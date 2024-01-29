@@ -54,6 +54,11 @@ echo 'Creating NDBC ascii2nc files'
 input_ascii2nc_ndbc_path=$COMIN/prep/${COMPONENT}/wave.${VDATE}/ndbc
 tmp_ascii2nc_ndbc_file=${DATA}/ncfiles/ndbc.${VDATE}.nc
 output_ascii2nc_ndbc_file=$COMOUTndbc/ndbc.${VDATE}.nc
+if [[ $input_ascii2nc_ndbc_path == *"/com/"* ]] || [[ $input_ascii2nc_ndbc_path == *"/dcom/"* ]]; then
+    alert_word="WARNING"
+else
+￼   alert_word="NOTE"
+fi
 if [[ -s $output_ascii2nc_ndbc_file ]]; then
     cpreq -v $output_ascii2nc_ndbc_file $tmp_ascii2nc_ndbc_file
 else
@@ -70,11 +75,6 @@ else
         chmod +x ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh" >> $poe_script
     else
-        if [[ $input_ascii2nc_ndbc_path == *"/com/"* ]] || [[ $input_ascii2nc_ndbc_path == *"/dcom/"* ]]; then
-￼           alert_word="WARNING"
-￼       else
-￼           alert_word="NOTE"
-￼       fi
 ￼       echo "${alert_word}: No files in $input_ascii2nc_ndbc_path"
     fi
 fi
