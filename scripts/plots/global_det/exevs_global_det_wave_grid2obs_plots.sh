@@ -46,7 +46,7 @@ while (( ${theDate} <= ${VDATE_END} )); do
             else
                 alert_word="NOTE"
             fi
-            echo "${alert_word}: DOES NOT EXIST $input_stats_file"
+            echo "${alert_word}: $input_stats_file does not exist"
         fi
         theDate=$($NDATE +24 ${theDate}${vhr} | cut -c 1-8)
     done
