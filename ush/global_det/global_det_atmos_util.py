@@ -1006,10 +1006,14 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                 os.symlink(source_file, dest_file)
             else:
                 if model == 'jma':
-                    if f"{init_time_dt:%H}" == '00' and int(forecast_hour) > 72:
-                        write_missing_file = False
-                    elif int(forecast_hour) % 24 != 0:
-                        write_missing_file = False
+                    if forecast_hour.isnumeric():
+                        if f"{init_time_dt:%H}" == '00' \
+                                and int(forecast_hour) > 72:
+                            write_missing_file = False
+                        elif int(forecast_hour) % 24 != 0:
+                            write_missing_file = False
+                        else:
+                            write_missing_file = True
                     else:
                         write_missing_file = True
                 else:

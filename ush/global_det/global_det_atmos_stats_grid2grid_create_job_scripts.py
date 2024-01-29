@@ -1204,19 +1204,24 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             job_env_dict['fhr_list'] = (
                                 "'"+', '.join(ukmet_fhr_list)+"'"
                             )
-                        # UKMET does not variables at
+                        # UKMET and JMA does not variables at
                         # different levels depending on if past
                         # a certain forecast hour
                         if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
                                 and verif_type_job in ['GeoHeight',
                                                        'Temp', 'UWind',
                                                        'VWind', 'VectorWind'] \
-                                and job_env_dict['MODEL'] in ['ukmet']:
+                                and job_env_dict['MODEL'] in ['jma',
+                                                              'ukmet']:
                             model_fhr_lev_dict = {
                                 'run1': {},
                                 'run2': {}
                             }
-                            if job_env_dict['MODEL'] == 'ukmet':
+                            if job_env_dict['MODEL'] == 'jma':
+                                mod_fhr_thresh = 120
+                                mod_rm_lefhr_level_list = []
+                                mod_rm_gtfhr_level_list = ['P250']
+                            elif job_env_dict['MODEL'] == 'ukmet':
                                 mod_fhr_thresh = 120
                                 mod_rm_lefhr_level_list = []
                                 if verif_type_job == 'GeoHeight':
@@ -1291,15 +1296,16 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             job.write(cmd+'\n')
                             job.write('export err=$?; err_chk'+'\n')
                         if JOB_GROUP == 'generate_stats':
-                            # UKMET: run again for fhr > 120
+                            # JMA and UKMET: run again for fhr > 120
                             rerun_key_list = list(
                                 model_fhr_lev_dict.keys()
                             )[1:]
                             if verif_type == 'pres_levs' \
                                     and verif_type_job in ['GeoHeight',
-                                                       'Temp', 'UWind',
-                                                       'VWind', 'VectorWind'] \
-                                    and job_env_dict['MODEL'] in ['ukmet']:
+                                                           'Temp', 'UWind',
+                                                           'VWind', 'VectorWind'] \
+                                    and job_env_dict['MODEL'] in ['jma',
+                                                                  'ukmet']:
                                 for runN in rerun_key_list:
                                     if (model_fhr_lev_dict[runN]['fhr_list']) \
                                             != "''":
