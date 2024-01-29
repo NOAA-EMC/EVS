@@ -111,8 +111,9 @@ class NOHRSCSpatialMap:
                  nohrsc_netcdf_file]
             )
         else:
-            self.logger.warning("wgrib2 executable not in PATH, "
-                                "not converting file to netCDF")
+            self.logger.error("wgrib2 executable not in PATH, "
+                              "cannot converting file to netCDF")
+            sys.exit(1)
         make_png = False
         make_gif = False
         DATA_png_name = os.path.join(
@@ -128,8 +129,8 @@ class NOHRSCSpatialMap:
                 make_png = True
             else:
                 make_png = False
-                self.logger.warning(f"{nohrsc_netcdf_file} does not exist, "
-                                    +"not making plot")
+                self.logger.info(f"{nohrsc_netcdf_file} does not exist, "
+                                  +"not making plot")
         else:
             make_png = False
         if make_png and os.path.exists(COMOUT_png_name):

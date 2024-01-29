@@ -161,7 +161,7 @@ graphics = {
                         }
                     },
                 },
-                'set4, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                'set4, namnest, hireswarw, hireswarwmem2, hireswfv3': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',

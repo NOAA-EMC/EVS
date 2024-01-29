@@ -52,6 +52,7 @@ export RUN=atmos
 export VERIF_CASE=severe
 export MODELNAME=hireswarw
 export modsys=hiresw
+export OMP_NUM_THREADS=1
 
 ############################################################
 # Execute j-job

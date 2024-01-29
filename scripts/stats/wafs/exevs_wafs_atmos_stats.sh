@@ -8,9 +8,7 @@
 set -x
 
 cd $DATA
-if [ -s wafs_stat.cmdfile ];then
-	rm wafs_stat.cmdfile
-fi
+rm -f wafs_stat.cmdfile
 
 export DATAsemifinal=$DATA/semifinal
 mkdir -p $DATAsemifinal
@@ -80,7 +78,7 @@ fi
 #Cat'ing errfiles to stdout
 #########################################
 
-log_dir=$DATA/*/METplus_output/logs
+log_dir=$DATA/METplus_output/logs
 log_file_count=$(find $log_dir -type f |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
 	for log_file in $log_dir/*; do
