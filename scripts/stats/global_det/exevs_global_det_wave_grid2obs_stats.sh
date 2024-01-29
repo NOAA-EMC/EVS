@@ -84,7 +84,12 @@ for valid_hour in ${valid_hours} ; do
         chgrp rstprod $tmp_pb2nc_prepbufrgdas_file
     else
         if [ ! -s $input_pb2nc_prepbufrgdas_file ] ; then
-            echo "WARNING: No GDAS Prepbufr files was available for valid date ${VDATE}${valid_hour} : $input_pb2nc_prepbufrgdas_file"
+            if [[ $input_pb2nc_prepbufrgdas_file == *"/com/"* ]] || [[ $input_pb2nc_prepbufrgdas_file == *"/dcom/"* ]]; then
+                alert_word="WARNING"
+            else
+                alert_word="NOTE"
+            fi
+            echo "${alert_word}: No GDAS Prepbufr files was available for valid date ${VDATE}${valid_hour} : $input_pb2nc_prepbufrgdas_file"
             if [ $SENDMAIL = YES ] ; then
                 export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
                 echo "Warning: No GDAS Prepbufr was available for valid date ${VDATE}${valid_hour}" > mailmsg
@@ -134,14 +139,14 @@ echo " Found ${DATA}/ncfiles/gdas.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} GDAS pb2nc files for valid date ${VDATE}"
 else
-    echo "WARNING : NO GDAS netcdf FILES for valid date ${VDATE} in ${DATA}/ncfiles"
+    echo "NOTE: NO GDAS netcdf FILES for valid date ${VDATE} in ${DATA}/ncfiles"
 fi
 nc=`ls ${DATA}/ncfiles/ndbc.${VDATE}*.nc | wc -l | awk '{print $1}'`
 echo " Found ${DATA}/ncfiles/ndbc.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} NDBC ascii2nc files for valid date ${VDATE}"
 else
-    echo "WARNING : NO NDBC netcdf FILES for valid date ${VDATE} in ${DATA}/ncfiles"
+    echo "NOTE: NO NDBC netcdf FILES for valid date ${VDATE} in ${DATA}/ncfiles"
 fi
 
 ############################################
@@ -185,7 +190,12 @@ for valid_hour in ${valid_hours} ; do
                 cpreq -v $input_model_file $tmp_model_file
             fi
         else
-            echo "WARNING: DOES NOT EXIST $input_model_file"
+            if [[ $input_model_file == *"/com/"* ]] || [[ $input_model_file == *"/dcom/"* ]]; then
+                alert_word="WARNING"
+            else
+                alert_word="NOTE"
+            fi
+            echo "${alert_word}: DOES NOT EXIST $input_model_file"
         fi
         if [[ -s $tmp_model_file ]]; then
             for OBSNAME in GDAS NDBC; do
@@ -249,7 +259,7 @@ if [ "${nc}" != '0' ]; then
     run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/StatAnalysis_fcstGLOBAL_DET.conf
     export err=$?; err_chk
 else
-    echo "WARNING : NO SMALL STAT FILES found for valid date ${VDATE} in ${DATA}/all_stats/*stat"
+    echo "NOTE: NO SMALL STAT FILES found for valid date ${VDATE} in ${DATA}/all_stats/*stat"
 fi
 # check to see if the large stat file was made, copy it to $COMOUTfinal
 nc=$(ls ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat | wc -l | awk '{print $1}')
@@ -260,7 +270,7 @@ if [ "${nc}" != '0' ]; then
         cpreq -v ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
     fi
 else
-    echo "WARNING: NO LARGE STAT FILE found for valid date ${VDATE} : ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+    echo "NOTE: NO LARGE STAT FILE found for valid date ${VDATE} : ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
 fi
 
 # Cat the METplus log files

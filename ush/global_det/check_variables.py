@@ -75,10 +75,10 @@ def check_USH_DIR(USH_DIR):
                      + f" configuration file.")
         #sys.exit(1)
     if not Path(USH_DIR).exists():
-        print(f"WARNING: The provided USH_DIR ('{USH_DIR}') does not exist on the"
+        print(f"The provided USH_DIR ('{USH_DIR}') does not exist on the"
                        + f" current system.")
     if not Path(USH_DIR).is_dir():
-        print(f"WARNING: The provided USH_DIR ('{USH_DIR}') is not a directory.")
+        print(f"The provided USH_DIR ('{USH_DIR}') is not a directory.")
     if not USH_DIR:
         print(f"The provided USH_DIR is empty. Will look for USH files"
                      + f" in the current working directory.")
@@ -95,10 +95,10 @@ def check_PRUNE_DIR(PRUNE_DIR):
                      + f" configuration file.")
         #sys.exit(1)
     if not Path(PRUNE_DIR).exists():
-        print(f"WARNING: The provided PRUNE_DIR ('{PRUNE_DIR}') does not exist on the"
+        print(f"The provided PRUNE_DIR ('{PRUNE_DIR}') does not exist on the"
                        + f" current system.")
     if not Path(PRUNE_DIR).is_dir():
-        print(f"WARNING: The provided PRUNE_DIR ('{PRUNE_DIR}') is not a directory.")
+        print(f"The provided PRUNE_DIR ('{PRUNE_DIR}') is not a directory.")
     if not PRUNE_DIR:
         print(f"The provided PRUNE_DIR is empty. Will store pruned stat files"
                      + f" in the current working directory.")
@@ -115,10 +115,10 @@ def check_SAVE_DIR(SAVE_DIR):
                      + f" configuration file.")
         #sys.exit(1)
     if not Path(SAVE_DIR).exists():
-        print(f"WARNING: The provided SAVE_DIR ('{SAVE_DIR}') does not exist on the"
+        print(f"The provided SAVE_DIR ('{SAVE_DIR}') does not exist on the"
                        + f" current system.")
     if not Path(SAVE_DIR).is_dir():
-        print(f"WARNING: The provided SAVE_DIR ('{SAVE_DIR}') is not a directory.")
+        print(f"The provided SAVE_DIR ('{SAVE_DIR}') is not a directory.")
     if not SAVE_DIR:
         print(f"The provided SAVE_DIR is empty. Will store plots"
                      + f" in the current working directory.")
@@ -134,10 +134,10 @@ def check_FIX_DIR(FIX_DIR):
                      + f"  FIX_DIR must be a string. Check the plotting"
                      + f" configuration file.")
     if not Path(FIX_DIR).exists():
-        print(f"WARNING: The provided FIX_DIR ('{FIX_DIR}') does not exist on the"
+        print(f"The provided FIX_DIR ('{FIX_DIR}') does not exist on the"
                      + f" current system.")
     if not Path(FIX_DIR).is_dir():
-        print(f"WARNING: The provided FIX_DIR ('{FIX_DIR}') is not a directory.")
+        print(f"The provided FIX_DIR ('{FIX_DIR}') is not a directory.")
     if not FIX_DIR:
         print(f"The provided FIX_DIR is empty.")
     return FIX_DIR
@@ -153,10 +153,10 @@ def check_OUTPUT_BASE_DIR(OUTPUT_BASE_DIR):
                      + f" configuration file.")
         #sys.exit(1)
     if not Path(OUTPUT_BASE_DIR).exists():
-        print(f"WARNING: The provided OUTPUT_BASE_DIR ('{OUTPUT_BASE_DIR}') does not exist on the"
+        print(f"The provided OUTPUT_BASE_DIR ('{OUTPUT_BASE_DIR}') does not exist on the"
                        + f" current system.")
     if not Path(OUTPUT_BASE_DIR).is_dir():
-        print(f"WARNING: The provided OUTPUT_BASE_DIR ('{OUTPUT_BASE_DIR}') is not a directory.")
+        print(f"The provided OUTPUT_BASE_DIR ('{OUTPUT_BASE_DIR}') is not a directory.")
     if not OUTPUT_BASE_DIR:
         print(f"The provided OUTPUT_BASE_DIR is empty. Will look for stat files"
                      + f" in the current working directory.")
@@ -173,7 +173,7 @@ def check_LOG_METPLUS(LOG_METPLUS):
                      + f" configuration file.")
         #sys.exit(1)
     if not LOG_METPLUS:
-        print(f"WARNING: The provided LOG_METPLUS is empty. The logger will be"
+        print(f"The provided LOG_METPLUS is empty. The logger will be"
                        + f" the root logger of the hierarchy.")
     return LOG_METPLUS
 
@@ -188,12 +188,12 @@ def check_LOG_LEVEL(LOG_LEVEL):
                      + f" configuration file.")
         #sys.exit(1)
     if str(LOG_LEVEL).upper() not in ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"]:
-        print(f"WARNING: The provided LOG_LEVEL ('{LOG_LEVEL}') may not be"
+        print(f"The provided LOG_LEVEL ('{LOG_LEVEL}') may not be"
                        + f" supported by the logger.  Consider using one of"
                        + f" 'DEBUG', 'INFO', 'WARNING', 'ERROR', or"
                        + f" 'CRITICAL'.")
     if str(LOG_LEVEL).upper() not in ["ERROR", "WARNING", "INFO", "DEBUG"]:
-        print(f"WARNING: You provided the following LOG_LEVEL: '{LOG_LEVEL}'."
+        print(f"You provided the following LOG_LEVEL: '{LOG_LEVEL}'."
                        + f" Note that the plotting scripts currently only log at"
                        + f" 'ERROR', 'WARNING', 'INFO' and 'DEBUG' levels.")
     if not LOG_LEVEL:
@@ -734,7 +734,7 @@ def check_OBS_THRESH(OBS_THRESH, FCST_THRESH, LINE_TYPE):
         if (OBS_THRESH.replace(' ','') != FCST_THRESH.replace(' ','')
                 or len(re.split(r'[\s,]+', OBS_THRESH)) 
                 != len(re.split(r'[\s,]+', FCST_THRESH))):
-            print(f"WARNING: The provided OBS_THRESH string ('{OBS_THRESH}')"
+            print(f"The provided OBS_THRESH string ('{OBS_THRESH}')"
                            + f" is not equivalent to the provided FCST_THRESH"
                            + f" string ('{FCST_THRESH}').")
     return OBS_THRESH
@@ -773,7 +773,7 @@ def check_CONFIDENCE_INTERVALS(CONFIDENCE_INTERVALS):
                      + f" configuration file.")
         #sys.exit(1)
     if not CONFIDENCE_INTERVALS:
-        print(f"WARNING: The provided CONFIDENCE_INTERVALS is empty."
+        print(f"The provided CONFIDENCE_INTERVALS is empty."
                        + f" Confidence intervals will not be plotted. Set to"
                        + f" 'True' if confidence intervals should be plotted.")
     return CONFIDENCE_INTERVALS
