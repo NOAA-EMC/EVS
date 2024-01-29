@@ -1,18 +1,27 @@
 #!/bin/ksh
 
-#*******************************************************************************
+#**********************************************************************************************
 # Purose: generate GEFS headline ACC plot
 #    
 # Procedure steps:
-#        (1) Copy (virtual link) 12 months of headline stat files
+#        (1) Collect (virtual link) 12 months of headline stat files
 #        (2) Average all of the sheadline stat files  by running MET StatAnlysis too
 #            and save the output text files for GEFS, NAEFS and GFS, respectively
 #            These 3 text files contained averaged ACC score data
-#        (3) Send these 3 text files to a python script to generate plot
+#        (3) Send these 3 text files in $DATA to a python script to generate plot 
+#               GEFS_500HGT_NH_PAC_2023.txt files, 
+#               GFS_500HGT_NH_PAC_2023.txt and
+#               NAEFS_500HGT_NH_PAC_2023.txt
+#             Note: These 3 txt files contain ACC for each forecat days which
+#                can be used to calculate the days when ACC drops below 0.6
+#        (4) Run the python script evs_global_ens_headline_plot.py to generate
+#            the headline plot. The plot tar file has only one png file with file name:
+#            evs.global_ens.acc.hgt_p500.lastYear0101_thisYear0116.fhrmean_valid00z_f384.g003_nhem.png
+#        (5) Send the plot tar file to $COMOUT 
 #
 #   Last update: 11/16/2023  by Binbin Zhou (Lynker@NCPE/EMC)
-##***************************************************************
-#
+#**********************************************************************************************
+
 set -x 
 
 last_year=$1
@@ -67,7 +76,7 @@ for yyyy in $years ; do
    months='01'
  fi
 
-#months="01 02 03 04 05"
+
 
 #********************************************************
 # Virtual link 12 months of headline stat files
@@ -78,7 +87,17 @@ for mm in $months  ; do
   elif [ $mm = 01 ] ; then
     days='02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31'	  
   elif [ $mm = 02 ] ; then
-    days='01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 '
+    
+    #**************************************
+    #Check if the last year was leap year
+    #  if nn=0, last year was leap year
+    #**************************************	  
+    nn=$(($last_year % 4))
+    if [ $nn = 0 ] ; then
+       days='01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 '
+    else
+       days='01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 '
+    fi
   else
     days='01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30'
   fi
@@ -112,6 +131,14 @@ done #yyyy
 #  MET StatAnlysis tool
 #***************************************************************
 export model
+
+if [ $run_entire_year = yes ] ; then
+  yyyy=$last_year
+else
+  yyyy=$this_year
+fi
+
+
 for model in gfs gefs naefs ; do
     export MODEL=`echo $model | tr '[a-z]' '[A-Z]'`
     >${MODEL}_500HGT_NH_PAC_${yyyy}.txt
@@ -126,7 +153,7 @@ for model in gfs gefs naefs ; do
     export output_base=$DATA/plot
     export stat_file_dir=$stat_data/$model
 
-   # stat_analysis -lookin $stat_data/$model/${model}_headline_*${yyyy}*.stat -fcst_valid_hour 00  -job aggregate_stat -line_type SAL1L2 -out_line_type CNT -by FCST_VAR,FCST_LEV,FCST_LEAD,VX_MASK -out_stat agg_stat_SAL1L2_to_CNT.${model}.${yyyy}.00Z
+    stat_analysis -lookin $stat_data/$model/${model}_headline_grid2grid_v*.stat -fcst_valid_hour 00  -job aggregate_stat -line_type SAL1L2 -out_line_type CNT -by FCST_VAR,FCST_LEV,FCST_LEAD,VX_MASK -out_stat agg_stat_SAL1L2_to_CNT.${model}.${yyyy}.00Z
 
    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PLOT_CONF}/StatAnlysis_fcstGENS_obsAnalysis_GatherByYear.conf 
    export err=$?; err_chk
@@ -165,4 +192,4 @@ sed -e "s!YYYY!${last_year}!g" -e "s!FIRST!$first!g" -e "s!LAST!$last!g"  $USHev
 python evs_global_ens_headline_plot.py
 export err=$?; err_chk
 
-cpreq NH_H500_PAC_${last_year}.png  evs.global_ens.acc.hgt_p500.${beg_day}_${end_day}.fhrmean_bar_valid00z_f384.g003_nhem.png
+cpreq NH_H500_PAC_${last_year}.png  evs.global_ens.acc.hgt_p500.${beg_day}_${end_day}.fhrmean_valid00z_f384.g003_nhem.png

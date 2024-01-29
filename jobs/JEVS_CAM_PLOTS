@@ -87,7 +87,11 @@ if  [ $MODELNAME = href ] ; then
 else
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
-  export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
+  if [ $VERIF_CASE = headline ] ; then
+    export COMOUTplots=${COMOUTplots:-$COMOUT/headline.$VDATE}
+  else
+    export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
+  fi
   export EVSINnam=${EVSINnam:-$COMIN/stats/$COMPONENT/$MODELNAME}
   echo $COMPATH
 fi
