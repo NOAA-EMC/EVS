@@ -1004,27 +1004,25 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                                        model, init_time_dt,
                                        forecast_hour.zfill(3))
         else:
-            if check_file_exists_size(source_file):
-                print("Linking "+source_file+" to "+dest_file)
-                os.symlink(source_file, dest_file)
-            else:
-                if model == 'jma':
-                    if forecast_hour.isnumeric():
-                        if f"{init_time_dt:%H}" == '00' \
-                                and int(forecast_hour) > 72:
-                            write_missing_file = False
-                        elif int(forecast_hour) % 24 != 0:
-                            write_missing_file = False
-                        else:
-                            write_missing_file = True
-                    else:
-                        write_missing_file = True
+            link_file = True
+            write_missing_file = True
+            if model == 'jma' and forecast_hour.isnumeric():
+                if f"{init_time_dt:%H}" == '00' \
+                        and int(forecast_hour) > 72:
+                    write_missing_file = False
+                    link_file = False
+                elif int(forecast_hour) % 24 != 0:
+                    write_missing_file = False
+                    link_file = False
+            if link_file:
+                if check_file_exists_size(source_file):
+                    print("Linking "+source_file+" to "+dest_file)
+                    os.symlink(source_file, dest_file)
                 else:
-                    write_missing_file = True
-                if write_missing_file:
-                    log_missing_file_model(log_missing_file, source_file,
-                                           model, init_time_dt,
-                                           forecast_hour.zfill(3))
+                    if write_missing_file:
+                        log_missing_file_model(log_missing_file, source_file,
+                                               model, init_time_dt,
+                                               forecast_hour.zfill(3))
 
 def get_truth_file(valid_time_dt, obs, source_prod_file_format,
                    source_arch_file_format, evs_run_mode,
