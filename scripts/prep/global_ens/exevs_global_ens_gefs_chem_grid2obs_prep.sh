@@ -9,9 +9,12 @@
 ###   Change Logs:
 ###
 ###   01/16/2024   Ho-Chun Huang  EVSv1.0 EE2 compliance
+###   01/30/2024   Ho-Chun Huang  for single email of missing files of both OBS
 ###
 ########################################################################
 set -x
+
+cd ${DATA}
 
 ## For temporary stoage on the working dirary before moving to COMOUT
 export finalprep=${DATA}/final
@@ -20,6 +23,9 @@ mkdir -p ${finalprep}
 obstype="aeronet airnow"
 export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}}
 export config_common=${PARMevs}/metplus_config/machine.conf
+
+flag_send_message=NO
+if [ -e mailmsg ]; /bin/rm -f mailmsg; fi
 
 for OBTTYPE in ${obstype}; do
     export OBTTYPE
@@ -44,11 +50,10 @@ for OBTTYPE in ${obstype}; do
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
-                export subject="AEORNET Level 1.5 NC file Missing for EVS ${COMPONENT}_${RUN}"
-                echo "WARNING: No AEORNET Level 1.5 data was available for valid date ${VDATE}" > mailmsg
+                echo "WARNING: No AEORNET Level 1.5 data was available for valid date ${VDATE}" >> mailmsg
                 echo "Missing file is ${checkfile}" >> mailmsg
-                echo "Job ID: $jobid" >> mailmsg
-                cat mailmsg | mail -s "$subject" $MAILTO 
+                echo "==============" >> mailmsg
+                flag_send_message=YES
             fi
             echo "WARNING: No AEORNET Level 1.5 data was available for valid date ${VDATE}"
             echo "WARNING: Missing file is ${checkfile}"
@@ -76,23 +81,22 @@ for OBTTYPE in ${obstype}; do
             checkfile=${DCOMIN}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
             if [ -s ${checkfile} ]; then
                 export VHOUR=${vldhr}
-        	if [ -s ${prep_config_file} ]; then
+                if [ -s ${prep_config_file} ]; then
                     run_metplus.py ${prep_config_file} ${config_common}
-        	    export err=$?; err_chk
-        	    if [ ${SENDCOM} = "YES" ]; then
+                    export err=$?; err_chk
+                    if [ ${SENDCOM} = "YES" ]; then
                         cpfile=${finalprep}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc 
                         if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTprep}; fi
-        	    fi
+                    fi
                 else
                     echo "WARNING: can not find ${prep_config_file}"
-        	fi
+                fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    export subject="AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}_${RUN}"
                     echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" > mailmsg
                     echo "Missing file is ${checkfile}" >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $MAILTO 
+                    echo "==============" >> mailmsg
+                    flag_send_message=YES
                 fi
         
                 echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
@@ -101,10 +105,16 @@ for OBTTYPE in ${obstype}; do
             ((ic++))
         done
     else
-	echo "DEBUG :: OBTTYPE=${OBTTYPE} is not define for ${COMPONENT}_${RUN} ${STEP} operationa"
+        echo "DEBUG :: OBTTYPE=${OBTTYPE} is not define for ${COMPONENT}_${RUN} ${STEP} operationa"
     fi
 
 done
+if [ "${flag_send_message}" == "YES" ]; then
+    export subject="AEORNET Level 1.5 NC or AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}_${RUN}"
+    echo "Job ID: $jobid" >> mailmsg
+    cat mailmsg | mail -s "${subject}" $MAILTO 
+fi 
+
 exit
 
 #######################################################################
