@@ -26,7 +26,6 @@ export PS4='$SECONDS + '
 ###########################################################
 ### obtain unique LSF id (jobid) and make temp directories
 #############################################################
-## export DATA=${DATA:-$DATAROOT/${NET}/${evs_ver}}
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
@@ -63,9 +62,6 @@ export FIXevs=${FIXevs:-${HOMEevs}/fix}
 ## PDYm3 for goes5, icap
 export VDATE=${VDATE:-${PDYm2}}
 
-export OBTTYPE=${OBTTYPE:-geos5}
-
-## export COMINobs=${COMINobs:-${DCOMROOT}}   ==> rename to DCOMIN
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMINgefs=${COMINgefs:-$(compath.py -o ${modsys}/${mod_ver}}
 export DCOMIN=${DCOMIN:-${DCOMROOT}}
