@@ -74,14 +74,34 @@ fi
 #  and WMO 1.5 deg verification for 00Z
 # NOTE: CMCE has no DPT
 #############################################################
-if [ $modnam = cmcanl ] ; then
+if [ $modnam = cmcanl ]; then
+
+  pat=pattern.$modnam
+  # Create a file of patterns to use with grep.  This way we only need one grep
+  if [ -e ${pat} ]; then rm ${pat}; fi
+  >${pat}
+  # Upper air
+  for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
+   echo "UGRD:$level mb" >> ${pat}
+   echo "VGRD:$level mb" >> ${pat}
+  done
+  echo "HGT:" >> ${pat}
+  echo "TMP:" >> ${pat}
+  echo "UGRD:10 m " >> ${pat}
+  echo "VGRD:10 m " >> ${pat}
+  # Surface
+  echo "PRMSL:" >> ${pat}
+  echo "RH:" >> ${pat}
+
   for ihour in 00 12; do
       origin=$COMINcmce/cmce.$vday/$ihour/pgrb2ap5
-      if [ ! -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl ] ; then
-        cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000
-      else
-        echo "WARNING: $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl does not exist, using $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl"
+      if [ -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl ] ; then
         cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl
+      elif [ -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 ] ; then
+        cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000	
+        echo "WARNING: $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl does not exist, using $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000"
+      else
+        echo "WARNING: No $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl or $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 file available"
       fi
       if [ ! -s $cmcanl ] ; then
        if [ $SENDMAIL = YES ]; then
@@ -94,32 +114,20 @@ if [ $modnam = cmcanl ] ; then
       else
        >$WORK/cmce.upper.${ihour}.gec00.anl
        >$WORK/cmce.sfc.${ihour}.gec00.anl
-       >output.${ihour}
-       for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
-         $WGRIB2  $cmcanl|grep "UGRD:$level mb"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${ihour}
-         cat $WORK/output.${ihour} >> $WORK/cmce.upper.${ihour}.gec00.anl
-         $WGRIB2  $cmcanl|grep "VGRD:$level mb"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${ihour}
-         cat $WORK/output.${ihour} >> $WORK/cmce.upper.${ihour}.gec00.anl
-       done
-       $WGRIB2  $cmcanl|grep "HGT:"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${ihour}
-       cat $WORK/output.${ihour} >> $WORK/cmce.upper.${ihour}.gec00.anl
-       $WGRIB2  $cmcanl|grep "TMP:"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${ihour}
-       cat $WORK/output.${ihour} >> $WORK/cmce.upper.${ihour}.gec00.anl
-       $WGRIB2  $cmcanl|grep "UGRD:10 m "|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${ihour}
-       cat $WORK/output.${ihour} >> $WORK/cmce.upper.${ihour}.gec00.anl
-       $WGRIB2  $cmcanl|grep "VGRD:10 m "|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${ihour}
-       cat $WORK/output.${ihour} >> $WORK/cmce.upper.${ihour}.gec00.anl
-       $WGRIB2 $cmcanl|grep "PRMSL:"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${ihour}
-       cat $WORK/output.${ihour} >> $WORK/cmce.sfc.${ihour}.gec00.anl
-       $WGRIB2 $cmcanl|grep "RH:"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${ihour}
-       cat $WORK/output.${ihour} >> $WORK/cmce.sfc.${ihour}.gec00.anl
-       #cat $WORK/cmce.sfc >> $WORK/cmce.upper.adjusted
-       #use WGRIB2 to reverse north-south direction, and convert ftom 0.5x0.5 degree to 1x1 degree
-       cat $WORK/cmce.sfc.${ihour}.gec00.anl >> $WORK/cmce.upper.${ihour}.gec00.anl
-       $WGRIB2 $WORK/cmce.upper.${ihour}.gec00.anl -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2
+
+       $WGRIB2 $cmcanl | grep --file=${pat} | grep "anl:ENS=low-res" | $WGRIB2 -i $cmcanl -grib ${WORK}/grabcmcanl.${ihour}
+#       $WGRIB2 $WORK/cmce.upper.${ihour}.gec00.anl -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2
+        $WGRIB2 ${WORK}/grabcmcanl.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 
+	
        [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 $COMOUTcmce/cmcanl.t${ihour}z.grid3.f000.grib2
     fi
   done
+
+   for ihour in 00 12; do
+    rm ${WORK}/grabcmcanl.${ihour}
+   done
+   rm ${pat}
+
   if [ -s $COMOUTcmce/cmcanl.t00z.grid3.f000.grib2 ]; then
       $WGRIB2 $COMOUTcmce/cmcanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $WORK/cmcanl.t00z.deg1.5.f000.grib2
       [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmcanl.t00z.deg1.5.f000.grib2 $COMOUTcmce/cmcanl.t00z.deg1.5.f000.grib2
@@ -133,6 +141,47 @@ fi
 ###########################################################
 if [ $modnam = gefs ] ; then
   total=30
+
+  if [ ! -s $WORK/gefs.ens30.t12z.grid3.f384.grib2 ] ; then
+    tmpDir=$WORK/${modnam}.${fhr_beg}
+    mkdir -p $tmpDir
+
+    # Create a file of patterns to use with grep.  This way we only need one grep
+    pat0=${tmpDir}/pattern0.${modnam}.${gens_ihour}.${fhr_beg}
+    pat1=${tmpDir}/pattern1.${modnam}.${gens_ihour}.${fhr_beg}
+
+    if [ -e ${pat0} ]; then rm ${pat0}; fi
+    >${pat0}
+
+    for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
+         echo "UGRD:$level mb" >> ${pat0}
+         echo "VGRD:$level mb" >> ${pat0}
+    done
+    # Upper air
+    echo "HGT:" >> ${pat0}
+    echo "TMP:" >> ${pat0} 
+    echo "UGRD:10 m" >> ${pat0}
+    echo "VGRD:10 m" >> ${pat0}
+    echo "RH:" >> ${pat0}
+    # Surface
+    echo "TCDC:" >> ${pat0}
+    echo "APCP:" >> ${pat0}
+    echo "WEASD:" >> ${pat0}
+    echo "SNOD:" >> ${pat0}
+    echo "PRMSL:" >> ${pat0}
+
+    # Upper from CVC
+    if [ -e ${pat1} ]; then rm ${pat1}; fi
+    >${pat1}
+    echo "DPT:2 m" >> ${pat1}
+    echo "VIS:surface" >> ${pat1}
+    echo "CAPE:surface" >> ${pat1}
+    echo "HGT:cloud ceiling" >> ${pat1}
+    echo "ICEC:surface" >> ${pat1}
+    echo "TMP:surface" >> ${pat1}
+    #echo "SPFH:" >> ${pat1}
+
+
   for ihour in $gens_ihour  ; do
     origin=$COMINgefs/gefs.$vday/$ihour/atmos/pgrb2ap5
     origin_cvc=$COMINgefs/gefs.$vday/$ihour/atmos/pgrb2bp5
@@ -157,33 +206,10 @@ if [ $modnam = gefs ] ; then
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
         else
-          for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
-            $WGRIB2  $gefs|grep "UGRD:$level mb"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-            cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-            $WGRIB2  $gefs|grep "VGRD:$level mb"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-            cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          done
-          $WGRIB2  $gefs|grep "HGT:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2  $gefs|grep "TMP:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2  $gefs|grep "UGRD:10 m "|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2  $gefs|grep "VGRD:10 m "|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2  $gefs|grep "RH:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs|grep "TCDC:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.sfc.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs|grep "APCP:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.sfc.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs|grep "WEASD:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.sfc.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs|grep "SNOD:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.sfc.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs|grep "PRMSL:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.sfc.${ihour}.${mb}.${hhh}
-          cat $WORK/gefs.sfc.${ihour}.${mb}.${hhh}  >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
+          grabgefs=${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+	  x=${tmpDir}/x.${ihour}.${mb}.${hhh}
+
+	  $WGRIB2 $gefs     | grep --file=${pat0} | $WGRIB2 -i $gefs     -grib ${grabgefs}
         fi
         if [ ! -s $gefs_cvc ]; then
           if [ $SENDMAIL = YES ]; then
@@ -194,28 +220,24 @@ if [ $modnam = gefs ] ; then
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
         else
-          $WGRIB2 $gefs_cvc|grep "DPT:2 m"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs_cvc|grep "VIS:surface"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs_cvc|grep "CAPE:surface"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs_cvc|grep "HGT:cloud ceiling"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs_cvc|grep "ICEC:surface"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs_cvc|grep "TMP:surface"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
-          #$WGRIB2 $gefs_cvc|grep "SPFH:"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
-          #cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
+          $WGRIB2 $gefs_cvc | grep --file=${pat1} | $WGRIB2 -i $gefs_cvc -grib ${x}
+	  cat ${x} >> ${grabgefs}
         fi
-        $WGRIB2 $WORK/gefs.upper.${ihour}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+#        $WGRIB2 $WORK/gefs.upper.${ihour}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+        $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 
         [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
         nfhrs=`expr $nfhrs + 6`
       done # forecast hour
+
+      for hhh in $(seq --format=%03g $fhr_beg 6 $fhr_end ); do
+         rm ${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+      done
+
       mbr=`expr $mbr + 1`
     done # member
   done # ihour
+  rm ${pat0} ${pat1}
+ fi # check if file not existing
 fi
 
 ##############################################################
@@ -225,6 +247,33 @@ fi
 ##############################################################
 if [ $modnam = cmce ] ; then
   total=20
+
+   tmpDir=$WORK/${modnam}
+   mkdir -p ${tmpDir}
+
+  # Create a file of patterns to use with grep.  This way we only need one grep
+  pat=${tmpDir}/pattern.${gens_ihour}.${fhr_beg}
+  if [ -e ${pat} ]; then rm ${pat}; fi
+  >${pat}
+  for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
+     echo "UGRD:$level mb" >> ${pat}
+     echo "VGRD:$level mb" >> ${pat}
+  done
+  # Upper air
+  echo "HGT:" >> ${pat}
+  echo "TMP:" >> ${pat}
+  echo "UGRD:10 m" >> ${pat}
+  echo "VGRD:10 m" >> ${pat}
+  echo "RH:" >> ${pat}
+  # Surface
+  echo "TCDC:local level" >> ${pat}
+  echo "APCP:" >> ${pat}
+  echo "WEASD:" >> ${pat}
+  echo "SNOD:" >> ${pat}
+  echo "PRMSL:" >> ${pat}
+  echo "CAPE:atmos col" >> ${pat}
+  #echo "SPFH:" >> ${pat}
+
   for ihour in $gens_ihour ; do
     origin=$COMINcmce/cmce.$vday/$ihour/pgrb2ap5
     mbr=1
@@ -247,34 +296,12 @@ if [ $modnam = cmce ] ; then
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
         else
-          for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
-              $WGRIB2  $cmce|grep "UGRD:$level mb"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-              cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.upper.${ihour}.${mb}.${h3}
-              $WGRIB2  $cmce|grep "VGRD:$level mb"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-              cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.upper.${ihour}.${mb}.${h3}
-          done
-          $WGRIB2  $cmce|grep "HGT:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.upper.${ihour}.${mb}.${h3}
-          $WGRIB2  $cmce|grep "TMP:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.upper.${ihour}.${mb}.${h3}
-          $WGRIB2  $cmce|grep "UGRD:10 m "|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.upper.${ihour}.${mb}.${h3}
-          $WGRIB2  $cmce|grep "VGRD:10 m "|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.upper.${ihour}.${mb}.${h3}
-          $WGRIB2  $cmce|grep "RH:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.upper.${ihour}.${mb}.${h3}
-          $WGRIB2 $cmce|grep "TCDC:local level"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.sfc.${ihour}.${mb}.${h3}
-          $WGRIB2 $cmce|grep "APCP:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.sfc.${ihour}.${mb}.${h3}
-          $WGRIB2 $cmce|grep "WEASD:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.sfc.${ihour}.${mb}.${h3}
-          $WGRIB2 $cmce|grep "SNOD:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.sfc.${ihour}.${mb}.${h3}
-          $WGRIB2 $cmce|grep "PRMSL:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.sfc.${ihour}.${mb}.${h3}
-          $WGRIB2 $cmce|grep "CAPE:atmos col"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
-          cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.sfc.${ihour}.${mb}.${h3}
+	 
+	  grabcmce=${tmpDir}/grabcmce.${ihour}.${mb}.${h3}
+
+	  $WGRIB2  $cmce|grep --file=${pat}|$WGRIB2 -i $cmce -grib ${grabcmce}
+
+
 	  #****************************************************************************************
 	  #Note:  SPFH is still not available. So close this one
           #$WGRIB2 $cmce|grep "SPFH:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${ihour}.${mb}.${h3}
@@ -288,15 +315,21 @@ if [ $modnam = cmce ] ; then
           #MET  uses string of field name to read data
           #Hrer, use WGRIB2 to reverse N-S grid direction and convert 0.5x0.5 deg to 1x1 deg
 	  #********************************************************************************
-          cat $WORK/cmce.sfc.${ihour}.${mb}.${h3} >> $WORK/cmce.upper.${ihour}.${mb}.${h3}
-          $WGRIB2 $WORK/cmce.upper.${ihour}.${mb}.${h3} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
+          $WGRIB2 ${grabcmce} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
           [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
         fi 
         nfhrs=`expr $nfhrs + 12`
       done # forecast hour
+
+
+     for h3 in $(seq --format=%03g $fhr_beg 12 $fhr_end ); do
+       rm ${tmpDir}/grabcmce.${ihour}.${mb}.${h3}
+     done
+
       mbr=`expr $mbr + 1`
     done # member
   done # ihour
+  rm ${pat}
 fi
 
 ###########################################
@@ -307,7 +340,7 @@ if [ $modnam = ecme ] ; then
   echo "getting ECMWF ensemble member files ...."
   export outdata=$COMOUTecme
   for ihour in 00 12 ; do
-    $USHevs/global_ens/evs_process_atmos_ecme.sh ${vday}${ihour} ${ihour}
+    $USHevs/global_ens/evs_process_atmos_ecme.sh ${vday}${ihour} ${ihour} 
   done 
 fi
 
@@ -322,8 +355,8 @@ if [ $modnam = prepbufr ] ; then
       echo  "export vbeg=${ihour}" >> run_pb2nc.${ihour}.sh
       echo  "export vend=${ihour}" >> run_pb2nc.${ihour}.sh
       if [ -s $COMINobsproc/gdas.${vday}/${ihour}/atmos/gdas.t${ihour}z.prepbufr ] ; then
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf" >> run_pb2nc.${ihour}.sh
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.conf" >> run_pb2nc.${ihour}.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf" >> run_pb2nc.${ihour}.sh  
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.conf" >> run_pb2nc.${ihour}.sh  
       else
 	if [ $SENDMAIL = YES ]; then
           export subject="Prepbufr  Data Missing for EVS ${COMPONENT}"
@@ -414,12 +447,12 @@ if [ $modnam = gefs_apcp06h ] ; then
          if [ -s $COMINgefs/gefs.$vday/$ihour/atmos/pgrb2ap5/gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh} ] ; then
            gefs=$COMINgefs/gefs.$vday/$ihour/atmos/pgrb2ap5/gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh}
            $WGRIB2 -match "APCP" $gefs|$WGRIB2 -i $gefs -grib gefs.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2
-           $WGRIB2 gefs.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+           $WGRIB2 gefs.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 
         else
            echo "WARNING: $COMINgefs/gefs.$vday/$ihour/atmos/pgrb2ap5/gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh} does not exist, using $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2"
            gefs=$COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
            if [ -s $gefs ]; then
-             $WGRIB2 -match "APCP" $gefs|$WGRIB2 -i $gefs -grib $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+             $WGRIB2 -match "APCP" $gefs|$WGRIB2 -i $gefs -grib $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 
            else
              echo "WARNING: $gefs does not exist"
            fi
@@ -452,7 +485,7 @@ if [ $modnam = gefs_apcp24h ] ; then
 	 fi
         done
         lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_APCP24h.conf
+        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_APCP24h.conf  
         unset lead_arr
       done
     done
@@ -472,7 +505,7 @@ if [ $modnam = cmce_apcp06h ] ; then
          cmce=$COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh}
          if [ -s $cmce ]; then
            $WGRIB2 -match "APCP" $cmce|$WGRIB2 -i $cmce -grib cmce.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2
-	   $WGRIB2 cmce.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+	   $WGRIB2 cmce.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 
            [[ $SENDCOM="YES" ]] && cpreq -v cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
          else
            echo "WARNING: $cmce does not exist"
@@ -504,7 +537,7 @@ if [ $modnam = cmce_apcp24h ] ; then
 	   fi
          done
          lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstCMCE_APCP24h.conf
+         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstCMCE_APCP24h.conf  
          unset lead_arr
       done
     done
@@ -531,7 +564,7 @@ if [ $modnam = ecme_apcp24h ] ; then
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf   
        unset lead_arr
      done
      [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTecme/.
@@ -582,7 +615,7 @@ if [ $modnam = gefs_snow24h ] ; then
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
        for snow in WEASD SNOD ; do
-           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf
+           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf  
        done
        unset lead_arr
      done
@@ -613,7 +646,7 @@ if [ $modnam = cmce_snow24h ] ; then
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
        for snow in WEASD SNOD ; do
-           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf
+           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf  
        done
        unset lead_arr
      done
@@ -642,7 +675,7 @@ if [ $modnam = ecme_snow24h ] ; then
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf  
        unset lead_arr
      done
      [[ $SENDCOM="YES" ]] && cp $output_base/ecme*.nc $COMOUTecme
@@ -676,9 +709,14 @@ fi
 # Process OSI-SAF ice data (using Mallory's python scripts)
 ############################################################
 if [ $modnam = osi_saf ] ; then
-   osi_nh=$DCOMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATE}1200.nc
-   osi_sh=$DCOMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATE}1200.nc
-   if [ ! -s $osi_nh ]; then
+  INITDATEm1=$($NDATE -24 ${INITDATE}00 | cut -c1-8)
+  osisaf_comout_file=${COMOUTosi_saf}/osi_saf.multi.${INITDATEm1}00to${INITDATE}00_G004.nc
+  if [ -s $osisaf_comout_file ]; then
+    echo "${osisaf_comout_file} exists"
+  else
+    osi_nh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATEm1}1200.nc
+    osi_sh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATEm1}1200.nc
+    if [ ! -s $osi_nh ]; then
         if [ $SENDMAIL = YES ]; then
           export subject="OSI_SAF NH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF NH data  available for ${INITDATE}" > mailmsg
@@ -686,18 +724,18 @@ if [ $modnam = osi_saf ] ; then
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
         fi 
-   else
-         if [ ! -s $osi_sh ]; then
+    elif [ ! -s $osi_sh ]; then
           export subject="OSI_SAF SH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF SH data  available for ${INITDATE}" > mailmsg
           echo "Missing file is $osi_sh"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
-         else
-             python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
-             [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
-         fi
-   fi
+    else
+	  echo "NH OSI_SAF and SH OSI_SAF datasets exist" 
+          python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
+         [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
+    fi
+  fi
 fi
 
 #############################################################################
@@ -725,7 +763,7 @@ if [ $modnam = gefs_icec24h ] ; then
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf  
        unset lead_arr
      done
     done
@@ -751,7 +789,7 @@ if [ $modnam = gefs_icec7day ] ; then
             export leads='180 204 228 252 276 300 324 348 372'
         fi
         for lead in $leads; do
-          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf
+          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf  
         done
      done
    done						     
@@ -785,7 +823,7 @@ if [ $modnam = gefs_sst24h ] ; then
 	   fi
          done
          lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SST24h.conf
+         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SST24h.conf  
          unset lead_arr
        done
    done

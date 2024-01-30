@@ -28,7 +28,6 @@ export init_end=$VDATE
 export valid_end=$VDATE
 
 model_list='ECME CMCE GEFS'
-models='ECME, CMCE, GEFS'
 
 n=0
 while [ $n -le $past_days ] ; do
@@ -127,6 +126,12 @@ fi
          # Build sub-task scripts
          #***************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
+
+	 if [ $FCST_LEVEL_value = P10 ] || [ $FCST_LEVEL_value = P250 ]; then
+	    models='CMCE, GEFS'
+	 else
+	    models='ECME, CMCE, GEFS'
+         fi
 
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 

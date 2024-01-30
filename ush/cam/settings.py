@@ -2891,7 +2891,7 @@ class Reference():
                                     'fcst_var_levels': ['Z0'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MXGS'],
+                                    'obs_var_names': ['GUST'],
                                     'obs_var_levels': ['Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',

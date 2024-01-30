@@ -25,7 +25,7 @@ for ff in $FHOURS ; do
 
     if [ $CENTER = "uk" ] ; then
 	if [ $RESOLUTION = "0P25" ] ; then
-	    sourcefile=$COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${ccfcst}z_t${ff}.grib2
+	    sourcefile=$DCOMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${ccfcst}z_t${ff}.grib2
 	fi
     elif [ $CENTER = "us" ] ; then
 	if [ $RESOLUTION = "0P25" ] ; then
@@ -179,6 +179,6 @@ fi
 export valid_beg=$cc
 export valid_end=$cc
 if [ $runMETplus = yes ] ; then
-    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
+    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATAmpmd/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
     ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
 fi

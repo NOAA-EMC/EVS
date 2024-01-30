@@ -8,9 +8,7 @@
 set -x
 
 cd $DATA
-if [ -s wafs_stat.cmdfile ];then
-	rm wafs_stat.cmdfile
-fi
+rm -f wafs_stat.cmdfile
 
 export DATAsemifinal=$DATA/semifinal
 mkdir -p $DATAsemifinal

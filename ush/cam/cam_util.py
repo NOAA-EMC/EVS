@@ -62,7 +62,7 @@ def get_data_type(fname):
         'NAM Nest Forecast': {
             'and':['nam', 'nest'],
             'or':[''],
-            'not':[],
+            'not':['firewx'],
             'type': 'fcst'
         },
         'HRRR Forecast': {

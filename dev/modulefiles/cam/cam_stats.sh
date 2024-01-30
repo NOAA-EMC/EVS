@@ -1,5 +1,5 @@
 #!/bin/bash
-# modulefile for EVS cam component, prep step
+# modulefile for EVS cam component, stats step
 
 set -x
 

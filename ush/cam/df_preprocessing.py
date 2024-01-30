@@ -113,16 +113,19 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
     for model in model_list:
         fpath = os.path.join(pruned_data_dir,f'{str(model)}.stat')
         if not os.path.isfile(fpath):
-            logger.warning(
-                f"{str(model)} is not a model in"
-                + f" {pruned_data_dir}."
-            )
-            logger.warning(
-                f"It may be a group name, or else check if the stats_dir ({stats_dir}) includes"
-                + f" {str(model)} data according to the output_base template,"
-                + f" given domain, variable, etc..."
-            )
-            logger.warning("Continuing ...")
+            if not any(
+                    group_name in str(model) for group_name in ["group", "set"]
+                ):
+                logger.warning(
+                    f"{str(model)} is not a model in"
+                    + f" {pruned_data_dir}."
+                )
+                logger.warning(
+                    f"It may be a group name, or else check if the stats_dir ({stats_dir}) includes"
+                    + f" {str(model)} data according to the output_base template,"
+                    + f" given domain, variable, etc..."
+                )
+                logger.warning("Continuing ...")
             continue
         if not clear_prune_dir:
             logger.debug(f"Creating dataframe using pruned data from {fpath}")
