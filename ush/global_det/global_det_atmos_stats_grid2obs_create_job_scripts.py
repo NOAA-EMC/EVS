@@ -1073,7 +1073,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     'P50', 'P20', 'P10', 'P5', 'P1'
                                 ]
                                 if verif_type_job in ['UWind', 'VWind',
-                                                      'VectorWind']:
+                                                      'VectorWind', 'Temp']:
                                     mod_rm_lefhr_level_list.append('P1000')
                                     mod_rm_gtfhr_level_list.append('P1000')
                             elif job_env_dict['MODEL'] == 'ukmet':
