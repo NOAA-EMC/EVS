@@ -1169,6 +1169,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             job_env_dict['fhr_list'] = (
                                 "'"+', '.join(ukmet_fhr_list)+"'"
                             )
+                    elif JOB_GROUP == 'assemble_data':
+                        # JMA does not have the forecast hour frequency
+                        # to do daily average Geopotential Height anomalies
+                        if verif_type == 'pres_levs' \
+                                and verif_type_job == 'DailyAvg_GeoHeightAnom' \
+                                and job_env_dict['MODEL'] == 'jma':
+                            write_job_cmds = False
                     elif JOB_GROUP == 'generate_stats':
                         # Models below do not have Ozone Mixing Ratio
                         if verif_type == 'pres_levs' \
@@ -1204,6 +1211,12 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             job_env_dict['fhr_list'] = (
                                 "'"+', '.join(ukmet_fhr_list)+"'"
                             )
+                        # JMA does not have the forecast hour frequency
+                        # to do daily average Geopotential Height anomalies
+                        if verif_type == 'pres_levs' \
+                                and verif_type_job == 'DailyAvg_GeoHeightAnom' \
+                                and job_env_dict['MODEL'] == 'jma':
+                            write_job_cmds = False
                         # UKMET and JMA does not variables at
                         # different levels depending on if past
                         # a certain forecast hour
