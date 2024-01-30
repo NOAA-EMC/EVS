@@ -2803,7 +2803,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                         [:]
                     )
             else:
-                logger.warning(f"{parsed_model_stat_file} does not exist")
+                logger.debug(f"{parsed_model_stat_file} does not exist")
         if model_num == 'model1':
             all_model_df = model_num_df
         else:
