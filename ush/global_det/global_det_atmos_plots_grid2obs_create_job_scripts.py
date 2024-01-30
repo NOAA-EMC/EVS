@@ -625,10 +625,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                    valid_hr_inc))
             if 'Daily' in verif_type_job:
                 daily_fhr_list = []
-                for fhr in job_env_dict['fhr_list'].split(','):
+                for fhr in job_env_dict['fhr_list'].split(', '):
                     if int(fhr) >= 24 and int(fhr) % 24 == 0:
                         daily_fhr_list.append(str(fhr))
-                    job_env_dict['fhr_list'] = ','.join(daily_fhr_list)
+                    job_env_dict['fhr_list'] = ', '.join(daily_fhr_list)
         if JOB_GROUP in ['condense_stats', 'filter_stats', 'make_plots']:
             obs_list = [
                 verif_type_plot_jobs_dict[verif_type_job]['obs_name']
