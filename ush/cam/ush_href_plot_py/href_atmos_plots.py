@@ -109,7 +109,7 @@ if len(model_list) > 10:
     logger.error("FATAL ERROR: TOO MANY MODELS LISTED ("+str(len(model_list))
                  +", ["+', '.join(model_list)+"]), maximum is 10")
     sys.exit(1)
-
+'''
 # Condense .stat files
 logger.info("Condensing model .stat files for job")
 for model_idx in range(len(model_list)):
@@ -119,10 +119,12 @@ for model_idx in range(len(model_list)):
                                              +'.stat')
     if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
         obs_name = truth_name_list[model_idx]
+    
     gda_util.condense_model_stat_files(logger, stat_base_dir,
                                        condensed_model_stat_file, model,
                                        obs_name, grid, vx_mask, fcst_var_name,
                                        obs_var_name, line_type)
+'''
 
 # Set up model information dictionary
 original_model_info_dict = {}
