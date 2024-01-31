@@ -134,7 +134,7 @@ init_hrs = list(range(int(init_hr_start),
                       int(init_hr_end)+int(init_hr_inc),
                       int(init_hr_inc)))
 fhrs = []
-for fhr in fhr_list.split(','):
+for fhr in fhr_list.split(', '):
     if int(fhr) <= 240:
         fhrs.append(int(fhr))
 

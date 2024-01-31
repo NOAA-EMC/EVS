@@ -84,7 +84,7 @@ while valid_date_dt <= ENDDATE_dt:
         input_file = gda_util.format_filler(
             file_format, valid_date_dt, init_date_dt, str(fhr), {}
         )
-        if os.path.exists(input_file):
+        if gda_util.check_file_exists_size(input_file):
             output_DATA_file = os.path.join(
                 DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
                 RUN+'.'+valid_date_dt.strftime('%Y%m%d'),
@@ -115,7 +115,8 @@ while valid_date_dt <= ENDDATE_dt:
                         gda_util.copy_file(output_DATA_file,
                                            output_COMOUT_file)
         else:
-            print(f"\nWARNING: {input_file} does not exist")
+            print(f"WARNING: Cannot make anomaly file {output_DATA_file} - "
+                  +f"{input_file} does not exist")
             make_anomaly_output_file = False
         if make_anomaly_output_file:
             print(f"\nInput file: {input_file}")

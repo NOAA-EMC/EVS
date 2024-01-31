@@ -82,4 +82,4 @@ for ndbc_input_file in glob.glob(os.path.join(DCOMINndbc,
                 print(f"Copying {ndbc_tmp_file} to {ndbc_output_file}")
                 shutil.copy2(ndbc_tmp_file, ndbc_output_file)
             else:
-                print("WARNING: {ndbc_tmp_file} empty, 0 sized")
+                print("NOTE: {ndbc_tmp_file} empty, 0 sized")
