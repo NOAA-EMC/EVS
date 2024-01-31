@@ -31,7 +31,7 @@ for MODEL in $MODELNAME; do
                 tmp_filename="${DATA}/gfswave.${INITDATE}.t${inithour}z.global.0p25.f${hr}.grib2"
                 output_filename="$COMOUT.${INITDATE}/${MODEL}/gfswave.${INITDATE}.t${inithour}z.global.0p25.f${hr}.grib2"
                 if [ ! -s $input_filename ] ; then
-                    echo "WARNING: F${hr} GFS Forecast Data Missing: ${input_filename}"
+                    echo "WARNING: ${input_filename} does not exist"
                     if [ $SENDMAIL = YES ] ; then
                         export subject="F${hr} GFS Forecast Data Missing for EVS ${COMPONENT}"
                         echo "Warning: No GFS forecast was available for ${INITDATE}${inithour}f${hr}" > mailmsg

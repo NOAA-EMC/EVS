@@ -281,7 +281,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 )
                             nf+=1
                     elif int(model_accum) > accum:
-                        print("WARNING: the model precip file "
+                        print("FATAL ERROR: the model precip file "
                               "accumulation for "+model+" ("
                               +model_file_format+") is greater than "
                               +"the verifying accumulation of "+str(accum)
@@ -744,14 +744,13 @@ elif STEP == 'plots' :
                     model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
                 )
             if not os.path.exists(dest_model_date_stat_file):
-                if os.path.exists(source_model_date_stat_file):
+                if gda_util.check_file_exists_size(
+                        source_model_date_stat_file
+                ):
                     print("Linking "+source_model_date_stat_file+" to "
                           +dest_model_date_stat_file)
                     os.symlink(source_model_date_stat_file,
                                dest_model_date_stat_file)
-                else:
-                    print("WARNING: "+source_model_date_stat_file+" "
-                          +"DOES NOT EXIST")
             date_dt = date_dt + datetime.timedelta(days=1)
     # Get model pcp_combine files from COMIN
     if VERIF_CASE == 'grid2grid' and 'precip' in VERIF_CASE_STEP_type_list:
@@ -804,14 +803,11 @@ elif STEP == 'plots' :
             +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
         )
         if not os.path.exists(dest_ccpa_pcp_combine_file):
-            if os.path.exists(source_ccpa_pcp_combine_file):
+            if gda_util.check_file_exists_size(source_ccpa_pcp_combine_file):
                 print("Linking "+source_ccpa_pcp_combine_file+" "
                       +"to "+dest_ccpa_pcp_combine_file)
                 os.symlink(source_ccpa_pcp_combine_file,
                            dest_ccpa_pcp_combine_file)
-            else:
-                print("WARNING: "+source_ccpa_pcp_combine_file+" "
-                       +"DOES NOT EXIST")
         for model_idx in range(len(model_list)):
             model = model_list[model_idx]
             COMINmodel = os.path.join(
@@ -834,14 +830,13 @@ elif STEP == 'plots' :
                     +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)+'.nc'
                 )
                 if not os.path.exists(dest_model_fhr_pcp_combine_file):
-                    if os.path.exists(source_model_fhr_pcp_combine_file):
+                    if gda_util.check_file_exists_size(
+                            source_model_fhr_pcp_combine_file
+                    ):
                         print("Linking "+source_model_fhr_pcp_combine_file+" "
                               +"to "+dest_model_fhr_pcp_combine_file)
                         os.symlink(source_model_fhr_pcp_combine_file,
                                    dest_model_fhr_pcp_combine_file)
-                    else:
-                        print("WARNING: "+source_model_fhr_pcp_combine_file+" "
-                              +"DOES NOT EXIST")
     # Get NOHRSC files from DCOMINnohrsc
     if VERIF_CASE == 'grid2grid' and 'snow' in VERIF_CASE_STEP_type_list:
         (NOHRSC24hr_valid_hr_start, NOHRSC24hr_valid_hr_end,
@@ -868,13 +863,10 @@ elif STEP == 'plots' :
             +NOHRSC24hr_valid_hr_list[0]+'.grb2'
         )
         if not os.path.exists(dest_nohrsc_file):
-            if os.path.exists(source_nohrsc_file):
+            if gda_util.check_file_exists_size(source_nohrsc_file):
                 print("Linking "+source_nohrsc_file+" "
                       +"to "+dest_nohrsc_file)
                 os.symlink(source_nohrsc_file,
                            dest_nohrsc_file)
-            else:
-                print("WARNING: "+source_nohrsc_file+" "
-                       +"DOES NOT EXIST")
 
 print("END: "+os.path.basename(__file__))
