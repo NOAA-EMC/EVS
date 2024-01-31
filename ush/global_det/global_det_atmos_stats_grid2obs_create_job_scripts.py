@@ -1093,21 +1093,23 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                         'P300', 'P250', 'P200', 'P150', 'P100',
                                         'P50', 'P20', 'P10', 'P5', 'P1'
                                     ]
-                            mod_full_fhr_list = (
-                                job_env_dict['fhr_list']\
-                                .replace("'",'').split(', ')
-                            )
                             mod_lefhr_list = []
                             mod_gtfhr_list = []
-                            for fhr_chk in mod_full_fhr_list:
-                                if int(fhr_chk) <= mod_fhr_thresh:
-                                    if int(fhr_chk) == 0 \
-                                            and job_env_dict['MODEL'] == 'jma':
-                                        run_jma_fhr000 = True
+                            if job_env_dict['fhr_list'] != "''":
+                                mod_full_fhr_list = (
+                                    job_env_dict['fhr_list']\
+                                    .replace("'",'').split(', ')
+                                )
+                                for fhr_chk in mod_full_fhr_list:
+                                    if int(fhr_chk) <= mod_fhr_thresh:
+                                        if int(fhr_chk) == 0 \
+                                                and job_env_dict['MODEL'] \
+                                                == 'jma':
+                                            run_jma_fhr000 = True
+                                        else:
+                                            mod_lefhr_list.append(fhr_chk)
                                     else:
-                                        mod_lefhr_list.append(fhr_chk)
-                                else:
-                                    mod_gtfhr_list.append(fhr_chk)
+                                        mod_gtfhr_list.append(fhr_chk)
                             # UKMET has no RH past 120
                             if job_env_dict['MODEL'] == 'ukmet' \
                                     and verif_type_job == 'RelHum':

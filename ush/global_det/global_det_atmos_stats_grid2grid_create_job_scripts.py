@@ -1245,17 +1245,18 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     mod_rm_gtfhr_level_list = [
                                         'P500', 'P250'
                                     ]
-                            mod_full_fhr_list = (
-                                job_env_dict['fhr_list']\
-                                .replace("'",'').split(', ')
-                            )
                             mod_lefhr_list = []
                             mod_gtfhr_list = []
-                            for fhr_chk in mod_full_fhr_list:
-                                if int(fhr_chk) <= mod_fhr_thresh:
-                                    mod_lefhr_list.append(fhr_chk)
-                                else:
-                                    mod_gtfhr_list.append(fhr_chk)
+                            if job_env_dict['fhr_list'] != "''":
+                                mod_full_fhr_list = (
+                                    job_env_dict['fhr_list']\
+                                    .replace("'",'').split(', ')
+                                )
+                                for fhr_chk in mod_full_fhr_list:
+                                    if int(fhr_chk) <= mod_fhr_thresh:
+                                        mod_lefhr_list.append(fhr_chk)
+                                    else:
+                                        mod_gtfhr_list.append(fhr_chk)
                             for runN in ['run1', 'run2']:
                                 if runN == 'run1':
                                     mod_runN_fhr_list =  mod_lefhr_list
