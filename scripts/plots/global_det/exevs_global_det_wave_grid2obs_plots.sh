@@ -41,7 +41,12 @@ while (( ${theDate} <= ${VDATE_END} )); do
         if [[ -s $input_stats_file ]]; then
             cpreq -v $input_stats_file $tmp_stats_file
         else
-            echo "WARNING: DOES NOT EXIST $input_stats_file"
+            if [[ $input_stats_file == *"/com/"* ]] || [[ $input_stats_file == *"/dcom/"* ]]; then
+                alert_word="WARNING"
+            else
+                alert_word="NOTE"
+            fi
+            echo "${alert_word}: $input_stats_file does not exist"
         fi
         theDate=$($NDATE +24 ${theDate}${vhr} | cut -c 1-8)
     done

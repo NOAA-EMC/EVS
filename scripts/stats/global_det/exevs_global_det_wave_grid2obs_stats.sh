@@ -54,6 +54,11 @@ echo 'Creating NDBC ascii2nc files'
 input_ascii2nc_ndbc_path=$COMIN/prep/${COMPONENT}/wave.${VDATE}/ndbc
 tmp_ascii2nc_ndbc_file=${DATA}/ncfiles/ndbc.${VDATE}.nc
 output_ascii2nc_ndbc_file=$COMOUTndbc/ndbc.${VDATE}.nc
+if [[ $input_ascii2nc_ndbc_path == *"/com/"* ]] || [[ $input_ascii2nc_ndbc_path == *"/dcom/"* ]]; then
+    alert_word="WARNING"
+else
+￼   alert_word="NOTE"
+fi
 if [[ -s $output_ascii2nc_ndbc_file ]]; then
     cpreq -v $output_ascii2nc_ndbc_file $tmp_ascii2nc_ndbc_file
 else
@@ -69,6 +74,8 @@ else
         fi
         chmod +x ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh" >> $poe_script
+    else
+￼       echo "${alert_word}: No files in $input_ascii2nc_ndbc_path"
     fi
 fi
 echo ' '
@@ -84,7 +91,12 @@ for valid_hour in ${valid_hours} ; do
         chgrp rstprod $tmp_pb2nc_prepbufrgdas_file
     else
         if [ ! -s $input_pb2nc_prepbufrgdas_file ] ; then
-            echo "WARNING: No GDAS Prepbufr files was available for valid date ${VDATE}${valid_hour} : $input_pb2nc_prepbufrgdas_file"
+            if [[ $input_pb2nc_prepbufrgdas_file == *"/com/"* ]] || [[ $input_pb2nc_prepbufrgdas_file == *"/dcom/"* ]]; then
+                alert_word="WARNING"
+            else
+                alert_word="NOTE"
+            fi
+            echo "${alert_word}: $input_pb2nc_prepbufrgdas_file does not exist"
             if [ $SENDMAIL = YES ] ; then
                 export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
                 echo "Warning: No GDAS Prepbufr was available for valid date ${VDATE}${valid_hour}" > mailmsg
@@ -134,14 +146,14 @@ echo " Found ${DATA}/ncfiles/gdas.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} GDAS pb2nc files for valid date ${VDATE}"
 else
-    echo "WARNING : NO GDAS netcdf FILES for valid date ${VDATE} in ${DATA}/ncfiles"
+    echo "NOTE: No GDAS netcdf files for valid date ${VDATE} in ${DATA}/ncfiles"
 fi
 nc=`ls ${DATA}/ncfiles/ndbc.${VDATE}*.nc | wc -l | awk '{print $1}'`
 echo " Found ${DATA}/ncfiles/ndbc.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} NDBC ascii2nc files for valid date ${VDATE}"
 else
-    echo "WARNING : NO NDBC netcdf FILES for valid date ${VDATE} in ${DATA}/ncfiles"
+    echo "NOTE: No NDBC netcdf files for valid date ${VDATE} in ${DATA}/ncfiles"
 fi
 
 ############################################
@@ -185,7 +197,12 @@ for valid_hour in ${valid_hours} ; do
                 cpreq -v $input_model_file $tmp_model_file
             fi
         else
-            echo "WARNING: DOES NOT EXIST $input_model_file"
+            if [[ $input_model_file == *"/com/"* ]] || [[ $input_model_file == *"/dcom/"* ]]; then
+                alert_word="WARNING"
+            else
+                alert_word="NOTE"
+            fi
+            echo "${alert_word}: $input_model_file does not exist"
         fi
         if [[ -s $tmp_model_file ]]; then
             for OBSNAME in GDAS NDBC; do
@@ -249,7 +266,7 @@ if [ "${nc}" != '0' ]; then
     run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/StatAnalysis_fcstGLOBAL_DET.conf
     export err=$?; err_chk
 else
-    echo "WARNING : NO SMALL STAT FILES found for valid date ${VDATE} in ${DATA}/all_stats/*stat"
+    echo "WARNING: No small stat files found in ${DATA}/all_stats/*stat"
 fi
 # check to see if the large stat file was made, copy it to $COMOUTfinal
 nc=$(ls ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat | wc -l | awk '{print $1}')
@@ -260,7 +277,7 @@ if [ "${nc}" != '0' ]; then
         cpreq -v ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
     fi
 else
-    echo "WARNING: NO LARGE STAT FILE found for valid date ${VDATE} : ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+    echo "WARNING: No large stat file found at ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
 fi
 
 # Cat the METplus log files
