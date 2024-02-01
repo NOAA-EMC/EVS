@@ -638,6 +638,27 @@ generate_stats_jobs_dict = {
                                                        +'obsGFS_Weeks3_4AvgAnom'
                                                        +'.conf'
                                                    )]},
+        'WeeklyAvg_GeoHeight': {'env': {'var1_name': 'HGT',
+                                        'var1_levels': 'P500'},
+                                'commands': [sub_util.metplus_command(
+                                                 'GridStat_fcstSUBSEASONAL_'
+                                                 +'obsGFS_climoERA5_WeeklyAvg'
+                                                 +'.conf'
+                                             )]},
+        'Days6_10Avg_GeoHeight': {'env': {'var1_name': 'HGT',
+                                          'var1_levels': 'P500'},
+                                  'commands': [sub_util.metplus_command(
+                                                   'GridStat_fcstSUBSEASONAL_'
+                                                   +'obsGFS_climoERA5_'
+                                                   +'Days6_10Avg.conf'
+                                               )]},
+        'Weeks3_4Avg_GeoHeight': {'env': {'var1_name': 'HGT',
+                                          'var1_levels': 'P500'},
+                                  'commands': [sub_util.metplus_command(
+                                                   'GridStat_fcstSUBSEASONAL_'
+                                                   +'obsGFS_climoERA5_'
+                                                   +'Weeks3_4Avg.conf'
+                                               )]},
     },
     'seaice': {
         'WeeklyAvg_Concentration': {'env': {},
@@ -766,14 +787,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     if JOB_GROUP == 'assemble_data':
                         check_truth_files = False
                     elif JOB_GROUP == 'generate_stats':
-                        if verif_type in ['pres_lvls', 'anom'] \
-                                and verif_type_job in [
-                                    'WeeklyAvg_GeoHeightAnom',
-                                    'Days6_10Avg_GeoHeightAnom',
-                                    'Weeks3_4Avg_GeoHeightAnom',
-                                    'WeeklyAvg_TempAnom2m',
-                                    'Days6_10Avg_TempAnom2m',
-                                    'Weeks3_4Avg_TempAnom2m']:
+                        if verif_type in ['pres_lvls', 'anom']:
                             check_truth_files = False
                         else:
                             check_truth_files = True
