@@ -1,10 +1,10 @@
-#PBS -N jevs_global_det_atmos_grid2grid_means_plots_31days_00
+#PBS -N jevs_global_det_atmos_grid2grid_sea_ice_plots_last31days_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:20:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter,select=1:ncpus=22:ompthreads=1:mem=25GB
 #PBS -l debug=true
 #PBS -V
 
@@ -18,7 +18,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=NO
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2grid_means_plots_31days}
+export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2grid_sea_ice_plots_last31days}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -32,7 +32,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export machine=WCOSS2
 export USE_CFP=YES
-export nproc=128
+export nproc=22
 
 export envir=prod
 export NET=evs
@@ -40,7 +40,7 @@ export STEP=plots
 export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2grid
-export VERIF_TYPE=means
+export VERIF_TYPE=sea_ice
 export NDAYS=31
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
@@ -59,5 +59,5 @@ $HOMEevs/jobs/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-grid means for last 31 days
+#          atmospheric grid-to-grid sea_ice for last 31 days
 ######################################################################

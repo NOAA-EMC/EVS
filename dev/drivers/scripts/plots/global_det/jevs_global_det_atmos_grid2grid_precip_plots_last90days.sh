@@ -1,9 +1,9 @@
-#PBS -N jevs_global_det_atmos_grid2obs_ptype_plots_31days_00
+#PBS -N jevs_global_det_atmos_grid2grid_precip_plots_last90days_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
+#PBS -l walltime=01:15:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
@@ -18,7 +18,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=NO
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2obs_ptype_plots_31days}
+export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2grid_precip_plots_last90days}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -39,9 +39,9 @@ export NET=evs
 export STEP=plots
 export COMPONENT=global_det
 export RUN=atmos
-export VERIF_CASE=grid2obs
-export VERIF_TYPE=ptype
-export NDAYS=31
+export VERIF_CASE=grid2grid
+export VERIF_TYPE=precip
+export NDAYS=90
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
@@ -59,5 +59,5 @@ $HOMEevs/jobs/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-observations ptype for last 31 days
+#          atmospheric grid-to-grid precip for last 90 days
 ######################################################################
