@@ -478,10 +478,15 @@ if [ $modnam = gefs_apcp24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
         typeset -a lead_arr
         for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         if [ -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then 	
+         #if [ -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+          if [ -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2 -a\
+               -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f$((lead_chk-6)).grib2 -a\
+               -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f$((lead_chk-12)).grib2 -a\
+               -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f$((lead_chk-18)).grib2 ] ; then	
             lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-            echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+            #echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+            echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f*.grib2 does not exist"
 	 fi
         done
         lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
