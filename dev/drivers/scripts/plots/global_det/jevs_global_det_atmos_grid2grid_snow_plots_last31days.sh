@@ -52,7 +52,6 @@ export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN.$V
 
 # Set config file
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
-echo $config
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_GLOBAL_DET_PLOTS
