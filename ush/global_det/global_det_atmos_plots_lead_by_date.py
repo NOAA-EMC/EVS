@@ -12,7 +12,6 @@ import os
 import logging
 import datetime
 import glob
-import subprocess
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
 #pd.plotting.register_matplotlib_converters()

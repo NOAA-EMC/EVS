@@ -11,7 +11,6 @@ import sys
 import logging
 import datetime
 import glob
-import subprocess
 import itertools
 import shutil
 import dateutil

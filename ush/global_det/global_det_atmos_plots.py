@@ -13,7 +13,6 @@ import sys
 import logging
 import datetime
 import glob
-import subprocess
 import itertools
 import shutil
 import global_det_atmos_util as gda_util
