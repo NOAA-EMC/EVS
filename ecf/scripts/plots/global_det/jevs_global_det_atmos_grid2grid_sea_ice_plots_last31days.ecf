@@ -1,10 +1,10 @@
-#PBS -N evs_global_det_wave_grid2obs_plots_31days
+#PBS -N evs_global_det_atmos_grid2grid_sea_ice_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=01:00:00
-#PBS -l place=vscatter,select=1:ncpus=15:mem=35GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter,select=1:ncpus=22:ompthreads=1:mem=25GB
 #PBS -l debug=true
 
 export model=evs
@@ -45,12 +45,14 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=15
+export nproc=22
 export USE_CFP=YES
 export NET=evs
-export RUN=wave
-export VERIF_CASE=grid2obs
+export RUN=atmos
+export VERIF_CASE=grid2grid
+export VERIF_TYPE=sea_ice
 export NDAYS=31
+export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
 
 ############################################################
 # Execute j-job

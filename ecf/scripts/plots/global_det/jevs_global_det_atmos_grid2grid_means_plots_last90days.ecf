@@ -1,4 +1,4 @@
-#PBS -N evs_global_det_atmos_grid2grid_pres_levs_plots_31days
+#PBS -N evs_global_det_atmos_grid2grid_means_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -50,8 +50,8 @@ export USE_CFP=YES
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2grid
-export VERIF_TYPE=pres_levs
-export NDAYS=31
+export VERIF_TYPE=means
+export NDAYS=90
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
 
 ############################################################

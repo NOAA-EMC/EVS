@@ -1,9 +1,9 @@
-#PBS -N evs_global_det_atmos_grid2grid_snow_plots_90days
+#PBS -N evs_global_det_atmos_grid2grid_precip_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:45:00
+#PBS -l walltime=01:15:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
 
@@ -50,7 +50,7 @@ export USE_CFP=YES
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2grid
-export VERIF_TYPE=snow
+export VERIF_TYPE=precip
 export NDAYS=90
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
 
