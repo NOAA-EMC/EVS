@@ -309,7 +309,7 @@ else:
     headline3_valid_hr = '00'
     headline3_model_group_dict = {'all_models': ['gfs', 'ecmwf', 'cmc',
                                                  'fnmoc', 'ukmet', 'cfs'],
-                                  'gfs_ecmwf': ['ecmwf', 'gfs']}
+                                  'gfs_ecmwf': ['gfs', 'ecmwf']}
     headline3_start_YYYY = '1984'
     headline3_end_YYYY = str(int(VDATE_END_dt.strftime('%Y'))-1)
     headline3_all_dt_list = list(
