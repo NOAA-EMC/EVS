@@ -203,11 +203,11 @@ def convert_grib1_grib2(grib1_file, grib2_file):
                           file (string)
          Returns:
     """
-    print("Converting GRIB1 file "+grib1_file+" "
-          +"to GRIB2 file "+grib2_file)
+    print(f"Converting GRIB1 file {grib1_file} to GRIB2 file {grib2_file}")
     cnvgrib = os.environ['CNVGRIB']
-    os.system(cnvgrib+' -g12 '+grib1_file+' '
-              +grib2_file+' > /dev/null 2>&1')
+    run_shell_command(
+        [cnvgrib, '-g12', grib1_file, grib2_file, '>', '/dev/null', '2>&1']
+    )
 
 def convert_grib2_grib1(grib2_file, grib1_file):
     """! Converts GRIB2 data to GRIB1
@@ -221,11 +221,11 @@ def convert_grib2_grib1(grib2_file, grib1_file):
                           file
          Returns:
     """
-    print("Converting GRIB2 file "+grib2_file+" "
-          +"to GRIB1 file "+grib1_file)
+    print(f"Converting GRIB2 file {grib2_file} to GRIB1 file {grib1_file}")
     cnvgrib = os.environ['CNVGRIB']
-    os.system(cnvgrib+' -g21 '+grib2_file+' '
-              +grib1_file+' > /dev/null 2>&1')
+    run_shell_command(
+        [cnvgrib, '-g21', grib2_file, grib1_file, '>', '/dev/null', '2>&1']
+    )
 
 def convert_grib2_grib2(grib2_fileA, grib2_fileB):
     """! Converts GRIB2 data to GRIB2
@@ -239,11 +239,11 @@ def convert_grib2_grib2(grib2_fileA, grib2_fileB):
                            file
          Returns:
     """
-    print("Converting GRIB2 file "+grib2_fileA+" "
-          +"to GRIB2 file "+grib2_fileB)
+    print(f"Converting GRIB2 file {grib2_fileA} to GRIB2 file {grib2_fileB}")
     cnvgrib = os.environ['CNVGRIB']
-    os.system(cnvgrib+' -g22 '+grib2_fileA+' '
-              +grib2_fileB+' > /dev/null 2>&1')
+    run_shell_command(
+        [cnvgrib, '-g22', grib2_fileA, grib2_fileB, '>', '/dev/null', '2>&1']
+    )
 
 def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
                   fhr_list):
@@ -2039,31 +2039,36 @@ def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
     walltime = (datetime.datetime.min
                 + datetime.timedelta(minutes=int(walltime))).time()
     # Submit job
-    print("Submitting "+job_file+" to "+queue)
-    print("Output sent to "+job_output)
+    print(f"Submitting {job_file} to {queue}")
+    print(f"Output sent to {job_output}")
     os.chmod(job_file, 0o755)
     if machine == 'WCOSS2':
-        os.system('qsub -V -l walltime='+walltime.strftime('%H:%M:%S')+' '
-                  +'-q '+queue+' -A '+account+' -o '+job_output+' '
-                  +'-e '+job_output+' -N '+job_name+' '
-                  +'-l select=1:ncpus=1 '+job_file)
-        job_check_cmd = ('qselect -s QR -u '+user+' '+'-N '
-                         +job_name+' | wc -l')
+        job_submit_cmd = (
+            f"qsub -V -l walltime={walltime:%H:%M:%S} -q {queue} -A {account} "
+            +f"-o {job_output} -e {job_output} -N {job_name} "
+            +f"-l select=1:ncpus=1 {job_file}"
+        )
+        job_check_cmd = (
+            f"qselect -s QR -u {user} -N {job_name} | wc -l"
+        )
     elif machine in ['HERA', 'ORION', 'S4', 'JET']:
-        os.system('sbatch --ntasks=1 --time='
-                  +walltime.strftime('%H:%M:%S')+' --partition='+queue+' '
-                  +'--account='+account+' --output='+job_output+' '
-                  +'--job-name='+job_name+' '+job_file)
-        job_check_cmd = ('squeue -u '+user+' -n '+job_name+' '
-                         +'-t R,PD -h | wc -l')
+        job_submit_cmd = (
+            f"sbatch --ntasks=1 --time={walltime:%H:%M:%S} "
+            +f"--partition={queue} --account={account} --output={job_output} "
+            +f"--job-name={job_name} {job_file}"
+        )
+        job_check_cmd = (
+            f"squeue -u {user} -n {job_name} -t R,PD -h | wc -l"
+        )
+    job_submit = subprocess.run(job_submit_cmd, shell=True)
     sleep_counter, sleep_checker = 1, 10
     while (sleep_counter*sleep_checker) <= walltime_seconds:
         sleep(sleep_checker)
-        print("Walltime checker: "+str(sleep_counter*sleep_checker)+" "
-              +"out of "+str(int(walltime_seconds))+" seconds")
-        check_job = subprocess.check_output(job_check_cmd, shell=True,
-                                            encoding='UTF-8')
-        if check_job[0] == '0':
+        print(f"Walltime checker: {str(sleep_counter*sleep_checker)} "
+              +f"out of {str(int(walltime_seconds))} seconds")
+        job_check = subprocess.run(job_check_cmd, shell=True,
+                                   capture_output=True, encoding="utf8")
+        if job_check.stdout[0] == '0':
             break
         sleep_counter+=1
 
@@ -2552,13 +2557,12 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
             )
             for model_stat_file in model_stat_files:
                 logger.debug(f"Getting data from {model_stat_file}")
-                ps = subprocess.Popen(
+                grep = subprocess.run(
                     'grep -R "'+model+' " '+model_stat_file+grep_opts,
-                    shell=True, stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT, encoding='UTF-8'
+                    shell=True, capture_output=True, encoding="utf8"
                 )
-                logger.debug(f"Ran {ps.args}")
-                all_grep_output = all_grep_output+ps.communicate()[0]
+                logger.debug(f"Ran {grep.args}")
+                all_grep_output = all_grep_output+grep.stdout
             logger.debug(f"Condensed {model} .stat file at "
                          +f"{output_file}")
             with open(output_file, 'w') as f:
