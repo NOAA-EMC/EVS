@@ -33,8 +33,12 @@ if ([ ! -d  $mask_day1 ] || (! ls $mask_day1/spc_otlk.day1_*G227.nc 1> /dev/null
     echo "Job ID: $jobid" >> mailmsg
     cat mailmsg | mail -s "$subject" $MAILTO
     export err=$?; err_chk
-    exit
+  else
+    echo "WARNING:  No SPC outlook mask files available for ${VDATE}."
+    echo "Missing mask files are $mask_day1/spc_otlk.day1_*G227.nc , $mask_day2/spc_otlk.day2_*G227.nc and $mask_day3/spc_otlk.day3_*G227.nc"
+    echo "This will occur if no outlooks were issued on ${VDATE}."
   fi
+  exit
 fi
 
 
