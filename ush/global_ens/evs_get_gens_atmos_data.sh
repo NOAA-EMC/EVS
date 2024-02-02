@@ -551,10 +551,31 @@ if [ $modnam = cmce_apcp24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
          typeset -a lead_arr
          for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-           if [ -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2 ] ; then
-             lead_arr[${#lead_arr[*]}+1]=${lead_chk}
+           file1=cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2
+           echo $file1
+           if [ $lead_chk -ge 108 ]; then
+             file2=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((lead_chk-6))).grib2
+             file3=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((lead_chk-12))).grib2
+             file4=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((lead_chk-18))).grib2
+             echo "file2: $file2"
+             echo "file3: $file3"
+             echo "file4: $file4"
            else
-             echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2 does not exist"
+             strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+             file2=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((strip_lead_chk-6))).grib2
+             file3=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((strip_lead_chk-12))).grib2
+             file4=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((strip_lead_chk-18))).grib2
+             echo "file2: $file2"
+             echo "file3: $file3"
+             echo "file4: $file4"
+          fi 
+          if [ -s $COMOUTcmce/$file1 -a\
+               -s $COMOUTcmce/$file2 -a\
+               -s $COMOUTcmce/$file3 -a\
+               -s $COMOUTcmce/$file4 ] ; then
+             lead_arr[${#lead_arr[*]}+1]=${lead_chk}
+          else
+             echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f*.grib2 does not exist"
 	   fi
          done
          lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
@@ -578,10 +599,20 @@ if [ $modnam = ecme_apcp24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40  41 42 43 44 45 46 47 48 49 50  ; do
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
-         if [ -s $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 ] ; then 
+         file1=ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1
+         echo $file1
+         if [ $lead_chk -ge 108 ]; then
+           file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((lead_chk-24))).grib1
+           echo "file2: $file2"
+         else
+           strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+           file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((strip_lead_chk-24))).grib1
+           echo "file2: $file2"
+         fi
+         if [ -s $COMOUTecme/$file1 -a -s $COMOUTecme/$file2 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk} 
          else
-           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 does not exist"
+           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f*.grib1 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
@@ -628,10 +659,20 @@ if [ $modnam = gefs_snow24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+         file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
+         echo $file1
+         if [ $lead_chk -ge 108 ]; then
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-24))).grib2
+             echo "file2: $file2"
+         else
+             strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-24))).grib2
+             echo "file2: $file2"
+         fi              
+         if [ -s $COMOUTgefs/$file1 -a -s $COMOUTgefs/$file2 ] ; then    
              lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
@@ -659,10 +700,20 @@ if [ $modnam = cmce_snow24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         if [  -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+         file1=cmce.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
+         echo $file1
+         if [ $lead_chk -ge 108 ]; then
+           file2=cmce.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-24))).grib2
+           echo "file2: $file2"
+         else
+           strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+           file2=cmce.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-24))).grib2
+           echo "file2: $file2"
+         fi
+         if [ -s $COMOUTcmce/$file1 -a -s $COMOUTcmce/$file2 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-           echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+           echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
@@ -689,10 +740,20 @@ if [ $modnam = ecme_snow24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
-         if [  -s $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 ] ; then
+         file1=ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1
+         echo $file1
+         if [ $lead_chk -ge 108 ]; then
+           file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((lead_chk-24))).grib1
+           echo "file2: $file2"
+         else
+           strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+           file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((strip_lead_chk-24))).grib1
+           echo "file2: $file2" 
+         fi
+         if [ -s $COMOUTecme/$file1 -a -s $COMOUTecme/$file2 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 does not exist"
+           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f*.grib1 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
@@ -777,10 +838,31 @@ if [ $modnam = gefs_icec24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
        typeset -a lead_arr
        for lead_chk in 024 048 072 096 120 144 168 192 216 240 264 288 312 336 360 384; do
-         if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+         file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
+         echo $file1
+         if [ $lead_chk -ge 108 ]; then
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-18))).grib2
+             echo "file2: $file2"
+             echo "file3: $file3"
+             echo "file4: $file4"
+         else
+             strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-18))).grib2
+             echo "file2: $file2"
+             echo "file3: $file3"
+             echo "file4: $file4"
+         fi
+         if [ -s $COMOUTgefs/$file1 -a\
+              -s $COMOUTgefs/$file2 -a\
+              -s $COMOUTgefs/$file3 -a\
+              -s $COMOUTgefs/$file4 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-           echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+           echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
@@ -837,10 +919,31 @@ if [ $modnam = gefs_sst24h ] ; then
          fi
          typeset -a lead_arr
          for lead_chk in $leads; do
-           if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+           file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
+           echo $file1
+           if [ $lead_chk -ge 108 ]; then
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-18))).grib2
+             echo "file2: $file2"
+             echo "file3: $file3"
+             echo "file4: $file4"
+           else
+             strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-18))).grib2
+             echo "file2: $file2"
+             echo "file3: $file3"
+             echo "file4: $file4"
+           fi
+           if [ -s $COMOUTgefs/$file1 -a\
+                -s $COMOUTgefs/$file2 -a\
+                -s $COMOUTgefs/$file3 -a\
+                -s $COMOUTgefs/$file4 ] ; then
              lead_arr[${#lead_arr[*]}+1]=${lead_chk}
            else
-             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
 	   fi
          done
          lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
