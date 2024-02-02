@@ -60,7 +60,7 @@ else
 ￼   alert_word="NOTE"
 fi
 if [[ -s $output_ascii2nc_ndbc_file ]]; then
-    cpreq -v $output_ascii2nc_ndbc_file $tmp_ascii2nc_ndbc_file
+    cp -v $output_ascii2nc_ndbc_file $tmp_ascii2nc_ndbc_file
 else
     nbdc_txt_ncount=$(ls -l ${input_ascii2nc_ndbc_path}/*.txt |wc -l)
     if [[ $nbdc_txt_ncount -ne 0 ]]; then
@@ -70,7 +70,7 @@ else
         echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         if [ $SENDCOM = YES ]; then
-            echo "cpreq -v $tmp_ascii2nc_ndbc_file $output_ascii2nc_ndbc_file" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+            echo "if [ -f $tmp_ascii2nc_ndbc_file ]; then cp -v $tmp_ascii2nc_ndbc_file $output_ascii2nc_ndbc_file; fi" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         fi
         chmod +x ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh" >> $poe_script
@@ -86,7 +86,7 @@ for valid_hour in ${valid_hours} ; do
     tmp_pb2nc_prepbufrgdas_file=${DATA}/ncfiles/gdas.${VDATE}${valid_hour2}.nc
     output_pb2nc_prepbufrgdas_file=$COMOUTprepbufr/gdas.${VDATE}${valid_hour2}.nc
     if [[ -s $output_pb2nc_prepbufrgdas_file ]]; then
-        cpreq -v $output_pb2nc_prepbufrgdas_file $tmp_pb2nc_prepbufrgdas_file
+        cp -v $output_pb2nc_prepbufrgdas_file $tmp_pb2nc_prepbufrgdas_file
         chmod 640 $tmp_pb2nc_prepbufrgdas_file
         chgrp rstprod $tmp_pb2nc_prepbufrgdas_file
     else
@@ -113,7 +113,7 @@ for valid_hour in ${valid_hours} ; do
             echo "chmod 640 $tmp_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
             echo "chgrp rstprod $tmp_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
             if [ $SENDCOM = YES ]; then
-                echo "cpreq -v $tmp_pb2nc_prepbufrgdas_file $output_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
+                echo "if [ -f $tmp_pb2nc_prepbufrgdas_file ]; then cp -v $tmp_pb2nc_prepbufrgdas_file $output_pb2nc_prepbufrgdas_file; fi" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
                 echo "chmod 640 $output_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
                 echo "chgrp rstprod $output_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
             fi
@@ -194,7 +194,7 @@ for valid_hour in ${valid_hours} ; do
         tmp_model_file=$DATA/gribs/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
         if [[ -s $input_model_file ]]; then
             if [[ ! -s $tmp_model_file ]]; then
-                cpreq -v $input_model_file $tmp_model_file
+                cp -v $input_model_file $tmp_model_file
             fi
         else
             if [[ $input_model_file == *"/com/"* ]] || [[ $input_model_file == *"/dcom/"* ]]; then
@@ -214,7 +214,7 @@ for valid_hour in ${valid_hours} ; do
                 tmp_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
                 output_stat_file=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
                 if [[ -s $output_stat_file ]]; then
-                    cpreq -v $output_stat_file $tmp_stat_file
+                    cp -v $output_stat_file $tmp_stat_file
                 else
                     if [[ -s $tmp_OBSNAME_file ]]; then
                         echo "#!/bin/bash" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
@@ -228,7 +228,7 @@ for valid_hour in ${valid_hours} ; do
                         echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PointStat_fcstGLOBAL_DET_obs${OBSNAME}_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         if [ $SENDCOM = YES ]; then
-                            echo "cpreq -v $tmp_stat_file $output_stat_file" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "if [ -f $tmp_stat_file ]; then cp -v $tmp_stat_file $output_stat_file; fi" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         fi
                         chmod +x ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh" >> $poe_script
@@ -274,7 +274,9 @@ echo " Found ${nc} large stat file for valid date ${VDATE} "
 if [ "${nc}" != '0' ]; then
     echo "Large stat file found for ${VDATE}"
     if [ $SENDCOM = YES ]; then
-        cpreq -v ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+        if [ -f ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+            cp -v ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+        fi
     fi
 else
     echo "WARNING: No large stat file found at ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"

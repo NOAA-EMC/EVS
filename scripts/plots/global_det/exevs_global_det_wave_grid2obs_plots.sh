@@ -39,7 +39,7 @@ while (( ${theDate} <= ${VDATE_END} )); do
         input_stats_file=${COMIN}/stats/${COMPONENT}/${MODEL}.${theDate}/evs.stats.${MODEL}.${RUN}.${VERIF_CASE}.v${theDate}.stat
         tmp_stats_file=${DATA}/stats/evs.stats.${MODEL}.${RUN}.${VERIF_CASE}.v${theDate}.stat
         if [[ -s $input_stats_file ]]; then
-            cpreq -v $input_stats_file $tmp_stats_file
+            cp -v $input_stats_file $tmp_stats_file
         else
             if [[ $input_stats_file == *"/com/"* ]] || [[ $input_stats_file == *"/dcom/"* ]]; then
                 alert_word="WARNING"
@@ -119,7 +119,9 @@ if [ "${nc}" != '0' ]; then
     cd ${DATA}/images
     tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar *.png
     if [ $SENDCOM = YES ]; then
-        cpreq -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar ${COMOUT}/.
+        if [ -f evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar ]; then
+            cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar ${COMOUT}/.
+        fi
     fi
     if [ $SENDDBN = YES ]; then
         $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar
