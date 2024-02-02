@@ -1090,7 +1090,7 @@ def check_model_files(job_dict):
     fhr_list = []
     fhr_check_input_dict = {}
     fhr_check_output_dict = {}
-    job_dict_fhr_list = job_dict['fhr_list'].replace("'",'').split(', ')
+    job_dict_fhr_list = job_dict['fhr_list'].split(', ')
     for fhr in [int(i) for i in job_dict_fhr_list]:
         fhr_check_input_dict[str(fhr)] = {}
         fhr_check_output_dict[str(fhr)] = {}
@@ -2129,10 +2129,7 @@ def initalize_job_env_dict(verif_type, group,
                 int(os.environ[verif_case_step_abbrev_type+'_fhr_inc'])
             )
             fhr_list = [str(i) for i in fhr_range]
-        if group in ['filter_stats', 'make_plots']:
-            job_env_dict['fhr_list'] = ', '.join(fhr_list)
-        else:
-            job_env_dict['fhr_list'] = "'"+', '.join(fhr_list)+"'"
+        job_env_dict['fhr_list'] = ', '.join(fhr_list)
         if verif_type in ['pres_levs', 'means', 'sfc', 'ptype']:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
