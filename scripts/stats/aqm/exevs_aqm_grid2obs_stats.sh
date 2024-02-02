@@ -16,6 +16,7 @@
 ##   12/27/2023   Ho-Chun Huang  Select the lead hours input to the METPlus only when
 ##                               model output daily fcst files existed.
 ##   01/05/2024   Ho-Chun Huang  modify for AQMv6 verification
+##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
@@ -169,7 +170,7 @@ for outtyp in awpozcon pm25; do
       cpdir=${DATA}/point_stat/${MODELNAME}
       if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-        if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
       fi
     fi
     if [ "${vhr}" == "23" ]; then
@@ -182,7 +183,7 @@ for outtyp in awpozcon pm25; do
         export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
           cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_${stat_output_index}.v${VDATE}.stat
-          if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+          if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
         fi
       fi
     fi
@@ -280,7 +281,7 @@ if [ ${vhr} = 11 ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
       if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-        if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
       fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
@@ -290,7 +291,7 @@ if [ ${vhr} = 11 ]; then
       export err=$?; err_chk
       if [ ${SENDCOM} = "YES" ]; then
         cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat
-        if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+        if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
       fi
     fi
   done  ## biastyp loop
@@ -372,7 +373,7 @@ if [ ${vhr} = 04 ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
       if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-        if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
       fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
@@ -382,7 +383,7 @@ if [ ${vhr} = 04 ]; then
       export err=$?; err_chk
       if [ ${SENDCOM} = "YES" ]; then
         cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat
-        if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+        if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
       fi
     fi
   done  ## biastyp loop
