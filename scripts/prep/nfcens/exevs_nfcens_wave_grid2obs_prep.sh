@@ -92,7 +92,7 @@ for HH in 00 06 12 18 ; do
 
   export inithour=t${HH}z
   if [ ! -s ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr ]; then
-	  if [ $SENDMAIL =YES ];then
+	  if [ $SENDMAIL = YES ];then
 		  export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
 		  echo "WARNING: No GDAS Prepbufr was available for init date ${INITDATE}${HH}" > mailmsg
 		  echo "WARNING: Missing file is ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
