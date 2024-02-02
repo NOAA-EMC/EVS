@@ -72,11 +72,14 @@ while valid_date_dt <= ENDDATE_dt:
             input_cicep_file_format, valid_date_dt, init_date_dt, str(fhr), {}
         )
         all_input_ptype_files_exist = True
+        missing_input_ptype_file_list = []
         for input_ptype_file in [input_crain_file, input_csnow_file,
                                  input_cfrzr_file, input_cicep_file]:
-            if not os.path.exists(input_ptype_file):
-                print(f"WARNING: {input_ptype_file} does not exist")
+            if not gda_util.check_file_exists_size(input_ptype_file):
                 all_input_ptype_files_exist = False
+                missing_input_ptype_file_list.append(
+                    input_ptype_file
+                )
         output_DATA_merged_ptype_file = os.path.join(
             DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
             RUN+'.'+valid_date_dt.strftime('%Y%m%d'), MODEL, VERIF_CASE,
@@ -111,6 +114,10 @@ while valid_date_dt <= ENDDATE_dt:
                                            output_COMOUT_merged_ptype_file)
             else:
                 make_merged_ptype_output_file = False
+                print("WARNING: Cannot make merged ptype file "
+                      +f"{output_DATA_merged_ptype_file} - "
+                      +"missing one of the input files "
+                      +f"{', '.join(missing_input_ptype_file_list)}")
         if make_merged_ptype_output_file:
             print(f"\nInput CRAIN File: {input_crain_file}")
             print(f"Input CSNOW File: {input_csnow_file}")

@@ -12,7 +12,7 @@ export machine=${machine:-"WCOSS2"}
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
+export log_metplus=$DATA/logs/GENS_verif_plotting_job
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir

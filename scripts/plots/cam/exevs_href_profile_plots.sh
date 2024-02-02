@@ -11,7 +11,7 @@ export machine=${machine:-"WCOSS2"}
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
+export log_metplus=$DATA/logs/GENS_verif_plotting_job
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
@@ -53,7 +53,6 @@ while [ $n -le $past_days ] ; do
 done 
 
 
-VX_MASK_LIST="CONUS, Alaska, Hawaii, PRico"
 
 export fcst_init_hour="0,6,12,18"
 valid_time='valid00_12z'
@@ -100,6 +99,14 @@ fi
    for lead in $fcst_leads ; do 
 
     export fcst_lead=$lead
+
+    if [[ "$fcst_lead" == "06" ]] || [[ "$fcst_lead" == "18" ]] || [[ "$fcst_lead" == "30" ]] || [[ "$fcst_lead" == "42" ]] ; then
+       VX_MASK_LIST="CONUS, Alaska, PRico"
+    elif [[ "$fcst_lead" == "12" ]] || [[ "$fcst_lead" == "24" ]] || [[ "$fcst_lead" == "36" ]] || [[ "$fcst_lead" == "48" ]] ; then
+       VX_MASK_LIST="CONUS, Hawaii"
+    else
+       VX_MASK_LIST="CONUS, Alaska"
+    fi
 
     for VAR in $VARS ; do 
 

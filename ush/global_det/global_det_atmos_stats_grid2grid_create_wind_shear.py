@@ -68,7 +68,7 @@ while valid_date_dt <= ENDDATE_dt:
         input_file = gda_util.format_filler(
             file_format, valid_date_dt, init_date_dt, str(fhr), {}
         )
-        if os.path.exists(input_file):
+        if gda_util.check_file_exists_size(input_file):
             input_file_data = netcdf.Dataset(input_file)
             input_file_data_var_list = list(input_file_data.variables.keys())
             if all(v in input_file_data_var_list \
@@ -104,13 +104,15 @@ while valid_date_dt <= ENDDATE_dt:
             else:
                 for req_var_level in req_var_level_list:
                     if req_var_level not in input_file_data_var_list:
-                        print(f"WARNING: {input_file} does not contain "
-                              +f"variable {req_var_level} cannot make "
-                              +"wind shear data")
+                        print("WARNING: Cannot make wind shear file "
+                              +f"{output_DATA_file} - {input_file} does "
+                              +f"not contain variable {req_var_level}")
                 make_wind_shear_output_file = False
             input_file_data.close()
         else:
-            print(f"\nWARNING: {input_file} does not exist")
+            print("WARNING: Cannot make wind shear file "
+                  +f"{output_DATA_file} - {input_file} "
+                  +"does not exist")
             make_wind_shear_output_file = False
         if make_wind_shear_output_file:
             print(f"\nInput file: {input_file}")
