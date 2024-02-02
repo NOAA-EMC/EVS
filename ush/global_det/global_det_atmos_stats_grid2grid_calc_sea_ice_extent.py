@@ -14,6 +14,7 @@ from pyproj import Geod
 from pyproj import CRS
 import netCDF4 as netcdf
 import datetime
+import global_det_atmos_util as gda_util
 
 print("Python Script:\t" + repr(sys.argv[0]))
 
@@ -121,7 +122,7 @@ obs_file = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
                         +'DailyAvg_Concentration'+hemisphere.upper()+'_valid'
                         +DATEm1_end_dt.strftime('%Y%m%d%H')
                         +'to'+DATE_end_dt.strftime('%Y%m%d%H')+'.nc')
-if os.path.exists(obs_file):
+if gda_util.check_file_exists_size(obs_file):
     obs = netcdf.Dataset(obs_file, 'r')
     obs_lat_in = obs.variables['lat'][:]
     obs_lon_in = obs.variables['lon'][:]
@@ -154,8 +155,7 @@ if os.path.exists(obs_file):
     )
     OBS = str(obs_extent/1e6)
 else:
-    print("WARNING: "+repr(sys.argv[0])
-          +" -> NO OBSERVATION FILE "+obs_file+", USING NA")
+    print("NOTE: Using NA for obs")
     OBS = 'NA'
 
 # Calculate observation sea-ice extent
@@ -169,7 +169,7 @@ for fcst_lead in fhr_list:
                              +initDATE_dt.strftime('%Y%m%d%H')+'_'
                              +'valid'+DATEm1_end_dt.strftime('%Y%m%d%H')
                              +'to'+DATE_end_dt.strftime('%Y%m%d%H')+'.nc')
-    if os.path.exists(fcst_file):
+    if gda_util.check_file_exists_size(fcst_file):
         fcst = netcdf.Dataset(fcst_file, 'r')
         fcst_lat_in = fcst.variables['lat'][:]
         fcst_lon_in = fcst.variables['lon'][:]
@@ -202,8 +202,7 @@ for fcst_lead in fhr_list:
         )
         FCST = str(fcst_extent/1e6)
     else:
-        print("WARNING: "+repr(sys.argv[0])
-              +" -> NO FORECAST FILE "+fcst_file+", USING NA")
+        print("NOTE: Using NA for forecast")
         FCST = 'NA'
     mpr_data.append(
         [MODEL, DESC, FCST_LEAD, FCST_VALID_BEG, FCST_VALID_END,
