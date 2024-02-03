@@ -136,8 +136,9 @@ while valid_hr <= int(valid_hr_end):
                         if 'CLIMO_MEAN_'+var_level in input_var:
                             climo_var_level = input_var
                         if not climo_var_level in input_file_data_var_list:
-                            print("WARNING: "+input_file+" does not contain "
-                                  +"climo variable to average")
+                            print("WARNING: "+weekly_avg_day_fhr_input_file+" "
+                                  +"does not contain "
+                                  +"CLIMO_MEAN_"+var_level+" to average")
                 if fcst_var_level in input_file_data_var_list:
                     weekly_avg_fcst_sum = (weekly_avg_fcst_sum +
                                           input_file_data.variables[
