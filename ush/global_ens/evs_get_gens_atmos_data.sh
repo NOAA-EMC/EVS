@@ -61,11 +61,19 @@ if [ $modnam = gfsanl ]; then
       $WGRIB2  $GFSf000|grep "VGRD:10 m above ground"|$WGRIB2 -i $GFSf000 -grib $WORK/V10_f000.${ihour}
       cat $WORK/V10_f000.${ihour} >> $WORK/gfsanl.t${ihour}z.grid3.f000.grib2
     fi
-    [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gfsanl.t${ihour}z.grid3.f000.grib2 $COMOUTgefs/gfsanl.t${ihour}z.grid3.f000.grib2
+    if [ $SENDCOM="YES" ] ; then
+        if [ -s $WORK/gfsanl.t${ihour}z.grid3.f000.grib2 ]; then
+            cp -v $WORK/gfsanl.t${ihour}z.grid3.f000.grib2 $COMOUTgefs/gfsanl.t${ihour}z.grid3.f000.grib2
+        fi
+    fi
  done
  if [ -s $COMOUTgefs/gfsanl.t00z.grid3.f000.grib2 ]; then
     $WGRIB2 $COMOUTgefs/gfsanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $WORK/gfsanl.t00z.deg1.5.f000.grib2
-    [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gfsanl.t00z.deg1.5.f000.grib2 $COMOUTgefs/gfsanl.t00z.deg1.5.f000.grib2
+    if [ $SENDCOM="YES" ] ; then
+        if [ -s $WORK/gfsanl.t00z.deg1.5.f000.grib2 ]; then
+            cp -v $WORK/gfsanl.t00z.deg1.5.f000.grib2 $COMOUTgefs/gfsanl.t00z.deg1.5.f000.grib2
+        fi
+    fi
  fi
 fi
 
@@ -118,8 +126,11 @@ if [ $modnam = cmcanl ]; then
        $WGRIB2 $cmcanl | grep --file=${pat} | grep "anl:ENS=low-res" | $WGRIB2 -i $cmcanl -grib ${WORK}/grabcmcanl.${ihour}
 #       $WGRIB2 $WORK/cmce.upper.${ihour}.gec00.anl -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2
         $WGRIB2 ${WORK}/grabcmcanl.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 
-	
-       [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 $COMOUTcmce/cmcanl.t${ihour}z.grid3.f000.grib2
+       if [ $SENDCOM="YES" ] ; then
+           if [ -s $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 ]; then	
+               cp -v $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 $COMOUTcmce/cmcanl.t${ihour}z.grid3.f000.grib2
+           fi
+       fi
     fi
   done
 
@@ -130,7 +141,11 @@ if [ $modnam = cmcanl ]; then
 
   if [ -s $COMOUTcmce/cmcanl.t00z.grid3.f000.grib2 ]; then
       $WGRIB2 $COMOUTcmce/cmcanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $WORK/cmcanl.t00z.deg1.5.f000.grib2
-      [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmcanl.t00z.deg1.5.f000.grib2 $COMOUTcmce/cmcanl.t00z.deg1.5.f000.grib2
+      if [ $SENDCOM="YES" ] ; then
+          if [ -s $WORK/cmcanl.t00z.deg1.5.f000.grib2 ]; then
+              cp -v $WORK/cmcanl.t00z.deg1.5.f000.grib2 $COMOUTcmce/cmcanl.t00z.deg1.5.f000.grib2
+          fi
+      fi
   fi
 fi
 
@@ -224,8 +239,12 @@ if [ $modnam = gefs ] ; then
 	  cat ${x} >> ${grabgefs}
         fi
 #        $WGRIB2 $WORK/gefs.upper.${ihour}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
-        $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 
-        [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+        $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+        if [ $SENDCOM="YES" ] ; then
+            if [ -s $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 ]; then 
+                cp -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+            fi
+        fi
         nfhrs=`expr $nfhrs + 6`
       done # forecast hour
 
@@ -316,7 +335,11 @@ if [ $modnam = cmce ] ; then
           #Hrer, use WGRIB2 to reverse N-S grid direction and convert 0.5x0.5 deg to 1x1 deg
 	  #********************************************************************************
           $WGRIB2 ${grabcmce} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
-          [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
+          if [ $SENDCOM="YES" ] ; then
+              if [ -s $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 ]; then
+                  cp -v $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
+              fi
+          fi
         fi 
         nfhrs=`expr $nfhrs + 12`
       done # forecast hour
@@ -371,7 +394,11 @@ if [ $modnam = prepbufr ] ; then
   done
   echo "chmod 640 ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
   echo "chgrp rstprod ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
-  echo "cpreq -v ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTgefs" >> run_pb2nc.sh
+  for FILE in ${WORK}/pb2nc/prepbufr_nc/*.nc ; do
+      if [ -s $FILE ]; then
+          echo "cp -v $FILE $COMOUTgefs" >> run_pb2nc.sh
+      fi
+  done
   echo "chmod 640 $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
   echo "chgrp rstprod $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
   chmod +x run_pb2nc.sh
@@ -388,7 +415,11 @@ if [ $modnam = ccpa ] ; then
   for ihour in 00 06 12 18 ; do
     if [ -s $COMINccpa/ccpa.${vday}/$ihour/ccpa.t${ihour}z.06h.1p0.conus.gb2 ] ; then
       $WGRIB2 $COMINccpa/ccpa.${vday}/$ihour/ccpa.t${ihour}z.06h.1p0.conus.gb2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/ccpa.t${ihour}z.grid3.06h.f00.grib2
-      [[ $SENDCOM="YES" ]] && cpreq -v $WORK/ccpa.t${ihour}z.grid3.06h.f00.grib2 ${COMOUTgefs}/ccpa.t${ihour}z.grid3.06h.f00.grib2
+      if [ $SENDCOM="YES" ] ; then
+          if [ -s $WORK/ccpa.t${ihour}z.grid3.06h.f00.grib2 ]; then
+              cp -v $WORK/ccpa.t${ihour}z.grid3.06h.f00.grib2 ${COMOUTgefs}/ccpa.t${ihour}z.grid3.06h.f00.grib2
+          fi
+      fi
     else
         if [ $SENDMAIL = YES ]; then
           export subject="CCPA  Data Missing for EVS ${COMPONENT}"
@@ -429,7 +460,11 @@ if [ $modnam = ccpa ] ; then
     done
     if [ -s ${WORK}/ccpa24/ccpa1 ] && [ -s ${WORK}/ccpa24/ccpa2 ] && [ -s ${WORK}/ccpa24/ccpa3 ] && [ -s ${WORK}/ccpa24/ccpa4 ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_obsCCPA24h.conf
-       [[ $SENDCOM="YES" ]] && cpreq -v $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUTgefs/.
+       if [ $SENDCOM="YES" ] ; then
+           if [ -s $output_base/ccpa.t12z.grid3.24h.f00.nc ]; then
+               cp -v $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUTgefs/.
+           fi
+       fi
     fi  
   done
 fi
@@ -457,9 +492,13 @@ if [ $modnam = gefs_apcp06h ] ; then
              echo "WARNING: $gefs does not exist"
            fi
         fi
-        [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+        if [ $SENDCOM="YES" ] ; then
+            if [ -s $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 ]; then
+                cp -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+            fi
+        fi
         fhr=$((fhr+6))
-       done
+      done
     done
    done
 fi 
@@ -510,7 +549,13 @@ if [ $modnam = gefs_apcp24h ] ; then
         unset lead_arr
       done
     done
-    [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTgefs/.
+    if [ $SENDCOM="YES" ] ; then
+        for FILE in ${output_base}/*.nc ; do
+            if [ -s $FILE ]; then
+                cp -v $FILE $COMOUTgefs/.
+            fi
+        done
+    fi
 fi
 
 ###########################################
@@ -526,8 +571,12 @@ if [ $modnam = cmce_apcp06h ] ; then
          cmce=$COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh}
          if [ -s $cmce ]; then
            $WGRIB2 -match "APCP" $cmce|$WGRIB2 -i $cmce -grib cmce.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2
-	   $WGRIB2 cmce.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 
-           [[ $SENDCOM="YES" ]] && cpreq -v cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+	   $WGRIB2 cmce.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+           if [ $SENDCOM="YES" ] ; then
+               if [ -s cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 ]; then  
+                   cp -v cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+               fi
+           fi
          else
            echo "WARNING: $cmce does not exist"
          fi
@@ -583,7 +632,13 @@ if [ $modnam = cmce_apcp24h ] ; then
          unset lead_arr
       done
     done
-    [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTcmce/.
+    if [ $SENDCOM="YES" ] ; then
+        for FILE in ${output_base}/*.nc ; do
+            if [ -s $FILE ]; then  
+                cp -v $FILE $COMOUTcmce/.
+            fi
+        done
+    fi
 fi
 
 ##############################################################
@@ -619,7 +674,13 @@ if [ $modnam = ecme_apcp24h ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf   
        unset lead_arr
      done
-     [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTecme/.
+     if [ $SENDCOM="YES" ] ; then
+         for FILE in ${output_base}/*.nc ; do
+             if [ -s $FILE ]; then
+                 cp -v $FILE $COMOUTecme/.
+             fi
+         done
+     fi
   done
 fi
 
@@ -631,7 +692,11 @@ if [ $modnam = nohrsc24h ] ; then
     snowfall=$DCOMINnohrsc/${vday}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${vday}${ihour}_grid184.grb2
     if [ -s $snowfall ] ; then
       cpreq -v $snowfall $WORK/nohrsc.t${ihour}z.grid184.grb2
-      [[ $SENDCOM="YES" ]] && cpreq -v $WORK/nohrsc.t${ihour}z.grid184.grb2 $COMOUTgefs/nohrsc.t${ihour}z.grid184.grb2
+      if [ $SENDCOM="YES" ] ; then
+          if [ -s $WORK/nohrsc.t${ihour}z.grid184.grb2 ]; then
+              cp -v $WORK/nohrsc.t${ihour}z.grid184.grb2 $COMOUTgefs/nohrsc.t${ihour}z.grid184.grb2
+          fi
+      fi
     else
         if [ $SENDMAIL = YES ]; then
           export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
@@ -681,7 +746,13 @@ if [ $modnam = gefs_snow24h ] ; then
        done
        unset lead_arr
      done
-     [[ $SENDCOM="YES" ]] && cpreq -v $output_base/*.nc $COMOUTgefs/.
+     if [ $SENDCOM="YES" ] ; then
+         for FILE in $output_base/*.nc ; do
+             if [ -s $FILE ]; then 
+                 cp -v $FILE $COMOUTgefs/.
+             fi
+         done
+     fi
    done
 fi
 
@@ -760,7 +831,13 @@ if [ $modnam = ecme_snow24h ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf  
        unset lead_arr
      done
-     [[ $SENDCOM="YES" ]] && cp $output_base/ecme*.nc $COMOUTecme
+     if [ $SENDCOM="YES" ] ; then
+         for FILE in $output_base/ecme*.nc ; do
+             if [ -s $FILE ]; then
+                 cp -v $FILE $COMOUTecme
+             fi
+         done
+     fi
   done
 fi
 
@@ -781,7 +858,11 @@ if [ $modnam = gfs ] ; then
       fi
      else
        $WGRIB2  $gfs|grep "HGT:500 mb"|$WGRIB2 -i $gfs -grib $WORK/gfs.t${ihour}z.grid3.f${hhh}.grib2
-       [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gfs.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gfs.t${ihour}z.grid3.f${hhh}.grib2
+       if [ $SENDCOM="YES" ] ; then
+           if [ -s $WORK/gfs.t${ihour}z.grid3.f${hhh}.grib2 ]; then
+               cp -v $WORK/gfs.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gfs.t${ihour}z.grid3.f${hhh}.grib2
+           fi
+       fi
      fi
     done
   done
@@ -815,7 +896,13 @@ if [ $modnam = osi_saf ] ; then
     else
 	  echo "NH OSI_SAF and SH OSI_SAF datasets exist" 
           python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
-         [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
+          if [ $SENDCOM="YES" ] ; then
+              for FILE in  $WORK/atmos.${INITDATE}/osi_saf/*.nc ; do
+                  if [ -s $FILE ]; then
+                      cp -v $FILE $COMOUTosi_saf/.
+                  fi
+              done
+          fi    
     fi
   fi
 fi
@@ -870,7 +957,13 @@ if [ $modnam = gefs_icec24h ] ; then
        unset lead_arr
      done
     done
-    [[ $SENDCOM="YES" ]] && cpreq -v $output_base/gefs*icec*.nc $COMOUTgefs/.
+    if [ $SENDCOM="YES" ] ; then
+        for FILE in $output_base/gefs*icec*.nc ; do
+            if [ -s $FILE ]; then
+                cp -v $FILE $COMOUTgefs/.
+            fi
+        done
+    fi
 fi
 
 ###########################################################################
@@ -895,8 +988,14 @@ if [ $modnam = gefs_icec7day ] ; then
           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf  
         done
      done
-   done						     
-   [[ $SENDCOM="YES" ]] && cpreq -v $output_base/gefs*icec*.nc $COMOUTgefs/.
+   done
+   if [ $SENDCOM="YES" ] ; then
+       for FILE in $output_base/gefs*icec*.nc ; do
+           if [ -s $FILE ]; then
+               cp -v $FILE $COMOUTgefs/.
+           fi
+       done
+   fi
 fi
 
 ######################################################
@@ -951,5 +1050,11 @@ if [ $modnam = gefs_sst24h ] ; then
          unset lead_arr
        done
    done
-   [[ $SENDCOM="YES" ]] && cpreq -v $output_base/gefs*sst*.nc $COMOUTgefs
+   if [ $SENDCOM="YES" ] ; then
+       for FILE in $output_base/gefs*sst*.nc ; do
+           if [ -s $FILE ]; then
+               cp -v $FILE $COMOUTgefs
+           fi
+       done
+   fi
 fi

@@ -101,7 +101,9 @@ while [ ${hourix} -lt 31 ]; do
        chgrp rstprod x
        cat x >> $WORK/ecmanl.t${ihour}z.grid3.f000.grib1
       if [[ $SENDCOM="YES" ]]; then
-          cpreq -v $WORK/ecmanl.t${ihour}z.grid3.f000.grib1 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
+          if [ -s $WORK/ecmanl.t${ihour}z.grid3.f000.grib1 ]; then
+              cp -v $WORK/ecmanl.t${ihour}z.grid3.f000.grib1 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
+          fi
           chmod 640 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
           chgrp rstprod $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
       fi
@@ -147,7 +149,9 @@ while [ ${hourix} -lt 31 ]; do
       chmod 640 $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       chgrp rstprod $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       if [[ $SENDCOM="YES" ]]; then
-          cpreq -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+          if [ -s ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 ]; then
+              cp -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+          fi
           chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
           chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       fi
@@ -188,7 +192,9 @@ while [ ${hourix} -lt 31 ]; do
       chmod 640 $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
       chgrp rstprod $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
       if [[ $SENDCOM="YES" ]]; then
-        cpreq -v $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+        if [ -s $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 ]; then
+            cp -v $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+        fi
         chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
         chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
       fi
@@ -248,7 +254,9 @@ while [ ${hourix} -lt 31 ]; do
       chmod 640 $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       chgrp rstprod $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       if [[ $SENDCOM="YES" ]]; then
-          cpreq -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+          if [ -s $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 ]; then
+              cp -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+          fi
           chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
           chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       fi

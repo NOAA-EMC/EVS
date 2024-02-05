@@ -57,7 +57,11 @@ if [ $modnam = gefs_bc ] ; then
              $WGRIB2  $gefs_bc|grep "VGRD:10 m "|$WGRIB2 -i $gefs_bc -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
              cat $WORK/grabgefs.${ihour}.${mb}.${hhh} >> $WORK/gefs.upper.${ihour}.${mb}.${hhh}
              $WGRIB2 $WORK/gefs.upper.${ihour}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
-             [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs_bc/gefs_bc.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+             if [ $SENDCOM="YES" ] ; then
+                 if [ -s $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 ]; then 
+                     cp -v $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs_bc/gefs_bc.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+                 fi
+             fi
           else
             if [ $SENDMAIL = YES ]; then
               export subject="GEFS BC member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
@@ -114,7 +118,11 @@ if [ $modnam = cmce_bc ] ; then
                #use WGRIB2 to reverse N-S grid direction and convert 0.5x0.5 deg to 1x1 deg
 	       #*****************************************************************************
 	       $WGRIB2 $WORK/cmce.upper.${ihour}.${mb}.${h3} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/cmce_bc.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
-               [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmce_bc.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 $COMOUTcmce_bc/cmce_bc.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
+               if [ $SENDCOM="YES" ] ; then
+                   if [ -s $WORK/cmce_bc.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 ]; then
+                       cp -v $WORK/cmce_bc.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 $COMOUTcmce_bc/cmce_bc.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
+                   fi
+               fi
                rm -f  $WORK/cmce.upper.${ihour}.${mb}.${h3}
              else
                if [ $SENDMAIL = YES ]; then
@@ -155,7 +163,11 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
           if [ -s $apcp24_bc ]; then
             $WGRIB2 $apcp24_bc|grep "ENS=+${mbr}"|$WGRIB2 -i $apcp24_bc -grib $WORK/grabmbr.${ihour}.${hhh}
             $WGRIB2 $WORK/grabmbr.${ihour}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.grib2
-            [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.grib2 $COMOUTgefs_bc/gefs_bc.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.grib2
+            if [ $SENDCOM="YES" ] ; then
+                if [ -s $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.grib2 ]; then
+                    cp -v $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.grib2 $COMOUTgefs_bc/gefs_bc.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.grib2
+                fi
+            fi
           else
             if [ $SENDMAIL = YES ]; then
               export subject="GEFS BC member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
