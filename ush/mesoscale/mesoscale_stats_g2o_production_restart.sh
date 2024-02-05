@@ -24,7 +24,12 @@ if [ "${STEP}" = "stats" ]; then
    if [ -d ${COMOUT_RUN_VDATE_VERIF_CASE} ]; then
       cnf=$(ls ${COMOUT_RUN_VDATE_VERIF_CASE}/point_stat* 2>/dev/null | wc -l)
       if [ $cnf -gt 0 ]; then
-         cpreq -pv ${COMOUT_RUN_VDATE_VERIF_CASE}/point_stat* ${TDAT}/
+         for file in ${COMOUT_RUN_VDATE_VERIF_CASE}/point_stat*; do
+	     if [ -s $file ]; then
+                cp -v $file ${TDAT}/
+	     fi
+         done
+   #      cpreq -pv ${COMOUT_RUN_VDATE_VERIF_CASE}/point_stat* ${TDAT}/
       fi
    fi
    

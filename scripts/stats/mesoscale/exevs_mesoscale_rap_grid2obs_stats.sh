@@ -365,7 +365,10 @@ echo "*****************************"
         MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
         mkdir -p $COMOUT/$MODEL_DIR
         for FILE in $MODEL_DIR_PATH/*; do
-           cpreq -v $FILE $COMOUT/$MODEL_DIR/.
+           if [ -s $FILE ]; then
+              cp -v $FILE $COMOUT/$MODEL_DIR/.
+	   fi
+           # cpreq -v $FILE $COMOUT/$MODEL_DIR/.
         done
      done
    fi
