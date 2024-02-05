@@ -41,9 +41,11 @@ for MODEL in $MODELNAME; do
                     fi
                 else
                     if [ ! -s $output_filename ] ; then
-                        cpreq -v $input_filename $tmp_filename
+                        cp -v $input_filename $tmp_filename
                         if [ $SENDCOM = YES ]; then
-                            cpreq -v $tmp_filename $output_filename
+                            if [ -f $tmp_filename ]; then
+                                cp -v $tmp_filename $output_filename
+                            fi
                         fi
                     fi
                 fi

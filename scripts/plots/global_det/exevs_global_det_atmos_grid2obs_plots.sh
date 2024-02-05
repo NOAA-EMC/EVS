@@ -94,7 +94,9 @@ if [ $SENDCOM = YES ]; then
     for VERIF_TYPE in $g2op_type_list; do
         large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
         tar -cvf $large_tar_file ${VERIF_CASE}_${VERIF_TYPE}*.tar
-        cpreq -v $large_tar_file $COMOUT/.
+        if [ -f $large_tar_file ]; then
+           cp -v $large_tar_file $COMOUT/.
+        fi
     done
     cd $DATA
 fi
