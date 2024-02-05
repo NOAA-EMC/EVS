@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A EVS-DEV
 #PBS -l walltime=0:30:00
-#PBS -l place=shared,select=1:ncpus=5:mem=500MB
+#PBS -l place=exclhost,select=1:ncpus=5:mem=500MB
 #PBS -l debug=true
 #PBS -V
 

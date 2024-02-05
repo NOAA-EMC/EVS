@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A EVS-DEV
 #PBS -l walltime=00:20:00
-#PBS -l place=vscatter,select=1:ncpus=37:mem=50GB
+#PBS -l place=vscatter,select=1:ncpus=32:mem=50GB
 #PBS -l debug=true
 
 set -x
@@ -39,7 +39,7 @@ export past_days=90
 
 export valid_time=both
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export SENDMAIL=YES
