@@ -127,9 +127,9 @@ then
   if [ $SENDCOM = "YES" ]; then
    stat_dir=$DATA/point_stat/$MODELNAME
    stat_files=("$stat_dir"/*)
-   for stat_file in "($stat_files[@}]"; do
+   for stat_file in "${stat_files[@]}"; do
     if [ -s $stat_file ]; then
-     cp -v $stat_dir/* $COMOUTsmall
+     cp -v $stat_file $COMOUTsmall
     fi
    done
   fi
