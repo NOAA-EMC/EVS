@@ -171,7 +171,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         for truth_output_file_tuple \
                                 in truth_copy_output_DATA2COMOUT_list:
                             job.write(f'if [ -f "{truth_output_file_tuple[0]}" ]; then '
-                                      +f"cpreq -v {truth_output_file_tuple[0]} "
+                                      +f"cp -v {truth_output_file_tuple[0]} "
                                       +f"{truth_output_file_tuple[1]}"
                                       +f"; fi\n")
                 job.close()
@@ -304,7 +304,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                                 for model_output_file_tuple \
                                         in model_copy_output_DATA2COMOUT_list:
                                     job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
-                                              +f"cpreq -v {model_output_file_tuple[0]} "
+                                              +f"cp -v {model_output_file_tuple[0]} "
                                               +f"{model_output_file_tuple[1]}"
                                               +f"; fi\n")
                         job.close()

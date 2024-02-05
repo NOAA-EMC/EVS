@@ -26,10 +26,10 @@ python $USHevs/subseasonal/check_subseasonal_config_stats.py
 export err=$?; err_chk
 
 # Set up environment variables for initialization, valid, and forecast hours and source them
-python $USHevs/subseasonal/set_init_valid_fhr_subseasonal_stats_info.py
-export err=$?; err_chk
-. $DATA/$VERIF_CASE_STEP/python_gen_env_vars.sh
-export err=$?; err_chk
+#python $USHevs/subseasonal/set_init_valid_fhr_subseasonal_stats_info.py
+#export err=$?; err_chk
+#. $DATA/$VERIF_CASE_STEP/python_gen_env_vars.sh
+#export err=$?; err_chk
 
 # Create output directories for METplus
 python $USHevs/subseasonal/create_METplus_subseasonal_output_dirs.py
@@ -196,7 +196,9 @@ if [ $SENDCOM = YES ]; then
 	for MODEL_DATE_PATH in $DATA/$VERIF_CASE_STEP/METplus_output/$MODEL.*; do
 	    MODEL_DATE_SUBDIR=$(echo ${MODEL_DATE_PATH##*/})
 	    for FILE in $DATA/$VERIF_CASE_STEP/METplus_output/$MODEL_DATE_SUBDIR/*; do
-		cpreq -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
+		if [ -s $FILE ]; then
+		    cp -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
+		fi
 	    done
         done
     done
