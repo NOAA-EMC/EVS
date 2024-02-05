@@ -20,7 +20,9 @@ if [ $SENDCOM = YES ]; then
     # Make and copy tar file
     cd $DATA/images
     tar -cvf $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar *.png
-    cpreq -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
+    if [ -f $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar ]; then
+        cp -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
+    fi
 fi
 
 # Cat the plotting log files

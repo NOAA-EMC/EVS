@@ -25,7 +25,9 @@ if [ $SENDCOM = YES ]; then
         MODEL_SUBDIR=$(echo ${MODEL_PATH##*/})
         mkdir -p $COMOUTmonthlystats/$MODEL_SUBDIR
         for FILE in $DATA/monthly/grid2grid/monthly_means/$MODEL_SUBDIR/*; do
-            cpreq -v $FILE $COMOUTmonthlystats/$MODEL_SUBDIR/.
+            if [ -f $FILE ]; then
+                cp -v $FILE $COMOUTmonthlystats/$MODEL_SUBDIR/.
+            fi
         done
     done
     if [ $VDATEmm = 12 ]; then
@@ -33,7 +35,9 @@ if [ $SENDCOM = YES ]; then
             MODEL_SUBDIR=$(echo ${MODEL_PATH##*/})
             mkdir -p $COMOUTyearlystats/$MODEL_SUBDIR
             for FILE in $DATA/yearly/grid2grid/yearly_means/$MODEL_SUBDIR/*; do
-                cpreq -v $FILE $COMOUTyearlystats/$MODEL_SUBDIR/.
+                if [ -f $FILE ]; then
+                    cp -v $FILE $COMOUTyearlystats/$MODEL_SUBDIR/.
+                fi
             done
         done
     fi

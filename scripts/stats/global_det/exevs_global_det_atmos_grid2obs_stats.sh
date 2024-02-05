@@ -96,7 +96,9 @@ if [ $SENDCOM = YES ]; then
         for MODEL_DATE_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL.*; do
             MODEL_DATE_SUBDIR=$(echo ${MODEL_DATE_PATH##*/})
             for FILE in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL_DATE_SUBDIR/*; do
-                cpreq -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
+                if [ -f $FILE ]; then
+                    cp -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
+                fi
             done
         done
     done
