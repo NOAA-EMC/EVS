@@ -1,9 +1,7 @@
 #!/bin/ksh
 # Purpose: setup environment, paths, and run the narre ploting python script
-# Last updated: 
-#               01/06/2024, Add restart capability, Binbin Zhou, Lynker@EMC/NCEP
-#               10/27/2023, Add commenst,           Binbin Zhou, Lynker@EMC/NCEP
-#     
+# Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
+#
 
 set -x 
 
@@ -19,11 +17,8 @@ mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
 
-if [ ! -d  $COMOUT/restart/$past_days ] ; then
-  mkdir -p $COMOUT/restart/$past_days
-fi  
-
 export eval_period='TEST'
+#export past_days=0
 
 export init_end=$VDATE
 export valid_end=$VDATE
@@ -64,14 +59,7 @@ mkdir -p ${plot_dir}
 # **************************************** 
 > run_all_poe.sh 
 for grid in $VX_MASK_LIST ; do
- 
- if [ $grid = G130 ] ; then
-     export grd=g130
- elif [ $grid = G242 ] ; then
-     export grd=g242
- fi
 
- 	
  #for score_type in performance_diagram  threshold_average time_series valid_hour_average lead_average ; do
  for score_type in performance_diagram ; do
 
@@ -84,11 +72,15 @@ for grid in $VX_MASK_LIST ; do
     # Build sub-jobs and setup environment for running the python plotting scripts
     # ****************************************************************************
     > run_narre_${grid}.${score_type}.${var}.${line_type}.sh 
-  
-  #**********************************************************************************************
-  # Check if this sub-job has been completed in the previous run for restart
-   if [ ! -e $COMOUT/restart/$past_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed ] ; then
-  #************************************************************************************************   
+
+     
+    if [ $grid = G130 ] ; then
+      echo "export mask=buk_conus" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+      echo "export grd=g130"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+    elif [ $grid = G242 ] ; then
+      echo "export mask=alaska" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+      echo "export grd=g242"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+    fi
 
       echo "export PLOT_TYPE=$score_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
 
@@ -163,18 +155,14 @@ for grid in $VX_MASK_LIST ; do
      chmod +x run_py.${var}_${line_type}.${score_type}.${grid}.sh
 
      echo "${DATA}/run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+ 
 
-     #For restart
-     echo "cp ${plot_dir}/${score_type}_regional_${grd}_valid_*${vname}_*.png  $COMOUT/restart/$past_days/." >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo ">$COMOUT/restart/$past_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-
+#     if [ $score_type = performance_diagram ] ; then
+#        echo "mv ${plot_dir}/${score_type}_regional_*\${grd}*_*\${vname}*.png ${plot_dir}/evs.narre.ctc.\${field}.last${past_days}days.perfdiag.f012.\${mask}.png" >>  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+#     fi 
+     
      chmod +x  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      echo "${DATA}/run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
-
-     else
-       #For restart	     
-       cp $COMOUT/restart/$past_days/${score_type}_regional_${grd}_*${vname}_*.png ${plot_dir}/.
-     fi
 
     done #end of line_type
 
@@ -219,7 +207,7 @@ for grid in g130 g242 ; do
 	  thrsh=_lt152lt305lt914lt1524lt3048
     fi	  
     if [ -s performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png ] ; then
-      mv  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${past_days}days.perfdiag_valid_all_times.${domain}.png
+      cp  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${past_days}days.perfdiag_valid_all_times.${domain}.png
     fi 
   done
 done
