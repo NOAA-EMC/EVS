@@ -274,7 +274,7 @@ then
        export err=$?; err_chk
        if [ $SENDCOM = "YES" ]; then
 	 if [ -s $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-	  cp $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
+	  cp -v $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
 	 fi
        fi
 else    
