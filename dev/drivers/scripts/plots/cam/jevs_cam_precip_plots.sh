@@ -5,7 +5,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=05:30:00
-#PBS -l place=vscatter:exclhost,select=4:ncpus=128
+#PBS -l place=vscatter:exclhost,select=4:ncpus=128:mem=250GB
 #PBS -l debug=true
 #PBS -V
 
@@ -24,6 +24,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
 export nproc=512
+export ncpu=128
 
 # General Verification Settings
 export NET="evs"
