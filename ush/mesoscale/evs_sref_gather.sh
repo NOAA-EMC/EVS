@@ -45,8 +45,8 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/StatAnlysis_fcstSREF_obsCCPA_GatherByDay.conf " >> run_gather_${verify}.sh
     fi
 
-    if [ $SENDCOM = 'YES' ]; then
-   echo "cpreq ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${model}.${verify}.v${vday}.stat">>run_gather_${verify}.sh
+    if [ $SENDCOM = 'YES' ] && [ -s ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat ] ; then
+   echo "cp ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${model}.${verify}.v${vday}.stat">>run_gather_${verify}.sh
     fi
   chmod +x run_gather_${verify}.sh
 

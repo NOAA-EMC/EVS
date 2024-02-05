@@ -259,11 +259,11 @@ done
 tar -cvf evs.plots.sref.cloud.past${past_days}days.v${VDATE}.tar *.png
 
 
-if [ $SENDCOM="YES" ]; then
- cpreq  evs.plots.sref.cloud.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.sref.cloud.past${past_days}days.v${VDATE}.tar ] ; then
+ cp evs.plots.sref.cloud.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
 fi
 
-if [ $SENDDBN = YES ] ; then
+if [ $SENDDBN = YES ] && [ -s evs.plots.sref.cloud.past${past_days}days.v${VDATE}.tar ] ; then
      $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.sref.cloud.past${past_days}days.v${VDATE}.tar
 fi
 

@@ -233,11 +233,11 @@ if [ -d $log_dir ]; then
 fi
 
 
-if [ $SENDCOM="YES" ]; then
- cpreq  evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar ] ; then
+ cp evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
-if [ $SENDDBN = YES ] ; then
+if [ $SENDDBN = YES ] && [ -s evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar ] ; then
    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar
 fi
 
