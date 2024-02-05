@@ -365,7 +365,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                             for model_output_file_tuple \
                                     in model_copy_output_DATA2COMOUT_list:
                                 job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
-                                          +f"cpreq -v {model_output_file_tuple[0]} "
+                                          +f"cp -v {model_output_file_tuple[0]} "
                                           +f"{model_output_file_tuple[1]}"
                                           +f"; fi\n")
                     job.close()
