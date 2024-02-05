@@ -11,6 +11,7 @@
 ##
 ##   11/14/2023   Ho-Chun Huang  replace cp with cpreq
 ##   11/15/2023   Ho-Chun Huang  combine similar code for multiple variable
+##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
 ##
 ## Plotting Information
 ##    OZMAX8 forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
@@ -58,7 +59,7 @@ for aqmtyp in ozone pm25 ozmax8 pmave; do
             DAY=`cut -c 1-8 curdate`
             cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
             sedfile=evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
-            if [ -e ${EVSINaqm}.${DAY}/${cpfile} ]; then
+            if [ -s ${EVSINaqm}.${DAY}/${cpfile} ]; then
                 cpreq ${EVSINaqm}.${DAY}/${cpfile} ${STATDIR}
                 sed "s/${model1}/${aqmtyp}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
             else
@@ -143,7 +144,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                 cpfile=${PLOTDIR}/${figfile}
                 if [ -e ${PLOTDIR}/aq/*/evs*png ]; then
                     mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
-                    cpreq ${cpfile} ${COMOUTplots}/${var}
+                    cp -v ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
                 fi
@@ -202,7 +203,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                 cpfile=${PLOTDIR}/${figfile}
                 if [ -e ${PLOTDIR}/aq/*/evs*png ]; then
                     mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
-                    cpreq ${cpfile} ${COMOUTplots}/${var}
+                    cp -v ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
                     echo "WARNING: This is possible where there is no exceedance of any threshold in the past 31 days"
@@ -235,16 +236,16 @@ tarfile=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar
 tar -cvf ${tarfile} *png
 
 if [ "${SENDCOM}" == "YES" ]; then
-    if [ -e ${tarfile} ]; then
+    if [ -s ${tarfile} ]; then
         mkdir -m 775 -p ${COMOUTplots}
-        cpreq -v ${tarfile} ${COMOUTplots}
+        cp -v ${tarfile} ${COMOUTplots}
     else
         echo "WARNING: Can not find ${PLOTDIR}/${tarfile}"
     fi
 fi
 
 if [ "${SENDDBN}" == "YES" ] ; then     
-    if [ -e ${COMOUTplots}/${tarfile} ]; then
+    if [ -s ${COMOUTplots}/${tarfile} ]; then
         $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${tarfile}
     else
         echo "WARNING: Can not find ${COMOUTplots}/${tarfile}"
@@ -321,7 +322,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
             cpfile=${PLOTDIR_headline}/${figfile}
             if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]; then
                 mv ${PLOTDIR_headline}/aq/*/evs*png ${cpfile}
-                cpreq ${cpfile} ${COMOUTplots}/headline
+                cp -v ${cpfile} ${COMOUTplots}/headline
             elif [ ! -e ${cpfile} ]; then
                 echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} ${region}"
                 echo "WARNING: This is possible where there is no exceedance of the critical threshold in the past 31 days"
@@ -355,15 +356,15 @@ tar -cvf ${tarfile} *png
 
 if [ "${SENDCOM}" == "YES" ]; then
     mkdir -m 775 -p ${COMOUTheadline}
-    if [ -e ${tarfile} ]; then
-        cpreq -v ${tarfile} ${COMOUTheadline}
+    if [ -s ${tarfile} ]; then
+        cp -v ${tarfile} ${COMOUTheadline}
     else
         echo "WARNING: Can not find ${PLOTDIR_headline}/${tarfile}"
     fi
 fi
 
 if [ "${SENDDBN}" == "YES" ]; then     
-    if [ -e ${COMOUTheadline}/${tarfile} ]; then
+    if [ -s ${COMOUTheadline}/${tarfile} ]; then
         $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTheadline}/${tarfile}
     else
         echo "WARNING: Can not find ${COMOUTheadline}/${tarfile}"
