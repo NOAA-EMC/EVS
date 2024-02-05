@@ -24,7 +24,6 @@ export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
 export nproc=512
 export ncpu=128
-export VDATE=20240121
 
 # General Verification Settings
 export NET="evs"
@@ -35,7 +34,7 @@ export VERIF_CASE="snowfall"
 export MODELNAME=${COMPONENT}
 
 # EVS Settings
-export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS_resources/EVS"
+export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
 
@@ -50,10 +49,9 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 # Developer Settings
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export vhr=${vhr:-${vhr}}
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
-export VDATE=20240127
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_PLOTS
