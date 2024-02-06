@@ -121,7 +121,7 @@ for VHOUR in VHOUR_LIST:
                                     +USER.lower()+"@noaa.gov'}\n"
                                 )
                                 mailmsg.write(
-                                    'echo "Warning: No '+MODELNAME.upper()
+                                    'echo "WARNING: No '+MODELNAME.upper()
                                     +' was available for '
                                     +f'{init_dt:%Y%m%d%H}f'
                                     +f'{str(fhr).zfill(3)}" > mailmsg\n'
@@ -176,7 +176,7 @@ for VHOUR in VHOUR_LIST:
                     +"@noaa.gov'}\n"
                 )
                 mailmsg.write(
-                    'echo "Warning: No NOHRSC accumulation '
+                    'echo "WARNING: No NOHRSC accumulation '
                     +accum+' hour data was available for '
                     +f'valid date {valid_dt:%Y%m%d%H}" '
                     +'> mailmsg\n'
