@@ -200,7 +200,6 @@ fi
         
 if [ $SENDCOM = "YES" ]; then
  if [ -s evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar ]; then
-  mkdir -m 775 -p $COMOUTplots
   cp -v evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
  fi
 fi
