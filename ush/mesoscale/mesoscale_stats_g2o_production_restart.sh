@@ -29,7 +29,6 @@ if [ "${STEP}" = "stats" ]; then
                 cp -v $file ${TDAT}/
 	     fi
          done
-   #      cpreq -pv ${COMOUT_RUN_VDATE_VERIF_CASE}/point_stat* ${TDAT}/
       fi
    fi
    

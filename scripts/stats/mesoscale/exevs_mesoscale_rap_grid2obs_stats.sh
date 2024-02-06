@@ -368,7 +368,6 @@ echo "*****************************"
            if [ -s $FILE ]; then
               cp -v $FILE $COMOUT/$MODEL_DIR/.
 	   fi
-           # cpreq -v $FILE $COMOUT/$MODEL_DIR/.
         done
      done
    fi
