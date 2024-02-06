@@ -298,18 +298,20 @@ fi
 if [ $SENDCOM = YES ]; then
     for MODEL_DIR_PATH in $MET_PLUS_OUT/stat_analysis/$MODELNAME*; do
         for FILE in $MODEL_DIR_PATH/*; do
-            cpreq -v $FILE $COMOUTsmall/.
+            if [ -s "$FILE" ]; then
+               cp -v $FILE $COMOUTsmall/.
+            fi
         done
     done
     mkdir -p $COMOUTsmall/spatial_maps
     for FILEn in $MET_PLUS_OUT/*/pcp_combine/*a24h*; do
         if [ -f "$FILEn" ]; then
-            cpreq -vr $FILEn $COMOUTsmall/spatial_maps/.
+            cp -vr $FILEn $COMOUTsmall/spatial_maps/.
         fi
     done
     for FILEn in $MET_PLUS_OUT/*/pcp_combine/*/*a24h*; do
         if [ -f "$FILEn" ]; then
-            cpreq -vr $FILEn $COMOUTsmall/spatial_maps/.
+            cp -vr $FILEn $COMOUTsmall/spatial_maps/.
         fi
     done
 fi

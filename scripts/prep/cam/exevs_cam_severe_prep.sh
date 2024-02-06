@@ -36,7 +36,9 @@ if [ -d $DATA/gen_vx_mask ]; then
       if [ $SENDCOM = YES ]; then
          mkdir -p $COMOUTotlk
          for FILE in $DATA/gen_vx_mask/*; do
-            cpreq -v $FILE $COMOUTotlk
+            if [ -s "$FILE" ]; then
+               cp -v $FILE $COMOUTotlk
+            fi
          done
       fi
 
@@ -91,7 +93,9 @@ if [ -s $DCOMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DAT
    if [ $SENDCOM = YES ]; then
       mkdir -p $COMOUTlsr
       for FILE in $DATA/point2grid/*; do
-         cpreq -v $FILE $COMOUTlsr
+         if [ -s "$FILE" ]; then
+            cp -v $FILE $COMOUTlsr
+         fi
       done
    fi
 
