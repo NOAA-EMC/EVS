@@ -92,7 +92,7 @@ fi
 if [ $SENDCOM = YES ]; then
     FILE=${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar
     if [ -s "$FILE" ]; then
-       cp -v ${VDATE} ${COMOUTplots}/.
+       cp -v ${FILE} ${COMOUTplots}/.
     fi
 fi
 if [ $SENDDBN = YES ]; then
