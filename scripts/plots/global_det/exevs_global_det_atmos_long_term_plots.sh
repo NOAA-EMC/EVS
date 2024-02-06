@@ -27,5 +27,7 @@ if [ $SENDCOM = YES ]; then
     else
         tar -cvf ${large_tar_file} -C ${DATA}/${VDATEYYYY}_${VDATEmm}_ACC/images . -C ${DATA}/monthly/grid2grid/images .
     fi
-    cpreq -v $large_tar_file $COMOUT/.
+    if [ -f $large_tar_file ]; then
+       cp -v $large_tar_file $COMOUT/.
+    fi
 fi
