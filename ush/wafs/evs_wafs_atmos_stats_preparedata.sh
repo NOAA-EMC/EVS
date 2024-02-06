@@ -88,6 +88,7 @@ if [ -z $FHOURS_EVSlist ] ; then
         echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 	cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
     fi
+    echo "Warning: All $CENTER forecasts are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus will not run."
     runMETplus=no
 fi
 
@@ -127,6 +128,7 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
 		echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	    fi
+	    echo "Warning: $OBSERVATION analysis is missing for $CENTER valid date ${VDATE}${cc}"
 	    runMETplus=no
 	fi
     fi
@@ -171,6 +173,7 @@ elif [[ $OBSERVATION = "GFS" ]] ; then
 		echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	    fi
+	    echo "Warning: $OBSERVATION analysis is missing for valid date ${VDATE}${cc}"
 	    runMETplus=no
 	fi
     fi
