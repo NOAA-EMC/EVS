@@ -34,7 +34,7 @@ DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_list = os.environ['fhr_list'].split(',')
+fhr_list = os.environ['fhr_list'].split(', ')
 
 # Process run time agruments
 if len(sys.argv) != 5:
