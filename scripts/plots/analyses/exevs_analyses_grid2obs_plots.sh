@@ -366,7 +366,9 @@ cd ${PLOTDIR}
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
 
 if [ $SENDCOM = "YES" ]; then
- cpreq -v  evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+ if [ -s evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar ]; then
+  cp -v evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+ fi
 fi
 
 if [ $SENDDBN = YES ] ; then     
