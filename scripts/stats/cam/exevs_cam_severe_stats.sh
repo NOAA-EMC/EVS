@@ -204,7 +204,9 @@ if [ -d $DATA/grid_stat ]; then
       if [ $SENDCOM = YES ]; then
          mkdir -p $COMOUTfinal
          for FILE in $DATA/stat_analysis/*; do
-            cpreq -v $FILE $COMOUTfinal
+            if [ -s "$FILE" ]; then
+               cp -v $FILE $COMOUTfinal
+            fi
          done
       fi
 
