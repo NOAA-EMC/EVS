@@ -227,16 +227,16 @@ if [ $verify = upper ] ; then
         fi
         if [ $metplus_job = EnsembleStat ] ; then
             if [ $SENDCOM="YES" ] ; then
-                echo "for FILE in $output_base/stat/${modnam}/ensemble_stat_*.stat ; do" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
-                echo "  if [ -s $FILE ]; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "for FILE in \$output_base/stat/${modnam}/ensemble_stat_*.stat ; do" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
                 echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
                 echo "  fi" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
                 echo "done" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
              fi
         elif [ $metplus_job = GridStat ] ; then
             if [ $SENDCOM="YES" ] ; then
-                echo "for FILE in $output_base/stat/${modnam}/grid_stat_*.stat ; do" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
-                echo "  if [ -s $FILE ]; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "for FILE in \$output_base/stat/${modnam}/grid_stat_*.stat ; do" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
                 echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
                 echo "  fi" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
                 echo "done" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
@@ -432,16 +432,16 @@ if [ $verify = precip ] ; then
         fi
         if [ $metplus_job = EnsembleStat ]; then
             if [ $SENDCOM="YES" ] ; then
-                echo "for FILE in $output_base/stat/${modnam}/ensemble_stat_*.stat ; do" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
-                echo "  if [ -s $FILE ]; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "for FILE in \$output_base/stat/${modnam}/ensemble_stat_*.stat ; do" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
                 echo "    cp -v \$FILE $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
                 echo "  fi" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
                 echo "done" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
             fi
         elif [ $metplus_job = GridStat ]; then
             if [ $SENDCOM="YES" ] ; then
-                echo "for FILE in $output_base/stat/${modnam}/grid_stat_*.stat ; do" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
-                echo "  if [ -s $FILE ]; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "for FILE in \$output_base/stat/${modnam}/grid_stat_*.stat ; do" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
                 echo "    cp -v \$FILE $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
                 echo "  fi" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
                 echo "done" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
@@ -453,8 +453,8 @@ if [ $verify = precip ] ; then
 	    #*******************************************************
             mkdir -p $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME
             if [ $SENDCOM="YES" ] ; then
-                echo "for FILE in $output_base/stat/${modnam}/GenEnsProd*APCP24*.nc ; do" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
-                echo "  if [ -s $FILE ]; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "for FILE in \$output_base/stat/${modnam}/GenEnsProd*APCP24*.nc ; do" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
                 echo "    cp -v \$FILE $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
                 echo "  fi" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
                 echo "done" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh

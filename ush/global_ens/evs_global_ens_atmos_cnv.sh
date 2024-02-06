@@ -156,19 +156,19 @@ for fhr in $fhrs ; do
             cp -v $FILE $WORK/grid2obs/run_${modnam}_${fhr}_cnv/stat/${modnam}/.
         fi
     done
+    echo  "export output_base=$WORK/grid2obs/run_${modnam}_${fhr}_cnv" >> run_${modnam}_${fhr}_cnv.sh
+    echo "cd \$output_base/stat/${modnam}" >> run_${modnam}_${fhr}_cnv.sh
+    echo "$USHevs/global_ens/evs_global_ens_average_cnv.sh $modnam $fhr" >> run_${modnam}_${fhr}_cnv.sh
+    echo "export err=\$?; err_chk" >>  run_${modnam}_${fhr}_cnv.sh
     if [ $SENDCOM="YES" ] ; then
-        echo  "export output_base=$WORK/grid2obs/run_${modnam}_${fhr}_cnv" >> run_${modnam}_${fhr}_cnv.sh
-        echo "cd \$output_base/stat/${modnam}" >> run_${modnam}_${fhr}_cnv.sh
-        echo "$USHevs/global_ens/evs_global_ens_average_cnv.sh $modnam $fhr" >> run_${modnam}_${fhr}_cnv.sh
-        echo "export err=\$?; err_chk" >>  run_${modnam}_${fhr}_cnv.sh
-        echo "for FILE in $output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat ; do" >> run_${modnam}_${fhr}_cnv.sh
-        echo "  if [ -s $FILE ]; then" >> run_${modnam}_${fhr}_cnv.sh
+        echo "for FILE in \$output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat ; do" >> run_${modnam}_${fhr}_cnv.sh
+        echo "  if [ -s \$FILE ]; then" >> run_${modnam}_${fhr}_cnv.sh
         echo  "cp -v  \$FILE $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
         echo "  fi" >> run_${modnam}_${fhr}_cnv.sh
         echo "done" >> run_${modnam}_${fhr}_cnv.sh
-        chmod +x run_${modnam}_${fhr}_cnv.sh
-        echo "${DATA}/run_${modnam}_${fhr}_cnv.sh" >> run_all_gens_cnv_poe2.sh
     fi
+    chmod +x run_${modnam}_${fhr}_cnv.sh
+    echo "${DATA}/run_${modnam}_${fhr}_cnv.sh" >> run_all_gens_cnv_poe2.sh
 done
 
 #**************************

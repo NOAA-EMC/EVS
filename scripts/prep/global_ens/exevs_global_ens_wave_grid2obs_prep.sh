@@ -63,7 +63,9 @@ for ihour in ${inithours} ; do
         if [ ! -s ${COMOUTgefs}/${newname} ]; then
             cpreq -v ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
             if [ $SENDCOM = YES ]; then
-                cp -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/${newname}
+                if [ -s $DATA/gefs_wave_grib2/${newname} ]; then 
+                    cp -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/${newname}
+                fi
             fi
         fi
     fi
@@ -111,10 +113,12 @@ for ihour in 00 06 12 18 ; do
             chmod 640 $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc
             chgrp rstprod $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc
             if [ $SENDCOM = YES ]; then
-                cp -v $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
-                chmod 640 ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
-                chgrp rstprod ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
+                if [ -s $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ]; then
+                    cp -v $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
+                fi
             fi
+            chmod 640 ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
+            chgrp rstprod ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
         fi
     fi
 done

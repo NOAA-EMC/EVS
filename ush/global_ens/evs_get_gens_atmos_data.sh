@@ -394,11 +394,11 @@ if [ $modnam = prepbufr ] ; then
   done
   echo "chmod 640 ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
   echo "chgrp rstprod ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
-  for FILE in ${WORK}/pb2nc/prepbufr_nc/*.nc ; do
-      if [ -s $FILE ]; then
-          echo "cp -v $FILE $COMOUTgefs" >> run_pb2nc.sh
-      fi
-  done
+  echo "for FILE in \${WORK}/pb2nc/prepbufr_nc/*.nc ; do" >> run_pb2nc.sh
+  echo "  if [ -s \$FILE ]; then" >> run_pb2nc.sh
+  echo "cp -v \$FILE $COMOUTgefs" >> run_pb2nc.sh
+  echo "  fi" >> run_pb2nc.sh
+  echo "done" >> run_pb2nc.sh 
   echo "chmod 640 $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
   echo "chgrp rstprod $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
   chmod +x run_pb2nc.sh
