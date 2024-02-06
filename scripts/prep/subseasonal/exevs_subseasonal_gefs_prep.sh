@@ -24,10 +24,10 @@ python $USHevs/subseasonal/check_subseasonal_config_gefs_prep.py
 export err=$?; err_chk
 
 # Set up environment variables for initialization, valid, and forecast hours and source them
-#python $USHevs/subseasonal/set_init_valid_fhr_subseasonal_prep_info.py
-#export err=$?; err_chk
-#. $DATA/$STEP/python_gen_env_vars.sh
-#export err=$?; err_chk
+python $USHevs/subseasonal/set_init_valid_fhr_subseasonal_prep_info.py
+export err=$?; err_chk
+. $DATA/$STEP/python_gen_env_vars.sh
+export err=$?; err_chk
 
 # Create job script
 mkdir -p data
