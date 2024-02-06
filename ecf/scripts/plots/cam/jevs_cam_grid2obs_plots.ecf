@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=12:00:00
-#PBS -l place=vscatter:exclhost,select=10:ncpus=128
+#PBS -l walltime=16:00:00
+#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=300GB
 #PBS -l debug=true
 
 export model=evs 
@@ -51,7 +51,8 @@ else
   export vhr=00
 fi
 export USE_CFP=YES
-export nproc=1280
+export nproc=1536
+export ncpu=128
 export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="grid2obs"

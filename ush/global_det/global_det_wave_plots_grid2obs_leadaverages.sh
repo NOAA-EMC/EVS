@@ -115,12 +115,12 @@ for period in ${periods} ; do
                 tmp_image=$DATA/images/$imagename
                 # Add commands
                 if [[ -s $output_image ]]; then
-                    echo "cpreq -v $output_image $tmp_image" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_${stats}_${ptype}_${period}_${region}.sh
+                    echo "cp -v $output_image $tmp_image" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_${stats}_${ptype}_${period}_${region}.sh
                 else
                     echo "${GRID2OBS_CONF}/py_plotting_wave.config"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_${stats}_${ptype}_${period}_${region}.sh
                     echo "export err=\$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_${stats}_${ptype}_${period}_${region}.sh
                     if [ $SENDCOM = YES ]; then
-                        echo "cpreq -v $tmp_image $output_image" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_${stats}_${ptype}_${period}_${region}.sh
+                        echo "if [ -f $tmp_image ]; then cp -v $tmp_image $output_image; fi" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_${stats}_${ptype}_${period}_${region}.sh
                     fi
                 fi
 
