@@ -32,7 +32,7 @@ if STEP == 'plots':
     if os.path.exists(completed_jobs_file):
         if os.stat(completed_jobs_file).st_size != 0:
             cutil.run_shell_command(
-                ['cpreq', '-rpv', os.path.join(RESTART_DIR,'*'), SAVE_DIR]
+                ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), SAVE_DIR]
             )
 
 print("END: "+os.path.basename(__file__))
