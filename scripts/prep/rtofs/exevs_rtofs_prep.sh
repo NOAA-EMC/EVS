@@ -26,9 +26,11 @@ for lead in ${leads}; do
         output_rtofs_file=$COMOUTprep/rtofs.$VDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
         if [ ! -s $output_rtofs_file ]; then
             if [ -s $input_rtofs_file ]; then
-                cpreq -v $input_rtofs_file $tmp_rtofs_file
+                cp -v $input_rtofs_file $tmp_rtofs_file
                 if [ $SENDCOM = YES ]; then
-                    cpreq -v $tmp_rtofs_file $output_rtofs_file
+			if [ -s $tmp_rtofs_file ]; then
+                    		cp -v $tmp_rtofs_file $output_rtofs_file
+			fi
                 fi
             else
                 echo "WARNING: ${input_rtofs_file} does not exist"
@@ -49,9 +51,11 @@ for lead in ${leads}; do
         output_rtofs_file=$COMOUTprep/rtofs.$VDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
         if [ ! -s $output_rtofs_file ]; then
             if [ -s $input_rtofs_file ]; then
-                cpreq -v $input_rtofs_file $tmp_rtofs_file
+                cp -v $input_rtofs_file $tmp_rtofs_file
                 if [ $SENDCOM = YES ]; then
-                    cpreq -v $tmp_rtofs_file $output_rtofs_file
+			if [ -s $tmp_rtofs_file ]; then
+                    		cp -v $tmp_rtofs_file $output_rtofs_file
+			fi
                 fi
             else
                 echo "WARNING: ${input_rtofs_file} does not exist"
@@ -94,7 +98,9 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
                     cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
                     export err=$?; err_chk
                     if [ $SENDCOM = "YES" ]; then
-                        cpreq -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
+                        if [ -s $tmp_rtofs_latlon_filename ]; then
+			    cp -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
+			fi
                     fi
                 else
                     echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
@@ -112,7 +118,9 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
                         cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
                         export err=$?; err_chk
                         if [ $SENDCOM = "YES" ]; then
-                            cpreq -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
+                            if [ -s $tmp_rtofs_latlon_filename ]; then
+				cp -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
+			    fi
                         fi
                     else
                         echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
@@ -154,7 +162,9 @@ for ftype in nh sh; do
             cdo remapbil,$osi_saf_grid_file $input_osisaf_file $tmp_osisaf_file
             export err=$?; err_chk
             if [ $SENDCOM = "YES" ]; then
-                cpreq -v $tmp_osisaf_file $output_osisaf_file
+                if [ -s $tmp_osisaf_file ]; then
+		    cp -v $tmp_osisaf_file $output_osisaf_file
+		fi
             fi
         else
             if [ $SENDMAIL = YES ] ; then
@@ -188,7 +198,9 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
         -c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsNDBC.conf
         export err=$?; err_chk
          if [ $SENDCOM = YES ]; then
-             cpreq -v $tmp_ndbc_file $output_ndbc_file
+             if [ -s $tmp_ndbc_file ] ; then
+		 cp -v $tmp_ndbc_file $output_ndbc_file
+	     fi
          fi
     fi
 else
@@ -217,7 +229,9 @@ if [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_pro
 			-c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsARGO.conf
 			export err=$?; err_chk
 			if [ $SENDCOM = YES ]; then
-				cpreq -v $tmp_argo_file $output_argo_file
+				if [ -s $tmp_argo_file ] ; then
+					cp -v $tmp_argo_file $output_argo_file
+				fi
 			fi
 		fi
 	else
