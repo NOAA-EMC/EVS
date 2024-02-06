@@ -52,6 +52,7 @@ for ihour in ${inithours} ; do
     filename="gefs.wave.t${ihour}z.mean.global.0p25.f${hr}.grib2"
     newname="gefs.wave.${INITDATE}.t${ihour}z.mean.global.0p25.f${hr}.grib2"
     if [ ! -s ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} ]; then
+        echo "WARNING: ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} is not available"
 	if [ $SENDMAIL = YES ]; then
           export subject="F${hr} GEFS Forecast Data Missing for EVS ${COMPONENT}"
           echo "Warning: No GEFS forecast was available for ${INITDATE}${ihour}f${hr}" > mailmsg
@@ -81,6 +82,7 @@ for ihour in 00 06 12 18 ; do
 
   export inithour=t${ihour}z
   if [ ! -s ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ]; then
+      echo "WARNING: ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr"
       if [ $SENDMAIL = YES ]; then
         export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GDAS Prepbufr was available for init date ${INITDATE}${ihour}" > mailmsg

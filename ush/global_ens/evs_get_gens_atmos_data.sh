@@ -36,6 +36,7 @@ cd $WORK
 if [ $modnam = gfsanl ]; then
   for ihour in 00 06 12 18 ; do
     if [ ! -s $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl ] ; then
+      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl is not available" 
       if [ $SENDMAIL = YES ]; then
         export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS analysis available for ${vday}${ihour}" > mailmsg
@@ -47,6 +48,7 @@ if [ $modnam = gfsanl ]; then
       cpreq -v $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl $WORK/gfsanl.t${ihour}z.grid3.f000.grib2
     fi
     if [ ! -s $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 ]; then
+      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="GFS F000 Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS F000 available for ${vday}${ihour}" > mailmsg
@@ -112,6 +114,7 @@ if [ $modnam = cmcanl ]; then
         echo "WARNING: No $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl or $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 file available"
       fi
       if [ ! -s $cmcanl ] ; then
+        echo "WARNING: $cmcanl is not available"
        if [ $SENDMAIL = YES ]; then
          export subject="CMC Analysis Data Missing for EVS ${COMPONENT}"
          echo "Warning: No CMC analysis available for ${vday}${ihour}" > mailmsg
@@ -213,6 +216,7 @@ if [ $modnam = gefs ] ; then
         >$WORK/gefs.upper.${ihour}.${mb}.${hhh}
         >$WORK/gefs.sfc.${ihour}.${mb}.${hhh}
         if [ ! -s $gefs ]; then
+          echo "WARNING: $gefs is not available"
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
             echo "Warning: No GEFS Member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
@@ -227,6 +231,7 @@ if [ $modnam = gefs ] ; then
 	  $WGRIB2 $gefs     | grep --file=${pat0} | $WGRIB2 -i $gefs     -grib ${grabgefs}
         fi
         if [ ! -s $gefs_cvc ]; then
+          echo "WARNING: $gefs_cvc is not available"
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
             echo "Warning: No GEFS Member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
@@ -307,6 +312,7 @@ if [ $modnam = cmce ] ; then
         >$WORK/cmce.upper.${ihour}.${mb}.${h3}
         >$WORK/cmce.sfc.${ihour}.${mb}.${h3}
         if [ ! -s $cmce ]; then
+          echo "WARNING: $cmce is not available"
           if [ $SENDMAIL = YES ]; then
             export subject="CMCE Member ${mb} F${h3} Data Missing for EVS ${COMPONENT}"
             echo "Warning: No CMCE Member ${mb} F${h3} available for ${vday}${ihour}" > mailmsg
@@ -381,6 +387,7 @@ if [ $modnam = prepbufr ] ; then
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf" >> run_pb2nc.${ihour}.sh  
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.conf" >> run_pb2nc.${ihour}.sh  
       else
+        echo "WARNING: $COMINobsproc/gdas.${vday}/${ihour}/atmos/gdas.t${ihour}z.prepbufr is not available"
 	if [ $SENDMAIL = YES ]; then
           export subject="Prepbufr  Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No prepbufr analysis available for ${vday}${ihour}" > mailmsg
@@ -421,6 +428,7 @@ if [ $modnam = ccpa ] ; then
           fi
       fi
     else
+        echo "WARNING: $COMINccpa/ccpa.${vday}/$ihour/ccpa.t${ihour}z.06h.1p0.conus.gb2" 
         if [ $SENDMAIL = YES ]; then
           export subject="CCPA  Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No CCPA analysis available for ${INITDATE}${ihour}" > mailmsg
@@ -448,6 +456,7 @@ if [ $modnam = ccpa ] ; then
         if [ -s $source_ccpa_file ]; then
             cpreq -v $source_ccpa_file ${WORK}/ccpa24/ccpa${nccpa_file}
         else
+            echo "WARNING: $source_ccpa_file is not available"
             if [ $SENDMAIL = YES ]; then
                 export subject="06h CCPA Data Missing for 24h CCPA generation"
                 echo "Warning: A 06h CCPA file is missing for 24h CCPA generation at ${vday}${ihour}" > mailmsg
@@ -698,6 +707,7 @@ if [ $modnam = nohrsc24h ] ; then
           fi
       fi
     else
+        echo "WARNING: $snowfall is not available"
         if [ $SENDMAIL = YES ]; then
           export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No NOHRSC analysis available for ${vday}${ihour}" > mailmsg
@@ -849,6 +859,7 @@ if [ $modnam = gfs ] ; then
     for  hhh in 024 048 072 096  120 144 168 192 216 240 264 288 312 336 360 384 ; do     
      gfs=$COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f${hhh}
      if [ ! -s $gfs ]; then
+      echo "WARNING: $gfs is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="GFS F${hhh} Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS F${hhh} available for ${vday}${ihour}" > mailmsg
@@ -880,6 +891,7 @@ if [ $modnam = osi_saf ] ; then
     osi_nh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATEm1}1200.nc
     osi_sh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATEm1}1200.nc
     if [ ! -s $osi_nh ]; then
+        echo "WARNING: $osi_nh is not available" 
         if [ $SENDMAIL = YES ]; then
           export subject="OSI_SAF NH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF NH data  available for ${INITDATE}" > mailmsg
@@ -888,6 +900,7 @@ if [ $modnam = osi_saf ] ; then
           cat mailmsg | mail -s "$subject" $MAILTO
         fi 
     elif [ ! -s $osi_sh ]; then
+          echo "WARNING: $osi_sh is not available" 
           export subject="OSI_SAF SH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF SH data  available for ${INITDATE}" > mailmsg
           echo "Missing file is $osi_sh"  >> mailmsg

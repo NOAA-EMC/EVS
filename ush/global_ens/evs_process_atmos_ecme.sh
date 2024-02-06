@@ -108,6 +108,7 @@ while [ ${hourix} -lt 31 ]; do
           chgrp rstprod $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
       fi
     else
+      echo "WARNING: $DCD is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="ECME Data Missing for EVS ${COMPONENT}"
         echo "Warning:  No ECME data for ${ymdh}" > mailmsg
@@ -124,6 +125,7 @@ while [ ${hourix} -lt 31 ]; do
   #******************************************************************
   E1E=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
   if [ ! -s $E1E ]; then
+    echo "WARNING: $E1E is not available"
     if [ $SENDMAIL = YES ]; then
         export subject="ECME Data Missing for EVS ${COMPONENT}"
         echo "Warning:  No ECME data for ${ymdh}" > mailmsg

@@ -63,6 +63,7 @@ if [ $modnam = gefs_bc ] ; then
                  fi
              fi
           else
+            echo "WARNING: $gefs_bc" is not available"
             if [ $SENDMAIL = YES ]; then
               export subject="GEFS BC member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
               echo "Warning: No GEFS BC member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
@@ -125,6 +126,7 @@ if [ $modnam = cmce_bc ] ; then
                fi
                rm -f  $WORK/cmce.upper.${ihour}.${mb}.${h3}
              else
+               echo "WARNING: $cmce_bc is not available"
                if [ $SENDMAIL = YES ]; then
                  export subject="CMCE BC member ${mb} F${h3} Data Missing for EVS ${COMPONENT}"
                  echo "Warning: No CMCE BC member ${mb} F${h3} available for ${vday}${ihour}" > mailmsg
@@ -169,6 +171,7 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
                 fi
             fi
           else
+            echo "WARNING: $apcp24_bc is not available" 
             if [ $SENDMAIL = YES ]; then
               export subject="GEFS BC member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
               echo "Warning: No GEFS BC member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
