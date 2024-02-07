@@ -150,6 +150,7 @@ for ftype in nh sh; do
     	actual_size_osisaf=$(wc -c <"$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc")
     fi
     if [[ ! -s $input_osisaf_file || $actual_size_osisaf -lt $min_size ]]; then
+	    echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $VDATE."
 	    if [ $SENDMAIL = YES ] ; then
 		    export subject="OSI-SAF Data Missing for EVS RTOFS"
 		    echo "Warning: No OSI-SAF ${ftype} data was available for valid date $VDATE." > mailmsg
@@ -167,6 +168,7 @@ for ftype in nh sh; do
 		fi
             fi
         else
+	    echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $VDATE."
             if [ $SENDMAIL = YES ] ; then
                 export subject="OSI-SAF Data Missing for EVS RTOFS"
                 echo "Warning: No OSI-SAF ${ftype} data was available for valid date $VDATE." > mailmsg
@@ -204,6 +206,7 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
          fi
     fi
 else
+  echo "WARNING: No NDBC data was available for valid date $VDATE."	
   if [ $SENDMAIL = YES ] ; then
     export subject="NDBC Data Missing for EVS RTOFS"
     echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
@@ -243,6 +246,7 @@ if [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_pro
 		fi
 	fi
 else
+	echo "WARNING: No Argo data was available for valid date $VDATE."
 	if [ $SENDMAIL = YES ] ; then
 		export subject="Argo Data Missing for EVS RTOFS"
 		echo "Warning: No Argo data was available for valid date $VDATE." > mailmsg
