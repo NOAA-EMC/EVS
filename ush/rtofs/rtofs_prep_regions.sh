@@ -88,7 +88,7 @@ if [ ! -s $COMOUTprep/rtofs.$VDATE/$RUN/south_atlantic.lat.nc ]; then
         -type lat -thresh 'ge-80 && le0' -intersection
         export err=$?; err_chk
         if [ $SENDCOM = "YES" ]; then
-		if [-s $DATA/rtofs.$VDATE/$RUN/south_atlantic.lat.nc ]; then
+		if [ -s $DATA/rtofs.$VDATE/$RUN/south_atlantic.lat.nc ]; then
             		cp -v $DATA/rtofs.$VDATE/$RUN/south_atlantic.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
 		fi
         fi
