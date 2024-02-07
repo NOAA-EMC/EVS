@@ -163,7 +163,7 @@ for fhr in $fhrs ; do
     if [ $SENDCOM="YES" ] ; then
         echo "for FILE in \$output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat ; do" >> run_${modnam}_${fhr}_cnv.sh
         echo "  if [ -s \$FILE ]; then" >> run_${modnam}_${fhr}_cnv.sh
-        echo  "cp -v  \$FILE $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
+        echo  "     cp -v  \$FILE $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
         echo "  fi" >> run_${modnam}_${fhr}_cnv.sh
         echo "done" >> run_${modnam}_${fhr}_cnv.sh
     fi
