@@ -28,14 +28,20 @@ for ff in $FHOURS ; do
 	    sourcefile=$DCOMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${ccfcst}z_t${ff}.grib2
 	fi
     elif [ $CENTER = "us" ] ; then
+	mod=$(( 10#$ccfcst % 6 ))
+	[ $mod -eq 3 ] && continue
 	if [ $RESOLUTION = "0P25" ] ; then
 	    sourcefile=$COMINgfs/gfs.$day/$ccfcst/atmos/gfs.t${ccfcst}z.wafs_0p25_unblended.f${ff}.grib2
 	fi
     elif [ $CENTER = "blend" ] ; then
+	mod=$(( 10#$ccfcst % 6 ))
+	[ $mod -eq 3 ] && continue
         if [ $RESOLUTION = "0P25" ] ; then
 	    sourcefile=$COMINgfs/gfs.$day/$ccfcst/atmos/WAFS_0p25_blended_${day}${ccfcst}f${ff}.grib2
 	fi
     elif [ $CENTER = "gfs" ] ; then
+	mod=$(( 10#$ccfcst % 6 ))
+	[ $mod -eq 3 ] && continue
 	if [ $RESOLUTION = "1P25" ] ; then
 	    sourcefile=$COMINgfs/gfs.$day/$ccfcst/atmos/gfs.t${ccfcst}z.wafs_grb45f${ff}.grib2
 	fi
