@@ -791,7 +791,7 @@ def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
     daily_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                       +daily_source_file.rpartition('/')[2])
     # Prep daily file
-    if os.path.exists(daily_source_file):
+    if check_file_exists_size(daily_source_file):
         copy_file(daily_source_file, daily_prepped_file)
     else:
         log_missing_file_obs(log_missing_file, daily_source_file,
