@@ -98,14 +98,18 @@ def check_file_exists_size(file_name):
                        - False: file doesn't exist
                                 OR file size = 0
     """
+    if '/com/' in file_name or '/dcom/' in file_name:
+        alert_word = 'WARNING'
+    else:
+        alert_word = 'NOTE'
     if os.path.exists(file_name):
         if os.path.getsize(file_name) > 0:
             file_good = True
         else:
-            print("WARNING: "+file_name+" empty, 0 sized")
+            print(f"{alert_word}: {file_name} empty, 0 sized")
             file_good = False
     else:
-        print("WARNING: "+file_name+" does not exist")
+        print(f"{alert_word}: {file_name} does not exist")
         file_good = False
     return file_good
 
@@ -787,7 +791,7 @@ def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
     daily_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                       +daily_source_file.rpartition('/')[2])
     # Prep daily file
-    if os.path.exists(daily_source_file):
+    if check_file_exists_size(daily_source_file):
         copy_file(daily_source_file, daily_prepped_file)
     else:
         log_missing_file_obs(log_missing_file, daily_source_file,
