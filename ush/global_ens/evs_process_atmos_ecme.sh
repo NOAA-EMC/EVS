@@ -203,6 +203,15 @@ while [ ${hourix} -lt 31 ]; do
       mbr=$((mbr+1))
      done
      rm E1E_apcp.${hourinc}
+  else
+     echo "WARNING: $E1E is not available"
+        if [ $SENDMAIL = YES ]; then
+            export subject="ECME Data Missing for EVS ${COMPONENT}"
+            echo "Warning:  No ECME data for ${ymdh}" > mailmsg
+            echo "Missing files are in $E1E"  >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $MAILTO
+        fi
   fi
   let hourix=hourix+1
 done
@@ -265,6 +274,16 @@ while [ ${hourix} -lt 31 ]; do
       mbr=$((mbr+1))
      done
      rm E1E_vertical.${hourinc}*
+  else
+     echo "WARNING: $E1E is not available"
+        if [ $SENDMAIL = YES ]; then
+            export subject="ECME Data Missing for EVS ${COMPONENT}"
+            echo "Warning:  No ECME data for ${ymdh}" > mailmsg
+            echo "Missing files are in $E1E"  >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $MAILTO
+        fi
+ 
   fi
   let hourix=hourix+1
 done

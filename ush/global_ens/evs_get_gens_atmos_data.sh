@@ -215,7 +215,11 @@ if [ $modnam = gefs ] ; then
         gefs_cvc=$origin_cvc/gep${mb}.t${ihour}z.pgrb2b.0p50.f${hhh} 
         >$WORK/gefs.upper.${ihour}.${mb}.${hhh}
         >$WORK/gefs.sfc.${ihour}.${mb}.${hhh}
-        if [ ! -s $gefs ]; then
+        if [ -s $gefs ]; then
+          grabgefs=${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+          x=${tmpDir}/x.${ihour}.${mb}.${hhh}
+          $WGRIB2 $gefs     | grep --file=${pat0} | $WGRIB2 -i $gefs     -grib ${grabgefs}
+        else
           echo "WARNING: $gefs is not available"
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
@@ -224,13 +228,13 @@ if [ $modnam = gefs ] ; then
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
-        else
-          grabgefs=${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
-	  x=${tmpDir}/x.${ihour}.${mb}.${hhh}
-
-	  $WGRIB2 $gefs     | grep --file=${pat0} | $WGRIB2 -i $gefs     -grib ${grabgefs}
         fi
-        if [ ! -s $gefs_cvc ]; then
+        if [ -s $gefs_cvc ]; then
+          [[ -z $grabgefs ]] && grabgefs=${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+          [[ -z $x ]] && x=${tmpDir}/x.${ihour}.${mb}.${hhh}
+          $WGRIB2 $gefs_cvc | grep --file=${pat1} | $WGRIB2 -i $gefs_cvc -grib ${x}
+          cat ${x} >> ${grabgefs}
+        else
           echo "WARNING: $gefs_cvc is not available"
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
@@ -239,9 +243,6 @@ if [ $modnam = gefs ] ; then
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
-        else
-          $WGRIB2 $gefs_cvc | grep --file=${pat1} | $WGRIB2 -i $gefs_cvc -grib ${x}
-	  cat ${x} >> ${grabgefs}
         fi
 #        $WGRIB2 $WORK/gefs.upper.${ihour}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
         $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
@@ -401,7 +402,7 @@ if [ $modnam = prepbufr ] ; then
   done
   echo "chmod 640 ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
   echo "chgrp rstprod ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
-  echo "for FILE in \${WORK}/pb2nc/prepbufr_nc/*.nc ; do" >> run_pb2nc.sh
+  echo "for FILE in ${WORK}/pb2nc/prepbufr_nc/*.nc ; do" >> run_pb2nc.sh
   echo "  if [ -s \$FILE ]; then" >> run_pb2nc.sh
   echo "cp -v \$FILE $COMOUTgefs" >> run_pb2nc.sh
   echo "  fi" >> run_pb2nc.sh

@@ -82,7 +82,7 @@ for ihour in 00 06 12 18 ; do
 
   export inithour=t${ihour}z
   if [ ! -s ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ]; then
-      echo "WARNING: ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr"
+      echo "WARNING: ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GDAS Prepbufr was available for init date ${INITDATE}${ihour}" > mailmsg
