@@ -161,7 +161,7 @@ for VHOUR in VHOUR_LIST:
                                     +f"init{init_dt:%Y%m%d%H}_"
                                     +f"{str(fhr).zfill(3)}.sh"
                                 )
-                                print("MISSING or ZERO SIZE: "
+                                print("WARNING: MISSING or ZERO SIZE: "
                                       +f"{COMINmodel_file}")
                                 print("Mail File: "
                                       +f"{mail_COMINmodel_file}")
@@ -180,7 +180,7 @@ for VHOUR in VHOUR_LIST:
                                         +USER.lower()+"@noaa.gov'}\n"
                                     )
                                     mailmsg.write(
-                                        'echo "Warning: No '+MODELNAME.upper()
+                                        'echo "WARNING: No '+MODELNAME.upper()
                                         +' was available for '
                                         +f'{init_dt:%Y%m%d%H}f'
                                         +f'{str(fhr).zfill(3)}" > mailmsg\n'
@@ -259,7 +259,7 @@ for VHOUR in VHOUR_LIST:
                     DATA, f"mail_ccpa_accum{ccpa_file_accum}hr_"
                     +f"valid{ccpa_file_dt_in_accum:%Y%m%d%H}.sh"
                 )
-                print(f"MISSING or ZERO SIZE: {EVSINccpa_file}")
+                print(f"WARNING: MISSING or ZERO SIZE: {EVSINccpa_file}")
                 print(f"Mail File: {mail_EVSINccpa_file}")
                 if not os.path.exists(mail_EVSINccpa_file):
                     mailmsg = open(mail_EVSINccpa_file, 'w')
@@ -274,7 +274,7 @@ for VHOUR in VHOUR_LIST:
                         +"@noaa.gov'}\n"
                     )
                     mailmsg.write(
-                        'echo "Warning: No CCPA accumulation '
+                        'echo "WARNING: No CCPA accumulation '
                         +ccpa_file_accum+' hour data was available for '
                         +f'valid date {ccpa_file_dt_in_accum:%Y%m%d%H}" '
                         +'> mailmsg\n'
@@ -335,7 +335,7 @@ for VHOUR in VHOUR_LIST:
                     DATA, f"mail_mrms_accum{accum}hr_{mrms_area}_"
                     +f"valid{accum_end_dt:%Y%m%d%H}.sh"
                 )
-                print(f"MISSING or ZERO SIZE: {EVSINmrms_gzfile}")
+                print(f"WARNING: MISSING or ZERO SIZE: {EVSINmrms_gzfile}")
                 print(f"Mail File: {mail_EVSINmrms_file}")
                 if not os.path.exists(mail_EVSINmrms_file):
                     mailmsg = open(mail_EVSINmrms_file, 'w')
@@ -351,7 +351,7 @@ for VHOUR in VHOUR_LIST:
                         +"@noaa.gov'}\n"
                     )
                     mailmsg.write(
-                        'echo "Warning: No MRMS '+mrms_area.title()+' '
+                        'echo "WARNING: No MRMS '+mrms_area.title()+' '
                         +'accumulation '+accum+' hour data was available '
                         +f'for valid date {accum_end_dt:%Y%m%d%H}" '
                         +'> mailmsg\n'
