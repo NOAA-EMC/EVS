@@ -62,29 +62,18 @@ output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
 print("\nCreating monthly average files")
 valid_hr = int(valid_hr_start)
 while valid_hr <= int(valid_hr_end):
-    if job_name == 'MonthlyAvg_GeoHeightAnom':
-        if int(valid_hr) % 12 != 0 :
-            valid_hr+=int(valid_hr_inc)
-            continue
     monthly_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
                                                        '%Y%m%d%H')
-    if job_name == 'MonthlyAvg_GeoHeightAnom':
-        monthly_avg_valid_start = (monthly_avg_valid_end
-                                  - datetime.timedelta(hours=156))
-    else:
-        monthly_avg_valid_start = datetime.datetime.strptime(MONTHLYSTART
-                                                             +str(valid_hr),
-                                                             '%Y%m%d%H')
+    monthly_avg_valid_start = datetime.datetime.strptime(MONTHLYSTART
+                                                         +str(valid_hr),
+                                                         '%Y%m%d%H')
     monthly_avg_day_end = int(fhr_list[-1])/24
     monthly_avg_day_start = 30
     monthly_avg_day = monthly_avg_day_start
     while monthly_avg_day <= monthly_avg_day_end:
         monthly_avg_day_fhr_end = int(monthly_avg_day * 24)
         monthly_avg_file_list = []
-        if job_name == 'MonthlyAvg_GeoHeightAnom':
-            monthly_avg_day_fhr_start = monthly_avg_day_fhr_end - 156
-        else:
-            monthly_avg_day_fhr_start = monthly_avg_day_fhr_end - 720
+        monthly_avg_day_fhr_start = monthly_avg_day_fhr_end - 720
         monthly_avg_day_init = (monthly_avg_valid_end
                                - datetime.timedelta(days=monthly_avg_day))
         monthly_avg_day_fhr = monthly_avg_day_fhr_start
@@ -158,10 +147,7 @@ while valid_hr <= int(valid_hr_end):
                       +', init '+str(monthly_avg_day_init)+" "
                       +monthly_avg_day_fhr_DATAROOT_input_file+" or "
                       +monthly_avg_day_fhr_COMIN_input_file)
-            if job_name == 'MonthlyAvg_GeoHeightAnom':
-                monthly_avg_day_fhr+=12
-            else:
-                monthly_avg_day_fhr+=int(fhr_inc)
+            monthly_avg_day_fhr+=int(fhr_inc)
         if len(monthly_avg_fcst_file_list) >= 49:
             monthly_avg_fcst = (
                 monthly_avg_fcst_sum/len(monthly_avg_fcst_file_list)
@@ -170,13 +156,10 @@ while valid_hr <= int(valid_hr_end):
             monthly_avg_obs = (
                 monthly_avg_obs_sum/len(monthly_avg_obs_file_list)
             )
-        if job_name == 'MonthlyAvg_GeoHeightAnom':
-            expected_nfiles = 14
-        else:
-            if fhr_inc == '6':
-                expected_nfiles = 29
-            elif fhr_inc == '12':
-                expected_nfiles = 49
+        if fhr_inc == '6':
+            expected_nfiles = 29
+        elif fhr_inc == '12':
+            expected_nfiles = 49
         if len(monthly_avg_fcst_file_list) >= expected_nfiles \
                 and len(monthly_avg_obs_file_list) >= expected_nfiles:
             print("Output File: "+output_file)
@@ -270,10 +253,7 @@ while valid_hr <= int(valid_hr_end):
         else:
             print("WARNING: Cannot create monthly average file "+output_file+" "
                   +"; need at least "+str(expected_nfiles)+" input files")
-        if job_name == 'MonthlyAvg_GeoHeightAnom':
-            monthly_avg_day+=1
-        else:
-            monthly_avg_day+=1
+        monthly_avg_day+=1
         print("")
     valid_hr+=int(valid_hr_inc)
     
