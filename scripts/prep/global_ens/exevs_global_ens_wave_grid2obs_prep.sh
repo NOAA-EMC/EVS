@@ -117,10 +117,10 @@ for ihour in 00 06 12 18 ; do
             if [ $SENDCOM = YES ]; then
                 if [ -s $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ]; then
                     cp -v $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
+                    chmod 640 ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
+                    chgrp rstprod ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
                 fi
             fi
-            chmod 640 ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
-            chgrp rstprod ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
         fi
     fi
 done
