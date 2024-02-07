@@ -528,22 +528,15 @@ if [ $modnam = gefs_apcp24h ] ; then
         typeset -a lead_arr
         for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
           file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
-          echo $file1
           if [ $lead_chk -ge 108 ]; then
              file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-6))).grib2
              file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-12))).grib2
              file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-18))).grib2
-             echo "file2: $file2"
-             echo "file3: $file3"
-             echo "file4: $file4"
           else
              strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
              file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-6))).grib2
              file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-12))).grib2
              file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-18))).grib2
-             echo "file2: $file2"
-             echo "file3: $file3"
-             echo "file4: $file4"
           fi 
           if [ -s $COMOUTgefs/$file1 -a\
                -s $COMOUTgefs/$file2 -a\
@@ -611,22 +604,15 @@ if [ $modnam = cmce_apcp24h ] ; then
          typeset -a lead_arr
          for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
            file1=cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2
-           echo $file1
            if [ $lead_chk -ge 108 ]; then
              file2=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((lead_chk-6))).grib2
              file3=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((lead_chk-12))).grib2
              file4=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((lead_chk-18))).grib2
-             echo "file2: $file2"
-             echo "file3: $file3"
-             echo "file4: $file4"
            else
              strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
              file2=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((strip_lead_chk-6))).grib2
              file3=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((strip_lead_chk-12))).grib2
              file4=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((strip_lead_chk-18))).grib2
-             echo "file2: $file2"
-             echo "file3: $file3"
-             echo "file4: $file4"
           fi 
           if [ -s $COMOUTcmce/$file1 -a\
                -s $COMOUTcmce/$file2 -a\
@@ -665,14 +651,11 @@ if [ $modnam = ecme_apcp24h ] ; then
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
          file1=ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1
-         echo $file1
          if [ $lead_chk -ge 108 ]; then
            file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((lead_chk-24))).grib1
-           echo "file2: $file2"
          else
            strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
            file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((strip_lead_chk-24))).grib1
-           echo "file2: $file2"
          fi
          if [ -s $COMOUTecme/$file1 -a -s $COMOUTecme/$file2 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk} 
@@ -736,14 +719,11 @@ if [ $modnam = gefs_snow24h ] ; then
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
          file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
-         echo $file1
          if [ $lead_chk -ge 108 ]; then
              file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-24))).grib2
-             echo "file2: $file2"
          else
              strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
              file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-24))).grib2
-             echo "file2: $file2"
          fi              
          if [ -s $COMOUTgefs/$file1 -a -s $COMOUTgefs/$file2 ] ; then    
              lead_arr[${#lead_arr[*]}+1]=${lead_chk}
@@ -783,14 +763,11 @@ if [ $modnam = cmce_snow24h ] ; then
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
          file1=cmce.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
-         echo $file1
          if [ $lead_chk -ge 108 ]; then
            file2=cmce.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-24))).grib2
-           echo "file2: $file2"
          else
            strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
            file2=cmce.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-24))).grib2
-           echo "file2: $file2"
          fi
          if [ -s $COMOUTcmce/$file1 -a -s $COMOUTcmce/$file2 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk}
@@ -823,14 +800,11 @@ if [ $modnam = ecme_snow24h ] ; then
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
          file1=ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1
-         echo $file1
          if [ $lead_chk -ge 108 ]; then
            file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((lead_chk-24))).grib1
-           echo "file2: $file2"
          else
            strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
            file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((strip_lead_chk-24))).grib1
-           echo "file2: $file2" 
          fi
          if [ -s $COMOUTecme/$file1 -a -s $COMOUTecme/$file2 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk}
@@ -940,22 +914,15 @@ if [ $modnam = gefs_icec24h ] ; then
        typeset -a lead_arr
        for lead_chk in 024 048 072 096 120 144 168 192 216 240 264 288 312 336 360 384; do
          file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
-         echo $file1
          if [ $lead_chk -ge 108 ]; then
              file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-6))).grib2
              file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-12))).grib2
              file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-18))).grib2
-             echo "file2: $file2"
-             echo "file3: $file3"
-             echo "file4: $file4"
          else
              strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
              file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-6))).grib2
              file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-12))).grib2
              file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-18))).grib2
-             echo "file2: $file2"
-             echo "file3: $file3"
-             echo "file4: $file4"
          fi
          if [ -s $COMOUTgefs/$file1 -a\
               -s $COMOUTgefs/$file2 -a\
@@ -1033,22 +1000,15 @@ if [ $modnam = gefs_sst24h ] ; then
          typeset -a lead_arr
          for lead_chk in $leads; do
            file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
-           echo $file1
            if [ $lead_chk -ge 108 ]; then
              file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-6))).grib2
              file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-12))).grib2
              file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-18))).grib2
-             echo "file2: $file2"
-             echo "file3: $file3"
-             echo "file4: $file4"
            else
              strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
              file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-6))).grib2
              file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-12))).grib2
              file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-18))).grib2
-             echo "file2: $file2"
-             echo "file3: $file3"
-             echo "file4: $file4"
            fi
            if [ -s $COMOUTgefs/$file1 -a\
                 -s $COMOUTgefs/$file2 -a\
