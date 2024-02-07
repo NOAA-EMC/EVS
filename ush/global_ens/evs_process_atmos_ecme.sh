@@ -160,8 +160,8 @@ while [ ${hourix} -lt 31 ]; do
       mbr=$((mbr+1))
     done
     rm E1E.${hourinc}
-    let hourix=hourix+1
   fi
+  let hourix=hourix+1
 done 
 
 #******************************************************************
@@ -203,8 +203,8 @@ while [ ${hourix} -lt 31 ]; do
       mbr=$((mbr+1))
      done
      rm E1E_apcp.${hourinc}
-    let hourix=hourix+1
   fi
+  let hourix=hourix+1
 done
 
 
