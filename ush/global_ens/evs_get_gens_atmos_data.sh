@@ -245,7 +245,6 @@ if [ $modnam = gefs ] ; then
           fi
         fi
         if [ -s $grabgefs ]; then
-            echo "run wgrib2"
             $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
         fi
         if [ $SENDCOM="YES" ] ; then
