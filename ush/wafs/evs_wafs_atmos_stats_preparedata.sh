@@ -16,6 +16,8 @@ fi
 icao2023=yes
 runMETplus=yes
 
+missingForecast=""
+
 #Re-define FHOURS_EVSlist
 export FHOURS_EVSlist=""
 for ff in $FHOURS ; do
@@ -85,6 +87,7 @@ for ff in $FHOURS ; do
             FHOURS_EVSlist="$FHOURS_EVSlist,$ff"
 	    ln -sf $sourcefile $targetfile
 	else
+	    missingForecast="$missingForecast $ff"
 	    echo "WARNING: missing forecast $sourcefile"
 	fi
     fi
@@ -100,6 +103,16 @@ if [ -z $FHOURS_EVSlist ] ; then
     fi
     echo "WARNING: All $CENTER forecasts are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus will not run."
     runMETplus=no
+else
+    if [ ! -z "$missingForecast" ] ; then
+	if [[ $SENDMAIL = YES ]] ; then
+            export subject="Some forecast files are missing for EVS ${COMPONENT}"
+            echo "WARNING: Some $CENTER forecasts $missingForecast are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues." > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+            echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+	    cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
+	fi
+	echo "WARNING: Some $CENTER forecasts $missingForecast are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues."
+    fi
 fi
 
 # GCIP data
