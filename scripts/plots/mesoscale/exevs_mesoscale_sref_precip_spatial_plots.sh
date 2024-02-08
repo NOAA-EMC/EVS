@@ -77,11 +77,11 @@ cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumM
 
 tar -cvf evs.plots.sref.precip.spatial.map.v${VDATE}.tar *.gif
 
-if [ $SENDCOM="YES" ] && [ -s evs.plots.sref.precip.spatial.map.v${VDATE}.tar ] ; then
- cp evs.plots.sref.precip.spatial.map.v${VDATE}.tar  $COMOUTplots/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.sref.precip.spatial.map.v${VDATE}.tar ] ; then
+ cp -v evs.plots.sref.precip.spatial.map.v${VDATE}.tar  $COMOUTplots/.  
 fi
 
-if [ $SENDDBN = YES ] && [ -s evs.plots.sref.precip.spatial.map.v${VDATE}.tar ] ; then
+if [ $SENDDBN = YES ] ; then
    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.sref.precip.spatial.map.v${VDATE}.tar
 fi
 

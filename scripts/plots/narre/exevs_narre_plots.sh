@@ -215,10 +215,10 @@ done
 tar -cvf evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ] && [ -s evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar ] ; then
-   cp evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
+   cp -v evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
 
-if [ $SENDDBN = YES ] && [ -s evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar ] ; then    
+if [ $SENDDBN = YES ] ; then    
    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar
 fi 
 

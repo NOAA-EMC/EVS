@@ -257,10 +257,10 @@ if [ -d $log_dir ]; then
 fi
 
 if [ $SENDCOM = YES ] && [ -s evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar ] ; then
- cp evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+ cp -v evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
-if [ $SENDDBN = YES ] && [ -s evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar ] ; then
+if [ $SENDDBN = YES ] ; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar
 fi  
 
