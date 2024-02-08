@@ -63,7 +63,7 @@ if [ $modnam = gefs_bc ] ; then
                  fi
              fi
           else
-            echo "WARNING: $gefs_bc" is not available"
+            echo "WARNING: $gefs_bc is not available"
             if [ $SENDMAIL = YES ]; then
               export subject="GEFS BC member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
               echo "Warning: No GEFS BC member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
