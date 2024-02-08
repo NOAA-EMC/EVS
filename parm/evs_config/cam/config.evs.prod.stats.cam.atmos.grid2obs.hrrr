@@ -66,7 +66,7 @@ elif [ "$NEST" = "subreg" ]; then
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
-    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G218_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G218_CPlains.nc, ${FIXevs}/masks/Bukovsky_G218_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G218_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G218_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G218_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G218_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NPlains.nc, ${FIXevs}/masks/Bukovsky_G218_NRockies.nc, ${FIXevs}/masks/Bukovsky_G218_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G218_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G218_Prairie.nc, ${FIXevs}/masks/Bukovsky_G218_Southeast.nc, ${FIXevs}/masks/Bukovsky_G218_SPlains.nc, ${FIXevs}/masks/Bukovsky_G218_SRockies.nc"
+    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G218_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G218_CPlains.nc, ${FIXevs}/masks/Bukovsky_G218_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G218_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G218_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G218_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G218_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NPlains.nc, ${FIXevs}/masks/Bukovsky_G218_NRockies.nc, ${FIXevs}/masks/Bukovsky_G218_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G218_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G218_Prairie.nc, ${FIXevs}/masks/Bukovsky_G218_Southeast.nc, ${FIXevs}/masks/Bukovsky_G218_Southwest.nc, ${FIXevs}/masks/Bukovsky_G218_SPlains.nc, ${FIXevs}/masks/Bukovsky_G218_SRockies.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
     export FHR_END_FULL="48"
