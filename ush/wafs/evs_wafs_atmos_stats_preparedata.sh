@@ -108,7 +108,6 @@ else
             echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 	    cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	fi
-	echo "WARNING: A subset of $CENTER forecasts ($missingForecast) is missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues."
     fi
 fi
 
