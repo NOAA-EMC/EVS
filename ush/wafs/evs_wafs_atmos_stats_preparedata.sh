@@ -93,7 +93,7 @@ done
 export FHOURS_EVSlist=`echo $FHOURS_EVSlist | sed 's/^,//'`
 if [ -z $FHOURS_EVSlist ] ; then
     if [[ $SENDMAIL = YES ]] ; then
-        export subject="All forecast files are missing for EVS ${COMPONENT}"
+        export subject="All $CENTER forecast files are missing for EVS ${COMPONENT}"
         echo "WARNING: All $CENTER forecasts are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus will not run." > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
         echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 	cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
@@ -103,12 +103,12 @@ if [ -z $FHOURS_EVSlist ] ; then
 else
     if [ ! -z "$missingForecast" ] ; then
 	if [[ $SENDMAIL = YES ]] ; then
-            export subject="Some forecast files are missing for EVS ${COMPONENT}"
-            echo "WARNING: Some $CENTER forecasts $missingForecast are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues." > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+            export subject="A subset of $CENTER forecast files is missing for EVS ${COMPONENT}"
+            echo "WARNING: A subset of $CENTER forecasts ($missingForecast) is missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues." > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
             echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 	    cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	fi
-	echo "WARNING: Some $CENTER forecasts $missingForecast are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues."
+	echo "WARNING: A subset of $CENTER forecasts ($missingForecast) is missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues."
     fi
 fi
 
