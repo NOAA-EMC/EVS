@@ -888,7 +888,7 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +source_file.rpartition('/')[2])
     # Prep file
-    if os.path.exists(source_file):
+    if check_file_exists_size(source_file):
         copy_file(source_file, prepped_file)
     else:
         log_missing_file_truth(log_missing_file, source_file,
@@ -920,7 +920,7 @@ def prep_prod_get_d_file(source_file, dest_file, date_dt,
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +source_file.rpartition('/')[2])
     # Prep file
-    if os.path.exists(source_file):
+    if check_file_exists_size(source_file):
         copy_file(prepped_file, dest_file)
     else:
         log_missing_file_truth(log_missing_file, source_file,

@@ -97,7 +97,9 @@ if [ $SENDCOM = YES ]; then
 	cd $VERIF_TYPE_SUBDIR
 	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${end_date}.tar
         tar -cvf $large_tar_file *.tar
-	cpreq -v $large_tar_file $COMOUT/.
+	if [ -s $large_tar_file ]; then
+	    cp -v $large_tar_file $COMOUT/.
+	fi
     done
     cd $DATA
 fi

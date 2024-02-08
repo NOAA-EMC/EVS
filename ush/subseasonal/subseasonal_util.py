@@ -98,14 +98,18 @@ def check_file_exists_size(file_name):
                        - False: file doesn't exist
                                 OR file size = 0
     """
+    if '/com/' in file_name or '/dcom/' in file_name:
+        alert_word = 'WARNING'
+    else:
+        alert_word = 'NOTE'
     if os.path.exists(file_name):
         if os.path.getsize(file_name) > 0:
             file_good = True
         else:
-            print("WARNING: "+file_name+" empty, 0 sized")
+            print(f"{alert_word}: {file_name} empty, 0 sized")
             file_good = False
     else:
-        print("WARNING: "+file_name+" does not exist")
+        print(f"{alert_word}: {file_name} does not exist")
         file_good = False
     return file_good
 
@@ -787,7 +791,7 @@ def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
     daily_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                       +daily_source_file.rpartition('/')[2])
     # Prep daily file
-    if os.path.exists(daily_source_file):
+    if check_file_exists_size(daily_source_file):
         copy_file(daily_source_file, daily_prepped_file)
     else:
         log_missing_file_obs(log_missing_file, daily_source_file,
@@ -3726,56 +3730,6 @@ def get_obs_valid_hrs(obs):
         print(f"FATAL ERROR: Cannot get {obs} valid hour information")
         sys.exit(1)
     return valid_hr_start, valid_hr_end, valid_hr_inc
-
-def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
-                         account):
-    """! This submits a job to the transfer queue
-         to get data that does not reside on current machine
-         Args:
-             job_file   - path to job submission file (string)
-             job_name   - job submission name (string)
-             job_output - path to write job output (string)
-             machine    - machine name (string)
-             user       - user name (string)
-             queue      - submission queue name (string)
-             account    - submission account name (string)
-         Returns:
-    """
-    # Set up job wall time information
-    walltime = '60'
-    walltime_seconds = (
-        datetime.timedelta(minutes=int(walltime)).total_seconds()
-    )
-    walltime = (datetime.datetime.min
-                + datetime.timedelta(minutes=int(walltime))).time()
-    # Submit job
-    print("Submitting "+job_file+" to "+queue)
-    print("Output sent to "+job_output)
-    os.chmod(job_file, 0o755)
-    if machine == 'WCOSS2':
-        os.system('qsub -V -l walltime='+walltime.strftime('%H:%M:%S')+' '
-                  +'-q '+queue+' -A '+account+' -o '+job_output+' '
-                  +'-e '+job_output+' -N '+job_name+' '
-                  +'-l select=1:ncpus=1 '+job_file)
-        job_check_cmd = ('qselect -s QR -u '+user+' '+'-N '
-                         +job_name+' | wc -l')
-    elif machine in ['HERA', 'ORION', 'S4', 'JET']:
-        os.system('sbatch --ntasks=1 --time='
-                  +walltime.strftime('%H:%M:%S')+' --partition='+queue+' '
-                  +'--account='+account+' --output='+job_output+' '
-                  +'--job-name='+job_name+' '+job_file)
-        job_check_cmd = ('squeue -u '+user+' -n '+job_name+' '
-                         +'-t R,PD -h | wc -l')
-    sleep_counter, sleep_checker = 1, 10
-    while (sleep_counter*sleep_checker) <= walltime_seconds:
-        sleep(sleep_checker)
-        print("Walltime checker: "+str(sleep_counter*sleep_checker)+" "
-              +"out of "+str(int(walltime_seconds))+" seconds")
-        check_job = subprocess.check_output(job_check_cmd, shell=True,
-                                            encoding='UTF-8')
-        if check_job[0] == '0':
-            break
-        sleep_counter+=1
 
 def initialize_prep_job_env_dict(verif_type, group,
                                  job):

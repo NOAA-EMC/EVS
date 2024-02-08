@@ -68,24 +68,25 @@ while valid_date_dt <= ENDDATE_dt:
         input_file = gda_util.format_filler(
             file_format, valid_date_dt, init_date_dt, str(fhr), {}
         )
+        output_DATA_file = os.path.join(
+            DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
+            RUN+'.'+valid_date_dt.strftime('%Y%m%d'), MODEL,
+            VERIF_CASE, 'wind_shear_'+VERIF_TYPE+'_'+job_name
+            +'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
+            +'fhr'+str(fhr).zfill(3)+'.nc'
+        )
+        output_COMOUT_file = os.path.join(
+            COMOUT, RUN+'.'+valid_date_dt.strftime('%Y%m%d'), MODEL,
+            VERIF_CASE, 'wind_shear_'+VERIF_TYPE+'_'+job_name
+            +'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
+            +'fhr'+str(fhr).zfill(3)+'.nc'
+        )
+
         if gda_util.check_file_exists_size(input_file):
             input_file_data = netcdf.Dataset(input_file)
             input_file_data_var_list = list(input_file_data.variables.keys())
             if all(v in input_file_data_var_list \
                    for v in req_var_level_list):
-                output_DATA_file = os.path.join(
-                    DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
-                    RUN+'.'+valid_date_dt.strftime('%Y%m%d'), MODEL,
-                    VERIF_CASE, 'wind_shear_'+VERIF_TYPE+'_'+job_name
-                    +'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
-                    +'fhr'+str(fhr).zfill(3)+'.nc'
-                )
-                output_COMOUT_file = os.path.join(
-                    COMOUT, RUN+'.'+valid_date_dt.strftime('%Y%m%d'), MODEL,
-                    VERIF_CASE, 'wind_shear_'+VERIF_TYPE+'_'+job_name
-                    +'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
-                    +'fhr'+str(fhr).zfill(3)+'.nc'
-                )
                 if os.path.exists(output_COMOUT_file):
                     gda_util.copy_file(output_COMOUT_file, output_DATA_file)
                     make_wind_shear_output_file = False
