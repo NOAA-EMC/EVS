@@ -140,7 +140,9 @@ if [ $modnam = cmcanl ]; then
   done
 
    for ihour in 00 12; do
-    rm ${WORK}/grabcmcanl.${ihour}
+       if [ -f ${WORK}/grabcmcanl.${ihour} ]; then
+           rm ${WORK}/grabcmcanl.${ihour}
+       fi
    done
    rm ${pat}
 
