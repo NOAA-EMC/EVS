@@ -25,7 +25,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class StatByLevel:
     """
-    Create a stat by level graphic
+    Make a stat by level graphic
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
@@ -54,13 +54,13 @@ class StatByLevel:
         self.logo_dir = logo_dir
 
     def make_stat_by_level(self):
-        """! Create the stat by level graphic
+        """! Make the stat by level graphic
 
              Args:
 
              Returns:
         """
-        self.logger.info(f"Creating stat by level...")
+        self.logger.info(f"Plot Type: Stat By Level")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -75,7 +75,7 @@ class StatByLevel:
                               +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
         # Get dates to plot
-        self.logger.info("Creating valid and init date arrays")
+        self.logger.debug("Making valid and init date arrays")
         valid_dates, init_dates = gda_util.get_plot_dates(
             self.logger,
             self.date_info_dict['date_type'],
@@ -145,7 +145,7 @@ class StatByLevel:
             self.logger.info("Reading in model stat files "
                              +f"from {level_input_dir}")
             all_model_df = gda_util.build_df(
-                self.logger, level_input_dir, self.output_dir,
+                'make_plots', self.logger, level_input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],
                 level,
@@ -179,7 +179,7 @@ class StatByLevel:
                 stat_df.index.get_level_values(0).unique().tolist()
             )
             if self.plot_info_dict['event_equalization'] == 'YES':
-                self.logger.debug("Doing event equalization")
+                self.logger.info("Doing event equalization")
                 masked_stat_array = np.ma.masked_invalid(stat_array)
                 stat_array = np.ma.mask_cols(masked_stat_array)
                 stat_array = stat_array.filled(fill_value=np.nan)
@@ -215,7 +215,7 @@ class StatByLevel:
                         model_idx_forecast_hour_avg
                     )
         # Set up plot
-        self.logger.info(f"Doing plot set up")
+        self.logger.info(f"Setting up plot")
         plot_specs_sbl.set_up_plot()
         stat_min = np.ma.masked_invalid(np.nan)
         stat_max = np.ma.masked_invalid(np.nan)
@@ -234,7 +234,6 @@ class StatByLevel:
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
@@ -247,7 +246,9 @@ class StatByLevel:
                     plot_specs_sbl.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
@@ -260,13 +261,14 @@ class StatByLevel:
                     plot_specs_sbl.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         image_name = plot_specs_sbl.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
-        # Create plot
-        self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} "
-                         +"- vertical profile "
-                         +f"{self.plot_info_dict['vert_profile']}")
+        # Make plot
+        self.logger.info(f"Making plot")
         fig, ax = plt.subplots(1,1,figsize=(plot_specs_sbl.fig_size[0],
                                             plot_specs_sbl.fig_size[1]))
         ax.grid(True)
@@ -315,8 +317,8 @@ class StatByLevel:
                 vert_profile_levels_int
             )
             if model_num_npts != 0:
-                self.logger.debug(f"Plotting {model_num} - {model_num_name} "
-                                  +f"- {model_num_plot_name}")
+                self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}]")
                 ax.plot(
                     np.ma.compressed(masked_model_num_data),
                     np.ma.compressed(masked_vert_profile_levels_int),
@@ -336,8 +338,8 @@ class StatByLevel:
                         or np.ma.is_masked(stat_max):
                     stat_max = masked_model_num_data.max()
             else:
-                self.logger.debug(f"{model_num} - {model_num_name} "
-                                  +f"- {model_num_plot_name} has no points")
+                self.logger.debug(f"{model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}] has no points")
         preset_x_axis_tick_min = ax.get_xticks()[0]
         preset_x_axis_tick_max = ax.get_xticks()[-1]
         preset_x_axis_tick_inc = ax.get_xticks()[1] - ax.get_xticks()[0]
@@ -453,7 +455,7 @@ def main():
         'root': '/PATH/TO/MET',
         'version': '11.0.2'
     }
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

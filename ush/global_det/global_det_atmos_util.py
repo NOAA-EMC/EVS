@@ -2323,7 +2323,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
                     line_type_cols = line.split(' : ')[-1]
                     break
     else:
-        logger.error(f"{met_minor_version_col_file} DOES NOT EXISTS, "
+        logger.error(f"{met_minor_version_col_file} does not exist, "
                      +"cannot determine MET data column structure")
         sys.exit(1)
     met_version_line_type_col_list = (
@@ -2535,7 +2535,7 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
         +f"{vx_mask.lower()}.stat"
     )
     if len(model_stat_files) == 0:
-        logger.warning(f"NO STAT FILES IN MATCHING "
+        logger.warning(f"No stat files matching "
                        +f"{model_stat_files_wildcard}")
     else:
         if not os.path.exists(output_file):
@@ -2543,40 +2543,42 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
                         +f"{model_stat_files_wildcard}")
             with open(model_stat_files[0]) as msf:
                 met_header_cols = msf.readline()
+            additional_grep_list = [obs, vx_mask, fcst_var_name,
+                                    fcst_var_level, obs_var_name,
+                                    line_type]
+            additional_grep = ''
+            for item in additional_grep_list:
+                additional_grep = (additional_grep
+                                   +f' | grep "{item} "')
             all_grep_output = ''
-            grep_opts = (
-                ' | grep "'+obs+' "'
-                +' | grep "'+vx_mask+' "'
-                +' | grep "'+fcst_var_name+' "'
-                +' | grep "'+fcst_var_level+' "'
-                +' | grep "'+obs_var_name+' "'
-                +' | grep "'+line_type+' "'
-            )
             for model_stat_file in model_stat_files:
-                logger.debug(f"Getting data from {model_stat_file}")
+                logger.info(f"Grep'ing {model_stat_file} for "
+                            +f"{model}, {', '.join(additional_grep_list)}")
                 grep = subprocess.run(
-                    'grep -R "'+model+' " '+model_stat_file+grep_opts,
+                    'grep -R "'+model+' " '+model_stat_file+additional_grep,
                     shell=True, capture_output=True, encoding="utf8"
                 )
                 logger.debug(f"Ran {grep.args}")
                 all_grep_output = all_grep_output+grep.stdout
-            logger.debug(f"Condensed {model} .stat file at "
-                         +f"{output_file}")
+            logger.info(f"Condensed {model} stat file at "
+                        +f"{output_file}")
             with open(output_file, 'w') as f:
                 f.write(met_header_cols+all_grep_output)
         else:
             logger.info(f"{output_file} exists")
 
-def build_df(logger, input_dir, output_dir, model_info_dict,
+def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
              obs_var_name, obs_var_level, obs_var_thresh, line_type,
              grid, vx_mask, interp_method, interp_points, date_type, dates,
              met_format_valid_dates, fhr):
     """! Build the data frame for all model stats,
-         Read the model parse file, if doesn't exist
-         parse the model file for need information, and write file
+         Read the model's filtered file, and if doesn't exist
+         filter the model file for need information and write file
 
          Args:
+             job_group              - either filter_stats or make_plots
+                                      (string)
              logger                 - logger object
              input_dir              - path to input directory (string)
              output_dir             - path to output directory (string)
@@ -2624,7 +2626,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             +f"{vx_mask.lower()}.stat"
         )
         if len(dates) != 0:
-            parsed_model_stat_file_name = (
+            filtered_model_stat_file_name = (
                 'fcst'+model_dict['name']+'_'
                 +fcst_var_name+fcst_var_level+fcst_var_thresh+'_'
                 +'obs'+model_dict['obs_name']+'_'
@@ -2639,25 +2641,27 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             ).lower().replace('.','p').replace('-', '_')\
             .replace('&&', 'and').replace('||', 'or')\
             .replace('0,*,*', '').replace('*,*', '')+'.stat'
-            input_parsed_model_stat_file = os.path.join(
-                input_dir, parsed_model_stat_file_name
+            input_filtered_model_stat_file = os.path.join(
+                input_dir, filtered_model_stat_file_name
             )
-            output_parsed_model_stat_file = os.path.join(
-                output_dir, parsed_model_stat_file_name
+            output_filtered_model_stat_file = os.path.join(
+                output_dir, filtered_model_stat_file_name
             )
-            if os.path.exists(input_parsed_model_stat_file):
-                parsed_model_stat_file = input_parsed_model_stat_file
+            if os.path.exists(input_filtered_model_stat_file):
+                filtered_model_stat_file = input_filtered_model_stat_file
             else:
-                parsed_model_stat_file = output_parsed_model_stat_file
-            if not os.path.exists(parsed_model_stat_file):
-                write_parse_stat_file = True
-                read_parse_stat_file = True
+                filtered_model_stat_file = output_filtered_model_stat_file
+            if not os.path.exists(filtered_model_stat_file):
+                write_filtered_stat_file = True
+                read_filtered_stat_file = True
             else:
-                write_parse_stat_file = False
-                read_parse_stat_file = True
+                write_filtered_stat_file = False
+                read_filtered_stat_file = True
+            if job_group == 'filter_stats':
+                read_filtered_stat_file = False
         else:
-            write_parse_stat_file = False
-            read_parse_stat_file = False
+            write_filtered_stat_file = False
+            read_filtered_stat_file = False
         if os.path.exists(condensed_model_file) and line_type == 'MCTC':
             tmp_df = pd.read_csv(
                 condensed_model_file, sep=" ", skiprows=1,
@@ -2689,7 +2693,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 met_version_line_type_col_list = (
                     new_met_version_line_type_col_list
                 )
-        if write_parse_stat_file:
+        if write_filtered_stat_file:
             if fcst_var_thresh != 'NA':
                 fcst_var_thresh_symbol, fcst_var_thresh_letter = (
                     format_thresh(fcst_var_thresh)
@@ -2705,13 +2709,26 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 obs_var_thresh_symbol = obs_var_thresh
                 obs_vat_thresh_letter = obs_var_thresh
             if os.path.exists(condensed_model_file):
-                logger.debug(f"Parsing file {condensed_model_file}")
+                logger.info(f"Filtering file {condensed_model_file} for "
+                            +f"MODEL: {model_dict['name']}, DESC: {grid} "
+                            +f"FCST_LEAD: {fhr.zfill(2)}0000, "
+                            +f"FCST_VAR: {fcst_var_name}, "
+                            +f"FCST_LEV: {fcst_var_level}, "
+                            +f"OBS_VAR: {obs_var_name}, "
+                            +f"OBS_LEV: {obs_var_level}, "
+                            +f"OBTYPE: {model_dict['obs_name']}, "
+                            +f"VX_MASK: {vx_mask}, "
+                            +f"INTERP_MTHD: {interp_method}, "
+                            +f"INTERP_PNTS: {interp_points}, "
+                            +f"FCST_THRESH: {fcst_var_thresh_symbol}, "
+                            +f"OBS_THRESH: {obs_var_thresh_symbol}, "
+                            +f"LINE_TYPE: {line_type}")
                 condensed_model_df = pd.read_csv(
                     condensed_model_file, sep=" ", skiprows=1,
                     skipinitialspace=True, names=met_version_line_type_col_list,
                     keep_default_na=False, dtype='str', header=None
                 )
-                parsed_model_df = condensed_model_df[
+                filtered_model_df = condensed_model_df[
                     (condensed_model_df['MODEL'] == model_dict['name'])
                      & (condensed_model_df['DESC'] == grid)
                      & (condensed_model_df['FCST_LEAD'] \
@@ -2738,35 +2755,35 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                      & (condensed_model_df['LINE_TYPE'] \
                         == line_type)
                 ]
-                parsed_model_df = parsed_model_df[
-                    parsed_model_df['FCST_VALID_BEG'].isin(met_format_valid_dates)
+                filtered_model_df = filtered_model_df[
+                    filtered_model_df['FCST_VALID_BEG'].isin(met_format_valid_dates)
                 ]
-                parsed_model_df['FCST_VALID_BEG'] = pd.to_datetime(
-                    parsed_model_df['FCST_VALID_BEG'], format='%Y%m%d_%H%M%S'
+                filtered_model_df['FCST_VALID_BEG'] = pd.to_datetime(
+                    filtered_model_df['FCST_VALID_BEG'], format='%Y%m%d_%H%M%S'
                 )
-                parsed_model_df = parsed_model_df.sort_values(by='FCST_VALID_BEG')
-                parsed_model_df['FCST_VALID_BEG'] = (
-                    parsed_model_df['FCST_VALID_BEG'].dt.strftime('%Y%m%d_%H%M%S')
+                filtered_model_df = filtered_model_df.sort_values(by='FCST_VALID_BEG')
+                filtered_model_df['FCST_VALID_BEG'] = (
+                    filtered_model_df['FCST_VALID_BEG'].dt.strftime('%Y%m%d_%H%M%S')
                 )
-                parsed_model_df.to_csv(
-                    parsed_model_stat_file, header=met_version_line_type_col_list,
+                filtered_model_df.to_csv(
+                    filtered_model_stat_file, header=met_version_line_type_col_list,
                     index=None, sep=' ', mode='w'
                 )
             else:
-                logger.debug(f"{condensed_model_file} does not exist")
-            if os.path.exists(parsed_model_stat_file):
-                logger.debug(f"Parsed {model_dict['name']} file "
-                             +f"at {parsed_model_stat_file}")
+                logger.warning(f"{condensed_model_file} does not exist")
+            if os.path.exists(filtered_model_stat_file):
+                logger.info(f"Filtered {model_dict['name']} file "
+                            +f"at {filtered_model_stat_file}")
             else:
-                logger.debug(f"Could not create {parsed_model_stat_file}")
+                logger.warning(f"Could not create {filtered_model_stat_file}")
         model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
                                     columns=met_version_line_type_col_list)
-        if read_parse_stat_file:
-            if os.path.exists(parsed_model_stat_file):
-                logger.debug(f"Reading {parsed_model_stat_file} for "
-                             +f"{model_dict['name']}")
+        if read_filtered_stat_file:
+            if os.path.exists(filtered_model_stat_file):
+                logger.info(f"Reading {filtered_model_stat_file} for "
+                            +f"{model_dict['name']}")
                 model_stat_file_df = pd.read_csv(
-                    parsed_model_stat_file, sep=" ", skiprows=1,
+                    filtered_model_stat_file, sep=" ", skiprows=1,
                     skipinitialspace=True, names=met_version_line_type_col_list,
                     na_values=['NA'], header=None
                 )
@@ -2787,25 +2804,25 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                     ).tolist()
                     if len(model_stat_file_df_valid_date_idx_list) == 0:
                         logger.debug("No data matching valid date "
-                                     +f"{valid_date} in"
-                                     +f"{parsed_model_stat_file}")
+                                     +f"{valid_date} in "
+                                     +f"{filtered_model_stat_file}")
                         continue
                     elif len(model_stat_file_df_valid_date_idx_list) > 1:
                         logger.debug(f"Multiple lines matching valid date "
                                      +f"{valid_date} in "
-                                     +f"{parsed_model_stat_file} "
+                                     +f"{filtered_model_stat_file} "
                                      +f"using first one")
                     else:
                         logger.debug(f"One line matching valid date "
                                      +f"{valid_date} in "
-                                     +f"{parsed_model_stat_file}")
+                                     +f"{filtered_model_stat_file}")
                     model_num_df.loc[(model_num_name, valid_date)] = (
                         model_stat_file_df.loc\
                         [model_stat_file_df_valid_date_idx_list[0]]\
                         [:]
                     )
             else:
-                logger.debug(f"{parsed_model_stat_file} does not exist")
+                logger.warning(f"{filtered_model_stat_file} does not exist")
         if model_num == 'model1':
             all_model_df = model_num_df
         else:
@@ -3199,7 +3216,7 @@ def calculate_stat(logger, data_df, line_type, stat):
                FFBAR + OOBAR - FBAR*FBAR - OBAR*OBAR - 2*FOBAR + 2*FBAR*OBAR
            )
    else:
-        logger.error(stat+" IS NOT AN OPTION")
+        logger.error(stat+" is not an option")
         sys.exit(1)
    idx = 0
    idx_dict = {}

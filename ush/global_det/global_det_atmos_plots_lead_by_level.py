@@ -25,7 +25,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class LeadByLevel:
     """
-    Create a lead by level graphic
+    Make a lead by level graphic
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
@@ -54,13 +54,13 @@ class LeadByLevel:
         self.logo_dir = logo_dir
 
     def make_lead_by_level(self):
-        """! Create the lead by level graphic
+        """! Make the lead by level graphic
 
              Args:
 
              Returns:
         """
-        self.logger.info(f"Creating lead by level...")
+        self.logger.info(f"Plot Type: Lead By Level...")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -75,7 +75,7 @@ class LeadByLevel:
                               +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
         plot_specs_lbl = PlotSpecs(self.logger, 'lead_by_level')
-        self.logger.info(f"Gathering data for {self.plot_info_dict['stat']} "
+        self.logger.info(f"Building data for {self.plot_info_dict['stat']} "
                          +"- vertical profile "
                          +f"{self.plot_info_dict['vert_profile']}")
         vert_profile_levels = plot_specs_lbl.get_vert_profile_levels(
@@ -93,18 +93,16 @@ class LeadByLevel:
             self.plot_info_dict['vert_profile']
         )
         fcst_units = []
+        # Make datafram for all levels and all forecast hours
         for level in vert_profile_levels:
             vert_profile_levels_int[vert_profile_levels.index(level)] = (
                 level[1:]
             )
-            self.logger.debug(f"Building data for level {level}")
-            # Create dataframe for all forecast hours
-            self.logger.info("Building dataframe for all forecast hours")
             for forecast_hour in self.date_info_dict['forecast_hours']:
-                self.logger.debug("Building data for forecast hour "
-                                  +f"{forecast_hour}")
+                self.logger.info(f"Building data for level {level} "
+                                 +f"forecast hour {forecast_hour}")
                 # Get dates to plot
-                self.logger.info("Creating valid and init date arrays")
+                self.logger.debug("Making valid and init date arrays")
                 valid_dates, init_dates = gda_util.get_plot_dates(
                     self.logger,
                     self.date_info_dict['date_type'],
@@ -155,7 +153,7 @@ class LeadByLevel:
                 self.logger.info("Reading in model stat files from "
                                  +f"{level_input_dir}")
                 all_model_df = gda_util.build_df(
-                    self.logger, level_input_dir, self.output_dir,
+                    'make_plots', self.logger, level_input_dir, self.output_dir,
                     self.model_info_dict, self.met_info_dict,
                     self.plot_info_dict['fcst_var_name'],
                     level,
@@ -191,7 +189,7 @@ class LeadByLevel:
                     stat_df.index.get_level_values(0).unique().tolist()
                 )
                 if self.plot_info_dict['event_equalization'] == 'YES':
-                    self.logger.debug("Doing event equalization")
+                    self.logger.info("Doing event equalization")
                     masked_stat_array = np.ma.masked_invalid(stat_array)
                     stat_array = np.ma.mask_cols(masked_stat_array)
                     stat_array = stat_array.filled(fill_value=np.nan)
@@ -235,7 +233,7 @@ class LeadByLevel:
                             (model_idx, forecast_hour), level
                         ] = model_idx_forecast_hour_avg
         # Set up plot
-        self.logger.info(f"Doing plot set up")
+        self.logger.info(f"Setting up plot")
         plot_specs_lbl = PlotSpecs(self.logger, 'lead_by_level')
         plot_specs_lbl.set_up_plot()
         model_idx_list = (
@@ -285,7 +283,7 @@ class LeadByLevel:
             cbar_bottom = 0.04
             cbar_height = 0.02
         else:
-            self.logger.error("TOO MANY SUBPLOTS REQUESTED, MAXIMUM IS 10")
+            self.logger.error("Too many subplots requested, maximum is 10")
             sys.exit(1)
         if nsubplots <= 2:
             plot_specs_lbl.fig_size = (16., 8.)
@@ -329,7 +327,6 @@ class LeadByLevel:
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
@@ -342,7 +339,9 @@ class LeadByLevel:
                     plot_specs_lbl.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
@@ -355,6 +354,9 @@ class LeadByLevel:
                     plot_specs_lbl.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         image_name = plot_specs_lbl.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
@@ -386,10 +388,8 @@ class LeadByLevel:
             )
         )
         make_colorbar = False
-        # Create plot
-        self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} "
-                         +"- vertical profile "
-                         +f"{self.plot_info_dict['vert_profile']}")
+        # Make plot
+        self.logger.info(f"Making plot")
         fig = plt.figure(figsize=(plot_specs_lbl.fig_size[0],
                                   plot_specs_lbl.fig_size[1]))
         gs = gridspec.GridSpec(gs_row, gs_col,
@@ -445,10 +445,11 @@ class LeadByLevel:
             else:
                 plt.setp(ax.get_yticklabels(), visible=False)
             if model_idx == model_idx_list[0]:
-                self.logger.debug(f"Plotting {model_num} "
-                                  +f"- {model_num_name} "
-                                  +f"- {model_num_plot_name}")
+                self.logger.debug(f"Plotting {model_num} ["
+                                  +f"{model_num_name},"
+                                  +f"{model_num_plot_name}]")
                 ax.set_title(model_num_plot_name)
+                subplot_name = model_num_name
                 subplot0_plot_name = model_num_plot_name
                 subplot0_data = masked_model_num_data
                 if not subplot0_data.mask.all():
@@ -486,21 +487,23 @@ class LeadByLevel:
                                 self.plot_info_dict['stat']
                             )
                 else:
-                    self.logger.debug("Fully masked array "
-                                      +f"for {model_num}, no plotting")
+                    self.logger.debug(f"{model_num} [{model_num_name},"
+                                      +f"{model_num_plot_name}] is fully "
+                                      +"masked")
             else:
                 if self.plot_info_dict['stat'] in ['BIAS', 'ME', 'FBIAS']:
-                    self.logger.debug(f"Plotting {model_num} "
-                                      +f"- {model_num_name} "
-                                      +f"- {model_num_plot_name}")
+                    self.logger.debug(f"Plotting {model_num} ["
+                                      +f"{model_num_name},"
+                                      +f"{model_num_plot_name}]")
                     ax.set_title(model_num_plot_name)
                     subplotN_data = masked_model_num_data
                 else:
-                    self.logger.debug(f"Plotting {model_num} - "
-                                      +f"{model_num_name} "
-                                      +f"- {model_num_plot_name} "
-                                      +"difference from "
-                                      +f"{subplot0_plot_name}")
+                    self.logger.debug(f"Plotting {model_num} ["
+                                      +f"{model_num_name},"
+                                      +f"{model_num_plot_name}] "
+                                      +"difference from model1 ["
+                                      +f"{subplot_name},"
+                                      +f"{subplot0_plot_name}]")
                     ax.set_title(model_num_plot_name+'-'+subplot0_plot_name)
                     subplotN_data = masked_model_num_data - subplot0_data
                 if not subplotN_data.mask.all():
@@ -544,11 +547,21 @@ class LeadByLevel:
                                 cbar_label = 'Difference'
                     else:
                         self.logger.debug("Do not have contour levels "
-                                          +"to plot, not plotting")
+                                          +"to plot")
                 else:
-                    self.logger.debug("Fully masked array "
-                                      +f"for {model_num}, "
-                                      +"no plotting")
+                    if self.plot_info_dict['stat'] in ['BIAS', 'ME', 'FBIAS']:
+                        self.logger.debug(f"{model_num} ["
+                                          +f"{model_num_name},"
+                                          +f"{model_num_plot_name}] is fully "
+                                          +"masked")
+                    else:
+                        self.logger.debug(f"{model_num} ["
+                                          +f"{model_num_name},"
+                                          +f"{model_num_plot_name}] "
+                                          +"difference from model1 ["
+                                          +f"{subplot_name},"
+                                          +f"{subplot0_plot_name}] is fully "
+                                          +"masked")
                     if os.environ['evs_run_mode'] == 'production' \
                             and model_num_plot_name == 'jma' \
                             and (int(self.date_info_dict['forecast_hours'][1])\
@@ -624,7 +637,7 @@ def main():
         'root': '/PATH/TO/MET',
         'version': '11.0.2'
     }
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

@@ -28,7 +28,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class NOHRSCSpatialMap:
     """
-    Create a NOHRSC spatial map graphic
+    Make a NOHRSC spatial map graphic
     """
 
     def __init__(self, logger, input_dir, DATA_output_dir, COMOUT_output_dir,
@@ -54,11 +54,11 @@ class NOHRSCSpatialMap:
         self.logo_dir = logo_dir
 
     def make_nohrsc_spatial_map(self):
-        """! Create the NOHRSCn spatial map graphic
+        """! Make the NOHRSCn spatial map graphic
              Args:
              Returns:
         """
-        self.logger.info(f"Creating NOHRSC spatial map...")
+        self.logger.info(f"Plot Type: NOHRSC Spatial Map")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.DATA_output_dir}")
         self.logger.debug(f"Date information dictionary: "
@@ -111,8 +111,7 @@ class NOHRSCSpatialMap:
                  nohrsc_netcdf_file]
             )
         else:
-            self.logger.error("wgrib2 executable not in PATH, "
-                              "cannot converting file to netCDF")
+            self.logger.error("wgrib2 executable not in PATH")
             sys.exit(1)
         make_png = False
         make_gif = False
@@ -129,15 +128,14 @@ class NOHRSCSpatialMap:
                 make_png = True
             else:
                 make_png = False
-                self.logger.info(f"{nohrsc_netcdf_file} does not exist, "
-                                  +"not making plot")
+                self.logger.info(f"{nohrsc_netcdf_file} does not exist")
         else:
             make_png = False
         if make_png and os.path.exists(COMOUT_png_name):
             gda_util.copy_file(COMOUT_png_name, DATA_png_name)
             make_png = False
         if make_png:
-            self.logger.debug("Plotting data from "+nohrsc_netcdf_file)
+            self.logger.debug(f"Plotting data from {nohrsc_netcdf_file}")
             nohrsc_data = netcdf.Dataset(nohrsc_netcdf_file)
             nohrsc_lat = nohrsc_data.variables['latitude'][:]
             nohrsc_lon = nohrsc_data.variables['longitude'][:]
@@ -159,7 +157,7 @@ class NOHRSCSpatialMap:
                 nohrsc_ASNOW_surface = nohrsc_ASNOW_surface * 39.3701
                 var_units = 'inches'
             nohrsc_ASNOW_surface = np.ma.masked_equal(nohrsc_ASNOW_surface, 0)
-            self.logger.info(f"Doing plot set up")
+            self.logger.info(f"Setting up plot")
             plot_specs_nsm = PlotSpecs(self.logger, 'nohrsc_spatial_map')
             plot_specs_nsm.set_up_plot()
             plot_title = (
@@ -169,7 +167,6 @@ class NOHRSCSpatialMap:
                 .strftime('%d%b%Y %H')+'Z to '
                 +valid_date_dt.strftime('%d%b%Y %H')+'Z'
             )
-            plot_left_logo = False
             plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
             if os.path.exists(plot_left_logo_path):
                 plot_left_logo = True
@@ -183,7 +180,9 @@ class NOHRSCSpatialMap:
                          plt.rcParams['figure.dpi']
                     )
                 )
-            plot_right_logo = False
+            else:
+                plot_left_logo = False
+                self.logger.debug(f"{plot_left_logo_path} does not exist")
             plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
             if os.path.exists(plot_right_logo_path):
                 plot_right_logo = True
@@ -197,6 +196,9 @@ class NOHRSCSpatialMap:
                         plt.rcParams['figure.dpi']
                     )
                 )
+            else:
+                plot_right_logo = False
+                self.logger.debug(f"{plot_right_logo_path} does not exist")
             if var_units == 'inches':
                 clevs = clevs_in
                 cmap = matplotlib.colors.ListedColormap(colorlist_in)
@@ -208,8 +210,8 @@ class NOHRSCSpatialMap:
                 cmap_under_color = cmap_under_color_m
                 cmap_over_color = cmap_over_color_m
             norm = matplotlib.colors.BoundaryNorm(clevs, cmap.N)
-            # Create plot
-            self.logger.info(f"Creating plot for NOHRS")
+            # Make plot
+            self.logger.info(f"Making plot")
             fig = plt.figure(figsize=(plot_specs_nsm.fig_size[0],
                                       plot_specs_nsm.fig_size[1]))
             gs_hspace, gs_wspace = 0, 0
@@ -280,7 +282,7 @@ class NOHRSCSpatialMap:
                         str(round(tick,3)).rstrip('0')
                     )
             cbar.ax.set_xticklabels(cbar_tick_labels_list)
-            self.logger.info("Saving image as "+DATA_png_name)
+            self.logger.info(f"Saving image as {DATA_png_name}")
             plt.savefig(DATA_png_name)
             plt.clf()
             plt.close('all')
@@ -307,8 +309,7 @@ class NOHRSCSpatialMap:
                 )
                 gda_util.copy_file(DATA_gif_name, COMOUT_gif_name)
             else:
-                self.logger.warning("convert executable not in PATH, "
-                                    "not creating gif of image")
+                self.logger.warning("convert executable not in PATH")
 
 def main():
     # Need settings
@@ -331,7 +332,7 @@ def main():
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
     }
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

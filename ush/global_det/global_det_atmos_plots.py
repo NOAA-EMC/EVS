@@ -202,8 +202,8 @@ if JOB_GROUP in ['filter_stats', 'make_plots']:
             for v in range(len(fcst_var_prod)):
                 var_info.append((fcst_var_prod[v], obs_var_prod[v]))
         else:
-            logger.error("FORECAST AND OBSERVATION VARIABLE INFORMATION NOT THE "
-                         +"SAME LENGTH")
+            logger.error("Forecast and observation variable information not "
+                         +"the same length")
             sys.exit(1)
 
 
@@ -334,7 +334,7 @@ elif JOB_GROUP == 'filter_stats':
                                        DATAjob_filter_stats_model_file)
                 else:
                     all_model_df = gda_util.build_df(
-                        logger, DATAjob, DATAjob,
+                        JOB_GROUP, logger, DATAjob, DATAjob,
                         model_info_dict, met_info_dict,
                         plot_info_dict['fcst_var_name'],
                         plot_info_dict['fcst_var_level'],
@@ -360,7 +360,7 @@ elif JOB_GROUP == 'filter_stats':
                                            COMOUTjob_filter_stats_model_file)
 elif JOB_GROUP == 'make_plots':
     if len(model_list) > 10:
-        logger.error("TOO MANY MODELS LISTED ("+str(len(model_list))
+        logger.error("Too many models requested ("+str(len(model_list))
                      +", ["+', '.join(model_list)+"]), maximum is 10")
         sys.exit(1)
     plot_specs = PlotSpecs(logger, plot)
@@ -813,7 +813,8 @@ elif JOB_GROUP == 'make_plots':
                         gda_util.copy_file(DATAjob_image_name,
                                            COMOUTjob_image_name)
     else:
-        logger.warning(plot+" not recongized")
+        logger.error(plot+" not recongized")
+        sys.exit(1)
 elif JOB_GROUP == 'tar_images':
     cwd = os.getcwd()
     tar_file = os.path.join(
@@ -833,7 +834,8 @@ elif JOB_GROUP == 'tar_images':
             gda_util.run_shell_command(['tar', '-cvf', tar_file, '*'])
             os.chdir(cwd)
         else:
-            logger.warning(f"No images generated in {DATAjob}")
+            logger.warning(f"No images generated in {DATAjob}, "
+                           +"cannot make tar file")
     if KEEPDATA != 'YES':
         if os.path.exists(DATAjob):
             logger.info(f"Removing {DATAjob}")
