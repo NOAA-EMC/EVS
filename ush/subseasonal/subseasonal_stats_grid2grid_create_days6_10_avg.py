@@ -135,7 +135,7 @@ while valid_hr <= int(valid_hr_end):
                     if job_name == 'Days6_10Avg_GeoHeight':
                         if 'CLIMO_MEAN_'+var_level in input_var:
                             climo_var_level = input_var
-                        if not climo_var_level in input_file_data_var_list:
+                        else:
                             print("WARNING: "+days_avg_day_fhr_input_file+" "
                                   +"does not contain "
                                   +"CLIMO_MEAN_"+var_level+" to average")
@@ -153,6 +153,7 @@ while valid_hr <= int(valid_hr_end):
                     days_avg_obs_file_list.append(days_avg_day_fhr_input_file)
                 if job_name == 'Days6_10Avg_GeoHeight':
                     if climo_var_level in input_file_data_var_list:
+                        print("Summing days 6-10 CLIMO data")
                         days_avg_climo_sum = (days_avg_climo_sum +
                                              input_file_data.variables[
                                                  climo_var_level
@@ -175,6 +176,7 @@ while valid_hr <= int(valid_hr_end):
             )
         if job_name == 'Days6_10Avg_GeoHeight':
             if len(days_avg_climo_file_list) >= 9:
+                print("Averaging days 6-10 CLIMO data")
                 days_avg_climo = (
                     days_avg_climo_sum/len(days_avg_climo_file_list)
                 )
