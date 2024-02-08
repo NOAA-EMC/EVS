@@ -86,7 +86,9 @@ for DOMAIN in ${DOMAINS}; do
          if [ $SENDCOM = YES ]; then
             mkdir -p $COMOUTmrms/${DOMAIN}
             for FILE in $DATA/MRMS_${DOMAIN}/*; do
-               cpreq -v $FILE $COMOUTmrms/${DOMAIN}
+               if [ -s "$FILE" ]; then
+                  cp -v $FILE $COMOUTmrms/${DOMAIN}
+               fi
             done
          fi
 

@@ -311,6 +311,7 @@ assemble_data_model_jobs_dict = {
                                                           +'${VERIF_TYPE}_'
                                                           +'Concentration_'
                                                           +'{lead?fmt=%2H}0000L_'
+                                                          +'{valid?fmt=%Y%m%d}_'
                                                           +'{valid?fmt=%H}0000V_'
                                                           +'pairs.nc'
                                                       )])]},
@@ -348,6 +349,7 @@ assemble_data_model_jobs_dict = {
                                                            +'${VERIF_TYPE}_'
                                                            +'Concentration_'
                                                            +'{lead?fmt=%2H}0000L_'
+                                                           +'{valid?fmt=%Y%m%d}_'
                                                            +'{valid?fmt=%H}0000V_'
                                                            +'pairs.nc'
                                                        )])]},
@@ -416,6 +418,7 @@ assemble_data_model_jobs_dict = {
                                                 +'${VERIF_TYPE}_'
                                                 +'SST_'
                                                 +'{lead?fmt=%2H}0000L_'
+                                                +'{valid?fmt=%Y%m%d}_'
                                                 +'{valid?fmt=%H}0000V_'
                                                 +'pairs.nc'
                                             )])]},

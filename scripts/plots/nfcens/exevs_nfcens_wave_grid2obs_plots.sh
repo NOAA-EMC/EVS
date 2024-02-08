@@ -107,7 +107,7 @@ chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 # Run the command files for the PAST31DAYS 
 ###########################################
 if [ ${run_mpi} = 'yes' ] ; then
-  mpiexec -np 36 --cpu-bind verbose,core --depth=3 cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
+  mpiexec -np 128 -ppn 64 --cpu-bind verbose,depth cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 else
   echo "not running mpiexec"
   sh plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
@@ -155,9 +155,11 @@ if [ $gather = yes ] ; then
     if [ "${nc}" > '0' ] ; then
       cd ${DATA}/sfcshp
       tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*.png
+      if [ -s evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ]; then
+	      cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/.
+      fi
     fi
   done
-  cpreq evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
 else  
   echo "not copying the plots"
 fi
