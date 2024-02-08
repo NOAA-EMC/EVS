@@ -114,28 +114,28 @@ if [ $modnam = cmcanl ]; then
         echo "WARNING: No $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl or $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 file available"
       fi
       if [ ! -z $cmcanl ]; then
-          if [ ! -s $cmcanl ] ; then
-             echo "WARNING: $cmcanl is not available"
-             if [ $SENDMAIL = YES ]; then
-             export subject="CMC Analysis Data Missing for EVS ${COMPONENT}"
-             echo "Warning: No CMC analysis available for ${vday}${ihour}" > mailmsg
-             echo "Missing file is $cmcanl" >> mailmsg
-             echo "Job ID: $jobid" >> mailmsg
-             cat mailmsg | mail -s "$subject" $MAILTO
-          fi
-         else
-             >$WORK/cmce.upper.${ihour}.gec00.anl
-             >$WORK/cmce.sfc.${ihour}.gec00.anl
+        if [ ! -s $cmcanl ] ; then
+          echo "WARNING: $cmcanl is not available"
+            if [ $SENDMAIL = YES ]; then
+              export subject="CMC Analysis Data Missing for EVS ${COMPONENT}"
+              echo "Warning: No CMC analysis available for ${vday}${ihour}" > mailmsg
+              echo "Missing file is $cmcanl" >> mailmsg
+              echo "Job ID: $jobid" >> mailmsg
+              cat mailmsg | mail -s "$subject" $MAILTO
+            fi
+        else
+          >$WORK/cmce.upper.${ihour}.gec00.anl
+          >$WORK/cmce.sfc.${ihour}.gec00.anl
 
-             $WGRIB2 $cmcanl | grep --file=${pat} | grep "anl:ENS=low-res" | $WGRIB2 -i $cmcanl -grib ${WORK}/grabcmcanl.${ihour}
-#            $WGRIB2 $WORK/cmce.upper.${ihour}.gec00.anl -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2
-             $WGRIB2 ${WORK}/grabcmcanl.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 
-             if [ $SENDCOM="YES" ] ; then
-                 if [ -s $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 ]; then	
-                     cp -v $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 $COMOUTcmce/cmcanl.t${ihour}z.grid3.f000.grib2
-                 fi
-             fi
-         fi
+          $WGRIB2 $cmcanl | grep --file=${pat} | grep "anl:ENS=low-res" | $WGRIB2 -i $cmcanl -grib ${WORK}/grabcmcanl.${ihour}
+#         $WGRIB2 $WORK/cmce.upper.${ihour}.gec00.anl -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2
+          $WGRIB2 ${WORK}/grabcmcanl.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 
+          if [ $SENDCOM="YES" ] ; then
+            if [ -s $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 ]; then	
+              cp -v $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 $COMOUTcmce/cmcanl.t${ihour}z.grid3.f000.grib2
+            fi
+          fi
+        fi
       fi    
   done
 
