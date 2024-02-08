@@ -244,8 +244,10 @@ if [ $modnam = gefs ] ; then
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
         fi
-#        $WGRIB2 $WORK/gefs.upper.${ihour}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
-        $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+        if [ -s $grabgefs ]; then
+            echo "run wgrib2"
+            $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+        fi
         if [ $SENDCOM="YES" ] ; then
             if [ -s $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 ]; then 
                 cp -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
