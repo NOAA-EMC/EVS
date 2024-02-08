@@ -165,12 +165,13 @@ for OBS in OBSNAME:
                 print("----> Trying to create "+arch_file)
                 if SENDCOM == 'YES':
                     sub_util.copy_file(prod_file, arch_file)
-                    sub_util.run_shell_command(
-                        ['chmod', '640', arch_file]
-                    )
-                    sub_util.run_shell_command(
-                        ['chgrp', 'rstprod', arch_file]
-                    )
+                    if os.path.exists(arch_file):
+                        sub_util.run_shell_command(
+                            ['chmod', '640', arch_file]
+                        )
+                        sub_util.run_shell_command(
+                            ['chgrp', 'rstprod', arch_file]
+                        )
                 if not os.path.exists(prod_file):
                     sub_util.log_missing_file_obs(
                         log_missing_file, prod_file, OBS,
@@ -256,12 +257,13 @@ for OBS in OBSNAME:
                 elif OBS == 'ecmwf':
                     if SENDCOM == 'YES':
                         sub_util.copy_file(prod_file, arch_file)
-                        sub_util.run_shell_command(
-                            ['chmod', '640', arch_file]
-                        )
-                        sub_util.run_shell_command(
-                            ['chgrp', 'rstprod', arch_file]
-                        )
+                        if os.path.exists(arch_file):
+                            sub_util.run_shell_command(
+                                ['chmod', '640', arch_file]
+                            )
+                            sub_util.run_shell_command(
+                                ['chgrp', 'rstprod', arch_file]
+                            )
                     if not os.path.exists(prod_file):
                         sub_util.log_missing_file_obs(
                             log_missing_file, prod_file, OBS,
