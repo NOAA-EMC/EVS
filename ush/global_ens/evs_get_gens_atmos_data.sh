@@ -128,7 +128,6 @@ if [ $modnam = cmcanl ]; then
           >$WORK/cmce.sfc.${ihour}.gec00.anl
 
           $WGRIB2 $cmcanl | grep --file=${pat} | grep "anl:ENS=low-res" | $WGRIB2 -i $cmcanl -grib ${WORK}/grabcmcanl.${ihour}
-#         $WGRIB2 $WORK/cmce.upper.${ihour}.gec00.anl -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2
           $WGRIB2 ${WORK}/grabcmcanl.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 
           if [ $SENDCOM="YES" ] ; then
             if [ -s $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 ]; then	
@@ -201,7 +200,6 @@ if [ $modnam = gefs ] ; then
     echo "HGT:cloud ceiling" >> ${pat1}
     echo "ICEC:surface" >> ${pat1}
     echo "TMP:surface" >> ${pat1}
-    #echo "SPFH:" >> ${pat1}
 
 
   for ihour in $gens_ihour  ; do
@@ -248,25 +246,31 @@ if [ $modnam = gefs ] ; then
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
         fi
-        if [ -s $grabgefs ]; then
-            $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
-        fi
-        if [ $SENDCOM="YES" ] ; then
-            if [ -s $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 ]; then 
-                cp -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+        if [ ! -z $grabgefs ]; then
+            if [ -s $grabgefs ]; then
+                $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+            fi
+            if [ $SENDCOM="YES" ] ; then
+                if [ -s $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 ]; then 
+                    cp -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+                fi
             fi
         fi
         nfhrs=`expr $nfhrs + 6`
       done # forecast hour
 
       for hhh in $(seq --format=%03g $fhr_beg 6 $fhr_end ); do
-         rm ${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+         if [ -f ${tmpDir}/grabgefs.${ihour}.${mb}.${hhh} ]; then
+             rm ${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+         fi
       done
 
       mbr=`expr $mbr + 1`
     done # member
   done # ihour
-  rm ${pat0} ${pat1}
+  if [ -f $pat0 -a $pat1 ]; then
+      rm ${pat0} ${pat1}
+  fi
  fi # check if file not existing
 fi
 
@@ -302,7 +306,6 @@ if [ $modnam = cmce ] ; then
   echo "SNOD:" >> ${pat}
   echo "PRMSL:" >> ${pat}
   echo "CAPE:atmos col" >> ${pat}
-  #echo "SPFH:" >> ${pat}
 
   for ihour in $gens_ihour ; do
     origin=$COMINcmce/cmce.$vday/$ihour/pgrb2ap5
