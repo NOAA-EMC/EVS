@@ -560,7 +560,7 @@ if [ $modnam = gefs_apcp24h ] ; then
 	 fi
         done
         lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-        if [ !-z $lead ]; then
+        if [ ! -z $lead ]; then
             ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_APCP24h.conf
         fi  
         unset lead_arr
@@ -638,7 +638,7 @@ if [ $modnam = cmce_apcp24h ] ; then
 	   fi
          done
          lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-         if [ !-z $lead ]; then
+         if [ ! -z $lead ]; then
              ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstCMCE_APCP24h.conf
          fi  
          unset lead_arr
@@ -680,7 +680,7 @@ if [ $modnam = ecme_apcp24h ] ; then
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       if [ !-z $lead ]; then
+       if [ ! -z $lead ]; then
            ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf
        fi   
        unset lead_arr
@@ -750,7 +750,7 @@ if [ $modnam = gefs_snow24h ] ; then
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       if [ !-z $lead ]; then
+       if [ ! -z $lead ]; then
            for snow in WEASD SNOD ; do
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf  
            done
@@ -796,7 +796,7 @@ if [ $modnam = cmce_snow24h ] ; then
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       if [ !-z $lead ]; then
+       if [ ! -z $lead ]; then
            for snow in WEASD SNOD ; do
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf  
            done
@@ -841,7 +841,7 @@ if [ $modnam = ecme_snow24h ] ; then
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       if [ !-z $lead ]; then
+       if [ ! -z $lead ]; then
            ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf
        fi  
        unset lead_arr
@@ -964,7 +964,7 @@ if [ $modnam = gefs_icec24h ] ; then
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       if [ !-z $lead ]; then
+       if [ ! -z $lead ]; then
            ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf
        fi  
        unset lead_arr
@@ -1052,7 +1052,7 @@ if [ $modnam = gefs_sst24h ] ; then
 	   fi
          done
          lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-         if [ !-z $lead ]; then 
+         if [ ! -z $lead ]; then 
              ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SST24h.conf
          fi  
          unset lead_arr
