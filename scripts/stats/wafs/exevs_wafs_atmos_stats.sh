@@ -70,8 +70,8 @@ for resolution in $resolutions ; do
 done
 
 if [ $SENDCOM = YES ] ; then
-    [ -z `ls -A $STATSOUTfinal` ] || cpreq $STATSOUTfinal/* $COMOUTfinal/.  
-    [ -z `ls -A $STATSOUTsmall` ] || cpreq $STATSOUTsmall/* $COMOUTsmall/.
+    [ -z "`ls -A $STATSOUTfinal`" ] || cp -v $STATSOUTfinal/* $COMOUTfinal/.
+    [ -z "`ls -A $STATSOUTsmall`" ] || cp -v $STATSOUTsmall/* $COMOUTsmall/.
 fi
 
 #########################################
