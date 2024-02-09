@@ -71,7 +71,155 @@ graphics = {
                 },
             },
             'raob':{
-                'domain_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                'domain_group1, fhr_group1, namnest': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['PuertoRico'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HGT':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TMP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'UGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'vl1l2':{
+                                'UGRD_VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''], 
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                }
+                            },
+                        }
+                    },
+                },
+                'domain_group1, fhr_group2, namnest': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['PuertoRico'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HGT':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TMP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'UGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'vl1l2':{
+                                'UGRD_VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''], 
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                }
+                            },
+                        }
+                    },
+                },
+                'domain_group2, fhr_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -86,7 +234,7 @@ graphics = {
                             'sl1l2':{
                                 'HGT':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -97,7 +245,7 @@ graphics = {
                                 },
                                 'TMP':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -108,7 +256,7 @@ graphics = {
                                 },
                                 'UGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -119,7 +267,7 @@ graphics = {
                                 },
                                 'VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -132,7 +280,7 @@ graphics = {
                             'vl1l2':{
                                 'UGRD_VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -158,7 +306,7 @@ graphics = {
                             'sl1l2':{
                                 'HPBL':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60'],
                                     'FCST_LEVELs':['PBL'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':[''],
@@ -171,7 +319,7 @@ graphics = {
                             'ctc':{
                                 'HPBL':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60'],
                                     'FCST_LEVELs':['PBL'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':['<=500','>=2000'],
@@ -197,7 +345,7 @@ graphics = {
                             'ctc':{
                                 'SBCAPE':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['L0'],
                                     'OBS_LEVELs':['L100000-0'],
                                     'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
@@ -208,7 +356,7 @@ graphics = {
                                 },
                                 'MLCAPE':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['P90-0'],
                                     'OBS_LEVELs':['L90000-0'],
                                     'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
@@ -234,7 +382,7 @@ graphics = {
                             'ctc':{
                                 'SBCAPE':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['L0'],
                                     'OBS_LEVELs':['L100000-0'],
                                     'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
@@ -245,7 +393,7 @@ graphics = {
                                 },
                                 'MLCAPE':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['P90-0'],
                                     'OBS_LEVELs':['L90000-0'],
                                     'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
@@ -258,7 +406,455 @@ graphics = {
                         }
                     }
                 },
-                'domain_group2, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                'domain_group2, fhr_group2, namnest, hireswfv3': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Alaska'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['6','18'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HGT':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TMP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'UGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'vl1l2':{
+                                'UGRD_VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''], 
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                }
+                            },
+                        }
+                    },
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Alaska'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['6','18'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['L0'],
+                                    'OBS_LEVELs':['L100000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['P90-0'],
+                                    'OBS_LEVELs':['L90000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Alaska'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['6','18'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['L0'],
+                                    'OBS_LEVELs':['L100000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['P90-0'],
+                                    'OBS_LEVELs':['L90000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    }
+                },
+                'domain_group3, fhr_group1, namnest, hireswarw, hireswarwmem2, hireswfv3': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Hawaii'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HGT':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TMP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'UGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'vl1l2':{
+                                'UGRD_VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''], 
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                }
+                            },
+                        }
+                    },
+                },
+                'domain_group3, fhr_group2, namnest, hireswfv3': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Hawaii'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HGT':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TMP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'UGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'vl1l2':{
+                                'UGRD_VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''], 
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                }
+                            },
+                        }
+                    },
+                },
+                'domain_group4, fhr_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['L0'],
+                                    'OBS_LEVELs':['L100000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['P90-0'],
+                                    'OBS_LEVELs':['L90000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['L0'],
+                                    'OBS_LEVELs':['L100000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['P90-0'],
+                                    'OBS_LEVELs':['L90000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    }
+                },
+                'domain_group4, fhr_group2, namnest, hireswfv3': {
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['L0'],
+                                    'OBS_LEVELs':['L100000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['P90-0'],
+                                    'OBS_LEVELs':['L90000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['L0'],
+                                    'OBS_LEVELs':['L100000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['P90-0'],
+                                    'OBS_LEVELs':['L90000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    }
+                },
+                'domain_group5, fhr_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
                     'time_series':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -273,7 +869,7 @@ graphics = {
                             'sl1l2':{
                                 'SBCAPE':{
                                     'STATSs':['fbar,obar'],
-                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['L0'],
                                     'OBS_LEVELs':['L100000-0'],
                                     'FCST_THRESHs':[''],
@@ -284,7 +880,7 @@ graphics = {
                                 },
                                 'MLCAPE':{
                                     'STATSs':['fbar,obar'],
-                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['P90-0'],
                                     'OBS_LEVELs':['L90000-0'],
                                     'FCST_THRESHs':[''],
@@ -302,7 +898,7 @@ graphics = {
                         'VALID_END':'',
                         'INIT_BEG':'',
                         'INIT_END':'',
-                        'VX_MASK_LISTs':['CONUS', 'Hawaii', 'PuertoRico'],
+                        'VX_MASK_LISTs':['CONUS'],
                         'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
@@ -310,7 +906,7 @@ graphics = {
                             'sl1l2':{
                                 'HGT':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -321,7 +917,7 @@ graphics = {
                                 },
                                 'TMP':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -332,7 +928,7 @@ graphics = {
                                 },
                                 'UGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -343,7 +939,7 @@ graphics = {
                                 },
                                 'VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -356,7 +952,7 @@ graphics = {
                             'vl1l2':{
                                 'UGRD_VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -374,7 +970,7 @@ graphics = {
                         'VALID_END':'',
                         'INIT_BEG':'',
                         'INIT_END':'',
-                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South','Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
                         'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
@@ -382,7 +978,7 @@ graphics = {
                             'sl1l2':{
                                 'HPBL':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60'],
                                     'FCST_LEVELs':['PBL'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':[''],
@@ -395,7 +991,7 @@ graphics = {
                             'ctc':{
                                 'HPBL':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60'],
                                     'FCST_LEVELs':['PBL'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':['<=500','>=2000'],
@@ -413,7 +1009,7 @@ graphics = {
                         'VALID_END':'',
                         'INIT_BEG':'',
                         'INIT_END':'',
-                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South','Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
                         'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
@@ -421,7 +1017,7 @@ graphics = {
                             'ctc':{
                                 'SBCAPE':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['L0'],
                                     'OBS_LEVELs':['L100000-0'],
                                     'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
@@ -432,7 +1028,7 @@ graphics = {
                                 },
                                 'MLCAPE':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['P90-0'],
                                     'OBS_LEVELs':['L90000-0'],
                                     'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
@@ -450,7 +1046,7 @@ graphics = {
                         'VALID_END':'',
                         'INIT_BEG':'',
                         'INIT_END':'',
-                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South','Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
                         'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
@@ -458,7 +1054,7 @@ graphics = {
                             'ctc':{
                                 'SBCAPE':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['L0'],
                                     'OBS_LEVELs':['L100000-0'],
                                     'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
@@ -469,7 +1065,7 @@ graphics = {
                                 },
                                 'MLCAPE':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['P90-0'],
                                     'OBS_LEVELs':['L90000-0'],
                                     'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
@@ -482,14 +1078,199 @@ graphics = {
                         }
                     }
                 },
-                'namnest, hrrr': {
+                'domain_group5, fhr_group2, namnest, hireswfv3': {
+                    'time_series':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'SBCAPE':{
+                                    'STATSs':['fbar,obar'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['L0'],
+                                    'OBS_LEVELs':['L100000-0'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['fbar,obar'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['P90-0'],
+                                    'OBS_LEVELs':['L90000-0'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
                         'VALID_END':'',
                         'INIT_BEG':'',
                         'INIT_END':'',
-                        'VX_MASK_LISTs':['CONUS', 'Alaska', 'Hawaii', 'PuertoRico'],
+                        'VX_MASK_LISTs':['CONUS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HGT':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TMP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'UGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'vl1l2':{
+                                'UGRD_VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''], 
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                }
+                            },
+                        }
+                    },
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['L0'],
+                                    'OBS_LEVELs':['L100000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['P90-0'],
+                                    'OBS_LEVELs':['L90000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['L0'],
+                                    'OBS_LEVELs':['L100000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['P90-0'],
+                                    'OBS_LEVELs':['L90000-0'],
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    }
+                },
+                'var_group2, domain_group1, fhr_group1, namnest, hrrr': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS', 'Alaska'],
                         'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
@@ -497,7 +1278,91 @@ graphics = {
                             'sl1l2':{
                                 'SPFH':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
+                'var_group2, domain_group1, fhr_group2, namnest': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS', 'Alaska'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'SPFH':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
+                'var_group2, domain_group2, namnest': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Hawaii'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'SPFH':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48','60'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
+                'var_group2, domain_group3, namnest': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['PuertoRico'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'SPFH':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -512,7 +1377,7 @@ graphics = {
                 }
             },
             'metar':{
-                'domain_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                'domain_group1, fhr_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -759,7 +1624,7 @@ graphics = {
                             'ctc':{
                                 'DPT2m':{
                                     'STATSs':['fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['Z2'],
                                     'OBS_LEVELs':['Z2'],
                                     'FCST_THRESHs':['>=277.594,>=283.15,>=288.706,>=294.261'],
@@ -770,7 +1635,7 @@ graphics = {
                                 },
                                 'RH2m':{
                                     'STATSs':['fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['Z2'],
                                     'OBS_LEVELs':['Z2'],
                                     'FCST_THRESHs':['<=15,<=20,<=25,<=30'],
@@ -781,7 +1646,7 @@ graphics = {
                                 },
                                 'VIS':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['Z0'],
                                     'OBS_LEVELs':['Z0'],
                                     'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
@@ -792,7 +1657,7 @@ graphics = {
                                 },
                                 'CEILING':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['CEILING'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':['<152,<305,<914,<1524,<3048'],
@@ -803,7 +1668,7 @@ graphics = {
                                 },
                                 'TCDC':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['TOTAL'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':['>10,>50,>90'],
@@ -829,7 +1694,7 @@ graphics = {
                             'ctc':{
                                 'VIS':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['Z0'],
                                     'OBS_LEVELs':['Z0'],
                                     'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
@@ -840,7 +1705,7 @@ graphics = {
                                 },
                                 'CEILING':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['CEILING'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':['<152,<305,<914,<1524,<3048'],
@@ -851,7 +1716,7 @@ graphics = {
                                 },
                                 'TCDC':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['TOTAL'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':['>10,>50,>90'],
@@ -864,7 +1729,203 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                'domain_group1, fhr_group2, namnest, hireswfv3': {
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Alaska'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['6','18'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'DPT2m':{
+                                    'STATSs':['fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['Z2'],
+                                    'OBS_LEVELs':['Z2'],
+                                    'FCST_THRESHs':['>=277.594,>=283.15,>=288.706,>=294.261'],
+                                    'OBS_THRESHs':['>=277.594,>=283.15,>=288.706,>=294.261'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'RH2m':{
+                                    'STATSs':['fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['Z2'],
+                                    'OBS_LEVELs':['Z2'],
+                                    'FCST_THRESHs':['<=15,<=20,<=25,<=30'],
+                                    'OBS_THRESHs':['<=15,<=20,<=25,<=30'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VIS':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'OBS_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'CEILING':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['CEILING'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['<152,<305,<914,<1524,<3048'],
+                                    'OBS_THRESHs':['<152,<305,<914,<1524,<3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TCDC':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['TOTAL'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['>10,>50,>90'],
+                                    'OBS_THRESHs':['>10,>50,>90'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Alaska'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['6','18'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'VIS':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'OBS_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'CEILING':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['CEILING'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['<152,<305,<914,<1524,<3048'],
+                                    'OBS_THRESHs':['<152,<305,<914,<1524,<3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TCDC':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['TOTAL'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['>10,>50,>90'],
+                                    'OBS_THRESHs':['>10,>50,>90'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
+                'domain_group1, fhr_group3, namnest, hireswfv3, hrrr': {
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Alaska'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['6','18'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'VIS':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'OBS_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TCDC':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0'],
+                                    'FCST_LEVELs':['TOTAL'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['>10,>50,>90'],
+                                    'OBS_THRESHs':['>10,>50,>90'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Alaska'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['6','18'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'VIS':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['0'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'OBS_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TCDC':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['0'],
+                                    'FCST_LEVELs':['TOTAL'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['>10,>50,>90'],
+                                    'OBS_THRESHs':['>10,>50,>90'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
+                'domain_group2, fhr_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -906,17 +1967,6 @@ graphics = {
                                     'OBS_LEVELs':['Z2'],
                                     'FCST_THRESHs':['','','','',''],
                                     'OBS_THRESHs':['','<=15','<=20','<=25','<=30'],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'MSLP':{
-                                    'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
-                                    'FCST_LEVELs':['Z0'],
-                                    'OBS_LEVELs':['Z0'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'BILIN',
                                     'INTERP_PNTSs':[''],
@@ -1026,17 +2076,6 @@ graphics = {
                                     'INTERP':'BILIN',
                                     'INTERP_PNTSs':[''],
                                 },
-                                'MSLP':{
-                                    'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
-                                    'FCST_LEVELs':['Z0'],
-                                    'OBS_LEVELs':['Z0'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
                                 'UGRD10m':{
                                     'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
@@ -1111,7 +2150,7 @@ graphics = {
                             'ctc':{
                                 'DPT2m':{
                                     'STATSs':['fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['Z2'],
                                     'OBS_LEVELs':['Z2'],
                                     'FCST_THRESHs':['>=277.594,>=283.15,>=288.706,>=294.261'],
@@ -1122,7 +2161,7 @@ graphics = {
                                 },
                                 'RH2m':{
                                     'STATSs':['fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['Z2'],
                                     'OBS_LEVELs':['Z2'],
                                     'FCST_THRESHs':['<=15,<=20,<=25,<=30'],
@@ -1133,7 +2172,7 @@ graphics = {
                                 },
                                 'VIS':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['Z0'],
                                     'OBS_LEVELs':['Z0'],
                                     'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
@@ -1144,22 +2183,11 @@ graphics = {
                                 },
                                 'CEILING':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['CEILING'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':['<152,<305,<914,<1524,<3048'],
                                     'OBS_THRESHs':['<152,<305,<914,<1524,<3048'],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'TCDC':{
-                                    'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
-                                    'FCST_LEVELs':['TOTAL'],
-                                    'OBS_LEVELs':['L0'],
-                                    'FCST_THRESHs':['>10,>50,>90'],
-                                    'OBS_THRESHs':['>10,>50,>90'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'BILIN',
                                     'INTERP_PNTSs':[''],
@@ -1181,7 +2209,7 @@ graphics = {
                             'ctc':{
                                 'VIS':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['Z0'],
                                     'OBS_LEVELs':['Z0'],
                                     'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
@@ -1192,7 +2220,7 @@ graphics = {
                                 },
                                 'CEILING':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['CEILING'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':['<152,<305,<914,<1524,<3048'],
@@ -1201,9 +2229,230 @@ graphics = {
                                     'INTERP':'BILIN',
                                     'INTERP_PNTSs':[''],
                                 },
-                                'TCDC':{
+                            },
+                        }
+                    },
+                },
+                'domain_group2, fhr_group2, namnest, hireswfv3': {
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South','Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'DPT2m':{
+                                    'STATSs':['fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['Z2'],
+                                    'OBS_LEVELs':['Z2'],
+                                    'FCST_THRESHs':['>=277.594,>=283.15,>=288.706,>=294.261'],
+                                    'OBS_THRESHs':['>=277.594,>=283.15,>=288.706,>=294.261'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'RH2m':{
+                                    'STATSs':['fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['Z2'],
+                                    'OBS_LEVELs':['Z2'],
+                                    'FCST_THRESHs':['<=15,<=20,<=25,<=30'],
+                                    'OBS_THRESHs':['<=15,<=20,<=25,<=30'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VIS':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'OBS_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'CEILING':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['CEILING'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['<152,<305,<914,<1524,<3048'],
+                                    'OBS_THRESHs':['<152,<305,<914,<1524,<3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South','Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'VIS':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'OBS_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'CEILING':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['CEILING'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['<152,<305,<914,<1524,<3048'],
+                                    'OBS_THRESHs':['<152,<305,<914,<1524,<3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
+                'domain_group2, fhr_group3, namnest, hireswfv3, hrrr': {
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South','Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'VIS':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'OBS_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South','Appalachia','CPlains','DeepSouth','GreatBasin','GreatLakes','Mezquital','MidAtlantic','NorthAtlantic','NPlains','NRockies','PacificNW','PacificSW','Prairie','Southeast','Southwest','SPlains','SRockies'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'VIS':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['0'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'OBS_THRESHs':['<805,<1609,<4828,<8045,<16090'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
+                'domain_group3, fhr_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                    'lead_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'MSLP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'valid_hour_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':['0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23'],
+                        'FCST_INIT_HOURS':['0,12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'MSLP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'TCDC':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
                                     'FCST_LEVELs':['TOTAL'],
                                     'OBS_LEVELs':['L0'],
                                     'FCST_THRESHs':['>10,>50,>90'],
@@ -1215,7 +2464,141 @@ graphics = {
                             },
                         }
                     },
-                }
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'TCDC':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48'],
+                                    'FCST_LEVELs':['TOTAL'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['>10,>50,>90'],
+                                    'OBS_THRESHs':['>10,>50,>90'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
+                'domain_group3, fhr_group2, namnest, hireswfv3': {
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'TCDC':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['TOTAL'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['>10,>50,>90'],
+                                    'OBS_THRESHs':['>10,>50,>90'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'TCDC':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['51','54','57','60'],
+                                    'FCST_LEVELs':['TOTAL'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['>10,>50,>90'],
+                                    'OBS_THRESHs':['>10,>50,>90'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
+                'domain_group3, fhr_group3, namnest, hireswfv3, hrrr': {
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'TCDC':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0'],
+                                    'FCST_LEVELs':['TOTAL'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['>10,>50,>90'],
+                                    'OBS_THRESHs':['>10,>50,>90'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'TCDC':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['0'],
+                                    'FCST_LEVELs':['TOTAL'],
+                                    'OBS_LEVELs':['L0'],
+                                    'FCST_THRESHs':['>10,>50,>90'],
+                                    'OBS_THRESHs':['>10,>50,>90'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                },
             }
         }
     },

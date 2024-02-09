@@ -166,8 +166,9 @@ class PrecipSpatialMap:
                         make_plot = False
                 else:
                     make_plot = False
-                    self.logger.warning(f"No input files exist, "
-                                        +"not making plot")
+                    if "group" not in str(model_num_name):
+                        self.logger.warning(f"No input files exist, "
+                                            +"not making plot")
             else:
                 model_num_file = os.path.join(
                     model_num_data_dir,
@@ -187,8 +188,9 @@ class PrecipSpatialMap:
                         make_plot = True
                     else:
                         make_plot = False
-                        self.logger.warning(f"{model_num_file} does not exist, "
-                                        +"not making plot")
+                        if "group" not in str(model_num_name):
+                            self.logger.warning(f"{model_num_file} does not exist, "
+                                                +"not making plot")
                 else:
                     make_plot = False
             if make_plot:
