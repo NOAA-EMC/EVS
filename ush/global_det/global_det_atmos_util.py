@@ -3138,25 +3138,34 @@ def calculate_stat(logger, data_df, line_type, stat):
        ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
    if stat == 'ACC': # Anomaly Correlation Coefficient
        if line_type == 'SAL1L2':
+           radicand = (FFABAR - FABAR*FABAR)*(OOABAR - OABAR*OABAR)
+           radicand[radicand<0] = np.nan
            stat_df = (FOABAR - FABAR*OABAR) \
-                     /np.sqrt((FFABAR - FABAR*FABAR)*
-                              (OOABAR - OABAR*OABAR))
+                     /np.sqrt(radicand)
        elif line_type in ['CNT', 'VCNT']:
            stat_df = ANOM_CORR
        elif line_type == 'VAL1L2':
-           stat_df = UVFOABAR/np.sqrt(UVFFABAR*UVOOABAR)
+           radicand = UVFFABAR*UVOOABAR
+           radicand[radicand<0] = np.nan
+           stat_df = UVFOABAR/np.sqrt(radicand)
    elif stat in ['BIAS', 'ME']: # Bias/Mean Error
        if line_type == 'SL1L2':
            stat_df = FBAR - OBAR
        elif line_type == 'CNT':
            stat_df = ME
        elif line_type == 'VL1L2':
-           stat_df = np.sqrt(UVFFBAR) - np.sqrt(UVOOBAR)
+           radicand1 = UVFFBAR
+           radicand1[radicand1<0] = np.nan
+           radicand2 = UVOOBAR
+           radicand2[radicand2<0] = np.nan
+           stat_df = np.sqrt(radicand1) - np.sqrt(radicand2)
    elif stat == 'CORR': # Pearson Correlation Coefficient
        if line_type == 'SL1L2':
            var_f = FFBAR - FBAR*FBAR
            var_o = OOBAR - OBAR*OBAR
-           stat_df = (FOBAR - (FBAR*OBAR))/np.sqrt(var_f*var_o)
+           radicand = var_f*var_o
+           radicand[radicand<0] = np.nan
+           stat_df = (FOBAR - (FBAR*OBAR))/np.sqrt(radicand)
    elif stat == 'CSI': # Critical Success Index'
        if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FY_ON + FN_OY)
@@ -3199,11 +3208,15 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = FY_OY/(FY_OY + FN_OY)
    elif stat == 'RMSE': # Root Mean Square Error
        if line_type == 'SL1L2':
-           stat_df = np.sqrt(FFBAR + OOBAR - 2*FOBAR)
+           radicand = FFBAR + OOBAR - 2*FOBAR
+           radicand[radicand<0] = np.nan
+           stat_df = np.sqrt(radicand)
        elif line_type == 'CNT':
            stat_df = RMSE
        elif line_type == 'VL1L2':
-           stat_df = np.sqrt(UVFFBAR + UVOOBAR - 2*UVFOBAR)
+           radicand = UVFFBAR + UVOOBAR - 2*UVFOBAR
+           radicand[radicand<0] = np.nan
+           stat_df = np.sqrt(radicand)
    elif stat == 'S1': # S1
        if line_type == 'GRAD':
            stat_df = S1
@@ -3212,9 +3225,11 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
    elif stat == 'STDEV_ERR': # Standard Deviation of Error
        if line_type == 'SL1L2':
-           stat_df = np.sqrt(
+           radicand = (
                FFBAR + OOBAR - FBAR*FBAR - OBAR*OBAR - 2*FOBAR + 2*FBAR*OBAR
            )
+           radicand[radicand<0] = np.nan
+           stat_df = np.sqrt(radicand)
    else:
         logger.error(stat+" is not an option")
         sys.exit(1)
