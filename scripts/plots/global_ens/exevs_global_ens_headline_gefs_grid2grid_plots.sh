@@ -34,7 +34,9 @@ export err=$?; err_chk
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.v${VDATE}.tar evs.global_ens*.png
 
 if [ $SENDCOM = YES ]; then
-    cpreq evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.v${VDATE}.tar $COMOUT/.
+    if [ -s evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.v${VDATE}.tar ]; then
+        cp -v evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.v${VDATE}.tar $COMOUT/.
+    fi
 fi
 
 if [ $SENDDBN = YES ]; then 
@@ -62,7 +64,7 @@ if [ $calculate_acc0p6_days = yes ] ; then
   export err=$?; err_chk
   if [ $SENDCOM = YES ]; then
     if [ -s $output ] ; then	  
-      cpreq $output $COMOUT/day_acc_below_0.6.txt
+      cp -v $output $COMOUT/day_acc_below_0.6.txt
     fi 
   fi
 fi
