@@ -71,7 +71,7 @@ graphics = {
                 },
             },
             'raob':{
-                'domain_group1, fhr_group1, namnest, hireswarw, hireswarwmem2, hireswfv3': {
+                'domain_group1, fhr_group1, namnest': {
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -81,12 +81,12 @@ graphics = {
                         'VX_MASK_LISTs':['PuertoRico'],
                         'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
-                        'FCST_INIT_HOURS':['6','18'],
+                        'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
                             'sl1l2':{
                                 'HGT':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['6','18','30','42'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -97,7 +97,7 @@ graphics = {
                                 },
                                 'TMP':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['6','18','30','42'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -108,7 +108,7 @@ graphics = {
                                 },
                                 'UGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['6','18','30','42'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -119,7 +119,7 @@ graphics = {
                                 },
                                 'VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['6','18','30','42'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -132,7 +132,7 @@ graphics = {
                             'vl1l2':{
                                 'UGRD_VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['6','18','30','42'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -145,7 +145,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group2, namnest, hireswfv3': {
+                'domain_group1, fhr_group2, namnest': {
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -155,12 +155,12 @@ graphics = {
                         'VX_MASK_LISTs':['PuertoRico'],
                         'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
-                        'FCST_INIT_HOURS':['6','18'],
+                        'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
                             'sl1l2':{
                                 'HGT':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54'],
+                                    'FCST_LEADS':['54','60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -171,7 +171,7 @@ graphics = {
                                 },
                                 'TMP':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54'],
+                                    'FCST_LEADS':['54','60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -182,7 +182,7 @@ graphics = {
                                 },
                                 'UGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54'],
+                                    'FCST_LEADS':['54','60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -193,7 +193,7 @@ graphics = {
                                 },
                                 'VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54'],
+                                    'FCST_LEADS':['54','60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -206,7 +206,7 @@ graphics = {
                             'vl1l2':{
                                 'UGRD_VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54'],
+                                    'FCST_LEADS':['54','60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -569,7 +569,7 @@ graphics = {
                             'sl1l2':{
                                 'HGT':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -580,7 +580,7 @@ graphics = {
                                 },
                                 'TMP':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -591,7 +591,7 @@ graphics = {
                                 },
                                 'UGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -602,7 +602,7 @@ graphics = {
                                 },
                                 'VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -615,7 +615,7 @@ graphics = {
                             'vl1l2':{
                                 'UGRD_VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -643,7 +643,7 @@ graphics = {
                             'sl1l2':{
                                 'HGT':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEADS':['60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -654,7 +654,7 @@ graphics = {
                                 },
                                 'TMP':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEADS':['60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -665,7 +665,7 @@ graphics = {
                                 },
                                 'UGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEADS':['60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -676,7 +676,7 @@ graphics = {
                                 },
                                 'VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEADS':['60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -689,7 +689,7 @@ graphics = {
                             'vl1l2':{
                                 'UGRD_VGRD':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEADS':['60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
@@ -1362,7 +1362,7 @@ graphics = {
                             'sl1l2':{
                                 'SPFH':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['6','18','30','42','54'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
                                     'FCST_THRESHs':[''],
