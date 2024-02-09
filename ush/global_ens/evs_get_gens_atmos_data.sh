@@ -361,13 +361,17 @@ if [ $modnam = cmce ] ; then
 
 
      for h3 in $(seq --format=%03g $fhr_beg 12 $fhr_end ); do
-       rm ${tmpDir}/grabcmce.${ihour}.${mb}.${h3}
+       if [ -f ${tmpDir}/grabcmce.${ihour}.${mb}.${h3} ]; then
+           rm ${tmpDir}/grabcmce.${ihour}.${mb}.${h3}
+       fi
      done
 
       mbr=`expr $mbr + 1`
     done # member
   done # ihour
-  rm ${pat}
+  if [ -f $pat ]; then
+      rm ${pat}
+  fi
 fi
 
 ###########################################
