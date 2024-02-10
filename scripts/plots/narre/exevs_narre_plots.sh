@@ -214,8 +214,8 @@ done
 
 tar -cvf evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar *.png
 
-if [ $SENDCOM = YES ] ; then
-   cpreq evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
+if [ $SENDCOM = YES ] && [ -s evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar ] ; then
+   cp -v evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
 
 if [ $SENDDBN = YES ] ; then    
