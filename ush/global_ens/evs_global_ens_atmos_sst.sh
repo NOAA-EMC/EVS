@@ -105,8 +105,14 @@ lead_str=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
 unset lead_arr
 echo  "export lead='${lead_str}' "  >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcst${MODL}_obsGHRSST.conf " >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
-echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh 
-[[ $SENDCOM="YES" ]] && echo "cpreq -v  \$output_base/stat/${modnam}/ensemble_stat_*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+if [ $SENDCOM="YES" ] ; then
+    echo "for FILE in \$output_base/stat/${modnam}/ensemble_stat_*.stat ; do" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+    echo "  if [ -s \$FILE ]; then" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+    echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+    echo "  fi" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+    echo "done" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+fi 
 chmod +x run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo "${DATA}/run_${modnam}_valid_at_t${vhour}z_${verify}.sh" >> run_all_gens_sst24h_poe.sh
 

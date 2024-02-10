@@ -68,7 +68,11 @@ for modnam in $models ; do
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstGENS_obsPREPBUFR_CNV_GatherByDay.conf " >> run_gather_${modnam}_${verify}.sh
     fi
     echo "export err=\$?; err_chk" >> run_gather_${modnam}_${verify}.sh
-    [[ $SENDCOM="YES" ]] && echo "cpreq -v $output_base/${vday}/${modnam}_${verify}_${vday}.stat $COMOUTfinal/evs.stats.${modnam}.${RUN}.${verify}.v${vday}.stat" >> run_gather_${modnam}_${verify}.sh
+    if [ $SENDCOM="YES" ] ; then
+        echo "if [ -s  \$output_base/${vday}/${modnam}_${verify}_${vday}.stat ]; then" >> run_gather_${modnam}_${verify}.sh
+        echo "    cp -v \$output_base/${vday}/${modnam}_${verify}_${vday}.stat $COMOUTfinal/evs.stats.${modnam}.${RUN}.${verify}.v${vday}.stat" >> run_gather_${modnam}_${verify}.sh
+        echo "fi" >> run_gather_${modnam}_${verify}.sh
+    fi
   chmod +x run_gather_${modnam}_${verify}.sh
   echo "${DATA}/run_gather_${modnam}_${verify}.sh" >> run_gather_all_poe.sh 
 done
