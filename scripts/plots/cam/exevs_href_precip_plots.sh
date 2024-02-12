@@ -321,8 +321,8 @@ if [ -d $log_dir ]; then
 fi
 
 
-if [ $SENDCOM="YES" ]; then
- cpreq evs.plots.href.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.href.precip.past${past_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.href.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then

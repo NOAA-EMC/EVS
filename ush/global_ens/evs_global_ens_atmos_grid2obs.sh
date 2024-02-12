@@ -319,9 +319,21 @@ for field in $fields ; do
               echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
           fi
           if [ $metplus_job = EnsembleStat ] ; then
-              [[ $SENDCOM="YES" ]] && echo  "cpreq -v \$output_base/stat/${modnam}/ensemble_stat*.stat $COMOUTsmall" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+              if [ $SENDCOM="YES" ] ; then
+                  echo "for FILE in \$output_base/stat/${modnam}/ensemble_stat*.stat ; do" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  echo "  if [ -s \$FILE ]; then" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  echo "  fi" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  echo "done" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+               fi
           elif [ $metplus_job = PointStat ]; then
-              [[ $SENDCOM="YES" ]] && echo  "cpreq -v \$output_base/stat/${modnam}/point_stat*.stat $COMOUTsmall" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+              if [ $SENDCOM="YES" ] ; then
+                  echo "for FILE in \$output_base/stat/${modnam}/point_stat*.stat ; do" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  echo "  if [ -s \$FILE ]; then" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  echo "  fi" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  echo "done" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+              fi
           fi
           chmod +x run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
           echo "${DATA}/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh" >> run_all_gens_${field}_${metplus_job}_g2o_poe.sh

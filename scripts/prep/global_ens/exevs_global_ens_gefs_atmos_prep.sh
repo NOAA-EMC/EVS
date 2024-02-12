@@ -108,6 +108,7 @@ if [ $get_ghrsst = yes ] ; then
       python $USHevs/${COMPONENT}/global_ens_prep_ghrsst_obs.py
       export err=$?; err_chk
   else
+    echo "WARNING: $DCOMINghrsst/$vdaym1/validation_data/marine/ghrsst/${vdaym1}_OSPO_L4_GHRSST.nc is not available"
     if [ $SENDMAIL = YES ]; then
      export subject="GHRSST OSPO Data Missing for EVS ${COMPONENT}"
      export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,steven.simon@noaa.gov'}

@@ -101,11 +101,14 @@ while [ ${hourix} -lt 31 ]; do
        chgrp rstprod x
        cat x >> $WORK/ecmanl.t${ihour}z.grid3.f000.grib1
       if [[ $SENDCOM="YES" ]]; then
-          cpreq -v $WORK/ecmanl.t${ihour}z.grid3.f000.grib1 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
+          if [ -s $WORK/ecmanl.t${ihour}z.grid3.f000.grib1 ]; then
+              cp -v $WORK/ecmanl.t${ihour}z.grid3.f000.grib1 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
+          fi
           chmod 640 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
           chgrp rstprod $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
       fi
     else
+      echo "WARNING: $DCD is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="ECME Data Missing for EVS ${COMPONENT}"
         echo "Warning:  No ECME data for ${ymdh}" > mailmsg
@@ -122,6 +125,7 @@ while [ ${hourix} -lt 31 ]; do
   #******************************************************************
   E1E=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
   if [ ! -s $E1E ]; then
+    echo "WARNING: $E1E is not available"
     if [ $SENDMAIL = YES ]; then
         export subject="ECME Data Missing for EVS ${COMPONENT}"
         echo "Warning:  No ECME data for ${ymdh}" > mailmsg
@@ -147,15 +151,17 @@ while [ ${hourix} -lt 31 ]; do
       chmod 640 $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       chgrp rstprod $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       if [[ $SENDCOM="YES" ]]; then
-          cpreq -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+          if [ -s ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 ]; then
+              cp -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+          fi
           chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
           chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       fi
       mbr=$((mbr+1))
     done
     rm E1E.${hourinc}
-    let hourix=hourix+1
   fi
+  let hourix=hourix+1
 done 
 
 #******************************************************************
@@ -188,15 +194,26 @@ while [ ${hourix} -lt 31 ]; do
       chmod 640 $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
       chgrp rstprod $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
       if [[ $SENDCOM="YES" ]]; then
-        cpreq -v $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+        if [ -s $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 ]; then
+            cp -v $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+        fi
         chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
         chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
       fi
       mbr=$((mbr+1))
      done
      rm E1E_apcp.${hourinc}
-    let hourix=hourix+1
+  else
+     echo "WARNING: $E1E is not available"
+        if [ $SENDMAIL = YES ]; then
+            export subject="ECME Data Missing for EVS ${COMPONENT}"
+            echo "Warning:  No ECME data for ${ymdh}" > mailmsg
+            echo "Missing files are in $E1E"  >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $MAILTO
+        fi
   fi
+  let hourix=hourix+1
 done
 
 
@@ -248,13 +265,25 @@ while [ ${hourix} -lt 31 ]; do
       chmod 640 $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       chgrp rstprod $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       if [[ $SENDCOM="YES" ]]; then
-          cpreq -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+          if [ -s $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 ]; then
+              cp -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+          fi
           chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
           chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       fi
       mbr=$((mbr+1))
      done
      rm E1E_vertical.${hourinc}*
+  else
+     echo "WARNING: $E1E is not available"
+        if [ $SENDMAIL = YES ]; then
+            export subject="ECME Data Missing for EVS ${COMPONENT}"
+            echo "Warning:  No ECME data for ${ymdh}" > mailmsg
+            echo "Missing files are in $E1E"  >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $MAILTO
+        fi
+ 
   fi
   let hourix=hourix+1
 done

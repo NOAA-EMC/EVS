@@ -52,6 +52,7 @@ for ihour in ${inithours} ; do
     filename="gefs.wave.t${ihour}z.mean.global.0p25.f${hr}.grib2"
     newname="gefs.wave.${INITDATE}.t${ihour}z.mean.global.0p25.f${hr}.grib2"
     if [ ! -s ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} ]; then
+        echo "WARNING: ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} is not available"
 	if [ $SENDMAIL = YES ]; then
           export subject="F${hr} GEFS Forecast Data Missing for EVS ${COMPONENT}"
           echo "Warning: No GEFS forecast was available for ${INITDATE}${ihour}f${hr}" > mailmsg
@@ -63,7 +64,9 @@ for ihour in ${inithours} ; do
         if [ ! -s ${COMOUTgefs}/${newname} ]; then
             cpreq -v ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
             if [ $SENDCOM = YES ]; then
-                cpreq -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/${newname}
+                if [ -s $DATA/gefs_wave_grib2/${newname} ]; then 
+                    cp -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/${newname}
+                fi
             fi
         fi
     fi
@@ -79,6 +82,7 @@ for ihour in 00 06 12 18 ; do
 
   export inithour=t${ihour}z
   if [ ! -s ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ]; then
+      echo "WARNING: ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GDAS Prepbufr was available for init date ${INITDATE}${ihour}" > mailmsg
@@ -111,9 +115,11 @@ for ihour in 00 06 12 18 ; do
             chmod 640 $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc
             chgrp rstprod $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc
             if [ $SENDCOM = YES ]; then
-                cpreq -v $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
-                chmod 640 ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
-                chgrp rstprod ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
+                if [ -s $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ]; then
+                    cp -v $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
+                    chmod 640 ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
+                    chgrp rstprod ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
+                fi
             fi
         fi
     fi
