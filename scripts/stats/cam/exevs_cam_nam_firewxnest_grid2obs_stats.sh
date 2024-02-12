@@ -54,6 +54,8 @@ do
         echo "Missing file is $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
+       else
+        echo "WARNING: The NAM Firewx file is missing for valid date ${VDATE}. METplus will not run."
        fi
      fi
      fi
