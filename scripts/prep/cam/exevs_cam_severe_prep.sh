@@ -56,7 +56,7 @@ if [ $data_missing ]; then
 
    if [ $SENDMAIL = YES ]; then
       export subject="SPC OTLK Data Missing for EVS ${COMPONENT}"
-      echo "Warning: The ${OTLK_DATE} SPC outlook file(s) is missing. METplus will not run." > mailmsg
+      echo "WARNING: The ${OTLK_DATE} SPC outlook file(s) is missing. METplus will not run." > mailmsg
       echo "Missing files are $DCOMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $MAILTO
@@ -103,7 +103,7 @@ else
 
    if [ $SENDMAIL = YES ]; then
       export subject="SPC LSR Data Missing for EVS ${COMPONENT}"
-      echo "Warning: The ${REP_DATE} SPC report file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+      echo "WARNING: The ${REP_DATE} SPC report file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
       echo "Missing file is $DCOMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $MAILTO
