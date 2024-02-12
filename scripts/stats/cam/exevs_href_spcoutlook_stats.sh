@@ -14,7 +14,7 @@ cd $WORK
 #*********************************
 #check input data are available:
 #*********************************
-$USHevs/cam/evs_check_href_files.sh 
+source $USHevs/cam/evs_check_href_files.sh 
 export err=$?; err_chk
 
 #lvl = profile or sfc or both
@@ -22,7 +22,7 @@ export lvl='both'
 
 #  verify_all = yes:  verify both profile and sfc (system + product)
 #  if lvl is not both, verify_all = no
-export verify_all='yes'
+export verify_all=${verify_all:-'yes'}
 
 export prepare='yes'
 export verif_system='es'

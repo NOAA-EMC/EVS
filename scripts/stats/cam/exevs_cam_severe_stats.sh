@@ -39,6 +39,8 @@ else
       echo "Missing file is $EVSINspclsr/${obs_lsr_file}" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $MAILTO
+   else
+      echo "WARNING: The ${REP_DATE} SPC LSR file is missing for valid date ${VDATE}. METplus will not run."
    fi
 
 fi
@@ -53,6 +55,8 @@ else
       echo "Missing file is $EVSINspclsr/${obs_ppf_file}" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $MAILTO
+   else
+      echo "WARNING: The ${REP_DATE} SPC PPF file is missing for valid date ${VDATE}. METplus will not run."
    fi
 
 fi
@@ -133,7 +137,7 @@ while [ $fhr -le $fhr_max ]; do
       fcst_found=1
 
    else
-      echo "Missing file is $EVSINfcst/${fcst_file}\n" >> $DATA/missing_fcst_list
+      echo "WARNING: Missing file is $EVSINfcst/${fcst_file}\n" >> $DATA/missing_fcst_list
 
    fi
 
