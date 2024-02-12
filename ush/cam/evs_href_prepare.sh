@@ -297,6 +297,7 @@ if [ "$data" = "prepbufr" ] ; then
       fi
    else
       if [ "$SENDMAIL" = "YES" ] ; then
+	 echo "Warning:  No RAP Prepbufr data available for ${VDATE}"
          export subject="RAP Prepbufr Data Missing for EVS ${COMPONENT}"
          echo "Warning:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
          echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00  >> mailmsg
@@ -338,6 +339,7 @@ if [ "$data" = "gfs_prepbufr" ] ; then
       done
    else
       if [ "$SENDMAIL" = "YES" ] ; then
+	 echo "Warning:  No GFS Prepbufr data available for ${VDATE}"     
          export subject="GFS Prepbufr Data Missing for EVS ${COMPONENT}"
          echo "Warning:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
          echo Missing file is $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr  >> mailmsg
@@ -400,6 +402,7 @@ if [ "$data" = "mrms" ] ; then
       done
    else
       if [ "$SENDMAIL" = "YES" ] ; then
+	 echo "Warning:  No MRMS data available for ${VDATE}"
          export subject="MRMS Data Missing for EVS ${COMPONENT}"
          echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
          echo Missing file is $DCOMINmrms/MultiSensor_QPE_*.grib2.gz  >> mailmsg

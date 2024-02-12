@@ -10,12 +10,6 @@ set -x
 export regrid='NONE'
 export vday=$VDATE
 
-#********************************************************
-# Check input forecsat and validation data availability
-# ******************************************************
-$USHevs/narre/check_files_existing.sh
-export err=$?; err_chk
-
 echo COMOUTsmall=$COMOUTsmall
 
 #**********************************************

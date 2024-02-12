@@ -53,9 +53,9 @@ if [ $prepare = yes ] ; then
 
   if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] && [ -s $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr ] ; then
 
-     $USHevs/cam/evs_href_preppare.sh prepbufr $domain
+     $USHevs/cam/evs_href_prepare.sh prepbufr $domain
      export err=$?; err_chk
-     $USHevs/cam/evs_href_preppare.sh gfs_prepbufr $domain
+     $USHevs/cam/evs_href_prepare.sh gfs_prepbufr $domain
      export err=$?; err_chk
 
   else
