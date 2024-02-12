@@ -46,16 +46,11 @@ export err=$?; err_chk
 #metrics. The results are much better. So for sref, first run cnv job. After it is
 #finished, run grid2obs job. In global_ens, both are combined together in grid2obs.
 #*****************************************************************************
-if [ -e $DATA/prepbufr.missing ] || [ -e $DATA/sref_mbrs.missing ] ; then
- echo "EXIT: Either ccpa or sref members are missing!  Terminate $jobid"
- exit
-else
- if [ $just_cnv = yes ] ; then
+if [ $just_cnv = yes ] ; then
    $USHevs/mesoscale/evs_sref_cnv.sh
    export err=$?; err_chk
- else
+else
    $USHevs/mesoscale/evs_sref_grid2obs.sh
    export err=$?; err_chk
- fi
 fi
 

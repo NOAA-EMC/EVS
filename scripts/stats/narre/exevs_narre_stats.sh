@@ -23,15 +23,9 @@ export maskpath=$MASKS
 $USHevs/narre/check_files_existing.sh
 export err=$?; err_chk
 
-#Note must use ksh to check narre_mean_*.missing files 
-if [ ! -e $DATA/prepbufr.missing ] && [ ! -e $DATA/narre_mean_*.missing ] ; then
- if [ $stats = yes ] ; then
-   $USHevs/narre/evs_narre_stats.sh  
-   export err=$?; err_chk
- fi
-else
- echo "EXIT: Either prepbufr or narre mean files are missing! Terminate $jobid."
- exit
+if [ $stats = yes ] ; then
+ $USHevs/narre/evs_narre_stats.sh  
+ export err=$?; err_chk
 fi
 
 

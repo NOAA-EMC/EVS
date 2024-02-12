@@ -24,11 +24,6 @@ export maskpath=$MASKS
 $USHevs/mesoscale/evs_check_sref_files.sh
 export err=$?; err_chk
 
-if [ -e $DATA/ccpa.missing ] || [ -e $DATA/sref_mbrs.missing ] ; then
- echo "EXIT: Either ccpa or sref members are missing! Terminate $jobid!"
- exit
-else 
-  $USHevs/mesoscale/evs_sref_precip.sh 
-  export err=$?; err_chk
-fi
+$USHevs/mesoscale/evs_sref_precip.sh 
+export err=$?; err_chk
 
