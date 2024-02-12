@@ -192,4 +192,4 @@ sed -e "s!YYYY!${last_year}!g" -e "s!FIRST!$first!g" -e "s!LAST!$last!g"  $USHev
 python evs_global_ens_headline_plot.py
 export err=$?; err_chk
 
-cpreq NH_H500_PAC_${last_year}.png  evs.global_ens.acc.hgt_p500.${beg_day}_${end_day}.fhrmean_valid00z_f384.g003_nhem.png
+cp -v NH_H500_PAC_${last_year}.png  evs.global_ens.acc.hgt_p500.${beg_day}_${end_day}.fhrmean_valid00z_f384.g003_nhem.png

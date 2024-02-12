@@ -151,12 +151,22 @@ for fhr in $fhrs ; do
     #   to get averaged CTC final stat files
     #***************************************************************************
     mkdir -p $WORK/grid2obs/run_${modnam}_${fhr}_cnv/stat/${modnam}
-    cpreq -v $WORK/grid2obs/run_${modnam}_t*z_${fhr}_cnv/stat/${modnam}/* $WORK/grid2obs/run_${modnam}_${fhr}_cnv/stat/${modnam}/.
+    for FILE in $WORK/grid2obs/run_${modnam}_t*z_${fhr}_cnv/stat/${modnam}/* ; do
+        if [ -s $FILE ]; then
+            cp -v $FILE $WORK/grid2obs/run_${modnam}_${fhr}_cnv/stat/${modnam}/.
+        fi
+    done
     echo  "export output_base=$WORK/grid2obs/run_${modnam}_${fhr}_cnv" >> run_${modnam}_${fhr}_cnv.sh
     echo "cd \$output_base/stat/${modnam}" >> run_${modnam}_${fhr}_cnv.sh
     echo "$USHevs/global_ens/evs_global_ens_average_cnv.sh $modnam $fhr" >> run_${modnam}_${fhr}_cnv.sh
     echo "export err=\$?; err_chk" >>  run_${modnam}_${fhr}_cnv.sh
-    [[ $SENDCOM="YES" ]] && echo  "cpreq -v  \$output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
+    if [ $SENDCOM="YES" ] ; then
+        echo "for FILE in \$output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat ; do" >> run_${modnam}_${fhr}_cnv.sh
+        echo "  if [ -s \$FILE ]; then" >> run_${modnam}_${fhr}_cnv.sh
+        echo  "     cp -v  \$FILE $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
+        echo "  fi" >> run_${modnam}_${fhr}_cnv.sh
+        echo "done" >> run_${modnam}_${fhr}_cnv.sh
+    fi
     chmod +x run_${modnam}_${fhr}_cnv.sh
     echo "${DATA}/run_${modnam}_${fhr}_cnv.sh" >> run_all_gens_cnv_poe2.sh
 done
