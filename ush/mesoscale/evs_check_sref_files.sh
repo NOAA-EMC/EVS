@@ -22,11 +22,11 @@ done
 
 echo "Missing prepbufr files = " $missing
 if [ $missing -eq 4  ] ; then
-  echo "Warning: all of the preppbufr files are missing, exit execution!!!"
+  echo "WARNING: all of the preppbufr files ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr are missing"
   >$DATA/prepbufr.missing
   if [ $SENDMAIL = YES ] ; then
      export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-     echo "Warning: all of the preppbufr files are missing, exit execution!!!" > mailmsg
+     echo "WARNING: all of the preppbufr files are missing, exit execution!!!" > mailmsg
      echo "Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr"  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $MAILTO
@@ -67,11 +67,11 @@ done
 
 echo "Missing ccpa  files = " $missing
 if [ $missing -eq 8  ] ; then
-  echo "Warning: all of the ccpa files are missing"
+  echo "WARNING: all of the ccpa files $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2 are missing"
   >$DATA/ccpa.missing
   if [ $SENDMAIL = YES ] ; then
      export subject="CCPA Data Missing for EVS ${COMPONENT}"
-     echo "Warning: all of the ccpa files are missing" > mailmsg
+     echo "WARNING: all of the ccpa files are missing" > mailmsg
      echo "Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2"  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $MAILTO

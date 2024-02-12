@@ -23,11 +23,11 @@ done
 
 echo "Missing prepbufr files = " $missing
 if [ $missing -eq 24  ] ; then
-  echo "Warning: all of the preppbufr files are missing"
+  echo "WARNING: all of the preppbufr files $COMINobsproc/rap.${vday}/rap.t??z.prepbufr.tm00 are missing"
   >$DATA/prepbufr.missing
   if [ $SENDMAIL = YES ] ; then
      export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-     echo "Waring: all of the preppbufr files are missing" > mailmsg
+     echo "WARNING all of the preppbufr files are missing" > mailmsg
      echo "Missing file is $COMINobsproc/rap.${vday}/rap.t??z.prepbufr.tm00"  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $MAILTO
