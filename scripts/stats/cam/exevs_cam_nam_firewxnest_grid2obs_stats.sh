@@ -55,7 +55,7 @@ do
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
        else
-        echo "WARNING: The NAM Firewx file is missing for valid date ${VDATE}. METplus will not run."
+        echo "WARNING: File $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 is missing."
        fi
      fi
      fi
@@ -126,7 +126,7 @@ else
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $MAILTO
   else
-   echo "WARNING: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run."
+   echo "WARNING: File $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum} is missing."
   fi
 fi
 
