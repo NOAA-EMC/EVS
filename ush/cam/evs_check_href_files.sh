@@ -22,7 +22,7 @@ if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
    done
    echo "Missing prepbufr files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "All of the preppbufr files are missing."
+      err_exit "All of the preppbufr files are missing."
    fi
 
 fi
@@ -59,7 +59,7 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing ccpa01h files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "All of the ccpa files are missing"
+      err_exit "All of the ccpa files are missing"
    fi
 
    missing=0
@@ -88,7 +88,7 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing ccpa03h files = " $missing
    if [ $missing -eq 8  ] ; then
-      echo "All of the ccpa03h files are missing"
+      err_exit "All of the ccpa03h files are missing"
    fi
 
    missing=0
@@ -109,7 +109,7 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing ccpa06h files = " $missing
    if [ $missing -ge 1  ] ; then
-      echo "At least one of the ccpa06h files are missing"
+      err_exit "At least one of the ccpa06h files are missing"
    fi
 
    accum=01
@@ -123,7 +123,7 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing mrms01h files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "All of mrms01h files are missing"
+      err_exit "All of mrms01h files are missing"
    fi
 
    accum=03
@@ -137,7 +137,7 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing mrms03h files = " $missing
    if [ $missing -eq 8  ] ; then
-      echo "All of mrms03h files are missing"
+      err_exit "All of mrms03h files are missing"
    fi
 
    accum=24
@@ -151,7 +151,7 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing mrms24h files = " $missing
    if [ $missing -eq 4  ] ; then
-      echo "All of the mrms24h files are missing"   
+      err_exit "All of the mrms24h files are missing"   
    fi
 fi
 
@@ -181,7 +181,7 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
             fi        
          done
          if [ $href_mbrs -lt 4 ] ; then
-            echo "HREF members = " $href_mbrs " which < 4"
+            err_exit "HREF members = " $href_mbrs " which < 4"
          fi
       fi
    done
@@ -212,7 +212,7 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
              fi        
          done
          if [ $href_mbrs -lt 4 ] ; then
-             echo "HREF members = " $href_mbrs " which < 4"
+             err_exit "HREF members = " $href_mbrs " which < 4"
          fi
       fi
    done
@@ -239,7 +239,7 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
              fi	    
           done
           if [ $href_prod -lt 4 ] ; then
-             echo "HREF Products = " $href_prod " which < 4, some products are missing"
+             err_exit "HREF Products = " $href_prod " which < 4, some products are missing"
           fi
       fi
       fhr=$((fhr+1))  
@@ -267,7 +267,7 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
             fi	    
          done
          if [ $href_prod -lt 4 ] ; then
-            echo "HREF Products = " $href_prod " which < 4, some products are missing"
+            err_exit "HREF Products = " $href_prod " which < 4, some products are missing"
          fi
       fi
       fhr=$((fhr+1))  
