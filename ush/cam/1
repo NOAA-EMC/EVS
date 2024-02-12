@@ -114,7 +114,7 @@ if [ "$data" = "ccpa01h03h" ] ; then
       fi
    done
    if [ "$missing_ccpa" -gt "0" ] ; then ; then 
-      echo "WARNING:  No CCPA data in $COMCCPA available for EVS ${COMPONENT}" 
+      echo "WARNING:  No CCPA data in $COMCCPA available for ${VDATE}" 
     if [ "$SENDMAIL" = "YES" ] ; then
       export subject="CCPA Data Missing for EVS ${COMPONENT}"
       echo "WARNING:  No CCPA data available for ${VDATE}" > mailmsg
@@ -167,7 +167,7 @@ if [ "$data" = "ccpa24h" ] ; then
          mkdir -p ${COMOUTfinal}/precip_mean24
          cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
       else
-	 echo "WARNING: At least one of ccpa06h files $ccpa24/ccpa? is missing for EVS ${COMPONENT}"
+	 echo "WARNING: At least one of ccpa06h files $ccpa24/ccpa? is missing for ${VDATE}"
          if [ "$SENDMAIL" = "YES" ] ; then
             export subject="06h CCPA Data Missing for 24h CCPA generation"
             echo "WARNING: At least one of ccpa06h files is missing  for ${VDATE}" > mailmsg
@@ -342,7 +342,7 @@ if [ "$data" = "gfs_prepbufr" ] ; then
          fi
       done
    else
-      echo "WARNING:  No GFS Prepbufr data $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr available for EVS ${COMPONENT}"
+      echo "WARNING:  No GFS Prepbufr data $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr available for ${VDATE}"
       if [ "$SENDMAIL" = "YES" ] ; then
          export subject="GFS Prepbufr Data Missing for EVS ${COMPONENT}"
          echo "WARNING:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
@@ -405,7 +405,7 @@ if [ "$data" = "mrms" ] ; then
          fi
       done
    else
-      echo "WARNING:  No MRMS data $DCOMINmrms/MultiSensor_QPE_*.grib2.gz available for EVS ${COMPONENT}"
+      echo "WARNING:  No MRMS data $DCOMINmrms/MultiSensor_QPE_*.grib2.gz available for ${VDATE}"
       if [ "$SENDMAIL" = "YES" ] ; then
          export subject="MRMS Data Missing for EVS ${COMPONENT}"
          echo "WARNING:  No MRMS data available for ${VDATE}" > mailmsg
