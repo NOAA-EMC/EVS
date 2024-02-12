@@ -98,8 +98,8 @@ for log_dir in $log_dirs; do
     fi
 done
 
-if [ $SENDCOM="YES" ]; then
- cpreq evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.href.precip.spatial.map.v${VDATE}.tar ] ; then
+ cp -v evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
