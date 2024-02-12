@@ -54,9 +54,8 @@ do
         echo "Missing file is $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
-       else
-        echo "WARNING: File $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 is missing."
        fi
+       echo "WARNING: File $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 is missing."
      fi
      fi
      let "shr=shr+1"
@@ -125,9 +124,8 @@ else
    echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum}" >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $MAILTO
-  else
-   echo "WARNING: File $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum} is missing."
   fi
+  echo "WARNING: File $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum} is missing."
 fi
 
 echo $obfound
