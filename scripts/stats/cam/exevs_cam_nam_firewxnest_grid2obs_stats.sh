@@ -51,7 +51,7 @@ do
        echo "WARNING: File $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 is missing."
        if [ $SENDMAIL = "YES" ]; then
         export subject="NAM Firewx File Missing for EVS ${COMPONENT}"
-        echo "Warning: The NAM Firewx file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+        echo "Warning: The NAM Firewx file is missing for valid date ${VDATE}." > mailmsg
         echo "Missing file is $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
