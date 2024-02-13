@@ -96,47 +96,50 @@ for VHOUR in VHOUR_LIST:
                             print(f"Linking {COMINmodel_file} to "
                                   +f"{DATAmodel_file}")
                             os.symlink(COMINmodel_file, DATAmodel_file)
-                        elif SENDMAIL == "YES":
-                            mail_COMINmodel_file = os.path.join(
-                                DATA, f"mail_{MODELNAME}_"
-                                +f"init{init_dt:%Y%m%d%H}_"
-                                +f"{str(fhr).zfill(3)}.sh"
-                            )
+                        else:
                             print("WARNING: MISSING or ZERO SIZE: "
                                   +f"{COMINmodel_file}")
-                            print("Mail File: "
-                                  +f"{mail_COMINmodel_file}")
-                            if not os.path.exists(mail_COMINmodel_file):
-                                mailmsg = open(mail_COMINmodel_file, 'w')
-                                mailmsg.write('#!/bin/bash\n')
-                                mailmsg.write('set -x\n\n')
-                                mailmsg.write(
-                                    'export subject="F'+str(fhr).zfill(3)
-                                    +' '+MODELNAME.upper()+' Forecast '
-                                    +'Data Missing for EVS '+COMPONENT
-                                    +'"\n'
+                            if SENDMAIL == "YES":
+                                mail_COMINmodel_file = os.path.join(
+                                        DATA, f"mail_{MODELNAME}_"
+                                        +f"init{init_dt:%Y%m%d%H}_"
+                                        +f"{str(fhr).zfill(3)}.sh"
                                 )
-                                mailmsg.write(
-                                    "export MAILTO=${MAILTO:-'"
-                                    +USER.lower()+"@noaa.gov'}\n"
-                                )
-                                mailmsg.write(
-                                    'echo "WARNING: No '+MODELNAME.upper()
-                                    +' was available for '
-                                    +f'{init_dt:%Y%m%d%H}f'
-                                    +f'{str(fhr).zfill(3)}" > mailmsg\n'
-                                )
-                                mailmsg.write(
-                                    'echo "Missing file is '
-                                    +COMINmodel_file+'" >> mailmsg\n'
-                                )
-                                mailmsg.write(
-                                    'echo "Job ID: '+jobid+'" >> mailmsg\n'
-                                )
-                                mailmsg.write('cat mailmsg | '+mail_cmd+'\n')
-                                mailmsg.write('exit 0')
-                                mailmsg.close()
-                                os.chmod(mail_COMINmodel_file, 0o755)
+                                print("WARNING: MISSING or ZERO SIZE: "
+                                      +f"{COMINmodel_file}")
+                                print("Mail File: "
+                                      +f"{mail_COMINmodel_file}")
+                                if not os.path.exists(mail_COMINmodel_file):
+                                    mailmsg = open(mail_COMINmodel_file, 'w')
+                                    mailmsg.write('#!/bin/bash\n')
+                                    mailmsg.write('set -x\n\n')
+                                    mailmsg.write(
+                                            'export subject="F'+str(fhr).zfill(3)
+                                            +' '+MODELNAME.upper()+' Forecast '
+                                            +'Data Missing for EVS '+COMPONENT
+                                            +'"\n'
+                                    )
+                                    mailmsg.write(
+                                            "export MAILTO=${MAILTO:-'"
+                                            +USER.lower()+"@noaa.gov'}\n"
+                                    )
+                                    mailmsg.write(
+                                            'echo "WARNING: No '+MODELNAME.upper()
+                                            +' was available for '
+                                            +f'{init_dt:%Y%m%d%H}f'
+                                            +f'{str(fhr).zfill(3)}" > mailmsg\n'
+                                    )
+                                    mailmsg.write(
+                                            'echo "Missing file is '
+                                            +COMINmodel_file+'" >> mailmsg\n'
+                                    )
+                                    mailmsg.write(
+                                            'echo "Job ID: '+jobid+'" >> mailmsg\n'
+                                    )
+                                    mailmsg.write('cat mailmsg | '+mail_cmd+'\n')
+                                    mailmsg.write('exit 0')
+                                    mailmsg.close()
+                                    os.chmod(mail_COMINmodel_file, 0o755)
         # OBS: Get NOHRSC
         DATAnohrsc = os.path.join(DATA, 'data', 'nohrsc')
         if not os.path.exists(DATAnohrsc):
@@ -156,41 +159,43 @@ for VHOUR in VHOUR_LIST:
         if m_util.check_file(COMINnohrsc_file):
             print(f"Linking {COMINnohrsc_file} to {DATAnohrsc_file}")
             os.symlink(COMINnohrsc_file, DATAnohrsc_file)
-        elif SENDMAIL == "YES":
-            mail_COMINnohrsc_file = os.path.join(
-                DATA, f"mail_nohrsc_accum{accum}hr_"
-                +f"valid{valid_dt:%Y%m%d%H}.sh"
-            )
+        else:
             print(f"WARNING: MISSING or ZERO SIZE: {COMINnohrsc_file}")
-            print(f"Mail File: {mail_COMINnohrsc_file}")
-            if not os.path.exists(mail_COMINnohrsc_file):
-                mailmsg = open(mail_COMINnohrsc_file, 'w')
-                mailmsg.write('#!/bin/bash\n')
-                mailmsg.write('set -x\n\n')
-                mailmsg.write(
-                    'export subject="NOHRSC Accum '+accum+'hr '
-                    +'Data Missing for EVS '+COMPONENT+'"\n'
+            if SENDMAIL == "YES":
+                mail_COMINnohrsc_file = os.path.join(
+                        DATA, f"mail_nohrsc_accum{accum}hr_"
+                        +f"valid{valid_dt:%Y%m%d%H}.sh"
                 )
-                mailmsg.write(
-                    "export MAILTO=${MAILTO:-'"+USER.lower()
-                    +"@noaa.gov'}\n"
-                )
-                mailmsg.write(
-                    'echo "WARNING: No NOHRSC accumulation '
-                    +accum+' hour data was available for '
-                    +f'valid date {valid_dt:%Y%m%d%H}" '
-                    +'> mailmsg\n'
-                )
-                mailmsg.write(
-                    'echo "Missing file is '+COMINnohrsc_file
-                    +'" >> mailmsg\n'
-                )
-                mailmsg.write(
-                     'echo "Job ID: '+jobid+'" >> mailmsg\n'
-                )
-                mailmsg.write('cat mailmsg | '+mail_cmd+'\n')
-                mailmsg.write('exit 0')
-                mailmsg.close()
-                os.chmod(mail_COMINnohrsc_file, 0o755)
+                print(f"WARNING: MISSING or ZERO SIZE: {COMINnohrsc_file}")
+                print(f"Mail File: {mail_COMINnohrsc_file}")
+                if not os.path.exists(mail_COMINnohrsc_file):
+                    mailmsg = open(mail_COMINnohrsc_file, 'w')
+                    mailmsg.write('#!/bin/bash\n')
+                    mailmsg.write('set -x\n\n')
+                    mailmsg.write(
+                            'export subject="NOHRSC Accum '+accum+'hr '
+                            +'Data Missing for EVS '+COMPONENT+'"\n'
+                    )
+                    mailmsg.write(
+                            "export MAILTO=${MAILTO:-'"
+                            +USER.lower()+"@noaa.gov'}\n"
+                    )
+                    mailmsg.write(
+                            'echo "WARNING: No NOHRSC accumulation '
+                            +accum+' hour data was available for '
+                            +f'valid date {valid_dt:%Y%m%d%H}" '
+                            +'> mailmsg\n'
+                    )
+                    mailmsg.write(
+                            'echo "Missing file is '+COMINnohrsc_file
+                            +'" >> mailmsg\n'
+                    )
+                    mailmsg.write(
+                            'echo "Job ID: '+jobid+'" >> mailmsg\n'
+                    )
+                    mailmsg.write('cat mailmsg | '+mail_cmd+'\n')
+                    mailmsg.write('exit 0')
+                    mailmsg.close()
+                    os.chmod(mail_COMINnohrsc_file, 0o755)
 
 print(f"END: {os.path.basename(__file__)}")
