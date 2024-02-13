@@ -1579,7 +1579,6 @@ def calculate_stat(logger, model_data, stat, conversion):
 
         Returns:
            stat_values       - Dataframe of the statistic values
-           stat_values_array - array of the statistic values
            stat_plot_name    - string of the formal statistic
                                name being plotted
    """
@@ -2036,96 +2035,7 @@ def calculate_stat(logger, model_data, stat, conversion):
       logger.error("FATAL ERROR: "+stat+" is not a valid option")
       exit(1)
    nindex = stat_values.index.nlevels
-   if stat == 'fbar_obar' or stat == 'orate_frate' or stat == 'baser_frate':
-      try:
-         if nindex == 1:
-            index0 = len(stat_values_fbar.index.get_level_values(0).unique())
-            stat_values_array_fbar = (
-               np.ma.masked_invalid(
-                  stat_values_fbar.values.reshape(index0)
-               )
-            )
-            index0 = len(stat_values_obar.index.get_level_values(0).unique())
-            stat_values_array_obar = (
-               np.ma.masked_invalid(
-                  stat_values_obar.values.reshape(index0)
-               )
-            )
-         elif nindex == 2:
-            index0 = len(stat_values_fbar.index.get_level_values(0).unique())
-            index1 = len(stat_values_fbar.index.get_level_values(1).unique())
-            stat_values_array_fbar = (
-               np.ma.masked_invalid(
-                  stat_values_fbar.values.reshape(index0, index1)
-               )
-            )
-            index0 = len(stat_values_obar.index.get_level_values(0).unique())
-            index1 = len(stat_values_obar.index.get_level_values(1).unique())
-            stat_values_array_obar = (
-               np.ma.masked_invalid(
-                  stat_values_obar.values.reshape(index0, index1)
-               )
-            )
-         elif nindex == 3:
-            index0 = len(stat_values_fbar.index.get_level_values(0).unique())
-            index1 = len(stat_values_fbar.index.get_level_values(1).unique())
-            index2 = len(stat_values_fbar.index.get_level_values(2).unique())
-            stat_values_array_fbar = (
-               np.ma.masked_invalid(
-                  stat_values_fbar.values.reshape(index0, index1, index2)
-               )
-            )
-            index0 = len(stat_values_obar.index.get_level_values(0).unique())
-            index1 = len(stat_values_obar.index.get_level_values(1).unique())
-            index2 = len(stat_values_obar.index.get_level_values(2).unique())
-            stat_values_array_obar = (
-               np.ma.masked_invalid(
-                  stat_values_obar.values.reshape(index0, index1, index2)
-               )
-            )
-         stat_values_array = np.ma.array([stat_values_array_fbar,
-                                          stat_values_array_obar])
-      except ValueError as e:
-         logger.warning(e)
-         logger.warning("This is usually OK, and will happen if "
-                        + "event_equalization=False.") 
-         logger.warning("Setting stat_values_array to Nonetype.")
-         stat_values_array = None
-         logger.warning("Continuing ...")
-   else:
-      try:
-         if nindex == 1:
-            index0 = len(stat_values.index.get_level_values(0).unique())
-            stat_values_array = (
-               np.ma.masked_invalid(
-                  stat_values.values.reshape(1, index0)
-               )
-            )
-         elif nindex == 2:
-            index0 = len(stat_values.index.get_level_values(0).unique())
-            index1 = len(stat_values.index.get_level_values(1).unique())
-            stat_values_array = (
-               np.ma.masked_invalid(
-                  stat_values.values.reshape(1, index0, index1)
-               )
-            )
-         elif nindex == 3:
-            index0 = len(stat_values.index.get_level_values(0).unique())
-            index1 = len(stat_values.index.get_level_values(1).unique())
-            index2 = len(stat_values.index.get_level_values(2).unique())
-            stat_values_array = (
-               np.ma.masked_invalid(
-                  stat_values.values.reshape(1, index0, index1, index2)
-               )
-            )
-      except ValueError as e:
-         logger.warning(e)
-         logger.warning("This is usually OK, and will happen if "
-                        + "event_equalization=False.") 
-         logger.warning("Setting stat_values_array to Nonetype.")
-         stat_values_array = None
-         logger.warning("Continuing ...")
-   return stat_values, stat_values_array, stat_plot_name
+   return stat_values, None, stat_plot_name
 
 def get_lead_avg_file(stat, input_filename, fcst_lead, output_base_dir):
    lead_avg_filename = stat + '_' + os.path.basename(input_filename) \

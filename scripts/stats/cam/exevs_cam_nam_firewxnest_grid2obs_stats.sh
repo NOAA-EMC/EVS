@@ -25,6 +25,7 @@ export fcstmax=$g2os_sfc_fhr_max
 fhr=0
 shr=0
 fcstnum=0
+fcstmiss=0
 obfound=0
 while [ $shr -le $fcstmax ]
 do
@@ -39,26 +40,37 @@ do
      adate=`$NDATE -$fhr $datehr`
      aday=`echo $adate |cut -c1-8`
      acyc=`echo $adate |cut -c9-10`
+     if [ $acyc = 00 -o $acyc = 06 -o $acyc = 12 -o $acyc = 18 ]; then
      if [ -e $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 ]
      then
        echo $fhr >> $DATA/fcstlist
        let "fcstnum=fcstnum+1"
      else
-       if [ $acyc = 00 -o $acyc = 06 -o $acyc = 12 -o $acyc = 18 ]
-       then
+       echo $fhr >> $DATA/fcstmiss
+       let "fcstmiss=fcstmiss+1"
+       echo "WARNING: File $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 is missing."
        if [ $SENDMAIL = "YES" ]; then
         export subject="NAM Firewx File Missing for EVS ${COMPONENT}"
-        echo "Warning: The NAM Firewx file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+        echo "Warning: The NAM Firewx file is missing for valid date ${VDATE}." > mailmsg
         echo "Missing file is $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
        fi
-       fi
+     fi
      fi
      let "shr=shr+1"
 done
-export fcsthours=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist`
-echo $fcsthours, $fcstnum
+
+if [ $fcstnum -gt 0 ]; then
+ export fcsthours=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist`
+ echo $fcsthours, $fcstnum
+fi
+
+if [ $fcstmiss -gt 0 ]; then
+ export fcstmissing=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstmiss`
+ echo "WARNING: Missing forecast hours $fcstmissing"
+fi
+
 
 # do a search on the obs file needed
 
@@ -106,6 +118,7 @@ then
  mkdir -p $DATA/$OBSDIR/nam.${obday}
   cpreq $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
 else
+  echo "WARNING: File $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum} is missing."
   if [ $SENDMAIL = "YES" ]; then
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
    echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg

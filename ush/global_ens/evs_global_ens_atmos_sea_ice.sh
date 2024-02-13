@@ -133,9 +133,21 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
             echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
         fi
         if [ $metplus_job = EnsembleStat ]; then
-          [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/ensemble_stat_*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+            if [ $SENDCOM="YES" ] ; then
+                echo "for FILE in \$output_base/stat/${modnam}/ensemble_stat_*.stat ; do" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+                echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+                echo "  fi" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+                echo "done" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+            fi
         elif [ $metplus_job = GridStat ]; then
-          [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/grid_stat_*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+            if [ $SENDCOM="YES" ] ; then
+                echo "for FILE in \$output_base/stat/${modnam}/grid_stat_*.stat ; do" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+                echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+                echo "  fi" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+                echo "done" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+            fi
         fi
         chmod +x run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
         echo "${DATA}/run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh" >> run_all_gens_sea_ice_${metplus_job}_poe.sh

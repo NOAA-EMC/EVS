@@ -102,7 +102,7 @@ for VHOUR in VHOUR_LIST:
                                 +f"init{init_dt:%Y%m%d%H}_"
                                 +f"{str(fhr).zfill(3)}.sh"
                             )
-                            print("MISSING or ZERO SIZE: "
+                            print("WARNING: MISSING or ZERO SIZE: "
                                   +f"{COMINmodel_file}")
                             print("Mail File: "
                                   +f"{mail_COMINmodel_file}")
@@ -161,7 +161,7 @@ for VHOUR in VHOUR_LIST:
                 DATA, f"mail_nohrsc_accum{accum}hr_"
                 +f"valid{valid_dt:%Y%m%d%H}.sh"
             )
-            print(f"MISSING or ZERO SIZE: {COMINnohrsc_file}")
+            print(f"WARNING: MISSING or ZERO SIZE: {COMINnohrsc_file}")
             print(f"Mail File: {mail_COMINnohrsc_file}")
             if not os.path.exists(mail_COMINnohrsc_file):
                 mailmsg = open(mail_COMINnohrsc_file, 'w')

@@ -226,9 +226,21 @@ if [ $verify = upper ] ; then
           fi
         fi
         if [ $metplus_job = EnsembleStat ] ; then
-            [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/ensemble_stat_*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+            if [ $SENDCOM="YES" ] ; then
+                echo "for FILE in \$output_base/stat/${modnam}/ensemble_stat_*.stat ; do" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "  fi" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "done" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+             fi
         elif [ $metplus_job = GridStat ] ; then
-            [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/grid_stat_*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+            if [ $SENDCOM="YES" ] ; then
+                echo "for FILE in \$output_base/stat/${modnam}/grid_stat_*.stat ; do" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "  fi" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+                echo "done" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+            fi
         fi
         chmod +x run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
         echo "${DATA}/run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh" >> run_all_gens_g2g_${metplus_job}_poe.sh
@@ -419,16 +431,34 @@ if [ $verify = precip ] ; then
           fi
         fi
         if [ $metplus_job = EnsembleStat ]; then
-          [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/ensemble_stat_*.stat $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+            if [ $SENDCOM="YES" ] ; then
+                echo "for FILE in \$output_base/stat/${modnam}/ensemble_stat_*.stat ; do" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "    cp -v \$FILE $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "  fi" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "done" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+            fi
         elif [ $metplus_job = GridStat ]; then
-          [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/grid_stat_*.stat $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+            if [ $SENDCOM="YES" ] ; then
+                echo "for FILE in \$output_base/stat/${modnam}/grid_stat_*.stat ; do" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "    cp -v \$FILE $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "  fi" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "done" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+            fi
         elif [ $metplus_job = GenEnsProd ]; then
           if [ $apcp = 24h ] ; then
 	    #*******************************************************
 	    # Save the 24h APCP ensemble mean files for spatial map 
 	    #*******************************************************
             mkdir -p $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME
-            [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/GenEnsProd*APCP24*.nc  $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+            if [ $SENDCOM="YES" ] ; then
+                echo "for FILE in \$output_base/stat/${modnam}/GenEnsProd*APCP24*.nc ; do" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "  if [ -s \$FILE ]; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "    cp -v \$FILE $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "  fi" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+                echo "done" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+            fi      
           fi
         fi
         chmod +x run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh

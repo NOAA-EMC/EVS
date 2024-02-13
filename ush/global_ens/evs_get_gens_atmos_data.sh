@@ -36,6 +36,7 @@ cd $WORK
 if [ $modnam = gfsanl ]; then
   for ihour in 00 06 12 18 ; do
     if [ ! -s $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl ] ; then
+      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl is not available" 
       if [ $SENDMAIL = YES ]; then
         export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS analysis available for ${vday}${ihour}" > mailmsg
@@ -47,6 +48,7 @@ if [ $modnam = gfsanl ]; then
       cpreq -v $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl $WORK/gfsanl.t${ihour}z.grid3.f000.grib2
     fi
     if [ ! -s $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 ]; then
+      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="GFS F000 Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS F000 available for ${vday}${ihour}" > mailmsg
@@ -61,11 +63,19 @@ if [ $modnam = gfsanl ]; then
       $WGRIB2  $GFSf000|grep "VGRD:10 m above ground"|$WGRIB2 -i $GFSf000 -grib $WORK/V10_f000.${ihour}
       cat $WORK/V10_f000.${ihour} >> $WORK/gfsanl.t${ihour}z.grid3.f000.grib2
     fi
-    [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gfsanl.t${ihour}z.grid3.f000.grib2 $COMOUTgefs/gfsanl.t${ihour}z.grid3.f000.grib2
+    if [ $SENDCOM="YES" ] ; then
+        if [ -s $WORK/gfsanl.t${ihour}z.grid3.f000.grib2 ]; then
+            cp -v $WORK/gfsanl.t${ihour}z.grid3.f000.grib2 $COMOUTgefs/gfsanl.t${ihour}z.grid3.f000.grib2
+        fi
+    fi
  done
  if [ -s $COMOUTgefs/gfsanl.t00z.grid3.f000.grib2 ]; then
     $WGRIB2 $COMOUTgefs/gfsanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $WORK/gfsanl.t00z.deg1.5.f000.grib2
-    [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gfsanl.t00z.deg1.5.f000.grib2 $COMOUTgefs/gfsanl.t00z.deg1.5.f000.grib2
+    if [ $SENDCOM="YES" ] ; then
+        if [ -s $WORK/gfsanl.t00z.deg1.5.f000.grib2 ]; then
+            cp -v $WORK/gfsanl.t00z.deg1.5.f000.grib2 $COMOUTgefs/gfsanl.t00z.deg1.5.f000.grib2
+        fi
+    fi
  fi
 fi
 
@@ -103,34 +113,45 @@ if [ $modnam = cmcanl ]; then
       else
         echo "WARNING: No $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl or $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 file available"
       fi
-      if [ ! -s $cmcanl ] ; then
-       if [ $SENDMAIL = YES ]; then
-         export subject="CMC Analysis Data Missing for EVS ${COMPONENT}"
-         echo "Warning: No CMC analysis available for ${vday}${ihour}" > mailmsg
-         echo "Missing file is $cmcanl" >> mailmsg
-         echo "Job ID: $jobid" >> mailmsg
-         cat mailmsg | mail -s "$subject" $MAILTO
-       fi
-      else
-       >$WORK/cmce.upper.${ihour}.gec00.anl
-       >$WORK/cmce.sfc.${ihour}.gec00.anl
+      if [ ! -z $cmcanl ]; then
+        if [ ! -s $cmcanl ] ; then
+          echo "WARNING: $cmcanl is not available"
+            if [ $SENDMAIL = YES ]; then
+              export subject="CMC Analysis Data Missing for EVS ${COMPONENT}"
+              echo "Warning: No CMC analysis available for ${vday}${ihour}" > mailmsg
+              echo "Missing file is $cmcanl" >> mailmsg
+              echo "Job ID: $jobid" >> mailmsg
+              cat mailmsg | mail -s "$subject" $MAILTO
+            fi
+        else
+          >$WORK/cmce.upper.${ihour}.gec00.anl
+          >$WORK/cmce.sfc.${ihour}.gec00.anl
 
-       $WGRIB2 $cmcanl | grep --file=${pat} | grep "anl:ENS=low-res" | $WGRIB2 -i $cmcanl -grib ${WORK}/grabcmcanl.${ihour}
-#       $WGRIB2 $WORK/cmce.upper.${ihour}.gec00.anl -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2
-        $WGRIB2 ${WORK}/grabcmcanl.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 
-	
-       [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 $COMOUTcmce/cmcanl.t${ihour}z.grid3.f000.grib2
-    fi
+          $WGRIB2 $cmcanl | grep --file=${pat} | grep "anl:ENS=low-res" | $WGRIB2 -i $cmcanl -grib ${WORK}/grabcmcanl.${ihour}
+          $WGRIB2 ${WORK}/grabcmcanl.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 
+          if [ $SENDCOM="YES" ] ; then
+            if [ -s $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 ]; then	
+              cp -v $WORK/cmcanl.t${ihour}z.grid3.f000.grib2 $COMOUTcmce/cmcanl.t${ihour}z.grid3.f000.grib2
+            fi
+          fi
+        fi
+      fi    
   done
 
    for ihour in 00 12; do
-    rm ${WORK}/grabcmcanl.${ihour}
+       if [ -f ${WORK}/grabcmcanl.${ihour} ]; then
+           rm ${WORK}/grabcmcanl.${ihour}
+       fi
    done
    rm ${pat}
 
   if [ -s $COMOUTcmce/cmcanl.t00z.grid3.f000.grib2 ]; then
       $WGRIB2 $COMOUTcmce/cmcanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $WORK/cmcanl.t00z.deg1.5.f000.grib2
-      [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmcanl.t00z.deg1.5.f000.grib2 $COMOUTcmce/cmcanl.t00z.deg1.5.f000.grib2
+      if [ $SENDCOM="YES" ] ; then
+          if [ -s $WORK/cmcanl.t00z.deg1.5.f000.grib2 ]; then
+              cp -v $WORK/cmcanl.t00z.deg1.5.f000.grib2 $COMOUTcmce/cmcanl.t00z.deg1.5.f000.grib2
+          fi
+      fi
   fi
 fi
 
@@ -179,7 +200,6 @@ if [ $modnam = gefs ] ; then
     echo "HGT:cloud ceiling" >> ${pat1}
     echo "ICEC:surface" >> ${pat1}
     echo "TMP:surface" >> ${pat1}
-    #echo "SPFH:" >> ${pat1}
 
 
   for ihour in $gens_ihour  ; do
@@ -197,7 +217,12 @@ if [ $modnam = gefs ] ; then
         gefs_cvc=$origin_cvc/gep${mb}.t${ihour}z.pgrb2b.0p50.f${hhh} 
         >$WORK/gefs.upper.${ihour}.${mb}.${hhh}
         >$WORK/gefs.sfc.${ihour}.${mb}.${hhh}
-        if [ ! -s $gefs ]; then
+        if [ -s $gefs ]; then
+          grabgefs=${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+          x=${tmpDir}/x.${ihour}.${mb}.${hhh}
+          $WGRIB2 $gefs     | grep --file=${pat0} | $WGRIB2 -i $gefs     -grib ${grabgefs}
+        else
+          echo "WARNING: $gefs is not available"
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
             echo "Warning: No GEFS Member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
@@ -205,13 +230,14 @@ if [ $modnam = gefs ] ; then
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
-        else
-          grabgefs=${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
-	  x=${tmpDir}/x.${ihour}.${mb}.${hhh}
-
-	  $WGRIB2 $gefs     | grep --file=${pat0} | $WGRIB2 -i $gefs     -grib ${grabgefs}
         fi
-        if [ ! -s $gefs_cvc ]; then
+        if [ -s $gefs_cvc ]; then
+          [[ -z $grabgefs ]] && grabgefs=${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+          [[ -z $x ]] && x=${tmpDir}/x.${ihour}.${mb}.${hhh}
+          $WGRIB2 $gefs_cvc | grep --file=${pat1} | $WGRIB2 -i $gefs_cvc -grib ${x}
+          cat ${x} >> ${grabgefs}
+        else
+          echo "WARNING: $gefs_cvc is not available"
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
             echo "Warning: No GEFS Member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
@@ -219,24 +245,32 @@ if [ $modnam = gefs ] ; then
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
-        else
-          $WGRIB2 $gefs_cvc | grep --file=${pat1} | $WGRIB2 -i $gefs_cvc -grib ${x}
-	  cat ${x} >> ${grabgefs}
         fi
-#        $WGRIB2 $WORK/gefs.upper.${ihour}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
-        $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 
-        [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+        if [ ! -z $grabgefs ]; then
+            if [ -s $grabgefs ]; then
+                $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+            fi
+            if [ $SENDCOM="YES" ] ; then
+                if [ -s $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 ]; then 
+                    cp -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
+                fi
+            fi
+        fi
         nfhrs=`expr $nfhrs + 6`
       done # forecast hour
 
       for hhh in $(seq --format=%03g $fhr_beg 6 $fhr_end ); do
-         rm ${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+         if [ -f ${tmpDir}/grabgefs.${ihour}.${mb}.${hhh} ]; then
+             rm ${tmpDir}/grabgefs.${ihour}.${mb}.${hhh}
+         fi
       done
 
       mbr=`expr $mbr + 1`
     done # member
   done # ihour
-  rm ${pat0} ${pat1}
+  if [ -f $pat0 -a $pat1 ]; then
+      rm ${pat0} ${pat1}
+  fi
  fi # check if file not existing
 fi
 
@@ -272,7 +306,6 @@ if [ $modnam = cmce ] ; then
   echo "SNOD:" >> ${pat}
   echo "PRMSL:" >> ${pat}
   echo "CAPE:atmos col" >> ${pat}
-  #echo "SPFH:" >> ${pat}
 
   for ihour in $gens_ihour ; do
     origin=$COMINcmce/cmce.$vday/$ihour/pgrb2ap5
@@ -288,6 +321,7 @@ if [ $modnam = cmce ] ; then
         >$WORK/cmce.upper.${ihour}.${mb}.${h3}
         >$WORK/cmce.sfc.${ihour}.${mb}.${h3}
         if [ ! -s $cmce ]; then
+          echo "WARNING: $cmce is not available"
           if [ $SENDMAIL = YES ]; then
             export subject="CMCE Member ${mb} F${h3} Data Missing for EVS ${COMPONENT}"
             echo "Warning: No CMCE Member ${mb} F${h3} available for ${vday}${ihour}" > mailmsg
@@ -316,20 +350,28 @@ if [ $modnam = cmce ] ; then
           #Hrer, use WGRIB2 to reverse N-S grid direction and convert 0.5x0.5 deg to 1x1 deg
 	  #********************************************************************************
           $WGRIB2 ${grabcmce} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
-          [[ $SENDCOM="YES" ]] && cpreq -v $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
+          if [ $SENDCOM="YES" ] ; then
+              if [ -s $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 ]; then
+                  cp -v $WORK/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${h3}.grib2
+              fi
+          fi
         fi 
         nfhrs=`expr $nfhrs + 12`
       done # forecast hour
 
 
      for h3 in $(seq --format=%03g $fhr_beg 12 $fhr_end ); do
-       rm ${tmpDir}/grabcmce.${ihour}.${mb}.${h3}
+       if [ -f ${tmpDir}/grabcmce.${ihour}.${mb}.${h3} ]; then
+           rm ${tmpDir}/grabcmce.${ihour}.${mb}.${h3}
+       fi
      done
 
       mbr=`expr $mbr + 1`
     done # member
   done # ihour
-  rm ${pat}
+  if [ -f $pat ]; then
+      rm ${pat}
+  fi
 fi
 
 ###########################################
@@ -358,6 +400,7 @@ if [ $modnam = prepbufr ] ; then
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf" >> run_pb2nc.${ihour}.sh  
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.conf" >> run_pb2nc.${ihour}.sh  
       else
+        echo "WARNING: $COMINobsproc/gdas.${vday}/${ihour}/atmos/gdas.t${ihour}z.prepbufr is not available"
 	if [ $SENDMAIL = YES ]; then
           export subject="Prepbufr  Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No prepbufr analysis available for ${vday}${ihour}" > mailmsg
@@ -369,11 +412,15 @@ if [ $modnam = prepbufr ] ; then
       chmod +x run_pb2nc.${ihour}.sh
       echo "${DATA}/run_pb2nc.${ihour}.sh" >> run_pb2nc.sh
   done
-  echo "chmod 640 ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
-  echo "chgrp rstprod ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
-  echo "cpreq -v ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTgefs" >> run_pb2nc.sh
-  echo "chmod 640 $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
-  echo "chgrp rstprod $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
+  echo "for FILE in ${WORK}/pb2nc/prepbufr_nc/*.nc ; do" >> run_pb2nc.sh
+  echo "  if [ -s \$FILE ]; then" >> run_pb2nc.sh
+  echo "      chmod 640 ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
+  echo "      chgrp rstprod ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
+  echo "      cp -v \$FILE $COMOUTgefs" >> run_pb2nc.sh
+  echo "      chmod 640 $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
+  echo "      chgrp rstprod $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
+  echo "  fi" >> run_pb2nc.sh
+  echo "done" >> run_pb2nc.sh 
   chmod +x run_pb2nc.sh
   ${DATA}/run_pb2nc.sh
 fi  
@@ -388,8 +435,13 @@ if [ $modnam = ccpa ] ; then
   for ihour in 00 06 12 18 ; do
     if [ -s $COMINccpa/ccpa.${vday}/$ihour/ccpa.t${ihour}z.06h.1p0.conus.gb2 ] ; then
       $WGRIB2 $COMINccpa/ccpa.${vday}/$ihour/ccpa.t${ihour}z.06h.1p0.conus.gb2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/ccpa.t${ihour}z.grid3.06h.f00.grib2
-      [[ $SENDCOM="YES" ]] && cpreq -v $WORK/ccpa.t${ihour}z.grid3.06h.f00.grib2 ${COMOUTgefs}/ccpa.t${ihour}z.grid3.06h.f00.grib2
+      if [ $SENDCOM="YES" ] ; then
+          if [ -s $WORK/ccpa.t${ihour}z.grid3.06h.f00.grib2 ]; then
+              cp -v $WORK/ccpa.t${ihour}z.grid3.06h.f00.grib2 ${COMOUTgefs}/ccpa.t${ihour}z.grid3.06h.f00.grib2
+          fi
+      fi
     else
+        echo "WARNING: $COMINccpa/ccpa.${vday}/$ihour/ccpa.t${ihour}z.06h.1p0.conus.gb2" 
         if [ $SENDMAIL = YES ]; then
           export subject="CCPA  Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No CCPA analysis available for ${INITDATE}${ihour}" > mailmsg
@@ -417,6 +469,7 @@ if [ $modnam = ccpa ] ; then
         if [ -s $source_ccpa_file ]; then
             cpreq -v $source_ccpa_file ${WORK}/ccpa24/ccpa${nccpa_file}
         else
+            echo "WARNING: $source_ccpa_file is not available"
             if [ $SENDMAIL = YES ]; then
                 export subject="06h CCPA Data Missing for 24h CCPA generation"
                 echo "Warning: A 06h CCPA file is missing for 24h CCPA generation at ${vday}${ihour}" > mailmsg
@@ -429,7 +482,11 @@ if [ $modnam = ccpa ] ; then
     done
     if [ -s ${WORK}/ccpa24/ccpa1 ] && [ -s ${WORK}/ccpa24/ccpa2 ] && [ -s ${WORK}/ccpa24/ccpa3 ] && [ -s ${WORK}/ccpa24/ccpa4 ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_obsCCPA24h.conf
-       [[ $SENDCOM="YES" ]] && cpreq -v $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUTgefs/.
+       if [ $SENDCOM="YES" ] ; then
+           if [ -s $output_base/ccpa.t12z.grid3.24h.f00.nc ]; then
+               cp -v $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUTgefs/.
+           fi
+       fi
     fi  
   done
 fi
@@ -457,9 +514,13 @@ if [ $modnam = gefs_apcp06h ] ; then
              echo "WARNING: $gefs does not exist"
            fi
         fi
-        [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+        if [ $SENDCOM="YES" ] ; then
+            if [ -s $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 ]; then
+                cp -v $WORK/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+            fi
+        fi
         fhr=$((fhr+6))
-       done
+      done
     done
    done
 fi 
@@ -478,18 +539,40 @@ if [ $modnam = gefs_apcp24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
         typeset -a lead_arr
         for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         if [ -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then 	
+          file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
+          if [ $lead_chk -ge 108 ]; then
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-18))).grib2
+          else
+             strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-18))).grib2
+          fi 
+          if [ -s $COMOUTgefs/$file1 -a\
+               -s $COMOUTgefs/$file2 -a\
+               -s $COMOUTgefs/$file3 -a\
+               -s $COMOUTgefs/$file4 ] ; then	
             lead_arr[${#lead_arr[*]}+1]=${lead_chk}
-         else
-            echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+          else
+            echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
 	 fi
         done
         lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_APCP24h.conf  
+        if [ ! -z $lead ]; then
+            ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_APCP24h.conf
+        fi  
         unset lead_arr
       done
     done
-    [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTgefs/.
+    if [ $SENDCOM="YES" ] ; then
+        for FILE in ${output_base}/*.nc ; do
+            if [ -s $FILE ]; then
+                cp -v $FILE $COMOUTgefs/.
+            fi
+        done
+    fi
 fi
 
 ###########################################
@@ -505,8 +588,12 @@ if [ $modnam = cmce_apcp06h ] ; then
          cmce=$COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh}
          if [ -s $cmce ]; then
            $WGRIB2 -match "APCP" $cmce|$WGRIB2 -i $cmce -grib cmce.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2
-	   $WGRIB2 cmce.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 
-           [[ $SENDCOM="YES" ]] && cpreq -v cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+	   $WGRIB2 cmce.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+           if [ $SENDCOM="YES" ] ; then
+               if [ -s cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 ]; then  
+                   cp -v cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
+               fi
+           fi
          else
            echo "WARNING: $cmce does not exist"
          fi
@@ -530,18 +617,40 @@ if [ $modnam = cmce_apcp24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
          typeset -a lead_arr
          for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-           if [ -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2 ] ; then
-             lead_arr[${#lead_arr[*]}+1]=${lead_chk}
+           file1=cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2
+           if [ $lead_chk -ge 108 ]; then
+             file2=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((lead_chk-6))).grib2
+             file3=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((lead_chk-12))).grib2
+             file4=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((lead_chk-18))).grib2
            else
-             echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2 does not exist"
+             strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+             file2=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((strip_lead_chk-6))).grib2
+             file3=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((strip_lead_chk-12))).grib2
+             file4=cmce.ens${mb}.t${ihour}z.grid3.06h.f$(printf '%03d' $((strip_lead_chk-18))).grib2
+          fi 
+          if [ -s $COMOUTcmce/$file1 -a\
+               -s $COMOUTcmce/$file2 -a\
+               -s $COMOUTcmce/$file3 -a\
+               -s $COMOUTcmce/$file4 ] ; then
+             lead_arr[${#lead_arr[*]}+1]=${lead_chk}
+          else
+             echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f*.grib2 does not exist"
 	   fi
          done
          lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstCMCE_APCP24h.conf  
+         if [ ! -z $lead ]; then
+             ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstCMCE_APCP24h.conf
+         fi  
          unset lead_arr
       done
     done
-    [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTcmce/.
+    if [ $SENDCOM="YES" ] ; then
+        for FILE in ${output_base}/*.nc ; do
+            if [ -s $FILE ]; then  
+                cp -v $FILE $COMOUTcmce/.
+            fi
+        done
+    fi
 fi
 
 ##############################################################
@@ -557,17 +666,32 @@ if [ $modnam = ecme_apcp24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40  41 42 43 44 45 46 47 48 49 50  ; do
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
-         if [ -s $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 ] ; then 
+         file1=ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1
+         if [ $lead_chk -ge 108 ]; then
+           file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((lead_chk-24))).grib1
+         else
+           strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+           file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((strip_lead_chk-24))).grib1
+         fi
+         if [ -s $COMOUTecme/$file1 -a -s $COMOUTecme/$file2 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk} 
          else
-           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 does not exist"
+           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f*.grib1 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf   
+       if [ ! -z $lead ]; then
+           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf
+       fi   
        unset lead_arr
      done
-     [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTecme/.
+     if [ $SENDCOM="YES" ] ; then
+         for FILE in ${output_base}/*.nc ; do
+             if [ -s $FILE ]; then
+                 cp -v $FILE $COMOUTecme/.
+             fi
+         done
+     fi
   done
 fi
 
@@ -579,8 +703,13 @@ if [ $modnam = nohrsc24h ] ; then
     snowfall=$DCOMINnohrsc/${vday}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${vday}${ihour}_grid184.grb2
     if [ -s $snowfall ] ; then
       cpreq -v $snowfall $WORK/nohrsc.t${ihour}z.grid184.grb2
-      [[ $SENDCOM="YES" ]] && cpreq -v $WORK/nohrsc.t${ihour}z.grid184.grb2 $COMOUTgefs/nohrsc.t${ihour}z.grid184.grb2
+      if [ $SENDCOM="YES" ] ; then
+          if [ -s $WORK/nohrsc.t${ihour}z.grid184.grb2 ]; then
+              cp -v $WORK/nohrsc.t${ihour}z.grid184.grb2 $COMOUTgefs/nohrsc.t${ihour}z.grid184.grb2
+          fi
+      fi
     else
+        echo "WARNING: $snowfall is not available"
         if [ $SENDMAIL = YES ]; then
           export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No NOHRSC analysis available for ${vday}${ihour}" > mailmsg
@@ -607,19 +736,34 @@ if [ $modnam = gefs_snow24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+         file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
+         if [ $lead_chk -ge 108 ]; then
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-24))).grib2
+         else
+             strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-24))).grib2
+         fi              
+         if [ -s $COMOUTgefs/$file1 -a -s $COMOUTgefs/$file2 ] ; then    
              lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       for snow in WEASD SNOD ; do
-           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf  
-       done
+       if [ ! -z $lead ]; then
+           for snow in WEASD SNOD ; do
+               ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf  
+           done
+       fi
        unset lead_arr
      done
-     [[ $SENDCOM="YES" ]] && cpreq -v $output_base/*.nc $COMOUTgefs/.
+     if [ $SENDCOM="YES" ] ; then
+         for FILE in $output_base/*.nc ; do
+             if [ -s $FILE ]; then 
+                 cp -v $FILE $COMOUTgefs/.
+             fi
+         done
+     fi
    done
 fi
 
@@ -638,19 +782,34 @@ if [ $modnam = cmce_snow24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         if [  -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+         file1=cmce.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
+         if [ $lead_chk -ge 108 ]; then
+           file2=cmce.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-24))).grib2
+         else
+           strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+           file2=cmce.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-24))).grib2
+         fi
+         if [ -s $COMOUTcmce/$file1 -a -s $COMOUTcmce/$file2 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-           echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+           echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       for snow in WEASD SNOD ; do
-           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf  
-       done
+       if [ ! -z $lead ]; then
+           for snow in WEASD SNOD ; do
+               ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf  
+           done
+       fi
        unset lead_arr
      done
-     [[ $SENDCOM="YES" ]] && cp $output_base/*.nc $COMOUTcmce/.
+     if [ $SENDCOM="YES" ] ; then
+         for FILE in $output_base/*.nc ; do
+             if [ -s $FILE ]; then
+                 cp -v $FILE $COMOUTcmce/.
+             fi
+         done
+     fi     
   done
 fi
 
@@ -668,17 +827,32 @@ if [ $modnam = ecme_snow24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do
        typeset -a lead_arr
        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
-         if [  -s $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 ] ; then
+         file1=ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1
+         if [ $lead_chk -ge 108 ]; then
+           file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((lead_chk-24))).grib1
+         else
+           strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+           file2=ecme.ens${mb}.t${ihour}z.grid4_apcp.f$(printf '%03d' $((strip_lead_chk-24))).grib1
+         fi
+         if [ -s $COMOUTecme/$file1 -a -s $COMOUTecme/$file2 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 does not exist"
+           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f*.grib1 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf  
+       if [ ! -z $lead ]; then
+           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf
+       fi  
        unset lead_arr
      done
-     [[ $SENDCOM="YES" ]] && cp $output_base/ecme*.nc $COMOUTecme
+     if [ $SENDCOM="YES" ] ; then
+         for FILE in $output_base/ecme*.nc ; do
+             if [ -s $FILE ]; then
+                 cp -v $FILE $COMOUTecme
+             fi
+         done
+     fi
   done
 fi
 
@@ -690,6 +864,7 @@ if [ $modnam = gfs ] ; then
     for  hhh in 024 048 072 096  120 144 168 192 216 240 264 288 312 336 360 384 ; do     
      gfs=$COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f${hhh}
      if [ ! -s $gfs ]; then
+      echo "WARNING: $gfs is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="GFS F${hhh} Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS F${hhh} available for ${vday}${ihour}" > mailmsg
@@ -699,7 +874,11 @@ if [ $modnam = gfs ] ; then
       fi
      else
        $WGRIB2  $gfs|grep "HGT:500 mb"|$WGRIB2 -i $gfs -grib $WORK/gfs.t${ihour}z.grid3.f${hhh}.grib2
-       [[ $SENDCOM="YES" ]] && cpreq -v $WORK/gfs.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gfs.t${ihour}z.grid3.f${hhh}.grib2
+       if [ $SENDCOM="YES" ] ; then
+           if [ -s $WORK/gfs.t${ihour}z.grid3.f${hhh}.grib2 ]; then
+               cp -v $WORK/gfs.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gfs.t${ihour}z.grid3.f${hhh}.grib2
+           fi
+       fi
      fi
     done
   done
@@ -717,6 +896,7 @@ if [ $modnam = osi_saf ] ; then
     osi_nh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATEm1}1200.nc
     osi_sh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATEm1}1200.nc
     if [ ! -s $osi_nh ]; then
+        echo "WARNING: $osi_nh is not available" 
         if [ $SENDMAIL = YES ]; then
           export subject="OSI_SAF NH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF NH data  available for ${INITDATE}" > mailmsg
@@ -725,6 +905,7 @@ if [ $modnam = osi_saf ] ; then
           cat mailmsg | mail -s "$subject" $MAILTO
         fi 
     elif [ ! -s $osi_sh ]; then
+          echo "WARNING: $osi_sh is not available" 
           export subject="OSI_SAF SH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF SH data  available for ${INITDATE}" > mailmsg
           echo "Missing file is $osi_sh"  >> mailmsg
@@ -733,7 +914,13 @@ if [ $modnam = osi_saf ] ; then
     else
 	  echo "NH OSI_SAF and SH OSI_SAF datasets exist" 
           python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
-         [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
+          if [ $SENDCOM="YES" ] ; then
+              for FILE in  $WORK/atmos.${INITDATE}/osi_saf/*.nc ; do
+                  if [ -s $FILE ]; then
+                      cp -v $FILE $COMOUTosi_saf/.
+                  fi
+              done
+          fi    
     fi
   fi
 fi
@@ -756,18 +943,40 @@ if [ $modnam = gefs_icec24h ] ; then
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
        typeset -a lead_arr
        for lead_chk in 024 048 072 096 120 144 168 192 216 240 264 288 312 336 360 384; do
-         if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+         file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
+         if [ $lead_chk -ge 108 ]; then
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-18))).grib2
+         else
+             strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-18))).grib2
+         fi
+         if [ -s $COMOUTgefs/$file1 -a\
+              -s $COMOUTgefs/$file2 -a\
+              -s $COMOUTgefs/$file3 -a\
+              -s $COMOUTgefs/$file4 ] ; then
            lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-           echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+           echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
          fi
        done
        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf  
+       if [ ! -z $lead ]; then
+           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf
+       fi  
        unset lead_arr
      done
     done
-    [[ $SENDCOM="YES" ]] && cpreq -v $output_base/gefs*icec*.nc $COMOUTgefs/.
+    if [ $SENDCOM="YES" ] ; then
+        for FILE in $output_base/gefs*icec*.nc ; do
+            if [ -s $FILE ]; then
+                cp -v $FILE $COMOUTgefs/.
+            fi
+        done
+    fi
 fi
 
 ###########################################################################
@@ -792,8 +1001,14 @@ if [ $modnam = gefs_icec7day ] ; then
           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf  
         done
      done
-   done						     
-   [[ $SENDCOM="YES" ]] && cpreq -v $output_base/gefs*icec*.nc $COMOUTgefs/.
+   done
+   if [ $SENDCOM="YES" ] ; then
+       for FILE in $output_base/gefs*icec*.nc ; do
+           if [ -s $FILE ]; then
+               cp -v $FILE $COMOUTgefs/.
+           fi
+       done
+   fi
 fi
 
 ######################################################
@@ -816,16 +1031,38 @@ if [ $modnam = gefs_sst24h ] ; then
          fi
          typeset -a lead_arr
          for lead_chk in $leads; do
-           if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+           file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
+           if [ $lead_chk -ge 108 ]; then
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-18))).grib2
+           else
+             strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
+             file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-6))).grib2
+             file3=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-12))).grib2
+             file4=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-18))).grib2
+           fi
+           if [ -s $COMOUTgefs/$file1 -a\
+                -s $COMOUTgefs/$file2 -a\
+                -s $COMOUTgefs/$file3 -a\
+                -s $COMOUTgefs/$file4 ] ; then
              lead_arr[${#lead_arr[*]}+1]=${lead_chk}
            else
-             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
+             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
 	   fi
          done
          lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SST24h.conf  
+         if [ ! -z $lead ]; then 
+             ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SST24h.conf
+         fi  
          unset lead_arr
        done
    done
-   [[ $SENDCOM="YES" ]] && cpreq -v $output_base/gefs*sst*.nc $COMOUTgefs
+   if [ $SENDCOM="YES" ] ; then
+       for FILE in $output_base/gefs*sst*.nc ; do
+           if [ -s $FILE ]; then
+               cp -v $FILE $COMOUTgefs
+           fi
+       done
+   fi
 fi
