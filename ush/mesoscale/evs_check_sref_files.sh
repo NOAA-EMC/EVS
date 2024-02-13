@@ -26,7 +26,7 @@ if [ $missing -eq 4  ] ; then
   >$DATA/prepbufr.missing
   if [ $SENDMAIL = YES ] ; then
      export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-     echo "WARNING: all of the preppbufr files are missing, exit execution!!!" > mailmsg
+     echo "WARNING: all of the prepbufr files are missing" > mailmsg
      echo "Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr"  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $MAILTO
