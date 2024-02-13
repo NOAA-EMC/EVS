@@ -6,7 +6,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:10:00
-#PBS -l place=vscatter,select=1:ncpus=8:mem=1GB
+#PBS -l place=vscatter,select=1:ncpus=8:mem=8GB
 #PBS -l debug=true
 
 
@@ -17,7 +17,6 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
 
-export met_v=${met_ver:0:4}
 
 export envir=prod
 
@@ -42,7 +41,7 @@ export past_days=90
 
 export run_mpi=yes
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 

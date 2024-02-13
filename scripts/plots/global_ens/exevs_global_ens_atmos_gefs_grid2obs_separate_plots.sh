@@ -18,7 +18,6 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
-met_v=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 export eval_period='TEST'
 
 export interp_pnts=' '
@@ -27,7 +26,6 @@ export init_end=$VDATE
 export valid_end=$VDATE
 
 model_list='ECME CMCE GEFS'
-models='ECME, CMCE, GEFS'
 
 n=0
 while [ $n -le $past_days ] ; do
@@ -166,6 +164,13 @@ elif [ $stats = sratio_pod_csi ] ; then
            thresh_list='NA'
        fi
 
+       if [ $VAR = RH2m ] || [ $VAR = CAPEsfc ] ; then
+          models='CMCE, GEFS'
+       elif [ $VAR = DPT2m ] ; then
+          models='ECME, GEFS'
+       else
+          models='ECME, CMCE, GEFS'
+       fi
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
 
 	OBS_LEVEL_value=$FCST_LEVEL_value
@@ -191,7 +196,6 @@ elif [ $stats = sratio_pod_csi ] ; then
         echo "export verif_type=$verif_type" >> run_${fcst_init_hour}_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${thresh}.${line_tp}.sh
 
         echo "export log_level=DEBUG" >> run_${fcst_init_hour}_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${thresh}.${line_tp}.sh
-        echo "export met_ver=$met_v" >> run_${fcst_init_hour}_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${thresh}.${line_tp}.sh
 
         echo "export eval_period=TEST" >> run_${fcst_init_hour}_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${thresh}.${line_tp}.sh
 

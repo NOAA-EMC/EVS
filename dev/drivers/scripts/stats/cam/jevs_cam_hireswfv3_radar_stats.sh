@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=0:30:00
-#PBS -l place=vscatter,select=1:ncpus=12:mem=500GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=3:mem=500GB
 #PBS -l debug=true
 #PBS -V
 
@@ -19,6 +19,7 @@ cd $PBS_O_WORKDIR
 ############################################################
 
 
+export OMP_NUM_THREADS=1
 export model=evs
 export NET=evs
 export STEP=stats

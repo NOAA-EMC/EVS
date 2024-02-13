@@ -5,7 +5,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=1:mem=10GB
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -33,6 +33,7 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
 export SENDMAIL=YES
+export SENDDBN=NO
 
 export NET=evs
 export STEP=plots
@@ -56,9 +57,6 @@ export vhr=00
 echo $vhr
 
 export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
-
-export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
-source $config
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_ANALYSES_PLOTS

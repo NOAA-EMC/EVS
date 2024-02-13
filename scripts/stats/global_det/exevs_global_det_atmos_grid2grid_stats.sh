@@ -58,7 +58,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
             if [ $machine = WCOSS2 ]; then
                 nselect=$(cat $PBS_NODEFILE | wc -l)
                 nnp=$(($nselect * $nproc))
-                launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+                launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,core cfp"
             elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
                 export SLURM_KILL_BAD_EXIT=0
                 launcher="srun --export=ALL --multi-prog"
@@ -95,7 +95,9 @@ if [ $SENDCOM = YES ]; then
         for MODEL_DATE_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL.*; do
             MODEL_DATE_SUBDIR=$(echo ${MODEL_DATE_PATH##*/})
             for FILE in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL_DATE_SUBDIR/*; do
-                cpreq -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
+                if [ -f $FILE ]; then
+                    cp -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
+                fi
             done
         done
     done

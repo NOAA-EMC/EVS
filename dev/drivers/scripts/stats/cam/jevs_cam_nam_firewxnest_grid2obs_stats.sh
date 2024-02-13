@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l place=shared,select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
 export model=evs
@@ -48,9 +48,6 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
 export MAILTO=${MAILTO:-'perry.shafran@noaa.gov,alicia.bentley@noaa.gov'}
-
-export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
-source $config
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_CAM_STATS

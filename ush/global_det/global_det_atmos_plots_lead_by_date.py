@@ -73,8 +73,8 @@ class LeadByDate:
                           +f"{self.plot_info_dict}")
         # Check stat
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
-            self.logger.warning("Cannot make lead_by_date for stat "
-                                +f"{self.plot_info_dict['stat']}")
+            self.logger.error("Cannot make lead_by_date for stat "
+                              +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
         # Create dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
@@ -291,10 +291,10 @@ class LeadByDate:
         fcst_units = np.unique(fcst_units)
         fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
-            self.logger.error("DIFFERING UNITS")
+            self.logger.error(f"Have multilple units: {', '.join(fcst_units)}")
             sys.exit(1)
         elif len(fcst_units) == 0:
-            self.logger.warning("Empty dataframe")
+            self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
         plot_title = plot_specs_lbd.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
@@ -446,8 +446,8 @@ class LeadByDate:
                                 self.plot_info_dict['stat']
                             )
                 else:
-                    self.logger.warning(f"Fully masked array for {model_num}, "
-                                        +"no plotting")
+                    self.logger.debug(f"Fully masked array for {model_num}, "
+                                      +"no plotting")
             else:
                 if self.plot_info_dict['stat'] in ['BIAS', 'ME',' FBIAS']:
                     self.logger.debug(f"Plotting {model_num} - {model_num_name} "
@@ -495,11 +495,11 @@ class LeadByDate:
                             else:
                                 cbar_label = 'Difference'
                     else:
-                        self.logger.warning("Do not have contour levels "
-                                            +"to plot, not plotting")
+                        self.logger.debug("Do not have contour levels "
+                                          +"to plot, not plotting")
                 else:
-                    self.logger.warning(f"Fully masked array for {model_num}, "
-                                        +"no plotting")
+                    self.logger.debug(f"Fully masked array for {model_num}, "
+                                      +"no plotting")
         if make_colorbar:
             cbar_left = gs.get_grid_positions(fig)[2][0]
             cbar_width = (gs.get_grid_positions(fig)[3][-1]

@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=04:00:00
-#PBS -l place=vscatter:exclhost,select=12:ncpus=128
+#PBS -l walltime=11:50:00
+#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=500GB
 #PBS -l debug=true
 #PBS -V
 
@@ -33,7 +33,6 @@ module load udunits/${udunits_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
 module load nco/${nco_ver}
-module load prod_util/${prod_util_ver}
 module load cdo/${cdo_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
@@ -50,13 +49,8 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
-export SENDECF=YES
-export SENDCOM=YES
-export SENDDBN=NO
-export SENDDBN_NTC=${SENDDBN_NTC:-NO}
-export SENDMAIL=YES
 export nproc=128
 export evs_run_mode="production"
 export USE_CFP=YES
@@ -65,11 +59,6 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=${COMPONENT}
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
-export COMIN=${COMevs}
-export COMOUT=${COMevs}/${STEP}/${COMPONENT}
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 
 ############################################################
 # Execute j-job

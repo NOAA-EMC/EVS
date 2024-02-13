@@ -4,12 +4,13 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:20:00
-#PBS -l place=vscatter,select=1:ncpus=36:mem=25G
+#PBS -l place=vscatter,select=1:ncpus=36:mem=40G
 #PBS -l debug=true
 #PBS -V
 
 set -x 
 
+export OMP_NUM_THREADS=1
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 ############################################################
 # read version file and set model_ver

@@ -42,7 +42,7 @@ export VDATE=${VDATE:-$PDYm1}
 ####################################
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
@@ -58,7 +58,7 @@ export evs_run_mode=${evs_run_mode:-production}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
+export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver)}
 export COMINgfs=${COMINgfs:-$(compath.py $envir/gfs/$gfs_ver)}
 export COMINccpa=${COMINccpa:-$(compath.py $envir/ccpa/$ccpa_ver)}
 export COMINobsproc=${COMINobsproc:-$(compath.py $envir/obsproc/$obsproc_ver)}

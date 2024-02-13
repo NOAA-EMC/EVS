@@ -97,7 +97,7 @@ export LOG_METPLUS=$log_metplus
 export LOG_LEVEL=$log_level
 
 # Version of MET listed in the metplus .stat files used to create graphics
-export MET_VERSION=$met_ver
+export MET_VERSION=$(echo $met_ver | cut -d'.' -f1-2)
 
 # Will use statistics for all comma-separated models.  Names must match the model naming convention
 # in ${OUTPUT_BASE_DIR}

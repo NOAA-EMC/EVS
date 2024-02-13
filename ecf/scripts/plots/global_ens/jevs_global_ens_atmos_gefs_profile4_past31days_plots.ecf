@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:20:00
-#PBS -l place=vscatter,select=5:ncpus=32:mpiprocs=32:mem=75GB
+#PBS -l walltime=00:15:00
+#PBS -l place=vscatter:shared,select=5:ncpus=32:mpiprocs=32:mem=75GB
 #PBS -l debug=true
 
 export model=evs
@@ -22,7 +22,6 @@ module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
-module load prod_util/${prod_util_ver}
 module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
@@ -43,7 +42,7 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
 export OMP_NUM_THREADS=1
 export NET=evs
@@ -52,12 +51,6 @@ export VERIF_CASE=profile4
 export MODELNAME=gefs
 export past_days=31
 export valid_time=both
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export SENDMAIL=YES
 
 ############################################################
 # Execute j-job

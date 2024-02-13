@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=5GB
+#PBS -l place=shared,select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
 set -x
@@ -32,7 +32,7 @@ export SENDDBN=NO
 
 export vhr=00
 
-export met_v=${met_ver:0:4}
+
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d

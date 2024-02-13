@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=2GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=128GB
 #PBS -l debug=true
 
 export model=evs
@@ -32,7 +32,6 @@ module load udunits/${udunits_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
 module load nco/${nco_ver}
-module load prod_util/${prod_util_ver}
 module load cdo/${cdo_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
@@ -47,21 +46,13 @@ export nproc=128
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
-export SENDECF=YES
-export SENDCOM=YES
-export SENDDBN=NO
-export SENDDBN_NTC=${SENDDBN_NTC:-"NO"}
 export USE_CFP=NO
 export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="precip"
 export MODELNAME="hrrr"
-export COMOUT=${COMevs}/$STEP/$COMPONENT
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 ############################################################

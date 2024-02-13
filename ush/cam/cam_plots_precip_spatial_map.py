@@ -151,7 +151,7 @@ class PrecipSpatialMap:
                     model_num_data_dir,
                     '*',
                     'precip',
-                    valid_date_dt.strftime(f'{model_num_name}.%Y%m%d'),
+                    'spatial_maps',
                     valid_date_dt.strftime(
                        f'{model_num_name}.t%Hz.a24h.'
                        + f'{stats_region_dict[self.plot_info_dict["vx_mask"]]}'
@@ -173,9 +173,9 @@ class PrecipSpatialMap:
                     model_num_data_dir,
                     model_num,
                     'precip',
-                    init_date_dt.strftime(f'{model_num_name}.init%Y%m%d'),
+                    'spatial_maps',
                     init_date_dt.strftime(
-                       f'{model_num_name}.t%Hz.'
+                       f'{model_num_name}.init%Y%m%d.t%Hz.'
                        + f'f{self.date_info_dict["forecast_hour"].zfill(3)}.'
                        + f'a24h.'
                        + f'{stats_region_dict[self.plot_info_dict["vx_mask"]]}'

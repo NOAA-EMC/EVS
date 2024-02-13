@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:05:00
-#PBS -l select=1:ncpus=1:mem=5GB
+#PBS -l place=shared,select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
 set -x
@@ -36,7 +36,7 @@ export SENDDBN=NO
 export vhr=00
 export past_days=31
 
-export met_v=${met_ver:0:4}
+
 
 export run_mpi=no
 export valid_time=both

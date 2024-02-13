@@ -1,10 +1,10 @@
-#PBS -N evs_nfcens_wave_plots
+#PBS -N evs_nfcens_wave_grid2obs_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=1:ncpus=128:mem=500G
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter:exclhost,select=2:ncpus=128:mem=500G
 #PBS -l debug=true
 
 export model=evs
@@ -22,7 +22,6 @@ module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
-module load prod_util/${prod_util_ver}
 module load libjpeg/${libjpeg_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
@@ -38,21 +37,13 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
-export SENDCOM=${SENDCOM:-YES}
-export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-NO}
 export NET=evs
 export RUN=wave
 export VERIF_CASE=grid2obs
 export MODELNAME=nfcens
 export OBTYPE=GDAS
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 export run_mpi='yes'
 export gather='yes'
 

@@ -52,7 +52,7 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,core cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -90,7 +90,10 @@ fi
    find ${DATA}/${VERIF_CASE}/* -name "*.png" -type f -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##' -T -
 
 if [ $SENDCOM = YES ]; then
-    cpreq -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
+    FILE=${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar
+    if [ -s "$FILE" ]; then
+       cp -v ${FILE} ${COMOUTplots}/.
+    fi
 fi
 if [ $SENDDBN = YES ]; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar

@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l place=shared,select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
 set -x
@@ -43,9 +43,6 @@ export MODELNAME=aqm
 export modsys=aqm
 export mod_ver=${aqm_ver}
 
-export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
-source $config
-
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
 export SENDMAIL=YES
@@ -54,8 +51,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
-# for PR testing
-export COMINaqm=/lfs/h2/emc/ptmp/ho-chun.huang/emc.para/com/${MODELNAME}/v7.0
 
 ########################################################################
 

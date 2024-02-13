@@ -20,7 +20,6 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
-met_v=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 export eval_period='TEST'
 
 export interp_pnts='' 
@@ -29,7 +28,6 @@ export init_end=$VDATE
 export valid_end=$VDATE
 
 model_list='ECME CMCE GEFS'
-models='ECME, CMCE, GEFS'
 
 n=0
 while [ $n -le $past_days ] ; do
@@ -129,6 +127,12 @@ fi
          #***************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
 
+	 if [ $FCST_LEVEL_value = P10 ] || [ $FCST_LEVEL_value = P250 ]; then
+	    models='CMCE, GEFS'
+	 else
+	    models='ECME, CMCE, GEFS'
+         fi
+
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
         echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
@@ -138,7 +142,6 @@ fi
         echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
         echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
         echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 

@@ -11,7 +11,7 @@ export machine=${machine:-"WCOSS2"}
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
+export log_metplus=$DATA/logs/GENS_verif_plotting_job
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
@@ -108,7 +108,7 @@ for valid_time in 00 12 ; do
        fi 	  
 
        if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then 
-           doms="dom1 dom2 dom3 dom4 dome5 dom6 dom7 dom8"
+           doms="dom1 dom2 dom3 dom4 dom5 dom6 dom7 dom8"
        fi 
 
        for dom in $doms ; do 
@@ -159,7 +159,6 @@ for valid_time in 00 12 ; do
         echo "export verif_type=$verif_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
         echo "export log_level=DEBUG" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
         echo "export eval_period=TEST" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
@@ -223,7 +222,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 768 -ppn 84 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 840 -ppn 84 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi

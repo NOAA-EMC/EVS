@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:30:00
-#PBS -l place=vscatter,select=1:ncpus=12:mem=25GB
+#PBS -l place=vscatter,select=1:ncpus=12:mem=100GB
 #PBS -l debug=true
 
 set -x
@@ -37,7 +37,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-
+export OMP_NUM_THREADS=1
 #export SENDMAIL=YES
 export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 

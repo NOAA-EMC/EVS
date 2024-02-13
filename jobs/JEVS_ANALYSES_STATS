@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 
 ########################################
 # Preliminary data setup step
@@ -13,7 +13,7 @@ set -x
 ### SENDMAIL - Send email if file is missing
 ###################################################
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 

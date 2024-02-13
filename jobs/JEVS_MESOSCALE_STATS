@@ -70,7 +70,7 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
   export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
   export COMINobs=$COMINobsproc
-  export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+  export COMINccpa=${COMINccpa:-$(compath.py  ${envir}/com/ccpa/${ccpa_ver})}
   export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/cam}
   export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
   export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
@@ -84,7 +84,7 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   fi
   
  # in production, the following will be set to the approp. COMOUT dir
-  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT})}
   export COMOUTfinal=${COMOUTfinal:-$COMOUT/${MODELNAME}.${VDATE}}
   export COMOUTsmall=${COMOUTsmall:-$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE}
   mkdir -p $COMOUT $COMOUTfinal $COMOUTsmall
@@ -93,9 +93,9 @@ elif [ $MODELNAME = sref ]; then
   export VDATE=${VDATE:-$PDYm2}
   
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/$RUN
-  export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
+  export COMINsref=${COMINsref:-$(compath.py  ${envir}/com/sref/$sref_ver)}
   export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-  export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+  export COMINccpa=${COMINccpa:-$(compath.py  ${envir}/com/ccpa/${ccpa_ver})}
   export EVSINsrefmean=${EVSINsrefmean:-$COMIN/prep/$COMPONENT}
 
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT

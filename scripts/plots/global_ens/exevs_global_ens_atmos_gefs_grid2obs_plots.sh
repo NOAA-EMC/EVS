@@ -13,7 +13,7 @@ cd $DATA
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
+export log_metplus=$DATA/logs/GENS_verif_plotting_job
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
@@ -21,14 +21,12 @@ mkdir -p $DATA/logs
 
 
 export eval_period='TEST'
-met_v=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 export interp_pnts=''
 
 export init_end=$VDATE
 export valid_end=$VDATE
 
 model_list='ECME CMCE GEFS'
-models='ECME, CMCE, GEFS'
 
 n=0
 while [ $n -le $past_days ] ; do
@@ -135,6 +133,14 @@ for stats in acc me_mae crpss rmse_spread  ; do
           FCST_LEVEL_values="L0"
        fi
 
+       if [ $VAR = RH2m ] ; then
+          models='CMCE, GEFS'
+       elif [ $VAR = DPT2m ] ; then
+          models='ECME, GEFS'
+       else
+          models='ECME, CMCE, GEFS'
+       fi
+
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
 
 	OBS_LEVEL_value=$FCST_LEVEL_value
@@ -160,7 +166,6 @@ for stats in acc me_mae crpss rmse_spread  ; do
         echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
         echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
         echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 

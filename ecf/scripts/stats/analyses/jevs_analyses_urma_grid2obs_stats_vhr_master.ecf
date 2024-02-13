@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=10GB
+#PBS -l walltime=00:25:00
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 export model=evs
@@ -27,7 +27,6 @@ module load libjpeg/${libjpeg_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
 module load gsl/${gsl_ver}
-module load prod_util/${prod_util_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module list
@@ -39,16 +38,8 @@ export vhr=%VHR%
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
 export MODELNAME=urma
 export modsys=urma
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export config=$HOMEevs/parm/evs_config/analyses/config.evs.urma.prod
-source $config
-export SENDMAIL=YES
 
 ############################################################
 # Execute j-job

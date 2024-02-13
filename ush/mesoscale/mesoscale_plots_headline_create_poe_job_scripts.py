@@ -1,5 +1,4 @@
-#!/bin/bash -e
- 
+#!/usr/bin/env python3
 # =============================================================================
 #
 # NAME: mesoscale_plots_headline_create_poe_job_scripts.sh

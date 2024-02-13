@@ -6,7 +6,6 @@
 set -x 
 
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
-export met_v=${met_ver:0:4}
 cd $DATA
 
 export prune_dir=$DATA/data
@@ -142,7 +141,6 @@ for stat in  ets fbias; do
         echo "export verif_type=$verif_type" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
         echo "export log_level=DEBUG" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-        echo "export met_ver=$met_v" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
         echo "export eval_period=TEST" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
@@ -200,10 +198,11 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
    mpiexec -np 80 -ppn 80 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   export err=$?; err_chk
 else
    ${DATA}/run_all_poe.sh
+    export err=$?; err_chk
 fi
-export err=$?; err_chk
 
 
 #**************************************************

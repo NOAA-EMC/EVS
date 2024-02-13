@@ -11,7 +11,6 @@ export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
 export log_metplus=$DATA/logs/NARRE_verif_plotting_job.out
-export met_v=${met_ver:0:4}
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
@@ -132,7 +131,6 @@ for grid in $VX_MASK_LIST ; do
      echo "export verif_type=conus_sfc" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
 
      echo "export log_level=INFO" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "export met_ver=$met_v" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      echo "export model=NARRE_MEAN" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
 
      echo "export eval_period=TEST" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
@@ -180,7 +178,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 4 -ppn 4 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 8 -ppn 8 --cpu-bind verbose,core cfp ${DATA}/run_all_poe.sh
    export err=$?; err_chk
 else
   ${DATA}/run_all_poe.sh

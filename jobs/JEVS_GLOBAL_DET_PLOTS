@@ -61,7 +61,7 @@ export evs_run_mode=${evs_run_mode:-production}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
+export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver)}
 export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END)}
 mkdir -p $COMOUT

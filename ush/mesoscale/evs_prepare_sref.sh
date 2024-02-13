@@ -36,8 +36,9 @@ if [ $modnam = sref_apcp06 ] ; then
       export fday=${fcst_time:0:8}
       export fvhr=${fcst_time:8:2}
       export modelpath=${COMINsref}/sref.${fday}/$fvhr/pgrb
-      mkdir $WORK/sref.${fday}
-
+      if [ ! -d $WORK/sref.${fday} ] ; then
+       mkdir $WORK/sref.${fday}
+      fi
       for base in arw nmb ; do
         for mb in ctl n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ; do
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
@@ -176,14 +177,11 @@ if [ $modnam = ccpa ] ; then
 
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
     export err=$?; err_chk
-    echo "Print PcpCombine_obsCCPA06h log files begin:"
-    cat $DATA/pb2nc/logs/*
-    echo "Print PcpCombine_obsCCPA06h log files end"
 
  else
   if [ $SENDMAIL = YES ] ; then	 
     export subject="CCPA Data Missing for EVS ${COMPONENT}"
-    echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
+    echo "WARNING:  No CCPA data available for ${VDATE}" > mailmsg
     echo Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2  >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
     cat mailmsg | mail -s "$subject" $MAILTO  
@@ -216,15 +214,11 @@ export output_base=${WORK}/pb2nc
        cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
      fi
    done
-    echo "Print Pb2nc_obsGFS_Prepbufr log files begin:"
-     cat $DATA/pb2nc/logs/*
-    echo "Print Pb2nc_obsGFS_Prepbufr log files end"
-
 
  else
   if [ $SENDMAIL = YES ] ; then
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-   echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
+   echo "WARNING:  No Prepbufr data available for ${VDATE}" > mailmsg
    echo Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $MAILTO 

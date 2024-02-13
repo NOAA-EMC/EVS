@@ -11,7 +11,7 @@ export machine=${machine:-"WCOSS2"}
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
+export log_metplus=$DATA/logs/GENS_verif_plotting_job
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
@@ -71,27 +71,67 @@ line_type='ctc'
 > run_all_poe.sh
 
 for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
-
-for stats in csi_fbias ets_fbias ratio_pod_csi ; do 
- if [ $stats = csi_fbias ] ; then
-    stat_list='csi, fbias'
-    #VARs='VISsfc HGTcldceil CAPEsfc MLCAPE'
-    VARs='VISsfc HGTcldceil'
-    score_types='lead_average threshold_average'
- elif [ $stats = ets_fbias ] ; then
-    stat_list='ets, fbias'
-    VARs='TCDC'
-    score_types='lead_average threshold_average'
- elif [ $stats = ratio_pod_csi ] ; then
-    stat_list='sratio, pod, csi'
-    VARs='VISsfc HGTcldceil CAPEsfc TCDC MLCAPE'
-    #VARs='VISsfc HGTcldceil TCDC'
-    score_types='performance_diagram'   
+    
+if [ "$fcst_valid_hour" -eq "03" ] || [ "$fcst_valid_hour" -eq "09" ] || [ "$fcst_valid_hour" -eq "15" ] || [ "$fcst_valid_hour" -eq "21" ] ; then
+ stats_list="csi_fbias ratio_pod_csi"
+else
+ stats_list="csi_fbias ets_fbias ratio_pod_csi"
+fi
+for stats in $stats_list ; do 
+ if [ "$fcst_valid_hour" -eq "03" ] || [ "$fcst_valid_hour" -eq "09" ] || [ "$fcst_valid_hour" -eq "15" ] || [ "$fcst_valid_hour" -eq "21" ] ; then
+    if [ $stats = csi_fbias ] ; then
+       stat_list='csi, fbias'
+       #VARs='VISsfc HGTcldceil'
+       VARs='VISsfc HGTcldceil'
+       score_types='lead_average threshold_average'
+    elif [ $stats = ratio_pod_csi ] ; then
+       stat_list='sratio, pod, csi'
+       VARs='VISsfc HGTcldceil'
+       #VARs='VISsfc HGTcldceil'
+       score_types='performance_diagram'   
+    else
+     echo $stats is wrong stat
+     exit
+    fi   
+ elif [ "$fcst_valid_hour" -eq "06" ] || [ "$fcst_valid_hour" -eq "18" ] ; then
+    if [ $stats = csi_fbias ] ; then
+       stat_list='csi, fbias'
+       #VARs='VISsfc HGTcldceil'
+       VARs='VISsfc HGTcldceil'
+       score_types='lead_average threshold_average'
+    elif [ $stats = ets_fbias ] ; then
+       stat_list='ets, fbias'
+       VARs='TCDC'
+       score_types='lead_average threshold_average'
+    elif [ $stats = ratio_pod_csi ] ; then
+       stat_list='sratio, pod, csi'
+       VARs='VISsfc HGTcldceil TCDC'
+       #VARs='VISsfc HGTcldceil TCDC'
+       score_types='performance_diagram'   
+    else
+     echo $stats is wrong stat
+     exit
+    fi   
  else
-  echo $stats is wrong stat
-  exit
- fi   
-
+    if [ $stats = csi_fbias ] ; then
+       stat_list='csi, fbias'
+       #VARs='VISsfc HGTcldceil CAPEsfc MLCAPE'
+       VARs='VISsfc HGTcldceil'
+       score_types='lead_average threshold_average'
+    elif [ $stats = ets_fbias ] ; then
+       stat_list='ets, fbias'
+       VARs='TCDC'
+       score_types='lead_average threshold_average'
+    elif [ $stats = ratio_pod_csi ] ; then
+       stat_list='sratio, pod, csi'
+       VARs='VISsfc HGTcldceil CAPEsfc TCDC MLCAPE'
+       #VARs='VISsfc HGTcldceil TCDC'
+       score_types='performance_diagram'   
+    else
+     echo $stats is wrong stat
+     exit
+    fi   
+ fi
  for score_type in $score_types ; do
 
   export fcst_leads="6,9,12,15,18,21,24,27,30,33,36,39,42,45,48"
@@ -111,7 +151,7 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
 	  FCST_LEVEL_values="ML"
        fi 	  
 
-       doms="dom1 dom2 dom3 dom4 dome5 dom6 dom7 dom8"
+       doms="dom1 dom2 dom3 dom4 dom5 dom6 dom7 dom8"
 
        for dom in $doms ; do 
 
@@ -159,7 +199,6 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
         echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
         echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
         echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
@@ -222,7 +261,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 704 -ppn 82 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 820 -ppn 82 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi

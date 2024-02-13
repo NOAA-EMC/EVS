@@ -11,11 +11,11 @@ set -x
 
 # Set up initial directories and initialize variables
 
-mkdir -p $DATA/plots
+export config=$PARMevs/evs_config/$COMPONENT/config.evs.rtma.prod
+source $config
+
 mkdir -p $DATA/plots/logs
 export LOGDIR=$DATA/plots/logs
-export LOGFIN=$DATA/logs
-mkdir -p $LOGFIN
 export STATDIR=$DATA/stats
 mkdir -p $STATDIR
 export PLOTDIR=$DATA/plots
@@ -152,8 +152,6 @@ do
 	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
 	export err=$?; err_chk
-	cat $LOGDIR/*out
-	mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
@@ -187,8 +185,6 @@ do
 	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
 	export err=$?; err_chk
-        cat $LOGDIR/*out
-        mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
@@ -210,7 +206,7 @@ for varb in GUST
 # Plots for wind gust
 
 do
- if [ $plot = yes ]; then
+ if [ $plot = yes -a $region != Guam ]; then
 	mkdir -p $COMOUTplots/$varb
 	export var=${varb}sfc
 	export lev=Z10
@@ -222,8 +218,6 @@ do
 	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
 	export err=$?; err_chk
-        cat $LOGDIR/*out
-        mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
@@ -269,8 +263,6 @@ do
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]; then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_perf
 	export err=$?; err_chk
-        cat $LOGDIR/*out
-        mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png $PLOTDIR
@@ -293,8 +285,6 @@ do
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
 	export err=$?; err_chk
-        cat $LOGDIR/*out
-        mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $PLOTDIR
@@ -335,8 +325,6 @@ if [ $plot = yes ]; then
 	if [ ! -e $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
 	export err=$?; err_chk
-        cat $LOGDIR/*out
-        mv $LOGDIR/*out $LOGFIN
         else
         echo "RESTART - plot exists; copying over to plot directory"
         cp $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $PLOTDIR
@@ -357,13 +345,30 @@ fi
 done
 done
 
+log_dir="$LOGDIR"
+if [ -d $log_dir ]; then
+   log_file_count=$(find $log_dir -type f | wc -l)
+   if [[ $log_file_count -ne 0 ]]; then
+       log_files=("$log_dir"/*)
+       for log_file in "${log_files[@]}"; do
+         if [ -f "$log_file" ]; then
+           echo "Start: $log_file"
+           cat "$log_file"
+           echo "End: $log_file"
+         fi
+       done
+   fi
+fi
+
 # Tar up plot files and send to com directory
 
 cd ${PLOTDIR}
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
 
 if [ $SENDCOM = "YES" ]; then
- cpreq -v  evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+ if [ -s evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar ]; then
+  cp -v evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+ fi
 fi
 
 if [ $SENDDBN = YES ] ; then     

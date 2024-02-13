@@ -8,7 +8,7 @@
 set -x
 
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
-
+mkdir -p $DATA/tmp/rtofs
 # set major & minor MET version
 export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 
@@ -150,7 +150,9 @@ cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- cpreq -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
+	if [ -s evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then	 
+       		cp -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
+	fi
 fi
 
 if [ $SENDDBN = YES ] ; then

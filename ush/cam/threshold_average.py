@@ -261,10 +261,14 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         for (m, keep) in zip(model_list, cols_to_keep) if keep
     ]
     if not all(cols_to_keep):
-        logger.warning(
-            f"{models_removed_string} data were not found and will not be"
-            + f" plotted."
-        )
+        if not any(
+                group_name in str(models_removed_string) 
+                for group_name in ["group", "set"]
+            ):
+            logger.warning(
+                f"{models_removed_string} data were not found and will not be"
+                + f" plotted."
+            )
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         plt.close(num)
@@ -860,7 +864,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             level_savename = f'A{level_num.zfill(2)}'
         elif 'Z' in str(level):
             level_num = df['OBS_LEV'].tolist()[0].replace('A', '').replace('0', '')
-            level_string = f'{level_num}-hour '
+            level_string = f''
             level_savename= f'A{level_num.zfill(2)}'
         else:
             level_string = f''
@@ -1234,7 +1238,6 @@ def main():
                     FLEADS, requested_var, fcst_var_names, obs_var_names, MODELS, 
                     domain, INTERP, INTERP_PNTS, MET_VERSION, clear_prune_dir
                 )
-                logger.info("test")
                 if df is None:
                     continue
                 for metric in metrics:

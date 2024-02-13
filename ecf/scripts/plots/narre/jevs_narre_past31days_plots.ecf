@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=8:mem=1GB
+#PBS -l walltime=00:15:00
+#PBS -l place=vscatter:shared,select=1:ncpus=8:mem=8GB
 #PBS -l debug=true
 
 export model=evs
@@ -40,7 +40,7 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
 export OMP_NUM_THREADS=1
 export NET=evs
@@ -49,11 +49,6 @@ export VERIF_CASE=grid2obs
 export MODELNAME=narre
 export past_days=31
 export run_mpi=yes
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
 
 ############################################################
 # Execute j-job

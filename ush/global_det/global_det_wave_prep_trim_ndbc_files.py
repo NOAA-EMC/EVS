@@ -23,6 +23,7 @@ DATA = os.environ['DATA']
 DCOMINndbc = os.environ['DCOMINndbc']
 SENDCOM = os.environ['SENDCOM']
 COMOUT = os.environ['COMOUT']
+FIXevs = os.environ['FIXevs']
 
 # Set up dates
 INITDATE_dt = datetime.datetime.strptime(INITDATE, '%Y%m%d')
@@ -34,17 +35,29 @@ ndbc_header1 = ("#YY  MM DD hh mm WDIR WSPD GST  WVHT   DPD   APD MWD   "
 ndbc_header2 = ("#yr  mo dy hr mn degT m/s  m/s     m   sec   sec degT   "
                 +"hPa  degC  degC  degC  nmi  hPa    ft\n")
 
+# Read in location data file
+buoy_with_loc_list = []
+for line in open(os.path.join(FIXevs, 'ndbc_stations', 'ndbc_stations.xml'),
+                 'r'):
+    buoy_with_loc_list.append(
+        line.partition('<station id="')[2].partition('"')[0]
+    )
+
 # Trim down files for single date
+# and only include those with location data
 for ndbc_input_file in glob.glob(os.path.join(DCOMINndbc,
                                              f"{INITDATEp1_dt:%Y%m%d}",
                                              'validation_data', 'marine',
                                              'buoy', '*.txt')):
+    buoy_id = ndbc_input_file.rpartition('/')[2].partition('.')[0]
+    if buoy_id not in buoy_with_loc_list:
+        continue
     ndbc_tmp_file = os.path.join(DATA,
                                  f"ndbc_trimmed_{INITDATE_dt:%Y%m%d}_"
-                                 +f"{ndbc_input_file.rpartition('/')[2]}")
+                                 +f"{buoy_id}.txt")
     ndbc_output_file = os.path.join(f"{COMOUT}.{INITDATE_dt:%Y%m%d}",
                                    'ndbc',
-                                   f"{ndbc_input_file.rpartition('/')[2]}")
+                                   f"{buoy_id}.txt")
     if not os.path.exists(ndbc_output_file):
         print(f"Trimming {ndbc_input_file} for {INITDATE_dt:%Y%m%d}")
         ndbc_input_file_df = pd.read_csv(
@@ -69,4 +82,4 @@ for ndbc_input_file in glob.glob(os.path.join(DCOMINndbc,
                 print(f"Copying {ndbc_tmp_file} to {ndbc_output_file}")
                 shutil.copy2(ndbc_tmp_file, ndbc_output_file)
             else:
-                print("WARNING: {ndbc_tmp_file} empty, 0 sized")
+                print("NOTE: {ndbc_tmp_file} empty, 0 sized")

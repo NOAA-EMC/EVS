@@ -77,7 +77,7 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,core cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -85,12 +85,14 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
     set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
     set -x
@@ -144,7 +146,7 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,core cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -152,12 +154,14 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
     set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
     set -x
@@ -200,7 +204,7 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,core cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -208,12 +212,14 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
     set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
     set -x
@@ -254,7 +260,7 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,core cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -262,12 +268,14 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
     set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
     set -x
@@ -278,7 +286,9 @@ fi
 if [ $SENDCOM = YES ]; then
     for MODEL_DIR_PATH in $MET_PLUS_OUT/stat_analysis/$MODELNAME*; do
         for FILE in $MODEL_DIR_PATH/*; do
-            cpreq -v $FILE $COMOUTsmall/.
+            if [ -s "$FILE" ]; then
+               cp -v $FILE $COMOUTsmall/.
+            fi
         done
     done
 fi
@@ -317,7 +327,7 @@ if [ "$vhr" -ge "$last_cyc" ]; then
                 export MP_PGMMODEL=mpmd
                 export MP_CMDFILE=${poe_script}
                 if [ $machine = WCOSS2 ]; then
-                    launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+                    launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,core cfp"
                 elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
                     export SLURM_KILL_BAD_EXIT=0
                     launcher="srun --export=ALL --multi-prog"
@@ -325,12 +335,14 @@ if [ "$vhr" -ge "$last_cyc" ]; then
                     err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
                 fi
                 $launcher $MP_CMDFILE
+                export err=$?; err_chk
                 nc=$((nc+1))
             done
         else
             set -x
             while [ $nc -le $ncount_job ]; do
                 ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+                export err=$?; err_chk
                 nc=$((nc+1))
             done
             set -x
@@ -369,3 +381,6 @@ if [ -d $log_dir ]; then
         done
     fi
 fi
+
+
+

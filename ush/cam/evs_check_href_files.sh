@@ -159,19 +159,26 @@ echo "Checking HREF members files ..."
 
 domain=conus 
 for obsv_cyc in 00 03 06 09 12 15 18 21 ; do 
-   for fhr in 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 ; do 	
+   for fhr in 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 ; do 
       fcst_time=`$NDATE -$fhr ${vday}${obsv_cyc}`
       fday=${fcst_time:0:8}
       fcyc=${fcst_time:8:2}
       if [ $fcyc = 00 ] || [ $fcyc = 06 ] || [ $fcyc = 12 ] || [ $fcyc = 18 ] ; then
          href_mbrs=0
          for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
-            href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.conus.f${fhr}
-	        if [ -s $href ] ; then
-               href_mbrs=$((href_mbrs+1))
-	        else
-	           echo "WARNING: $href is missing"
-            fi	    
+            if ! ([ "$mb" = "04" ] && (( fhr >= 45 ))) && \
+               ! ([ "$mb" = "06" ] && ([ "$fcyc" = "06" ] || [ "$fcyc" = "18" ]) && (( fhr >= 45 ))) && \
+               ! ( ([ "$mb" = "07" ] || [ "$mb" = "08" ]) && ([ "$fcyc" = "06" ] || [ "$fcyc" = "18" ]) && (( fhr >= 45 )) ) && \
+               ! ( ([ "$mb" = "09" ] || [ "$mb" = "10" ]) && ([ "$fcyc" = "00" ] || [ "$fcyc" = "12" ]) && (( fhr >= 39 )) ) && \
+               ! ( ([ "$mb" = "09" ] || [ "$mb" = "10" ]) && ([ "$fcyc" = "06" ] || [ "$fcyc" = "18" ]) && (( fhr >= 33 )) )
+            then
+               href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.conus.f${fhr}
+               if [ -s $href ] ; then
+                  href_mbrs=$((href_mbrs+1))
+               else
+                  echo "WARNING: $href is missing"
+               fi
+            fi        
          done
          if [ $href_mbrs -lt 4 ] ; then
             err_exit "HREF members = " $href_mbrs " which < 4"
@@ -192,15 +199,20 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
       if [ $fcyc = 06 ] ; then
          href_mbrs=0
          for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
-            href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.ak.f${fhr}
-	        if [ -s $href ] ; then
-               href_mbrs=$((href_mbrs+1))
-	        else
-	           echo "WARNING: $href is missing"
-            fi	    
+             if ! ([ "$mb" = "02" ] && (( fhr >= 45 ))) && \
+                ! (([ "$mb" = "07" ] || [ "$mb" = "08" ]) && (( fhr >= 39 ))) && \
+                ! ([ "$mb" = "09" ] || [ "$mb" = "10" ])
+             then
+                href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.ak.f${fhr}
+                if [ -s $href ] ; then
+                   href_mbrs=$((href_mbrs+1))
+                else
+                   echo "WARNING: $href is missing"
+                fi
+             fi        
          done
          if [ $href_mbrs -lt 4 ] ; then
-            err_exit "HREF members = " $href_mbrs " which < 4"
+             err_exit "HREF members = " $href_mbrs " which < 4"
          fi
       fi
    done

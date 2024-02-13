@@ -1,10 +1,10 @@
-#PBS -N evs_subseasonal_grid2obs_PrepBufr_plots_90days
+#PBS -N evs_subseasonal_gefs_grid2grid_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:10:00
-#PBS -l place=vscatter,select=1:ncpus=32:ompthreads=1:mem=10GB
+#PBS -l walltime=00:15:00
+#PBS -l place=vscatter:shared,select=1:ncpus=59:ompthreads=1:mem=70GB
 #PBS -l debug=true
 
 export model=evs
@@ -16,14 +16,13 @@ export model=evs
 ############################################################
 set -x
 export COMPONENT=subseasonal
-export STEP=plots
+export STEP=stats
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
-module load prod_util/${prod_util_ver}
 module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
 module load cfp/${cfp_ver}
@@ -45,28 +44,20 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
-export nproc=32
-export SENDDBN=NO
+export nproc=59
 export USE_CFP=YES
 export NET=evs
 export RUN=atmos
-export MODELNAME="gefs cfs"
-export VERIF_CASE=grid2obs
-export VERIF_TYPE=prepbufr
-export NDAYS=90
-export DAYS=91
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export COMIN=${COMevs}
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.${model}.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
+export MODELNAME=gefs
+export VERIF_CASE=grid2grid
+export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.${model}.${COMPONENT}.${MODELNAME}.${VERIF_CASE}.${STEP}
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
+$HOMEevs/jobs/JEVS_SUBSEASONAL_STATS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

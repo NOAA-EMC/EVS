@@ -42,7 +42,7 @@ export INITDATE=${INITDATE:-$PDYm1}
 ####################################
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
@@ -56,7 +56,7 @@ export RUN=${RUN:-atmos}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
+export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver)}
 export COMINcfs=${COMINcfs:-$(compath.py $envir/cfs/$cfs_ver/cfs.$INITDATE)}
 export COMINcmc=${COMINcmc:-$(compath.py $envir/cmc/$cmc_ver/cmc.$INITDATE)}
 export COMINgfs=${COMINgfs:-$(compath.py $envir/gfs/$gfs_ver/gfs.$INITDATE)}

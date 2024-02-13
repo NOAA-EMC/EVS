@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=0:30:00
-#PBS -l select=1:ncpus=5:mem=500MB
+#PBS -l place=exclhost,select=1:ncpus=5:mem=500MB
 #PBS -l debug=true
 #PBS -V
 
@@ -18,6 +18,7 @@ cd $PBS_O_WORKDIR
 # Load modules
 ############################################################
 
+export OMP_NUM_THREADS=1
 export model=evs
 export NET=evs
 export STEP=stats

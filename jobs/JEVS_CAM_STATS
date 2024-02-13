@@ -14,7 +14,7 @@ set -x
 ##################################################
 export SENDMAIL=${SENDMAIL:-NO}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 
@@ -117,7 +117,6 @@ export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/Multi
 export DCOMINsnow=${DCOMINsnow:-$DCOMROOT}
 export EVSINccpa=${EVSINccpa:-$COMIN/prep/$COMPONENT}
 export EVSINmrms=${EVSINmrms:-$COMIN/prep/$COMPONENT}
-export EVSINmping=${EVSINmping:-$COMIN/prep/$COMPONENT}
 export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/$COMPONENT}
 export EVSINfcst=${EVSINfcst:-$COMIN/prep/$COMPONENT}
 export EVSINspclsr=${EVSINspclsr:-$COMIN/prep/$COMPONENT}
@@ -128,8 +127,11 @@ mkdir -p $COMOUT
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-mkdir -p $COMOUTfinal $COMOUTsmall
-
+if [ $VERIF_CASE = severe ]; then
+   mkdir -p $COMOUTfinal
+else
+   mkdir -p $COMOUTfinal $COMOUTsmall
+fi
 
 ####################################
 # Execute the script 
@@ -143,8 +145,6 @@ else
 fi
 
 export err=$?; err_chk
-
-fi
 
 if [ "$KEEPDATA" != "YES" ]; then
    cd $DATAROOT

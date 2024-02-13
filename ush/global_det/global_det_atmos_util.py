@@ -110,14 +110,18 @@ def check_file_exists_size(file_name):
                        - False: file doesn't exist
                                 OR file size = 0
     """
+    if '/com/' in file_name or '/dcom/' in file_name:
+        alert_word = 'WARNING'
+    else:
+        alert_word = 'NOTE'
     if os.path.exists(file_name):
         if os.path.getsize(file_name) > 0:
             file_good = True
         else:
-            print("WARNING: "+file_name+" empty, 0 sized")
+            print(f"{alert_word}: {file_name} empty, 0 sized")
             file_good = False
     else:
-        print("WARNING: "+file_name+" does not exist")
+        print(f"{alert_word}: {file_name} does not exist")
         file_good = False
     return file_good
 
@@ -973,25 +977,52 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
         elif 'qpf_verif/METFRA' in source_file:
             prep_prod_metfra_file(source_file, dest_file, init_time_dt,
                                   forecast_hour, 'precip', log_missing_file)
-        else:
-            if os.path.exists(source_file):
-                print("Linking "+source_file+" to "+dest_file)
-                os.symlink(source_file, dest_file)
-            else:
-                if model == 'jma':
-                    if f"{init_time_dt:%H}" == '00' and int(forecast_hour) > 72:
-                        write_missing_file = False
-                    elif int(forecast_hour) % 24 != 0:
-                        write_missing_file = False
-                    else:
-                        write_missing_file = True
+        elif '.precip.' in dest_file and 'com/gfs' in source_file \
+                and int(forecast_hour) in [3,6]:
+            ### Need to prepare special files for GFS precip for
+            ### for f003 and f006 as APCP variables in the files
+            ### are the same and throw WARNING from MET
+            if check_file_exists_size(source_file):
+                wgrib2_apcp_grep = subprocess.run(
+                    'wgrib2 '+source_file+' | grep "APCP"',
+                    shell=True, capture_output=True, encoding="utf8"
+                )
+                if wgrib2_apcp_grep.returncode == 0:
+                    first_apcp_rec = wgrib2_apcp_grep.stdout.split(':')[0]
+                    wgrib2_apcp_match = subprocess.run(
+                        "wgrib2 "+source_file
+                        +" -match '^("+first_apcp_rec+"):' "
+                        +"-grib "+dest_file, shell=True
+                    )
                 else:
-                    write_missing_file = True
-                if write_missing_file:
-                    print("WARNING: "+source_file+" DOES NOT EXIST")
-                    log_missing_file_model(log_missing_file, source_file,
-                                           model, init_time_dt,
-                                           forecast_hour.zfill(3))
+                    print("Could not get APCP record number(s) "
+                          +"linking files insted")
+                    print(f"Linking {source_file} to {dest_file}")
+                    os.symlink(source_file, dest_file)
+            else:
+                log_missing_file_model(log_missing_file, source_file,
+                                       model, init_time_dt,
+                                       forecast_hour.zfill(3))
+        else:
+            link_file = True
+            write_missing_file = True
+            if model == 'jma' and forecast_hour.isnumeric():
+                if f"{init_time_dt:%H}" == '00' \
+                        and int(forecast_hour) > 72:
+                    write_missing_file = False
+                    link_file = False
+                elif int(forecast_hour) % 24 != 0:
+                    write_missing_file = False
+                    link_file = False
+            if link_file:
+                if check_file_exists_size(source_file):
+                    print("Linking "+source_file+" to "+dest_file)
+                    os.symlink(source_file, dest_file)
+                else:
+                    if write_missing_file:
+                        log_missing_file_model(log_missing_file, source_file,
+                                               model, init_time_dt,
+                                               forecast_hour.zfill(3))
 
 def get_truth_file(valid_time_dt, obs, source_prod_file_format,
                    source_arch_file_format, evs_run_mode,
@@ -1026,11 +1057,10 @@ def get_truth_file(valid_time_dt, obs, source_prod_file_format,
         source_file = format_filler(source_file_format, valid_time_dt,
                                     valid_time_dt, ['anl'], {})
         if not os.path.exists(dest_file):
-            if os.path.exists(source_file):
+            if check_file_exists_size(source_file):
                 print("Linking "+source_file+" to "+dest_file)
                 os.symlink(source_file, dest_file)
             else:
-                print("WARNING: "+source_file+" DOES NOT EXIST")
                 log_missing_file_truth(log_missing_file, source_file,
                                        obs, valid_time_dt)
 
@@ -1060,7 +1090,8 @@ def check_model_files(job_dict):
     fhr_list = []
     fhr_check_input_dict = {}
     fhr_check_output_dict = {}
-    for fhr in [int(i) for i in job_dict['fhr_list'].split(',')]:
+    job_dict_fhr_list = job_dict['fhr_list'].replace("'",'').split(', ')
+    for fhr in [int(i) for i in job_dict_fhr_list]:
         fhr_check_input_dict[str(fhr)] = {}
         fhr_check_output_dict[str(fhr)] = {}
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
@@ -1897,8 +1928,11 @@ def check_truth_files(job_dict):
                     and job_dict['VERIF_CASE'] == 'grid2obs' \
                     and job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
                     and 'Prepbufr' in job_dict['job_name']:
-                run_shell_command(['chmod', '640', truth_file_tuple[0]])
-                run_shell_command(['chgrp', 'rstprod', truth_file_tuple[0]])
+                if os.path.exists(truth_file_tuple[0]):
+                    run_shell_command(['chmod', '640',
+                                       truth_file_tuple[0]])
+                    run_shell_command(['chgrp', 'rstprod',
+                                       truth_file_tuple[0]])
             truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
@@ -2065,6 +2099,8 @@ def initalize_job_env_dict(verif_type, group,
     elif group in ['condense_stats', 'filter_stats', 'make_plots',
                    'tar_images']:
         job_env_var_list.extend(['MET_ROOT', 'met_ver'])
+        if group == 'tar_images':
+            job_env_var_list.extend(['KEEPDATA'])
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
@@ -2088,7 +2124,10 @@ def initalize_job_env_dict(verif_type, group,
                 int(os.environ[verif_case_step_abbrev_type+'_fhr_inc'])
             )
             fhr_list = [str(i) for i in fhr_range]
-        job_env_dict['fhr_list'] = ','.join(fhr_list)
+        if group in ['filter_stats', 'make_plots']:
+            job_env_dict['fhr_list'] = ', '.join(fhr_list)
+        else:
+            job_env_dict['fhr_list'] = "'"+', '.join(fhr_list)+"'"
         if verif_type in ['pres_levs', 'means', 'sfc', 'ptype']:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
@@ -2457,13 +2496,11 @@ def get_daily_stat_file(model_name, source_stats_base_dir,
             +date_dt.strftime('%Y%m%d')+'.stat'
         )
         if not os.path.exists(dest_model_date_stat_file):
-            if os.path.exists(source_model_date_stat_file):
+            if check_file_exists_size(source_model_date_stat_file):
                 print(f"Linking {source_model_date_stat_file} to "
                       +f"{dest_model_date_stat_file}")
                 os.symlink(source_model_date_stat_file,
                            dest_model_date_stat_file)
-            else:
-                print(f"WARNING: {source_model_date_stat_file} DOES NOT EXIST")
         date_dt = date_dt + datetime.timedelta(days=1)
 
 def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
@@ -2767,7 +2804,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                         [:]
                     )
             else:
-                logger.warning(f"{parsed_model_stat_file} does not exist")
+                logger.debug(f"{parsed_model_stat_file} does not exist")
         if model_num == 'model1':
             all_model_df = model_num_df
         else:

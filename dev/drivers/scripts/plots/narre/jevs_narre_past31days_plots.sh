@@ -6,7 +6,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=8:mem=1GB
+#PBS -l place=vscatter,select=1:ncpus=8:mem=8GB
 #PBS -l debug=true
 
 
@@ -16,7 +16,6 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
-export met_v=${met_ver:0:4}
 
 export envir=prod
 

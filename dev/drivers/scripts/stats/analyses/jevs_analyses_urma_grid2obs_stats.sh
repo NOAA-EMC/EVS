@@ -6,7 +6,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=10GB
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -60,9 +60,6 @@ export modsys=urma
 export mod_ver=${urma_ver}
 
 export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
-
-export config=$HOMEevs/parm/evs_config/analyses/config.evs.urma.prod
-source $config
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_ANALYSES_STATS

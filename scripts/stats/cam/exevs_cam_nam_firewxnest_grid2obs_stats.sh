@@ -2,6 +2,9 @@
 
 set -x
 
+export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
+source $config
+
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
 mkdir -p $DATA/statanalysis
@@ -122,7 +125,13 @@ then
 
   mkdir -p $COMOUTsmall
   if [ $SENDCOM = "YES" ]; then
-   cpreq $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+   stat_dir=$DATA/point_stat/$MODELNAME
+   stat_files=("$stat_dir"/*)
+   for stat_file in "${stat_files[@]}"; do
+    if [ -s $stat_file ]; then
+     cp -v $stat_file $COMOUTsmall
+    fi
+   done
   fi
 
   if [ $vhr = 23 ]
@@ -137,7 +146,9 @@ then
 
        cat *ADPUPA >> evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat
        if [ $SENDCOM = "YES" ]; then
-        cpreq evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
+        if [ -s evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+         cp -v evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
+	fi
        fi
   fi
 

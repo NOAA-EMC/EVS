@@ -20,7 +20,7 @@ prevday=`$NDATE -24 ${vday}09 |cut -c1-8`
 #********************************************************************
 # For 1hr and 3hr CCPA data, directly copy from ccpa production files
 # *******************************************************************
-if [ $data = ccpa01h03h ] ; then
+if [ "$data" = "ccpa01h03h" ] ; then
    export  ccpadir=${WORK}/ccpa.${vday}
    mkdir -p $ccpadir
    cd $ccpadir
@@ -113,8 +113,7 @@ if [ $data = ccpa01h03h ] ; then
          missing_ccpa=$((missing_ccpa + 1 ))
       fi
    done
-else
-   if [ $SENDMAIL = YES ] && [ $missing_ccpa gt 0 ] ; then
+   if [ "$SENDMAIL" = "YES" ] && [ "$missing_ccpa" -gt "0" ] ; then
       export subject="CCPA Data Missing for EVS ${COMPONENT}"
       echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
       echo -e "`cat $DATA/job${data}${domain}_missing_ccpa_list`" >> mailmsg
@@ -130,7 +129,7 @@ fi
 # For 24hr ccpa data
 # by using 6hr ccpa to derived from MET pcpcombine tool
 # ******************************************************
-if [ $data = ccpa24h ] ; then
+if [ "$data" = "ccpa24h" ] ; then
 
    export output_base=${WORK}/ccpa.${vday}
    export ccpadir=${WORK}/ccpa.${vday}
@@ -165,7 +164,7 @@ if [ $data = ccpa24h ] ; then
          mkdir -p ${COMOUTfinal}/precip_mean24
          cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
       else
-         if [ $SENDMAIL = YES ] ; then
+         if [ "$SENDMAIL" = "YES" ] ; then
             export subject="06h CCPA Data Missing for 24h CCPA generation"
             echo "Warning: At least one of ccpa06h files is missing  for ${VDATE}" > mailmsg
             echo -e "`cat $DATA/job${data}${domain}_missing_24hrccpa_list`" >> mailmsg
@@ -185,7 +184,7 @@ fi
 #  While product prob files have 1hr, 3hr and 24APCP probability fields, so no need to derive 
 #  This is based on validation time is only at 12Z
 #  *******************************************************************************************************
-if [ $data = apcp24h_conus ] ; then
+if [ "$data" = "apcp24h_conus" ] ; then
 
    export domain=conus
    export grid=G227
@@ -221,7 +220,7 @@ fi
 #  While product prob files have 1hr, 3hr and 24APCP probability fields, so no need to derive 
 #  This is obly based on validation time at 00Z, 06Z, 12Z and 18Z 
 #**********************************************************************************************************
-if [ $data = apcp24h_alaska ] ; then
+if [ "$data" = "apcp24h_alaska" ] ; then
 
    export domain=ak
    export grid=G255
@@ -253,19 +252,19 @@ fi
 # For RAP prepbufr data files: need to convert to netCDF format
 #      by using MET pb2nc tool
 #********************************************************  
-if [ $data = prepbufr ] ; then
+if [ "$data" = "prepbufr" ] ; then
 
    mkdir -p $WORK/prepbufr.$vday
    export output_base=${WORK}/pb2nc
-   if [ $domain = CONUS ] ; then
+   if [ "$domain" = "CONUS" ] ; then
       grids=G227
-   elif [ $domain = Alaska ] ; then
+   elif [ "$domain" = "Alaska" ] ; then
       grids=G198
    else
       grids="G227 G198"
    fi
    
-   if [ $lvl = profile ] || [ $VERIF_CASE = severe ] ; then
+   if [ "$lvl" = "profile" ] || [ "$VERIF_CASE" = "severe" ] ; then
       cycs="00 12"
    else
       cycs="00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23"
@@ -277,16 +276,16 @@ if [ $data = prepbufr ] ; then
             export vbeg=${vhr}
             export vend=${vhr}
             export verif_grid=$grid
-            if [ $lvl = sfc ] ; then
+            if [ "$lvl" = "sfc" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href.conf
                export err=$?; err_chk
-            elif [ $lvl = profile ] ; then
+            elif [ "$lvl" = "profile" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href_profile.conf
                export err=$?; err_chk
-            elif [ $lvl = both ] ; then
+            elif [ "$lvl" = "both" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href.conf
                export err=$?; err_chk
-               if [ $vhr = 00 ] || [ $vhr = 12 ] ; then
+               if [ "$vhr" = "00" ] || [ "$vhr" = "12" ] ; then
                   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href_profile.conf
 	              export err=$?; err_chk
                fi
@@ -297,7 +296,7 @@ if [ $data = prepbufr ] ; then
          cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday}
       fi
    else
-      if [ $SENDMAIL = YES ] ; then
+      if [ "$SENDMAIL" = "YES" ] ; then
          export subject="RAP Prepbufr Data Missing for EVS ${COMPONENT}"
          echo "Warning:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
          echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00  >> mailmsg
@@ -315,15 +314,15 @@ fi
 #      by using MET pb2nc tool
 # Used for validation over Hawaii and Peurto Rico
 #********************************************************
-if [ $data = gfs_prepbufr ] ; then
+if [ "$data" = "gfs_prepbufr" ] ; then
 
    mkdir -p $WORK/prepbufr.$vday
    export output_base=${WORK}/pb2nc
    if [ -s $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr ] ; then 
       for domain in Hawaii PRico ; do
-         if [ $domain = Hawaii ] ; then
+         if [ "$domain" = "Hawaii" ] ; then
             grid=G139
-         elif [ $domain = PRico ] ; then
+         elif [ "$domain" = "PRico" ] ; then
             grid=G200
          fi
          export verif_grid=$grid
@@ -338,7 +337,7 @@ if [ $data = gfs_prepbufr ] ; then
          fi
       done
    else
-      if [ $SENDMAIL = YES ] ; then
+      if [ "$SENDMAIL" = "YES" ] ; then
          export subject="GFS Prepbufr Data Missing for EVS ${COMPONENT}"
          echo "Warning:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
          echo Missing file is $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr  >> mailmsg
@@ -354,16 +353,16 @@ fi
 # For MRMS precip data over Alaska, need to convert to required grid
 #     by using MET RegridDataPlane tool
 #*********************************************************************
-if [ $data = mrms ] ; then
+if [ "$data" = "mrms" ] ; then
    
    export accum
    if [ -s $DCOMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-??0000.grib2.gz ] ; then 
       for accum in 01 03 24 ; do 	
-         if [ $accum = 03 ] ; then
+         if [ "$accum" = "03" ] ; then
             cycs="00 03 06 09 12 15 18 21"
-         elif [ $accum = 24 ] ; then
+         elif [ "$accum" = "24" ] ; then
             cycs="00 06 12  18"
-         elif [ $accum = 01 ] ; then
+         elif [ "$accum" = "01" ] ; then
             cycs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
          fi
          export vhr
@@ -400,7 +399,7 @@ if [ $data = mrms ] ; then
          fi
       done
    else
-      if [ $SENDMAIL = YES ] ; then
+      if [ "$SENDMAIL" = "YES" ] ; then
          export subject="MRMS Data Missing for EVS ${COMPONENT}"
          echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
          echo Missing file is $DCOMINmrms/MultiSensor_QPE_*.grib2.gz  >> mailmsg

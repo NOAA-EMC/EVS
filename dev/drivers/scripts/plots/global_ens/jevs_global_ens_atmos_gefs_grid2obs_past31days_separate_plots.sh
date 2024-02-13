@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:20:00
-#PBS -l place=vscatter,select=2:ncpus=77:mpiprocs=77:mem=75GB
+#PBS -l place=vscatter,select=2:ncpus=77:mpiprocs=77:mem=80GB
 #PBS -l debug=true
 
 set -x
@@ -36,7 +36,7 @@ export SENDDBN=NO
 export vhr=00
 export past_days=31
 
-export met_v=${met_ver:0:4}
+
 
 export valid_time=separate
 

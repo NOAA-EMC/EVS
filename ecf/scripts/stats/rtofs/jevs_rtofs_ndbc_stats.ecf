@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=06:00:00
-#PBS -l select=1:ncpus=1:mem=500GB
+#PBS -l walltime=05:20:00
+#PBS -l place=exclhost,select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
 export model=evs
@@ -23,7 +23,6 @@ module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
-module load prod_util/${prod_util_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module list
@@ -34,20 +33,14 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
-export SENDMAIL=YES
 export NET=evs
 export RUN=ndbc
 export RUNupper=NDBC_STANDARD
 export VERIF_CASE=grid2obs
 export VAR=sst
 export VDATE=$($NDATE -48 ${PDY}00| cut -c 1-8)
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 
 ############################################################
 # Execute j-job

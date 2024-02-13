@@ -55,7 +55,7 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,core cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -84,7 +84,9 @@ for NEST in "conus" "ak" "pr" "hi"; do
             mkdir -p $COMOUT/$OBS_DIR
             if [ ! -z "$(ls -A $OBS_DIR_PATH)" ]; then
                 for FILE in $OBS_DIR_PATH/*; do
-                    cpreq -v $FILE $COMOUT/$OBS_DIR/.
+                    if [ -s "$FILE" ]; then
+                       cp -v $FILE $COMOUT/$OBS_DIR/.
+                    fi
                 done
             fi
         done

@@ -5,7 +5,7 @@ graphics = {
     'cam':{
         'headline':{
             'metar':{
-                'set1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr, href_avrg, href_mean, href_lpmm, href_pmmn': {
+                'set1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -57,7 +57,7 @@ graphics = {
                         }
                     },
                 },
-                'set2, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr, href_avrg, href_mean, href_lpmm, href_pmmn': {
+                'set2, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -109,7 +109,7 @@ graphics = {
                         }
                     },
                 },
-                'set3, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr, href_avrg, href_mean, href_lpmm, href_pmmn': {
+                'set3, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -161,7 +161,7 @@ graphics = {
                         }
                     },
                 },
-                'set4, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr, href_avrg, href_mean, href_lpmm, href_pmmn': {
+                'set4, namnest, hireswarw, hireswarwmem2, hireswfv3': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',

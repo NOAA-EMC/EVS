@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: mesoscale_production_restart.py
 Contact(s): Marcel Caron

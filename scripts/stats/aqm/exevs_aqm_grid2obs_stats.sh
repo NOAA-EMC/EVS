@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
@@ -13,11 +13,21 @@
 ##                               of directory path depends on model verified hour.
 ##   10/31/2023   Ho-Chun Huang  Update EVS model input directory structure from AQMv6 to AQMv7
 ##   11/14/2023   Ho-Chun Huang  Replace cp with cpreq
+##   12/27/2023   Ho-Chun Huang  Select the lead hours input to the METPlus only when
+##                               model output daily fcst files existed.
+##   01/05/2024   Ho-Chun Huang  modify for AQMv6 verification
+##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
 ##
+##   Note :  The lead hours specification is important to avoid the error generated 
+##           by the MetPlus for not finding the input FCST or OBS files. The error
+##           will lead to job crash by err_chk.
 ##
 #######################################################################
 #
 set -x
+
+export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
+source $config
 
 mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/stat
@@ -35,8 +45,8 @@ else
   export HOURLY_INPUT_TYPE=hourly_data
 fi
 
-export dirname=aqm
-export gridspec=793
+export dirname=cs
+export gridspec=148
 export fcstmax=72
 #
 ## export MASK_DIR is declared in the ~/EVS/jobs/JEVS_AQM_STATS 
@@ -56,10 +66,6 @@ echo ${model1}
 cdate=${VDATE}${vhr}
 vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
 vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
-
-VDAYm1=$(${NDATE} -24 ${cdate} | cut -c1-8)
-VDAYm2=$(${NDATE} -48 ${cdate} | cut -c1-8)
-VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 
 check_file=${EVSINaqm}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
@@ -108,14 +114,13 @@ for outtyp in awpozcon pm25; do
     #
     for hour in 06 12; do
       export hour
-      export mdl_cyc=${hour}
 
       let ihr=1
       num_fcst_in_metplus=0
       recorded_temp_list=${DATA}/fcstlist_in_metplus
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       while [ ${ihr} -le ${fcstmax} ]; do
-        filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7
+        filehr=$(printf %2.2d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7
         fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
         export fhr
     
@@ -124,7 +129,7 @@ for outtyp in awpozcon pm25; do
         aday=`echo ${adate} |cut -c1-8`
         acyc=`echo ${adate} |cut -c9-10`
         if [ ${acyc} = ${hour} ]; then
-          fcst_file=${COMINaqm}/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.${outtyp}${bctag}.f${filehr}.${gridspec}.grib2
+          fcst_file=${COMINaqm}/${dirname}.${aday}/aqm.t${acyc}z.${outtyp}${bctag}.f${filehr}.${gridspec}.grib2
           if [ -s ${fcst_file} ]; then
             echo "${fhr} found"
             echo ${fhr} >> ${recorded_temp_list}
@@ -144,9 +149,11 @@ for outtyp in awpozcon pm25; do
         fi 
         ((ihr++))
       done
-      export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
-      export num_fcst_in_metplus
+      if [ -s ${recorded_temp_list} ]; then
+        export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+      fi
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      export num_fcst_in_metplus
       echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
     
       if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_hourly_found} -eq 1 ]; then
@@ -161,19 +168,23 @@ for outtyp in awpozcon pm25; do
     mkdir -p ${COMOUTsmall}
     if [ ${SENDCOM} = "YES" ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
-      stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-      if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
+        stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      fi
     fi
     if [ "${vhr}" == "23" ]; then
       mkdir -p ${COMOUTfinal}
       stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-      if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
-      cd ${finalstat}
-      run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
-      export err=$?; err_chk
-      if [ ${SENDCOM} = "YES" ]; then
-        cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_${stat_output_index}.v${VDATE}.stat
-        if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+      if [ ${stat_file_count} -ne 0 ]; then
+        cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+        cd ${finalstat}
+        run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
+        export err=$?; err_chk
+        if [ ${SENDCOM} = "YES" ]; then
+          cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_${stat_output_index}.v${VDATE}.stat
+          if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
+        fi
       fi
     fi
   done  ## biastyp loop
@@ -219,15 +230,24 @@ if [ ${vhr} = 11 ]; then
 
     for hour in 06 12; do
       export hour
-      export mdl_cyc=${hour}
 
       ##  search for processed daily 8-hr ozone max model files
+      ##  AQMv7 output daily forecast of 3 days.  Becasue of
+      ##  different valid time definitions between model and
+      ##  observation, the lead time to check is 00, 24, and 48.
 
-      num_fcst_ozmax8=0
-      for chk_date in ${VDAYm1} ${VDAYm2} ${VDAYm3}; do
+      let ihr=0
+      num_fcst_in_metplus=0
+      recorded_temp_list=${DATA}/fcstlist_in_metplus
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      while [ ${ihr} -le ${fcstmax} ]; do
+        chk_date=$(${NDATE} -${ihr} ${cdate} | cut -c1-8)
         ozmax8_preprocessed_file=${EVSINaqm}/atmos.${chk_date}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
         if [ -s ${ozmax8_preprocessed_file} ]; then
-          let "num_fcst_ozmax8=num_fcst_ozmax8+1"
+          fhr=$(printf %2.2d ${ihr})
+          echo "${ozmax8_preprocessed_file} found"
+          echo ${fhr} >> ${recorded_temp_list}
+          let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
           if [ $SENDMAIL = "YES" ]; then
             export subject="ozmax8${bctag} AQM Daily Forecast Data Missing for EVS ${COMPONENT}"
@@ -239,28 +259,40 @@ if [ ${vhr} = 11 ]; then
           echo "WARNING: No AQM max_8hr_o3${bctag} forecast was available for ${chk_date} t${hour}z"
           echo "WARNING: Missing file is ${ozmax8_preprocessed_file}"
         fi
+        let "ihr=ihr+24"
       done
-      echo "number of fcst day for ${outtyp}${bctag} == ${num_fcst_ozmax8}, index of daily obs_found == ${obs_daily_found}"
-      if [ ${num_fcst_ozmax8} -gt 0 -a ${obs_daily_found} -gt 0 ]; then 
+      if [ -s ${recorded_temp_list} ]; then
+        export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+      fi
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      export num_fcst_in_metplus
+      echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
+      echo "index of daily obs_found == ${obs_daily_found}"
+      if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_daily_found} -gt 0 ]; then 
+        export fcsthours=${fcsthours_list}
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
         echo "WARNING: NO OZMAX8 OBS OR MODEL DATA"
-        echo "WARNING: NUM FCST=${num_fcst_ozmax8}, INDEX OBS=${obs_daily_found}"
+        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
       fi
-    done   ## hour loop
+    done   ## cyc hour loop
     if [ ${SENDCOM} = "YES" ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
-      stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-      if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
+        stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-    if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
-    run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
-    export err=$?; err_chk
-    if [ ${SENDCOM} = "YES" ]; then
-      cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat
-      if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+    if [ ${stat_file_count} -ne 0 ]; then
+      cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+      run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
+      export err=$?; err_chk
+      if [ ${SENDCOM} = "YES" ]; then
+        cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat
+        if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
+      fi
     fi
   done  ## biastyp loop
 fi  ## vhr if logic
@@ -288,15 +320,24 @@ if [ ${vhr} = 04 ]; then
 
     for hour in 06 12; do
       export hour
-      export mdl_cyc=${hour}
 
       ##  search for forecast daily average PM model files
+      ##  AQMv7 output daily forecast of 3 days.  Becasue of
+      ##  different valid time definitions between model and
+      ##  observation, the lead time to check is 00, 24, and 48.
 
-      num_fcst_pmave=0
-      for chk_date in ${VDAYm1} ${VDAYm2} ${VDAYm3}; do
-        fcst_file=${COMINaqm}/${dirname}.${chk_date}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
+      let ihr=0
+      num_fcst_in_metplus=0
+      recorded_temp_list=${DATA}/fcstlist_in_metplus
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      while [ ${ihr} -le ${fcstmax} ]; do
+        chk_date=$(${NDATE} -${ihr} ${cdate} | cut -c1-8)
+        fcst_file=${COMINaqm}/${dirname}.${chk_date}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
         if [ -s ${fcst_file} ]; then
-          let "num_fcst_pmave=num_fcst_pmave+1"
+          fhr=$(printf %2.2d ${ihr})
+          echo "${fcst_file} found"
+          echo ${fhr} >> ${recorded_temp_list}
+          let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
           if [ $SENDMAIL = "YES" ]; then
             export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
@@ -309,32 +350,59 @@ if [ ${vhr} = 04 ]; then
           echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${chk_date} t${hour}z"
           echo "WARNING: Missing file is $fcst_file}"
         fi
+        let "ihr=ihr+24"
       done
-      echo "number of fcst day for ${outtyp}${bctag} == ${num_fcst_pmave} index of daily obs_found == ${obs_daily_found}"
+      if [ -s ${recorded_temp_list} ]; then
+        export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+      fi
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      export num_fcst_in_metplus
+      echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
+      echo "index of daily obs_found == ${obs_daily_found}"
 
-      if [ ${num_fcst_pmave} -gt 0 -a ${obs_daily_found} -gt 0 ]; then
+      if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_daily_found} -gt 0 ]; then
+        export fcsthours=${fcsthours_list}
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
         echo "WARNING: NO PMAVE OBS OR MODEL DATA"
-        echo "WARNING: NUM FCST=${num_fcst_pmave}, INDEX OBS=${obs_daily_found}"
+        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
       fi
-    done   ## hour loop
+    done   ## cyc hour loop
     if [ ${SENDCOM} = "YES" ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
-      stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-      if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
+        stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-    if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
-    run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
-    export err=$?; err_chk
-    if [ ${SENDCOM} = "YES" ]; then
-      cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat
-      if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+    if [ ${stat_file_count} -ne 0 ]; then
+      cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+      run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
+      export err=$?; err_chk
+      if [ ${SENDCOM} = "YES" ]; then
+        cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat
+        if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
+      fi
     fi
   done  ## biastyp loop
 fi  ## vhr if logic
+
+log_dir="$DATA/logs/${model1}"
+if [ -d $log_dir ]; then
+   log_file_count=$(find $log_dir -type f | wc -l)
+   if [[ $log_file_count -ne 0 ]]; then
+       log_files=("$log_dir"/*)
+       for log_file in "${log_files[@]}"; do
+          if [ -f "$log_file" ]; then
+             echo "Start: $log_file"
+             cat "$log_file"
+             echo "End: $log_file"
+          fi
+      done
+  fi
+fi
 
 exit
 

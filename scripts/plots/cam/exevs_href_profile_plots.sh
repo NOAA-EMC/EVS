@@ -11,7 +11,7 @@ export machine=${machine:-"WCOSS2"}
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
+export log_metplus=$DATA/logs/GENS_verif_plotting_job
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
@@ -53,7 +53,6 @@ while [ $n -le $past_days ] ; do
 done 
 
 
-VX_MASK_LIST="CONUS, Alaska, Hawaii, PRico"
 
 export fcst_init_hour="0,6,12,18"
 valid_time='valid00_12z'
@@ -101,6 +100,14 @@ fi
 
     export fcst_lead=$lead
 
+    if [[ "$fcst_lead" == "06" ]] || [[ "$fcst_lead" == "18" ]] || [[ "$fcst_lead" == "30" ]] || [[ "$fcst_lead" == "42" ]] ; then
+       VX_MASK_LIST="CONUS, Alaska, PRico"
+    elif [[ "$fcst_lead" == "12" ]] || [[ "$fcst_lead" == "24" ]] || [[ "$fcst_lead" == "36" ]] || [[ "$fcst_lead" == "48" ]] ; then
+       VX_MASK_LIST="CONUS, Hawaii"
+    else
+       VX_MASK_LIST="CONUS, Alaska"
+    fi
+
     for VAR in $VARS ; do 
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
@@ -141,7 +148,6 @@ fi
         echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
         echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
         echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
@@ -206,7 +212,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 90 -ppn 90 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 60 -depth 1 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -257,7 +263,7 @@ for valid in 00z 12z ; do
 	if [ $var = 700mb_wind_ens_freq_ge15.4 ] ; then
 	  var_new='windspeed.ge.30kt.p700'
 	elif [ $var = 700mb_wind_ens_freq_ge20.58 ] ; then
-	  var_new='windspeed.ge.40kt.P700'
+	  var_new='windspeed.ge.40kt.p700'
 	elif [ $var = 850mb_wind_ens_freq_ge15.4 ] ; then
 	  var_new='windspeed.ge.30kt.p850'
         elif [ $var = 850mb_wind_ens_freq_ge20.58 ] ; then

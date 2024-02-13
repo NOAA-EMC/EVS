@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 generate_stats_jobs_dict = {
     'HGT': {
         'raob': {
@@ -903,27 +904,6 @@ generate_stats_jobs_dict = {
                 'var1_obs_levels': 'Z0',
                 'var1_obs_thresholds': 'ge1.0, ge2.0, ge3.0, ge4.0',
                 'var1_obs_options': 'censor_thresh = [<161, >=161&&<=163, >=164&&<=166, >=167&&<=170, >=171&&<=173, >=174&&<=176, >176]; censor_val=[0.0, 1.0, 3.0, 0.0, 2.0, 4.0, 0.0];',
-            },
-            'output_types': {
-                'CTC': 'NONE',
-                'SL1L2': 'NONE',
-                'VL1L2': 'NONE',
-                'CNT': 'NONE',
-                'VCNT': 'NONE',
-                'NBRCNT': 'NONE',
-                'MCTC': 'STAT',
-            }
-        },
-        'mping': {
-            'nam': {
-                'var1_fcst_name': 'PTYPE',
-                'var1_fcst_levels': '\\"(*,*)\\"',
-                'var1_fcst_thresholds': 'ge1.0, ge2.0, ge3.0, ge4.0',
-                'var1_fcst_options': 'set_attr_name = \\"PTYPE\\";',
-                'var1_obs_name': 'PTYPE',
-                'var1_obs_levels': 'Z0',
-                'var1_obs_thresholds': 'ge1.0, ge2.0, ge3.0, ge4.0',
-                'var1_obs_options': 'censor_thresh = [<3, >=3&&<4, >=4&&<5, >=5&&<6, >=6&&<7, >=7&&<8, >=8&&<9, >=9]; censor_val=[0.0, 1.0, 3.0, 1.0, 0.0, 4.0, 2.0, 0.0];',
             },
             'output_types': {
                 'CTC': 'NONE',

@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:45:00
-#PBS -l select=1:ncpus=1:mem=20GB
+#PBS -l walltime=00:50:00
+#PBS -l place=shared,select=1:ncpus=1:mem=100GB
 #PBS -l debug=true
 
 export model=evs
@@ -32,7 +32,6 @@ module load udunits/${udunits_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
 module load nco/${nco_ver}
-module load prod_util/${prod_util_ver}
 module load cdo/${cdo_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
@@ -49,22 +48,13 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
-export SENDMAIL=YES
-export SENDDBN=NO
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=nam_firewxnest
 export modsys=nam
-export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
-source $config
-export COMIN=${COMevs}
-export COMOUT=${COMevs}/$STEP/$COMPONENT
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 
 ############################################################
 # Execute j-job

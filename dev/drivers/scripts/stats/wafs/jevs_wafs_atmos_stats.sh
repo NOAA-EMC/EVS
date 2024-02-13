@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:25:00
-#PBS -l select=1:ncpus=4:mem=10GB
+#PBS -l place=shared,select=1:ncpus=4:mem=10GB
 #PBS -l debug=true
 #PBS -V
 
@@ -37,7 +37,6 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 # environment variables set
 ############################################################
 export envir=prod
-export COMINgfs=/lfs/h1/ops/para/com/gfs/${gfs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/$evs_ver_2d
 
 ############################################################

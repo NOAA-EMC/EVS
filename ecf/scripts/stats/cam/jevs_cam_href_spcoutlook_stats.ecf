@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=01:00:00
+#PBS -l walltime=00:40:00
 #PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
 #PBS -l debug=true
 
@@ -32,7 +32,6 @@ module load udunits/${udunits_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
 module load nco/${nco_ver}
-module load prod_util/${prod_util_ver}
 module load cdo/${cdo_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
@@ -46,18 +45,13 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
 export OMP_NUM_THREADS=1
-export SENDMAIL=YES
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=spcoutlook
 export MODELNAME=href
-export COMOUT=${COMevs}/$STEP/$COMPONENT
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 export run_mpi=yes
 export gather=yes
 

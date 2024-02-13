@@ -91,10 +91,10 @@ class Presets():
 
         self.level_presets = {
             'all': 'P1000,P925,P850,P700,P500,P400,P300,P200,P150,P100,P50',
-            'ltrop': 'P1000,P950,P900,P850,P800,P750,P700,P650,P600,P550,P500',
+            'ltrop': 'P1000,P925,P850,P700,P500',
             'strat': 'P100,P75,P50,P30,P20,P10',
             'trop': 'P1000,P900,P850,P700,P600,P500,P400,P300,P200,P100',
-            'utrop': 'P500,P450,P400,P350,P300,P250,P200,P150,P100'
+            'utrop': 'P500,P400,P300,P250,P200,P150,P100'
         }
 
         '''
@@ -1086,7 +1086,7 @@ class Reference():
                                   },
                                   'PacificNW': {
                                       'long_name': 'Pacific Northwest',
-                                      'save_name': 'buk_pnw',
+                                      'save_name': 'buk_npw',
                                   },
                                   'SWC': {
                                       'long_name': 'Southwest Coast',
@@ -2237,7 +2237,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
-                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
+                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies',
                         'Alaska', 'Hawaii', 'PuertoRico', 'Guam', 'FireWx', 'DAY1_1200_TSTM',
                         'DAY1_0100_TSTM'
                     ],
@@ -2424,7 +2424,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
-                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
+                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies',
                         'Alaska', 'Hawaii', 'PuertoRico', 'Guam', 'FireWx', 'DAY1_1200_TSTM',
                         'DAY1_0100_TSTM'
                     ],
@@ -2472,7 +2472,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
-                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
+                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies',
                         'Alaska', 'Hawaii', 'PuertoRico', 'Guam', 'FireWx', 'DAY1_1200_TSTM',
                         'DAY1_0100_TSTM'
                     ],
@@ -2576,7 +2576,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
-                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
+                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies',
                         'Alaska', 'Hawaii', 'PuertoRico', 'Guam', 'FireWx', 'DAY1_1200_TSTM',
                         'DAY1_0100_TSTM'
                     ],
@@ -2662,7 +2662,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
-                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
+                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies',
                         'Alaska', 'Hawaii', 'PuertoRico', 'Guam', 'FireWx', 'DAY1_1200_TSTM',
                         'DAY1_0100_TSTM'
                     ],
@@ -2686,7 +2686,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
-                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
+                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies',
                         'Alaska', 'Hawaii', 'PuertoRico', 'Guam', 'FireWx', 'DAY1_1200_TSTM',
                         'DAY1_0100_TSTM'
                     ],
@@ -2764,7 +2764,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
-                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
+                        'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies',
                         'Alaska', 'Hawaii', 'PuertoRico', 'Guam', 'FireWx', 'DAY1_1200_TSTM',
                         'DAY1_0100_TSTM'
                     ],
@@ -2891,7 +2891,7 @@ class Reference():
                                     'fcst_var_levels': ['Z0'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MXGS'],
+                                    'obs_var_names': ['GUST'],
                                     'obs_var_levels': ['Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',

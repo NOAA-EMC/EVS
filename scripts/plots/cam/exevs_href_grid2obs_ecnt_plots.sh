@@ -11,7 +11,7 @@ export machine=${machine:-"WCOSS2"}
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
+export log_metplus=$DATA/logs/GENS_verif_plotting_job
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
@@ -73,7 +73,11 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
    if [ $stats = rmse_spread  ] ; then
      stat_list='rmse, spread'
      line_type='ecnt'
-     VARs='TMP2m DPT2m UGRD10m VGRD10m RH2m PRMSL WIND10m GUSTsfc HPBL'
+     if [ "$fcst_valid_hour" -eq "00" ] || [ "$fcst_valid_hour" -eq "12" ] ; then
+       VARs='TMP2m DPT2m UGRD10m VGRD10m RH2m PRMSL WIND10m GUSTsfc HPBL'
+     else
+       VARs='TMP2m DPT2m UGRD10m VGRD10m RH2m PRMSL WIND10m GUSTsfc'
+     fi
      score_types='lead_average'
    else
      echo $stats is wrong stat
@@ -123,7 +127,6 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
         echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
         echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
         echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 

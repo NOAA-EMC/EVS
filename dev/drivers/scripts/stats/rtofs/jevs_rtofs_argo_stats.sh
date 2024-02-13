@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=03:00:00
-#PBS -l select=1:ncpus=1:mem=500GB
+#PBS -l place=exclhost,select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
 ############################################################

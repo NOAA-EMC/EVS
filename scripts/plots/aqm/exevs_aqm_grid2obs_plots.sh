@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 #######################################################################
 ## UNIX Script Documentation Block
 ##                      .
@@ -11,6 +11,7 @@
 ##
 ##   11/14/2023   Ho-Chun Huang  replace cp with cpreq
 ##   11/15/2023   Ho-Chun Huang  combine similar code for multiple variable
+##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
 ##
 ## Plotting Information
 ##    OZMAX8 forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
@@ -24,9 +25,11 @@
 
 set -x
 
+export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
+source $config
+
 # Set up initial directories and initialize variables
 
-export LOGFIN=${DATA}/logs
 export LOGDIR=${DATA}/plots/logs
 export LOGDIR_headline=${DATA}/plots_headline/logs
 
@@ -36,7 +39,7 @@ export PLOTDIR_headline=${DATA}/plots_headline
 export OUTDIR=${DATA}/out
 export PRUNEDIR=${DATA}/prune
 
-mkdir -p ${LOGFIN}   ${LOGDIR}  ${LOGDIR_headline}
+mkdir -p  ${LOGDIR}  ${LOGDIR_headline}
 mkdir -p ${STATDIR}  ${PLOTDIR} ${PLOTDIR_headline}
 mkdir -p ${PRUNEDIR} ${OUTDIR}
 
@@ -56,7 +59,7 @@ for aqmtyp in ozone pm25 ozmax8 pmave; do
             DAY=`cut -c 1-8 curdate`
             cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
             sedfile=evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
-            if [ -e ${EVSINaqm}.${DAY}/${cpfile} ]; then
+            if [ -s ${EVSINaqm}.${DAY}/${cpfile} ]; then
                 cpreq ${EVSINaqm}.${DAY}/${cpfile} ${STATDIR}
                 sed "s/${model1}/${aqmtyp}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
             else
@@ -133,8 +136,6 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                 if [ ! -e $${cpfile} ]; then
                     ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/${config_file}
                     export err=$?; err_chk
-                    cat ${LOGDIR}/*out
-                    mv ${LOGDIR}/*out ${LOGFIN}
                 else
                     echo "RESTART - ${var} ${figtype} ${region} plot exists; copying over to plot directory"
                     cpreq ${cpfile} ${PLOTDIR}
@@ -143,7 +144,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                 cpfile=${PLOTDIR}/${figfile}
                 if [ -e ${PLOTDIR}/aq/*/evs*png ]; then
                     mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
-                    cpreq ${cpfile} ${COMOUTplots}/${var}
+                    cp -v ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
                 fi
@@ -194,8 +195,6 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                 if [ ! -e ${cpfile} ]; then
                     ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}.config
                     export err=$?; err_chk
-                    cat ${LOGDIR}/*out
-                    mv ${LOGDIR}/*out ${LOGFIN}
                 else
                     echo "RESTART - plot exists; copying over to plot directory"
                     cpreq ${cpfile} ${PLOTDIR}
@@ -204,7 +203,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                 cpfile=${PLOTDIR}/${figfile}
                 if [ -e ${PLOTDIR}/aq/*/evs*png ]; then
                     mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
-                    cpreq ${cpfile} ${COMOUTplots}/${var}
+                    cp -v ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
                     echo "WARNING: This is possible where there is no exceedance of any threshold in the past 31 days"
@@ -215,6 +214,21 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
     done
 done
 
+log_dir="$LOGDIR"
+if [ -d $log_dir ]; then
+   log_file_count=$(find $log_dir -type f | wc -l)
+   if [[ $log_file_count -ne 0 ]]; then
+       log_files=("$log_dir"/*)
+       for log_file in "${log_files[@]}"; do
+          if [ -f "$log_file" ]; then
+           echo "Start: $log_file"
+           cat "$log_file"
+           echo "End: $log_file"
+         fi
+       done
+   fi   
+fi 
+
 # Tar up plot directory and copy to the plot output directory
 
 cd ${PLOTDIR}
@@ -222,16 +236,16 @@ tarfile=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar
 tar -cvf ${tarfile} *png
 
 if [ "${SENDCOM}" == "YES" ]; then
-    if [ -e ${tarfile} ]; then
+    if [ -s ${tarfile} ]; then
         mkdir -m 775 -p ${COMOUTplots}
-        cpreq -v ${tarfile} ${COMOUTplots}
+        cp -v ${tarfile} ${COMOUTplots}
     else
         echo "WARNING: Can not find ${PLOTDIR}/${tarfile}"
     fi
 fi
 
 if [ "${SENDDBN}" == "YES" ] ; then     
-    if [ -e ${COMOUTplots}/${tarfile} ]; then
+    if [ -s ${COMOUTplots}/${tarfile} ]; then
         $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${tarfile}
     else
         echo "WARNING: Can not find ${COMOUTplots}/${tarfile}"
@@ -300,8 +314,6 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
             if [ ! -e ${cpfile} ]; then
                 ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}_headline.config
                 export err=$?; err_chk
-                cat ${LOGDIR_headline}/*out
-                mv ${LOGDIR_headline}/*out ${LOGFIN}
             else
                 echo "RESTART - plot exists; copying over to plot directory"
                 cpreq ${cpfile} ${PLOTDIR_headline}
@@ -310,7 +322,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
             cpfile=${PLOTDIR_headline}/${figfile}
             if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]; then
                 mv ${PLOTDIR_headline}/aq/*/evs*png ${cpfile}
-                cpreq ${cpfile} ${COMOUTplots}/headline
+                cp -v ${cpfile} ${COMOUTplots}/headline
             elif [ ! -e ${cpfile} ]; then
                 echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} ${region}"
                 echo "WARNING: This is possible where there is no exceedance of the critical threshold in the past 31 days"
@@ -318,6 +330,23 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
         done
     done
 done
+
+log_dir="${LOGDIR_headline}"
+if [ -d $log_dir ]; then
+   log_file_count=$(find $log_dir -type f | wc -l)
+   if [[ $log_file_count -ne 0 ]]; then
+        log_files=("$log_dir"/*)
+        for log_file in "${log_files[@]}"; do
+          if [ -f "$log_file" ]; then
+            echo "Start: $log_file"
+            cat "$log_file"
+            echo "End: $log_file"
+          fi
+        done
+   fi
+fi
+
+
 
 # Tar up headline plot tarball and copy to the headline plot directory
 
@@ -327,15 +356,15 @@ tar -cvf ${tarfile} *png
 
 if [ "${SENDCOM}" == "YES" ]; then
     mkdir -m 775 -p ${COMOUTheadline}
-    if [ -e ${tarfile} ]; then
-        cpreq -v ${tarfile} ${COMOUTheadline}
+    if [ -s ${tarfile} ]; then
+        cp -v ${tarfile} ${COMOUTheadline}
     else
         echo "WARNING: Can not find ${PLOTDIR_headline}/${tarfile}"
     fi
 fi
 
 if [ "${SENDDBN}" == "YES" ]; then     
-    if [ -e ${COMOUTheadline}/${tarfile} ]; then
+    if [ -s ${COMOUTheadline}/${tarfile} ]; then
         $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTheadline}/${tarfile}
     else
         echo "WARNING: Can not find ${COMOUTheadline}/${tarfile}"

@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=128:mem=500GB
+#PBS -l place=shared,select=1:ncpus=128:mem=500GB
 #PBS -l debug=true
 
 set -x
@@ -44,9 +44,6 @@ export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
 export mod_ver=${aqm_ver}
-
-export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
-source $config
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES

@@ -9,6 +9,8 @@
 # Make the command files for cfp 
 #################################
 
+set -x
+
 # set up plot variables
 
 periods='PAST31DAYS PAST90DAYS'
@@ -23,7 +25,7 @@ ptype='lead_average'
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
-mkdir ${DATA}/sfcshp
+mkdir -p ${DATA}/sfcshp
 touch plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 # write the commands

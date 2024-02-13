@@ -23,8 +23,8 @@ cd $DATA
 # SENDDBN=YES--Issue DBNet Client Calls
 ################################################################
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}       # need to set to NO for testing
-export SENDECF=${SENDECF:-NO}
+export SENDDBN=${SENDDBN:-YES}       # need to set to NO for testing
+export SENDECF=${SENDECF:-YES}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ################################################################
 # Specify Execution Areas
@@ -55,7 +55,7 @@ export VDATE=${VDATE:-$PDYm2}
 #################################################
 # Set up the INPUT and OUTPUT directories
 #################################################
-export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver/prep/$COMPONENT/$RUN)}
+export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver/prep)/$COMPONENT/$RUN}
 export EVSINclimo=${EVSINclimo:-$FIXevs/climos/atmos}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE

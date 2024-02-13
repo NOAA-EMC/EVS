@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=1:mem=20GB
+#PBS -l walltime=01:10:00
+#PBS -l place=shared,select=1:ncpus=1:mem=20GB
 #PBS -l debug=true
 
 export model=evs
@@ -25,7 +25,6 @@ module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
 module load wgrib2/${wgrib2_ver}
 module load gsl/${gsl_ver}
-module load prod_util/${prod_util_ver}
 module load imagemagick/${imagemagick_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
@@ -37,21 +36,13 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=rtma
 export modsys=rtma
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
-export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
-source $config
-export SENDMAIL=YES
 
 ############################################################
 # Execute j-job
