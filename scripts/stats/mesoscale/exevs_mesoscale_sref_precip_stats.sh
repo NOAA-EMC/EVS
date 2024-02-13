@@ -24,6 +24,10 @@ export maskpath=$MASKS
 $USHevs/mesoscale/evs_check_sref_files.sh
 export err=$?; err_chk
 
-$USHevs/mesoscale/evs_sref_precip.sh 
-export err=$?; err_chk
+if [ -e $DATA/ccpa.missing ] || [ -e $DATA/sref_mbrs.missing ]; then
+ echo "WARNING: Either ccpa or sref members missing"
+else
+ $USHevs/mesoscale/evs_sref_precip.sh 
+ export err=$?; err_chk
+fi
 
