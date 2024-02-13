@@ -11,7 +11,7 @@ export machine=${machine:-"WCOSS2"}
 #*************************************
 #check input data are available:
 #*************************************
-$USHevs/cam/evs_check_href_files.sh
+source $USHevs/cam/evs_check_href_files.sh
 export err=$?; err_chk
 
 export WORK=$DATA

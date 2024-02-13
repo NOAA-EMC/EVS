@@ -119,7 +119,11 @@ fi
 periods='PAST31DAYS PAST90DAYS'
 if [ $gather = yes ] ; then
   echo "copying all images into one directory"
-  cpreq -v ${DATA}/wave/*png ${DATA}/sfcshp/.  ## lead_average plots
+  for FILE in ${DATA}/wave/*png ; do
+      if [ -s $FILE ]; then
+          cp -v $FILE ${DATA}/sfcshp/.  ## lead_average plots
+      fi
+  done
   nc=$(ls ${DATA}/sfcshp/*png | wc -l | awk '{print $1}')
   echo "copied $nc plots"
   for period in ${periods} ; do
@@ -150,7 +154,11 @@ if [ $gather = yes ] ; then
       cd ${DATA}/sfcshp
       tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*.png
     fi
-    [[ $SENDCOM="YES" ]] && cpreq -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/.
+    if [ $SENDCOM="YES" ] ; then
+        if [ -s evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ]; then
+            cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/.
+        fi
+    fi
     if [ $SENDDBN = YES ]; then
       $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
     fi

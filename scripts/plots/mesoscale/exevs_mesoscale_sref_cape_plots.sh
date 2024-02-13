@@ -263,8 +263,8 @@ done
 tar -cvf evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar *.png
 
 
-if [ $SENDCOM = YES ] ; then
- cpreq  evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
 fi
 
 if [ $SENDDBN = YES ] ; then

@@ -682,8 +682,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if len(thresh_labels)+len(model_list) > 12:
         e = (f"The plot legend may be cut off.  Consider reducing the number"
              + f" of models or thresholds and rerunning the plotting job.")
-        logger.warning(e)
-        logger.warning("Continuing ...")
+        logger.debug(e)
+        logger.debug("Continuing ...")
     if len(thresh_labels) > len(thresh_markers):
         e = (f"FATAL ERROR: Too many thresholds were requested.  Only {len(thresh_markers)}"
              + f" or fewer thresholds may be plotted.")

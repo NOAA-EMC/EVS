@@ -117,7 +117,7 @@ for vhour in ${validhours} ; do
                     echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     if [ $SENDCOM = YES ]; then
-                        echo "cpreq -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                        echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     fi
 
                     chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
@@ -157,7 +157,7 @@ if [ $gather = yes ] ; then
       export err=$?; err_chk
       if [ $SENDCOM = YES ]; then
           if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-              cpreq -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+              cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
           else
               echo "WARNING: DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
           fi
