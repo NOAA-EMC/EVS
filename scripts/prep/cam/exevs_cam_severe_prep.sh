@@ -54,6 +54,7 @@ fi
 # Send missing data alert if needed
 if [ $data_missing ]; then
 
+   echo "WARNING: File $DCOMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip is missing"
    if [ $SENDMAIL = YES ]; then
       export subject="SPC OTLK Data Missing for EVS ${COMPONENT}"
       echo "WARNING: The ${OTLK_DATE} SPC outlook file(s) is missing. METplus will not run." > mailmsg
@@ -101,6 +102,7 @@ if [ -s $DCOMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DAT
 
 else
 
+   echo "WARNING: File $DCOMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv is missing."
    if [ $SENDMAIL = YES ]; then
       export subject="SPC LSR Data Missing for EVS ${COMPONENT}"
       echo "WARNING: The ${REP_DATE} SPC report file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
