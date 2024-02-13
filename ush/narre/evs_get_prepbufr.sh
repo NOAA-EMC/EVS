@@ -30,8 +30,8 @@ if [ $modnam = prepbufr ] ; then
      echo "Pb2nc_obsRAP_Prepbufr  Metplus log file End:"
    done
   else 
+    echo "WARNING:  No Prepbufr data available $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00 for ${VDATE}"
     if [ $SENDMAIL = YES ] ; then
-     echo "Warning:  No Prepbufr data available for ${VDATE}"
      export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
      echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
      echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00  >> mailmsg

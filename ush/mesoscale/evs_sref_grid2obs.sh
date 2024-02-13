@@ -37,6 +37,7 @@ for  obsv in prepbufr ; do
   for fhr in fhr1 fhr2 ; do
        >run_sref_g2o_${domain}.${obsv}.${fhr}.sh
 
+       echo  "#!/bin/ksh" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export output_base=$WORK/grid2obs/${domain}.${obsv}.${fhr}" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh 
        echo  "export domain=CONUS"  >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh 
   
@@ -70,9 +71,9 @@ for  obsv in prepbufr ; do
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_mean.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_prob.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
 
-       if [ $SENDCOM = 'YES' ]; then
-       echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       fi
+       echo "if [ -s \$output_base/stat/*.stat ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "  cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "fi" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
 
        chmod +x run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo "${DATA}/run_sref_g2o_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_g2o_poe.sh
@@ -114,7 +115,7 @@ echo "Print stat generation  metplus log files end"
 #***********************************************
 # Gather small stat files to forma big stat file
 # **********************************************
-if [ $gather = yes ] ; then 
+if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then 
   $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE
   export err=$?; err_chk
 fi
