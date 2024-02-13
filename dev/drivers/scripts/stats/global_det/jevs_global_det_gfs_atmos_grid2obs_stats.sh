@@ -1,10 +1,10 @@
-#PBS -N jevs_global_det_atmos_fnmoc_grid2grid_stats_00
+#PBS -N jevs_global_det_gfs_atmos_grid2obs_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=1:ncpus=20:ompthreads=1:mem=25GB
+#PBS -l walltime=01:30:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=250GB
 #PBS -l debug=true
 #PBS -V
 
@@ -18,7 +18,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export SENDMAIL=YES
 export KEEPDATA=YES
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_fnmoc_grid2grid_stats}
+export job=${PBS_JOBNAME:-jevs_global_det_gfs_atmos_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -32,7 +32,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export machine=WCOSS2
 export USE_CFP=YES
-export nproc=20
+export nproc=128
 
 export MAILTO='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
@@ -41,8 +41,8 @@ export NET=evs
 export STEP=stats
 export COMPONENT=global_det
 export RUN=atmos
-export VERIF_CASE=grid2grid
-export MODELNAME=fnmoc
+export VERIF_CASE=grid2obs
+export MODELNAME=gfs
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
@@ -56,5 +56,5 @@ $HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
 
 ######################################################################
 # Purpose: This does the statistics work for the global deterministic
-#          atmospheric grid-to-grid component for FNMOC
+#          atmospheric grid-to-observations component for GFS
 ######################################################################

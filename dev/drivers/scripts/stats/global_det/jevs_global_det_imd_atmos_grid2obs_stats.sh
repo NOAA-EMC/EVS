@@ -1,9 +1,9 @@
-#PBS -N jevs_global_det_atmos_ukmet_grid2obs_stats_00
+#PBS -N jevs_global_det_imd_atmos_grid2obs_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=00:20:00
 #PBS -l place=vscatter,select=1:ncpus=14:ompthreads=1:mem=25GB
 #PBS -l debug=true
 #PBS -V
@@ -18,7 +18,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export SENDMAIL=YES
 export KEEPDATA=YES
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_ukmet_grid2obs_stats}
+export job=${PBS_JOBNAME:-jevs_global_det_imd_atmos_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -42,7 +42,7 @@ export STEP=stats
 export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export MODELNAME=ukmet
+export MODELNAME=imd
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
@@ -56,5 +56,5 @@ $HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
 
 ######################################################################
 # Purpose: This does the statistics work for the global deterministic
-#          atmospheric grid-to-observations component for UKMET
+#          atmospheric grid-to-observations component for IMD
 ######################################################################
