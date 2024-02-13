@@ -30,7 +30,10 @@ if [ $STEP == "prep" ]; then
                         if [ -f $infile ]; then
                             cp $infile $COMOUTobs/.
                         else
-                            echo "Input $OBSNAME file does not exist: $infile ... Continuing to the next valid datetime."
+                            echo "WARNING: Input $OBSNAME file does not exist: $infile ..."
+                            echo "The file may not be available yet, or may have aged out."  
+                            echo "This is usually OK: this job runs several times a day to catch such files." 
+                            echo "Continuing to the next valid datetime."
                         fi
                     fi
                     subtract_hours=$(( $subtract_hours + $subtract_hours_inc ))
