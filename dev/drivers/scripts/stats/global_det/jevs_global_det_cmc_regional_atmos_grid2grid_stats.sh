@@ -1,4 +1,4 @@
-#PBS -N jevs_global_det_cmc_atmos_regional_grid2grid_stats_00
+#PBS -N jevs_global_det_cmc_regional_atmos_grid2grid_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -18,7 +18,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export SENDMAIL=YES
 export KEEPDATA=YES
-export job=${PBS_JOBNAME:-jevs_global_det_cmc_atmos_regional_grid2grid_stats}
+export job=${PBS_JOBNAME:-jevs_global_det_cmc_regional_atmos_grid2grid_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
