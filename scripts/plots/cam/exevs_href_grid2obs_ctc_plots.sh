@@ -279,11 +279,11 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
     new_domain=buk_${domain}
  fi
 
- for var in vis hgt tcdc cape mlcape; do
+ for var in vis hgtcldceil tcdc cape mlcape; do
   if [ $var = vis ] ; then
     var_new=$var
     level=l0
-  elif [ $var = hgt ] ; then
+  elif [ $var = hgtcldceil ] ; then
     var_new=ceiling
     level=l0
   elif [ $var = tcdc ] ; then
@@ -309,12 +309,12 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
 
  for score_type in lead_average threshold_average; do
 
-  for var in vis hgt tcdc ; do
+  for var in vis hgtcldceil tcdc ; do
    if [ $var = vis ] ; then
        var_new=$var
        level=l0
        stats="csi_fbias csi fbias"
-   elif [ $var = hgt ] ; then
+   elif [ $var = hgtcldceil ] ; then
        var_new=ceiling
        level=l0
        stats="csi_fbias csi fbias"
