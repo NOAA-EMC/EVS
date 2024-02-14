@@ -150,6 +150,7 @@ i=1
 
    else
 
+      echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. $min_file_req files are required."
       if [ $SENDMAIL = YES ]; then
          export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
          echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
