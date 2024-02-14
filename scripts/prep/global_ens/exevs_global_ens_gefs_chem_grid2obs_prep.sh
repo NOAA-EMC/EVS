@@ -93,7 +93,7 @@ for OBTTYPE in ${obstype}; do
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" > mailmsg
+                    echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" >> mailmsg
                     echo "Missing file is ${checkfile}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
