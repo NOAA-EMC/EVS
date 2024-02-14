@@ -86,8 +86,7 @@ for stats in ets_fbias ratio_pod_csi fss ; do
     interp_pnts='1,9,25,49,91,121'
     score_types='threshold_average' 
  else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is not a valid stat"
  fi   
 
  for score_type in $score_types ; do

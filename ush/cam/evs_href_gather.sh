@@ -66,6 +66,3 @@ chmod 775 run_gather_all_poe.sh
 #*****************************
 ${DATA}/run_gather_all_poe.sh
 export err=$?; err_chk
-
-exit
-
