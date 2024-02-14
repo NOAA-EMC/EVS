@@ -25,9 +25,9 @@ export lvl='both'
 export verify_all=${verify_all:-'yes'}
 
 export prepare='yes'
-export verif_system='es'
-export verif_profile='es'
-export verif_product='es'
+export verif_system='yes'
+export verif_profile='yes'
+export verif_product='yes'
 export verif_spcoutlook='yes'
 export gather=${gather:-'yes'}
 export verify=$VERIF_CASE
