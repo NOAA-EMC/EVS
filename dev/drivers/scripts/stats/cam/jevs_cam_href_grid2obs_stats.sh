@@ -4,14 +4,14 @@
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=04:30:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=36:mem=500GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=72:mem=500GB
 #PBS -l debug=true
 
 set -x 
 
 export OMP_NUM_THREADS=1
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS_resources2/EVS
 source $HOMEevs/versions/run.ver
 
 export NET=evs
@@ -34,7 +34,7 @@ export run_mpi=yes
 export gather=yes
 
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
