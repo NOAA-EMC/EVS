@@ -80,8 +80,7 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
      fi
      score_types='lead_average'
    else
-     echo $stats is wrong stat
-     exit
+     err_exit "$stats is not a valid stat"
    fi   
 
  for score_type in $score_types ; do

@@ -182,7 +182,7 @@ for prod in mean prob ; do
 
    else
 
-    exit
+    err_exit "$dom is not a valid domain"
 
    fi   
 
@@ -191,7 +191,3 @@ for prod in mean prob ; do
 done #end of prod loop
 
 chmod 775 run_all_href_product_poe.sh
-
-
-exit
-

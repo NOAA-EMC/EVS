@@ -90,8 +90,7 @@ for stats in $stats_list ; do
        #VARs='VISsfc HGTcldceil'
        score_types='performance_diagram'   
     else
-     echo $stats is wrong stat
-     exit
+     err_exit "$stats is not a valid stat for vhr $fcst_valid_hour"
     fi   
  elif [ "$fcst_valid_hour" -eq "06" ] || [ "$fcst_valid_hour" -eq "18" ] ; then
     if [ $stats = csi_fbias ] ; then
@@ -109,8 +108,7 @@ for stats in $stats_list ; do
        #VARs='VISsfc HGTcldceil TCDC'
        score_types='performance_diagram'   
     else
-     echo $stats is wrong stat
-     exit
+     err_exit "$stats is not a valid stat for vhr $fcst_valid_hour"
     fi   
  else
     if [ $stats = csi_fbias ] ; then
@@ -128,8 +126,7 @@ for stats in $stats_list ; do
        #VARs='VISsfc HGTcldceil TCDC'
        score_types='performance_diagram'   
     else
-     echo $stats is wrong stat
-     exit
+     err_exit "$stats is not a valid stat for vhr $fcst_valid_hour"
     fi   
  fi
  for score_type in $score_types ; do

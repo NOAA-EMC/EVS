@@ -172,6 +172,3 @@ for dom in CONUS Alaska ; do
     fi 
 
 done #end of dom
-
-exit
-
