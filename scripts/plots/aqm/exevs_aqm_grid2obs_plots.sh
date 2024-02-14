@@ -12,6 +12,7 @@
 ##   11/14/2023   Ho-Chun Huang  replace cp with cpreq
 ##   11/15/2023   Ho-Chun Huang  combine similar code for multiple variable
 ##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
+##   02/08/2024   Ho-Chun Huang  modify for AQMv7 verification
 ##
 ## Plotting Information
 ##    OZMAX8 forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
@@ -48,13 +49,13 @@ export model1
 
 # Bring in 31 days of stats files
 
-STARTDATE=${VDATE}00
-ENDDATE=${PDYm31}00
+STARTDATE=${PLOT_START}"00"
+ENDDATE=${PLOT_END}"00"
 
 for aqmtyp in ozone pm25 ozmax8 pmave; do
     for biasc in raw bc; do
         DATE=${STARTDATE}
-        while [ ${DATE} -ge ${ENDDATE} ]; do
+        while [ ${DATE} -le ${ENDDATE} ]; do
             echo ${DATE} > curdate
             DAY=`cut -c 1-8 curdate`
             cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
@@ -65,7 +66,7 @@ for aqmtyp in ozone pm25 ozmax8 pmave; do
             else
                 echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${EVSINaqm}.${DAY}/${cpfile}"
             fi
-            DATE=`${NDATE} -24 ${DATE}`
+            DATE=`${NDATE} +24 ${DATE}`
         done
     done
 done
