@@ -46,7 +46,10 @@ for MODEL in $MODEL_LIST ; do
       cp  $stat_file ${MODEL}_${day}.stat
       #Binbin note: fcst level and obs level must be same string!
       #Note2 change MLCAPE's fcst name from CAPE to MLCAPE and level to ML 
+      #Note3 change HGT to HGTcldceili for ceiling height to avoid confusing with geopotential height
       grep L0 ${MODEL}_${day}.stat > L0
+      sed -e "s!HGT!HGTcldceil!g" -e "s!gpm!m!g" L0 > hgt
+      mv hgt L0
       grep MLCAPE ${MODEL}_${day}.stat | sed -e "s! CAPE ! MLCAPE!g" -e "s!L100000-0!ML!g" -e "s!P90-0!ML!g"  > mlcape
       cat mlcape >> L0 
       if [  $VERIF_CASE = grid2obs_ctc  ] || [ $VERIF_CASE = grid2obs_cape ] ; then 
