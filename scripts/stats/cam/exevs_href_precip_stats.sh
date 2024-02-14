@@ -21,6 +21,9 @@ export run_mpi=${run_mpi:-'yes'}
 export prepare=${prepare:-'yes'}
 export verif_precip=${verif_precip:-'yes'}
 export verif_snowfall=${verif_snowfall:-'yes'}
+if [ "$verif_precip" = "no" ] && [ "$verif_snowfall" = "no" ] ; then
+    export gather='no'
+fi
 export gather=${gather:-'yes'}
 export verify='precip'
 
