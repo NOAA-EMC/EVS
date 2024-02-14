@@ -9,6 +9,7 @@ set -x
 # Build POE script to collect sub-jobs 
 #******************************************
 export members=10
+export write_job_cards=yes
 >run_all_href_snowfall_poe.sh
 
 mkdir -p $COMOUTsmall/HREF_SNOW
@@ -23,10 +24,10 @@ if [ ! -s $COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${VDATE}12_g
    cat mailmsg | mail -s "$subject" $MAILTO
   fi
   echo "WARNING:  No NOHRSC data $COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${VDATE}12_grid184.grb2 available for ${VDATE}! Terminate snowfall verification"
-  exit
+  export write_job_cards=no
 fi
 
-
+if [ "$write_job_cards" = "yes" ] ; then
 for obsv in 6h 24h  ; do
 
     #*****************************
@@ -130,7 +131,5 @@ for obsv in 6h 24h  ; do
         done #end of vhr
     done #end of fhr
 done  #end of obsv
-
+fi
 chmod 775 run_all_href_snowfall_poe.sh
-
-

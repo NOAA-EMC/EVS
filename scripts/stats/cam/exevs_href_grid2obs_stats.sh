@@ -65,7 +65,9 @@ if [ $prepare = yes ] ; then
        echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 or $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
        cat mailmsg | mail -s "$subject" $MAILTO
-       exit
+       export verif_system=no
+       export verif_profile=no
+       export verif_product=no
   fi
 
 fi 
