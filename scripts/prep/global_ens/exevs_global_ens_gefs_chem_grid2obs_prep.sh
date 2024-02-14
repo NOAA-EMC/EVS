@@ -25,7 +25,7 @@ export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${R
 export config_common=${PARMevs}/metplus_config/machine.conf
 
 flag_send_message=NO
-if [ -e mailmsg ]; /bin/rm -f mailmsg; fi
+if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
 
 for OBTTYPE in ${obstype}; do
     export OBTTYPE

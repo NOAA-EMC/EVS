@@ -27,7 +27,7 @@ export METPLUS_PATH
 export obstype=`echo ${OBTTYPE} | tr a-z A-Z`
 export RUNnow=${OBTTYPE}
 
-if [ -e mailmsg ]; /bin/rm -f mailmsg; fi
+if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
 
 case ${OBTTYPE} in
     abi)   flag_send_message=NO
