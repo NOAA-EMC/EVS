@@ -65,7 +65,6 @@ case ${OBTTYPE} in
 			       ((num_fcst_in_metplus++))
                            else
                                if [ ${SENDMAIL} = "YES" ]; then
-                                   export subject="GEFS 00Z chem/pgrb2ap25 file Missing for EVS ${COMPONENT}"
                                    echo "WARNING: No GEFS 00Z chem/pgrb2ap25 file was available for valid date ${VDATE}" >> mailmsg
                                    echo "Missing file is ${checkfile}" >> mailmsg
                                    echo "==============" >> mailmsg
@@ -80,7 +79,6 @@ case ${OBTTYPE} in
                    done
                else
                    if [ ${SENDMAIL} = "YES" ]; then
-                       export subject="GOES L3 AOD file Missing for EVS ${COMPONENT}"
                        echo "WARNING: No "GOES L3 AOD file was available for valid date ${vlddate}" >> mailmsg
                        echo "Missing file is ${checkfile}" >> mailmsg
                        echo "==============" >> mailmsg
@@ -142,7 +140,6 @@ case ${OBTTYPE} in
                        ((num_obs++))
                    else
                        if [ ${SENDMAIL} = "YES" ]; then
-                           export subject="GEOS5 validation NC file Missing for EVS ${COMPONENT}"
                            echo "WARNING: No GEOS5 validation NC file was available for valid date ${VDATE}" >> mailmsg
                            echo "Missing file is ${checkfile}" >> mailmsg
                            echo "==============" >> mailmsg
@@ -166,7 +163,6 @@ case ${OBTTYPE} in
                    ((num_obs++))
                else
                    if [ ${SENDMAIL} = "YES" ]; then
-                       export subject="ICAP validation NC file Missing for EVS ${COMPONENT}"
                        echo "WARNING: No ICAP validation NC file was available for valid date ${VDATE}" >> mailmsg
                        echo "Missing file is ${checkfile}" >> mailmsg
                        echo "==============" >> mailmsg
@@ -191,7 +187,6 @@ case ${OBTTYPE} in
                    ((num_obs++))
                else
                    if [ ${SENDMAIL} = "YES" ]; then
-                       export subject="VIIRS L3 AOD file Missing for EVS ${COMPONENT}"
                        echo "WARNING: No VIIRS L3 AOD file was available for valid date ${VDATE}" >> mailmsg
                        echo "Missing file is ${checkfile}" >> mailmsg
                        echo "==============" >> mailmsg
@@ -221,7 +216,6 @@ case ${OBTTYPE} in
                    let "num_fcst_in_metplus=num_fcst_in_metplus+1"
                else
                    if [ ${SENDMAIL} = "YES" ]; then
-                       export subject="GEFS 00Z chem/pgrb2ap25 file Missing for EVS ${COMPONENT}"
                        echo "WARNING: No GEFS 00Z chem/pgrb2ap25 file was available for valid date ${VDATE}" >> mailmsg
                        echo "Missing file is ${checkfile}" >> mailmsg
                        echo "==============" >> mailmsg
@@ -268,6 +262,13 @@ case ${OBTTYPE} in
            ;;
 esac
 if [ "${flag_send_message}" = "YES" ]; then
+                                   export subject="GEFS 00Z chem/pgrb2ap25 file Missing for EVS ${COMPONENT}"
+                       export subject="GOES L3 AOD file Missing for EVS ${COMPONENT}"
+                           export subject="GEOS5 validation NC file Missing for EVS ${COMPONENT}"
+                       export subject="ICAP validation NC file Missing for EVS ${COMPONENT}"
+                       export subject="VIIRS L3 AOD file Missing for EVS ${COMPONENT}"
+                       export subject="GEFS 00Z chem/pgrb2ap25 file Missing for EVS ${COMPONENT}"
+              export subject="t${acyc}z ${outtyp}${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
     echo "Job ID: $jobid" >> mailmsg
     cat mailmsg | mail -s "$subject" $MAILTO 
 fi
@@ -307,7 +308,6 @@ fi
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
             if [ $SENDMAIL = "YES" ]; then
-              export subject="t${acyc}z ${outtyp}${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
               echo "WARNING: No AQM ${outtyp}${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
               echo "Missing file is ${fcst_file}" >> mailmsg
               echo "Job ID: $jobid" >> mailmsg

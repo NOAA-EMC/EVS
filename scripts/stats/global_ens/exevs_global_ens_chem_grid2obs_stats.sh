@@ -8,7 +8,7 @@
 ###
 ###   Change Logs:
 ###
-###   01/16/2024   Ho-Chun Huang  consolidate exevs_global_ens_chem_grid2grid scripts
+###   01/16/2024   Ho-Chun Huang  consolidate exevs_global_ens_chem_grid2obs scripts
 ###
 ########################################################################
 set -x
