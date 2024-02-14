@@ -294,7 +294,3 @@ for dom in $domains ; do
 
 
 chmod 775 run_all_href_profile_poe.sh
-
-exit
-
-
