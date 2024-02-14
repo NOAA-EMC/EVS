@@ -10,12 +10,6 @@ set -x
 export regrid='NONE'
 export vday=$VDATE
 
-#********************************************************
-# Check input forecsat and validation data availability
-# ******************************************************
-$USHevs/narre/check_files_existing.sh
-export err=$?; err_chk
-
 echo COMOUTsmall=$COMOUTsmall
 
 #**********************************************
@@ -47,6 +41,7 @@ for prod in mean  ; do
      # *********************************************************** 
      >run_narre_${model}.${dom}.${range}.sh
 
+       echo  "#!/bin/ksh">>run_narre_${model}.${dom}.${range}.sh
        echo  "export range=$range" >> run_narre_${model}.${dom}.${range}.sh
 
        echo  "export output_base=$WORK/grid2obs/${model}.${dom}.${range}" >> run_narre_${model}.${dom}.${range}.sh 
@@ -113,7 +108,9 @@ for prod in mean  ; do
        echo  "cat \$output_base/logs/* " >> run_narre_${model}.${dom}.${range}.sh
        echo  "echo End: stat metplus log files for ${model}.${dom}.${range}" >> run_narre_${model}.${dom}.${range}.sh
 
-       echo "[[ $SENDCOM="YES" ]] && cp \$output_base/stat/*.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${range}.sh
+       echo "if [ -s \$output_base/stat/*.stat ] ; then " >> run_narre_${model}.${dom}.${range}.sh
+       echo " cp \$output_base/stat/*.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${range}.sh
+       echo "fi" >> run_narre_${model}.${dom}.${range}.sh 
 
        chmod +x run_narre_${model}.${dom}.${range}.sh
        echo "${DATA}/run_narre_${model}.${dom}.${range}.sh" >> run_all_narre_poe.sh
@@ -139,7 +136,7 @@ fi
 #*****************************************************
 # Combine small stat files to a big stat file (final)
 #****************************************************
-if [ $gather = yes ] ; then
+if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then
   $USHevs/narre/evs_narre_gather.sh
   export err=$?; err_chk
 fi
