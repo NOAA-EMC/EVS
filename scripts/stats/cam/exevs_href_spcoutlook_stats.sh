@@ -56,7 +56,7 @@ export domain="all"
 # Prepare prepbufr data files
 # ********************************
 if [ $prepare = yes ] ; then
-  $USHevs/cam/evs_href_preppare.sh prepbufr CONUS
+  $USHevs/cam/evs_href_prepare.sh prepbufr CONUS
   export err=$?; err_chk
 fi 
 

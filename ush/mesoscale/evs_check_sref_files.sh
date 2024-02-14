@@ -7,7 +7,10 @@
 #
 set -x
 
+
 typeset -Z2 vhr
+
+vday=$VDATE
 
 missing=0 
 for vhr in 00 06 12 18 ; do
@@ -19,7 +22,16 @@ done
 
 echo "Missing prepbufr files = " $missing
 if [ $missing -eq 4  ] ; then
-  err_exit "all of the preppbufr files are missing, exit execution!!!"
+  echo "WARNING: all of the preppbufr files ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr are missing"
+  >$DATA/prepbufr.missing
+  if [ $SENDMAIL = YES ] ; then
+     export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
+     echo "WARNING: all of the prepbufr files are missing" > mailmsg
+     echo "Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr"  >> mailmsg
+     echo "Job ID: $jobid" >> mailmsg
+     cat mailmsg | mail -s "$subject" $MAILTO
+  fi
+
 else
   echo "Continue check CCAP files...." 
 fi
@@ -55,7 +67,16 @@ done
 
 echo "Missing ccpa  files = " $missing
 if [ $missing -eq 8  ] ; then
-  err_exit "all of the ccpa files are missing, exit execution!!!"
+  echo "WARNING: all of the ccpa files $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2 are missing"
+  >$DATA/ccpa.missing
+  if [ $SENDMAIL = YES ] ; then
+     export subject="CCPA Data Missing for EVS ${COMPONENT}"
+     echo "WARNING: all of the ccpa files are missing" > mailmsg
+     echo "Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2"  >> mailmsg
+     echo "Job ID: $jobid" >> mailmsg
+     cat mailmsg | mail -s "$subject" $MAILTO
+  fi
+
 else
   echo "Continue check SREF files...."
 fi
@@ -92,7 +113,8 @@ for vhr in  00 06 12 18 ; do #SREF grid2obs validation is by gfs prepbufr
     done
 
     if [ $sref_mbrs -lt 26 ] ; then
-      err_exit "SREF members = " $sref_mbrs " which < 26, exit METplus execution !!!"
+      echo "SREF members = " $sref_mbrs " which < 26"
+      >$DATA/sref_mbrs.missing
     fi
 
     fhr=$((fhr+6))
@@ -100,7 +122,5 @@ for vhr in  00 06 12 18 ; do #SREF grid2obs validation is by gfs prepbufr
   done
 
 done
-
-echo "All SREF member files are available. COntinue running  METplus ..." 
 
 

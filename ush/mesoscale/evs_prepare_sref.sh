@@ -19,7 +19,7 @@ export vday=$VDATE
 #   First get sref member files
 #   Then use MET Pcpcombine to get sref's APCP 6h mean netCD files
 #**************************************************************
-if [ $modnam = sref_apcp06 ] ; then
+if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 
   export output_base=${WORK}/sref.${vday}
   export fhr
@@ -58,7 +58,7 @@ fi
 #  First get operational sref's 3hr APCP mean grib2 files 
 #  Then use Pcpcombine to get 24hr APCP netCDF files
 #********************************************************************************
-if [ $modnam = sref_apcp24_mean ] ; then
+if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
   export output_base=${WORK}/sref.${vday}
   mkdir -p $output_base
   cd $output_base
@@ -98,7 +98,7 @@ fi
 # Get 3hr CCPA observation data over grid212 and grid240 by using MET
 #  RegridDataPlane tool
 #*******************************************************************
-if [ $modnam = ccpa ] ; then
+if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
 
   export output_base=${WORK}/ccpa.${vday}
 
@@ -179,13 +179,13 @@ if [ $modnam = ccpa ] ; then
     export err=$?; err_chk
 
  else
+  echo "WARNING: Missing file $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2"
   if [ $SENDMAIL = YES ] ; then	 
     export subject="CCPA Data Missing for EVS ${COMPONENT}"
     echo "WARNING:  No CCPA data available for ${VDATE}" > mailmsg
-    echo Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2  >> mailmsg
+    echo "Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2"  >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
     cat mailmsg | mail -s "$subject" $MAILTO  
-    err_exit "Missing file $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2"
   fi
  fi
 fi
@@ -195,7 +195,7 @@ fi
 # Get prepbufr data and converted to NetCDF format files by using
 #  MET pb2nc tool
 #  **************************************************************
-if [ $modnam = prepbufr ] ; then
+if [ $modnam = prepbufr ] && [ ! -e $DATA/prepbufr.missing ] ; then
 
  mkdir -p $WORK/prepbufr.$vday
 
@@ -216,13 +216,13 @@ export output_base=${WORK}/pb2nc
    done
 
  else
+  echo "WARNING: Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr"
   if [ $SENDMAIL = YES ] ; then
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
    echo "WARNING:  No Prepbufr data available for ${VDATE}" > mailmsg
-   echo Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
+   echo "Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr"  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $MAILTO 
-   err_exit "Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr"
   fi
  fi
 
