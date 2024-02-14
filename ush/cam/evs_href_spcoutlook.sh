@@ -22,7 +22,7 @@ mask_day1=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day1
 mask_day2=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day2
 mask_day3=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day3
 
-
+write_job_cards=yes
 if ([ ! -d  $mask_day1 ] || (! ls $mask_day1/spc_otlk.day1_*G227.nc 1> /dev/null 2>&1)) \
   && ([ ! -d  $mask_day2 ] || (! ls $mask_day2/spc_otlk.day2_*G227.nc 1> /dev/null 2>&1)) \
   && ([ ! -d  $mask_day3 ] || (! ls $mask_day3/spc_otlk.day3_*G227.nc 1> /dev/null 2>&1)) ; then
@@ -38,7 +38,7 @@ if ([ ! -d  $mask_day1 ] || (! ls $mask_day1/spc_otlk.day1_*G227.nc 1> /dev/null
     echo "Missing mask files are $mask_day1/spc_otlk.day1_*G227.nc , $mask_day2/spc_otlk.day2_*G227.nc and $mask_day3/spc_otlk.day3_*G227.nc"
     echo "This will occur if no outlooks were issued on ${VDATE}."
   fi
-  exit
+  write_job_cards=no
 fi
 
 
@@ -90,7 +90,7 @@ cd $WORK
 >run_all_href_spcoutlook_poe.sh
 
 obsv='prepbufr'
-
+if [ "$write_job_cards" = "yes" ] ; then
 for prod in mean ; do
 
  PROD=`echo $prod | tr '[a-z]' '[A-Z]'`
@@ -148,9 +148,7 @@ for prod in mean ; do
   done #end of dom loop
 
 done #end of prod loop
+fi
 
 chmod 775 run_all_href_spcoutlook_poe.sh
-
 export err=$?; err_chk
-exit
-
