@@ -37,6 +37,7 @@ for  obsv in prepbufr ; do
   for fhr in 3 9 15 21 27 33 39 45 51 57 63 69 75 81 87 ; do
        >run_sref_cnv_${fhr}.sh
 
+       echo  "#!/bin/ksh" >> run_sref_cnv_${fhr}.sh
        echo  "export output_base=$WORK/grid2obs/run_sref_cnv_${fhr}" >> run_sref_cnv_${fhr}.sh 
        echo  "export domain=CONUS"  >> run_sref_cnv_${fhr}.sh 
   
@@ -79,9 +80,9 @@ for  obsv in prepbufr ; do
        #echo "rm \$output_base/stat/*SREFarw*.stat ">> run_sref_cnv_${fhr}.sh
        #echo "rm \$output_base/stat/*SREFnmb*.stat ">> run_sref_cnv_${fhr}.sh
 
-       if [ $SENDCOM = 'YES' ]; then
-       echo "cp \$output_base/stat/*CNV*.stat $COMOUTsmall" >> run_sref_cnv_${fhr}.sh
-       fi
+       echo "if [ -s \$output_base/stat/*CNV*.stat ] ; then" >> run_sref_cnv_${fhr}.sh
+       echo " cp \$output_base/stat/*CNV*.stat $COMOUTsmall" >> run_sref_cnv_${fhr}.sh
+       echo "fi" >> run_sref_cnv_${fhr}.sh
 
        chmod +x run_sref_cnv_${fhr}.sh
        echo "${DATA}/run_sref_cnv_${fhr}.sh" >> run_all_sref_cnv_poe.sh
