@@ -69,7 +69,7 @@ export SITE=$(cat /etc/cluster_name)
 $HOMEevs/jobs/JEVS_GLWU_WAVE_GRID2OBS_PREP
 
 #######################################################################
-# Purpose: This does the prep work for the NFCENS wave model
+# Purpose: This does the prep work for the GLWU wave model
 # Author: Samira Ardani (samira.ardani@NOAA.gov)
 #######################################################################
 
