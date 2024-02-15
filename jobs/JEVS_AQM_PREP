@@ -30,8 +30,8 @@ export PS4='$SECONDS + '
 export pid=$$
 
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-mkdir -p $DATA
-cd $DATA
+mkdir -p ${DATA}
+cd ${DATA}
 
 export vhr=${vhr:-00}
 export cycle=${cycle:-t${vhr}z}
@@ -59,7 +59,7 @@ export MASKS=${MASKS:-$FIXevs/masks}
 
 # Define COMIN/COMOUT variables:
 
-echo $COMPATH
+echo ${COMPATH}
 
 #
 #  The AirNOW obs in DCOM will continue to be updated after first
@@ -86,10 +86,10 @@ export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
+postmsg "${msg}"
 
-if [ "$KEEPDATA" != "YES" ] ; then
-    cd $DATAROOT
-    rm -rf $DATA
+if [ "${KEEPDATA}" != "YES" ] ; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
 fi
 

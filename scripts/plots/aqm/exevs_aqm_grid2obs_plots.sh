@@ -12,7 +12,7 @@
 ##   11/14/2023   Ho-Chun Huang  replace cp with cpreq
 ##   11/15/2023   Ho-Chun Huang  combine similar code for multiple variable
 ##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
-##   02/08/2024   Ho-Chun Huang  modify for AQMv7 verification
+##   02/15/2024   Ho-Chun Huang  Use PLOT_* defined in JEVS_AQM_PLOTS for the plotting period.
 ##
 ## Plotting Information
 ##    OZMAX8 forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
@@ -26,8 +26,8 @@
 
 set -x
 
-export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
-source $config
+export config=${PARMevs}/evs_config/${COMPONENT}/config.evs.aqm.prod
+source ${config}
 
 # Set up initial directories and initialize variables
 
@@ -47,7 +47,7 @@ mkdir -p ${PRUNEDIR} ${OUTDIR}
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
-# Bring in 31 days of stats files
+# Bring in ${NUM_DAY_BACK} days of stats files
 
 STARTDATE=${PLOT_START}"00"
 ENDDATE=${PLOT_END}"00"
@@ -132,7 +132,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                     fbar_obar)
                           config_file=py_plotting_${config_name}_fbar.config;;
                 esac
-                figfile=evs.${COMPONENT}.${figtype}.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
+                figfile=evs.${COMPONENT}.${figtype}.${smvar}_${smlev}.last${NUM_DAY_BACK}days.fhrmean_init${inithr}z.buk_${smregion}.png
                 cpfile=${COMOUTplots}/${var}/${figfile}
                 if [ ! -e ${cpfile} ]; then
                     ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/${config_file}
@@ -191,7 +191,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
 
             for flead in "${fcst_lead[@]}"; do
                 export flead
-                figfile=evs.${COMPONENT}.${smlinetype}.${smvar}.${smlev}.last31days.${figtype}_init${inithr}z_f${flead}.buk_${smregion}.png
+                figfile=evs.${COMPONENT}.${smlinetype}.${smvar}.${smlev}.last${NUM_DAY_BACK}days.${figtype}_init${inithr}z_f${flead}.buk_${smregion}.png
                 cpfile=${COMOUTplots}/${var}/${figfile}
                 if [ ! -e ${cpfile} ]; then
                     ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}.config
@@ -207,7 +207,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                     cp -v ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
-                    echo "WARNING: This is possible where there is no exceedance of any threshold in the past 31 days"
+                    echo "WARNING: This is possible where there is no exceedance of any threshold in the past ${NUM_DAY_BACK} days"
                 fi
 
             done
@@ -215,25 +215,25 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
     done
 done
 
-log_dir="$LOGDIR"
-if [ -d $log_dir ]; then
-   log_file_count=$(find $log_dir -type f | wc -l)
-   if [[ $log_file_count -ne 0 ]]; then
-       log_files=("$log_dir"/*)
-       for log_file in "${log_files[@]}"; do
-          if [ -f "$log_file" ]; then
-           echo "Start: $log_file"
-           cat "$log_file"
-           echo "End: $log_file"
+log_dir="${LOGDIR}"
+if [ -d ${log_dir} ]; then
+   log_file_count=$(find ${log_dir} -type f | wc -l)
+   if [[ ${log_file_count} -ne 0 ]]; then
+      log_files=("${log_dir}"/*)
+      for log_file in "${log_files[@]}"; do
+         if [ -f "${log_file}" ]; then
+            echo "Start: ${log_file}"
+            cat "${log_file}"
+            echo "End: ${log_file}"
          fi
-       done
+      done
    fi   
 fi 
 
 # Tar up plot directory and copy to the plot output directory
 
 cd ${PLOTDIR}
-tarfile=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar
+tarfile=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NUM_DAY_BACK}days.v${VDATE}.tar
 tar -cvf ${tarfile} *png
 
 if [ "${SENDCOM}" == "YES" ]; then
@@ -247,7 +247,7 @@ fi
 
 if [ "${SENDDBN}" == "YES" ] ; then     
     if [ -s ${COMOUTplots}/${tarfile} ]; then
-        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${tarfile}
+        ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUTplots}/${tarfile}
     else
         echo "WARNING: Can not find ${COMOUTplots}/${tarfile}"
     fi
@@ -310,7 +310,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
             smvar=`echo ${var} | tr A-Z a-z`
             figtype=csi
 
-            figfile=headline_${COMPONENT}.${figtype}_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+            figfile=headline_${COMPONENT}.${figtype}_gt${select_headline_csi}.${smvar}.${smlev}.last${NUM_DAY_BACK}days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
             cpfile=${COMOUTplots}/headline/${figfile}
             if [ ! -e ${cpfile} ]; then
                 ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}_headline.config
@@ -326,24 +326,24 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
                 cp -v ${cpfile} ${COMOUTplots}/headline
             elif [ ! -e ${cpfile} ]; then
                 echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} ${region}"
-                echo "WARNING: This is possible where there is no exceedance of the critical threshold in the past 31 days"
+                echo "WARNING: This is possible where there is no exceedance of the critical threshold in the past ${NUM_DAY_BACK} days"
             fi
         done
     done
 done
 
 log_dir="${LOGDIR_headline}"
-if [ -d $log_dir ]; then
-   log_file_count=$(find $log_dir -type f | wc -l)
-   if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-          if [ -f "$log_file" ]; then
-            echo "Start: $log_file"
-            cat "$log_file"
-            echo "End: $log_file"
+if [ -d ${log_dir} ]; then
+   log_file_count=$(find ${log_dir} -type f | wc -l)
+   if [[ ${log_file_count} -ne 0 ]]; then
+       log_files=("${log_dir}"/*)
+       for log_file in "${log_files[@]}"; do
+          if [ -f "${log_file}" ]; then
+             echo "Start: ${log_file}"
+             cat "${log_file}"
+             echo "End: ${log_file}"
           fi
-        done
+       done
    fi
 fi
 
@@ -352,7 +352,7 @@ fi
 # Tar up headline plot tarball and copy to the headline plot directory
 
 cd ${PLOTDIR_headline}
-tarfile=evs.plots.${COMPONENT}.${RUN}.headline.last31days.v${VDATE}.tar
+tarfile=evs.plots.${COMPONENT}.${RUN}.headline.last${NUM_DAY_BACK}days.v${VDATE}.tar
 tar -cvf ${tarfile} *png
 
 if [ "${SENDCOM}" == "YES" ]; then
@@ -366,7 +366,7 @@ fi
 
 if [ "${SENDDBN}" == "YES" ]; then     
     if [ -s ${COMOUTheadline}/${tarfile} ]; then
-        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTheadline}/${tarfile}
+        ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUTheadline}/${tarfile}
     else
         echo "WARNING: Can not find ${COMOUTheadline}/${tarfile}"
     fi

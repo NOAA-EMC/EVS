@@ -28,8 +28,8 @@ export PS4='$SECONDS + '
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-mkdir -p $DATA
-cd $DATA
+mkdir -p ${DATA}
+cd ${DATA}
 
 export cycle=${cycle:-t${vhr}z}
 setpdy.sh
@@ -56,7 +56,7 @@ export MASK_DIR=${MASK_DIR:-$FIXevs/masks}
 
 # Define COMIN/COMOUT variables:
 
-echo $COMPATH
+echo ${COMPATH}
 
 export VDATE=${VDATE:-${PDYm3}}
 
@@ -80,10 +80,10 @@ export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
+postmsg "${msg}"
 
-if [ "$KEEPDATA" != "YES" ] ; then
-    cd $DATAROOT
-    rm -rf $DATA
+if [ "${KEEPDATA}" != "YES" ] ; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
 fi
 

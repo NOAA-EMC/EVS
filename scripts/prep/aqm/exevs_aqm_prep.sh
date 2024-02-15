@@ -24,8 +24,8 @@
 #
 set -x
 
-export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
-source $config
+export config=${PARMevs}/evs_config/${COMPONENT}/config.evs.aqm.prod
+source ${config}
 
 #######################################################################
 # Define INPUT OBS DATA TYPE for ASCII2NC 
@@ -48,8 +48,8 @@ export PREP_SAVE_DIR=${DATA}/prepsave
 mkdir -p ${PREP_SAVE_DIR}
 
 
-export model1=`echo $MODELNAME | tr a-z A-Z`
-echo $model1
+export model1=`echo ${MODELNAME} | tr a-z A-Z`
+echo ${model1}
 
 ## Pre-Processed EPA AIRNOW ASCII input file to METPlus NetCDF input for PointStat
 ##
@@ -78,8 +78,8 @@ while [ ${ic} -le ${endvhr} ]; do
             export subject="AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}"
             echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" > mailmsg
             echo "Missing file is ${checkfile}" >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $MAILTO 
+            echo "Job ID: ${jobid}" >> mailmsg
+            cat mailmsg | mail -s "${subject}" ${MAILTO} 
         fi
 
         echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
@@ -107,8 +107,8 @@ else
         export subject="AIRNOW ASCII Daily Data Missing for EVS ${COMPONENT}"
         echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}" > mailmsg
         echo "Missing file is ${checkfile}" >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $MAILTO 
+        echo "Job ID: ${jobid}" >> mailmsg
+        cat mailmsg | mail -s "${subject}" ${MAILTO} 
     fi
 
     echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}"
@@ -118,8 +118,8 @@ fi
 ##
 ## Pre-Processed Daily Max 8HR-AVG ozone to have a consistent averaging period
 ##
-mkdir -p $DATA/modelinput
-cd $DATA/modelinput
+mkdir -p ${DATA}/modelinput
+cd ${DATA}/modelinput
 
 ## mkdir -p $COMOUT.${VDATE}/${MODELNAME}
 
@@ -128,15 +128,15 @@ for hour in 06 12; do
     for biastyp in raw bc; do
 
         export biastyp
-        echo $biastyp
+        echo ${biastyp}
 
-        if [ $biastyp = "raw" ]; then
+        if [ ${biastyp} = "raw" ]; then
             export bctag=
-        elif [ $biastyp = "bc" ]; then
+        elif [ ${biastyp} = "bc" ]; then
             export bctag=_bc
         fi
 
-        if [ $hour -eq 06 ]; then
+        if [ ${hour} -eq 06 ]; then
             ozmax8_file=${COMINaqm}/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
             if [ -s ${ozmax8_file} ]; then
                 wgrib2 -d 1 ${ozmax8_file} -set_ftime "6-29 hour ave fcst"  -grib out1.grb2
@@ -152,8 +152,8 @@ for hour in 06 12; do
                     export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
                     echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
                     echo "Missing file is ${ozmax8_file}" >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $MAILTO
+                    echo "Job ID: ${jobid}" >> mailmsg
+                    cat mailmsg | mail -s "${subject}" ${MAILTO}
                 fi
         
                 echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
@@ -162,7 +162,7 @@ for hour in 06 12; do
         fi
         
         
-        if [ $hour -eq 12 ]; then
+        if [ ${hour} -eq 12 ]; then
             ozmax8_file=${COMINaqm}/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
             if [ -s ${ozmax8_file} ]; then
                 wgrib2 -d 1 ${ozmax8_file} -set_ftime "0-23 hour ave fcst" -grib out1.grb2
@@ -178,8 +178,8 @@ for hour in 06 12; do
                     export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
                     echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
                     echo "Missing file is ${ozmax8_file}" >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $MAILTO
+                    echo "Job ID: ${jobid}" >> mailmsg
+                    cat mailmsg | mail -s "${subject}" ${MAILTO}
                 fi
         
                 echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
@@ -188,16 +188,16 @@ for hour in 06 12; do
         fi
     done
 done
-log_dir="$DATA/logs/${model1}"
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-       log_files=("$log_dir"/*)
+log_dir="${DATA}/logs/${model1}"
+if [ -d ${log_dir} ]; then
+    log_file_count=$(find ${log_dir} -type f | wc -l)
+    if [[ ${log_file_count} -ne 0 ]]; then
+       log_files=("${log_dir}"/*)
        for log_file in "${log_files[@]}"; do
-          if [ -f "$log_file" ]; then
-             echo "Start: $log_file"
-             cat "$log_file"
-             echo "End: $log_file"
+          if [ -f "${log_file}" ]; then
+             echo "Start: ${log_file}"
+             cat "${log_file}"
+             echo "End: ${log_file}"
           fi
       done
   fi
