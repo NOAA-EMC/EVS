@@ -72,7 +72,7 @@ fi
 if [ $run_mpi = yes ] ; then
  if [ -s run_get_all_naefs_atmos_poe.sh ] ; then
    chmod +x run_get_all_naefs_atmos_poe.sh 
-   mpiexec  -n 34 -ppn 34 --cpu-bind verbose,core cfp  ${DATA}/run_get_all_naefs_atmos_poe.sh
+   mpiexec  -n 34 -ppn 34 --cpu-bind verbose,depth cfp  ${DATA}/run_get_all_naefs_atmos_poe.sh
    export err=$?; err_chk
  fi
 else

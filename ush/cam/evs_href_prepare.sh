@@ -113,14 +113,15 @@ if [ "$data" = "ccpa01h03h" ] ; then
          missing_ccpa=$((missing_ccpa + 1 ))
       fi
    done
-   if [ "$SENDMAIL" = "YES" ] && [ "$missing_ccpa" -gt "0" ] ; then
+   if [ "$missing_ccpa" -gt "0" ] ; then 
+      echo "WARNING:  No CCPA data in $COMCCPA available for EVS ${COMPONENT}" 
+    if [ "$SENDMAIL" = "YES" ] ; then
       export subject="CCPA Data Missing for EVS ${COMPONENT}"
-      echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
+      echo "WARNING:  No CCPA data available for ${VDATE}" > mailmsg
       echo -e "`cat $DATA/job${data}${domain}_missing_ccpa_list`" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $MAILTO
-      export err=$?; err_chk
-      exit
+    fi
    fi
 fi
 
@@ -164,14 +165,13 @@ if [ "$data" = "ccpa24h" ] ; then
          mkdir -p ${COMOUTfinal}/precip_mean24
          cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
       else
+	 echo "WARNING: At least one of ccpa06h files $ccpa24/ccpa? is missing for EVS ${COMPONENT}"
          if [ "$SENDMAIL" = "YES" ] ; then
             export subject="06h CCPA Data Missing for 24h CCPA generation"
-            echo "Warning: At least one of ccpa06h files is missing  for ${VDATE}" > mailmsg
+            echo "WARNING: At least one of ccpa06h files is missing  for ${VDATE}" > mailmsg
             echo -e "`cat $DATA/job${data}${domain}_missing_24hrccpa_list`" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO
-            export err=$?; err_chk
-            exit
          fi
       fi
    done
@@ -296,14 +296,13 @@ if [ "$data" = "prepbufr" ] ; then
          cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday}
       fi
    else
+      echo "WARNING:  No RAP Prepbufr data $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 AVAILABLE FOR ${vdate}"
       if [ "$SENDMAIL" = "YES" ] ; then
          export subject="RAP Prepbufr Data Missing for EVS ${COMPONENT}"
-         echo "Warning:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
+         echo "WARNING:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
          echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
-         export err=$?; err_chk
-         exit 
       fi
    fi
 fi
@@ -337,14 +336,13 @@ if [ "$data" = "gfs_prepbufr" ] ; then
          fi
       done
    else
+      echo "WARNING:  No GFS Prepbufr data $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr available for EVS ${COMPONENT}"
       if [ "$SENDMAIL" = "YES" ] ; then
          export subject="GFS Prepbufr Data Missing for EVS ${COMPONENT}"
-         echo "Warning:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
+         echo "WARNING:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
          echo Missing file is $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
-         export err=$?; err_chk
-         exit
       fi
    fi
 fi
@@ -399,14 +397,13 @@ if [ "$data" = "mrms" ] ; then
          fi
       done
    else
+      echo "WARNING:  No MRMS data $DCOMINmrms/MultiSensor_QPE_*.grib2.gz available for EVS ${COMPONENT}"
       if [ "$SENDMAIL" = "YES" ] ; then
          export subject="MRMS Data Missing for EVS ${COMPONENT}"
-         echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
+         echo "WARNING:  No MRMS data available for ${VDATE}" > mailmsg
          echo Missing file is $DCOMINmrms/MultiSensor_QPE_*.grib2.gz  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
-         export err=$?; err_chk
-         exit
       fi
    fi
 fi 

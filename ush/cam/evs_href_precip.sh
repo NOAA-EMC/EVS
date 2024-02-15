@@ -409,6 +409,4 @@ for obsvtype in ccpa mrms ; do
    done  #end of obsv
 
 done # end of domain 
-
 export err=$?; err_chk
-exit

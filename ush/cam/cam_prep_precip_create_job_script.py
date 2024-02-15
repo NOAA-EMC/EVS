@@ -79,7 +79,7 @@ if STEP == 'prep':
                                     f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2'
                                 )
                             if not glob.glob(infiles):
-                                print(f"Currently there are no matches for"
+                                print(f"WARNING: Currently there are no matches for"
                                       + f" {infiles}. This is normal, and these"
                                       + f" files may appear later, to be"
                                       + f" captured by another prep cycle. Will"
