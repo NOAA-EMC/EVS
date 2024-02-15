@@ -1085,7 +1085,7 @@ def check_prep_files(job_dict):
     inithr = job_dict['init_hr_start']
     fhr_min = int(job_dict['fhr_start'])
     fhr_max = int(job_dict['fhr_end'])
-    fhr_inc = 12
+    fhr_inc = 6
     fhr = fhr_min
     fhr_list = []
     fhr_check_output_dict = {}
