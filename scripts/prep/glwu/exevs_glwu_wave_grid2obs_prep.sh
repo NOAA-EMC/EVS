@@ -39,7 +39,7 @@ mkdir -p ${DATA}/glwu_grib2
 echo 'Copying GLWU wave grib2 and nc files'
 
 HHs='00 06 12 18'
-leads='000 024 048 072 096 120 144 168 192'
+leads='000 024 048 072 096 120 144'
 
 mtype='glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_sr grlr_500m grlr_500m_lc'
 
@@ -70,11 +70,13 @@ else
      for lead in ${leads} ; do	   
 	filename="glwu.${mtype}.t${HH}z.grib2"
 	if [ ! -s glwu.${INITDATE}/${filename} ]; then
-	    export subject="F${hr} GLWU Forecast Data Missing for EVS ${COMPONENT}"
-	    echo "Warning: No GLWU forecast was available for ${INITDATE}${HH}f${lead}" > mailmsg
-	    echo "Missing file is glwu.${INITDATE}/${filename}" >> mailmsg
-	    echo "Job ID: $jobid" >> mailmsg
-	    cat mailmsg | mail -s "$subject" $MAILTO
+		if [ SENDMAIL  YES ]; then
+	    		export subject="F${hr} GLWU Forecast Data Missing for EVS ${COMPONENT}"
+	    		echo "Warning: No GLWU forecast was available for ${INITDATE}${HH}f${lead}" > mailmsg
+	    		echo "Missing file is glwu.${INITDATE}/${filename}" >> mailmsg
+	    		echo "Job ID: $jobid" >> mailmsg
+	    		cat mailmsg | mail -s "$subject" $MAILTO
+		fi
         else
 	    if [ ! -s ${ARCglwu}/${newname} ]; then
 	       cp -v glwu.${INITDATE}/${filename} $DATA/glwu_grib2/${newname}/
@@ -105,11 +107,12 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
    fi
 else
 	if [ $SENDMAIL = YES ] ; then
- 	export subject="NDBC Data Missing for EVS ${COMPONENT}"
-	echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
-	echo "Missing files are located at $COMINobs/$VDATE/validation_data/marine/buoy/." >> mailmsg
-	echo "Job ID: $jobid" >> mailmsg
-	cat mailmsg | mail -s "$subject" $MAILTO
+ 		export subject="NDBC Data Missing for EVS ${COMPONENT}"
+		echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
+		echo "Missing files are located at $COMINobs/$VDATE/validation_data/marine/buoy/." >> mailmsg
+		echo "Job ID: $jobid" >> mailmsg
+		cat mailmsg | mail -s "$subject" $MAILTO
+	fi
 fi
 
 

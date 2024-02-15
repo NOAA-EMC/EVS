@@ -38,6 +38,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}
+export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
 # Define NET/RUN variables          
