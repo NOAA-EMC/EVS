@@ -713,7 +713,8 @@ class Reference():
         '''
         self.variable_translator = {'TMP': 'Temperature',
                                     'TMP_Z0_mean': 'Temperature',
-                                    'HGT': 'Ceiling Height',
+                                    'HGT': 'Geopotential Height',
+                                    'HGTcldceil':'Ceiling Height',
                                     'HGT_WV1_0-3': ('Geopotential Height:' 
                                                     + ' Waves 0-3'),
                                     'HGT_WV1_4-9': ('Geopotential Height:'
@@ -2539,12 +2540,12 @@ class Reference():
                                    'obs_var_thresholds': '',
                                    'obs_var_options': '',
                                    'plot_group':'sfc_upper'},
-                        'HGTcldceil': {'fcst_var_names': ['HGT'],
+                        'HGTcldceil': {'fcst_var_names': ['HGT','HGTcldceil'],
                                        'fcst_var_levels': ['L0'],
                                        'fcst_var_thresholds': '',
                                        'fcst_var_options': ('GRIB_lvl_typ ='
                                                             + ' 215;'),
-                                       'obs_var_names': ['CEILING','HGT'],
+                                       'obs_var_names': ['CEILING','HGT','HGTcldceil'],
                                        'obs_var_levels': ['L0'],
                                        'obs_var_thresholds': '',
                                        'obs_var_options': '',
@@ -2684,7 +2685,7 @@ class Reference():
                                                           + ' <=16000, <16090'),
                                    'obs_var_options': '',
                                    'plot_group':'sfc_upper'},
-                        'HGTcldceil': {'fcst_var_names': ['HGT'],
+                        'HGTcldceil': {'fcst_var_names': ['HGT','HGTcldceil'],
                                        'fcst_var_levels': ['L0'],
                                        'fcst_var_thresholds': ('<152, <=152, <305,'
                                                                + ' <=305, <914,'
@@ -2693,7 +2694,7 @@ class Reference():
                                                                + ' <3048, <=3048'),
                                        'fcst_var_options': ('GRIB_lvl_typ ='
                                                             + ' 215;'),
-                                       'obs_var_names': ['CEILING','HGT'],
+                                       'obs_var_names': ['CEILING','HGT','HGTcldceil'],
                                        'obs_var_levels': ['L0'],
                                        'obs_var_thresholds': ('<152, <=152, <305,'
                                                               + ' <=305, <914, '

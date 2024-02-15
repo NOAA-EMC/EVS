@@ -24,8 +24,6 @@ if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
    if [ $missing -eq 24  ] ; then
       echo "WARNING: All of the preppbufr files are missing."
       export verif_all=no
-      export err=$?
-      exit $err
    fi
 
 fi
@@ -64,8 +62,6 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 24  ] ; then
       echo "WARNING: All of the ccpa files are missing"
       export verif_precip=no
-      export err=$?
-      exit $err
    fi                 
 
    missing=0
@@ -96,8 +92,6 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 8  ] ; then
       echo "WARNING: All of the ccpa03h files are missing"
       export verif_precip=no
-      export err=$?
-      exit $err
    fi
 
    missing=0
@@ -120,8 +114,6 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -ge 1  ] ; then
       echo "WARNING: At least one of the ccpa06h files are missing"
       export verif_precip=no
-      export err=$?
-      exit $err
    fi
 
    accum=01
@@ -137,8 +129,6 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 24  ] ; then
       echo "WARNING: All of mrms01h files are missing"
       export verif_precip=no
-      export err=$?
-      exit $err
    fi
 
    accum=03
@@ -154,8 +144,6 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 8  ] ; then
       echo "WARNING: All of mrms03h files are missing"
       export verif_precip=no
-      export err=$?
-      exit $err
    fi
 
    accum=24
@@ -171,8 +159,6 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 4  ] ; then
       echo "WARNING: All of the mrms24h files are missing"   
       export verif_precip=no
-      export err=$?
-      exit $err
    fi
 fi
 
@@ -206,8 +192,6 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
             export verif_precip=no
             export verif_snowfall=no
             export verif_all=no
-            export err=$?
-            exit $err
          fi
       fi
    done
@@ -242,8 +226,6 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
             export verif_precip=no
             export verif_snowfall=no
             export verif_all=no
-            export err=$?
-            exit $err
          fi
       fi
    done
@@ -274,8 +256,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
             export verif_precip=no
             export verif_snowfall=no
             export verif_all=no
-            export err=$?
-            exit $err
           fi
       fi
       fhr=$((fhr+1))  
@@ -307,8 +287,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
             export verif_precip=no
             export verif_snowfall=no
             export verif_all=no
-            export err=$?
-            exit $err
          fi
       fi
       fhr=$((fhr+1))  
