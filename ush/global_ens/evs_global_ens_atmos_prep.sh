@@ -266,7 +266,7 @@ if [ $run_mpi = yes ] ; then
 
  if [ -s run_get_all_gens_atmos_poe.sh ] ; then
    chmod +x run_get_all_gens_atmos_poe.sh 
-   mpiexec  -n 83 -ppn 83 --cpu-bind verbose,core cfp ${DATA}/run_get_all_gens_atmos_poe.sh
+   mpiexec  -n 84 -ppn 42 --cpu-bind verbose,core cfp ${DATA}/run_get_all_gens_atmos_poe.sh
    export err=$?; err_chk
  fi
  
