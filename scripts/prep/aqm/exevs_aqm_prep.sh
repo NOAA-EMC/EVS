@@ -41,6 +41,8 @@ else
     export HOURLY_ASCII2NC_FORMAT=airnowhourly
 fi
  
+# Set up initial directories and initialize variables
+
 export dirname=aqm
 export gridspec=793
 

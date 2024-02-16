@@ -47,11 +47,11 @@ export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-export USHevs=${USHevs:-$HOMEevs/ush}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=${USHevs:-${HOMEevs}/ush}
 export MASK_DIR=${MASK_DIR:-$FIXevs/masks}
 
 # Define COMIN/COMOUT variables:
@@ -77,9 +77,9 @@ export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
-msg="JOB $job HAS COMPLETED NORMALLY."
+msg="JOB ${job} HAS COMPLETED NORMALLY."
 postmsg "${msg}"
 
 if [ "${KEEPDATA}" != "YES" ] ; then

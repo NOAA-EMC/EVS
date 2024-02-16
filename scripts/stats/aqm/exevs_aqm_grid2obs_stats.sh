@@ -30,12 +30,6 @@ set -x
 export config=${PARMevs}/evs_config/${COMPONENT}/config.evs.aqm.prod
 source ${config}
 
-mkdir -p ${DATA}/logs
-mkdir -p ${DATA}/stat
-export finalstat=${DATA}/final
-mkdir -p ${DATA}/final
-
-export conf_file_dir=${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 #######################################################################
 # Define INPUT OBS DATA TYPE for PointStat
 #######################################################################
@@ -46,12 +40,22 @@ else
   export HOURLY_INPUT_TYPE=hourly_data
 fi
 
+# Set up initial directories and initialize variables
+
+mkdir -p ${DATA}/logs
+mkdir -p ${DATA}/stat
+export finalstat=${DATA}/final
+mkdir -p ${DATA}/final
+
+#
+## export MASK_DIR is declared in the ~/EVS/jobs/JEVS_AQM_STATS for all config files
+#
+export conf_file_dir=${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
+
 export dirname=aqm
 export gridspec=793
 export fcstmax=72
-#
-## export MASK_DIR is declared in the ~/EVS/jobs/JEVS_AQM_STATS 
-#
+
 export model1=`echo ${MODELNAME} | tr a-z A-Z`
 echo ${model1}
 
