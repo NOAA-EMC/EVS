@@ -47,7 +47,7 @@ mkdir -p ${PRUNEDIR} ${OUTDIR}
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
-# Bring in ${NUM_DAY_BACK} days of stats files
+# Bring in ${NUM_DAY_BACK} [defined in JEVS_AQM_PLOTS] days of stats files
 
 STARTDATE=${PLOT_START}"00"
 ENDDATE=${PLOT_END}"00"
@@ -154,8 +154,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
         done
     done
     #
-    # Daily Plots for maximum 8-hr average ozone 
-    #   and 24-hr average PM2.5
+    # Daily Plots for maximum 8-hr average ozone and 24-hr average PM2.5
     #   for figure type of perfdiag
     #
     for inithr in 06 12; do
@@ -209,7 +208,6 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
                     echo "WARNING: This is possible where there is no exceedance of any threshold in the past ${NUM_DAY_BACK} days"
                 fi
-
             done
         done
     done
@@ -217,17 +215,17 @@ done
 
 log_dir="${LOGDIR}"
 if [ -d ${log_dir} ]; then
-   log_file_count=$(find ${log_dir} -type f | wc -l)
-   if [[ ${log_file_count} -ne 0 ]]; then
-      log_files=("${log_dir}"/*)
-      for log_file in "${log_files[@]}"; do
-         if [ -f "${log_file}" ]; then
-            echo "Start: ${log_file}"
-            cat "${log_file}"
-            echo "End: ${log_file}"
-         fi
-      done
-   fi   
+    log_file_count=$(find ${log_dir} -type f | wc -l)
+    if [[ ${log_file_count} -ne 0 ]]; then
+        log_files=("${log_dir}"/*)
+        for log_file in "${log_files[@]}"; do
+            if [ -f "${log_file}" ]; then
+                echo "Start: ${log_file}"
+                cat "${log_file}"
+                echo "End: ${log_file}"
+            fi
+        done
+    fi   
 fi 
 
 # Tar up plot directory and copy to the plot output directory
@@ -334,17 +332,17 @@ done
 
 log_dir="${LOGDIR_headline}"
 if [ -d ${log_dir} ]; then
-   log_file_count=$(find ${log_dir} -type f | wc -l)
-   if [[ ${log_file_count} -ne 0 ]]; then
-       log_files=("${log_dir}"/*)
-       for log_file in "${log_files[@]}"; do
-          if [ -f "${log_file}" ]; then
-             echo "Start: ${log_file}"
-             cat "${log_file}"
-             echo "End: ${log_file}"
-          fi
-       done
-   fi
+    log_file_count=$(find ${log_dir} -type f | wc -l)
+    if [[ ${log_file_count} -ne 0 ]]; then
+         log_files=("${log_dir}"/*)
+         for log_file in "${log_files[@]}"; do
+             if [ -f "${log_file}" ]; then
+                 echo "Start: ${log_file}"
+                 cat "${log_file}"
+                 echo "End: ${log_file}"
+             fi
+         done
+    fi
 fi
 
 
