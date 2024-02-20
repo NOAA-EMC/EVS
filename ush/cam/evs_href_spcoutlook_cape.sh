@@ -99,6 +99,3 @@ for prod in mean ; do
 done #end of prod loop
 
 chmod 775 run_all_href_spcoutlook_poe.sh
-
-exit
-

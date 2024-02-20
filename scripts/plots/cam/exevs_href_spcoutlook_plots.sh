@@ -86,8 +86,7 @@ for stats in csi_fbias ratio_pod_csi ; do
     VARs='CAPEsfc MLCAPE'
     score_types='performance_diagram'   
  else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is not a valid stat"
  fi   
 
  for score_type in $score_types ; do
