@@ -16,7 +16,7 @@ missing=0
 for vhr in 00 06 12 18 ; do
   if [ ! -s $COMINobsproc/gfs.${vday}/${vhr}/atmos/gfs.t${vhr}z.prepbufr ] ; then
     missing=$((missing + 1 ))
-    echo $COMINobsproc/gfs.${vday}/${vhr}/atmos/gfs.t${vhr}z.prepbufr is missing
+    echo "WARNING: $COMINobsproc/gfs.${vday}/${vhr}/atmos/gfs.t${vhr}z.prepbufr is missing"
   fi
 done
 
@@ -61,7 +61,7 @@ for vhr in 00 03 06 09 12 15 18 21 ; do
 
   if [ ! -s $ccpa ] ; then
       missing=$((missing + 1 ))
-      echo $ccpa is missing
+      echo "WARNING: $ccpa is missing"
   fi
 done
 
@@ -107,7 +107,7 @@ for vhr in  00 06 12 18 ; do #SREF grid2obs validation is by gfs prepbufr
 	if [ -s $sref ] ; then
            sref_mbrs=$((sref_mbrs+1))
         else
-	   echo $sref is missing
+	   echo "WARNING: $sref is missing"
         fi	    
       done
     done
