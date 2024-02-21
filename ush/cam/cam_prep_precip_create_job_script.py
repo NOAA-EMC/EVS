@@ -91,7 +91,7 @@ if STEP == 'prep':
                             for infile in glob.glob(infiles):
                                 job_cmd_list.append(
                                     f"if [ -f \"{infile}\" ]; then cp \"{infile}\""
-                                    + f" \"{COMOUTobs}/.\"; else echo \"Input {OBSNAME}"
+                                    + f" \"{COMOUTobs}/.\"; else echo \"WARNING: Input {OBSNAME}"
                                     + f" file does not exist: {infile} ..."
                                     + f" Continuing to the next valid datetime.\"; fi"
                                 )
@@ -179,7 +179,7 @@ if STEP == 'prep':
                                 + f" else echo \"Output {OBSNAME} file already"
                                 + f" exists: {COMOUTobs}/{outfilename} ..."
                                 + f" Continuing to the next valid datetime.\"; fi"
-                                + f" else echo \"Input {OBSNAME}"
+                                + f" else echo \"WARNING: Input {OBSNAME}"
                                 + f" file does not exist: {infilepath} ..."
                                 + f" Continuing to the next valid datetime.\"; fi"
                             )
