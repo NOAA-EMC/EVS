@@ -12,7 +12,13 @@ modnam=href
 verify=$1
 
 if [ $verify = precip ] ; then
- MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB HREF_EAS HREF_SNOW'
+ if [ "$verif_precip" = "no" ] ; then
+  MODELS='HREF_SNOW'
+ elif [ "$verif_snowfall" = "no" ] ; then
+  MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB HREF_EAS'
+ else
+  MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB HREF_EAS HREF_SNOW'
+ fi
 elif [ $verify = grid2obs ] ; then
  MODELS='HREF HREF_MEAN HREF_PROB'
 elif [ $verify = spcoutlook ] ; then
