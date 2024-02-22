@@ -25,6 +25,7 @@ if [ ! -s $COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${VDATE}12_g
   fi
   echo "WARNING:  No NOHRSC data $COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${VDATE}12_grid184.grb2 available for ${VDATE}! Terminate snowfall verification"
   export write_job_cards=no
+  export verif_snowfall=no
 fi
 
 if [ "$write_job_cards" = "yes" ] ; then
