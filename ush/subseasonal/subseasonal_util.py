@@ -54,11 +54,18 @@ def metplus_command(conf_file_name):
                                'run_metplus.py')
     machine_conf = os.path.join(os.environ['PARMevs'], 'metplus_config',
                                 'machine.conf')
-    conf_file = os.path.join(os.environ['PARMevs'], 'metplus_config',
-                             os.environ['STEP'],
-                             os.environ['COMPONENT'],
-                             os.environ['VERIF_CASE'],
-                             conf_file_name)
+    if os.environ['STEP'] == 'prep':
+        conf_file = os.path.join(os.environ['PARMevs'], 'metplus_config',
+                                 os.environ['STEP'],
+                                 os.environ['COMPONENT'],
+                                 'grid2grid',
+                                 conf_file_name)
+    else:
+        conf_file = os.path.join(os.environ['PARMevs'], 'metplus_config',
+                                 os.environ['STEP'],
+                                 os.environ['COMPONENT'],
+                                 os.environ['VERIF_CASE'],
+                                 conf_file_name)
     if not os.path.exists(conf_file):
         print("FATAL ERROR: "+conf_file+" DOES NOT EXIST")
         sys.exit(1)
@@ -1066,7 +1073,7 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
             print("WARNING: "+source_file+" DOES NOT EXIST")
 
 
-def check_prep_files(job_dict):
+def check_gefs_prep_files(job_dict):
     """! Check if COMOUT GEFS prep files exist and adjust fhr_list
 
          Args:
@@ -1149,6 +1156,53 @@ def check_prep_files(job_dict):
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
     )
     return fhr_list
+
+
+def check_ccpa_prep_files(DATA, STEP, INITDATE):
+    """!
+        Args:
+            DATA     - Temporary working directory (string)
+            STEP     - Step (string)
+            INITDATE - Initialization date (string, format: YYYYmmdd)
+
+        Returns:
+            all_ccpa_file_exist - if all needed ccpa files
+                                  exist or not (boolean)
+    """
+    cdate_dt = datetime.datetime.strptime(
+        INITDATE+'12',
+        '%Y%m%d%H'
+    )
+    temp_dir = os.path.join(
+        DATA, STEP
+    )
+    ccpa_file_list = []
+    ccpa_file_format = os.path.join(
+        temp_dir, 'data', 'ccpa',
+        'ccpa.6H.{init?fmt=%Y%m%d%H}'
+    )
+    nf = 0
+    while nf <= 3:
+        ccpa_file = format_filler(
+            ccpa_file_format,
+            (cdate_dt-datetime.timedelta(hours=6*nf)),
+            (cdate_dt-datetime.timedelta(hours=6*nf)),
+            ['anl'], {}
+        )
+        ccpa_file_list.append(ccpa_file)
+        nf+=1
+    ccpa_files_exist_list = []
+    for ccpa_file in ccpa_file_list:
+        if os.path.exists(ccpa_file):
+            ccpa_files_exist_list.append(True)
+        else:
+            ccpa_files_exist_list.append(False)
+    if all(x == True for x in ccpa_files_exist_list) \
+            and len(ccpa_files_exist_list) > 0:
+        all_ccpa_file_exist = True
+    else:
+        all_ccpa_file_exist = False
+    return all_ccpa_file_exist
 
 
 def check_daily_model_files(job_dict):
