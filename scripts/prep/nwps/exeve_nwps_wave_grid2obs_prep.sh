@@ -1,7 +1,7 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_glwu_fcst_prep.sh
-# Purpose of Script: To pre-process glwu forecast data into the same spatial
+# Name of Script: exevs_nwps_wave_grid2obs_prep.sh
+# Purpose of Script: To pre-process nwps forecast data into the same spatial
 #    and temporal scales as validation data.
 # Author: Samira Ardani (samira.ardani@noaa.gov)
 ###############################################################################
@@ -9,7 +9,7 @@
 set -x
 
 ##############################
-## grid2obs GLWU Model Prep 
+## grid2obs NWPS Model Prep 
 ###############################
 
 cd $DATA
@@ -25,69 +25,73 @@ echo '-------------'
 echo ' '
 
 
-
-# n024 is nowcast = f000 forecast
-mkdir -p $COMOUTprep/glwu.$VDATE/$RUN
-mkdir -p $DATA/glwu.$VDATE/$RUN
-
 ################################################################################
-# Create today's GLWU individual fcst grib2 files and add them to the archive
+# Create today's NWPS individual fcst grib2 files and add them to the archive
 ################################################################################
-mkdir -p ${DATA}/glwu_nc
-mkdir -p ${DATA}/glwu_grib2
+mkdir -p ${DATA}/grib2
 
-echo 'Copying GLWU wave grib2 and nc files'
+echo 'Copying NWPS wave grib2 files'
 
 HHs='00 06 12 18'
 leads='000 024 048 072 096 120 144 168 192'
+regions='ar er pr sr wr'
 
-mtype='glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_sr grlr_500m grlr_500m_lc'
-
-
-if [[ ${mtype} == "glwu" || ${mtype} == "glwu_lc" ]];then
-  for HH in ${HHs} ; do
-     for lead in ${leads} ; do
-	filename="glwu.${mtype}.t${HH}z.nc"
-	newname="glwu.${mtype}.${INITDATE}.t${HH}z.nc"
-	if [ ! -s glwu.${INITDATE}/${filename} ]; then
-	   export subject="F${lead} GLWU Forecast Data Missing for EVS ${COMPONENT}"
-	   echo "Warning: No GLWU forecast was available for ${INITDATE}${HH}f${lead}" > mailmsg
-	   echo "Missing file is glwu.${INITDATE}/${filename}" >> mailmsg
-	   echo "Job ID: $jobid" >> mailmsg
-	   cat mailmsg | mail -s "$subject" $MAILTO
-        else
-	   if [ ! -s ${ARCglwu}/${newname} ]; then
-	      cp -v glwu.${INITDATE}/${filename} $DATA/glwu_nc/${newname}/
-	      if [ $SENDCOM = YES ]; then
-		 cp -v $DATA/glwu_nc/ ${ARCglwu}/glwu_nc/${newname}/
-	      fi
-	   fi
+for region in ${regions} ; do
+	COMINregion="${COMINnwps}/${region}.${INITDATE}"
+	if [ ! -s $COMINregion ]; then
+		if [ $SENDMAIL = YES ]; then
+			export subject="NWPS Forecast Data Missing for ${region} EVS ${COMPONENT}"
+			echo "WARNING: No NWPS forecast was available for ${region}" > mailmsg
+			echo "WARNING: Missing file is $COMINregion" >> mailmsg
+			echo "Job ID: $jobid" >> mailmsg
+			cat mailmsg | mail -s "$subject" $MAILTO
+		fi
+	else
+	find ${COMINregion} -name \*.grib2 -exec cp {} ${DATA}/grib2 \;
 	fi
-   done
-  done
-else
-  for HH in ${HHs} ; do
-     for lead in ${leads} ; do	   
-	filename="glwu.${mtype}.t${HH}z.grib2"
-	if [ ! -s glwu.${INITDATE}/${filename} ]; then
-	    export subject="F${hr} GLWU Forecast Data Missing for EVS ${COMPONENT}"
-	    echo "Warning: No GLWU forecast was available for ${INITDATE}${HH}f${lead}" > mailmsg
-	    echo "Missing file is glwu.${INITDATE}/${filename}" >> mailmsg
-	    echo "Job ID: $jobid" >> mailmsg
-	    cat mailmsg | mail -s "$subject" $MAILTO
-        else
-	    if [ ! -s ${ARCglwu}/${newname} ]; then
-	       cp -v glwu.${INITDATE}/${filename} $DATA/glwu_grib2/${newname}/
-	       if [ $SENDCOM = YES ]; then
-		  cp -v $DATA/glwu_grib2/ ${ARCglwu}/glwu_grib2/${newname}/
-	       fi
-	    fi
-	fi
-   done
-  done
-fi
+done
 
-############################################################
+wfos='aer afg ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfi mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
+CGs='CG1 CG2 CG3 CG4 CG5 CG6'
+for wfo in $wfos; do
+	for CG in $CGs; do
+		for HH in ${HHs}; do
+			DATAfilename=${DATA}/gribs/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00.grib2
+			if [ ! -s DATAfilename ]; then
+				echo "WARNING: NO NWPS forecast was available for valid date ${INITDATE}"
+				if [ $SENDMAIL = YES ] ; then
+					export subject="NWPS Forecast Data Missing for EVS ${COMPONENT}"
+					echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
+					echo "Missing file is ${input_rtofs_file}" >> mailmsg
+					echo "Job ID: $jobid" >> mailmsg
+	    				cat mailmsg | mail -s "$subject" $MAILTO
+				fi
+			else
+				while (( $fcst <= 144 )); do
+					FCST=$(printf "%03d" "$fcst")
+	    				DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00_f${FCST}.grib2
+					ARCmodelfilename_fhr=${ARCmodel}/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00_f${FCST}.grib2
+					if [ ! -s $ARCmodelfilename_fhr ]; then
+						if [ $fcst = 0 ]; then
+							grib2_match_fhr=":surface:anl:"
+						else
+	    						grib2_match_fhr=":${fcst} hour fcst:"
+						fi
+						DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00_f${FCST}.grib2
+						wgrib2 $DATAfilename -match "$grib2_match_fhr" -grib $DATAfilename_fhr > /dev/null
+						export err=$?; err_chk
+						if [ $SENDCOM = YES ]; then
+							cp -v $DATAfilename_fhr ${ARCmodel}/.
+						fi
+					fi
+					fcst=$(( $fcst+ 1 ))
+				done
+			fi
+		done
+	done
+done
+	
+###########################################################
 # convert NDBC *.txt files into a netcdf file using ASCII2NC
 ############################################################
 
@@ -112,52 +116,6 @@ else
 	cat mailmsg | mail -s "$subject" $MAILTO
 fi
 
-
-############################################
-# get the GDAS prepbufr files for yesterday 
-############################################
-
-echo 'Copying GDAS prepbufr files'
-
-for HH in 00 06 12 18 ; do
-	export inithour=t${HH}z
-	if [ ! -s ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr ]; then
-		export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
-		echo "WARNING: No GDAS Prepbufr was available for init date ${INITDATE}${HH}" > mailmsg
-		echo "WARNING: Missing file is ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
-		echo "Job ID: $jobid" >> mailmsg
-		cat mailmsg | mail -s "$subject" $MAILTO
-	else
-		cp -v ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${HH}.prepbufr
-	fi
-done
-
-
-############################################
-# run PB2NC                                 
-############################################
-
-echo 'Run pb2nc'
-
-for HH in 00 12; do
-	export HH=$HH
-	export inithour=t${HH}z
-	if [ -s ${DATA}/gdas.${INITDATE}${HH}.prepbufr ]; then
-		if [ ! -s ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${HH}.nc ]; then
-			run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_wave.conf
-			export err=$?; err_chk
-			if [ $SENDCOM = YES ]; then
-				cp -v $DATA/ncfiles/gdas.${INITDATE}${HH}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
-			fi
-		fi
-		chmod 640 $DATA/ncfiles/gdas.${INITDATE}${HH}.nc
-		chgrp rstprod $DATA/ncfiles/gdas.${INITDATE}${HH}.nc	
-	fi
-done
-
-
-# Create the masks
-$HOMEevs/scripts/$STEP/$COMPONENT/glwu_regions.sh
 
 ##########################################
 ## Cat the prep log files
