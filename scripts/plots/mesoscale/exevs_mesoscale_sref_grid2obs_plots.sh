@@ -213,7 +213,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 216 -ppn 72 --cpu-bind verbose,core cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 216 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
    export err=$?; err_chk
 else
    ${DATA}/run_all_poe.sh
@@ -325,8 +325,8 @@ done     #valid
 tar -cvf evs.plots.sref.grid2obs.past${past_days}days.v${VDATE}.tar *.png
 
 
-if [ $SENDCOM="YES" ]; then
- cpreq  evs.plots.sref.grid2obs.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.sref.grid2obs.past${past_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.sref.grid2obs.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
 fi
 
 if [ $SENDDBN = YES ] ; then

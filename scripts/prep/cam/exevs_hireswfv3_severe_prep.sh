@@ -96,7 +96,7 @@ i=1
          echo "File number $i found"
          nfiles=$((nfiles+1))
       else
-         echo "$fcst_file is missing"
+         echo "WARNING: $fcst_file is missing"
       fi
    
       fhr=$((fhr+1))
@@ -120,19 +120,24 @@ i=1
       if [ $SENDCOM = YES ]; then
          mkdir -p $COMOUT/${modsys}.${IDATE}
          for FILE in $DATA/pcp_combine/${modsys}.${IDATE}/*; do
-            cpreq -v $FILE $COMOUT/${modsys}.${IDATE}
+            if [ -s "$FILE" ]; then
+               cp -v $FILE $COMOUT/${modsys}.${IDATE}
+            fi
          done
          for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
-            cpreq -v $FILE $COMOUT/${modsys}.${IDATE}
+            if [ -s "$FILE" ]; then
+               cp -v $FILE $COMOUT/${modsys}.${IDATE}
+            fi
          done
       fi
 
 
    else
 
+      echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. $min_file_req files are required."
       if [ $SENDMAIL = YES ]; then
          export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
-         echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
+         echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
       fi

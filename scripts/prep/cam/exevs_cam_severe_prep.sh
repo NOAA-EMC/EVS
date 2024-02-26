@@ -36,7 +36,9 @@ if [ -d $DATA/gen_vx_mask ]; then
       if [ $SENDCOM = YES ]; then
          mkdir -p $COMOUTotlk
          for FILE in $DATA/gen_vx_mask/*; do
-            cpreq -v $FILE $COMOUTotlk
+            if [ -s "$FILE" ]; then
+               cp -v $FILE $COMOUTotlk
+            fi
          done
       fi
 
@@ -52,9 +54,10 @@ fi
 # Send missing data alert if needed
 if [ $data_missing ]; then
 
+   echo "WARNING: File $DCOMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip is missing"
    if [ $SENDMAIL = YES ]; then
       export subject="SPC OTLK Data Missing for EVS ${COMPONENT}"
-      echo "Warning: The ${OTLK_DATE} SPC outlook file(s) is missing. METplus will not run." > mailmsg
+      echo "WARNING: The ${OTLK_DATE} SPC outlook file(s) is missing. METplus will not run." > mailmsg
       echo "Missing files are $DCOMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $MAILTO
@@ -91,15 +94,18 @@ if [ -s $DCOMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DAT
    if [ $SENDCOM = YES ]; then
       mkdir -p $COMOUTlsr
       for FILE in $DATA/point2grid/*; do
-         cpreq -v $FILE $COMOUTlsr
+         if [ -s "$FILE" ]; then
+            cp -v $FILE $COMOUTlsr
+         fi
       done
    fi
 
 else
 
+   echo "WARNING: File $DCOMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv is missing."
    if [ $SENDMAIL = YES ]; then
       export subject="SPC LSR Data Missing for EVS ${COMPONENT}"
-      echo "Warning: The ${REP_DATE} SPC report file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+      echo "WARNING: The ${REP_DATE} SPC report file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
       echo "Missing file is $DCOMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $MAILTO

@@ -720,10 +720,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                    valid_hr_inc))
             if 'Daily' in verif_type_job:
                 daily_fhr_list = []
-                for fhr in job_env_dict['fhr_list'].split(','):
+                for fhr in job_env_dict['fhr_list'].split(', '):
                     if int(fhr) >= 24 and int(fhr) % 24 == 0:
                         daily_fhr_list.append(str(fhr))
-                    job_env_dict['fhr_list'] = ','.join(daily_fhr_list)
+                    job_env_dict['fhr_list'] = ', '.join(daily_fhr_list)
         if JOB_GROUP in ['condense_stats', 'filter_stats', 'make_plots']:
             if verif_type == 'pres_levs':
                 obs_list = (
@@ -1020,7 +1020,7 @@ if USE_CFP == 'YES':
     job_files = glob.glob(os.path.join(JOB_GROUP_jobs_dir, 'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print("WARNING: No job files created in "+JOB_GROUP_jobs_dir)
+        print("NOTE: No job files created in "+JOB_GROUP_jobs_dir)
     poe_files = glob.glob(os.path.join(JOB_GROUP_jobs_dir, 'poe*'))
     npoe_files = len(poe_files)
     if npoe_files > 0:

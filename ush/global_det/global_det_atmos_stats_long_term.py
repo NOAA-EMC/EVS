@@ -76,13 +76,11 @@ def get_daily_stat_file(model_name, source_stats_base_dir,
             +'.stat'
         )
         if not os.path.exists(dest_model_date_stat_file):
-            if os.path.exists(source_model_date_stat_file):
+            if gda_util.check_file_exists_size(source_model_date_stat_file):
                 print(f"Linking {source_model_date_stat_file} to "
                       +f"{dest_model_date_stat_file}")
                 os.symlink(source_model_date_stat_file,
                            dest_model_date_stat_file)
-            else:
-                print(f"WARNING: {source_model_date_stat_file} DOES NOT EXIST")
         date_dt = date_dt + datetime.timedelta(days=1)
 
 def get_logger(log_file):

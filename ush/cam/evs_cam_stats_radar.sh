@@ -204,7 +204,7 @@ while [ $fhr -le $fhr_max ]; do
          nfcst=$((nfcst+1))
 
       else
-         echo "Missing file is ${MODEL_INPUT_DIR}/${fcst_file}\n" >> $DATA/job${JOBNUM}_missing_fcst_list
+         echo "WARNING: Missing file is ${MODEL_INPUT_DIR}/${fcst_file}\n" >> $DATA/job${JOBNUM}_missing_fcst_list
          nmiss=$((nmiss+1))
 
       fi
@@ -252,7 +252,7 @@ if [ -s $EVSINmrms/${obs_file} ]; then
 else
    if [ $SENDMAIL = YES ]; then
       export subject="MRMS Prep Data Missing for EVS ${COMPONENT}"
-      echo "Warning: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
+      echo "WARNING: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
       echo "Missing file is $EVSINmrms/${obs_file}" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $MAILTO

@@ -16,12 +16,17 @@ fi
 icao2023=yes
 runMETplus=yes
 
+missingForecast=""
+
 #Re-define FHOURS_EVSlist
 export FHOURS_EVSlist=""
 for ff in $FHOURS ; do
     past=`$NDATE -$ff ${VDATE}${cc}`
     day=${past:0:8}
     ccfcst=${past:8:2}
+
+    mod=$(( 10#$ccfcst % 6 ))
+    [ $mod -eq 3 ] && continue
 
     if [ $CENTER = "uk" ] ; then
 	if [ $RESOLUTION = "0P25" ] ; then
@@ -71,11 +76,16 @@ for ff in $FHOURS ; do
 			-match ":(UGRD|VGRD|TMP):"\
 			-grib $targetfile
 	    fi
+	else
+	    echo "WARNING: missing forecast $sourcefile"
         fi
     else
 	if [[ -f $sourcefile ]] ; then
             FHOURS_EVSlist="$FHOURS_EVSlist,$ff"
 	    ln -sf $sourcefile $targetfile
+	else
+	    missingForecast="$missingForecast F$ff"
+	    echo "WARNING: missing forecast $sourcefile"
 	fi
     fi
 done
@@ -83,12 +93,22 @@ done
 export FHOURS_EVSlist=`echo $FHOURS_EVSlist | sed 's/^,//'`
 if [ -z $FHOURS_EVSlist ] ; then
     if [[ $SENDMAIL = YES ]] ; then
-        export subject="All forecast files are missing for EVS ${COMPONENT}"
-        echo "Warning: All $CENTER forecasts are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus will not run." > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+        export subject="All $CENTER forecast files are missing for EVS ${COMPONENT}"
+        echo "WARNING: All $CENTER forecasts are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus will not run." > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
         echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 	cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
     fi
+    echo "WARNING: All $CENTER forecasts are missing for $OBSERVATION valid date ${VDATE}${cc}. METplus will not run."
     runMETplus=no
+else
+    if [ ! -z "$missingForecast" ] ; then
+	if [[ $SENDMAIL = YES ]] ; then
+            export subject="A subset of $CENTER forecast files is missing for EVS ${COMPONENT}"
+            echo "WARNING: A subset of $CENTER forecasts ($missingForecast) is missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues." > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+            echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+	    cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
+	fi
+    fi
 fi
 
 # GCIP data
@@ -122,11 +142,12 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
 	else
 	    if [ $SENDMAIL = YES ] ; then
 		export subject="$OBSERVATION Analysis Data Missing for EVS ${COMPONENT}"
-		echo "Warning: $OBSERVATION analysis is missing for $CENTER valid date ${VDATE}${cc}" > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+		echo "WARNING: $OBSERVATION analysis is missing for $CENTER valid date ${VDATE}${cc}" > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		echo "Missing file is $sourcefile" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	    fi
+	    echo "WARNING: $OBSERVATION analysis is missing for $CENTER valid date ${VDATE}${cc}"
 	    runMETplus=no
 	fi
     fi
@@ -166,11 +187,12 @@ elif [[ $OBSERVATION = "GFS" ]] ; then
 	else
 	    if [ $SENDMAIL = YES ] ; then
 		export subject="$OBSERVATION Analysis Data Missing for EVS ${COMPONENT}"
-		echo "Warning: $OBSERVATION analysis is missing for valid date ${VDATE}${cc}" > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+		echo "WARNING: $OBSERVATION analysis is missing for valid date ${VDATE}${cc}" > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		echo "Missing file is $sourcefile" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	    fi
+	    echo "WARNING: $OBSERVATION analysis is missing for valid date ${VDATE}${cc}"
 	    runMETplus=no
 	fi
     fi

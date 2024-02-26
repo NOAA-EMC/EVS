@@ -16,6 +16,8 @@
 ##   12/27/2023   Ho-Chun Huang  Select the lead hours input to the METPlus only when
 ##                               model output daily fcst files existed.
 ##   01/05/2024   Ho-Chun Huang  modify for AQMv6 verification
+##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
+##   02/21/2024   Ho-Chun Huang  modify for AQMv7 verification
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
@@ -44,8 +46,8 @@ else
   export HOURLY_INPUT_TYPE=hourly_data
 fi
 
-export dirname=cs
-export gridspec=148
+export dirname=aqm
+export gridspec=793
 export fcstmax=72
 #
 ## export MASK_DIR is declared in the ~/EVS/jobs/JEVS_AQM_STATS 
@@ -113,13 +115,14 @@ for outtyp in awpozcon pm25; do
     #
     for hour in 06 12; do
       export hour
+      export mdl_cyc=${hour}    ## is needed for *.conf
 
       let ihr=1
       num_fcst_in_metplus=0
       recorded_temp_list=${DATA}/fcstlist_in_metplus
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       while [ ${ihr} -le ${fcstmax} ]; do
-        filehr=$(printf %2.2d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7
+        filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7
         fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
         export fhr
     
@@ -128,7 +131,7 @@ for outtyp in awpozcon pm25; do
         aday=`echo ${adate} |cut -c1-8`
         acyc=`echo ${adate} |cut -c9-10`
         if [ ${acyc} = ${hour} ]; then
-          fcst_file=${COMINaqm}/${dirname}.${aday}/aqm.t${acyc}z.${outtyp}${bctag}.f${filehr}.${gridspec}.grib2
+          fcst_file=${COMINaqm}/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.${outtyp}${bctag}.f${filehr}.${gridspec}.grib2
           if [ -s ${fcst_file} ]; then
             echo "${fhr} found"
             echo ${fhr} >> ${recorded_temp_list}
@@ -169,7 +172,7 @@ for outtyp in awpozcon pm25; do
       cpdir=${DATA}/point_stat/${MODELNAME}
       if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-        if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
       fi
     fi
     if [ "${vhr}" == "23" ]; then
@@ -182,7 +185,7 @@ for outtyp in awpozcon pm25; do
         export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
           cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_${stat_output_index}.v${VDATE}.stat
-          if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+          if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
         fi
       fi
     fi
@@ -229,6 +232,7 @@ if [ ${vhr} = 11 ]; then
 
     for hour in 06 12; do
       export hour
+      export mdl_cyc=${hour}    ## is needed for *.conf
 
       ##  search for processed daily 8-hr ozone max model files
       ##  AQMv7 output daily forecast of 3 days.  Becasue of
@@ -280,7 +284,7 @@ if [ ${vhr} = 11 ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
       if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-        if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
       fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
@@ -290,7 +294,7 @@ if [ ${vhr} = 11 ]; then
       export err=$?; err_chk
       if [ ${SENDCOM} = "YES" ]; then
         cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat
-        if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+        if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
       fi
     fi
   done  ## biastyp loop
@@ -319,6 +323,7 @@ if [ ${vhr} = 04 ]; then
 
     for hour in 06 12; do
       export hour
+      export mdl_cyc=${hour}    ## is needed for *.conf
 
       ##  search for forecast daily average PM model files
       ##  AQMv7 output daily forecast of 3 days.  Becasue of
@@ -331,7 +336,7 @@ if [ ${vhr} = 04 ]; then
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       while [ ${ihr} -le ${fcstmax} ]; do
         chk_date=$(${NDATE} -${ihr} ${cdate} | cut -c1-8)
-        fcst_file=${COMINaqm}/${dirname}.${chk_date}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
+        fcst_file=${COMINaqm}/${dirname}.${chk_date}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
         if [ -s ${fcst_file} ]; then
           fhr=$(printf %2.2d ${ihr})
           echo "${fcst_file} found"
@@ -372,7 +377,7 @@ if [ ${vhr} = 04 ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
       if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-        if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
       fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
@@ -382,7 +387,7 @@ if [ ${vhr} = 04 ]; then
       export err=$?; err_chk
       if [ ${SENDCOM} = "YES" ]; then
         cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat
-        if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+        if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
       fi
     fi
   done  ## biastyp loop

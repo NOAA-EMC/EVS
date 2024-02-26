@@ -86,7 +86,9 @@ for DOMAIN in ${DOMAINS}; do
          if [ $SENDCOM = YES ]; then
             mkdir -p $COMOUTmrms/${DOMAIN}
             for FILE in $DATA/MRMS_${DOMAIN}/*; do
-               cpreq -v $FILE $COMOUTmrms/${DOMAIN}
+               if [ -s "$FILE" ]; then
+                  cp -v $FILE $COMOUTmrms/${DOMAIN}
+               fi
             done
          fi
 
@@ -94,7 +96,7 @@ for DOMAIN in ${DOMAINS}; do
 
          if [ $SENDMAIL = YES ]; then
             export subject="MRMS ${MRMS_PRODUCT} Data Missing for EVS ${COMPONENT}"
-            echo "Warning: The ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
+            echo "WARNING: The ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO
          fi

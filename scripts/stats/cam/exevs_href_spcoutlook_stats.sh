@@ -14,7 +14,7 @@ cd $WORK
 #*********************************
 #check input data are available:
 #*********************************
-$USHevs/cam/evs_check_href_files.sh 
+source $USHevs/cam/evs_check_href_files.sh 
 export err=$?; err_chk
 
 #lvl = profile or sfc or both
@@ -22,12 +22,12 @@ export lvl='both'
 
 #  verify_all = yes:  verify both profile and sfc (system + product)
 #  if lvl is not both, verify_all = no
-export verify_all='yes'
+export verify_all=${verify_all:-'yes'}
 
 export prepare='yes'
-export verif_system='es'
-export verif_profile='es'
-export verif_product='es'
+export verif_system='yes'
+export verif_profile='yes'
+export verif_product='yes'
 export verif_spcoutlook='yes'
 export gather=${gather:-'yes'}
 export verify=$VERIF_CASE
@@ -56,7 +56,7 @@ export domain="all"
 # Prepare prepbufr data files
 # ********************************
 if [ $prepare = yes ] ; then
-  $USHevs/cam/evs_href_preppare.sh prepbufr CONUS
+  $USHevs/cam/evs_href_prepare.sh prepbufr CONUS
   export err=$?; err_chk
 fi 
 
@@ -78,7 +78,7 @@ chmod 775 run_href_all_grid2obs_poe
 # Run POE script to get small stat files
 # ***************************************
 if [ $run_mpi = yes ] ; then
-    mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
+    mpiexec -np 4 -ppn 4 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
 else
     ${DATA}/run_href_all_grid2obs_poe

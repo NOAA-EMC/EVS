@@ -489,7 +489,7 @@ if JOB_GROUP == 'assemble_data':
                                 else:
                                     for job_model_input_file in job_model_input_files_list:
                                         if not m_util.check_file(job_model_input_file):
-                                            print("MISSING or ZERO SIZE input "
+                                            print("NOTE: MISSING or ZERO SIZE input "
                                                   +f"file for job {job_file}: "
                                                   +f"{job_model_input_file}")
                             job.close()
@@ -549,7 +549,7 @@ if JOB_GROUP == 'assemble_data':
                         else:
                             for job_obs_input_file in job_obs_input_files_list:
                                 if not m_util.check_file(job_obs_input_file):
-                                    print("MISSING or ZERO SIZE input file for"
+                                    print("NOTE: MISSING or ZERO SIZE input file for"
                                           f" job {job_file}: {job_obs_input_file}")
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
@@ -660,11 +660,11 @@ elif JOB_GROUP == 'generate_stats':
                                 else:
                                     for job_obs_input_file in job_obs_input_files_list:
                                         if not m_util.check_file(job_obs_input_file):
-                                            print("MISSING or ZERO SIZE input file for"
+                                            print("NOTE: MISSING or ZERO SIZE input file for"
                                                   f" job {job_file}: {job_obs_input_file}")
                                     for job_model_input_file in job_model_input_files_list:
                                         if not m_util.check_file(job_model_input_file):
-                                            print("MISSING or ZERO SIZE input file for"
+                                            print("NOTE: MISSING or ZERO SIZE input file for"
                                                   f" job {job_file}: {job_model_input_file}")
                             job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)

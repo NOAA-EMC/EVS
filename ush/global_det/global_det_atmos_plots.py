@@ -166,7 +166,7 @@ if JOB_GROUP in ['filter_stats', 'make_plots']:
     init_hrs = list(range(int(init_hr_start),
                           int(init_hr_end)+int(init_hr_inc),
                           int(init_hr_inc)))
-    fhrs = [int(i) for i in fhr_list.split(',')]
+    fhrs = [int(i) for i in fhr_list.split(', ')]
 
 # Set up plot information dictionary
 if JOB_GROUP != 'tar_images':

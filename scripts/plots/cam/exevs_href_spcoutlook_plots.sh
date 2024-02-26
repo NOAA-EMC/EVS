@@ -86,8 +86,7 @@ for stats in csi_fbias ratio_pod_csi ; do
     VARs='CAPEsfc MLCAPE'
     score_types='performance_diagram'   
  else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is not a valid stat"
  fi   
 
  for score_type in $score_types ; do
@@ -174,7 +173,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 6 -ppn 6 --cpu-bind verbose,core cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 6 -ppn 6 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -233,8 +232,8 @@ if [ -d $log_dir ]; then
 fi
 
 
-if [ $SENDCOM="YES" ]; then
- cpreq  evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then

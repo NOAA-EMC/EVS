@@ -80,8 +80,7 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
      fi
      score_types='lead_average'
    else
-     echo $stats is wrong stat
-     exit
+     err_exit "$stats is not a valid stat"
    fi   
 
  for score_type in $score_types ; do
@@ -177,7 +176,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 72 -ppn 72 --cpu-bind verbose,core cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -256,8 +255,8 @@ if [ -d $log_dir ]; then
     fi
 fi
 
-if [ $SENDCOM="YES" ]; then
- cpreq evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
