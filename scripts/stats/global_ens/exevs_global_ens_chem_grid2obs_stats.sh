@@ -157,7 +157,7 @@ for OBTTYPE in ${grid2obs_list}; do
         run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
-          cpfile=${finalstat}/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${OBTTYPE}_${outtype}.v${VDATE}.stat
+          cpfile=${finalstat}/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${OBTTYPE}_${outtype}.v${VDATE}.stat
           if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
         fi
       fi
