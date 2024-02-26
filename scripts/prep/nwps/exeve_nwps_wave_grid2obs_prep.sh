@@ -56,13 +56,13 @@ CGs='CG1 CG2 CG3 CG4 CG5 CG6'
 for wfo in $wfos; do
 	for CG in $CGs; do
 		for HH in ${HHs}; do
-			DATAfilename=${DATA}/gribs/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00.grib2
+			DATAfilename=${DATA}/grib2/${wfo}_nwps_${CG}_${INITDATE}_${HH}00.grib2
 			if [ ! -s DATAfilename ]; then
 				echo "WARNING: NO NWPS forecast was available for valid date ${INITDATE}"
 				if [ $SENDMAIL = YES ] ; then
 					export subject="NWPS Forecast Data Missing for EVS ${COMPONENT}"
-					echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
-					echo "Missing file is ${input_rtofs_file}" >> mailmsg
+					echo "Warning: No RTOFS forecast was available for ${INITDATE}" > mailmsg
+					echo "Missing file is ${DATAfilename}" >> mailmsg
 					echo "Job ID: $jobid" >> mailmsg
 	    				cat mailmsg | mail -s "$subject" $MAILTO
 				fi
@@ -77,7 +77,7 @@ for wfo in $wfos; do
 						else
 	    						grib2_match_fhr=":${fcst} hour fcst:"
 						fi
-						DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00_f${FCST}.grib2
+						DATAfilename_fhr=${DATA}/grib2/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00_f${FCST}.grib2
 						wgrib2 $DATAfilename -match "$grib2_match_fhr" -grib $DATAfilename_fhr > /dev/null
 						export err=$?; err_chk
 						if [ $SENDCOM = YES ]; then
