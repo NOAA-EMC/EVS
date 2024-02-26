@@ -1,17 +1,17 @@
 #!/bin/bash
 ##################################################################################
-# Name of Script: exevs_glwu_wave_grid2obs_plots.sh                           
+# Name of Script: exevs_nwps_wave_grid2obs_plots.sh                           
 # Samira Ardani / samira.ardani@noaa.gov                                    
-# Purpose of Script: Run the grid2obs plots for GLWU wave model           
+# Purpose of Script: Run the grid2obs plots for NWPS wave model           
 #                      
 #                                                                               
 # Usage:                                                                        
 #  Parameters: None                                                             
 #  Input files:                                                                 
-#     evs.stats.glwu.wave.grid2obs.vYYYYMMDD.stat                             
+#     evs.stats.nwps.wave.grid2obs.vYYYYMMDD.stat                             
 #  Output files:                                                                
-#     evs.plots.glwu.wave.grid2obs.last31days.vYYYYMMDD.tar                   
-#     evs.plots.glwu.wave.grid2obs.last90days.vYYYYMMDD.tar                   
+#     evs.plots.nwps.wave.grid2obs.last31days.vYYYYMMDD.tar                   
+#     evs.plots.nwps.wave.grid2obs.last90days.vYYYYMMDD.tar                   
 #                                                
 #################################################################################
 
@@ -58,11 +58,11 @@ plot_end_date=${VDATE}
 
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
-  EVSINglwu=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
-    if [ -s ${EVSINglwu}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
-	    cp ${EVSINglwu}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  EVSINnwps=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
+    if [ -s ${EVSINnwps}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
+	    cp ${EVSINnwps}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
     else
-	    echo "WARNING: ${EVSINglwu}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
+	    echo "WARNING: ${EVSINnwps}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
     fi
     theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
 done
@@ -76,20 +76,20 @@ echo " Found ${nc} ${DATA}/stats/evs*stat file for ${VDATE} "
 if [ "${nc}" != '0' ]
 then
 	set -x
-	echo "Successfully copied the GLWU *.stat file for ${VDATE}"
+	echo "Successfully copied the NWPS *.stat file for ${VDATE}"
 	[[ "$LOUD" = YES ]] && set -x
 else
 	set -x
 	echo ' '
 	echo '**************************************** '
-	echo '*** FATAL ERROR: NO GLWU *.stat FILES *** '
+	echo '*** FATAL ERROR: NO NWPS *.stat FILES *** '
 	echo "             for ${VDATE} "
 	echo '**************************************** '
 	echo ' '
-	echo "${MODELNAME}_${RUN} $VDATE $vhour : GLWU *.stat files missing."
+	echo "${MODELNAME}_${RUN} $VDATE $vhour : NWPS *.stat files missing."
 	[[ "$LOUD" = YES ]] && set -x
-	"FATAL ERROR: NO GLWU *.stat files for ${VDATE}"
-	err_exit "FATAL ERROR: Did not copy the GLWU *.stat files for ${VDATE}"
+	"FATAL ERROR: NO NWPS *.stat files for ${VDATE}"
+	err_exit "FATAL ERROR: Did not copy the NWPS *.stat files for ${VDATE}"
 	exit
 fi
 
@@ -119,7 +119,7 @@ fi
 # Gather all the files 
 #######################
 
-periods='PAST31DAYS PAST90DAYS'
+periods='LAST31DAYS'
 if [ $gather = yes ] ; then
 	echo "copying all images into one directory"
 	cp ${DATA}/wave/*png ${DATA}/sfcshp/.  ## lead_average plots 
@@ -127,10 +127,8 @@ if [ $gather = yes ] ; then
 	echo "copied $nc lead_average plots"
 	for period in ${periods} ; do
 		period_lower=$(echo ${period,,})
-		if [ ${period} = 'PAST31DAYS' ] ; then
+		if [ ${period} = 'LAST31DAYS' ] ; then
 			period_out='last31days'
-		elif [ ${period} = 'PAST90DAYS' ] ; then
-			period_out='last90days'
 		fi
 
 		# check to see if the plots are there
@@ -212,4 +210,4 @@ echo ' '
 [[ "$LOUD" = YES ]] && set -x
 
 
-# End of GLWU grid2obs plots script ------------------------------------- #
+# End of NWPS grid2obs plots script ------------------------------------- #
