@@ -53,9 +53,9 @@ if [ $prepare = yes ] ; then
 
   if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] && [ -s $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr ] ; then
 
-     $USHevs/cam/evs_href_preppare.sh prepbufr $domain
+     $USHevs/cam/evs_href_prepare.sh prepbufr $domain
      export err=$?; err_chk
-     $USHevs/cam/evs_href_preppare.sh gfs_prepbufr $domain
+     $USHevs/cam/evs_href_prepare.sh gfs_prepbufr $domain
      export err=$?; err_chk
 
   else
@@ -65,7 +65,9 @@ if [ $prepare = yes ] ; then
        echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 or $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
        cat mailmsg | mail -s "$subject" $MAILTO
-       exit
+       export verif_system=no
+       export verif_profile=no
+       export verif_product=no
   fi
 
 fi 
@@ -106,7 +108,7 @@ chmod 775 run_href_all_grid2obs_poe
 # Run the POE script to generate small stat files
 #*************************************************
 if [ $run_mpi = yes ] ; then
-    mpiexec -np 36 -ppn 36 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
+    mpiexec -np 72 -ppn 72 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
 else
     ${DATA}/run_href_all_grid2obs_poe

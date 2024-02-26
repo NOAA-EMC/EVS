@@ -18,9 +18,12 @@ export WORK=$DATA
 cd $WORK
 
 export run_mpi=${run_mpi:-'yes'}
-export prepare=${prepare:-'yes'}
 export verif_precip=${verif_precip:-'yes'}
 export verif_snowfall=${verif_snowfall:-'yes'}
+if [ "$verif_precip" = "no" ] && [ "$verif_snowfall" = "no" ] ; then
+    export prepare='no'
+fi
+export prepare=${prepare:-'yes'}
 export gather=${gather:-'yes'}
 export verify='precip'
 
@@ -42,7 +45,7 @@ export vday=$VDATE
 #**********************************
 if [ $prepare = yes ] ; then
  for precip in ccpa01h03h ccpa24h apcp24h_conus  apcp24h_alaska mrms ; do
-  $USHevs/cam/evs_href_preppare.sh  $precip
+  $USHevs/cam/evs_href_prepare.sh  $precip
   export err=$?; err_chk
  done
 fi
@@ -61,7 +64,7 @@ fi
 
 # Build sub-jobs for snowfall
 if [ $verif_snowfall = yes ] ; then
- $USHevs/cam/evs_href_snowfall.sh
+ source $USHevs/cam/evs_href_snowfall.sh
  export err=$?; err_chk
  cat ${DATA}/run_all_href_snowfall_poe.sh >> run_all_precip_poe.sh
 fi
@@ -86,6 +89,9 @@ fi
 #******************************************************************
 # Run gather job to combine the small stats to form a big stat file
 #******************************************************************
+if [ "$verif_precip" = "no" ] && [ "$verif_snowfall" = "no" ] ; then
+    export gather='no'
+fi
 if [ $gather = yes ] ; then
   $USHevs/cam/evs_href_gather.sh precip
   export err=$?; err_chk
