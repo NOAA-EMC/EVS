@@ -28,7 +28,7 @@ export METPLUS_PATH
 
 grid2obs_list="aeronet airnow"
 
-export mdl_cyc="00"
+export vld_cyc="00"
 
 flag_send_message=NO
 if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
@@ -44,6 +44,7 @@ for OBTTYPE in ${grid2obs_list}; do
 ##    esac
 
     if [ "${OBTTYPE}" == "aeronet" ]; then
+        fcstmax=24
         outtype=aod
         check_file=${EVSINgefs}/${RUN}.${VDATE}/${MODELNAME}/aeronet_All_${VDATE}_lev15.nc
         num_obs_found=0
@@ -60,6 +61,7 @@ for OBTTYPE in ${grid2obs_list}; do
         fi
         echo "index of daily aeronet obs found = ${num_obs_found}"
     elif [ "${OBTTYPE}" == "airnow" ]; then
+        fcstmax=24
         outtype=pm25
 
         cdate=${VDATE}${vhr}
@@ -79,17 +81,87 @@ for OBTTYPE in ${grid2obs_list}; do
             flag_send_message=YES
           fi
         fi
-        echo "index of hourly obs found = ${num_obs_found}"
+        echo "index of hourly AirNOW obs found = ${num_obs_found}"
     fi
-    #############################
-    # run Point Stat Analysis
-    #############################
+
     #LEAD_SEQ = 0, 3, 6, 9, 12, 15, 18, 21
-    checkfile=${COMINgefs}/${MODELNAME}.${VDATE}/${mdl_cyc}/${RUN}/pgrb2ap25
-    checkfile=${MODELNAME}.${RUN}.${mdl_cyc}.a2d_0p25.f${filehr}.grib2
-FCST_POINT_STAT_INPUT_TEMPLATE = {ENV[MODELNAME]}.{lead?fmt=%Y%m%d}/{ENV[mdl_cyc]}/{ENV[RUN]}/pgrb2ap25/{ENV[MODELNAME]}.{ENV[RUN]}.{cycle}.a2d_0p25.f{lead?fmt=%3H}.grib2
-    run_metplus.py ${point_stat_conf_file} ${config_common}
-    export err=$?; err_chk
+    for hour in ${vld_cyc}; do
+      export mdl_cyc=${hour}    ## is needed for *.conf
+
+      let ihr=3
+      num_fcst_in_metplus=0
+      recorded_temp_list=${DATA}/fcstlist_in_metplus
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      while [ ${ihr} -le ${fcstmax} ]; do
+        filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7
+        fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
+        export fhr
+    
+        export datehr=${VDATE}${vhr}
+        adate=`${NDATE} -${ihr} ${datehr}`
+        aday=`echo ${adate} |cut -c1-8`
+        acyc=`echo ${adate} |cut -c9-10`
+        if [ ${acyc} = ${hour} ]; then
+          fcst_file=${COMINgefs}/${MODELNAME}.${aday}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.grib2
+          if [ -s ${fcst_file} ]; then
+            echo "${fhr} found"
+            echo ${fhr} >> ${recorded_temp_list}
+            let "num_fcst_in_metplus=num_fcst_in_metplus+1"
+          else
+            if [ $SENDMAIL = "YES" ]; then
+              echo "WARNING: No ${model1} ${outtype} forecast was available for ${aday} t${acyc}z" > mailmsg
+              echo "Missing file is ${fcst_file}" >> mailmsg
+              echo "==============" >> mailmsg
+            fi
+
+            echo "WARNING: No ${model1} ${outtype} forecast was available for ${aday} t${acyc}z"
+            echo "WARNING: Missing file is ${fcst_file}"
+          fi 
+        fi 
+        ## ((ihr++))
+        let "ihr=ihr+3"
+      done
+      if [ -s ${recorded_temp_list} ]; then
+        export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+      fi
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      export num_fcst_in_metplus
+      echo "number of fcst lead in_metplus point_stat for ${model1} ${outtype} == ${num_fcst_in_metplus}"
+    
+      if [ ${num_fcst_in_metplus} -gt 0 -a ${num_obs_found} -eq 1 ]; then
+        export fcsthours=${fcsthours_list}
+        #############################
+        # run Point Stat Analysis
+        #############################
+        run_metplus.py ${point_stat_conf_file} ${config_common}
+        export err=$?; err_chk
+      else
+        echo "WARNING: NO ${model1} ${outtype} FORECAST OR OBS TO VERIFY"
+        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${num_obs_found}"
+      fi
+    done   ## hour loop
+    mkdir -p ${COMOUTsmall}
+    if [ ${SENDCOM} = "YES" ]; then
+      cpdir=${DATA}/point_stat/${MODELNAME}
+      if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
+        stat_file_count=$(find ${cpdir} -name "*${MODELNAME}_${OBTTYPE}_${outtype}*" | wc -l)
+        if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${MODELNAME}_${OBTTYPE}_${outtype}* ${COMOUTsmall}; fi
+      fi
+    fi
+    if [ "${vhr}" == "21" ]; then
+      mkdir -p ${COMOUTfinal}
+      stat_file_count=$(find ${COMOUTsmall} -name "*${MODELNAME}_${OBTTYPE}_${outtype}*" | wc -l)
+      if [ ${stat_file_count} -ne 0 ]; then
+        cpreq ${COMOUTsmall}/*${outtyp}${outtype}* ${finalstat}
+        cd ${finalstat}
+        run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
+        export err=$?; err_chk
+        if [ ${SENDCOM} = "YES" ]; then
+          cpfile=${finalstat}/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${OBTTYPE}_${outtype}.v${VDATE}.stat
+          if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
+        fi
+      fi
+    fi
 
 done
 if [ "${flag_send_message}" == "YES" ]; then

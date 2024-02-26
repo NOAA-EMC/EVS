@@ -33,7 +33,7 @@ cd ${DATA}
 ####################################
 ## Determine Job Output Name on System
 #####################################
-export cycle=${cycle:t${cyc}z}
+export cycle=${cycle:t${vhr}z}
 
 setpdy.sh 8
 . ./PDY
