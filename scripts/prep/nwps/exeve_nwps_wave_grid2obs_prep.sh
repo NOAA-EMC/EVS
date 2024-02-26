@@ -33,7 +33,7 @@ mkdir -p ${DATA}/grib2
 echo 'Copying NWPS wave grib2 files'
 
 HHs='00 06 12 18'
-leads='000 024 048 072 096 120 144 168 192'
+leads='000 024 048 072 096 120 144'
 regions='ar er pr sr wr'
 
 for region in ${regions} ; do
@@ -69,15 +69,15 @@ for wfo in $wfos; do
 			else
 				while (( $fcst <= 144 )); do
 					FCST=$(printf "%03d" "$fcst")
-	    				DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00_f${FCST}.grib2
-					ARCmodelfilename_fhr=${ARCmodel}/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00_f${FCST}.grib2
+	    				DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}_${INITDATE}_${HH}00_f${FCST}.grib2
+					ARCmodelfilename_fhr=${ARCmodel}/${wfo}_nwps_${CG}_${INITDATE}_${HH}00_f${FCST}.grib2
 					if [ ! -s $ARCmodelfilename_fhr ]; then
 						if [ $fcst = 0 ]; then
 							grib2_match_fhr=":surface:anl:"
 						else
 	    						grib2_match_fhr=":${fcst} hour fcst:"
 						fi
-						DATAfilename_fhr=${DATA}/grib2/${wfo}_nwps_${CG}_${INITHOUR}_${HH}00_f${FCST}.grib2
+						DATAfilename_fhr=${DATA}/grib2/${wfo}_nwps_${CG}_${INITDATE}_${HH}00_f${FCST}.grib2
 						wgrib2 $DATAfilename -match "$grib2_match_fhr" -grib $DATAfilename_fhr > /dev/null
 						export err=$?; err_chk
 						if [ $SENDCOM = YES ]; then
@@ -96,12 +96,12 @@ done
 ############################################################
 
 export RUN=ndbc
-mkdir -p $COMOUTprep/glwu.$VDATE/$RUN
+mkdir -p $COMOUTprep/nwps.$VDATE/$RUN
 mkdir -p ${DATA}/ncfiles
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
 ndbc_txt_ncount=$(ls -l $DCOMINndbc/$VDATE/validation_data/marine/buoy/*.txt |wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
-   run_metplus.py -c $CONFIGevs/metplus_glwu.conf \
+   run_metplus.py -c $CONFIGevs/metplus_nwps.conf \
      -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsNDBC.conf
    export err=$?; err_chk
    if [ $SENDCOM = YES ]; then
