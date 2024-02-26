@@ -9,7 +9,7 @@
 ###   Change Logs:
 ###
 ###   01/16/2024   Ho-Chun Huang  EVSv1.0 EE2 compliance
-###   01/30/2024   Ho-Chun Huang  for single email of missing files of both OBS
+###   01/30/2024   Ho-Chun Huang  for a single email of missing files of both OBS and FCST
 ###
 ########################################################################
 set -x
@@ -41,8 +41,7 @@ for OBTTYPE in ${obstype}; do
                 if [ ${SENDCOM} = "YES" ]; then
                     cpfile=${finalprep}/${OBTTYPE}_All_${VDATE}_lev15.nc
                     if [ -e ${cpfile} ]; then
-                        if [ ! -d ${COMOUTprep} ]; then mkdir -p ${COMOUTprep}; fi
-                        cpreq ${cpfile} ${COMOUTprep}
+                        cp -v ${cpfile} ${COMOUTprep}
                     fi
                 fi
             else
@@ -86,7 +85,7 @@ for OBTTYPE in ${obstype}; do
                     export err=$?; err_chk
                     if [ ${SENDCOM} = "YES" ]; then
                         cpfile=${finalprep}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc 
-                        if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTprep}; fi
+                        if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
                     fi
                 else
                     echo "WARNING: can not find ${prep_config_file}"
@@ -105,14 +104,14 @@ for OBTTYPE in ${obstype}; do
             ((ic++))
         done
     else
-        echo "DEBUG :: OBTTYPE=${OBTTYPE} is not define for ${COMPONENT}_${RUN} ${STEP} operationa"
+        echo "DEBUG :: OBTTYPE=${OBTTYPE} is not defined for ${COMPONENT}_${RUN} ${STEP} operationa"
     fi
 
 done
 if [ "${flag_send_message}" == "YES" ]; then
     export subject="AEORNET Level 1.5 NC or AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}_${RUN}"
-    echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "${subject}" $MAILTO 
+    echo "Job ID: ${jobid}" >> mailmsg
+    cat mailmsg | mail -s "${subject}" ${MAILTO}
 fi 
 
 exit

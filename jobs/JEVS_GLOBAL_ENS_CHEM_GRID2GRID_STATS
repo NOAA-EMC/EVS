@@ -13,7 +13,7 @@ set -xa
 ### SENDMAIL - Send email if file is missing
 ###################################################
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
@@ -27,8 +27,8 @@ export PS4='$SECONDS + '
 ### obtain unique LSF id (jobid) and make temp directories
 #############################################################
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-mkdir -p $DATA
-cd $DATA
+mkdir -p ${DATA}
+cd ${DATA}
 
 export cycle=${cycle:t${cyc}z}
 
@@ -39,7 +39,7 @@ export envir=${envir:-prod}
 
 # Define COMIN/COMOUT variables:
 
-echo $COMPATH
+echo ${COMPATH}
 
 export NET=${NET:-evs}
 export STEP=${STEP:-stats}
@@ -65,22 +65,22 @@ export VDATE=${VDATE:-${PDYm2}}
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMINgefs=${COMINgefs:-$(compath.py -o ${modsys}/${mod_ver}}
 export DCOMIN=${DCOMIN:-${DCOMROOT}}
-export EVSINgefs=${EVSINgefs:-${COMIN}/prep/$COMPONENT)}
+export EVSINgefs=${EVSINgefs:-${COMIN}/prep/${COMPONENT})}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${STEP}/${COMPONENT}/$OBTTYPE.${VDATE}}
 export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${STEP}/${COMPONENT}/$COMPONENT.${VDATE}}
 
-mkdir -p ${COMOUTsmall} ${COMOUTfinal}
+mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
 #######################################################################
 ## Execute the script.
 #########################################################################
 ${HOMEevs}/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
+msg="JOB ${job} HAS COMPLETED NORMALLY."
+postmsg "${msg}"
 
-if [ "$KEEPDATA" != "YES" ]; then
-    cd $DATAROOT
-    rm -rf $DATA
+if [ "${KEEPDATA}" != "YES" ]; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
 fi
 
