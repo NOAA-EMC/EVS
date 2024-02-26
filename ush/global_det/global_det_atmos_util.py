@@ -139,6 +139,7 @@ def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
     if not os.path.exists(log_missing_file):
         with open(log_missing_file, "w") as lmf:
             lmf.write("#!/bin/bash\n")
+            lmf.write("set -x\n")
             if fhr == 'anl':
                 lmf.write(f'export subject="{model.upper()} Analysis '
                           +'Data Missing for EVS global_det"\n')
@@ -168,6 +169,7 @@ def log_missing_file_truth(log_missing_file, missing_file, obs, valid_dt):
     if not os.path.exists(log_missing_file):
         with open(log_missing_file, "a") as lmf:
             lmf.write("#!/bin/bash\n")
+            lmf.write("set -x\n")
             lmf.write(f'export subject="{obs} Data Missing for EVS '
                       +'global_det"\n')
             lmf.write(f'echo "Warning: No {obs} data was available for '
