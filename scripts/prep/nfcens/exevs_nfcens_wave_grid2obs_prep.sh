@@ -83,6 +83,60 @@ for HH in ${HHs} ; do
     fi
 done
 
+
+
+###############################################################################
+## create today's FNMOC individual fcst grib files and add them to the archive
+################################################################################
+echo 'copy the FNMOC model grib files'
+for HH in ${HHs} ; do
+	fcst=0
+	while (( $fcst <=144 )); do
+		FCST=$(printf "%03d" "$fcst")
+		COMINfnmoc="${COMINfnmoc}/wave_{INITDATE}${HH}f${FCST}.grib"
+		DATAfilenamefnmoc="${DATA}/gribs/wave_${INITDATE}${HH}f${FCST}.grib"
+		if [ ! -s $COMINfnmoc ]; then
+			if [ $SENDMAIL = YES ]; then
+				export subject="FNMOC Forecast Data Missing for EVS ${COMPONENT}"
+				echo "WARNING: No FNMOC forecast was available for ${INITDATE}${HH}" > mailmsg
+				echo "WARNING: Missing file is $COMINfnmoc" >> mailmsg
+				echo "Job ID: $jobid" >> mailmsg
+				cat mailmsg | mail -s "$subject" $MAILTO
+			fi
+		else
+			cp -v $COMINfnmoc $DATAfilenamefnmoc
+		fi
+		fcst=$(( $fcst+ 24 ))
+	done
+done
+
+##################################################################################
+# create today's GEFS-wave individual fcst grib2 files and add them to the archive
+##################################################################################
+
+echo 'copy the GEFS-wave model grib files'
+for HH in ${HHs} ; do
+	fcst=0
+	while (( $fcst <=240 )); do
+		FCST=$(printf "%03d" "$fcst")
+		COMINgefs="${COMINgefs}/gefs.{INITDATE}/${HH}/wave/gridded/gefs.wave.t${HH}z.mean.global.0p25.f${FCST}.grib2"
+		DATAfilenamegefs="${DATA}/gribs/gefs.wave.t${HH}z.mean.global.0p25.f${FCST}.grib2"
+		if [ ! -s $COMINgefs ]; then
+		if [ $SENDMAIL = YES ]; then
+			export subject="GEFS wave Forecast Data Missing for EVS ${COMPONENT}"
+			echo "WARNING: No GEFS wave forecast was available for ${INITDATE}${HH}" > mailmsg
+			echo "WARNING: Missing file is $COMINgefs" >> mailmsg
+			echo "Job ID: $jobid" >> mailmsg
+			cat mailmsg | mail -s "$subject" $MAILTO
+		fi
+		else
+		cp -v $COMINgefs $DATAfilenamegefs
+		fi
+		fcst=$(( $fcst+ 24 ))
+	done
+done
+
+
 ############################################
 # get the GDAS prepbufr files for yesterday 
 ############################################
