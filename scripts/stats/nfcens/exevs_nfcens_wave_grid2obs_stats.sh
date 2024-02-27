@@ -77,6 +77,19 @@ for vhr in ${vhours} ; do
         DATAmodelfilename=$DATA/gribs/HTSGW_mean.${match_date}.t${match_fhr}z.f${flead}.grib2
         DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
         COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+	EVSINgefsfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
+	DATAgefsfilename=$DATA/gribs/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
+	DATAgefsstatfilename=$DATA/all_stats/point_stat_fcst${MOD1NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+	COMOUTgefsstatfilename=$COMOUTsmall/point_stat_fcst${MOD1NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+	EVSINfnmocfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/gefs.wave.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
+	DATAfnmocfilename=$DATA/gribs/wave_{INITDATE}${match_fhr}f${flead}.grib
+	DATAfnmocstatfilename=$DATA/all_stats/point_stat_fcst${MOD2NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+	COMOUTfnmocstatfilename=$COMOUTsmall/point_stat_fcst${MOD2NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+
+        ############################################################################################
+	#Poitn-stat for nfcents:
+	############################################################################################
+	
         if [[ -s $COMOUTstatfilename ]]; then
             cp -v $COMOUTstatfilename $DATAstatfilename
         else
@@ -112,6 +125,91 @@ for vhr in ${vhours} ; do
                 fi
             fi
         fi
+
+        ###############################################################################
+        # Point-stat for gefs model:
+        ##############################################################################
+
+        if [[ -s $COMOUTgefsstatfilename ]]; then
+            cp -v $COMOUTgefsstatfilename $DATAgefsstatfilename
+        else
+            if [[ ! -s $DATAgdasncfilename ]]; then
+                if [[ -s $EVSINgdasncfilename ]]; then
+                    cp -v $EVSINgdasncfilename $DATAgdasncfilename
+                else
+                    echo "WARNING: DOES NOT EXIST $EVSINgdasncfilename"
+                fi
+            fi
+            if [[ -s $DATAgdasncfilename ]]; then
+                if [[ ! -s $DATAgefsfilename ]]; then
+                    if [[ -s $EVSINgefsfilename ]]; then
+                        cp -v $EVSINgefsfilename $DATAgefsfilename
+                    else
+                        echo "WARNING: DOES NOT EXIST $EVSINgefsfilename"
+                    fi
+                fi
+                if [[ -s $DATAgefsfilename ]]; then
+                    echo "export climo_level_str=${climo_level_str}" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+
+                    echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+		    export err=$?; err_chk
+                    echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    if [ $SENDCOM = YES ]; then
+                        echo "cp -v $DATAgefsstatfilename $COMOUTgefsstatfilename" >> ${DATA}/jobs/run_${MODE1LNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    fi
+
+                    chmod +x ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+      
+                    echo "${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODEL1NAME}_${RUN}_g2o_poe.sh
+                fi
+            fi
+        fi
+
+
+        ###############################################################################
+        # Point-stat for fnmoc model:
+        ##############################################################################
+
+        if [[ -s $COMOUTfnmocstatfilename ]]; then
+            cp -v $COMOUTfnmocstatfilename $DATAgefsstatfilename
+        else
+            if [[ ! -s $DATAgdasncfilename ]]; then
+                if [[ -s $EVSINgdasncfilename ]]; then
+                    cp -v $EVSINgdasncfilename $DATAgdasncfilename
+                else
+                    echo "WARNING: DOES NOT EXIST $EVSINgdasncfilename"
+                fi
+            fi
+            if [[ -s $DATAgdasncfilename ]]; then
+                if [[ ! -s $DATAfnmocfilename ]]; then
+                    if [[ -s $EVSINfnmocfilename ]]; then
+                        cp -v $EVSINfnmocfilename $DATAgefsfilename
+                    else
+                        echo "WARNING: DOES NOT EXIST $EVSINfnmocfilename"
+                    fi
+                fi
+                if [[ -s $DATAfnmocfilename ]]; then
+                    echo "export climo_level_str=${climo_level_str}" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+
+                    echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstFNMOC_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+		    export err=$?; err_chk
+                    echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    if [ $SENDCOM = YES ]; then
+                        echo "cp -v $DATAfnmocstatfilename $COMOUTfnmocstatfilename" >> ${DATA}/jobs/run_${MODE2LNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    fi
+
+                    chmod +x ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+      
+                    echo "${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODEL2NAME}_${RUN}_g2o_poe.sh
+
+                fi
+            fi
+        fi
+
     done
 done
 
