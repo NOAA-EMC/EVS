@@ -3,9 +3,11 @@
 # Name of Script: exevs_nfcens_wave_grid2obs_stats.sh                           
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                    
 # Mallory Row / Mallory.Row@noaa.gov
+# Samira Ardani / samira.ardani@noaa.gov
+#
 # Purpose of Script: Run the grid2obs stats for any global wave model           
 #                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NWPS)    
-#                                                                               
+# 		    EVSv2: FNMOC anf GEFS were added to plot against NFCENS.	                                                                              
 # Usage:                                                                        
 #  Parameters: None                                                             
 #  Input files:                                                                 
@@ -216,15 +218,17 @@ done
 #######################
 # Run the command file 
 #######################
-if [[ -s ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh ]]; then
-    if [ ${run_mpi} = 'yes' ] ; then
-        mpiexec -np 36 -ppn 36 --cpu-bind verbose,core cfp ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
-    else
-        echo "not running mpiexec"
-        sh ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
-    fi
-fi
-
+models='nfcens gefs fnmoc'
+for model in ${models}; do
+	if [[ -s ${DATA}/jobs/run_all_${model}_${RUN}_g2o_poe.sh ]]; then
+    		if [ ${run_mpi} = 'yes' ] ; then
+        	mpiexec -np 36 -ppn 36 --cpu-bind verbose,core cfp ${DATA}/jobs/run_all_${model}_${RUN}_g2o_poe.sh
+    	else
+        	echo "not running mpiexec"
+        	sh ${DATA}/jobs/run_all_${model}_${RUN}_g2o_poe.sh
+    	fi
+	fi
+done
 #######################
 # Gather all the files 
 #######################
@@ -238,19 +242,25 @@ if [ $gather = yes ] ; then
       # Use StatAnalysis to gather the small stat files into one file
       run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNFCENS_obsGDAS.conf
       export err=$?; err_chk
-      if [ $SENDCOM = YES ]; then
-          if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-              cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
-          else
-              echo "WARNING: DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
-          fi
-      fi
+
+      run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstGEFS_obsGDAS.conf
+      export err=$?; err_chk
+      
+      run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstFNMOC_obsGDAS.conf
+      export err=$?; err_chk
+      for model in ${models}; do
+	      if [ $SENDCOM = YES ]; then
+		      if [ -s ${DATA}/stats/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+			      cp -v ${DATA}/stats/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+		      else
+			      echo "WARNING: DOES NOT EXIST ${DATA}/stats/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+		      fi
+	      fi
+      done
   else
       echo "WARNING: NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
   fi
-
 fi
-
 #############################
 # Cat the stat log files
 #############################

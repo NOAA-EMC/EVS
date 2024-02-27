@@ -3,9 +3,10 @@
 # Name of Script: exevs_nfcens_wave_grid2obs_prep.sh                           
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                   
 # Mallory Row / Mallory.Row@noaa.gov
+# Samira Ardani / samira.ardani@noaa.gov
 # Purpose of Script: Run the grid2obs data prep for any global wave model      
 #                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NWPS)   
-#                                                                              
+#                    NFCENSv2: Add FNMOC and GEFS model to compare against NFCENS                                                          
 # Usage:                                                                       
 #  Parameters: None                                                            
 #  Input files:                                                                
