@@ -142,7 +142,7 @@ for OBTTYPE in ${grid2obs_list}; do
     done   ## hour loop
     mkdir -p ${COMOUTsmall}
     if [ ${SENDCOM} = "YES" ]; then
-      cpdir=${DATA}/point_stat/${MODELNAME}
+      cpdir=${DATA}/point_stat/${MODELNAME}_${OBTTYPE}
       if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${MODELNAME}_${OBTTYPE}_${outtype}*" | wc -l)
         if [ ${stat_file_count} -ne 0 ]; then cp -v ${cpdir}/*${MODELNAME}_${OBTTYPE}_${outtype}* ${COMOUTsmall}; fi
@@ -152,12 +152,12 @@ for OBTTYPE in ${grid2obs_list}; do
       mkdir -p ${COMOUTfinal}
       stat_file_count=$(find ${COMOUTsmall} -name "*${MODELNAME}_${OBTTYPE}_${outtype}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
-        cpreq ${COMOUTsmall}/*${outtyp}${outtype}* ${finalstat}
+        cpreq ${COMOUTsmall}/*${MODELNAME}_${OBTTYPE}_${outtype}* ${finalstat}
         cd ${finalstat}
         run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
-          cpfile=${finalstat}/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${OBTTYPE}_${outtype}.v${VDATE}.stat
+          cpfile=${finalstat}/${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${OBTTYPE}_${outtype}.v${VDATE}.stat
           if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
         fi
       fi

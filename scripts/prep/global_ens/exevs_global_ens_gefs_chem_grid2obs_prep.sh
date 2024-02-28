@@ -3,7 +3,7 @@
 ###  UNIX Script Documentation Block
 ###                      .
 ### Script name:         exevs_global_ens_chem_grid2obs_prep.sh
-### Script description:  To run grid-to-grid verification on all global chem
+### Script description:  To run grid-to-obs verification on GEFS-aerosol (chem-component)
 ### Original Author   :  Partha Bhattacharjee
 ###
 ###   Change Logs:
@@ -12,11 +12,14 @@
 ###   01/30/2024   Ho-Chun Huang  for a single email of missing files of both OBS and FCST
 ###
 ########################################################################
+#
 set -x
 
 cd ${DATA}
 
-## For temporary stoage on the working dirary before moving to COMOUT
+#
+## For temporary stoage on the working dirary before moving to COMOUT with SENDCOM setting
+#
 export finalprep=${DATA}/final
 mkdir -p ${finalprep}
 
