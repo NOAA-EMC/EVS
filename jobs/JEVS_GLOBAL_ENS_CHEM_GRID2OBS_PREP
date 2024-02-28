@@ -30,7 +30,8 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p ${DATA}
 cd ${DATA}
 
-export cycle=${cycle:-t${cyc}z}
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 
 setpdy.sh 8
 . ./PDY

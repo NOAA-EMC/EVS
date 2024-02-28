@@ -52,11 +52,11 @@ export mod_ver=${mod_ver:-${gefs_ver}}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
-export USHevs=${USHevs:-${HOMEevs}/ush/$COMPONENT}
+export USHevs=${USHevs:-${HOMEevs}/ush/${COMPONENT}}
 export EXECevs=${EXECevs:-${HOMEevs}/exec}
 export PARMevs=${PARMevs:-${HOMEevs}/parm}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
-## to be determined export MASKS=${MASKS:-$FIXevs/masks}
+## to be determined export MASKS=${MASKS:-${FIXevs}/masks}
 
 ## PDYm2 for abi, viirs
 ## PDYm3 for goes5, icap
@@ -67,8 +67,8 @@ export COMINgefs=${COMINgefs:-$(compath.py -o ${modsys}/${mod_ver}}
 export DCOMIN=${DCOMIN:-${DCOMROOT}}
 export EVSINgefs=${EVSINgefs:-${COMIN}/prep/${COMPONENT})}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
-export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${STEP}/${COMPONENT}/$OBTTYPE.${VDATE}}
-export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${STEP}/${COMPONENT}/$COMPONENT.${VDATE}}
+export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
+export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}}
 
 mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
 #######################################################################
