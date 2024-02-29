@@ -2087,14 +2087,19 @@ def initalize_job_env_dict(verif_type, group,
         'evs_run_mode'
     ]
     if group in ['reformat_data', 'assemble_data', 'generate_stats', 'gather_stats']:
-        os.environ['MET_TMP_DIR'] = os.path.join(
-            os.environ['DATA'],
-            os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
-            'METplus_output', 'tmp'
-        )
+        if os.environ['VERIF_CASE'] == 'wmo':
+           os.environ['MET_TMP_DIR'] = os.path.join(
+                os.environ['DATA'], 'tmp'
+           )
+        else:
+            os.environ['MET_TMP_DIR'] = os.path.join(
+                os.environ['DATA'],
+                os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
+                'METplus_output', 'tmp'
+            )
         make_dir(os.environ['MET_TMP_DIR'])
         job_env_var_list.extend(
-            ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR', 'COMROOT']
+            ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR']
         )
     elif group in ['condense_stats', 'filter_stats', 'make_plots',
                    'tar_images']:
@@ -2104,6 +2109,10 @@ def initalize_job_env_dict(verif_type, group,
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
+    if os.environ['VERIF_CASE'] == 'wmo':
+        for env_var in ['MODELNAME', 'COMINgfs', 'JOB_GROUP']:
+            job_env_dict[env_var] = os.environ[env_var]
+        return job_env_dict
     if group in ['condense_stats', 'filter_stats', 'make_plots',
                  'tar_images']:
         job_env_dict['plot_verbosity'] = 'DEBUG'
