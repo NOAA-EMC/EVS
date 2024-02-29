@@ -52,6 +52,7 @@ export NET=${NET:-evs}
 export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2grid}
 export machine=${machine:-WCOSS2}
 export evs_run_mode=${evs_run_mode:-production}
 
