@@ -37,10 +37,10 @@ if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
 for ObsType in ${grid2obs_list}; do
     export MdlObsStat=${DATA}/point_stat/${MODELNAME}_${ObsType}  # define config variable
     export OutputId=${MODELNAME}_${ObsType}_${obs_var}            # define config variable
-    export ${ObsType}
-    export config_name=`echo ${ObsType} | tr a-z A-Z`
-    point_stat_conf_file=${CONFIGevs}/PointStat_fcstGEFSAero_obs${config_name}.conf
-    stat_analysis_conf_file=${CONFIGevs}/Statanalysis_fcstGEFSAero_obs${config_name}.conf
+    export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${obs_var}
+    export OBSTYPE=`echo ${ObsType} | tr a-z A-Z`
+    point_stat_conf_file=${CONFIGevs}/PointStat_fcstGEFSAero_obs${OBSTYPE}.conf
+    stat_analysis_conf_file=${CONFIGevs}/Statanalysis_fcstGEFSAero_obs${OBSTYPE}.conf
 
 ##    case ${ObsType} in
 ##        aeronet) export obs_var=aod;;
@@ -50,14 +50,14 @@ for ObsType in ${grid2obs_list}; do
     if [ "${ObsType}" == "aeronet" ]; then
         fcstmax=24
         obs_var=aod
-        check_file=${EVSINgefs}/${RUN}.${VDATE}/${MODELNAME}/aeronet_All_${VDATE}_lev15.nc
+        check_file=${EVSINgefs}/${RUN}.${VDATE}/${MODELNAME}/${ObsType}_All_${VDATE}_lev15.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "WARNING: Can not find pre-processed AEORNET Level 1.5 input ${check_file}"
+          echo "WARNING: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
           if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "WARNING: No pre-processed AEORNET Level 1.5 was available for ${VDATE} " >> mailmsg
+            echo "WARNING: No pre-processed ${OBSTYPE} Level 1.5 was available for ${VDATE} " >> mailmsg
             echo "Missing file is ${check_file}" >> mailmsg
             echo "==============" >> mailmsg
             flag_send_message=YES
@@ -72,14 +72,14 @@ for ObsType in ${grid2obs_list}; do
         vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
         vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
-        check_file=${EVSINaqm}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+        check_file=${EVSINaqm}/${RUN}.${vld_date}/${MODELNAME}/${ObsType}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "WARNING: Can not find pre-processed obs hourly input ${check_file}"
+          echo "WARNING: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
           if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "WARNING: No AQM ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" >> mailmsg
+            echo "WARNING: No ${OBSTYPE} ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" >> mailmsg
             echo "Missing file is ${check_file}" >> mailmsg
             echo "==============" >> mailmsg
             flag_send_message=YES
@@ -162,7 +162,7 @@ for ObsType in ${grid2obs_list}; do
         run_metplus.py ${stat_analysis_conf_file} ${config_common}
         export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
-          cpfile=${finalstat}/${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${obs_var}.v${VDATE}.stat
+          cpfile=${finalstat}/${StatFileId}.v${VDATE}.stat
           if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
         fi
       fi
@@ -170,7 +170,7 @@ for ObsType in ${grid2obs_list}; do
 
 done
 if [ "${flag_send_message}" == "YES" ]; then
-    export subject="pre-process AERONET or Hourly Observed AirNOW Missing for EVS ${COMPONENT}"
+    export subject="${OBSTYPE} Obs or ${CMODLE} Fcst files Missing for EVS ${COMPONENT} ${RUN} ${VERIF_CASE}"
     echo "Job ID: ${jobid}" >> mailmsg
     cat mailmsg | mail -s "${subject}" ${MAILTO}
 fi 
