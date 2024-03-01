@@ -2083,10 +2083,11 @@ def initalize_job_env_dict(verif_type, group,
     """
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
-        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM', 'COMOUT',
-        'evs_run_mode'
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
+        'COMOUT', 'evs_run_mode'
     ]
-    if group in ['reformat_data', 'assemble_data', 'generate_stats', 'gather_stats']:
+    if group in ['reformat_data', 'assemble_data', 'generate_stats',
+                 'gather_stats', 'summarize_stats']:
         if os.environ['VERIF_CASE'] == 'wmo':
            os.environ['MET_TMP_DIR'] = os.path.join(
                 os.environ['DATA'], 'tmp'

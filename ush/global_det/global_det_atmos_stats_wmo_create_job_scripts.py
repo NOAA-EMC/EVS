@@ -28,6 +28,7 @@ VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
 VDATE = os.environ['VDATE']
+VYYYYmm = os.environ['VYYYYmm']
 MODELNAME = os.environ['MODELNAME']
 JOB_GROUP = os.environ['JOB_GROUP']
 machine = os.environ['machine']
@@ -38,6 +39,7 @@ MET_ROOT = os.environ['MET_ROOT']
 PARMevs = os.environ['PARMevs']
 
 VDATE_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
+VYYYYmm_dt = datetime.datetime.strptime(VYYYYmm, '%Y%m')
 
 # Check only running for GFS
 if MODELNAME != 'gfs':
@@ -56,7 +58,11 @@ fhr_0p25_file_format = os.path.join(
 
 # WMO Verifcations
 wmo_verif_list = ['grid2grid_upperair']
-
+wmo_verif_settings_dict = {
+    'grid2grid_upperair': {'valid_hour_list': ['00', '12'],
+                           'fhr_list': [str(fhr) for fhr \
+                                        in range(12,240+12,12)]}
+}
 # Set up job directory
 njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, 'jobs', JOB_GROUP)
@@ -71,9 +77,13 @@ if JOB_GROUP == 'generate_stats':
          print(f"----> Making job scripts for {VERIF_CASE} {wmo_verif} {STEP} "
                +f"for job group {JOB_GROUP}")
          # Set WMO verification specifications
+         wmo_verif_valid_hour_list = (
+             wmo_verif_settings_dict[wmo_verif]['valid_hour_list']
+         )
+         wmo_verif_fhr_list = (
+             wmo_verif_settings_dict[wmo_verif]['fhr_list']
+         )
          if wmo_verif == 'grid2grid_upperair':
-             wmo_verif_valid_hour_list = ['00', '12']
-             wmo_verif_fhr_list = [str(fhr) for fhr in range(12,240+12,12)]
              wmo_verif_metplus_conf = ('GridStat_fcstGFS_obsGFS_ANL_'
                                        +'climoERA_INTERIM.conf')
          for vhr in wmo_verif_valid_hour_list:
@@ -228,7 +238,7 @@ elif JOB_GROUP == 'gather_stats':
     else:
         if have_fhr_stat_files:
             job.write(
-                gda_util.metplus_command('StatAnalysis_fcstGFS.conf')
+                gda_util.metplus_command('StatAnalysis_fcstGFS_filter.conf')
                 +'\n'
             )
             job.write('export err=$?; err_chk\n')
@@ -239,6 +249,111 @@ elif JOB_GROUP == 'gather_stats':
                 )
                 job.write('export err=$?; err_chk')
     job.close()
+elif JOB_GROUP == 'summarize_stats':
+    job_env_dict = gda_util.initalize_job_env_dict('all', JOB_GROUP,
+                                                   VERIF_CASE, 'all')
+    job_env_dict['year_month'] = VYYYYmm
+    job_env_dict['valid_date'] = VDATE
+    # Get daily stat files in VYYYYmm
+    VYYYYmm_daily_stats_dir = os.path.join(DATA, f"{VYYYYmm}_daily_stats")
+    date_dt = VDATE_dt
+    while date_dt >= VYYYYmm_dt:
+        input_date_stat_file = os.path.join(
+            COMIN, STEP, COMPONENT, f"{MODELNAME}.{date_dt:%Y%m%d}",
+            f"{NET}.{STEP}.{MODELNAME}.{RUN}.{VERIF_CASE}."
+            +f"v{date_dt:%Y%m%d}.stat"
+        )
+        tmp_date_stat_file = os.path.join(
+            VYYYYmm_daily_stats_dir, input_date_stat_file.rpartition('/')[2]
+        )
+        if gda_util.check_file_exists_size(input_date_stat_file):
+            print(f"Linking {input_date_stat_file} to {tmp_date_stat_file}")
+            os.symlink(input_date_stat_file, tmp_date_stat_file)
+        date_dt = date_dt - datetime.timedelta(days=1)
+    job_env_dict['daily_stats_dir'] = VYYYYmm_daily_stats_dir
+    # Make job scripts
+    VYYYYmm_monthly_stats_dir = os.path.join(DATA, f"{VYYYYmm}_monthly_stats")
+    job_env_dict['monthly_stats_dir'] = VYYYYmm_monthly_stats_dir
+    for wmo_verif in wmo_verif_list:
+        job_env_dict['wmo_verif'] = wmo_verif
+        if wmo_verif == 'grid2grid_upperair':
+            job_env_dict['obtype'] = f"{MODELNAME}_anl"
+            job_env_dict['summary_columns'] = (
+                'VCNT:RMSVE,VCNT:SPEED_ERR,CNT:ME,CNT:RMSE,CNT:ANOM_CORR,'
+                +'GRAD:S1,CNT:MAE,CNT:RMSFA,CNT:RMSOA,CNT:FSTDEV,CNT:OSTDEV'
+            )
+            wmo_verif_metplus_conf = 'StatAnalysis_fcstGFS_summary.conf'
+        for vhr in wmo_verif_settings_dict[wmo_verif]['valid_hour_list']:
+            job_env_dict['valid_hour'] = vhr
+            tmp_wmo_verif_vhr_stat_file = os.path.join(
+                DATA , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
+                f"{MODELNAME}.{wmo_verif}.{VYYYYmm}_{vhr}Z.summary.stat"
+            )
+            job_env_dict['tmp_wmo_verif_vhr_stat_file'] = (
+                tmp_wmo_verif_vhr_stat_file
+            )
+            job_env_dict['tmp_wmo_verif_vhr_dump_row_file'] = (
+                tmp_wmo_verif_vhr_stat_file.replace(
+                    '.summary.', '.summary_dump_row.'
+                )
+            )
+            output_wmo_verif_vhr_stat_file = os.path.join(
+                COMOUT , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
+                tmp_wmo_verif_vhr_stat_file.rpartition('/')[2]
+            )
+            job_env_dict['output_wmo_verif_vhr_stat_file'] = (
+                output_wmo_verif_vhr_stat_file
+            )
+            job_env_dict['output_wmo_verif_vhr_dump_row_file'] = (
+                output_wmo_verif_vhr_stat_file.replace(
+                    '.summary.', '.summary_dump_row.'
+                )
+            )
+            if os.path.exists(output_wmo_verif_vhr_stat_file):
+                have_stat = True
+            else:
+                have_stat = False
+            njobs+=1
+            job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
+            print(f"Creating job script: {job_file}")
+            job = open(job_file, 'w')
+            job.write('#!/bin/bash\n')
+            job.write('set -x\n')
+            job.write('\n')
+            for name, value in job_env_dict.items():
+                job.write(f'export {name}="{value}"\n')
+            job.write('\n')
+            if have_stat:
+                job.write(
+                    'if [ -f $output_wmo_verif_vhr_stat_file ]; then '
+                    +'cp -v $output_wmo_verif_vhr_stat_file '
+                    +'$tmp_wmo_verif_vhr_stat_file; fi\n'
+                )
+                job.write('export err=$?; err_chk\n')
+                job.write(
+                    'if [ -f $output_wmo_verif_vhr_dump_row_file ]; then '
+                    +'cp -v $output_wmo_verif_vhr_dump_row_file '
+                    +'$tmp_wmo_verif_vhr_dump_row_file; fi\n'
+                )
+                job.write('export err=$?; err_chk')
+            else:
+                job.write(gda_util.metplus_command(wmo_verif_metplus_conf)
+                          +'\n')
+                job.write('export err=$?; err_chk\n')
+                if SENDCOM == 'YES':
+                    job.write(
+                        'if [ -f $tmp_wmo_verif_vhr_stat_file ]; then '
+                        +'cp -v $tmp_wmo_verif_vhr_stat_file '
+                        +'$output_wmo_verif_vhr_stat_file; fi\n'
+                    )
+                    job.write('export err=$?; err_chk\n')
+                    job.write(
+                        'if [ -f $tmp_wmo_verif_vhr_dump_row_file ]; then '
+                        +'cp -v $tmp_wmo_verif_vhr_dump_row_file '
+                        +'$output_wmo_verif_vhr_dump_row_file; fi\n'
+                    )
+                    job.write('export err=$?; err_chk')
+            job.close()
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':

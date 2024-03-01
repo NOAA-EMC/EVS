@@ -9,12 +9,16 @@
 
 set -x
 
+# Set month and year
+export VYYYYmm=$(echo $VDATE | cut -c1-6)
+
 # Make directories
 mkdir -p ${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE} ${MODELNAME}.${VDATE}
+mkdir -p ${VYYYYmm}_daily_stats
 mkdir -p jobs logs tmp
 
-# Create and run job scripts for generate_stats and gather_stats
-for group in generate_stats gather_stats; do
+# Create and run job scripts for generate_stats, gather_stats, and summarize_stats
+for group in generate_stats gather_stats summarize_stats; do
     export JOB_GROUP=$group
     mkdir -p jobs/${JOB_GROUP}
     echo "Creating and running jobs for WMO stats: ${JOB_GROUP}"
@@ -69,4 +73,26 @@ if [[ $log_file_count -ne 0 ]]; then
         cat $log_file
         echo "End: $log_file"
     done
+fi
+
+# Combine monthly summary files into 1
+tmp_monthly_stats_file_wildcard=${DATA}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gfs.*.${VYYYYmm}_*Z.summary.stat
+tmp_monthly_stat_file_count=$(ls $tmp_monthly_stats_file_wildcard 2> /dev/null | wc -l)
+tmp_monthly_stat_file=${DATA}/${MODELNAME}.${VDATE}/${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VYYYYmm}.stat
+output_monthly_stat_file=${COMOUT}/${MODELNAME}.${VDATE}/${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VYYYYmm}.stat
+if [ ! -s ${output_monthly_stat_file} ]; then
+    >${tmp_monthly_stat_file}
+    if [ ${tmp_monthly_stat_file_count} != "0" ]; then
+        for tmp_monthly_stats_file in $tmp_monthly_stats_file_wildcard; do
+            cat $tmp_monthly_stats_file >> ${tmp_monthly_stat_file}
+        done
+        if [ $SENDCOM = YES ]; then
+            cp -v ${tmp_monthly_stat_file} ${output_monthly_stat_file}
+        fi
+    else
+        echo "NOTE: No files matching ${tmp_monthly_stats_file_wildcard}"
+    fi
+else
+    echo "Copying ${output_monthly_stat_file} to ${tmp_monthly_stat_file}"
+    cp -v ${output_monthly_stat_file} ${tmp_monthly_stat_file}
 fi
