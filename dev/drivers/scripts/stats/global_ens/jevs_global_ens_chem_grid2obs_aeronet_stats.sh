@@ -5,7 +5,7 @@
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
 #PBS -l place=vscatter,select=1:ncpus=1:mpiprocs=1:mem=10G
-#PBS -l debug=true
+##PBS -l debug=true
 #PBS -V
 
 set -x
@@ -50,8 +50,6 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
 
-export DATA_TYPE=aeronet 
-
 export VDATE=$(date --date="3 days ago" +%Y%m%d)
 
 export DATAROOT=/lfs/h2/emc/ptmp/${USER}/EVS/stats
@@ -60,6 +58,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 ## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMIN=/lfs/h2/emc/physics/noscrub/$USER/$NET/${evs_ver_2d}
 mkdir -p ${COMIN}
+export COMOUT=${COMIN}
 
 ############################################################
 # CALL executable job script here
@@ -72,8 +71,9 @@ if [ -z "$MAILTO" ]; then
 
 else
 
-## for vhr in 00 03 06 09 12 18 21; do
-   for vhr in 03; do
+   export DATA_TYPE=aeronet 
+
+   for vhr in 00 03 06 09 12 15 18 21; do
       export vhr
       echo "vhr = ${vhr}"
       $HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS

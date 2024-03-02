@@ -147,14 +147,14 @@ for ObsType in ${grid2obs_list}; do
     done   ## hour loop
     mkdir -p ${COMOUTsmall}
     if [ "${SENDCOM}" == "YES" ]; then
-      if [ -d ${MdlObsStat} ]; then      ## does not exist if run_metplus.py did not execute
-        stat_file_count=$(find ${MdlObsStat} -name "*${OutputId}*" | wc -l)
+      if [ -d ${MdlObsStat}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
+        stat_file_count=$(find ${MdlObsStat}/${VDATE}.stat -name "*${OutputId}*" | wc -l)
         if [ ${stat_file_count} -ne 0 ]; then
-          cp -v ${MdlObsStat}/*${OutputId}* ${COMOUTsmall}
+          cp -v ${MdlObsStat}/${VDATE}.stat/*${OutputId}* ${COMOUTsmall}
        	fi
       fi
     fi
-    if [ "${vhr}" == "21" ]; then
+    if [ "${vhr}" == "21" ] && [ 1 -eq 2 ]; then
       mkdir -p ${COMOUTfinal}
       stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
