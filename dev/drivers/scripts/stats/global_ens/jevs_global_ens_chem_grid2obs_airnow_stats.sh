@@ -1,7 +1,7 @@
 #PBS -N jevs_global_ens_gefs_chem_g2o_airnow_stats
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q dev
+#PBS -q debug
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
 #PBS -l place=vscatter,select=1:ncpus=1:mpiprocs=1:mem=10G
@@ -13,8 +13,12 @@
 
 set -x
 
+cd $PBS_O_WORKDIR
+
 export model=evs
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVSGefsChem
 
 source $HOMEevs/versions/run.ver
 
@@ -30,51 +34,55 @@ module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/dev/modulefiles/global_ens/global_ens_stats.sh
 
-export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
-export MET_PATH="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
-export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
-export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
-
-
 ############################################################
 # set some variables
 ############################################################
-export cyc=00
-echo $cyc
-#export envir=dev
+export KEEPDATA=YES
+export SENDMAIL=NO
+export SENDDBN=NO
 
-export MODELNAME=gefs
-export NET=evs
-export COMPONENT=global_ens
-export STEP=stats
-export RUN=chem
-export VERIF_CASE=grid2obs
-#export VARS="aod pmtf"
-export OBTTYPE=airnow
-export MET_bin_exec=bin
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-global_ens}
+export RUN=${RUN:-chem}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-gefs}
+export modsys=${modsys:-gefs}
 
-export VDATE=$(date --date="2 days ago" +%Y%m%d)
+export DATA_TYPE=airnow
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
-export COMINobs2=/lfs/h1/ops/prod/com
-export COMINfcst=/lfs/h1/ops/prod/com/gefs/v12.3
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
-export COMOUTprep=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}/$STEP/$COMPONENT
-export COMOUTfinal=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
-export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export USHevs=$HOMEevs/ush/$COMPONENT
-export CONFIGevs=$HOMEevs/parm/metplus_config/$COMPONENT
+export VDATE=$(date --date="3 days ago" +%Y%m%d)
 
-export cycle=t${cyc}z
-
-export VDATE=$PDYm2
+export DATAROOT=/lfs/h2/emc/ptmp/${USER}/EVS/stats
+export job=${PBS_JOBNAME:-jevs_gefs_grib2obs_${DATA_TYPE}_stats}
+export jobid=$job.${PBS_JOBID:-$$}
+## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
+export COMIN=/lfs/h2/emc/physics/noscrub/$USER/$NET/${evs_ver_2d}
+mkdir -p ${COMIN}
 
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/$COMPONENT/$STEP/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
+export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 
+if [ -z "$MAILTO" ]; then
+
+   echo "MAILTO variable is not defined. Exiting without continuing."
+
+else
+
+## for vhr in 00 03 06 09 12 18 21; do
+   for vhr in 03; do
+      export vhr
+      $HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
+   done
+
+fi
+#
+######################################################################
+## Purpose: This job will generate the grid2obs statistics using AirNOW
+##          for the GEFS-Aerosol model.
+#######################################################################
 #%include <tail.h>
 #%manual
 #######################################################################

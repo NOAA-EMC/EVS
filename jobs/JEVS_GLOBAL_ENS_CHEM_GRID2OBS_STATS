@@ -33,7 +33,8 @@ cd ${DATA}
 ####################################
 ## Determine Job Output Name on System
 #####################################
-export cycle=${cycle:t${vhr}z}
+export vhr=${vhr:-03}
+export cycle=${cycle:-t${vhr}z}
 
 setpdy.sh 8
 . ./PDY
@@ -60,22 +61,24 @@ export USHevs=${USHevs:-${HOMEevs}/ush/${COMPONENT}}
 export PARMevs=${PARMevs:-${HOMEevs}/parm}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
-export VDATE=${VDATE:-${PDYm2}}
+export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export DCOMIN=${DCOMIN:-${DCOMROOT}}
-export COMINgefs=${COMINgefs:-$(compath.py -o ${modsys}/${mod_ver}}
+export COMINgefs=${COMINgefs:-$(compath.py -o ${modsys}/${mod_ver})}
 export EVSINgefs=${EVSINgefs:-${COMIN}/prep/${COMPONENT}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
 export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}}
 
 mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
+
+export DATA_TYPE=${DATA_TYPE:-aeronet}
 #######################################################################
 # Execute the script.
 #######################################################################
 
-${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
+${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 
 msg="JOB ${job} HAS COMPLETED NORMALLY."
 postmsg "${msg}"
