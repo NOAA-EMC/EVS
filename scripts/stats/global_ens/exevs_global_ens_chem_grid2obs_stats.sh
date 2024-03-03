@@ -154,7 +154,7 @@ for ObsType in ${grid2obs_list}; do
        	fi
       fi
     fi
-    if [ "${vhr}" == "21" ] && [ 1 -eq 2 ]; then
+    if [ "${vhr}" == "21" ]; then
       mkdir -p ${COMOUTfinal}
       stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
