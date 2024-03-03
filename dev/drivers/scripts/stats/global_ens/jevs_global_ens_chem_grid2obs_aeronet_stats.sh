@@ -17,24 +17,20 @@ export model=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVSGefsChem
 
-##%include <head.h>
-##%include <envir-p1.h>
-
-############################################################
-# Load modules
-############################################################
-
 source $HOMEevs/versions/run.ver
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
+############################################################
+# Load modules
+############################################################
+#
 module reset
 
 module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/dev/modulefiles/global_ens/global_ens_stats.sh
 
-echo "gefs_ver=${gefs_ver}"
 ############################################################
 # set some variables
 ############################################################
@@ -51,6 +47,8 @@ export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
 
 export VDATE=$(date --date="3 days ago" +%Y%m%d)
+
+export DATA_TYPE=aeronet 
 
 export DATAROOT=/lfs/h2/emc/ptmp/${USER}/EVS/stats
 export job=${PBS_JOBNAME:-jevs_gefs_chem_grib2obs_${DATA_TYPE}_stats}
@@ -71,8 +69,6 @@ if [ -z "$MAILTO" ]; then
 
 else
 
-   export DATA_TYPE=aeronet 
-
    for vhr in 00 03 06 09 12 15 18 21; do
       export vhr
       echo "vhr = ${vhr}"
@@ -82,12 +78,6 @@ else
 fi
 #
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics using aeronet
+## Purpose: This job will generate the grid2obs statistics using aeronet aod
 ##          for the GEFS-Aerosol model.
 #######################################################################
-#
-#%include <tail.h>
-#%manual
-#######################################################################
-#%end
-
