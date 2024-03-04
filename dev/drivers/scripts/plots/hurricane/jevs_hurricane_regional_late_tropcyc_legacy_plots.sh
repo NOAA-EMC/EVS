@@ -50,7 +50,7 @@ export KEEPDATA=YES
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_HURRICANE_LATE_PLOTS
+$HOMEevs/jobs/JEVS_HURRICANE_PLOTS
 
 %include <tail.h>
 %manual

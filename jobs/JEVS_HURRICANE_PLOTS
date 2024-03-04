@@ -90,6 +90,38 @@ export COMINvit=${COMINvit:-/your/TC/vitals/file}
 export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
+elif [ ${RUN} = "regional_late" -a ${VERIF_CASE} = "tropcyc_ops" ]; then
+export YYYY=`echo ${PDY} | cut -c1-4`
+export YY23=`echo ${PDY} | cut -c3-4`
+export COMINstats=${COMINstats:-/your/TC/stats/dir}
+export COMINvit=${COMINvit:-/your/TC/vitals/file}
+export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
+export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
+
+elif [ ${RUN} = "regional_late" -a ${VERIF_CASE} = "tropcyc_legacy" ]; then
+export YYYY=`echo ${PDY} | cut -c1-4`
+export YY23=`echo ${PDY} | cut -c3-4`
+export COMINstats=${COMINstats:-/your/TC/stats/dir}
+export COMINvit=${COMINvit:-/your/TC/vitals/file}
+export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
+export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
+
+elif [ ${RUN} = "regional_early" -a ${VERIF_CASE} = "tropcyc_legacy" ]; then
+export YYYY=`echo ${PDY} | cut -c1-4`
+export YY23=`echo ${PDY} | cut -c3-4`
+export COMINstats=${COMINstats:-/your/TC/stats/dir}
+export COMINvit=${COMINvit:-/your/TC/vitals/file}
+export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
+export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
+
+elif [ ${RUN} = "regional_early" -a ${VERIF_CASE} = "tropcyc_ops" ]; then
+export YYYY=`echo ${PDY} | cut -c1-4`
+export YY23=`echo ${PDY} | cut -c3-4`
+export COMINstats=${COMINstats:-/your/TC/stats/dir}
+export COMINvit=${COMINvit:-/your/TC/vitals/file}
+export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
+export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
+
 else
 echo "Job failed: unknown ${RUN} and ${VERIF_CASE}"
 err_exit "FAILED ${jobid} - ERROR IN unknown ${RUN} and ${VERIF_CASE} - ABNORMAL EXIT"

@@ -49,7 +49,7 @@ export KEEPDATA=YES
 
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_HURRICANE_LATE_STATS
+$HOMEevs/jobs/JEVS_HURRICANE_STATS
 
 %include <tail.h>
 %manual
