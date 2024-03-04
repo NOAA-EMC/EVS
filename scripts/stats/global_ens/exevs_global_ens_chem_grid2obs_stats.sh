@@ -68,13 +68,19 @@ for ObsType in ${grid2obs_list}; do
         fi
         echo "index of daily aeronet obs found = ${num_obs_found}"
     elif [ "${ObsType}" == "airnow" ]; then
+        if [ "${airnow_hourly_type}" == "aqobs" ]; then
+          export HOURLY_INPUT_TYPE=hourly_aqobs
+        else
+          export HOURLY_INPUT_TYPE=hourly_data
+        fi
+
         fcstmax=24
 
         cdate=${VDATE}${vhr}
         vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
         vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
-        check_file=${EVSINaqm}/${RUN}.${vld_date}/${MODELNAME}/${ObsType}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+        check_file=${EVSINgefs}/${RUN}.${vld_date}/${MODELNAME}/${ObsType}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
