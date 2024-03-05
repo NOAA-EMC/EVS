@@ -16,7 +16,9 @@
 set -x
 
 cd ${DATA}
-
+########################################################################
+## Pre-Processed Observations
+########################################################################
 #
 ## For temporary stoage on the working dirary before moving to COMOUT with SENDCOM setting
 #
@@ -111,6 +113,49 @@ for OBTTYPE in ${obstype}; do
     fi
 
 done
+#
+########################################################################
+## Backup GEFS-aerosol output for global_ens_chem_grid2obs stats step
+########################################################################
+if [ ${SENDCOM} = "YES" ]; then
+    NOW=${VDATE}
+    declare -a cyc_opt=( 00 06 12 18 )
+    let inc=3
+    for mdl_cyc in "${cyc_opt[@]}"; do
+        com_gefs=${COMINgefs}/${MODELNAME}.${NOW}/${mdl_cyc}/${RUN}/pgrb2ap25
+        if [ -d ${com_gefs} ]; then
+            prep_gefs=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
+	    mkdir -p ${prep_gefs}
+            let hour_now=3
+            let max_hour=120
+            while [ ${hour_now} -le ${max_hour} ]; do
+                fhr=`printf %3.3d ${hour_now}`
+                cpfile=${com_gefs}/${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2
+                if [ -s ${cpfile} ]; then
+                    cp -v ${cpfile} ${prep_gefs}
+                else
+                    if [ ${SENDMAIL} = "YES" ]; then
+                        echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
+                        echo "Missing file is ${cpfile}" >> mailmsg
+                        echo "==============" >> mailmsg
+                        flag_send_message=YES
+                    fi
+                    echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
+                    echo "Missing file is ${cpfile}" >> mailmsg
+                fi
+                ((hour_now+=${inc}))
+            done
+        else
+            if [ ${SENDMAIL} = "YES" ]; then
+                echo "WARNING: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
+                echo "==============" >> mailmsg
+                flag_send_message=YES
+            fi
+            echo "WARNING: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
+        fi
+    done
+fi
+#
 if [ "${flag_send_message}" == "YES" ]; then
     export subject="AEORNET Level 1.5 NC or AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}_${RUN}"
     echo "Job ID: ${jobid}" >> mailmsg
