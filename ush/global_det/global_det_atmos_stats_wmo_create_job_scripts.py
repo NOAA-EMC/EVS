@@ -84,8 +84,11 @@ if JOB_GROUP == 'generate_stats':
              wmo_verif_settings_dict[wmo_verif]['fhr_list']
          )
          if wmo_verif == 'grid2grid_upperair':
-             wmo_verif_metplus_conf = ('GridStat_fcstGFS_obsGFS_ANL_'
-                                       +'climoERA_INTERIM.conf')
+             wmo_verif_metplus_conf_list = [
+                 'GridStat_fcstGFS_obsGFS_ANL_climoERA_INTERIM_CNT.conf',
+                 'GridStat_fcstGFS_obsGFS_ANL_climoERA_INTERIM_VCNT.conf',
+                 'GridStat_fcstGFS_obsGFS_ANL_climoERA_INTERIM_GRAD.conf'
+             ]
          for vhr in wmo_verif_valid_hour_list:
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
              # Set truth input paths
@@ -125,68 +128,77 @@ if JOB_GROUP == 'generate_stats':
                          log_missing_fhr_file, fhr_file, MODELNAME,
                          init_time_dt, fhr.zfill(3)
                      )
-                 # Set up output file path
-                 # grid2grid_upperair: grid_stat
-                 if wmo_verif == 'grid2grid_upperair':
-                     tmp_fhr_stat_file = os.path.join(
-                         DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
-                         MODELNAME, VERIF_CASE, f"grid_stat_{wmo_verif}_"
-                         +f"{fhr.zfill(2)}0000L_"
-                         +f"{valid_time_dt:%Y%m%d_%H%M%S}V.stat"
-                     )
-                 output_fhr_stat_file = os.path.join(
-                     COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-                     VERIF_CASE, tmp_fhr_stat_file.rpartition('/')[2]
-                 )
-                 if os.path.exists(output_fhr_stat_file):
-                     have_fhr_stat = True
-                 else:
-                     have_fhr_stat = False
-                 # Set wmo_verif job variables
-                 if wmo_verif == 'grid2grid_upperair':
-                     job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
-                     job_env_dict['fhr'] = fhr
-                     job_env_dict['anl_file'] = truth_file
-                     job_env_dict['fhr_file'] = fhr_file
-                     job_env_dict['tmp_fhr_stat_file'] = tmp_fhr_stat_file
-                     job_env_dict['output_fhr_stat_file'] = (
-                         output_fhr_stat_file
-                     )
-                 # Make job script
-                 njobs+=1
-                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-                 print(f"Creating job script: {job_file}")
-                 job = open(job_file, 'w')
-                 job.write('#!/bin/bash\n')
-                 job.write('set -x\n')
-                 job.write('\n')
-                 for name, value in job_env_dict.items():
-                     job.write(f'export {name}="{value}"\n')
-                 job.write('\n')
-                 # If small stat file exists in COMOUT then copy it
-                 # if not then run METplus
-                 if have_fhr_stat:
-                     job.write(
-                         'if [ -f $output_fhr_stat_file ]; then '
-                         +'cp -v $output_fhr_stat_file '
-                         +'$tmp_fhr_stat_file; fi\n'
-                     )
-                     job.write('export err=$?; err_chk')
-                 else:
-                     if have_truth and have_fhr:
-                         job.write(
-                             gda_util.metplus_command(wmo_verif_metplus_conf)
-                             +'\n'
+                 for wmo_verif_metplus_conf in wmo_verif_metplus_conf_list:
+                     # Set up output file path
+                     # grid2grid_upperair: grid_stat
+                     if wmo_verif == 'grid2grid_upperair':
+                         wmo_verif_metplus_conf_line_type = (
+                             wmo_verif_metplus_conf.rpartition('_')[2]\
+                             .replace('.conf', '')
                          )
-                         job.write('export err=$?; err_chk\n')
-                         if SENDCOM == 'YES':
+                         tmp_fhr_stat_file = os.path.join(
+                             DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
+                             MODELNAME, VERIF_CASE, f"grid_stat_{wmo_verif}_"
+                             f"{wmo_verif_metplus_conf_line_type}_"
+                             +f"{fhr.zfill(2)}0000L_"
+                             +f"{valid_time_dt:%Y%m%d_%H%M%S}V.stat"
+                         )
+                     output_fhr_stat_file = os.path.join(
+                         COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
+                         VERIF_CASE, tmp_fhr_stat_file.rpartition('/')[2]
+                     )
+                     if os.path.exists(output_fhr_stat_file):
+                         have_fhr_stat = True
+                     else:
+                         have_fhr_stat = False
+                     # Set wmo_verif job variables
+                     if wmo_verif == 'grid2grid_upperair':
+                         job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
+                         job_env_dict['fhr'] = fhr
+                         job_env_dict['anl_file'] = truth_file
+                         job_env_dict['fhr_file'] = fhr_file
+                         job_env_dict['tmp_fhr_stat_file'] = tmp_fhr_stat_file
+                         job_env_dict['output_fhr_stat_file'] = (
+                             output_fhr_stat_file
+                         )
+                     # Make job script
+                     njobs+=1
+                     job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                             'job'+str(njobs))
+                     print(f"Creating job script: {job_file}")
+                     job = open(job_file, 'w')
+                     job.write('#!/bin/bash\n')
+                     job.write('set -x\n')
+                     job.write('\n')
+                     for name, value in job_env_dict.items():
+                         job.write(f'export {name}="{value}"\n')
+                     job.write('\n')
+                     # If small stat file exists in COMOUT then copy it
+                     # if not then run METplus
+                     if have_fhr_stat:
+                         job.write(
+                             'if [ -f $output_fhr_stat_file ]; then '
+                             +'cp -v $output_fhr_stat_file '
+                             +'$tmp_fhr_stat_file; fi\n'
+                         )
+                         job.write('export err=$?; err_chk')
+                     else:
+                         if have_truth and have_fhr:
                              job.write(
-                                 'if [ -f $tmp_fhr_stat_file ]; then '
-                                 +'cp -v $tmp_fhr_stat_file '
-                                 +'$output_fhr_stat_file; fi\n'
+                                 gda_util.metplus_command(
+                                     wmo_verif_metplus_conf
+                                 )
+                                 +'\n'
                              )
-                             job.write('export err=$?; err_chk')
-                 job.close()
+                             job.write('export err=$?; err_chk\n')
+                             if SENDCOM == 'YES':
+                                 job.write(
+                                     'if [ -f $tmp_fhr_stat_file ]; then '
+                                     +'cp -v $tmp_fhr_stat_file '
+                                     +'$output_fhr_stat_file; fi\n'
+                                 )
+                                 job.write('export err=$?; err_chk')
+                     job.close()
 elif JOB_GROUP == 'gather_stats':
     job_env_dict = gda_util.initalize_job_env_dict('all', JOB_GROUP,
                                                    VERIF_CASE, 'all')
