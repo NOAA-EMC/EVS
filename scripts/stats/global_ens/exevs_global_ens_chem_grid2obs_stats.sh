@@ -19,7 +19,7 @@ recorded_temp_list=${DATA}/fcstlist_in_metplus
 #
 ## For temporary stoage on the working dirary before moving to COMOUT
 #
-export finalstat=${DATA}/final  # define config variable
+export finalstat=${DATA}/final  # config variable
 mkdir -p ${finalstat}
 
 export CMODEL=`echo ${MODELNAME} | tr a-z A-Z`  # define config variable
@@ -32,7 +32,7 @@ export METPLUS_PATH
 ## grid2obs_list="aeronet airnow"
 grid2obs_list="${DATA_TYPE}"
 
-export vld_cyc="00"
+export vld_cyc="00 06 12 18"
 
 flag_send_message=NO
 if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
@@ -44,15 +44,15 @@ for ObsType in ${grid2obs_list}; do
         airnow)  export obs_var=pm25;;
     esac
 
-    export MdlObsStat=${DATA}/point_stat/${MODELNAME}_${ObsType}  # define config variable
-    export OutputId=${MODELNAME}_${ObsType}_${obs_var}            # define config variable
-    export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${obs_var}
-    export OBSTYPE=`echo ${ObsType} | tr a-z A-Z`
+    export RUNTIME_STATS=${DATA}/point_stat/${MODELNAME}_${ObsType}  # config variable
+    export OutputId=${MODELNAME}_${ObsType}_${obs_var}            # config variable
+    export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${obs_var} # config variable
+    export OBSTYPE=`echo ${ObsType} | tr a-z A-Z`    # config variable
     point_stat_conf_file=${CONFIGevs}/PointStat_fcstGEFSAero_obs${OBSTYPE}.conf
     stat_analysis_conf_file=${CONFIGevs}/Statanalysis_fcstGEFSAero_obs${OBSTYPE}.conf
 
     if [ "${ObsType}" == "aeronet" ]; then
-        fcstmax=24
+        fcstmax=120
         check_file=${EVSINgefs}/${RUN}.${VDATE}/${MODELNAME}/${ObsType}_All_${VDATE}_lev15.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
@@ -74,7 +74,7 @@ for ObsType in ${grid2obs_list}; do
           export HOURLY_INPUT_TYPE=hourly_data
         fi
 
-        fcstmax=24
+        fcstmax=120
 
         cdate=${VDATE}${vhr}
         vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
@@ -98,7 +98,7 @@ for ObsType in ${grid2obs_list}; do
 
     #LEAD_SEQ = 0, 3, 6, 9, 12, 15, 18, 21
     for mdl_cyc in ${vld_cyc}; do
-      export mdl_cyc    ## define variable used in *.conf
+      export mdl_cyc    ## variable used in *.conf
 
       let ihr=3
       num_fcst_in_metplus=0
@@ -151,17 +151,16 @@ for ObsType in ${grid2obs_list}; do
         echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${num_obs_found}"
       fi
     done   ## hour loop
-    mkdir -p ${COMOUTsmall}
     if [ "${SENDCOM}" == "YES" ]; then
-      if [ -d ${MdlObsStat}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
-        stat_file_count=$(find ${MdlObsStat}/${VDATE}.stat -name "*${OutputId}*" | wc -l)
+      if [ -d ${RUNTIME_STATS}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
+        stat_file_count=$(find ${RUNTIME_STATS}/${VDATE}.stat -name "*${OutputId}*" | wc -l)
         if [ ${stat_file_count} -ne 0 ]; then
-          cp -v ${MdlObsStat}/${VDATE}.stat/*${OutputId}* ${COMOUTsmall}
-       	fi
+          mkdir -p ${COMOUTsmall}
+          cp -v ${RUNTIME_STATS}/${VDATE}.stat/*${OutputId}* ${COMOUTsmall}
+        fi
       fi
     fi
     if [ "${vhr}" == "21" ]; then
-      mkdir -p ${COMOUTfinal}
       stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
         cpreq ${COMOUTsmall}/*${OutputId}* ${finalstat}
@@ -170,7 +169,10 @@ for ObsType in ${grid2obs_list}; do
         export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
           cpfile=${finalstat}/${StatFileId}.v${VDATE}.stat
-          if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTfinal}; fi
+          if [ -s ${cpfile} ]; then
+            mkdir -p ${COMOUTfinal}
+            cp -v ${cpfile} ${COMOUTfinal}
+          fi
         fi
       fi
     fi

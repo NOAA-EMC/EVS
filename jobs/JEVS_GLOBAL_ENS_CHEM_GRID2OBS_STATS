@@ -62,7 +62,7 @@ export PARMevs=${PARMevs:-${HOMEevs}/parm}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
 export MASK_DIR=${MASK_DIR:-$FIXevs/masks}
 
-export VDATE=${VDATE:-${PDYm3}}
+export VDATE=${VDATE:-${PDYm2}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export DCOMIN=${DCOMIN:-${DCOMROOT}}
