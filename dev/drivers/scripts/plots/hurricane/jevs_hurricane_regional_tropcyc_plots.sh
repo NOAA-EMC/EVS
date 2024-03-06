@@ -27,6 +27,7 @@ export VERIF_CASE=tropcyc
 export envir=dev
 export cyc=00
 export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
+export jobid=$job.${PBS_JOBID:-$$}
 
 ############################################################
 # Load modules
@@ -38,7 +39,7 @@ source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export PDY=20231231
 
 #Define the directory for TC-stats file 
-export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/stats/${COMPONENT}/${RUN}/${VERIF_CASE}
+export COMINstats=/lfs/h2/emc/vpppg/noscrub/$USER/evs/${evs_ver_2d}/stats/${COMPONENT}/${RUN}/${VERIF_CASE}
 
 #Define TC-vital file, and the directory for Bdeck files
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/TCvital/syndat_tcvitals.2023
@@ -46,8 +47,9 @@ export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdec
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck/
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
-export COMROOT=${DATAROOT}/com
-rm -rf ${COMROOT}/evs/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+#export COMROOT=${DATAROOT}/com
+#rm -rf ${COMROOT}/evs/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 

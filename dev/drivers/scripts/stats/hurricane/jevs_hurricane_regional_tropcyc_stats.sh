@@ -27,6 +27,7 @@ export VERIF_CASE=tropcyc
 export envir=dev
 export cyc=00
 export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
+export jobid=$job.${PBS_JOBID:-$$}
 
 ############################################################
 # Load modules
@@ -44,8 +45,8 @@ export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdec
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
-export COMROOT=${DATAROOT}/com
-rm -rf ${COMROOT}/evs/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+#rm -rf ${COMROOT}/evs/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 
 
