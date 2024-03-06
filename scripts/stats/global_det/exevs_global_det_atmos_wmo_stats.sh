@@ -87,7 +87,7 @@ if [ ! -s ${output_monthly_stat_file} ]; then
             cat $tmp_monthly_stats_file >> ${tmp_monthly_stat_file}
         done
         if [ $SENDCOM = YES ]; then
-            cp -v ${tmp_monthly_stat_file} ${output_monthly_stat_file}
+            if [ -f ${tmp_monthly_stat_file} ]; then cp -v ${tmp_monthly_stat_file} ${output_monthly_stat_file}; fi
         fi
     else
         echo "NOTE: No files matching ${tmp_monthly_stats_file_wildcard}"
@@ -95,4 +95,18 @@ if [ ! -s ${output_monthly_stat_file} ]; then
 else
     echo "Copying ${output_monthly_stat_file} to ${tmp_monthly_stat_file}"
     cp -v ${output_monthly_stat_file} ${tmp_monthly_stat_file}
+fi
+
+# Format daily stats for WMO rec2
+tmp_daily_wmo_rec2_file=${DATA}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_daily.rec2
+output_daily_wmo_rec2_file=${COMOUT}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_daily.rec2
+if [ ! -s ${output_daily_wmo_rec2_file} ]; then
+    python $USHevs/global_det/global_det_atmos_stats_wmo_format_rec2_daily.py
+    export err=$?; err_chk
+    if [ $SENDCOM = YES ]; then
+        if [ -f ${tmp_daily_wmo_rec2_file} ]; then cp -v ${tmp_daily_wmo_rec2_file} ${output_daily_wmo_rec2_file}; fi
+    fi
+else
+    echo "Copying ${output_daily_wmo_rec2_file} to ${tmp_daily_wmo_rec2_file}"
+    cp -v ${output_daily_wmo_rec2_file} ${tmp_daily_wmo_rec2_file}
 fi
