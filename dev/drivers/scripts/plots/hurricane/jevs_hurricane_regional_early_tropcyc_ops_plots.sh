@@ -17,6 +17,8 @@ set -x
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source ${HOMEevs}/versions/run.ver
 
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 export NET=evs
 export COMPONENT=hurricane
 export RUN=regional_early
@@ -36,7 +38,7 @@ source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export PDY=20231231
 
 #Define the directory for TC-stats file 
-export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/stats/${COMPONENT}/${RUN}/${VERIF_CASE}
+export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/stats/${COMPONENT}/${RUN}/${VERIF_CASE}
 
 #Define TC-vital file, and the directory for Bdeck files
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/TCvital/syndat_tcvitals.2023
@@ -45,7 +47,7 @@ export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bde
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
-rm -rf ${COMROOT}/evs/${evs_ver}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
+rm -rf ${COMROOT}/evs/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 

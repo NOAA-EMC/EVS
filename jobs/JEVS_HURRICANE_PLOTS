@@ -128,7 +128,7 @@ err_exit "FAILED ${jobid} - ERROR IN unknown ${RUN} and ${VERIF_CASE} - ABNORMAL
 
 fi
 
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}}
 mkdir -m 775 -p $COMOUT 
 
 msg="HAS BEGUN on `hostname`"
