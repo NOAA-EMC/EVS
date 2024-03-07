@@ -110,3 +110,17 @@ else
     echo "Copying ${output_daily_wmo_rec2_file} to ${tmp_daily_wmo_rec2_file}"
     cp -v ${output_daily_wmo_rec2_file} ${tmp_daily_wmo_rec2_file}
 fi
+
+# Format monthly stats for WMO rec2
+tmp_monthly_wmo_rec2_file=${DATA}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_monthly.rec2
+output_monthly_wmo_rec2_file=${COMOUT}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_monthly.rec2
+if [ ! -s ${output_monthly_wmo_rec2_file} ]; then
+    python $USHevs/global_det/global_det_atmos_stats_wmo_format_rec2_monthly.py
+    export err=$?; err_chk
+    if [ $SENDCOM = YES ]; then
+        if [ -f ${tmp_monthly_wmo_rec2_file} ]; then cp -v ${tmp_monthly_wmo_rec2_file} ${output_monthly_wmo_rec2_file}; fi
+    fi
+else
+    echo "Copying ${output_monthly_wmo_rec2_file} to ${tmp_monthly_wmo_rec2_file}"
+    cp -v ${output_monthly_wmo_rec2_file} ${tmp_monthly_wmo_rec2_file}
+fi
