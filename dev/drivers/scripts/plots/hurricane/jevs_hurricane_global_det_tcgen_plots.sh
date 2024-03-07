@@ -39,13 +39,14 @@ source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export PDY=20231231
 
 #Define the directories of your TC genesis stats files
-export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/stats/${COMPONENT}/${RUN}/${VERIF_CASE}
+export COMINstats=/lfs/h2/emc/vpppg/noscrub/$USER/evs/${evs_ver_2d}/stats/${COMPONENT}/${RUN}/${VERIF_CASE}
+
 #Define the directories of your NOAA/NWS logos
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
-export COMROOT=${DATAROOT}/com
-rm -rf ${COMROOT}/evs/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+#rm -rf ${COMROOT}/evs/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 
 

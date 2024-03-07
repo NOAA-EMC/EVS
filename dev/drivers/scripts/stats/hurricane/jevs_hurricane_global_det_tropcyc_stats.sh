@@ -45,8 +45,8 @@ export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdec
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
-export COMROOT=${DATAROOT}/com
-rm -rf ${COMROOT}/evs/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+#rm -rf ${COMROOT}/evs/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 
 # CALL executable job script here
