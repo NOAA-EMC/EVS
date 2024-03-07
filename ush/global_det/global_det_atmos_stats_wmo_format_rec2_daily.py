@@ -152,10 +152,10 @@ for stat_file_iter in stat_file_iter_list:
                     print(f"NOTE: {note_msg} in {stat_file} "
                           +f"matching MODEL={MODELNAME}, "
                           +f"FCST_LEAD={wmo_s.zfill(2)}0000, "
-                          +f"FCST_VAR=met_var_level.split('/')[0], "
-                          +f"FCST_LEV=met_var_level.split('/')[1], "
-                          +f"OBS_VAR=met_var_level.split('/')[0], "
-                          +f"OBS_LEV=met_var_level.split('/')[1], "
+                          +f"FCST_VAR={met_var_level.split('/')[0]}, "
+                          +f"FCST_LEV={met_var_level.split('/')[1]}, "
+                          +f"OBS_VAR={met_var_level.split('/')[0]}, "
+                          +f"OBS_LEV={met_var_level.split('/')[1]}, "
                           +f"OBTYPE={met_obtype}, VX_MASK={met_vx_mask}, "
                           +f"LINE_TYPE={met_line_type}")
                     have_stat_line = False
