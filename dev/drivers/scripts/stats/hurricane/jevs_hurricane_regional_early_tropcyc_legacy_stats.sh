@@ -27,6 +27,7 @@ export VERIF_CASE=tropcyc_legacy
 export envir=dev
 export cyc=00
 export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
+export jobid=$job.${PBS_JOBID:-$$}
 
 ############################################################
 # Load modules
@@ -38,14 +39,13 @@ export PDY=20231231
 #Set PDY to override setpdy.sh called in the j-jobs
 
 #Define TC-vital file, TC track file and the directory for Bdeck files
-export COMINvit=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/TCvital/syndat_tcvitals.2023
-export COMINtrack=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/regionalTrack/tracks.atcfunix.23
-export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
-export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
+export COMINvit=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/syndat_tcvitals.2023
+export COMINtrack=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/regional.tracks.atcfunix.23
+export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
+export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
-#rm -rf ${COMROOT}/evs/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 
 

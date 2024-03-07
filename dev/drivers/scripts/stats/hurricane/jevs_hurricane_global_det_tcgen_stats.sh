@@ -27,6 +27,7 @@ export VERIF_CASE=tcgen
 export envir=dev
 export cyc=00
 export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
+export jobid=$job.${PBS_JOBID:-$$}
 
 ############################################################
 # Load modules
@@ -39,15 +40,14 @@ source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export PDY=20231231
 
 #Define the directories of your TC genesis data and A/Bdeck files
-export COMINgenesis=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/TCgen
-export COMINadeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/adeck
-export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
-export COMINadeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/adeck
-export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
+export COMINgenesis=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/TCgen
+export COMINadeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/adeck
+export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
+export COMINadeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/adeck
+export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
-#rm -rf ${COMROOT}/evs/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 
 # CALL executable job script here
