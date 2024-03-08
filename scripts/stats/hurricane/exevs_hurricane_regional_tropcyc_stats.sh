@@ -167,11 +167,14 @@ if [ "$SENDCOM" = 'YES' ]; then
   cp -r ${STORMroot}/tc_pairs/* ${comoutroot}/tc_pairs/.
   cp -r ${STORMroot}/tc_stat/* ${comoutroot}/tc_stat/.
   if [ ${stormBasin} = "al" ]; then
-    cp ${comoutroot}/tc_stat/tc_stat_summary.tcst ${comoutatl}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst 
+    cp ${STORMroot}/tc_stat/tc_stat_summary.tcst ${comoutatl}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst 
+    #cp ${comoutroot}/tc_stat/tc_stat_summary.tcst ${comoutatl}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst 
   elif [ ${stormBasin} = "ep" ]; then
-    cp ${comoutroot}/tc_stat/tc_stat_summary.tcst ${comoutepa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
+    cp ${STORMroot}/tc_stat/tc_stat_summary.tcst ${comoutepa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
+    #cp ${comoutroot}/tc_stat/tc_stat_summary.tcst ${comoutepa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
   elif [ ${stormBasin} = "wp" ]; then
-    cp ${comoutroot}/tc_stat/tc_stat_summary.tcst ${comoutwpa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
+    cp ${STORMroot}/tc_stat/tc_stat_summary.tcst ${comoutwpa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
+    #cp ${comoutroot}/tc_stat/tc_stat_summary.tcst ${comoutwpa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
   fi
 fi
 
@@ -184,11 +187,20 @@ done
 #---  Atlantic/EastPacific/WestPacific Basin TC_Stat 
 if [ ${stormBasin} = "al" ]; then
   export comoutbas=${comoutatl}
+  export databas=${DATA}/metTC/atlantic
 elif [ ${stormBasin} = "ep" ]; then
   export comoutbas=${comoutepa}
+  export databas=${DATA}/metTC/eastpacific
 elif [ ${stormBasin} = "wp" ]; then
   export comoutbas=${comoutwpa}
+  export databas=${DATA}/metTC/westpacific
 fi
+
+# remove previously generated basin stats
+if [ -d ${comoutbas}/tc_stat ]; then
+  rm -rf ${comoutbas}/tc_stat
+fi
+
 
 nfile=$(ls ${comoutbas}/*.tcst |wc -l)
 if [ $nfile -ne 0 ]; then
@@ -196,6 +208,8 @@ if [ $nfile -ne 0 ]; then
 export mdh=010100
 export startdateB=${YYYY}${mdh}
 export metTCcomin=${comoutbas}
+#export metTCcomin=${databas}
+#export metTCcomin=${COMOUT}
 
 if [ ${stormBasin} = "al" ]; then
   export metTCcomout=${DATA}/metTC/atlantic

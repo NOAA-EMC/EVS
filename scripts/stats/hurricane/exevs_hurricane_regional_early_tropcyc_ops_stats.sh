@@ -188,6 +188,11 @@ elif [ ${stormBasin} = "wp" ]; then
   export comoutbas=${comoutwpa}
 fi
 
+# remove previously generated basin stats
+if [ -d ${comoutbas}/tc_stat ]; then
+  rm -rf ${comoutbas}/tc_stat
+fi
+
 nfile=$(ls ${comoutbas}/*.tcst |wc -l)
 if [ $nfile -ne 0 ]; then
 
