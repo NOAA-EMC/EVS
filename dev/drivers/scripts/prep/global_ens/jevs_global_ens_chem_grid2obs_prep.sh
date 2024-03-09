@@ -4,82 +4,93 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:00:00
-#PBS -l place=shared,select=ncpus=1:mem=8GB
+#PBS -l place=shared,select=ncpus=1:mem=10GB
 #PBS -l debug=true
 #PBS -V
 
-##%include <head.h>
-##%include <envir-p1.h>
-
-############################################################
-# Load modules
-############################################################
 set -x
 
 cd $PBS_O_WORKDIR
 
 export model=evs
+
+## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSGefsChem
 
 source $HOMEevs/versions/run.ver
 
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
+############################################################
+# Load modules
+############################################################
 module reset
 
 module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/dev/modulefiles/global_ens/global_ens_prep.sh
 
-evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+############################################################
+## set some variables
+#############################################################
+export KEEPDATA=NO
+export SENDMAIL=YES
+export SENDDBN=NO
 
-# export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
-# export MET_PATH="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
-# export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
-# export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-global_ens}
+export RUN=${RUN:-chem}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-gefs}
 
 export cyc=00
 echo $cyc
-export KEEPDATA=YES
-export NET=evs
-export STEP=prep
-export COMPONENT=global_ens
-export RUN=chem
-export VERIF_CASE=grid2obs
-export MODELNAME=gefs
+export cycle=t${cyc}z
 
-######################################
-### Correct MET/METplus roots (Aug 2022)
-########################################
+export VDATE=$(date --date="3 days ago" +%Y%m%d)
+echo "VDATE=${VDATE}"
 
 ## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMIN=/lfs/h2/emc/physics/noscrub/$USER/$NET/${evs_ver_2d}
+mkdir -p ${COMIN}
 export COMOUT=${COMIN}
-## export COMINobs=/lfs/h1/ops/dev/dcom/${VDATE}
-## export COMOUTprep=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT
-export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver_2d}/${STEP}
+
+export DATAROOT=/lfs/h2/emc/ptmp/${USER}/$}NET}/${evs_ver_2d}/${STEP}
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
 mkdir -p ${DATA}
-## export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-## export USHevs=$HOMEevs/ush/$COMPONENT
-## export CONFIGevs=$HOMEevs/parm/metplus_config/$COMPONENT
-## export PARMevs=$HOMEevs/parm/metplus_config
-
-## developers directories
-
-export cycle=t${cyc}z
-
-echo ${PDYm1}
-export VDATE=$PDYm1
-export VDATE=$(date --date="3 days ago" +%Y%m%d)
-echo ${VDATE}
-
 
 ############################################################
 ## CALL executable job script here
 #############################################################
 $HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PREP
 
-#%include <tail.h>
-#%manual
+############################################################
+## For EMC PARA TESTING
+## Each chem.${VDATE} is about 4GB, keep only 10 days from today
+############################################################
+ 
+TODAY=`date +%Y%m%d`
+
+export NUM_DAY_BACK=30
+let hour_back=${NUM_DAY_BACK}*24
+export CLEAN_START=$(${NDATE} -${hour_back} ${TODAY}"00" | cut -c1-8)
+
+export NUM_DAY_BACK=10
+let hour_back=${NUM_DAY_BACK}*24
+export CLEAN_END=$(${NDATE} -${hour_back} ${TODAY}"00" | cut -c1-8)
+
+cd ${COMOUT}/${STEP}/${COMPONENT}
+NOW=${CLEAN_START}
+while [ ${NOW} -lt ${CLEAN_END} ]; do
+    if [ -d ${RUN}.${NOW} ]; then
+        /bin/rm -rf ${RUN}.${NOW}
+    fi
+    cdate=${NOW}"00"
+    NOW=$(${NDATE} +24 ${cdate}| cut -c1-8)
+done
+ 
 #######################################################################
 # Purpose: This does the prep work for the global_ens GEFS-Chem model
 #######################################################################
-#%end
