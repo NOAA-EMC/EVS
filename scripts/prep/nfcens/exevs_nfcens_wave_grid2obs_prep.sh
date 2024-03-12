@@ -94,18 +94,21 @@ for HH in ${HHs} ; do
 	fcst=0
 	while (( $fcst <=144 )); do
 		FCST=$(printf "%03d" "$fcst")
-		COMINfnmoc="${COMINfnmoc}/wave_{INITDATE}${HH}f${FCST}.grib"
-		DATAfilenamefnmoc="${DATA}/gribs/wave_${INITDATE}${HH}f${FCST}.grib"
-		if [ ! -s $COMINfnmoc ]; then
+		COMINfilenamefnmoc="${COMINfnmoc}/${MODEL2NAME}_${RUN}.${INITDATE}/wave_${INITDATE}${HH}f${FCST}"
+		DATAfilenamefnmoc="${DATA}/gribs/wave_${INITDATE}${HH}f${FCST}"
+		if [ ! -s $COMINfilenamefnmoc ]; then
 			if [ $SENDMAIL = YES ]; then
 				export subject="FNMOC Forecast Data Missing for EVS ${COMPONENT}"
-				echo "WARNING: No FNMOC forecast was available for ${INITDATE}${HH}" > mailmsg
-				echo "WARNING: Missing file is $COMINfnmoc" >> mailmsg
+				echo "WARNING: No FNMOC forecast was available for ${INITDATE}" > mailmsg
+				echo "WARNING: Missing file is $COMINfilenamefnmoc" >> mailmsg
 				echo "Job ID: $jobid" >> mailmsg
 				cat mailmsg | mail -s "$subject" $MAILTO
 			fi
 		else
-			cp -v $COMINfnmoc $DATAfilenamefnmoc
+			cp -v $COMINfilenamefnmoc $DATAfilenamefnmoc
+			if [ $SENDCOM = YES ]; then
+                    		cp -v $DATAfilenamefnmoc ${ARCmodel}/.
+                	fi
 		fi
 		fcst=$(( $fcst+ 24 ))
 	done
@@ -120,18 +123,21 @@ for HH in ${HHs} ; do
 	fcst=0
 	while (( $fcst <=240 )); do
 		FCST=$(printf "%03d" "$fcst")
-		COMINgefs="${COMINgefs}/gefs.{INITDATE}/${HH}/wave/gridded/gefs.wave.t${HH}z.mean.global.0p25.f${FCST}.grib2"
+		COMINfilenamegefs="${COMINgefs}/gefs.${INITDATE}/${HH}/wave/gridded/gefs.wave.t${HH}z.mean.global.0p25.f${FCST}.grib2"
 		DATAfilenamegefs="${DATA}/gribs/gefs.wave.t${HH}z.mean.global.0p25.f${FCST}.grib2"
-		if [ ! -s $COMINgefs ]; then
-		if [ $SENDMAIL = YES ]; then
-			export subject="GEFS wave Forecast Data Missing for EVS ${COMPONENT}"
-			echo "WARNING: No GEFS wave forecast was available for ${INITDATE}${HH}" > mailmsg
-			echo "WARNING: Missing file is $COMINgefs" >> mailmsg
-			echo "Job ID: $jobid" >> mailmsg
-			cat mailmsg | mail -s "$subject" $MAILTO
-		fi
+		if [ ! -s $COMINfilenamegefs ]; then
+			if [ $SENDMAIL = YES ]; then
+				export subject="GEFS wave Forecast Data Missing for EVS ${COMPONENT}"
+				echo "WARNING: No GEFS wave forecast was available for ${INITDATE}${HH}" > mailmsg
+				echo "WARNING: Missing file is $COMINfilenamegefs" >> mailmsg
+				echo "Job ID: $jobid" >> mailmsg
+				cat mailmsg | mail -s "$subject" $MAILTO
+			fi
 		else
-		cp -v $COMINgefs $DATAfilenamegefs
+			cp -v $COMINfilenamegefs $DATAfilenamegefs
+			if [ $SENDCOM = YES ]; then
+                    		cp -v $DATAfilenamegefs ${ARCmodel}/.
+                	fi
 		fi
 		fcst=$(( $fcst+ 24 ))
 	done

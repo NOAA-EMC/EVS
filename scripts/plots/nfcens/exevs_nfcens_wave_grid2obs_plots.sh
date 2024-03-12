@@ -2,9 +2,10 @@
 ################################################################################
 # Name of Script: exevs_nfcens_wave_grid2obs_plots.sh                           
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                    
+# Samira Ardani / samira.ardani@noaa.gov
 # Purpose of Script: Run the grid2obs plots for any global wave model           
 #                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NFCENS)  
-#                                                                               
+#                    NFCENSv2: Add FNMOC and GEFS model to compare against NFCENS                                                                                  
 # Usage:                                                                        
 #  Parameters: None                                                             
 #  Input files:                                                                 
@@ -59,11 +60,24 @@ plot_end_date=${VDATE}
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
   EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
+  EVSINgefs=${COMIN}/stats/${COMPONENT}/${MODEL1NAME}.${theDate}
+  EVSINfnmoc=${COMIN}/stats/${COMPONENT}/${MODEL2NAME}.${theDate}
   if [ -s ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
 	  cp ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
   else
 	  echo "WARNING: ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
   fi
+  if [ -s ${EVSINgefs}/evs.stats.${MODEL1NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
+	  cp ${EVSINgefs}/evs.stats.${MODEL1NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  else
+	  echo "WARNING: ${EVSINgefs}/evs.stats.${MODEL1NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
+  fi
+  if [ -s ${EVSINfnmoc}/evs.stats.${MODEL2NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
+	  cp ${EVSINfnmoc}/evs.stats.${MODEL2NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  else
+	  echo "WARNING: ${EVSINfnmoc}/evs.stats.${MODEL2NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
+  fi
+
   theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
 done
 
@@ -71,12 +85,25 @@ done
 # quick error check 
 ####################
 nc=`ls ${DATA}/stats/evs*stat | wc -l | awk '{print $1}'`
+nc1=`ls ${DATA}/stats/evs*gefs | wc -l | awk '{print $1}'`
+nc2=`ls ${DATA}/stats/evs*fnmoc | wc -l | awk '{print $1}'`
 echo " Found ${nc} ${DATA}/stats/evs*stat file for ${VDATE} "
 if [ "${nc}" != '0' ]
-then
-  set -x
-  echo "Successfully copied the NFCENS *.stat file for ${VDATE}"
-  [[ "$LOUD" = YES ]] && set -x
+	then
+  	set -x
+  	echo "Successfully copied the NFCENS *.stat file for ${VDATE}"
+  	[[ "$LOUD" = YES ]] && set -x
+	if [ "${nc1}" != '0' ]; then
+		echo "Successfully copied the GEFS *.stat file for ${VDATE}"	
+	else
+		echo "WARNING: Did not copy the GEFS *.stat files for ${VDATE}"
+
+	fi
+	if [ "${nc2}" != '0' ]; then
+		echo "Successfully copied the FNMOC *.stat file for ${VDATE}"
+	else
+		echo "WARNING: Did not copy the FNMOC *.stat files for ${VDATE}"
+	fi
 else
   set -x
   echo ' '

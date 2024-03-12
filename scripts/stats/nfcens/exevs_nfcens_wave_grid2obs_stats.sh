@@ -79,12 +79,12 @@ for vhr in ${vhours} ; do
         DATAmodelfilename=$DATA/gribs/HTSGW_mean.${match_date}.t${match_fhr}z.f${flead}.grib2
         DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
         COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
-	EVSINgefsfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
-	DATAgefsfilename=$DATA/gribs/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
+	EVSINgefsfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODEL1NAME}/${VERIF_CASE}/${MODEL1NAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
+	DATAgefsfilename=$DATA/gribs/${MODEL1NAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
 	DATAgefsstatfilename=$DATA/all_stats/point_stat_fcst${MOD1NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
 	COMOUTgefsstatfilename=$COMOUTsmall/point_stat_fcst${MOD1NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
-	EVSINfnmocfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/gefs.wave.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
-	DATAfnmocfilename=$DATA/gribs/wave_{INITDATE}${match_fhr}f${flead}.grib
+	EVSINfnmocfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODEL2NAME}/${VERIF_CASE}/wave_${match_date}${match_fhr}f${flead}.grib
+	DATAfnmocfilename=$DATA/gribs/wave_${INITDATE}${match_fhr}f${flead}.grib
 	DATAfnmocstatfilename=$DATA/all_stats/point_stat_fcst${MOD2NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
 	COMOUTfnmocstatfilename=$COMOUTsmall/point_stat_fcst${MOD2NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
 
