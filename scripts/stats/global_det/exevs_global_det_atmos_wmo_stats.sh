@@ -14,17 +14,19 @@ export VYYYYmm=$(echo $VDATE | cut -c1-6)
 
 # Make directories
 mkdir -p ${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE} ${MODELNAME}.${VDATE}
+mkdir -p gdas_cnvstat
 mkdir -p ${VYYYYmm}_daily_stats
-mkdir -p jobs logs tmp
+mkdir -p jobs logs confs tmp
 
-# Create and run job scripts for generate_stats, gather_stats, and summarize_stats
-for group in generate_stats gather_stats summarize_stats; do
+# Create and run job scripts for reformat_data generate_stats, gather_stats, and summarize_stats
+for group in reformat_data generate_stats gather_stats summarize_stats; do
     export JOB_GROUP=$group
     mkdir -p jobs/${JOB_GROUP}
     echo "Creating and running jobs for WMO stats: ${JOB_GROUP}"
     python $USHevs/global_det/global_det_atmos_stats_wmo_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x jobs/$group/*
+    exit
     nc=1
     if [ $USE_CFP = YES ]; then
         group_ncount_poe=$(ls -l  jobs/$group/poe* |wc -l)
