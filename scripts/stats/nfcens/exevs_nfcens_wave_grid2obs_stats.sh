@@ -89,7 +89,7 @@ for vhr in ${vhours} ; do
 	COMOUTfnmocstatfilename=$COMOUTsmall/point_stat_fcst${MOD2NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
 
         ############################################################################################
-	#Poitn-stat for nfcents:
+	#Point-stat for nfcens:
 	############################################################################################
 	
         if [[ -s $COMOUTstatfilename ]]; then
