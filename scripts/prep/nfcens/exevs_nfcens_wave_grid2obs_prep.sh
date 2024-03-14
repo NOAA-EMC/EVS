@@ -124,7 +124,7 @@ for HH in ${HHs} ; do
 	while (( $fcst <=240 )); do
 		FCST=$(printf "%03d" "$fcst")
 		COMINfilenamegefs="${COMINgefs}/gefs.${INITDATE}/${HH}/wave/gridded/gefs.wave.t${HH}z.mean.global.0p25.f${FCST}.grib2"
-		DATAfilenamegefs="${DATA}/gribs/gefs.wave.t${HH}z.mean.global.0p25.f${FCST}.grib2"
+		DATAfilenamegefs="${DATA}/gribs/gefs.wave.${INITDATE}.t${HH}z.mean.global.0p25.f${FCST}.grib2"
 		if [ ! -s $COMINfilenamegefs ]; then
 			if [ $SENDMAIL = YES ]; then
 				export subject="GEFS wave Forecast Data Missing for EVS ${COMPONENT}"
