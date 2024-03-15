@@ -181,7 +181,12 @@ for stat_file_iter in stat_file_iter_list:
                 else:
                     wmo_v = 'nil'
                 if wmo_sc == 'sd' and str(wmo_s) == '12':
-                    wmo_v_sd_0 = str(round(float(stat_line.iloc[0]['OSTDEV']),3))
+                    if have_stat_line:
+                        wmo_v_sd_0 = str(
+                            round(float(stat_line.iloc[0]['OSTDEV']),3)
+                        )
+                    else:
+                        wmo_v_sd_0 = 'nil'
                     grid2grid_upperair_VDATE_daily_rec2_lines.append(
                         f"centre={wmo_centre},model={wmo_model},d={wmo_d},"
                         +f"ref={wmo_ref},par={wmo_par},sc={wmo_sc},"

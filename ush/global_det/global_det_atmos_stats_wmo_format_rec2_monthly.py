@@ -185,6 +185,7 @@ for wmo_t in wmo_t_list:
                         have_ostdev_stat_line = False
             else:
                 have_stat_line = False
+                have_ostdev_stat_line = False
             if have_stat_line:
                 wmo_v = str(
                     round(float(stat_line.iloc[0]['WMO_WEIGHTED_MEAN']),3)
