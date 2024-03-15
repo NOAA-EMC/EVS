@@ -56,29 +56,19 @@ mkdir -p ${DATA}/stats
 
 plot_start_date=${PDYm90}
 plot_end_date=${VDATE}
+models='nfcens gefs fnmoc'
 
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
-  EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
-  EVSINgefs=${COMIN}/stats/${COMPONENT}/${MODEL1NAME}.${theDate}
-  EVSINfnmoc=${COMIN}/stats/${COMPONENT}/${MODEL2NAME}.${theDate}
-  if [ -s ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
-	  cp ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
-  else
-	  echo "WARNING: ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
-  fi
-  if [ -s ${EVSINgefs}/evs.stats.${MODEL1NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
-	  cp ${EVSINgefs}/evs.stats.${MODEL1NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
-  else
-	  echo "WARNING: ${EVSINgefs}/evs.stats.${MODEL1NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
-  fi
-  if [ -s ${EVSINfnmoc}/evs.stats.${MODEL2NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
-	  cp ${EVSINfnmoc}/evs.stats.${MODEL2NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
-  else
-	  echo "WARNING: ${EVSINfnmoc}/evs.stats.${MODEL2NAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
-  fi
-
-  theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
+	EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
+	for model in ${models}; do
+		if [ -s ${EVSINnfcens}/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
+	  		cp ${EVSINnfcens}/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  		else
+	  		echo "WARNING: ${EVSINnfcens}/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
+  		fi
+	done
+	theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
 done
 
 ####################
