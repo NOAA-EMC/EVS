@@ -79,11 +79,11 @@ grep "${stbasin}, ${stormNumber}" ${COMINtrack} > tracks.atcfunix.${YY23}_${stor
 grep "03, AVNO" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} > a${stormBasin}${stormNumber}${stormYear}.dat
 grep "03,  EMX" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
 grep "03,  CMC" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
-grep "03,  UKX" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+grep "03,  UKM" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
 sed -i 's/03, AVNO/03, MD01/' a${stormBasin}${stormNumber}${stormYear}.dat
 sed -i 's/03,  EMX/03, MD02/' a${stormBasin}${stormNumber}${stormYear}.dat
 sed -i 's/03,  CMC/03, MD03/' a${stormBasin}${stormNumber}${stormYear}.dat
-sed -i 's/03,  UKX/03, MD04/' a${stormBasin}${stormNumber}${stormYear}.dat
+sed -i 's/03,  UKM/03, MD04/' a${stormBasin}${stormNumber}${stormYear}.dat
 export Model_List="MD01,MD02,MD03,MD04"
 #export Model_Plot="GFS,ECMWF,CMC,UKM"
 
