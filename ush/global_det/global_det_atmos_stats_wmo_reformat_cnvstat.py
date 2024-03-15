@@ -16,6 +16,7 @@ import netCDF4 as netcdf
 import tarfile
 import gzip
 import shutil
+import itertools
 import global_det_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
@@ -37,7 +38,17 @@ cnvstat_file = os.environ['cnvstat_file']
 input_ascii2nc_file = os.environ['input_ascii2nc_file']
 
 valid_date_dt = datetime.datetime.strptime(valid_date, '%Y%m%d%H')
-var_list = ['t', 'uv', 'q']
+
+diag_var_dict = {
+    't': 'Temperature',
+    'q': 'Specific Humidity',
+    'uv': 'Wind'
+}
+wmo_level_list = [925, 850, 700, 500, 250, 100]
+wmo_var_list = ['HGT', 'TMP', 'UGRD', 'VGRD', 'RH']
+
+if os.path.exists(input_ascii2nc_file):
+    os.remove(input_ascii2nc_file)
 
 ascii2nc_df_dict = {
     'Message_Type': [],
@@ -54,9 +65,9 @@ ascii2nc_df_dict = {
 }
 
 os.chdir(os.path.join(DATA, 'gdas_cnvstat'))
-print(f"Working in {os.path.join(DATA, 'gdas_cnvstat')}")
+print(f"Working in {os.getcwd()}")
 
-for diag_var in var_list:
+for diag_var in list(diag_var_dict.keys()):
     # Get file
     diag_var_file = f"diag_conv_{diag_var}_anl.{valid_date_dt:%Y%m%d%H}.nc4"
     diag_var_zipfile = f"{diag_var_file}.gz"
@@ -69,7 +80,7 @@ for diag_var in var_list:
                 print(f"Unzipping {diag_var_zipfile} to {diag_var_file}")
                 shutil.copyfileobj(dvzf, dvf)
     if gda_util.check_file_exists_size(diag_var_file):
-        print(f"Processing {diag_var_file}")
+        print(f"Processing {diag_var_dict[diag_var]} from {diag_var_file}")
         diag_var_nc = netcdf.Dataset(diag_var_file, 'r')
         diag_var_df_dict = {}
         for var in diag_var_nc.variables:
@@ -86,64 +97,64 @@ for diag_var in var_list:
                 diag_var_df_dict[var] = data
             elif len(diag_var_nc.variables[var].shape) == 1:
                 diag_var_df_dict[var] = diag_var_nc.variables[var][:]
-            diag_var_df = pd.DataFrame(diag_var_df_dict)
+        diag_var_df = pd.DataFrame(diag_var_df_dict)
         # Assimilated: Analysis_Use_Flag = 1
         diag_var_assim_df = diag_var_df[diag_var_df.Analysis_Use_Flag == 1.0]
-        # Rawinsonde: Observation_Type = 120 [t, q], 220 [uv]
+        # Rawinsonde: Observation_Type = 120 [t, q, ps], 220 [uv]
         if diag_var == 'uv':
             ob_type = 220
         else:
             ob_type = 120
-        diag_var_rawinsonde = diag_var_assim_df[
+        diag_var_rawinsonde_df = diag_var_assim_df[
             (diag_var_assim_df['Observation_Type'].isin([ob_type]))
-             & (diag_var_assim_df['Pressure']\
-                .isin([925, 850, 700, 500, 250, 100]))
+            & (diag_var_assim_df['Pressure'].isin(wmo_level_list))
         ]
-        station_id_list = diag_var_rawinsonde['Station_ID'].tolist()
-        reltimes = (diag_var_rawinsonde['Time'].to_numpy()
+        # Put into dataframe for MET to read
+        station_id_list = diag_var_rawinsonde_df['Station_ID'].tolist()
+        reltimes = (diag_var_rawinsonde_df['Time'].to_numpy()
                     * datetime.timedelta(hours=1))
         valid_time_list = [
             datetime.datetime.strftime(valid_date_dt+reltime,
                                        '%Y%m%d_%H%M%S') \
             for reltime in reltimes
         ]
-        lat_list = diag_var_rawinsonde['Latitude'].tolist()
-        lon_list = diag_var_rawinsonde['Longitude'].tolist()
-        elv_list = diag_var_rawinsonde['Station_Elevation'].tolist()
+        lat_list = diag_var_rawinsonde_df['Latitude'].tolist()
+        lon_list = diag_var_rawinsonde_df['Longitude'].tolist()
+        elv_list = diag_var_rawinsonde_df['Station_Elevation'].tolist()
         pres_list = [
-            f"P{round(p)}" for p in diag_var_rawinsonde['Pressure'].tolist()
+            f"P{round(p)}" for p in diag_var_rawinsonde_df['Pressure'].tolist()
         ]
-        height_list = diag_var_rawinsonde['Height'].tolist()
+        height_list = diag_var_rawinsonde_df['Height'].tolist()
         qc_string_list = [
-            round(qc) for qc in diag_var_rawinsonde['Prep_QC_Mark']\
+            round(qc) for qc in diag_var_rawinsonde_df['Prep_QC_Mark']\
                 .tolist()
         ]
+        anl_use_list = diag_var_rawinsonde_df['Analysis_Use_Flag'].tolist()
         if diag_var == 'uv':
-            message_type_list = ['ADPUPA'] * (2*len(diag_var_rawinsonde))
+            message_type_list = ['ADPUPA'] * (2*len(diag_var_rawinsonde_df))
             station_id_list.extend(station_id_list)
             valid_time_list.extend(valid_time_list)
             lat_list.extend(lat_list)
             lon_list.extend(lon_list)
             elv_list.extend(elv_list)
-            var_list = ['UGRD'] * len(diag_var_rawinsonde)
-            var_list.extend(['VGRD'] * len(diag_var_rawinsonde))
+            var_list = ['UGRD'] * len(diag_var_rawinsonde_df)
+            var_list.extend(['VGRD'] * len(diag_var_rawinsonde_df))
             pres_list.extend(pres_list)
             height_list.extend(height_list)
             qc_string_list.extend(qc_string_list)
-            value_list = diag_var_rawinsonde['u_Observation'].tolist()
-            value_list.extend(diag_var_rawinsonde['v_Observation'].tolist())
+            value_list = diag_var_rawinsonde_df['u_Observation'].tolist()
+            value_list.extend(diag_var_rawinsonde_df['v_Observation'].tolist())
         else:
-            message_type_list = ['ADPUPA'] * len(diag_var_rawinsonde)
+            message_type_list = ['ADPUPA'] * len(diag_var_rawinsonde_df)
             if diag_var == 't':
                 grib_var = 'TMP'
             elif diag_var == 'q':
                 grib_var = 'SPFH'
-                mixing_ratio = (
-                    diag_var_rawinsonde['Observation'].to_numpy()/
-                    (1-diag_var_rawinsonde['Observation'].to_numpy())
-                )
-            var_list = [grib_var] * len(diag_var_rawinsonde)
-            value_list = diag_var_rawinsonde['Observation'].tolist()
+            elif diag_var == 'ps':
+                grib_var = 'PRES'
+                pres_list = ['Z0'] * len(diag_var_rawinsonde_df)
+            var_list = [grib_var] * len(diag_var_rawinsonde_df)
+            value_list = diag_var_rawinsonde_df['Observation'].tolist()
         ascii2nc_df_dict['Message_Type'].extend(message_type_list)
         ascii2nc_df_dict['Station_ID'].extend(station_id_list)
         ascii2nc_df_dict['Valid_Time'].extend(valid_time_list)
@@ -156,9 +167,108 @@ for diag_var in var_list:
         ascii2nc_df_dict['QC_String'].extend(qc_string_list)
         ascii2nc_df_dict['Observation_Value'].extend(value_list)
         diag_var_nc.close()
+
+tmp_ascii2nc_df = pd.DataFrame(ascii2nc_df_dict)
+
+# Constants pulled from MetPy
+water_molecular_weight = 18.015268
+dry_air_molecular_weight = 28.96546
+epsilon = water_molecular_weight/dry_air_molecular_weight
+radius_earth = 6371008.7714
+gravity = 9.80665
+
+# Calculate geopotential heigh and relative humidity
+print("Calculating Geopotential Height and Relative Humidity")
+for sid_level in \
+        list(itertools.product(tmp_ascii2nc_df['Station_ID'].unique(),
+                               tmp_ascii2nc_df['Level'].unique())):
+    sid = sid_level[0]
+    level = sid_level[1]
+    tmp_row = tmp_ascii2nc_df[
+        (tmp_ascii2nc_df['Station_ID'] == sid)
+        & (tmp_ascii2nc_df['Level'] == level)
+        & (tmp_ascii2nc_df['Variable_Name'] == 'TMP')
+    ]
+    spfh_row = tmp_ascii2nc_df[
+        (tmp_ascii2nc_df['Station_ID'] == sid)
+        & (tmp_ascii2nc_df['Level'] == level)
+        & (tmp_ascii2nc_df['Variable_Name'] == 'SPFH')
+    ]
+    if len(tmp_row) == 1 and len(spfh_row) == 1:
+        if tmp_row.iloc[0]['Valid_Time'] == spfh_row.iloc[0]['Valid_Time'] \
+                and tmp_row.iloc[0]['Height'] == spfh_row.iloc[0]['Height'] \
+                and tmp_row.iloc[0]['Lat'] == spfh_row.iloc[0]['Lat'] \
+                and tmp_row.iloc[0]['Lon'] == spfh_row.iloc[0]['Lon']:
+            if tmp_row.iloc[0]['Height'] < 9999999:
+                geo_height = (
+                    (gravity*radius_earth*tmp_row.iloc[0]['Height'])
+                    /(radius_earth+tmp_row.iloc[0]['Height'])
+                )/gravity
+            else:
+                geo_height = 'NA'
+            # Relative Humidity
+            pres = float(level[1:])
+            tmpK = float(tmp_row.iloc[0]['Observation_Value'])
+            tmpC = tmpK - 273.15
+            spfh = float(spfh_row.iloc[0]['Observation_Value'])
+            mixing_ratio = spfh/(1-spfh)
+            # MetPy [Bolton (1980)]
+            sat_vap_pres = (
+                6.112 *
+                np.exp((17.67*tmpC)/(tmpC+243.5))
+            )
+            sat_mixing_ratio = epsilon*(sat_vap_pres/(pres-sat_vap_pres))
+            rh = (
+                (mixing_ratio/(epsilon+mixing_ratio))
+                *((epsilon+sat_mixing_ratio)/sat_mixing_ratio)
+            )*100.
+            for met_var in ['HGT', 'RH']:
+                if met_var == 'HGT' and geo_height == 'NA':
+                    continue
+                ascii2nc_df_dict['Message_Type'].append(
+                    tmp_row.iloc[0]['Message_Type'])
+                ascii2nc_df_dict['Station_ID'].append(
+                    tmp_row.iloc[0]['Station_ID']
+                )
+                ascii2nc_df_dict['Valid_Time'].append(
+                    tmp_row.iloc[0]['Valid_Time']
+                )
+                ascii2nc_df_dict['Lat'].append(
+                    tmp_row.iloc[0]['Lat']
+                )
+                ascii2nc_df_dict['Lon'].append(
+                    tmp_row.iloc[0]['Lon']
+                )
+                ascii2nc_df_dict['Elevation'].append(
+                    tmp_row.iloc[0]['Elevation']
+                )
+                ascii2nc_df_dict['Variable_Name'].append(met_var)
+                ascii2nc_df_dict['Level'].append(
+                    tmp_row.iloc[0]['Level']
+                )
+                ascii2nc_df_dict['Height'].append(
+                    tmp_row.iloc[0]['Height']
+                )
+                ascii2nc_df_dict['QC_String'].append(
+                    tmp_row.iloc[0]['QC_String']
+                )
+                if met_var == 'HGT':
+                    ascii2nc_df_dict['Observation_Value'].append(
+                        str(geo_height)
+                    )
+                elif met_var == 'RH':
+                    ascii2nc_df_dict['Observation_Value'].append(
+                        str(rh)
+                    )
+
+# Make dataframe
 ascii2nc_df = pd.DataFrame(ascii2nc_df_dict)
-# Filter out bad heights
-ascii2nc = ascii2nc_df[ascii2nc_df['Height'] < 9999999]
+
+# Keep only needed variables
+ascii2nc_df = ascii2nc_df[
+    (ascii2nc_df['Variable_Name'].isin(wmo_var_list))
+]
+
 # Write out dataframe
 print(f"Writing file to {input_ascii2nc_file}")
 ascii2nc_df.to_csv(
@@ -166,5 +276,6 @@ ascii2nc_df.to_csv(
 )
 
 os.chdir(DATA)
+print(f"Back in {os.getcwd()}")
 
 print("END: "+os.path.basename(__file__))
