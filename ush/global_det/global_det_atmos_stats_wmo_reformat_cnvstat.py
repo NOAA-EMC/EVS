@@ -121,9 +121,7 @@ for diag_var in list(diag_var_dict.keys()):
         lat_list = diag_var_rawinsonde_df['Latitude'].tolist()
         lon_list = diag_var_rawinsonde_df['Longitude'].tolist()
         elv_list = diag_var_rawinsonde_df['Station_Elevation'].tolist()
-        pres_list = [
-            f"P{round(p)}" for p in diag_var_rawinsonde_df['Pressure'].tolist()
-        ]
+        pres_list = diag_var_rawinsonde_df['Pressure'].tolist()
         height_list = diag_var_rawinsonde_df['Height'].tolist()
         qc_string_list = [
             round(qc) for qc in diag_var_rawinsonde_df['Prep_QC_Mark']\
@@ -207,7 +205,7 @@ for sid_level in \
             else:
                 geo_height = 'NA'
             # Relative Humidity
-            pres = float(level[1:])
+            pres = float(level)
             tmpK = float(tmp_row.iloc[0]['Observation_Value'])
             tmpC = tmpK - 273.15
             spfh = float(spfh_row.iloc[0]['Observation_Value'])
