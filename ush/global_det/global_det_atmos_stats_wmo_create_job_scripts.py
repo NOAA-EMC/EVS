@@ -36,7 +36,7 @@ USE_CFP = os.environ['USE_CFP']
 nproc = os.environ['nproc']
 METPLUS_PATH = os.environ['METPLUS_PATH']
 MET_ROOT = os.environ['MET_ROOT']
-PARMevs = os.environ['PARMevs']
+FIXevs = os.environ['FIXevs']
 
 VDATE_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
 VYYYYmm_dt = datetime.datetime.strptime(VYYYYmm, '%Y%m')
@@ -55,15 +55,23 @@ fhr_0p25_file_format = os.path.join(
     COMINgfs, MODELNAME+'.{init?fmt=%Y%m%d}', '{init?fmt=%2H}', 'atmos',
     MODELNAME+'.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}'
 )
+gaussin_file_format = os.path.join(
+    COMIN, 'prep', COMPONENT, RUN+'.{init?fmt=%Y%m%d}', MODELNAME,
+    MODELNAME+'.wmo.t{init?fmt=%2H}z.f{lead?fmt=%3H}'
+)
 
 # Set GDAS file format
 cnvstat_file_format = os.path.join(
      COMINgfs, 'gdas.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'atmos',
      'gdas.t{valid?fmt=%2H}z.cnvstat'
 )
+ascii2nc_file_format = os.path.join(
+    COMIN, STEP, COMPONENT, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME,
+    VERIF_CASE, 'ascii2nc_{valid?fmt=%Y%m%d%H}.nc'
+)
 
 # WMO Verifcations
-wmo_verif_list = ['grid2grid_upperair']
+wmo_verif_list = ['grid2grid_upperair', 'grid2obs_upperair']
 wmo_verif_settings_dict = {
     'grid2grid_upperair': {'valid_hour_list': ['00', '12'],
                            'fhr_list': [str(fhr) for fhr \
@@ -181,18 +189,28 @@ elif JOB_GROUP == 'generate_stats':
                  'GridStat_fcstGFS_obsGFS_ANL_climoERA_INTERIM_VCNT.conf',
                  'GridStat_fcstGFS_obsGFS_ANL_climoERA_INTERIM_GRAD.conf'
              ]
+         elif wmo_verif == 'grid2obs_upperair':
+             wmo_verif_metplus_conf_list = [
+                 'PointStat_fcstGFS_obsADPUPA_climoERA_INTERIM_CNT.conf',
+                 'PointStat_fcstGFS_obsADPUPA_climoERA_INTERIM_VCNT.conf'
+             ]
          for vhr in wmo_verif_valid_hour_list:
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
              # Set truth input paths
              # grid2grid_upperair: model's own analysis
+             # grid2obs_upperair: radiosondes
              if wmo_verif == 'grid2grid_upperair':
                  truth_file = gda_util.format_filler(
                      anl_file_format, valid_time_dt, valid_time_dt, 'anl', {}
                  )
-                 log_missing_truth_file = os.path.join(
-                     DATA, 'mail_missing_'
-                     +truth_file.rpartition('/')[2].replace('.', '_')+'.sh'
+             elif wmo_verif == 'grid2obs_upperair':
+                 truth_file = gda_util.format_filler(
+                     ascii2nc_file_format, valid_time_dt, valid_time_dt, 'anl', {}
                  )
+             log_missing_truth_file = os.path.join(
+                 DATA, 'mail_missing_'
+                 +truth_file.rpartition('/')[2].replace('.', '_')+'.sh'
+             )
              have_truth = gda_util.check_file_exists_size(truth_file)
              if not have_truth and not os.path.exists(log_missing_truth_file):
                  if wmo_verif == 'grid2grid_upperair':
@@ -200,14 +218,25 @@ elif JOB_GROUP == 'generate_stats':
                          log_missing_truth_file, truth_file, MODELNAME,
                          valid_time_dt, 'anl'
                      )
+                 else:
+                     gda_util.log_missing_file_truth(
+                         log_missing_truth_file, truth_file, 'cnvstat',
+                         valid_time_dt
+                     )
              for fhr in wmo_verif_fhr_list:
                  init_time_dt = (valid_time_dt
                                  - datetime.timedelta(hours=int(fhr)))
                  # Set forecast input paths
                  # grid2grid_upperair: 0.25 degree lat-lon
+                 # grid2obs_upperair: gaussian grid prepped files
                  if wmo_verif == 'grid2grid_upperair':
                      fhr_file = gda_util.format_filler(
                          fhr_0p25_file_format, valid_time_dt, init_time_dt,
+                         fhr, {}
+                     )
+                 elif wmo_verif == 'grid2obs_upperair':
+                     fhr_file = gda_util.format_filler(
+                         gaussin_file_format, valid_time_dt, init_time_dt,
                          fhr, {}
                      )
                  log_missing_fhr_file = os.path.join(
@@ -223,18 +252,22 @@ elif JOB_GROUP == 'generate_stats':
                  for wmo_verif_metplus_conf in wmo_verif_metplus_conf_list:
                      # Set up output file path
                      # grid2grid_upperair: grid_stat
+                     # grid2obs_upperair: point_stat
                      if wmo_verif == 'grid2grid_upperair':
-                         wmo_verif_metplus_conf_line_type = (
-                             wmo_verif_metplus_conf.rpartition('_')[2]\
-                             .replace('.conf', '')
-                         )
-                         tmp_fhr_stat_file = os.path.join(
-                             DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
-                             MODELNAME, VERIF_CASE, f"grid_stat_{wmo_verif}_"
-                             f"{wmo_verif_metplus_conf_line_type}_"
-                             +f"{fhr.zfill(2)}0000L_"
-                             +f"{valid_time_dt:%Y%m%d_%H%M%S}V.stat"
-                         )
+                         met_tool = 'grid_stat'
+                     else:
+                         met_tool = 'point_stat'
+                     wmo_verif_metplus_conf_line_type = (
+                         wmo_verif_metplus_conf.rpartition('_')[2]\
+                         .replace('.conf', '')
+                     )
+                     tmp_fhr_stat_file = os.path.join(
+                         DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
+                         MODELNAME, VERIF_CASE, f"{met_tool}_{wmo_verif}_"
+                         f"{wmo_verif_metplus_conf_line_type}_"
+                         +f"{fhr.zfill(2)}0000L_"
+                         +f"{valid_time_dt:%Y%m%d_%H%M%S}V.stat"
+                     )
                      output_fhr_stat_file = os.path.join(
                          COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
                          VERIF_CASE, tmp_fhr_stat_file.rpartition('/')[2]
@@ -244,15 +277,25 @@ elif JOB_GROUP == 'generate_stats':
                      else:
                          have_fhr_stat = False
                      # Set wmo_verif job variables
+                     job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
+                     job_env_dict['fhr'] = fhr
+                     job_env_dict['fhr_file'] = fhr_file
+                     job_env_dict['tmp_fhr_stat_file'] = tmp_fhr_stat_file
+                     job_env_dict['output_fhr_stat_file'] = (
+                         output_fhr_stat_file
+                     )
                      if wmo_verif == 'grid2grid_upperair':
-                         job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
-                         job_env_dict['fhr'] = fhr
                          job_env_dict['anl_file'] = truth_file
-                         job_env_dict['fhr_file'] = fhr_file
-                         job_env_dict['tmp_fhr_stat_file'] = tmp_fhr_stat_file
-                         job_env_dict['output_fhr_stat_file'] = (
-                             output_fhr_stat_file
+                     elif wmo_verif == 'grid2obs_upperair':
+                         job_env_dict['ascii2nc_file'] = truth_file
+                         wmo_global_radiosonde_file = os.path.join(
+                             FIXevs, 'masks', 'WMO_GLOBAL_radiosondes.txt'
                          )
+                         if os.path.exists(wmo_global_radiosonde_file):
+                             with open(wmo_global_radiosonde_file) as wgr:
+                                 job_env_dict['wmo_indiv_radiosondes'] = (
+                                     ','.join(wgr.readline().split(' ')[1:])
+                                 )
                      # Make job script
                      njobs+=1
                      job_file = os.path.join(JOB_GROUP_jobs_dir,
@@ -386,7 +429,12 @@ elif JOB_GROUP == 'summarize_stats':
                 'VCNT:RMSVE,VCNT:SPEED_ERR,CNT:ME,CNT:RMSE,CNT:ANOM_CORR,'
                 +'GRAD:S1,CNT:MAE,CNT:RMSFA,CNT:RMSOA,CNT:FSTDEV,CNT:OSTDEV'
             )
-            wmo_verif_metplus_conf = 'StatAnalysis_fcstGFS_summary.conf'
+        elif wmo_verif == 'grid2obs_upperair':
+            job_env_dict['obtype'] = 'ADPUPA'
+            job_env_dict['summary_columns'] = (
+                'VCNT:RMSVE,VCNT:SPEED_ERR,CNT:ME,CNT:RMSE,CNT:MAE'
+            )
+        wmo_verif_metplus_conf = 'StatAnalysis_fcstGFS_summary.conf'
         for vhr in wmo_verif_settings_dict[wmo_verif]['valid_hour_list']:
             job_env_dict['valid_hour'] = vhr
             tmp_wmo_verif_vhr_stat_file = os.path.join(

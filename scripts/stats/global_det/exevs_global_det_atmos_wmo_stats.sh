@@ -26,7 +26,6 @@ for group in reformat_data generate_stats gather_stats summarize_stats; do
     python $USHevs/global_det/global_det_atmos_stats_wmo_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x jobs/$group/*
-    exit
     nc=1
     if [ $USE_CFP = YES ]; then
         group_ncount_poe=$(ls -l  jobs/$group/poe* |wc -l)
@@ -98,7 +97,7 @@ else
     echo "Copying ${output_monthly_stat_file} to ${tmp_monthly_stat_file}"
     cp -v ${output_monthly_stat_file} ${tmp_monthly_stat_file}
 fi
-
+exit
 # Format daily stats for WMO rec2
 tmp_daily_wmo_rec2_file=${DATA}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_daily.rec2
 output_daily_wmo_rec2_file=${COMOUT}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_daily.rec2
