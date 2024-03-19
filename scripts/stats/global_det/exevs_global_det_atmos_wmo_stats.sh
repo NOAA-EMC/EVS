@@ -15,6 +15,8 @@ export VYYYYmm=$(echo $VDATE | cut -c1-6)
 # Make directories
 mkdir -p ${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE} ${MODELNAME}.${VDATE}
 mkdir -p gdas_cnvstat
+chmod 750 gdas_cnvstat
+chgrp rstprod gdas_cnvstat
 mkdir -p ${VYYYYmm}_daily_stats
 mkdir -p jobs logs confs tmp
 

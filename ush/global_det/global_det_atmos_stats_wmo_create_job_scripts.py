@@ -148,6 +148,14 @@ if JOB_GROUP == 'reformat_data':
                  +'cp -v $output_ascii2nc_file '
                  +'$tmp_ascii2nc_file; fi\n'
              )
+             job.write(
+                 'if [ -f $tmp_ascii2nc_file ]; then '
+                 +'chmod 750 $tmp_ascii2nc_file; fi\n'
+             )
+             job.write(
+                 'if [ -f $tmp_ascii2nc_file ]; then '
+                 +'chgrp rstprod $tmp_ascii2nc_file; fi\n'
+             )
          else:
              if have_cnvstat:
                  job.write(
@@ -158,10 +166,26 @@ if JOB_GROUP == 'reformat_data':
                  job.write('export err=$?; err_chk\n')
                  job.write(
                      'if [ -f $input_ascii2nc_file ]; then '
+                     +'chmod 750 $input_ascii2nc_file; fi\n'
+                 )
+                 job.write(
+                     'if [ -f $input_ascii2nc_file ]; then '
+                     +'chgrp rstprod $input_ascii2nc_file; fi\n'
+                 )
+                 job.write(
+                     'if [ -f $input_ascii2nc_file ]; then '
                      +gda_util.metplus_command('ASCII2NC_obsCNVSTAT.conf')
                      +'; fi\n'
                  )
                  job.write('export err=$?; err_chk\n')
+                 job.write(
+                     'if [ -f $tmp_ascii2nc_file ]; then '
+                     +'chmod 750 $tmp_ascii2nc_file; fi\n'
+                 )
+                 job.write(
+                     'if [ -f $tmp_ascii2nc_file ]; then '
+                     +'chgrp rstprod $tmp_ascii2nc_file; fi\n'
+                 )
                  if SENDCOM == 'YES':
                      job.write(
                          'if [ -f $tmp_ascii2nc_file ]; then '
@@ -169,6 +193,14 @@ if JOB_GROUP == 'reformat_data':
                          +'$output_ascii2nc_file; fi\n'
                      )
                      job.write('export err=$?; err_chk\n')
+                     job.write(
+                         'if [ -f $output_ascii2nc_file ]; then '
+                         +'chmod 750 $output_ascii2nc_file; fi\n'
+                     )
+                     job.write(
+                         'if [ -f $output_ascii2nc_file ]; then '
+                         +'chgrp rstprod $output_ascii2nc_file; fi\n'
+                     )
 elif JOB_GROUP == 'generate_stats':
      for wmo_verif in wmo_verif_list:
          job_env_dict = gda_util.initalize_job_env_dict(wmo_verif, JOB_GROUP,
