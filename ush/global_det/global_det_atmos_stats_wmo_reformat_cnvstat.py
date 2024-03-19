@@ -192,19 +192,23 @@ for sid_level in \
         & (tmp_ascii2nc_df['Level'] == level)
         & (tmp_ascii2nc_df['Variable_Name'] == 'SPFH')
     ]
+    # Geopotential Height
+    if len(tmp_row) == 1:
+        if tmp_row.iloc[0]['Height'] < 9999999:
+            geo_height = (
+                (gravity*radius_earth*tmp_row.iloc[0]['Height'])
+                    /(radius_earth+tmp_row.iloc[0]['Height'])
+                )/gravity
+        else:
+            geo_height = 'NA'
+    else:
+        geo_height = 'NA'
+    # Relative Humidity
     if len(tmp_row) == 1 and len(spfh_row) == 1:
         if tmp_row.iloc[0]['Valid_Time'] == spfh_row.iloc[0]['Valid_Time'] \
                 and tmp_row.iloc[0]['Height'] == spfh_row.iloc[0]['Height'] \
                 and tmp_row.iloc[0]['Lat'] == spfh_row.iloc[0]['Lat'] \
                 and tmp_row.iloc[0]['Lon'] == spfh_row.iloc[0]['Lon']:
-            if tmp_row.iloc[0]['Height'] < 9999999:
-                geo_height = (
-                    (gravity*radius_earth*tmp_row.iloc[0]['Height'])
-                    /(radius_earth+tmp_row.iloc[0]['Height'])
-                )/gravity
-            else:
-                geo_height = 'NA'
-            # Relative Humidity
             pres = float(level)
             tmpK = float(tmp_row.iloc[0]['Observation_Value'])
             tmpC = tmpK - 273.15
@@ -220,44 +224,49 @@ for sid_level in \
                 (mixing_ratio/(epsilon+mixing_ratio))
                 *((epsilon+sat_mixing_ratio)/sat_mixing_ratio)
             )*100.
-            for met_var in ['HGT', 'RH']:
-                if met_var == 'HGT' and geo_height == 'NA':
-                    continue
-                ascii2nc_df_dict['Message_Type'].append(
-                    tmp_row.iloc[0]['Message_Type'])
-                ascii2nc_df_dict['Station_ID'].append(
-                    tmp_row.iloc[0]['Station_ID']
-                )
-                ascii2nc_df_dict['Valid_Time'].append(
-                    tmp_row.iloc[0]['Valid_Time']
-                )
-                ascii2nc_df_dict['Lat'].append(
-                    tmp_row.iloc[0]['Lat']
-                )
-                ascii2nc_df_dict['Lon'].append(
-                    tmp_row.iloc[0]['Lon']
-                )
-                ascii2nc_df_dict['Elevation'].append(
-                    tmp_row.iloc[0]['Elevation']
-                )
-                ascii2nc_df_dict['Variable_Name'].append(met_var)
-                ascii2nc_df_dict['Level'].append(
-                    tmp_row.iloc[0]['Level']
-                )
-                ascii2nc_df_dict['Height'].append(
-                    tmp_row.iloc[0]['Height']
-                )
-                ascii2nc_df_dict['QC_String'].append(
-                    tmp_row.iloc[0]['QC_String']
-                )
-                if met_var == 'HGT':
-                    ascii2nc_df_dict['Observation_Value'].append(
-                        str(geo_height)
-                    )
-                elif met_var == 'RH':
-                    ascii2nc_df_dict['Observation_Value'].append(
-                        str(rh)
-                    )
+        else:
+            rh = 'NA'
+    else:
+        rh = 'NA'
+    if len(tmp_row) == 1:
+        for met_var in ['HGT', 'RH']:
+            if met_var == 'HGT':
+                met_var_value = geo_height
+            elif met_var == 'RH':
+                met_var_value = rh
+            if met_var_value == 'NA':
+                continue
+            ascii2nc_df_dict['Message_Type'].append(
+                tmp_row.iloc[0]['Message_Type']
+            )
+            ascii2nc_df_dict['Station_ID'].append(
+                tmp_row.iloc[0]['Station_ID']
+            )
+            ascii2nc_df_dict['Valid_Time'].append(
+                tmp_row.iloc[0]['Valid_Time']
+            )
+            ascii2nc_df_dict['Lat'].append(
+                tmp_row.iloc[0]['Lat']
+            )
+            ascii2nc_df_dict['Lon'].append(
+                tmp_row.iloc[0]['Lon']
+            )
+            ascii2nc_df_dict['Elevation'].append(
+                tmp_row.iloc[0]['Elevation']
+            )
+            ascii2nc_df_dict['Variable_Name'].append(met_var)
+            ascii2nc_df_dict['Level'].append(
+                tmp_row.iloc[0]['Level']
+            )
+            ascii2nc_df_dict['Height'].append(
+                tmp_row.iloc[0]['Height']
+            )
+            ascii2nc_df_dict['QC_String'].append(
+                tmp_row.iloc[0]['QC_String']
+            )
+            ascii2nc_df_dict['Observation_Value'].append(
+                str(met_var_value)
+            )
 
 # Make dataframe
 ascii2nc_df = pd.DataFrame(ascii2nc_df_dict)
