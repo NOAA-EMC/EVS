@@ -97,31 +97,19 @@ else
     echo "Copying ${output_monthly_stat_file} to ${tmp_monthly_stat_file}"
     cp -v ${output_monthly_stat_file} ${tmp_monthly_stat_file}
 fi
-exit
-# Format daily stats for WMO rec2
-tmp_daily_wmo_rec2_file=${DATA}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_daily.rec2
-output_daily_wmo_rec2_file=${COMOUT}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_daily.rec2
-if [ ! -s ${output_daily_wmo_rec2_file} ]; then
-    python $USHevs/global_det/global_det_atmos_stats_wmo_format_rec2_daily.py
-    export err=$?; err_chk
-    if [ $SENDCOM = YES ]; then
-        if [ -f ${tmp_daily_wmo_rec2_file} ]; then cp -v ${tmp_daily_wmo_rec2_file} ${output_daily_wmo_rec2_file}; fi
-    fi
-else
-    echo "Copying ${output_daily_wmo_rec2_file} to ${tmp_daily_wmo_rec2_file}"
-    cp -v ${output_daily_wmo_rec2_file} ${tmp_daily_wmo_rec2_file}
-fi
 
-# Format monthly stats for WMO rec2
-tmp_monthly_wmo_rec2_file=${DATA}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_monthly.rec2
-output_monthly_wmo_rec2_file=${COMOUT}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_monthly.rec2
-if [ ! -s ${output_monthly_wmo_rec2_file} ]; then
-    python $USHevs/global_det/global_det_atmos_stats_wmo_format_rec2_monthly.py
-    export err=$?; err_chk
-    if [ $SENDCOM = YES ]; then
-        if [ -f ${tmp_monthly_wmo_rec2_file} ]; then cp -v ${tmp_monthly_wmo_rec2_file} ${output_monthly_wmo_rec2_file}; fi
+# Format daily & monthly stats for WMO rec2 - domain
+for temporal in daily monthly; do
+    tmp_temporal_wmo_rec2_file=${DATA}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_${temporal}.rec2
+    output_temporal_wmo_rec2_file=${COMOUT}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_${temporal}.rec2
+    if [ ! -s ${output_temporal_wmo_rec2_file} ]; then
+        python $USHevs/global_det/global_det_atmos_stats_wmo_format_rec2_domain_${temporal}.py
+        export err=$?; err_chk
+        if [ $SENDCOM = YES ]; then
+            if [ -f ${tmp_temporal_wmo_rec2_file} ]; then cp -v ${tmp_temporal_wmo_rec2_file} ${output_temporal_wmo_rec2_file}; fi
+        fi
+    else
+        echo "Copying ${output_temporal_wmo_rec2_file} to ${tmp_temporal_wmo_rec2_file}"
+        cp -v ${output_temporal_wmo_rec2_file} ${tmp_temporal_wmo_rec2_file}
     fi
-else
-    echo "Copying ${output_monthly_wmo_rec2_file} to ${tmp_monthly_wmo_rec2_file}"
-    cp -v ${output_monthly_wmo_rec2_file} ${tmp_monthly_wmo_rec2_file}
-fi
+done
