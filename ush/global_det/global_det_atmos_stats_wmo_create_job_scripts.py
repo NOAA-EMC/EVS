@@ -72,6 +72,7 @@ ascii2nc_file_format = os.path.join(
 
 # WMO Verifcations
 wmo_verif_list = ['grid2grid_upperair', 'grid2obs_upperair']
+wmo_init_hour_list = ['00', '12']
 wmo_verif_settings_dict = {
     'grid2grid_upperair': {'valid_hour_list': ['00', '12'],
                            'fhr_list': [str(fhr) for fhr \
@@ -258,6 +259,11 @@ elif JOB_GROUP == 'generate_stats':
              for fhr in wmo_verif_fhr_list:
                  init_time_dt = (valid_time_dt
                                  - datetime.timedelta(hours=int(fhr)))
+                 if f"{init_time_dt:%H}" not in wmo_init_hour_list:
+                     print(f"Skipping forecast hour {fhr} with init"
+                           +f"{init_time_dt:%Y%m%d%H} as init hour not in "
+                           +f"WMO required init hours {wmo_init_hour_list}")
+                     continue
                  # Set forecast input paths
                  # grid2grid_upperair: 0.25 degree lat-lon
                  # grid2obs_upperair: gaussian grid prepped files
