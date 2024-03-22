@@ -28,26 +28,26 @@ echo ' '
 ################################################################################
 # Create today's NWPS individual fcst grib2 files and add them to the archive
 ################################################################################
-mkdir -p ${DATA}/grib2
+mkdir -p ${DATA}/gribs
 
 echo 'Copying NWPS wave grib2 files'
 
 HHs='00 06 12 18'
-leads='000 024 048 072 096 120 144'
+fcsts='000 024 048 072 096 120 144'
 regions='ar er pr sr wr'
 
 for region in ${regions} ; do
 	COMINregion="${COMINnwps}/${region}.${INITDATE}"
 	if [ ! -s $COMINregion ]; then
 		if [ $SENDMAIL = YES ]; then
-			export subject="NWPS Forecast Data Missing for ${region} EVS ${COMPONENT}"
+			export subject="Forecast Data Missing for ${region} EVS ${COMPONENT}"
 			echo "WARNING: No NWPS forecast was available for ${region}" > mailmsg
 			echo "WARNING: Missing file is $COMINregion" >> mailmsg
 			echo "Job ID: $jobid" >> mailmsg
 			cat mailmsg | mail -s "$subject" $MAILTO
 		fi
 	else
-	find ${COMINregion} -name \*.grib2 -exec cp {} ${DATA}/grib2 \;
+	find ${COMINregion} -name \*.grib2 -exec cp {} ${DATA}/gribs \;
 	fi
 done
 
@@ -56,17 +56,11 @@ CGs='CG1 CG2 CG3 CG4 CG5 CG6'
 for wfo in $wfos; do
 	for CG in $CGs; do
 		for HH in ${HHs}; do
-			DATAfilename=${DATA}/grib2/${wfo}_nwps_${CG}_${INITDATE}_${HH}00.grib2
-			if [ ! -s DATAfilename ]; then
+			DATAfilename=${DATA}/gribs/${wfo}_nwps_${CG}_${INITDATE}_${HH}00.grib2
+			if [ ! -s ${DATAfilename} ]; then
 				echo "WARNING: NO NWPS forecast was available for valid date ${INITDATE}"
-				if [ $SENDMAIL = YES ] ; then
-					export subject="NWPS Forecast Data Missing for EVS ${COMPONENT}"
-					echo "Warning: No RTOFS forecast was available for ${INITDATE}" > mailmsg
-					echo "Missing file is ${DATAfilename}" >> mailmsg
-					echo "Job ID: $jobid" >> mailmsg
-	    				cat mailmsg | mail -s "$subject" $MAILTO
-				fi
 			else
+				fcst=0
 				while (( $fcst <= 144 )); do
 					FCST=$(printf "%03d" "$fcst")
 	    				DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}_${INITDATE}_${HH}00_f${FCST}.grib2
@@ -77,7 +71,7 @@ for wfo in $wfos; do
 						else
 	    						grib2_match_fhr=":${fcst} hour fcst:"
 						fi
-						DATAfilename_fhr=${DATA}/grib2/${wfo}_nwps_${CG}_${INITDATE}_${HH}00_f${FCST}.grib2
+						DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}_${INITDATE}_${HH}00_f${FCST}.grib2
 						wgrib2 $DATAfilename -match "$grib2_match_fhr" -grib $DATAfilename_fhr > /dev/null
 						export err=$?; err_chk
 						if [ $SENDCOM = YES ]; then
@@ -96,7 +90,7 @@ done
 ############################################################
 
 export RUN=ndbc
-mkdir -p $COMOUTprep/nwps.$VDATE/$RUN
+#mkdir -p $COMOUTprep/nwps.$VDATE/$RUN
 mkdir -p ${DATA}/ncfiles
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
 ndbc_txt_ncount=$(ls -l $DCOMINndbc/$VDATE/validation_data/marine/buoy/*.txt |wc -l)
