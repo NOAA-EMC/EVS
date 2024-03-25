@@ -133,7 +133,7 @@ global_det_model_dict = {
                                                   +'t{init?fmt=%2H}z.master.'
                                                   +'grb2f{lead?fmt=%3H}'),
             'inithours': ['00', '06', '12', '18'],
-            'fcst_hrs': list(range(3, 72+3, 3))
+            'fcst_hrs': list(range(0, 72+3, 3))
                         + list(range(78, 240+6, 6))},
     'imd': {'input_fcst_file_format': os.path.join(DCOMINimd,
                                                    'gdas1.t{init?fmt=%2H}z.'

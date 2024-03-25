@@ -522,8 +522,11 @@ def prep_prod_gfs_file(source_file, dest_file, init_dt, forecast_hour,
             elif num == 3:
                 num_match = ':(DPT|TMP|RH|UGRD|VGRD):(2|10) m above ground:'
             elif num == 4:
-                num_match = (':TCDC:entire atmosphere:'
-                             +forecast_hour+' hour fcst:')
+                if int(forecast_hour) == 0:
+                    num_match = ':TCDC:entire atmosphere:anl:'
+                else:
+                    num_match = (':TCDC:entire atmosphere:'
+                                 +forecast_hour+' hour fcst:')
             run_shell_command(
                 [WGRIB2+' '+source_file+' -match "'+num_match+'" '
                  +'-grib '+working_filenum]
@@ -555,7 +558,11 @@ def prep_prod_gfs_file(source_file, dest_file, init_dt, forecast_hour,
                  +'-grib '+working_file5]
             )
         run_shell_command(['>', prepped_file])
-        for num in range(1,6,1):
+        if int(forecast_hour) == 0:
+            file_range = range(1,5,1)
+        else:
+            file_range = range(1,6,1)
+        for num in file_range:
             working_filenum = prepped_file+'.tmp'+str(num)
             if check_file_exists_size(working_filenum):
                 run_shell_command(['cat', working_filenum, '>>', prepped_file])
