@@ -19,6 +19,7 @@ print("BEGIN: "+os.path.basename(__file__))
 # Read in environment variables
 COMIN = os.environ['COMIN']
 COMINgfs = os.environ['COMINgfs']
+COMINobsproc = os.environ['COMINobsproc']
 SENDCOM = os.environ['SENDCOM']
 COMOUT = os.environ['COMOUT']
 DATA = os.environ['DATA']
@@ -65,13 +66,17 @@ cnvstat_file_format = os.path.join(
      COMINgfs, 'gdas.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'atmos',
      'gdas.t{valid?fmt=%2H}z.cnvstat'
 )
+prepbufr_file_format = os.path.join(
+    COMINobsproc, 'gdas.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'atmos',
+    'gdas.t{valid?fmt=%2H}z.prepbufr'
+)
 ascii2nc_file_format = os.path.join(
     COMIN, STEP, COMPONENT, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME,
     VERIF_CASE, 'ascii2nc_{valid?fmt=%Y%m%d%H}.nc'
 )
 
 # WMO Verifcations
-wmo_verif_list = ['grid2grid_upperair', 'grid2obs_upperair']
+wmo_verif_list = ['grid2grid_upperair', 'grid2obs_upperair', 'grid2obs_sfc']
 wmo_init_hour_list = ['00', '12']
 wmo_verif_settings_dict = {
     'grid2grid_upperair': {'valid_hour_list': ['00', '12'],
@@ -79,7 +84,10 @@ wmo_verif_settings_dict = {
                                         in range(12,240+12,12)]},
     'grid2obs_upperair': {'valid_hour_list': ['00', '12'],
                           'fhr_list': [str(fhr) for fhr \
-                                       in range(12,240+12,12)]}
+                                       in range(12,240+12,12)]},
+    'grid2obs_sfc': {'valid_hour_list': ['00', '06', '12', '18'],
+                     'fhr_list': [str(fhr) for fhr \
+                                  in range(0,240+3,3)]},
 }
 # Set up job directory
 njobs = 0
@@ -88,120 +96,151 @@ gda_util.make_dir(JOB_GROUP_jobs_dir)
 
 # Create job scripts
 if JOB_GROUP == 'reformat_data':
-     print(f"----> Making job scripts for {VERIF_CASE} grid2obs {STEP} "
-           +f"for job group {JOB_GROUP}")
-     grid2obs_valid_hour_list = (
-         wmo_verif_settings_dict['grid2obs_upperair']['valid_hour_list']
-     )
-     job_env_dict = gda_util.initalize_job_env_dict('grid2obs', JOB_GROUP,
-                                                    VERIF_CASE, 'grid2obs')
-     for vhr in grid2obs_valid_hour_list:
-         valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
-         # Set input paths
-         cnvstat_file = gda_util.format_filler(
-             cnvstat_file_format, valid_time_dt, valid_time_dt, 'anl', {}
+     # Do not run for grid2grid_upperair
+     wmo_verif_list.remove('grid2grid_upperair')
+     for wmo_verif in wmo_verif_list:
+         job_env_dict = gda_util.initalize_job_env_dict(wmo_verif, JOB_GROUP,
+                                                        VERIF_CASE, wmo_verif)
+         job_env_dict['wmo_verif'] = wmo_verif
+         print(f"----> Making job scripts for {VERIF_CASE} {wmo_verif} {STEP} "
+               +f"for job group {JOB_GROUP}")
+         # Set WMO verification specifications
+         wmo_verif_valid_hour_list = (
+             wmo_verif_settings_dict[wmo_verif]['valid_hour_list']
          )
-         log_missing_cnvstat_file = os.path.join(
-             DATA, 'mail_missing_'
-             +cnvstat_file.rpartition('/')[2].replace('.', '_')+'.sh'
-         )
-         input_ascii2nc_file = os.path.join(
-             DATA, 'gdas_cnvstat', f"ascii2nc_{valid_time_dt:%Y%m%d%H}.txt"
-         )
-         have_cnvstat = gda_util.check_file_exists_size(cnvstat_file)
-         if not have_cnvstat and not os.path.exists(log_missing_cnvstat_file):
-             gda_util.log_missing_file_truth(
-                 log_missing_cnvstat_file, cnvstat_file, 'cnvstat',
-                 valid_time_dt
+         for vhr in wmo_verif_valid_hour_list:
+             valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
+             # Set input paths
+             if wmo_verif == 'grid2obs_upperair':
+                 obs_file = gda_util.format_filler(
+                     cnvstat_file_format, valid_time_dt, valid_time_dt,
+                     'anl', {}
+                 )
+                 input_ascii2nc_file = os.path.join(
+                     DATA, 'gdas_cnvstat',
+                     f"gdas_cnvstat_{valid_time_dt:%Y%m%d%H}.txt"
+                 )
+                 obtype = 'cnvstat'
+             elif wmo_verif == 'grid2obs_sfc':
+                 obs_file = gda_util.format_filler(
+                     prepbufr_file_format, valid_time_dt, valid_time_dt,
+                     'anl', {}
+                 )
+                 obtype = 'prepbufr'
+             log_missing_obs_file = os.path.join(
+                 DATA, 'mail_missing_'
+                 +obs_file.rpartition('/')[2].replace('.', '_')+'.sh'
              )
-         # Set output paths
-         tmp_ascii2nc_file = os.path.join(
-             DATA, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME, VERIF_CASE,
-             f"ascii2nc_{valid_time_dt:%Y%m%d%H}.nc"
-         )
-         output_ascii2nc_file = os.path.join(
-             COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-             VERIF_CASE, tmp_ascii2nc_file.rpartition('/')[2]
-         )
-         have_ascii2nc = os.path.exists(output_ascii2nc_file)
-         # Set job variables
-         job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
-         job_env_dict['cnvstat_file'] = cnvstat_file
-         job_env_dict['input_ascii2nc_file'] = input_ascii2nc_file
-         job_env_dict['tmp_ascii2nc_file'] = tmp_ascii2nc_file
-         job_env_dict['output_ascii2nc_file'] = output_ascii2nc_file
-         # Make job script
-         njobs+=1
-         job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-         print(f"Creating job script: {job_file}")
-         job = open(job_file, 'w')
-         job.write('#!/bin/bash\n')
-         job.write('set -x\n')
-         job.write('\n')
-         for name, value in job_env_dict.items():
-             job.write(f'export {name}="{value}"\n')
-         job.write('\n')
-         # If ascii2nc file in COMOUT then copy it
-         # if not create it
-         if have_ascii2nc:
-             job.write(
-                 'if [ -f $output_ascii2nc_file ]; then '
-                 +'cp -v $output_ascii2nc_file '
-                 +'$tmp_ascii2nc_file; fi\n'
+             have_obs = gda_util.check_file_exists_size(obs_file)
+             if not have_obs and not os.path.exists(log_missing_obs_file):
+                 gda_util.log_missing_file_truth(
+                     log_missing_obs_file, obs_file, obtype,
+                     valid_time_dt
+                 )
+             # Set output paths
+             if wmo_verif == 'grid2obs_upperair':
+                 tmp_obs2nc_file = os.path.join(
+                     DATA, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
+                     VERIF_CASE, 'ascii2nc_gdas_cnvstat_'
+                     +f"{valid_time_dt:%Y%m%d%H}.nc"
+                 )
+             elif wmo_verif == 'grid2obs_sfc':
+                 tmp_obs2nc_file = os.path.join(
+                     DATA, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
+                     VERIF_CASE, 'pb2nc_gdas_prepbufr_'
+                     +f"{valid_time_dt:%Y%m%d%H}.nc"
+                 )
+             output_obs2nc_file = os.path.join(
+                 COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
+                 VERIF_CASE, tmp_obs2nc_file.rpartition('/')[2]
              )
-             job.write(
-                 'if [ -f $tmp_ascii2nc_file ]; then '
-                 +'chmod 750 $tmp_ascii2nc_file; fi\n'
-             )
-             job.write(
-                 'if [ -f $tmp_ascii2nc_file ]; then '
-                 +'chgrp rstprod $tmp_ascii2nc_file; fi\n'
-             )
-         else:
-             if have_cnvstat:
+             have_obs2nc = os.path.exists(output_obs2nc_file)
+             # Set job variables
+             job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
+             job_env_dict['COMINobsproc'] = COMINobsproc
+             job_env_dict['obs_file'] = obs_file
+             job_env_dict['tmp_obs2nc_file'] = tmp_obs2nc_file
+             job_env_dict['output_obs2nc_file'] = output_obs2nc_file
+             if wmo_verif == 'grid2obs_upperair':
+                 job_env_dict['input_ascii2nc_file'] = input_ascii2nc_file
+             # Make job script
+             njobs+=1
+             job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
+             print(f"Creating job script: {job_file}")
+             job = open(job_file, 'w')
+             job.write('#!/bin/bash\n')
+             job.write('set -x\n')
+             job.write('\n')
+             for name, value in job_env_dict.items():
+                 job.write(f'export {name}="{value}"\n')
+             job.write('\n')
+             # If obs2nc file in COMOUT then copy it
+             # if not create it
+             if have_obs2nc:
                  job.write(
-                     gda_util.python_command('global_det_atmos_stats_wmo_'
-                                             +'reformat_cnvstat.py', [])
-                     +'\n'
-                 )
-                 job.write('export err=$?; err_chk\n')
-                 job.write(
-                     'if [ -f $input_ascii2nc_file ]; then '
-                     +'chmod 750 $input_ascii2nc_file; fi\n'
-                 )
-                 job.write(
-                     'if [ -f $input_ascii2nc_file ]; then '
-                     +'chgrp rstprod $input_ascii2nc_file; fi\n'
-                 )
-                 job.write(
-                     'if [ -f $input_ascii2nc_file ]; then '
-                     +gda_util.metplus_command('ASCII2NC_obsCNVSTAT.conf')
-                     +'; fi\n'
-                 )
-                 job.write('export err=$?; err_chk\n')
-                 job.write(
-                     'if [ -f $tmp_ascii2nc_file ]; then '
-                     +'chmod 750 $tmp_ascii2nc_file; fi\n'
+                     'if [ -f $output_obs2nc_file ]; then '
+                     +'cp -v $output_obs2nc_file '
+                     +'$tmp_obs2nc_file; fi\n'
                  )
                  job.write(
-                     'if [ -f $tmp_ascii2nc_file ]; then '
-                     +'chgrp rstprod $tmp_ascii2nc_file; fi\n'
+                     'if [ -f $tmp_obs2nc_file ]; then '
+                     +'chmod 750 $tmp_obs2nc_file; fi\n'
                  )
-                 if SENDCOM == 'YES':
+                 job.write(
+                     'if [ -f $tmp_obs2nc_file ]; then '
+                     +'chgrp rstprod $tmp_obs2nc_file; fi\n'
+                 )
+             else:
+                 if have_obs:
+                     if wmo_verif == 'grid2obs_upperair':
+                         job.write(
+                             gda_util.python_command('global_det_atmos_stats_wmo_'
+                                                     +'reformat_cnvstat.py', [])
+                             +'\n'
+                         )
+                         job.write('export err=$?; err_chk\n')
+                         job.write(
+                             'if [ -f $input_ascii2nc_file ]; then '
+                             +'chmod 750 $input_ascii2nc_file; fi\n'
+                         )
+                         job.write(
+                             'if [ -f $input_ascii2nc_file ]; then '
+                             +'chgrp rstprod $input_ascii2nc_file; fi\n'
+                         )
+                         job.write(
+                             'if [ -f $input_ascii2nc_file ]; then '
+                             +gda_util.metplus_command('ASCII2NC_obsCNVSTAT.conf')
+                             +'; fi\n'
+                         )
+                         job.write('export err=$?; err_chk\n')
+                     elif wmo_verif == 'grid2obs_sfc':
+                         job.write(
+                             gda_util.metplus_command('PB2NC_obsPrepbufr.conf')
+                             +'\n'
+                         )
                      job.write(
-                         'if [ -f $tmp_ascii2nc_file ]; then '
-                         +'cp -v $tmp_ascii2nc_file '
-                         +'$output_ascii2nc_file; fi\n'
-                     )
-                     job.write('export err=$?; err_chk\n')
-                     job.write(
-                         'if [ -f $output_ascii2nc_file ]; then '
-                         +'chmod 750 $output_ascii2nc_file; fi\n'
+                         'if [ -f $tmp_obs2nc_file ]; then '
+                         +'chmod 750 $tmp_obs2nc_file; fi\n'
                      )
                      job.write(
-                         'if [ -f $output_ascii2nc_file ]; then '
-                         +'chgrp rstprod $output_ascii2nc_file; fi\n'
+                         'if [ -f $tmp_obs2nc_file ]; then '
+                         +'chgrp rstprod $tmp_obs2nc_file; fi\n'
                      )
+                     if SENDCOM == 'YES':
+                         job.write(
+                             'if [ -f $tmp_obs2nc_file ]; then '
+                             +'cp -v $tmp_obs2nc_file '
+                             +'$output_obs2nc_file; fi\n'
+                         )
+                         job.write('export err=$?; err_chk\n')
+                         job.write(
+                             'if [ -f $output_obs2nc_file ]; then '
+                             +'chmod 750 $output_obs2nc_file; fi\n'
+                         )
+                         job.write(
+                             'if [ -f $output_obs2nc_file ]; then '
+                             +'chgrp rstprod $output_obs2nc_file; fi\n'
+                         )
 elif JOB_GROUP == 'generate_stats':
      for wmo_verif in wmo_verif_list:
          job_env_dict = gda_util.initalize_job_env_dict(wmo_verif, JOB_GROUP,

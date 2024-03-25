@@ -34,7 +34,7 @@ STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
 valid_date = os.environ['valid_date']
 JOB_GROUP = os.environ['JOB_GROUP']
-cnvstat_file = os.environ['cnvstat_file']
+obs_file = os.environ['obs_file']
 input_ascii2nc_file = os.environ['input_ascii2nc_file']
 
 valid_date_dt = datetime.datetime.strptime(valid_date, '%Y%m%d%H')
@@ -72,8 +72,8 @@ for diag_var in list(diag_var_dict.keys()):
     diag_var_file = f"diag_conv_{diag_var}_anl.{valid_date_dt:%Y%m%d%H}.nc4"
     diag_var_zipfile = f"{diag_var_file}.gz"
     if not os.path.exists(diag_var_file):
-        with tarfile.open(cnvstat_file, 'r') as tf:
-            print(f"Extracting {diag_var_zipfile} from {cnvstat_file}")
+        with tarfile.open(obs_file, 'r') as tf:
+            print(f"Extracting {diag_var_zipfile} from {obs_file}")
             tf.extract(member=diag_var_zipfile)
         with gzip.open(diag_var_zipfile, 'rb') as dvzf:
             with open(diag_var_file, 'wb') as dvf:
