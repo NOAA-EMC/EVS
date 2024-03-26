@@ -398,8 +398,8 @@ elif JOB_GROUP == 'generate_stats':
              ]
          elif wmo_verif == 'grid2obs_upperair':
              wmo_verif_metplus_conf_list = [
-                 'PointStat_fcstGFS_obsADPUPA_climoERA_INTERIM_CNT.conf',
-                 'PointStat_fcstGFS_obsADPUPA_climoERA_INTERIM_VCNT.conf'
+                 'PointStat_fcstGFS_obsADPUPA_CNT.conf',
+                 'PointStat_fcstGFS_obsADPUPA_VCNT.conf'
              ]
          for vhr in wmo_verif_valid_hour_list:
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
