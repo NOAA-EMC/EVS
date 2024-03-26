@@ -56,7 +56,7 @@ fhr_0p25_file_format = os.path.join(
     COMINgfs, MODELNAME+'.{init?fmt=%Y%m%d}', '{init?fmt=%2H}', 'atmos',
     MODELNAME+'.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}'
 )
-gaussin_file_format = os.path.join(
+gaussian_file_format = os.path.join(
     COMIN, 'prep', COMPONENT, RUN+'.{init?fmt=%Y%m%d}', MODELNAME,
     MODELNAME+'.wmo.t{init?fmt=%2H}z.f{lead?fmt=%3H}'
 )
@@ -194,8 +194,9 @@ if JOB_GROUP == 'reformat_data':
                  if have_obs:
                      if wmo_verif == 'grid2obs_upperair':
                          job.write(
-                             gda_util.python_command('global_det_atmos_stats_wmo_'
-                                                     +'reformat_cnvstat.py', [])
+                             gda_util.python_command('global_det_atmos_stats_'
+                                                     +'wmo_reformat_cnvstat.py',
+                                                     [])
                              +'\n'
                          )
                          job.write('export err=$?; err_chk\n')
@@ -209,7 +210,9 @@ if JOB_GROUP == 'reformat_data':
                          )
                          job.write(
                              'if [ -f $input_ascii2nc_file ]; then '
-                             +gda_util.metplus_command('ASCII2NC_obsCNVSTAT.conf')
+                             +gda_util.metplus_command(
+                                 'ASCII2NC_obsCNVSTAT.conf'
+                             )
                              +'; fi\n'
                          )
                          job.write('export err=$?; err_chk\n')
@@ -241,6 +244,138 @@ if JOB_GROUP == 'reformat_data':
                              'if [ -f $output_obs2nc_file ]; then '
                              +'chgrp rstprod $output_obs2nc_file; fi\n'
                          )
+elif JOB_GROUP == 'assemble_data':
+     # Do not run for grid2grid_upperair, grid2obs_upperair
+     wmo_verif_list.remove('grid2grid_upperair')
+     wmo_verif_list.remove('grid2obs_upperair')
+     for wmo_verif in wmo_verif_list:
+         job_env_dict = gda_util.initalize_job_env_dict(wmo_verif, JOB_GROUP,
+                                                        VERIF_CASE, wmo_verif)
+         job_env_dict['wmo_verif'] = wmo_verif
+         print(f"----> Making job scripts for {VERIF_CASE} {wmo_verif} {STEP} "
+               +f"for job group {JOB_GROUP}")
+         # Set WMO verification specifications
+         wmo_verif_valid_hour_list = (
+             wmo_verif_settings_dict[wmo_verif]['valid_hour_list']
+         )
+         wmo_verif_fhr_list = (
+             wmo_verif_settings_dict[wmo_verif]['fhr_list']
+         )
+         for vhr in wmo_verif_valid_hour_list:
+             valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
+             for fhr in wmo_verif_fhr_list:
+                 init_time_dt = (valid_time_dt
+                                 - datetime.timedelta(hours=int(fhr)))
+                 if f"{init_time_dt:%H}" not in wmo_init_hour_list:
+                         print(f"Skipping forecast hour {fhr} with init"
+                               +f"{init_time_dt:%Y%m%d%H} as init hour not in "
+                               +"WMO required init hours "
+                               +f"{wmo_init_hour_list}")
+                         continue
+                 # Set forecast input paths
+                 # grid2obs_sfc: gaussian grid prepped files
+                 fhr_file = gda_util.format_filler(
+                     gaussian_file_format, valid_time_dt, init_time_dt,
+                     fhr, {}
+                 )
+                 log_missing_fhr_file = os.path.join(
+                     DATA, 'mail_missing_'
+                     +fhr_file.rpartition('/')[2].replace('.', '_')+'.sh'
+                 )
+                 have_fhr = gda_util.check_file_exists_size(fhr_file)
+                 if not have_fhr and not os.path.exists(log_missing_fhr_file):
+                     gda_util.log_missing_file_model(
+                         log_missing_fhr_file, fhr_file, MODELNAME,
+                         init_time_dt, fhr.zfill(3)
+                     )
+                 # Make precip accumulations
+                 for accum in [6, 24]:
+                     fhr_maccum = int(fhr)-accum
+                     if fhr_maccum < 0:
+                         continue
+                     fhr_maccum_file = gda_util.format_filler(
+                         gaussian_file_format, valid_time_dt, init_time_dt,
+                         str(fhr_maccum), {}
+                     )
+                     log_missing_fhr_maccum_file = os.path.join(
+                         DATA, 'mail_missing_'
+                         +fhr_maccum_file.rpartition('/')[2].replace('.', '_')
+                         +'.sh'
+                     )
+                     have_fhr_maccum = gda_util.check_file_exists_size(
+                         fhr_maccum_file
+                     )
+                     if not have_fhr_maccum \
+                             and not \
+                             os.path.exists(log_missing_fhr_maccum_file):
+                         gda_util.log_missing_file_model(
+                             log_missing_fhr_maccum_file, fhr_maccum_file,
+                             MODELNAME, init_time_dt, str(fhr_maccum).zfill(3)
+                         )
+                     tmp_fhr_accum_pcpcombine_file = os.path.join(
+                         DATA, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
+                         VERIF_CASE, f"pcp_combine_precip_accum{accum}H"
+                         +f"_init{init_time_dt:%Y%m%d%H}_fhr{fhr.zfill(3)}.nc"
+                     )
+                     output_fhr_accum_pcpcombine_file = os.path.join(
+                         COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
+                         VERIF_CASE,
+                         tmp_fhr_accum_pcpcombine_file.rpartition('/')[2]
+                     )
+                     if os.path.exists(output_fhr_accum_pcpcombine_file):
+                         have_fhr_accum_pcpcombine = True
+                     else:
+                         have_fhr_accum_pcpcombine = False
+                     # Set wmo_verif job variables
+                     job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
+                     job_env_dict['fhr'] = fhr
+                     job_env_dict['fhr_file'] = fhr_file
+                     job_env_dict['accum'] = str(accum)
+                     job_env_dict['fhr_minus_accum_file'] = fhr_maccum_file
+                     job_env_dict['tmp_fhr_accum_pcpcombine_file'] = (
+                         tmp_fhr_accum_pcpcombine_file
+                     )
+                     job_env_dict['output_fhr_accum_pcpcombine_file'] = (
+                         output_fhr_accum_pcpcombine_file
+                     )
+                     # Make job script
+                     njobs+=1
+                     job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                             'job'+str(njobs))
+                     print(f"Creating job script: {job_file}")
+                     job = open(job_file, 'w')
+                     job.write('#!/bin/bash\n')
+                     job.write('set -x\n')
+                     job.write('\n')
+                     for name, value in job_env_dict.items():
+                         job.write(f'export {name}="{value}"\n')
+                     job.write('\n')
+                     # If pcpcombine file exists in COMOUT then copy it
+                     # if not then run METplus
+                     if have_fhr_accum_pcpcombine:
+                         job.write(
+                             'if [ -f $output_fhr_accum_pcpcombine_file ]; '
+                             +'then cp -v $output_fhr_accum_pcpcombine_file '
+                             +'$tmp_fhr_accum_pcpcombine_file; fi\n'
+                         )
+                         job.write('export err=$?; err_chk')
+                     else:
+                         if have_fhr and have_fhr_maccum:
+                             job.write(
+                                 gda_util.metplus_command(
+                                     'PCPCombine_fcstGFS.conf'
+                                 )
+                                 +'\n'
+                             )
+                             job.write('export err=$?; err_chk\n')
+                             if SENDCOM == 'YES':
+                                 job.write(
+                                     'if [ -f $tmp_fhr_accum_pcpcombine_file '
+                                     +']; then cp -v '
+                                     +'$tmp_fhr_accum_pcpcombine_file '
+                                     +'$output_fhr_accum_pcpcombine_file; fi\n'
+                                 )
+                                 job.write('export err=$?; err_chk')
 elif JOB_GROUP == 'generate_stats':
      for wmo_verif in wmo_verif_list:
          job_env_dict = gda_util.initalize_job_env_dict(wmo_verif, JOB_GROUP,
@@ -313,7 +448,7 @@ elif JOB_GROUP == 'generate_stats':
                      )
                  elif wmo_verif == 'grid2obs_upperair':
                      fhr_file = gda_util.format_filler(
-                         gaussin_file_format, valid_time_dt, init_time_dt,
+                         gaussian_file_format, valid_time_dt, init_time_dt,
                          fhr, {}
                      )
                  log_missing_fhr_file = os.path.join(

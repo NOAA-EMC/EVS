@@ -20,8 +20,8 @@ chgrp rstprod gdas_cnvstat
 mkdir -p ${VYYYYmm}_daily_stats
 mkdir -p jobs logs confs tmp
 
-# Create and run job scripts for reformat_data generate_stats, gather_stats, and summarize_stats
-for group in reformat_data generate_stats gather_stats summarize_stats; do
+# Create and run job scripts for reformat_data, assemble_data, generate_stats, gather_stats, and summarize_stats
+for group in reformat_data assemble_data generate_stats gather_stats summarize_stats; do
     export JOB_GROUP=$group
     mkdir -p jobs/${JOB_GROUP}
     echo "Creating and running jobs for WMO stats: ${JOB_GROUP}"
@@ -57,7 +57,7 @@ for group in reformat_data generate_stats gather_stats summarize_stats; do
         done
     fi
 done
-
+exit
 # Send for missing files
 if [ $SENDMAIL = YES ] ; then
     if ls $DATA/mail_* 1> /dev/null 2>&1; then
