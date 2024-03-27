@@ -518,7 +518,7 @@ def prep_prod_gfs_file(source_file, dest_file, init_dt, forecast_hour,
                 num_match = (':(HGT|UGRD|VGRD|TMP|RH):'
                              +'(925|850|700|500|250|100) mb:')
             elif num == 2:
-                num_match = ':PRMSL:mean sea level:'
+                num_match = ':HGT:surface:'
             elif num == 3:
                 num_match = ':(DPT|TMP|RH|UGRD|VGRD):(2|10) m above ground:'
             elif num == 4:
