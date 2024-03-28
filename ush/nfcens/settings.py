@@ -50,7 +50,7 @@ class Templates():
         FCST_VAR_NAME                       VIS
         VAR_NAME                            VISsfc
         MODEL                               HRRR
-        EVAL_PERIOD                         PAST30DAYS
+        EVAL_PERIOD                         LAST30DAYS
         valid?fmt=%Y%m or VALID?fmt=%Y%m    202206
 
         Additionally, variable names may have the _LOWER or _UPPER suffix to 
@@ -98,25 +98,25 @@ class Presets():
         the online documentation to learn how to use these libraries.
         '''
         self.date_presets = {
-            'PAST90DAYS': {
+            'LAST90DAYS': {
                 'valid_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
                 'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
             },
-            'PAST31DAYS': {
+            'LAST31DAYS': {
                 'valid_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
                 'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
             },
-            'PAST7DAYS': {
+            'LAST7DAYS': {
                 'valid_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
                 'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
             },
-            'PAST3DAYS': {
+            'LAST3DAYS': {
                 'valid_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
