@@ -12,6 +12,7 @@ import sys
 import os
 import glob
 import datetime
+import netCDF4 as netcdf
 import global_det_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
@@ -72,7 +73,11 @@ prepbufr_file_format = os.path.join(
 )
 ascii2nc_file_format = os.path.join(
     COMIN, STEP, COMPONENT, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME,
-    VERIF_CASE, 'ascii2nc_{valid?fmt=%Y%m%d%H}.nc'
+    VERIF_CASE, 'ascii2nc_gdas_cnvstat_{valid?fmt=%Y%m%d%H}.nc'
+)
+pb2nc_file_format = os.path.join(
+    COMIN, STEP, COMPONENT, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME,
+    VERIF_CASE, 'pb2nc_gdas_prepbufr_{valid?fmt=%Y%m%d%H}.nc'
 )
 
 # WMO Verifcations
@@ -263,6 +268,22 @@ elif JOB_GROUP == 'assemble_data':
          )
          for vhr in wmo_verif_valid_hour_list:
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
+             # Get stations for valid time
+             pb2nc_file = gda_util.format_filler(
+                 pb2nc_file_format, valid_time_dt, valid_time_dt, 'anl', {}
+             )
+             if os.path.exists(pb2nc_file):
+                 pb2nc_data = netcdf.Dataset(pb2nc_file)
+                 pb2nc_data_hdr_sid_table = (
+                     pb2nc_data.variables['hdr_sid_table'][:]
+                 )
+                 synop_stations = [i.tobytes(fill_value='/////', order='C')
+                                   for i in pb2nc_data_hdr_sid_table]
+                 synop_station_list = [''.join(i.decode('UTF-8', 'ignore')\
+                                       .replace('/','').split())
+                                       for i in synop_stations]
+             else:
+                 synop_station_list = []
              for fhr in wmo_verif_fhr_list:
                  init_time_dt = (valid_time_dt
                                  - datetime.timedelta(hours=int(fhr)))
@@ -288,7 +309,139 @@ elif JOB_GROUP == 'assemble_data':
                          log_missing_fhr_file, fhr_file, MODELNAME,
                          init_time_dt, fhr.zfill(3)
                      )
+                 # Match TMP/Z2, DPT/Z2, and HGT/Z0
+                 tmp_fhr_stat_file = os.path.join(
+                     DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
+                     MODELNAME, VERIF_CASE, f"point_stat_{wmo_verif}_"
+                     +f"MPR_{fhr.zfill(2)}0000L_"
+                     +f"{valid_time_dt:%Y%m%d_%H%M%S}V.stat"
+                 )
+                 tmp_fhr_elv_correction_stat_file = (
+                     tmp_fhr_stat_file.replace(
+                         f"point_stat_{wmo_verif}_MPR_",
+                         f"point_stat_{wmo_verif}_MPR_elv_correction_"
+                     )
+                 )
+                 output_fhr_stat_file = os.path.join(
+                     COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
+                     VERIF_CASE, tmp_fhr_stat_file.rpartition('/')[2]
+                 )
+                 output_fhr_elv_correction_stat_file = (
+                     output_fhr_stat_file.replace(
+                         f"point_stat_{wmo_verif}_MPR_",
+                         f"point_stat_{wmo_verif}_MPR_elv_correction_"
+                     )
+                 )
+                 if os.path.exists(output_fhr_stat_file):
+                     have_fhr_stat = True
+                 else:
+                     have_fhr_stat = False
+                 if os.path.exists(output_fhr_elv_correction_stat_file):
+                     have_fhr_elv_correction_stat = True
+                 else:
+                     have_fhr_elv_correction_stat = False
+                 # Set wmo_verif job variables
+                 job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
+                 job_env_dict['pb2nc_file'] = pb2nc_file
+                 job_env_dict['fhr'] = fhr
+                 job_env_dict['fhr_file'] = fhr_file
+                 job_env_dict['tmp_fhr_stat_file'] = tmp_fhr_stat_file
+                 job_env_dict['output_fhr_stat_file'] = (
+                     output_fhr_stat_file
+                 )
+                 job_env_dict['tmp_fhr_elv_correction_stat_file'] = (
+                     tmp_fhr_elv_correction_stat_file
+                 )
+                 job_env_dict['output_fhr_elv_correction_stat_file'] = (
+                     output_fhr_elv_correction_stat_file
+                 )
+                 job_env_dict['synop_stations'] = ','.join(synop_station_list)
+                 njobs+=1
+                 job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                         'job'+str(njobs))
+                 print(f"Creating job script: {job_file}")
+                 job = open(job_file, 'w')
+                 job.write('#!/bin/bash\n')
+                 job.write('set -x\n')
+                 job.write('\n')
+                 for name, value in job_env_dict.items():
+                     job.write(f'export {name}="{value}"\n')
+                 job.write('\n')
+                 if have_fhr_stat and have_fhr_elv_correction_stat:
+                     job.write(
+                         'if [ -f $output_fhr_stat_file ]; then '
+                         +'cp -v $output_fhr_stat_file '
+                         +'$tmp_fhr_stat_file; fi\n'
+                     )
+                     job.write('export err=$?; err_chk\n')
+                     job.write(
+                         'if [ -f $output_fhr_elv_correction_stat_file ]; '
+                         +'then cp -v $output_fhr_elv_correction_stat_file '
+                         +'$tmp_fhr_elv_correction_stat_file; fi\n'
+                     )
+                     job.write('export err=$?; err_chk')
+                 elif have_fhr_stat and not have_fhr_elv_correction_stat:
+                     job.write(
+                         'if [ -f $output_fhr_stat_file ]; then '
+                         +'cp -v $output_fhr_stat_file '
+                         +'$tmp_fhr_stat_file; fi\n'
+                     )
+                     job.write('export err=$?; err_chk\n')
+                     job.write(
+                        'if [ -f $tmp_fhr_stat_file ]; then '
+                        +gda_util.python_command('global_det_atmos_stats_'
+                                                 +'wmo_elv_correction.py',
+                                                 [])
+                        +'; fi\n'
+                     )
+                     job.write('export err=$?; err_chk\n')
+                     if SENDCOM == 'YES':
+                         job.write(
+                             'if [ -f $tmp_fhr_elv_correction_stat_file ]; '
+                             +'then cp -v $tmp_fhr_elv_correction_stat_file '
+                             +'$output_fhr_elv_correction_stat_file; fi\n'
+                         )
+                         job.write('export err=$?; err_chk')
+                 else:
+                     if have_fhr:
+                         job.write(
+                             gda_util.metplus_command(
+                                 'PointStat_fcstGFS_obsADPSFC_MPR.conf'
+                             )
+                             +'\n'
+                         )
+                         job.write('export err=$?; err_chk\n')
+                         if SENDCOM == 'YES':
+                             job.write(
+                                 'if [ $tmp_fhr_stat_file ]; then '
+                                 +'cp -v $tmp_fhr_stat_file '
+                                 +'$output_fhr_stat_file; fi\n'
+                             )
+                             job.write('export err=$?; err_chk\n')
+                         job.write(
+                            'if [ -f $tmp_fhr_stat_file ]; then '
+                            +gda_util.python_command('global_det_atmos_stats_'
+                                                     +'wmo_elv_correction.py',
+                                                     [])
+                            +'; fi\n'
+                         )
+                         job.write('export err=$?; err_chk\n')
+                         if SENDCOM == 'YES':
+                             job.write(
+                                 'if [ -f $tmp_fhr_elv_correction_stat_file '
+                                 +']; then cp -v '
+                                 +'$tmp_fhr_elv_correction_stat_file '
+                                 +'$output_fhr_elv_correction_stat_file; '
+                                 +'fi\n'
+                             )
+                             job.write('export err=$?; err_chk')
                  # Make precip accumulations
+                 job_env_dict.pop('tmp_fhr_stat_file')
+                 job_env_dict.pop('output_fhr_stat_file')
+                 job_env_dict.pop('synop_stations')
+                 job_env_dict.pop('pb2nc_file')
+                 job_env_dict.pop('tmp_fhr_elv_correction_stat_file')
+                 job_env_dict.pop('output_fhr_elv_correction_stat_file')
                  for accum in [6, 24]:
                      fhr_maccum = int(fhr)-accum
                      if fhr_maccum < 0:

@@ -2178,6 +2178,7 @@ def initalize_job_env_dict(verif_type, group,
            os.environ['MET_TMP_DIR'] = os.path.join(
                 os.environ['DATA'], 'tmp'
            )
+           job_env_var_list.extend(['met_ver'])
         else:
             os.environ['MET_TMP_DIR'] = os.path.join(
                 os.environ['DATA'],
