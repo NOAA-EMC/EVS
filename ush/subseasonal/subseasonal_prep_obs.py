@@ -271,6 +271,28 @@ for OBS in OBSNAME:
                     ccpa_tmp_file_format, CDATEm1_dt,
                     CDATEm1_dt, 'anl', {}
                 )
+            else:
+                prod_file = sub_util.format_filler(
+                    obs_dict['prod_file_format'], CDATE_dt,
+                    CDATE_dt, 'anl', {}
+                )
+                tmp_file = sub_util.format_filler(
+                    ccpa_tmp_file_format, CDATE_dt,
+                    CDATE_dt, 'anl', {}
+                )
+            if os.path.exists(prod_file):
+                sub_util.copy_file(prod_file, tmp_file)
+            else:
+                if vhour == '18':
+                    sub_util.log_missing_file_obs(
+                        log_missing_file, prod_file, OBS,
+                        CDATEm1_dt
+                    )
+                else:
+                    sub_util.log_missing_file_obs(
+                        log_missing_file, prod_file, OBS,
+                        CDATE_dt
+                    )
         else:
             prod_file = sub_util.format_filler(
                 obs_dict['prod_file_format'], CDATE_dt, CDATE_dt,
