@@ -558,6 +558,9 @@ elif JOB_GROUP == 'generate_stats':
          elif wmo_verif == 'grid2obs_sfc':
              wmo_verif_metplus_conf_list = [
                  'PointStat_fcstGFS_obsADPSFC_CNT.conf',
+                 'PointStat_fcstGFS_obsADPSFC_CTC.conf',
+                 'PointStat_fcstGFS_obsADPSFC_CTCprecip6H.conf',
+                 'PointStat_fcstGFS_obsADPSFC_CTCprecip24H.conf',
                  'StatAnalysis_fcstGFS_obsADPSFC_MPRtoCNT.conf'
              ]
          for vhr in wmo_verif_valid_hour_list:
@@ -658,13 +661,13 @@ elif JOB_GROUP == 'generate_stats':
                                      not os.path.exists(
                                          log_missing_fhr_accum_file
                                      ) \
-                                     and int(fhr)-accum > 0:
+                                     and int(fhr)-accum >= 0:
                                  gda_util.log_missing_file_model(
                                      log_missing_fhr_accum_file,
                                      fhr_accum_file, MODELNAME, init_time_dt,
                                      fhr.zfill(3)
                                  )
-                             if int(fhr)-accum > 0:
+                             if int(fhr)-accum >= 0:
                                  have_fhr_accum = (
                                      gda_util.check_file_exists_size(
                                          fhr_accum_file
