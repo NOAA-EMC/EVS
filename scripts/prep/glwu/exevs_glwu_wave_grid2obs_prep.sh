@@ -103,6 +103,13 @@ else
 	fi
 fi
 
+###################################################################################
+# Create masks for Great Lakes regions
+# NOTE: script below is calling MET's gen_vx_mask directly instead of using METplus
+# keeping it in a ush script; future use should use METplus to do this
+###################################################################################
+
+$USHevs/${COMPONENT}/${COMPONENT}_${STEP}_regions.sh
 
 ##########################################
 ## Cat the prep log files
