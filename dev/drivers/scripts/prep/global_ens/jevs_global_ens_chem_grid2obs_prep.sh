@@ -56,7 +56,7 @@ export COMIN=/lfs/h2/emc/physics/noscrub/$USER/$NET/${evs_ver_2d}
 mkdir -p ${COMIN}
 export COMOUT=${COMIN}
 
-export DATAROOT=/lfs/h2/emc/ptmp/${USER}/$}NET}/${evs_ver_2d}/${STEP}
+export DATAROOT=/lfs/h2/emc/ptmp/${USER}/${NET}/${evs_ver_2d}/${STEP}
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 mkdir -p ${DATA}
