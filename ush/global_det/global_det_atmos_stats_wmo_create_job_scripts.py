@@ -65,17 +65,30 @@ cnvstat_file_format = os.path.join(
      COMINgfs, 'gdas.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'atmos',
      'gdas.t{valid?fmt=%2H}z.cnvstat'
 )
+cnvstat_txt_file_format = os.path.join(
+    DATA, 'gdas_cnvstat', 'gdas_cnvstat_{valid?fmt=%Y%m%d%H}.txt'
+)
 prepbufr_file_format = os.path.join(
     COMINobsproc, 'gdas.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'atmos',
     'gdas.t{valid?fmt=%2H}z.prepbufr'
 )
-ascii2nc_file_format = os.path.join(
+cnvstat_ascii2nc_file_format = os.path.join(
     DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'ascii2nc_gdas_cnvstat_{valid?fmt=%Y%m%d%H}.nc'
 )
-pb2nc_file_format = os.path.join(
+prepbufr_pb2nc_file_format = os.path.join(
     DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'pb2nc_gdas_prepbufr_{valid?fmt=%Y%m%d%H}.nc'
+)
+stat_file_format = os.path.join(
+    DATA , RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{met_tool?fmt=str}_{wmo_verif?fmt=str}_{line_type?fmt=str}_'
+    +'{lead?fmt=%2H}0000L_{valid?fmt=%Y%m%d_%H%M%S}V.stat'
+)
+pcpcombine_file_format = os.path.join(
+    DATA , RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    'pcp_combine_precip_accum{accum?fmt=str}H_init{init?fmt=%Y%m%d%H}_'
+    'fhr{lead?fmt=%3H}.nc'
 )
 
 # WMO Verifcations
@@ -119,9 +132,9 @@ if JOB_GROUP == 'reformat_data':
                      cnvstat_file_format, valid_time_dt, valid_time_dt,
                      'anl', {}
                  )
-                 input_ascii2nc_file = os.path.join(
-                     DATA, 'gdas_cnvstat',
-                     f"gdas_cnvstat_{valid_time_dt:%Y%m%d%H}.txt"
+                 input_ascii2nc_file = gda_util.format_filler(
+                     cnvstat_txt_file_format, valid_time_dt, valid_time_dt,
+                     'anl', {}
                  )
                  obtype = 'cnvstat'
              elif wmo_verif == 'grid2obs_sfc':
@@ -142,16 +155,14 @@ if JOB_GROUP == 'reformat_data':
                  )
              # Set output paths
              if wmo_verif == 'grid2obs_upperair':
-                 tmp_obs2nc_file = os.path.join(
-                     DATA, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-                     VERIF_CASE, 'ascii2nc_gdas_cnvstat_'
-                     +f"{valid_time_dt:%Y%m%d%H}.nc"
+                 tmp_obs2nc_file = gda_util.format_filler(
+                     cnvstat_ascii2nc_file_format, valid_time_dt,
+                     valid_time_dt, 'anl', {}
                  )
              elif wmo_verif == 'grid2obs_sfc':
-                 tmp_obs2nc_file = os.path.join(
-                     DATA, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-                     VERIF_CASE, 'pb2nc_gdas_prepbufr_'
-                     +f"{valid_time_dt:%Y%m%d%H}.nc"
+                 tmp_obs2nc_file = gda_util.format_filler(
+                     prepbufr_pb2nc_file_format, valid_time_dt, valid_time_dt,
+                     'anl', {}
                  )
              output_obs2nc_file = os.path.join(
                  COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
@@ -268,7 +279,8 @@ elif JOB_GROUP == 'assemble_data':
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
              # Get stations for valid time
              pb2nc_file = gda_util.format_filler(
-                 pb2nc_file_format, valid_time_dt, valid_time_dt, 'anl', {}
+                 prepbufr_pb2nc_file_format, valid_time_dt, valid_time_dt,
+                 'anl', {}
              )
              if os.path.exists(pb2nc_file):
                  pb2nc_data = netcdf.Dataset(pb2nc_file)
@@ -308,11 +320,11 @@ elif JOB_GROUP == 'assemble_data':
                          init_time_dt, fhr.zfill(3)
                      )
                  # Match TMP/Z2, DPT/Z2, and HGT/Z0
-                 tmp_fhr_stat_file = os.path.join(
-                     DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
-                     MODELNAME, VERIF_CASE, f"point_stat_{wmo_verif}_"
-                     +f"MPR_{fhr.zfill(2)}0000L_"
-                     +f"{valid_time_dt:%Y%m%d_%H%M%S}V.stat"
+                 tmp_fhr_stat_file = gda_util.format_filler(
+                     stat_file_format, valid_time_dt, init_time_dt,
+                     fhr,
+                     {'met_tool': 'point_stat', 'wmo_verif': wmo_verif,
+                      'line_type': 'MPR'}
                  )
                  tmp_fhr_elv_correction_stat_file = (
                      tmp_fhr_stat_file.replace(
@@ -459,10 +471,9 @@ elif JOB_GROUP == 'assemble_data':
                              log_missing_fhr_maccum_file, fhr_maccum_file,
                              MODELNAME, init_time_dt, str(fhr_maccum).zfill(3)
                          )
-                     tmp_fhr_accum_pcpcombine_file = os.path.join(
-                         DATA, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-                         VERIF_CASE, f"pcp_combine_precip_accum{accum}H"
-                         +f"_init{init_time_dt:%Y%m%d%H}_fhr{fhr.zfill(3)}.nc"
+                     tmp_fhr_accum_pcpcombine_file = gda_util.format_filler(
+                         pcpcombine_file_format, valid_time_dt, init_time_dt,
+                         fhr, {'accum': str(accum)}
                      )
                      output_fhr_accum_pcpcombine_file = os.path.join(
                          COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
@@ -578,13 +589,14 @@ elif JOB_GROUP == 'generate_stats':
              elif wmo_verif == 'grid2obs_upperair':
                  obtype = 'cnvstat'
                  truth_file = gda_util.format_filler(
-                     ascii2nc_file_format, valid_time_dt, valid_time_dt,
-                     'anl', {}
+                     cnvstat_ascii2nc_file_format, valid_time_dt,
+                     valid_time_dt, 'anl', {}
                  )
              elif wmo_verif == 'grid2obs_sfc':
                  obtype = 'prepbufr'
                  truth_file = gda_util.format_filler(
-                     pb2nc_file_format, valid_time_dt, valid_time_dt, 'anl', {}
+                     prepbufr_pb2nc_file_format, valid_time_dt, valid_time_dt,
+                     'anl', {}
                  )
                  if os.path.exists(truth_file):
                      pb2nc_data = netcdf.Dataset(truth_file)
@@ -638,37 +650,23 @@ elif JOB_GROUP == 'generate_stats':
                          fhr, {}
                      )
                      if wmo_verif == 'grid2obs_sfc':
-                         fhr_stat_elv_correction_file = os.path.join(
-                             DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
-                             MODELNAME, VERIF_CASE, f"point_stat_{wmo_verif}_"
-                             +f"MPR_elv_correction_{fhr.zfill(2)}0000L_"
-                             +f"{valid_time_dt:%Y%m%d_%H%M%S}V.stat"
+                         fhr_stat_elv_correction_file = gda_util.format_filler(
+                              stat_file_format, valid_time_dt, init_time_dt,
+                              fhr,
+                              {'met_tool': 'point_stat',
+                               'wmo_verif': wmo_verif, 'line_type': 'MPR'}
+                         ).replace(
+                             f"point_stat_{wmo_verif}_MPR_",
+                             f"point_stat_{wmo_verif}_MPR_elv_correction_"
                          )
                          have_fhr_elv_correction_stat = (
                              os.path.exists(fhr_stat_elv_correction_file)
                          )
                          for accum in [6, 24]:
-                             fhr_accum_file = os.path.join(
-                                 DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
-                                 MODELNAME, VERIF_CASE, 'pcp_combine_precip_'
-                                 +f"accum{accum}H_init{init_time_dt:%Y%m%d%H}_"
-                                 +f"fhr{fhr.zfill(3)}.nc"
+                             fhr_accum_file = gda_util.format_filler(
+                                 pcpcombine_file_format, valid_time_dt,
+                                 init_time_dt, fhr, {'accum': str(accum)}
                              )
-                             log_missing_fhr_accum_file = os.path.join(
-                                 DATA, 'mail_missing_'
-                                 +fhr_accum_file.rpartition('/')[2]\
-                                 .replace('.', '_')+'.sh'
-                             )
-                             if not os.path.exists(fhr_accum_file) and \
-                                     not os.path.exists(
-                                         log_missing_fhr_accum_file
-                                     ) \
-                                     and int(fhr)-accum >= 0:
-                                 gda_util.log_missing_file_model(
-                                     log_missing_fhr_accum_file,
-                                     fhr_accum_file, MODELNAME, init_time_dt,
-                                     fhr.zfill(3)
-                                 )
                              if int(fhr)-accum >= 0:
                                  have_fhr_accum = (
                                      gda_util.check_file_exists_size(
@@ -697,11 +695,7 @@ elif JOB_GROUP == 'generate_stats':
                      # Set up output file path
                      # grid2grid_upperair: grid_stat
                      # grid2obs_upperair: point_stat
-                     # grid2obs_sfc: point_stat
-                     if wmo_verif == 'grid2grid_upperair':
-                         met_tool = 'grid_stat'
-                     else:
-                         met_tool = 'point_stat'
+                     # grid2obs_sfc: point_stat and stat_analysis
                      wmo_verif_metplus_conf_line_type = (
                          wmo_verif_metplus_conf.rpartition('_')[2]\
                          .replace('.conf', '')
@@ -715,23 +709,20 @@ elif JOB_GROUP == 'generate_stats':
                      elif wmo_verif_metplus_conf_line_type == 'MPRtoCNT':
                          fhr_file = fhr_stat_elv_correction_file
                          have_fhr =  have_fhr_elv_correction_stat
-                     if wmo_verif_metplus_conf_line_type == 'MPRtoCNT':
-                         tmp_fhr_stat_file = os.path.join(
-                             DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
-                             MODELNAME, VERIF_CASE, "stat_analysis_"
-                             +f"{wmo_verif}_"
-                             +f"{wmo_verif_metplus_conf_line_type}_"
-                             +f"{fhr.zfill(2)}0000L_"
-                             +f"{valid_time_dt:%Y%m%d_%H%M%S}V.stat"
-                         )
+                     if wmo_verif == 'grid2grid_upperair':
+                         met_tool = 'grid_stat'
                      else:
-                         tmp_fhr_stat_file = os.path.join(
-                             DATA , f"{RUN}.{valid_time_dt:%Y%m%d}",
-                             MODELNAME, VERIF_CASE, f"{met_tool}_{wmo_verif}_"
-                             f"{wmo_verif_metplus_conf_line_type}_"
-                             +f"{fhr.zfill(2)}0000L_"
-                             +f"{valid_time_dt:%Y%m%d_%H%M%S}V.stat"
-                         )
+                         if wmo_verif_metplus_conf_line_type == 'MPRtoCNT':
+                             met_tool = 'stat_analysis'
+                         else:
+                             met_tool = 'point_stat'
+                     tmp_fhr_stat_file = gda_util.format_filler(
+                         stat_file_format, valid_time_dt, init_time_dt,
+                         fhr,
+                         {'met_tool': met_tool,
+                          'wmo_verif': wmo_verif,
+                          'line_type': wmo_verif_metplus_conf_line_type}
+                     )
                      output_fhr_stat_file = os.path.join(
                          COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
                          VERIF_CASE, tmp_fhr_stat_file.rpartition('/')[2]
