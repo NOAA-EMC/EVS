@@ -559,6 +559,8 @@ elif JOB_GROUP == 'generate_stats':
              wmo_verif_metplus_conf_list = [
                  'PointStat_fcstGFS_obsADPSFC_CNT.conf',
                  'PointStat_fcstGFS_obsADPSFC_CTC.conf',
+                 'PointStat_fcstGFS_obsADPSFC_VCNT.conf',
+                 'PointStat_fcstGFS_obsADPSFC_VL1L2.conf',
                  'PointStat_fcstGFS_obsADPSFC_CTCprecip6H.conf',
                  'PointStat_fcstGFS_obsADPSFC_CTCprecip24H.conf',
                  'StatAnalysis_fcstGFS_obsADPSFC_MPRtoCNT.conf'
