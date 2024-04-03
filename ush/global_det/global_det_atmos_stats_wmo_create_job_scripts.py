@@ -569,11 +569,11 @@ elif JOB_GROUP == 'generate_stats':
          elif wmo_verif == 'grid2obs_sfc':
              wmo_verif_metplus_conf_list = [
                  'PointStat_fcstGFS_obsADPSFC_CNT.conf',
-                 'PointStat_fcstGFS_obsADPSFC_CTC.conf',
+                 'PointStat_fcstGFS_obsADPSFC_MCTC.conf',
                  'PointStat_fcstGFS_obsADPSFC_VCNT.conf',
                  'PointStat_fcstGFS_obsADPSFC_VL1L2.conf',
-                 'PointStat_fcstGFS_obsADPSFC_CTCprecip6H.conf',
-                 'PointStat_fcstGFS_obsADPSFC_CTCprecip24H.conf',
+                 'PointStat_fcstGFS_obsADPSFC_MCTCprecip6H.conf',
+                 'PointStat_fcstGFS_obsADPSFC_MCTCprecip24H.conf',
                  'StatAnalysis_fcstGFS_obsADPSFC_MPRtoCNT.conf'
              ]
          for vhr in wmo_verif_valid_hour_list:
@@ -700,10 +700,10 @@ elif JOB_GROUP == 'generate_stats':
                          wmo_verif_metplus_conf.rpartition('_')[2]\
                          .replace('.conf', '')
                      )
-                     if wmo_verif_metplus_conf_line_type == 'CTCprecip6H':
+                     if wmo_verif_metplus_conf_line_type == 'MCTCprecip6H':
                          fhr_file = fhr_accum6H_file
                          have_fhr = have_fhr_accum6H
-                     elif wmo_verif_metplus_conf_line_type == 'CTCprecip24H':
+                     elif wmo_verif_metplus_conf_line_type == 'MCTCprecip24H':
                          fhr_file = fhr_accum24H_file
                          have_fhr = have_fhr_accum24H
                      elif wmo_verif_metplus_conf_line_type == 'MPRtoCNT':
