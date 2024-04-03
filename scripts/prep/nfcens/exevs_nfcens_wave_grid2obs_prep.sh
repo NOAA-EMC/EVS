@@ -96,6 +96,9 @@ for HH in ${HHs} ; do
 		FCST=$(printf "%03d" "$fcst")
 		COMINfilenamefnmoc="${COMINfnmoc}/${MODEL2NAME}_${RUN}.${INITDATE}/wave_${INITDATE}${HH}f${FCST}"
 		DATAfilenamefnmoc="${DATA}/gribs/wave_${INITDATE}${HH}f${FCST}"
+		DATAfilenamefnmoc_new="${DATA}/gribs/wave_${INITDATE}${HH}f${FCST}.grib2"
+		fnmoc_old_name="wave_${INITDATE}${HH}f${FCST}"
+		fnmoc_new_name="wave_${INITDATE}${HH}f${FCST}.grib2"
 		if [ ! -s $COMINfilenamefnmoc ]; then
 			if [ $SENDMAIL = YES ]; then
 				export subject="FNMOC Forecast Data Missing for EVS ${COMPONENT}"
@@ -106,8 +109,11 @@ for HH in ${HHs} ; do
 			fi
 		else
 			cp -v $COMINfilenamefnmoc $DATAfilenamefnmoc
+			cd ${DATA}/gribs
+			cnvgrib -g12 $fnmoc_old_name $fnmoc_new_name > /dev/null 2>&1
+
 			if [ $SENDCOM = YES ]; then
-                    		cp -v $DATAfilenamefnmoc ${ARCmodel}/.
+                    		cp -v $DATAfilenamefnmoc_new ${ARCmodel}/.
                 	fi
 		fi
 		fcst=$(( $fcst+ 24 ))
