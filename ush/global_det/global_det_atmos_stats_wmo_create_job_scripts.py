@@ -447,6 +447,8 @@ elif JOB_GROUP == 'assemble_data':
                      fhr_maccum = int(fhr)-accum
                      if fhr_maccum < 0:
                          continue
+                     if int(fhr) % accum != 0:
+                         continue
                      fhr_maccum_file = gda_util.format_filler(
                          gaussian_file_format, valid_time_dt, init_time_dt,
                          str(fhr_maccum), {}
@@ -662,7 +664,8 @@ elif JOB_GROUP == 'generate_stats':
                                  pcpcombine_file_format, valid_time_dt,
                                  init_time_dt, fhr, {'accum': str(accum)}
                              )
-                             if int(fhr)-accum >= 0:
+                             if int(fhr)-accum >= 0 \
+                                     and int(fhr) % accum == 0:
                                  have_fhr_accum = (
                                      gda_util.check_file_exists_size(
                                          fhr_accum_file
