@@ -287,23 +287,6 @@ elif JOB_GROUP == 'assemble_data':
          )
          for vhr in wmo_verif_valid_hour_list:
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
-             # Get stations for valid time
-             pb2nc_file = gda_util.format_filler(
-                 prepbufr_pb2nc_file_format, valid_time_dt, valid_time_dt,
-                 'anl', {}
-             )
-             if os.path.exists(pb2nc_file):
-                 pb2nc_data = netcdf.Dataset(pb2nc_file)
-                 pb2nc_data_hdr_sid_table = (
-                     pb2nc_data.variables['hdr_sid_table'][:]
-                 )
-                 synop_stations = [i.tobytes(fill_value='/////', order='C')
-                                   for i in pb2nc_data_hdr_sid_table]
-                 synop_station_list = [''.join(i.decode('UTF-8', 'ignore')\
-                                       .replace('/','').split())
-                                       for i in synop_stations]
-             else:
-                 synop_station_list = []
              for fhr in wmo_verif_fhr_list:
                  init_time_dt = (valid_time_dt
                                  - datetime.timedelta(hours=int(fhr)))
@@ -371,7 +354,6 @@ elif JOB_GROUP == 'assemble_data':
                  job_env_dict['output_fhr_elv_correction_stat_file'] = (
                      output_fhr_elv_correction_stat_file
                  )
-                 job_env_dict['synop_stations'] = ','.join(synop_station_list)
                  njobs+=1
                  job_file = os.path.join(JOB_GROUP_jobs_dir,
                                          'job'+str(njobs))
@@ -454,7 +436,6 @@ elif JOB_GROUP == 'assemble_data':
                  # Make precip accumulations
                  job_env_dict.pop('tmp_fhr_stat_file')
                  job_env_dict.pop('output_fhr_stat_file')
-                 job_env_dict.pop('synop_stations')
                  job_env_dict.pop('pb2nc_file')
                  job_env_dict.pop('tmp_fhr_elv_correction_stat_file')
                  job_env_dict.pop('output_fhr_elv_correction_stat_file')

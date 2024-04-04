@@ -36,7 +36,6 @@ tmp_fhr_stat_file = os.environ['tmp_fhr_stat_file']
 tmp_fhr_elv_correction_stat_file = (
     os.environ['tmp_fhr_elv_correction_stat_file']
 )
-synop_stations = os.environ['synop_stations']
 
 valid_date_dt = datetime.datetime.strptime(valid_date, '%Y%m%d%H')
 
@@ -64,7 +63,7 @@ if gda_util.check_file_exists_size(tmp_fhr_stat_file):
                           skipinitialspace=True, header= None,
                           names=MET_MPR_column_list,
                           na_filter=False, dtype=str)
-    for sid in synop_stations.split(','):
+    for sid in file_df['OBS_SID'].unique():
         sid_df = file_df[file_df['OBS_SID'] == sid]
         # Grab model elevation
         sid_model_elv_df = sid_df[sid_df['FCST_VAR'] == 'HGT']
