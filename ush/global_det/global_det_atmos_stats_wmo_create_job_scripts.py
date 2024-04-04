@@ -287,6 +287,10 @@ elif JOB_GROUP == 'assemble_data':
          )
          for vhr in wmo_verif_valid_hour_list:
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
+             pb2nc_file = gda_util.format_filler(
+                 prepbufr_pb2nc_file_format, valid_time_dt, valid_time_dt,
+                 'anl', {}
+             )
              for fhr in wmo_verif_fhr_list:
                  init_time_dt = (valid_time_dt
                                  - datetime.timedelta(hours=int(fhr)))
