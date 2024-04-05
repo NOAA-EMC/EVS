@@ -565,7 +565,6 @@ elif JOB_GROUP == 'generate_stats':
                      )
          elif wmo_verif == 'grid2obs_sfc':
              wmo_verif_metplus_conf_list = [
-                 'PointStat_fcstGFS_obsADPSFC_CNT.conf',
                  'PointStat_fcstGFS_obsADPSFC_MCTC.conf',
                  'PointStat_fcstGFS_obsADPSFC_VCNT.conf',
                  'PointStat_fcstGFS_obsADPSFC_MCTCprecip24H.conf',
