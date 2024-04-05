@@ -786,7 +786,7 @@ elif JOB_GROUP == 'gather_stats':
                                                    VERIF_CASE, 'all')
     print(f"----> Making job scripts for {VERIF_CASE} {STEP} "
           +f"for job group {JOB_GROUP}")
-    job_env_dict['VDATE'] = VDATE
+    job_env_dict['valid_date'] = VDATE
     # Set input file paths
     fhr_stat_files_wildcard = os.path.join(
         DATA , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
