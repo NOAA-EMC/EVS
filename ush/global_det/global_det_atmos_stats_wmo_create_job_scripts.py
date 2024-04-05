@@ -113,7 +113,7 @@ wmo_verif_settings_dict = {
                                        in range(12,240+12,12)]},
     'grid2obs_sfc': {'valid_hour_list': ['00', '06', '12', '18'],
                      'fhr_list': [str(fhr) for fhr \
-                                  in range(0,240+3,3)]},
+                                  in [*range(0,72,6), *range(72,240+12,12)]]},
 }
 # Set up job directory
 njobs = 0
@@ -443,7 +443,7 @@ elif JOB_GROUP == 'assemble_data':
                  job_env_dict.pop('pb2nc_file')
                  job_env_dict.pop('tmp_fhr_elv_correction_stat_file')
                  job_env_dict.pop('output_fhr_elv_correction_stat_file')
-                 for accum in [6, 24]:
+                 for accum in [24]:
                      fhr_maccum = int(fhr)-accum
                      if fhr_maccum < 0:
                          continue
@@ -569,7 +569,6 @@ elif JOB_GROUP == 'generate_stats':
                  'PointStat_fcstGFS_obsADPSFC_MCTC.conf',
                  'PointStat_fcstGFS_obsADPSFC_VCNT.conf',
                  'PointStat_fcstGFS_obsADPSFC_VL1L2.conf',
-                 'PointStat_fcstGFS_obsADPSFC_MCTCprecip6H.conf',
                  'PointStat_fcstGFS_obsADPSFC_MCTCprecip24H.conf',
                  'StatAnalysis_fcstGFS_obsADPSFC_MPRtoCNT.conf'
              ]
@@ -659,7 +658,7 @@ elif JOB_GROUP == 'generate_stats':
                          have_fhr_elv_correction_stat = (
                              os.path.exists(fhr_stat_elv_correction_file)
                          )
-                         for accum in [6, 24]:
+                         for accum in [24]:
                              fhr_accum_file = gda_util.format_filler(
                                  pcpcombine_file_format, valid_time_dt,
                                  init_time_dt, fhr, {'accum': str(accum)}
