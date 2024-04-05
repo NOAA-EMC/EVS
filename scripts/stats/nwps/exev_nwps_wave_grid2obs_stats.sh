@@ -82,48 +82,48 @@ for vhr in ${vhours} ; do
        match_fhr=$(printf "%02d" "${match_hr}")
        flead=$(printf "%03d" "${fhr}")
        flead2=$(printf "%02d" "${fhr}")
-       EVSINndbcfilename=${EVSINndbcnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/ndbc.${VDATE}${vhr2}.nc 
-       DATAndbcncfilename=${DATA}/ncfiles/ndbc.${VDATE}${vhr2}.nc
+
        EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${WFO}_${MODELNAME}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2                  
        DATAmodelfilename=$DATA/grib2/${WFO}_${MODNAM}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2
-       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
-       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obs_NDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
-       if [[ -s $COMOUTstatfilename ]]; then
-	       cp -v $COMOUTstatfilename $DATAstatfilename
+       if [[ -s $EVSINmodelfilename ]]; then
+	       if [[ ! -s $DATAmodelfilenmae ]]; then
+		       cp -v $EVSINmodelfilename $DATAmodelfilename
+	       fi
        else
-	       if [[ ! -s $DATAndbcncfilename ]]; then
-		       if [[ -s $EVSINndbcncfilename ]]; then
-			       cp -v $EVSINndbcncfilename $DATAndbcncfilename
+	       echo "WARNING: $DATAmodelfilename does not exist."
+	
+       fi	       
+       if [[ -s $DATAmodelfilename ]]; then
+	       for OBSNAME in GDAS NDBC; do
+		       if [ $OBSNAME = GDAS ]; then
+			       EVSIN_OBSNAME_file=${DATA}/ncfiles/gdas.${VDATE}${valid_hour2}.nc
+		       elif [ $OBSNAME = NDBC ]; then
+			       EVSIN_OBSNAME_file=${DATA}/ncfiles/ndbc.${VDATE}${vhr2}.nc
+		       fi
+		       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+		       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+		       if [[ -s $COMOUTstatfilename ]]; then
+			       cp -v $COMOUTstatfilename $DATAstatfilename
 		       else
-			       echo "DOES NOT EXIST $EVSINndbcncfilename"
-		       fi
-	       fi
-	       if [[ -s $DATAndbcncfilename ]]; then
-		       if [[ ! -s $DATAmodelfilename ]]; then
-			       if [[ -s $EVSINmodelfilename ]]; then
-				       cp -v $EVSINmodelfilename $DATAmodelfilename
-			       else
-				       echo "DOES NOT EXIST $EVSINmodelfilename"
+			       if [[ -s $EVSIN_OBSNAME_file ]]; then
+				       echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       echo "export wdir_level_str=${wdir_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       echo "export lead=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstNWPS_obsndbc_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
+				       if [ $SENDCOM = YES ]; then
+					       echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       fi
+				       chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
 			       fi
 		       fi
-		       if [[ -s $DATAmodelfilename ]]; then
-			       echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			        echo "export wdir_level_str=${wdir_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export VHR=${vhr}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export lead=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstNWPS_obsndbc_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       if [ $SENDCOM = YES ]; then
-				       echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       fi
-			       chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
-		       fi
-	       fi
+	       done
        fi
-done
+   done
 done
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 #####################																					
@@ -149,7 +149,7 @@ if [ $gather = yes ] ; then
            echo " Found ${nc} ${DATA}/all_stats/*stat files for ${VDATE}"
 	   mkdir -p ${DATA}/stats
            # Use StatAnalysis to gather the small stat files into one file
-           run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNWPS_obsNDBC.conf
+           run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNWPS.conf
 	   if [ $SENDCOM = YES ]; then
 		   if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
 			   cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
@@ -161,28 +161,6 @@ if [ $gather = yes ] ; then
 	   echo "NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
    fi
 fi
-
-##################################################################
-# Revisit part below later and keep it in case you need to use it:
-
-# run Point_Stat
-run_metplus.py -c $CONFIGevs/metplus_nwps.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstNWPS_obsNDBC_htsgw.conf
-
-# check if stat files exist; exit if not
-if [ ! -s $COMOUTsmall/point_stat_NWPS_NDBC_HTSGW_1440000L_${VDATE}_000000V.stat ] ; then
-   echo "Missing NWPS_NDBC_HTSGW stat files for $VDATE" 
-   exit
-fi
-
-# sum small stat files into one big file using Stat_Analysis
-mkdir -p $COMOUTfinal
-
-run_metplus.py -c $CONFIGevs/metplus_nwps.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstNWPS_obsNDBC.conf
-
-# archive final stat file
-rsync -av $COMOUTfinal $ARCHevs
 
 #############################
 #Cat the stat log files
