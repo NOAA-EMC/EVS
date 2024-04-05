@@ -98,6 +98,10 @@ if gda_util.check_file_exists_size(tmp_fhr_stat_file):
                             stat_elv_correction_dict[col].append(
                                 sid_var_level_fcst_elv_correction
                             )
+                        elif col == 'FCST_VAR':
+                            stat_elv_correction_dict[col].append(
+                                f"{sid_var_level_df.iloc[0][col]}_EC"
+                            )
                         else:
                             stat_elv_correction_dict[col].append(
                                 sid_var_level_df.iloc[0][col]
