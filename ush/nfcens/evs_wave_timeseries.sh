@@ -13,7 +13,7 @@ set -x
 
 # set up plot variables
 
-periods='PAST31DAYS PAST90DAYS'
+periods='LAST31DAYS LAST90DAYS'
 
 inithours='00 12'
 fhrs='000 024 048 072 096 120 144 168 192 216 240'
@@ -29,9 +29,9 @@ touch plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 # write the commands
 for period in ${periods} ; do
-  if [ ${period} = 'PAST31DAYS' ] ; then
+  if [ ${period} = 'LAST31DAYS' ] ; then
     plot_start_date=${PDYm31}
-  elif [ ${period} = 'PAST90DAYS' ] ; then
+  elif [ ${period} = 'LAST90DAYS' ] ; then
     plot_start_date=${PDYm90}
   fi
   for vhr in ${inithours} ; do
