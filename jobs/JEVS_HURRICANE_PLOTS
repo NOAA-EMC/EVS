@@ -60,6 +60,7 @@ fi
 
 ##############################################
 # Define COM directories
+# NOTE: All COMIN* variables must be defined in the upstream driver script
 ##############################################
 if [ ${RUN} = "global_det" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
