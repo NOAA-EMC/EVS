@@ -46,7 +46,7 @@ export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
 export COMINadeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/adeck
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
 
-export DATAROOT=/lfs/h2/emc/ptmp/$USER
+export DATAROOT=/lfs/h2/emc/stmp/$USER
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export KEEPDATA=YES
 
