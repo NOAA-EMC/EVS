@@ -20,8 +20,8 @@ chgrp rstprod gdas_cnvstat
 mkdir -p ${VYYYYmm}_daily_stats
 mkdir -p jobs logs confs tmp
 
-# Create and run job scripts for reformat_data, assemble_data, generate_stats, gather_stats, and summarize_stats
-for group in reformat_data assemble_data generate_stats gather_stats summarize_stats; do
+# Create and run job scripts for reformat_data, assemble_data, generate_stats, gather_stats, summarize_stats, and write_reports
+for group in reformat_data assemble_data generate_stats gather_stats summarize_stats write_reports; do
     export JOB_GROUP=$group
     mkdir -p jobs/${JOB_GROUP}
     echo "Creating and running jobs for WMO stats: ${JOB_GROUP}"
@@ -99,19 +99,3 @@ else
     echo "Copying ${output_monthly_stat_file} to ${tmp_monthly_stat_file}"
     cp -v ${output_monthly_stat_file} ${tmp_monthly_stat_file}
 fi
-
-# Format daily & monthly stats for WMO rec2 - domain
-for temporal in daily monthly; do
-    tmp_temporal_wmo_rec2_file=${DATA}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_${temporal}.rec2
-    output_temporal_wmo_rec2_file=${COMOUT}/${MODELNAME}.${VDATE}/${VYYYYmm}_kwbc_${temporal}.rec2
-    if [ ! -s ${output_temporal_wmo_rec2_file} ]; then
-        python $USHevs/global_det/global_det_atmos_stats_wmo_format_rec2_domain_${temporal}.py
-        export err=$?; err_chk
-        if [ $SENDCOM = YES ]; then
-            if [ -f ${tmp_temporal_wmo_rec2_file} ]; then cp -v ${tmp_temporal_wmo_rec2_file} ${output_temporal_wmo_rec2_file}; fi
-        fi
-    else
-        echo "Copying ${output_temporal_wmo_rec2_file} to ${tmp_temporal_wmo_rec2_file}"
-        cp -v ${output_temporal_wmo_rec2_file} ${tmp_temporal_wmo_rec2_file}
-    fi
-done

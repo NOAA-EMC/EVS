@@ -100,6 +100,10 @@ stat_analysis_job_file_format = os.path.join(
     MODELNAME+'.{wmo_verif?fmt=str}.{valid?fmt=%Y%m}_{valid?fmt=%H}Z.'
     +'f{lead?fmt=%H}.{stat_analysis_job?fmt=str}.stat'
 )
+wmo_domain_report_file_format = os.path.join(
+    DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
+    '{valid?fmt=%Y%m}_kwbc_{temporal?fmt=str}.rec2'
+)
 
 # WMO Verifcations
 wmo_verif_list = ['grid2grid_upperair', 'grid2obs_upperair', 'grid2obs_sfc']
@@ -982,6 +986,55 @@ elif JOB_GROUP == 'summarize_stats':
                                 )
                                 job.write('export err=$?; err_chk')
                     job.close()
+elif JOB_GROUP == 'write_reports':
+    job_env_dict = gda_util.initalize_job_env_dict('all', JOB_GROUP,
+                                                   VERIF_CASE, 'all')
+    valid_time_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
+    job_env_dict['VDATE'] = VDATE
+    report_script_list = ['domain_daily',
+                          'domain_monthly']
+    for report_script in report_script_list:
+        if 'domain' in report_script:
+            tmp_report_file = gda_util.format_filler(
+                wmo_domain_report_file_format, valid_time_dt, valid_time_dt,
+                'anl', {'temporal': report_script.split('_')[1]}
+            )
+            job_args = []
+        output_report_file = os.path.join(
+            COMOUT, f"{MODELNAME}.{VDATE}", tmp_report_file.rpartition('/')[2]
+        )
+        job_env_dict['tmp_report_file'] = tmp_report_file
+        job_env_dict['output_report_file'] = output_report_file
+        have_report = os.path.exists(output_report_file)
+        # Make job script
+        njobs+=1
+        job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
+        print(f"Creating job script: {job_file}")
+        job = open(job_file, 'w')
+        job.write('#!/bin/bash\n')
+        job.write('set -x\n')
+        job.write('\n')
+        for name, value in job_env_dict.items():
+            job.write(f'export {name}="{value}"\n')
+        job.write('\n')
+        if have_report:
+            job.write('if [ -f $output_report_file ]; then '
+                      +'cp -v $output_report_file $tmp_report_file; fi')
+            job.write('export err=$?; err_chk\n')
+        else:
+            job.write(
+                gda_util.python_command(
+                    'global_det_atmos_stats_wmo_format_rec2_'
+                    +f"{report_script}.py",
+                    job_args
+                )+'\n'
+            )
+            job.write(f'export {name}="{value}"\n')
+            if SENDCOM == 'YES':
+                job.write('if [ -f $tmp_report_file ]; then '
+                          +'cp -v $tmp_report_file $output_report_file '
+                          +'; fi\n')
+                job.write('export err=$?; err_chk\n')
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':

@@ -119,11 +119,16 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
     wmo_s_list = wmo_verif_dict['wmo_s_list']
     met_vx_mask_list = wmo_verif_dict['met_vx_mask_list']
     stat_dict = wmo_verif_dict['stat_dict']
-    for wmo_t in wmo_t_list:
+    time_iter_list = list(
+        itertools.product(wmo_t_list, wmo_s_list)
+    )
+    for time_iter in time_iter_list:
+        wmo_t = time_iter[0]
+        wmo_s = str(time_iter[1])
         stat_file = os.path.join(
             DATA, f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
-            f"{MODELNAME}.{wmo_verif}.{VDATE_dt:%Y%m}_{wmo_t.zfill(2)}Z"
-            +'.summary.stat'
+            f"{MODELNAME}.{wmo_verif}.{VDATE_dt:%Y%m}_{wmo_t.zfill(2)}Z."
+            +f"f{wmo_s}.summary.stat"
         )
         if os.path.exists(stat_file):
             have_stat_file = True
@@ -138,13 +143,12 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
             met_iter_list = list(
                 itertools.product(stat_dict[met_line_type]['var_list'],
                                   stat_dict[met_line_type]['stat_list'],
-                                  met_vx_mask_list, wmo_s_list)
+                                  met_vx_mask_list)
             )
             for met_iter in met_iter_list:
                 met_var_level = met_iter[0]
                 met_stat = met_iter[1]
                 met_vx_mask = met_iter[2]
-                wmo_s = str(met_iter[3])
                 if met_var_level == 'PRMSL/Z0':
                     wmo_par = 'mslp'
                 else:

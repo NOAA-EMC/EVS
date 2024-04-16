@@ -29,6 +29,8 @@ VDATE = os.environ['VDATE']
 MODELNAME = os.environ['MODELNAME']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
+tmp_report_file = os.environ['tmp_report_file']
+output_report_file = os.environ['output_report_file']
 
 VDATE_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
 VDATEm1_dt = VDATE_dt - datetime.timedelta(days=1)
@@ -51,24 +53,14 @@ wmo_met_par_match_dict = {
 }
 
 # Set input file paths
-input_VDATEm1_daily_rec2_file = os.path.join(
-    COMIN, STEP, COMPONENT, f"{MODELNAME}.{VDATEm1_dt:%Y%m%d}",
-    f"{VDATE_dt:%Y%m}_{wmo_centre}_daily.rec2"
+input_VDATEm1_daily_rec2_file = (
+    tmp_report_file.replace(VDATE, f"{VDATEm1_dt:%Y%m%d}")
 )
-if os.path.exists(input_VDATEm1_daily_rec2_file):
-    have_VDATEm1_daily_rec2 = True
-else:
-    have_VDATEm1_daily_rec2 = False
+have_VDATEm1_daily_rec2 = os.path.exists(input_VDATEm1_daily_rec2_file)
 
 # Set output file paths
-tmp_VDATE_daily_rec2_file = os.path.join(
-    DATA, f"{MODELNAME}.{VDATE}",
-    f"{VDATE_dt:%Y%m}_{wmo_centre}_daily.rec2"
-)
-output_VDATE_daily_rec2_file = os.path.join(
-    DATA, f"{MODELNAME}.{VDATE}",
-    tmp_VDATE_daily_rec2_file.rpartition('/')[2]
-)
+tmp_VDATE_daily_rec2_file = tmp_report_file
+output_VDATE_daily_rec2_file = output_report_file
 
 wmo_verif_info_dict = {
     'grid2grid_upperair': {
