@@ -283,6 +283,12 @@ class PlotSpecs:
                                           +'Geopotential Height Anomaly'),
             'HGT_ANOM_WEEKS3_4AVG/P500': ('500 hPa Weeks 3-4 Avg '
                                           +'Geopotential Height Anomaly'),
+            'HGT_WEEKLYAVG/P500': ('500 hPa Weekly Avg '
+                                   +'Geopotential Height'),
+            'HGT_DAYS6_10AVG/P500': ('500 hPa Days 6-10 Avg '
+                                     +'Geopotential Height'),
+            'HGT_WEEKS3_4AVG/P500': ('500 hPa Weeks 3-4 Avg '
+                                     +'Geopotential Height'),
             'HGT_DECOMP_WV1_0-3/P500': ('500 hPa Geopotential Height: '
                                         +'Waves 0-3'),
             'HGT_DECOMP_WV1_0-20/P500': ('500 hPa Geopotential Height: '
