@@ -20,6 +20,8 @@ module load udunits/${udunits_ver}
 module load nco/${nco_ver}
 module load grib_util/${grib_util_ver}
 module load cdo/${cdo_ver}
+module load met/${met_ver}
+module load metplus/${metplus_ver}
 
 module list
 
