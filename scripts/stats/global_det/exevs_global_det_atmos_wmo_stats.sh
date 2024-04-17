@@ -57,7 +57,7 @@ for group in reformat_data assemble_data generate_stats gather_stats summarize_s
         done
     fi
 done
-exit
+
 # Send for missing files
 if [ $SENDMAIL = YES ] ; then
     if ls $DATA/mail_* 1> /dev/null 2>&1; then
@@ -78,22 +78,31 @@ if [[ $log_file_count -ne 0 ]]; then
     done
 fi
 
-# Combine monthly summary files into 1
-tmp_monthly_stats_file_wildcard=${DATA}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gfs.*.${VYYYYmm}_*Z.summary.stat
-tmp_monthly_stat_file_count=$(ls $tmp_monthly_stats_file_wildcard 2> /dev/null | wc -l)
+# Combine monthly files into 1
+tmp_monthly_stats_summary_file_wildcard=${DATA}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gfs.*.${VYYYYmm}_*Z.f*.summary.stat
+tmp_monthly_stat_summary_file_count=$(ls $tmp_monthly_stats_summary_file_wildcard 2> /dev/null | wc -l)
+tmp_monthly_stats_aggregate_file_wildcard=${DATA}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gfs.*.${VYYYYmm}_*Z.f*.aggregate.stat
+tmp_monthly_stat_aggregate_file_count=$(ls $tmp_monthly_stats_aggregate_file_wildcard 2> /dev/null | wc -l)
 tmp_monthly_stat_file=${DATA}/${MODELNAME}.${VDATE}/${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VYYYYmm}.stat
 output_monthly_stat_file=${COMOUT}/${MODELNAME}.${VDATE}/${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VYYYYmm}.stat
 if [ ! -s ${output_monthly_stat_file} ]; then
     >${tmp_monthly_stat_file}
-    if [ ${tmp_monthly_stat_file_count} != "0" ]; then
-        for tmp_monthly_stats_file in $tmp_monthly_stats_file_wildcard; do
+    if [ ${tmp_monthly_stat_summary_file_count} != "0" ]; then
+        for tmp_monthly_stats_file in $tmp_monthly_stats_summary_file_wildcard; do
             cat $tmp_monthly_stats_file >> ${tmp_monthly_stat_file}
         done
-        if [ $SENDCOM = YES ]; then
-            if [ -f ${tmp_monthly_stat_file} ]; then cp -v ${tmp_monthly_stat_file} ${output_monthly_stat_file}; fi
-        fi
     else
         echo "NOTE: No files matching ${tmp_monthly_stats_file_wildcard}"
+    fi
+    if [ ${tmp_monthly_stat_aggregate_file_count} != "0" ]; then
+        for tmp_monthly_stats_file in $tmp_monthly_stats_aggregate_file_wildcard; do
+            cat $tmp_monthly_stats_file >> ${tmp_monthly_stat_file}
+        done
+    else
+        echo "NOTE: No files matching ${tmp_monthly_stats_file_wildcard}"
+    fi
+    if [ $SENDCOM = YES ]; then
+        if [ -s ${tmp_monthly_stat_file} ]; then cp -v ${tmp_monthly_stat_file} ${output_monthly_stat_file}; fi
     fi
 else
     echo "Copying ${output_monthly_stat_file} to ${tmp_monthly_stat_file}"
