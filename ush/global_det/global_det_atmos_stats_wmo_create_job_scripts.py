@@ -1019,8 +1019,8 @@ elif JOB_GROUP == 'write_reports':
         job.write('\n')
         if have_report:
             job.write('if [ -f $output_report_file ]; then '
-                      +'cp -v $output_report_file $tmp_report_file; fi')
-            job.write('export err=$?; err_chk\n')
+                      +'cp -v $output_report_file $tmp_report_file; fi\n')
+            job.write('export err=$?; err_chk')
         else:
             job.write(
                 gda_util.python_command(
