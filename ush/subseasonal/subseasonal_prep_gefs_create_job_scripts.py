@@ -81,7 +81,7 @@ if JOB_GROUP == 'retrieve_data':
             check_prep_files = True
             if check_prep_files:
                 prep_fhr_list = (
-                    sub_util.check_prep_files(job_env_dict)
+                    sub_util.check_gefs_prep_files(job_env_dict)
                 )
                 job_env_dict['fhr_list'] = (
                     '"'+','.join(prep_fhr_list)+'"'

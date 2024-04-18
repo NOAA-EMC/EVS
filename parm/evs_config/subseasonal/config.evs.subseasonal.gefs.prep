@@ -41,7 +41,7 @@ export make_met_data_by="INIT"
 # SETTINGS FOR USE CASES
 ####################################################
 export inithour_list="00"
-export vhr_list="00 12"
+export vhr_list="00 06 12 18"
 export fhr_min="00"
 export fhr_max="840"
 export gather_by="INIT"
