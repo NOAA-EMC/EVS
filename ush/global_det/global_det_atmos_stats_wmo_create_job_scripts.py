@@ -80,6 +80,10 @@ prepbufr_pb2nc_file_format = os.path.join(
     DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'pb2nc_gdas_prepbufr_{valid?fmt=%Y%m%d%H}.nc'
 )
+regriddataplane_file_format = os.path.join(
+    DATA , RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    'regrid_data_plane_init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
+)
 stat_file_format = os.path.join(
     DATA , RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     '{met_tool?fmt=str}_{wmo_verif?fmt=str}_{line_type?fmt=str}_'
@@ -140,6 +144,7 @@ if JOB_GROUP == 'reformat_data':
          )
          for vhr in wmo_verif_valid_hour_list:
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
+             # Reformat observations
              # Set input paths
              if wmo_verif == 'grid2obs_upperair':
                  obs_file = gda_util.format_filler(
@@ -272,6 +277,103 @@ if JOB_GROUP == 'reformat_data':
                              'if [ -f $output_obs2nc_file ]; then '
                              +'chgrp rstprod $output_obs2nc_file; fi\n'
                          )
+             # Reformat forecasts
+             if wmo_verif == 'grid2obs_sfc':
+                 wmo_verif_fhr_list = (
+                     wmo_verif_settings_dict[wmo_verif]['fhr_list']
+                 )
+                 for key_chk in ['COMINobsproc', 'obs_file', 'tmp_obs2nc_file',
+                                 'output_obs2nc_file', 'input_ascii2nc_file']:
+                     if key_chk in list(job_env_dict.keys()):
+                         job_env_dict.pop(key_chk)
+                 for fhr in wmo_verif_fhr_list:
+                     init_time_dt = (valid_time_dt
+                                     - datetime.timedelta(hours=int(fhr)))
+                     if f"{init_time_dt:%H}" not in wmo_init_hour_list:
+                         print(f"Skipping forecast hour {fhr} with init "
+                               +f"{init_time_dt:%Y%m%d%H} as init hour not in "
+                               +"WMO required init hours "
+                               +f"{wmo_init_hour_list}")
+                         continue
+                     # Set forecast input paths
+                     # grid2obs_sfc: gaussian grid prepped files
+                     fhr_file = gda_util.format_filler(
+                         gaussian_file_format, valid_time_dt, init_time_dt,
+                         fhr, {}
+                     )
+                     log_missing_fhr_file = os.path.join(
+                         DATA, 'mail_missing_'
+                         +fhr_file.rpartition('/')[2].replace('.', '_')+'.sh'
+                     )
+                     have_fhr = gda_util.check_file_exists_size(fhr_file)
+                     if not have_fhr and \
+                             not os.path.exists(log_missing_fhr_file):
+                         gda_util.log_missing_file_model(
+                             log_missing_fhr_file, fhr_file, MODELNAME,
+                             init_time_dt, fhr.zfill(3)
+                         )
+                     # Set forecst output paths
+                     tmp_regriddataplane_file = gda_util.format_filler(
+                         regriddataplane_file_format, valid_time_dt,
+                         init_time_dt, fhr, {}
+                     )
+                     output_regriddataplane_file = os.path.join(
+                         COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
+                         VERIF_CASE, tmp_regriddataplane_file.rpartition('/')[2]
+                     )
+                     have_fhr_regriddataplane = os.path.exists(
+                         output_regriddataplane_file
+                     )
+                     # Set wmo_verif job variables
+                     job_env_dict['fhr'] = fhr
+                     job_env_dict['fhr_file'] = fhr_file
+                     job_env_dict['tmp_regriddataplane_file'] = (
+                         tmp_regriddataplane_file
+                     )
+                     job_env_dict['output_regriddataplane_file'] = (
+                         output_regriddataplane_file
+                     )
+                     # Make job script
+                     njobs+=1
+                     job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                             'job'+str(njobs))
+                     print(f"Creating job script: {job_file}")
+                     job = open(job_file, 'w')
+                     job.write('#!/bin/bash\n')
+                     job.write('set -x\n')
+                     job.write('\n')
+                     for name, value in job_env_dict.items():
+                         job.write(f'export {name}="{value}"\n')
+                     job.write('\n')
+                     if have_fhr_regriddataplane:
+                         job.write(
+                             'if [ -f $output_regriddataplane_file ]; then '
+                             +'cp -v $output_regriddataplane_file '
+                             +'$tmp_regriddataplane_file; fi\n'
+                         )
+                         job.write('export err=$?; err_chk')
+                     else:
+                         job.write(
+                             gda_util.metplus_command(
+                                 'RegridDataPlane_fcstGFS.conf'
+                             )+'\n'
+                         )
+                         job.write('export err=$?; err_chk\n')
+                         job.write(
+                            'if [ -f $tmp_regriddataplane_file ]; then '
+                            +gda_util.python_command(
+                                'global_det_atmos_stats_wmo_add_lat_lon.py',
+                                []
+                            )+'; fi\n'
+                         )
+                         job.write('export err=$?; err_chk\n')
+                         if SENDCOM == 'YES':
+                             job.write(
+                                 'if [ -f $tmp_regriddataplane_file ]; then '
+                                 +'cp -v $tmp_regriddataplane_file '
+                                 +'$output_regriddataplane_file; fi\n'
+                             )
+                             job.write('export err=$?; err_chk')
 elif JOB_GROUP == 'assemble_data':
      # Do not run for grid2grid_upperair, grid2obs_upperair
      wmo_verif_list.remove('grid2grid_upperair')
@@ -305,22 +407,13 @@ elif JOB_GROUP == 'assemble_data':
                                +f"{wmo_init_hour_list}")
                          continue
                  # Set forecast input paths
-                 # grid2obs_sfc: gaussian grid prepped files
+                 # grid2obs_sfc: regrid_data_plane files
                  fhr_file = gda_util.format_filler(
-                     gaussian_file_format, valid_time_dt, init_time_dt,
+                     regriddataplane_file_format, valid_time_dt, init_time_dt,
                      fhr, {}
                  )
-                 log_missing_fhr_file = os.path.join(
-                     DATA, 'mail_missing_'
-                     +fhr_file.rpartition('/')[2].replace('.', '_')+'.sh'
-                 )
                  have_fhr = gda_util.check_file_exists_size(fhr_file)
-                 if not have_fhr and not os.path.exists(log_missing_fhr_file):
-                     gda_util.log_missing_file_model(
-                         log_missing_fhr_file, fhr_file, MODELNAME,
-                         init_time_dt, fhr.zfill(3)
-                     )
-                 # Match TMP/Z2, DPT/Z2, and HGT/Z0
+                 # Match TMP/Z2, elevation, latitude, and longitude
                  tmp_fhr_stat_file = gda_util.format_filler(
                      stat_file_format, valid_time_dt, init_time_dt,
                      fhr,
@@ -791,6 +884,9 @@ elif JOB_GROUP == 'gather_stats':
     print(f"----> Making job scripts for {VERIF_CASE} {STEP} "
           +f"for job group {JOB_GROUP}")
     job_env_dict['valid_date'] = VDATE
+    metplus_conf_list = [
+        'filter', 'filter_station_info'
+    ]
     # Set input file paths
     fhr_stat_files_wildcard = os.path.join(
         DATA , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
@@ -807,45 +903,59 @@ elif JOB_GROUP == 'gather_stats':
         datetime.datetime.strptime(VDATE, '%Y%m%d'),
         'anl', {}
     )
-    job_env_dict['tmp_stat_file'] = tmp_stat_file
+    tmp_stat_station_file = tmp_stat_file.replace(
+        '.wmo.', '.wmo.station_info.'
+    )
     output_stat_file = os.path.join(
         COMOUT, f"{MODELNAME}.{VDATE}", tmp_stat_file.rpartition('/')[2]
     )
-    job_env_dict['output_stat_file'] = output_stat_file
-    have_stat = os.path.exists(output_stat_file)
-    # Make job script
-    njobs+=1
-    job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-    print(f"Creating job script: {job_file}")
-    job = open(job_file, 'w')
-    job.write('#!/bin/bash\n')
-    job.write('set -x\n')
-    job.write('\n')
-    for name, value in job_env_dict.items():
-        job.write(f'export {name}="{value}"\n')
-    job.write('\n')
-    # If final stat file exists in COMOUT then copy it
-    # if not then run METplus
-    if have_stat:
-        job.write(
-            'if [ -f $output_stat_file ]; then '
-            +'cp -v $output_stat_file $tmp_stat_file; fi\n'
-        )
-        job.write('export err=$?; err_chk')
-    else:
-        if have_fhr_stat_files:
+    output_stat_station_file = os.path.join(
+        COMOUT, f"{MODELNAME}.{VDATE}",
+        tmp_stat_station_file.rpartition('/')[2]
+    )
+    for metplus_conf in metplus_conf_list:
+        if metplus_conf == 'filter':
+            job_env_dict['tmp_stat_file'] = tmp_stat_file
+            job_env_dict['output_stat_file'] = output_stat_file
+            have_stat = os.path.exists(output_stat_file)
+        elif metplus_conf == 'filter_station_info':
+            job_env_dict['tmp_stat_file'] = tmp_stat_station_file
+            job_env_dict['output_stat_file'] = output_stat_station_file
+            have_stat = os.path.exists(output_stat_station_file)
+        # Make job script
+        njobs+=1
+        job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
+        print(f"Creating job script: {job_file}")
+        job = open(job_file, 'w')
+        job.write('#!/bin/bash\n')
+        job.write('set -x\n')
+        job.write('\n')
+        for name, value in job_env_dict.items():
+            job.write(f'export {name}="{value}"\n')
+        job.write('\n')
+        # If final stat file exists in COMOUT then copy it
+        # if not then run METplus
+        if have_stat:
             job.write(
-                gda_util.metplus_command('StatAnalysis_fcstGFS_filter.conf')
-                +'\n'
+                'if [ -f $output_stat_file ]; then '
+                +'cp -v $output_stat_file $tmp_stat_file; fi\n'
             )
-            job.write('export err=$?; err_chk\n')
-            if SENDCOM == 'YES':
+            job.write('export err=$?; err_chk')
+        else:
+            if have_fhr_stat_files:
                 job.write(
-                    'if [ -f $tmp_stat_file ]; then '
-                    +'cp -v $tmp_stat_file $output_stat_file; fi\n'
+                    gda_util.metplus_command('StatAnalysis_fcstGFS_'
+                                             +f"{metplus_conf}.conf")
+                    +'\n'
                 )
-                job.write('export err=$?; err_chk')
-    job.close()
+                job.write('export err=$?; err_chk\n')
+                if SENDCOM == 'YES':
+                    job.write(
+                        'if [ -f $tmp_stat_file ]; then '
+                        +'cp -v $tmp_stat_file $output_stat_file; fi\n'
+                    )
+                    job.write('export err=$?; err_chk')
+        job.close()
 elif JOB_GROUP == 'summarize_stats':
     job_env_dict = gda_util.initalize_job_env_dict('all', JOB_GROUP,
                                                    VERIF_CASE, 'all')

@@ -66,7 +66,7 @@ if gda_util.check_file_exists_size(tmp_fhr_stat_file):
     for sid in file_df['OBS_SID'].unique():
         sid_df = file_df[file_df['OBS_SID'] == sid]
         # Grab model elevation
-        sid_model_elv_df = sid_df[sid_df['FCST_VAR'] == 'HGT']
+        sid_model_elv_df = sid_df[sid_df['FCST_VAR'] == 'ELV']
         if len(sid_model_elv_df) == 0:
             print(f"NOTE: Cannot grab model elevation for {sid} from "
                   +f"{tmp_fhr_stat_file}, not doing elevation corrections "
