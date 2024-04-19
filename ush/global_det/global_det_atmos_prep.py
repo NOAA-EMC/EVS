@@ -266,6 +266,13 @@ for MODEL in MODELNAME:
                                                       str(fcst_hr),
                                                       'full',
                                                       log_missing_file)
+                    elif MODEL == 'imd':
+                        gda_util.prep_prod_imd_file(input_fcst_file,
+                                                    tmp_fcst_file,
+                                                    CDATE_dt,
+                                                    str(fcst_hr),
+                                                    'full',
+                                                    log_missing_file)
                     else:
                         gda_util.copy_file(input_fcst_file, tmp_fcst_file)
                         if not os.path.exists(input_fcst_file):
@@ -474,6 +481,13 @@ for MODEL in MODELNAME:
                                                   'anl',
                                                   'full',
                                                   log_missing_file)
+                elif MODEL == 'imd':
+                    gda_util.prep_prod_imd_file(input_anl_file,
+                                                tmp_anl_file,
+                                                CDATE_dt,
+                                                'anl',
+                                                'full',
+                                                log_missing_file)
                 else:
                     gda_util.copy_file(input_anl_file, tmp_anl_file)
                     if not os.path.exists(input_anl_file):

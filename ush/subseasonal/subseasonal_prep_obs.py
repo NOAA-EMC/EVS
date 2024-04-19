@@ -27,6 +27,7 @@ DCOMINosi = os.environ['DCOMINosi']
 DCOMINghrsst = os.environ['DCOMINghrsst']
 DCOMINumd = os.environ['DCOMINumd']
 COMINnam = os.environ['COMINnam']
+COMINccpa = os.environ['COMINccpa']
 COMOUT = os.environ['COMOUT']
 SENDCOM = os.environ['SENDCOM']
 INITDATE = os.environ['INITDATE']
@@ -121,6 +122,18 @@ subseasonal_obs_dict = {
                                              'prepbufr.nam.'
                                              +'{init?fmt=%Y%m%d%H}'),
                       'vhours': ['00', '12']},
+    'ccpa': {'prod_file_format': os.path.join(COMINccpa, 'ccpa.'
+                                              +'{init?fmt=%Y%m%d}',
+                                              '{init?fmt=%2H}',
+                                              'ccpa.t{init?fmt=%2H}z'
+                                              +'.06h.1p0.conus.gb2'),
+                      'arch_file_format': os.path.join(COMOUT_INITDATE,
+                                                       'ccpa',
+                                                       'pcp_combine_precip_'
+                                                       +'accum24hr_24hrCCPA_'
+                                                       +'{init?fmt=%Y%m%d}12'
+                                                       +'.nc'),
+                      'vhours': ['00', '06', '12', '18']},
 }
 
 for OBS in OBSNAME:
@@ -136,6 +149,13 @@ for OBS in OBSNAME:
             DATA, 'mail_missing_'+OBS+'_valid'
             +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
         )
+        if vhour == '18':
+            CDATEm1_dt = (CDATE_dt
+                         + datetime.timedelta(hours=-24))
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATEm1_dt.strftime('%Y%m%d%H')+'.sh'
+            )
         if OBS == 'nam':
             offset_hr = str(int(CDATE_dt.strftime('%H'))%6
             ).zfill(2)
@@ -232,6 +252,47 @@ for OBS in OBSNAME:
                         daily_prod_file, daily_arch_file,
                         CDATE_dt, log_missing_file
                     )
+        elif OBS == 'ccpa':
+            ccpa_dir = os.path.join(
+                DATA, STEP, 'data', 'ccpa'
+            )
+            if not os.path.exists(ccpa_dir):
+                os.makedirs(ccpa_dir)
+            ccpa_tmp_file_format = os.path.join(
+                ccpa_dir,
+                'ccpa.6H.{init?fmt=%Y%m%d%H}'
+            )
+            if vhour == '18':
+                prod_file = sub_util.format_filler(
+                    obs_dict['prod_file_format'], CDATEm1_dt,
+                    CDATEm1_dt, 'anl', {}
+                )
+                tmp_file = sub_util.format_filler(
+                    ccpa_tmp_file_format, CDATEm1_dt,
+                    CDATEm1_dt, 'anl', {}
+                )
+            else:
+                prod_file = sub_util.format_filler(
+                    obs_dict['prod_file_format'], CDATE_dt,
+                    CDATE_dt, 'anl', {}
+                )
+                tmp_file = sub_util.format_filler(
+                    ccpa_tmp_file_format, CDATE_dt,
+                    CDATE_dt, 'anl', {}
+                )
+            if os.path.exists(prod_file):
+                sub_util.copy_file(prod_file, tmp_file)
+            else:
+                if vhour == '18':
+                    sub_util.log_missing_file_obs(
+                        log_missing_file, prod_file, OBS,
+                        CDATEm1_dt
+                    )
+                else:
+                    sub_util.log_missing_file_obs(
+                        log_missing_file, prod_file, OBS,
+                        CDATE_dt
+                    )
         else:
             prod_file = sub_util.format_filler(
                 obs_dict['prod_file_format'], CDATE_dt, CDATE_dt,
@@ -277,5 +338,66 @@ for OBS in OBSNAME:
                             log_missing_file, prod_file, OBS,
                             CDATE_dt
                         )
+    if OBS == 'ccpa':
+        all_ccpa_file_exist = sub_util.check_ccpa_prep_files(
+            DATA, STEP, INITDATE)
+        if all_ccpa_file_exist:
+            working_dir_list = []
+            working_output_base_dir = os.path.join(
+                DATA, STEP, 'METplus_output')
+            working_dir_list.append(working_output_base_dir)
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
+                             'confs')
+            )
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
+                             'logs')
+            )
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
+                             'tmp')
+            )
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
+                             'stage')
+            )
+            # Create working output directories
+            for working_output_dir in working_dir_list:
+                if not os.path.exists(working_output_dir):
+                    print("Creating working output directory: "+working_output_dir)
+                    os.makedirs(working_output_dir, mode=0o755, exist_ok=True)
+            metplus_cmd = sub_util.metplus_command(
+                'PCPCombine_obs24hrCCPA.conf')
+            EDATE = INITDATE+'12'
+            EDATE_dt = datetime.datetime.strptime(EDATE, '%Y%m%d%H')
+            SDATE_dt = EDATE_dt - datetime.timedelta(days=1)
+            arch_file = sub_util.format_filler(
+                obs_dict['arch_file_format'], EDATE_dt, EDATE_dt,
+                'anl', {}
+            )
+            if not os.path.exists(arch_file):
+                arch_file_dir = arch_file.rpartition('/')[0]
+                if not os.path.exists(arch_file_dir):
+                    os.makedirs(arch_file_dir)
+                print("----> Trying to create "+arch_file)
+            # Create file with environment variables and command to source
+            env_var_dict = {}
+            env_var_dict['STARTDATE'] = SDATE_dt.strftime('%Y%m%d%H')
+            env_var_dict['ENDDATE'] = EDATE_dt.strftime('%Y%m%d%H')
+            env_var_dict['pcp_arch_file'] = arch_file
+            ccpa_file = os.path.join(DATA, STEP, 'metplus_precip.sh')
+            file = open(ccpa_file, 'w')
+            file.write('#!/bin/bash\n')
+            file.write('set -x\n')
+            file.write('\n')
+            # Write environment variables
+            for name, value in env_var_dict.items():
+                file.write('export '+name+'='+'"'+value+'"\n')
+            file.write('\n')
+            # Write METplus command
+            file.write(metplus_cmd+'\n')
+            file.write('export err=$?; err_chk'+'\n')
+            file.close()
 
 print("END: "+os.path.basename(__file__))
