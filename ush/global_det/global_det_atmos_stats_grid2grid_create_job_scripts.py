@@ -1199,7 +1199,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         # UKMET does not have winds at P200 past fhr120
                         if verif_type == 'pres_levs' \
                                 and verif_type_job == 'WindShear' \
-                                and job_env_dict['MODEL'] == 'ukmet':
+                                and job_env_dict['MODEL'] == 'ukmet' \
+                                and job_env_dict['fhr_list'] != "''":
                             ukmet_fhr_list = []
                             ukmet_fhr_rm_list = []
                             for fhr_chk in (job_env_dict['fhr_list']\
