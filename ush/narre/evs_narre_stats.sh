@@ -2,7 +2,8 @@
 set -x 
 #**************************************************************************
 #  Purpose: To run the METplus-based stat generation jobs
-#  Last update: 10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update: 3/26/2024, Add restart capability, by Binbin Zhou Lynker@EMC/NCEP
+#               10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
 #************************************************************************
 #
 
@@ -18,13 +19,26 @@ echo COMOUTsmall=$COMOUTsmall
 >run_all_narre_poe.sh
 
 
-#********************************************
+#************************************************************
 #Get prepbufr data
-#********************************************
-$USHevs/narre/evs_get_prepbufr.sh prepbufr
-export err=$?; err_chk
-
+# 1. First check if has prepbugr data saved from previous run 
+# 2. if yes, then copy them for restart
+#    otherwise run evs_get_prepbufr.sh
+#************************************************************
+if [ ! -d $COMOUTsmall/prepbufr.${VDATE} ] ; then 
+ $USHevs/narre/evs_get_prepbufr.sh prepbufr
+ export err=$?; err_chk
+else
+ #Restart: copy saved stat files from previous runs
+ cp -r $COMOUTsmall/prepbufr.${VDATE} $WORK/.
+fi
+ 
 obsv='prepbufr'
+
+#******************************************************************
+# Check if all stats sub-tasks are completed in the previous runs
+if [ ! -s $COMOUTsmall/stats_completed ] ; then
+#*****************************************************************
 
 #######for prod in mean prob sclr ; do
 for prod in mean  ; do
@@ -40,6 +54,10 @@ for prod in mean  ; do
      # setup sub-jobs and all required environment for METplus run
      # *********************************************************** 
      >run_narre_${model}.${dom}.${range}.sh
+
+      #Check for restart: check if the single sub-job is completed in the previous run
+      #If this job has been completed in the previous run, then skip it
+      if [ ! -e $COMOUTsmall/run_narre_${model}.${dom}.${range}.completed ] ; then
 
        echo  "#!/bin/ksh">>run_narre_${model}.${dom}.${range}.sh
        echo  "export range=$range" >> run_narre_${model}.${dom}.${range}.sh
@@ -112,8 +130,13 @@ for prod in mean  ; do
        echo " cp \$output_base/stat/*.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${range}.sh
        echo "fi" >> run_narre_${model}.${dom}.${range}.sh 
 
+       #indicate sub-task is completed for restart 
+       echo ">$COMOUTsmall/run_narre_${model}.${dom}.${range}.completed" >> run_narre_${model}.${dom}.${range}.sh
+
        chmod +x run_narre_${model}.${dom}.${range}.sh
        echo "${DATA}/run_narre_${model}.${dom}.${range}.sh" >> run_all_narre_poe.sh
+
+      fi # check restart for sub-task
 
    done #end of range loop
 
@@ -132,6 +155,13 @@ else
    ${DATA}/run_all_narre_poe.sh
    export err=$?; err_chk
 fi
+
+>COMOUTsmall/stats_completed
+echo "stats are completed" >> COMOUTsmall/stats_completed
+
+fi # check restart for all tasks
+
+
 
 #*****************************************************
 # Combine small stat files to a big stat file (final)
