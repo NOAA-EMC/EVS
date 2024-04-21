@@ -2,7 +2,8 @@
 #**************************************************************************
 #  Purpose: Get required input forecast and validation data files
 #           for narre stat jobs
-#  Last update: 10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update:  3/26/2024, add restart capability, by Binbin Zhou Lynker@EMC/NCEP
+#                10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
 #************************************************************************
 #
 set -x 
@@ -41,5 +42,11 @@ if [ $modnam = prepbufr ] ; then
     fi
   fi
  done
+ #Save for restart
+  if [ -d $WORK/prepbufr.${VDATE} ] ; then
+      cp -r $WORK/prepbufr.${VDATE}  $COMOUTsmall
+  fi
+ 
+
 fi
 
