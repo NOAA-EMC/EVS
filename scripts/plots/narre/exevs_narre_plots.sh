@@ -1,8 +1,15 @@
 #!/bin/ksh
+#################################################################################
 # Purpose: setup environment, paths, and run the narre ploting python script
-# Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
+# Last updated: 04/01/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
+#               After a sub-task file is create, first check if it has been done
+#               in the previous (see its .completed file exists or not)
+#               If it has been done before, then skip further building this 
+#               sub-task, so that this sub-task file name is 0 size in the
+#               working directory
 #
-
+#               10/27/2023, Binbin Zhou Lynker@EMC/NCEP
+##################################################################################
 set -x 
 
 cd $DATA
@@ -16,6 +23,9 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
+if [ ! -d  $COMOUT/restart/$past_days ] ; then
+  mkdir -p $COMOUT/restart/$past_days
+fi
 
 export eval_period='TEST'
 #export past_days=0
@@ -73,13 +83,25 @@ for grid in $VX_MASK_LIST ; do
     # ****************************************************************************
     > run_narre_${grid}.${score_type}.${var}.${line_type}.sh 
 
-     
+  if [ $grid = G130 ] ; then
+    export grd=g130
+  elif [ $grid = G242 ] ; then
+    export grd=g242
+  fi
+
+  #**********************************************************************************************
+  # Check if this sub-job has been completed in the previous run for restart
+   if [ ! -e $COMOUT/restart/$past_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed ] ; then
+  #************************************************************************************************
+
     if [ $grid = G130 ] ; then
       echo "export mask=buk_conus" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      echo "export grd=g130"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+      #echo "export grd=g130"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+      #grd=g130
     elif [ $grid = G242 ] ; then
       echo "export mask=alaska" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      echo "export grd=g242"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+      #echo "export grd=g242"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+      #grd=g242
     fi
 
       echo "export PLOT_TYPE=$score_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
@@ -156,13 +178,19 @@ for grid in $VX_MASK_LIST ; do
 
      echo "${DATA}/run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
  
-
-#     if [ $score_type = performance_diagram ] ; then
-#        echo "mv ${plot_dir}/${score_type}_regional_*\${grd}*_*\${vname}*.png ${plot_dir}/evs.narre.ctc.\${field}.last${past_days}days.perfdiag.f012.\${mask}.png" >>  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-#     fi 
+     #For restart
+     echo "cp ${plot_dir}/${score_type}_regional_${grd}_valid_*${vname}_*.png  $COMOUT/restart/$past_days/." >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo ">$COMOUT/restart/$past_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      
-     chmod +x  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     chmod +x run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      echo "${DATA}/run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
+
+    else
+
+      #For restart
+      cp $COMOUT/restart/$past_days/${score_type}_regional_${grd}_*${vname}_*.png ${plot_dir}/.
+
+    fi      
 
     done #end of line_type
 
