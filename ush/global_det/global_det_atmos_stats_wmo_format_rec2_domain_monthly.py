@@ -2,8 +2,7 @@
 '''
 Name: global_det_atmos_stats_wmo_format_rec2_domain_monthly.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
-Abstract: This gather the GridStat stat files and puts them in one
-          file in the WMO required format for domains
+Abstract: Put monthly stats in the WMO required format for domains
 Run By: Individual job scripts
 '''
 
