@@ -51,7 +51,7 @@ COLUMN_NAMES = (
 point_frame = pd.DataFrame(columns=COLUMN_NAMES,dtype='str')
 
 #Read in the Storm report, 8 columns not matching the 11 column standard
-temp_data = pd.read_csv(input_file,names=['Time', 'Fscale', 'Location', 'County','Stat','Lat', 'Lon', 'Comment'], dtype=str ,skiprows=1)
+temp_data = pd.read_csv(input_file,names=['Time', 'Fscale', 'Location', 'County','Stat','Lat', 'Lon', 'Comment'], dtype=str ,skiprows=1, on_bad_lines='warn')
 
 #Strip out any rows in the middle that are actually header rows
 #Allows for concatenating storm reports together
