@@ -993,14 +993,14 @@ elif JOB_GROUP == 'summarize_stats':
         elif wmo_verif == 'grid2obs_upperair':
             job_env_dict['obtype'] = 'ADPUPA'
             job_env_dict['summary_columns'] = (
-                'VCNT:RMSVE,VCNT:SPEED_ERR,VCNT:SPEED_ABSERR,'
-                +'CNT:ME,CNT:RMSE,CNT:MAE'
+                'VCNT:RMSVE,VCNT:SPEED_ERR,CNT:ME,CNT:RMSE,CNT:MAE'
             )
             stat_analysis_job_list = ['summary']
         elif wmo_verif == 'grid2obs_sfc':
             job_env_dict['obtype'] = 'ADPSFC'
             job_env_dict['summary_columns'] = (
-                'VCNT:RMSVE,VCNT:SPEED_ERR,CNT:ME,CNT:RMSE,CNT:MAE'
+                'VCNT:RMSVE,VCNT:SPEED_ERR,VCNT:SPEED_ABSERR,'
+                +'CNT:ME,CNT:RMSE,CNT:MAE'
             )
             stat_analysis_job_list = ['summary', 'aggregate']
         for stat_analysis_job in stat_analysis_job_list:
