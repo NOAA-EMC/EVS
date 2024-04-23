@@ -18,6 +18,7 @@ mkdir -p gdas_cnvstat
 chmod 750 gdas_cnvstat
 chgrp rstprod gdas_cnvstat
 mkdir -p ${VYYYYmm}_daily_stats
+mkdir -p ${VYYYYmm}_station_info
 mkdir -p jobs logs confs tmp
 
 # Create and run job scripts for reformat_data, assemble_data, generate_stats, gather_stats, summarize_stats, and write_reports

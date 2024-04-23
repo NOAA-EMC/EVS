@@ -104,10 +104,15 @@ stat_analysis_job_file_format = os.path.join(
     MODELNAME+'.{wmo_verif?fmt=str}.{valid?fmt=%Y%m}_{valid?fmt=%H}Z.'
     +'f{lead?fmt=%H}.{stat_analysis_job?fmt=str}.stat'
 )
-wmo_domain_report_file_format = os.path.join(
+wmo_rec2_report_file_format = os.path.join(
     DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
     '{valid?fmt=%Y%m}_kwbc_{temporal?fmt=str}.rec2'
 )
+wmo_svs_report_file_format = os.path.join(
+    DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
+    '{valid?fmt=%Y%m}_kwbc_{param?fmt=str}.svs'
+)
+
 
 # WMO Verifcations
 wmo_verif_list = ['grid2grid_upperair', 'grid2obs_upperair', 'grid2obs_sfc']
@@ -963,6 +968,7 @@ elif JOB_GROUP == 'summarize_stats':
     job_env_dict['valid_date'] = VDATE
     # Get daily stat files in VYYYYmm
     VYYYYmm_daily_stats_dir = os.path.join(DATA, f"{VYYYYmm}_daily_stats")
+    VYYYYmm_station_info_dir = os.path.join(DATA, f"{VYYYYmm}_station_info")
     date_dt = VDATE_dt
     while date_dt >= VYYYYmm_dt:
         input_date_stat_file = gda_util.format_filler(
@@ -975,6 +981,18 @@ elif JOB_GROUP == 'summarize_stats':
         if gda_util.check_file_exists_size(input_date_stat_file):
             print(f"Linking {input_date_stat_file} to {tmp_date_stat_file}")
             os.symlink(input_date_stat_file, tmp_date_stat_file)
+        input_date_station_info_file = (
+            input_date_stat_file.replace('.wmo.', '.wmo.station_info.')
+        )
+        tmp_date_station_info_file = os.path.join(
+            VYYYYmm_station_info_dir,
+            input_date_station_info_file.rpartition('/')[2]
+        )
+        if gda_util.check_file_exists_size(input_date_station_info_file):
+            print(f"Linking {input_date_station_info_file} to "
+                  +f"{tmp_date_station_info_file}")
+            os.symlink(input_date_station_info_file,
+                       tmp_date_station_info_file)
         date_dt = date_dt - datetime.timedelta(days=1)
     ndaily_stat_files = len(os.listdir(VYYYYmm_daily_stats_dir))
     job_env_dict['daily_stats_dir'] = VYYYYmm_daily_stats_dir
@@ -1102,15 +1120,25 @@ elif JOB_GROUP == 'write_reports':
                                                    VERIF_CASE, 'all')
     valid_time_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
     job_env_dict['VDATE'] = VDATE
-    report_script_list = ['domain_daily',
-                          'domain_monthly']
-    for report_script in report_script_list:
-        if 'domain' in report_script:
+    report_list = ['rec2_domain_daily', 'rec2_domain_monthly',
+                   'svs_station_monthly/t2m', 'svs_station_monthly/ff10m',
+                   'svs_station_monthly/dd10m', 'svs_station_monthly/tp24']
+    for report in report_list:
+        if 'rec2' in report:
+            report_script = report
             tmp_report_file = gda_util.format_filler(
-                wmo_domain_report_file_format, valid_time_dt, valid_time_dt,
-                'anl', {'temporal': report_script.split('_')[1]}
+                wmo_rec2_report_file_format, valid_time_dt, valid_time_dt,
+                'anl', {'temporal': report_script.split('_')[2]}
             )
             job_args = []
+        elif 'svs':
+            report_script = report.split('/')[0]
+            param = report.split('/')[1]
+            tmp_report_file = gda_util.format_filler(
+                wmo_svs_report_file_format, valid_time_dt, valid_time_dt,
+                'anl', {'param': param}
+            )
+            job_args = [param]
         output_report_file = os.path.join(
             COMOUT, f"{MODELNAME}.{VDATE}", tmp_report_file.rpartition('/')[2]
         )
@@ -1135,17 +1163,17 @@ elif JOB_GROUP == 'write_reports':
         else:
             job.write(
                 gda_util.python_command(
-                    'global_det_atmos_stats_wmo_format_rec2_'
+                    'global_det_atmos_stats_wmo_format_'
                     +f"{report_script}.py",
                     job_args
                 )+'\n'
             )
-            job.write(f'export {name}="{value}"\n')
+            job.write('export err=$?; err_chk\n')
             if SENDCOM == 'YES':
                 job.write('if [ -f $tmp_report_file ]; then '
                           +'cp -v $tmp_report_file $output_report_file '
                           +'; fi\n')
-                job.write('export err=$?; err_chk\n')
+                job.write('export err=$?; err_chk')
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
