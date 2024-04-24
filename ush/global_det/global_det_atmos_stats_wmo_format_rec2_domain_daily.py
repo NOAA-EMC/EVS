@@ -236,6 +236,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
                     )
 
 # Write daily file
+print(f"Writing REC2 daily domain data to {tmp_VDATE_daily_rec2_file}")
 with open(tmp_VDATE_daily_rec2_file, 'w') as f:
     if have_VDATEm1_daily_rec2:
         VDATEm1_daily_rec2_lines = open(

@@ -253,6 +253,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
                 )
 
 # Write monthly file
+print(f"Writing REC2 monthly domain data to {tmp_VDATE_monthly_rec2_file}")
 with open(tmp_VDATE_monthly_rec2_file, 'w') as f:
     for line in VDATE_monthly_rec2_lines:
         f.write(line)
