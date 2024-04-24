@@ -275,6 +275,123 @@ assemble_data_model_jobs_dict = {
                                                             +'fhr{lead?fmt=%3H}.nc'
                                                         )]
                                                    )]},
+        'WeeklyAvg_GeoHeight': {'env': {'var1_name': 'HGT',
+                                        'var1_levels': 'P500'},
+                                'commands': [sub_util.python_command(
+                                                 'subseasonal_'
+                                                 +'stats_grid2grid'
+                                                 +'_create_weekly_avg.py',
+                                                 ['HGT_P500',
+                                                  os.path.join(
+                                                      '$DATA',
+                                                      '${VERIF_CASE}_'
+                                                      +'${STEP}',
+                                                      'METplus_output',
+                                                      '${RUN}.'
+                                                      +'$DATE',
+                                                      '$MODEL',
+                                                      '$VERIF_CASE',
+                                                      'grid_stat_'
+                                                      +'${VERIF_TYPE}_'
+                                                      +'GeoHeightAnom_'
+                                                      +'{lead?fmt=%2H}0000L_'
+                                                      +'{valid?fmt=%Y%m%d}_'
+                                                      +'{valid?fmt=%H}0000V_'
+                                                      +'pairs.nc'
+                                                  ),
+                                                  os.path.join(
+                                                      '$COMOUT',
+                                                      '${RUN}.'
+                                                      +'$DATE',
+                                                      '$MODEL',
+                                                      '$VERIF_CASE',
+                                                      'grid_stat_'
+                                                      +'${VERIF_TYPE}_'
+                                                      +'GeoHeightAnom_'
+                                                      +'{lead?fmt=%2H}0000L_'
+                                                      +'{valid?fmt=%Y%m%d}_'
+                                                      +'{valid?fmt=%H}0000V_'
+                                                      +'pairs.nc'
+                                                  )]
+                                            )]},
+        'Days6_10Avg_GeoHeight': {'env': {'var1_name': 'HGT',
+                                          'var1_levels': 'P500'},
+                                  'commands': [sub_util.python_command(
+                                                   'subseasonal_'
+                                                   +'stats_grid2grid'
+                                                   +'_create_days6_10_avg.py',
+                                                   ['HGT_P500',
+                                                    os.path.join(
+                                                        '$DATA',
+                                                        '${VERIF_CASE}_'
+                                                        +'${STEP}',
+                                                        'METplus_output',
+                                                        '${RUN}.'
+                                                        +'$DATE',
+                                                        '$MODEL',
+                                                        '$VERIF_CASE',
+                                                        'grid_stat_'
+                                                        +'${VERIF_TYPE}_'
+                                                        +'GeoHeightAnom_'
+                                                        +'{lead?fmt=%2H}0000L_'
+                                                        +'{valid?fmt=%Y%m%d}_'
+                                                        +'{valid?fmt=%H}0000V_'
+                                                        +'pairs.nc'
+                                                    ),
+                                                    os.path.join(
+                                                        '$COMOUT',
+                                                        '${RUN}.'
+                                                        +'$DATE',
+                                                        '$MODEL',
+                                                        '$VERIF_CASE',
+                                                        'grid_stat_'
+                                                        +'${VERIF_TYPE}_'
+                                                        +'GeoHeightAnom_'
+                                                        +'{lead?fmt=%2H}0000L_'
+                                                        +'{valid?fmt=%Y%m%d}_'
+                                                        +'{valid?fmt=%H}0000V_'
+                                                        +'pairs.nc'
+                                                    )]
+                                               )]},
+        'Weeks3_4Avg_GeoHeight': {'env': {'var1_name': 'HGT',
+                                          'var1_levels': 'P500'},
+                                  'commands': [sub_util.python_command(
+                                                   'subseasonal_'
+                                                   +'stats_grid2grid'
+                                                   +'_create_weeks3_4_avg.py',
+                                                   ['HGT_P500',
+                                                    os.path.join(
+                                                        '$DATA',
+                                                        '${VERIF_CASE}_'
+                                                        +'${STEP}',
+                                                        'METplus_output',
+                                                        '${RUN}.'
+                                                        +'$DATE',
+                                                        '$MODEL',
+                                                        '$VERIF_CASE',
+                                                        'grid_stat_'
+                                                        +'${VERIF_TYPE}_'
+                                                        +'GeoHeightAnom_'
+                                                        +'{lead?fmt=%2H}0000L_'
+                                                        +'{valid?fmt=%Y%m%d}_'
+                                                        +'{valid?fmt=%H}0000V_'
+                                                        +'pairs.nc'
+                                                    ),
+                                                    os.path.join(
+                                                        '$COMOUT',
+                                                        '${RUN}.'
+                                                        +'$DATE',
+                                                        '$MODEL',
+                                                        '$VERIF_CASE',
+                                                        'grid_stat_'
+                                                        +'${VERIF_TYPE}_'
+                                                        +'GeoHeightAnom_'
+                                                        +'{lead?fmt=%2H}0000L_'
+                                                        +'{valid?fmt=%Y%m%d}_'
+                                                        +'{valid?fmt=%H}0000V_'
+                                                        +'pairs.nc'
+                                                    )]
+                                               )]},
     },
     'seaice': {
         'WeeklyAvg_Concentration': {'env': {'var1_name': 'ICEC',
@@ -521,6 +638,27 @@ generate_stats_jobs_dict = {
                                                        +'obsGFS_Weeks3_4AvgAnom'
                                                        +'.conf'
                                                    )]},
+        'WeeklyAvg_GeoHeight': {'env': {'var1_name': 'HGT',
+                                        'var1_levels': 'P500'},
+                                'commands': [sub_util.metplus_command(
+                                                 'GridStat_fcstSUBSEASONAL_'
+                                                 +'obsGFS_climoERA5_WeeklyAvg'
+                                                 +'.conf'
+                                             )]},
+        'Days6_10Avg_GeoHeight': {'env': {'var1_name': 'HGT',
+                                          'var1_levels': 'P500'},
+                                  'commands': [sub_util.metplus_command(
+                                                   'GridStat_fcstSUBSEASONAL_'
+                                                   +'obsGFS_climoERA5_'
+                                                   +'Days6_10Avg.conf'
+                                               )]},
+        'Weeks3_4Avg_GeoHeight': {'env': {'var1_name': 'HGT',
+                                          'var1_levels': 'P500'},
+                                  'commands': [sub_util.metplus_command(
+                                                   'GridStat_fcstSUBSEASONAL_'
+                                                   +'obsGFS_climoERA5_'
+                                                   +'Weeks3_4Avg.conf'
+                                               )]},
     },
     'seaice': {
         'WeeklyAvg_Concentration': {'env': {},
@@ -649,14 +787,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     if JOB_GROUP == 'assemble_data':
                         check_truth_files = False
                     elif JOB_GROUP == 'generate_stats':
-                        if verif_type in ['pres_lvls', 'anom'] \
-                                and verif_type_job in [
-                                    'WeeklyAvg_GeoHeightAnom',
-                                    'Days6_10Avg_GeoHeightAnom',
-                                    'Weeks3_4Avg_GeoHeightAnom',
-                                    'WeeklyAvg_TempAnom2m',
-                                    'Days6_10Avg_TempAnom2m',
-                                    'Weeks3_4Avg_TempAnom2m']:
+                        if verif_type in ['pres_lvls', 'anom']:
                             check_truth_files = False
                         else:
                             check_truth_files = True

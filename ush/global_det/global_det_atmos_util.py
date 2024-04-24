@@ -513,6 +513,40 @@ def prep_prod_fnmoc_file(source_file, dest_file, init_dt, forecast_hour,
                                init_dt, str(forecast_hour).zfill(3))
     copy_file(prepped_file, dest_file)
 
+def prep_prod_imd_file(source_file, dest_file, init_dt, forecast_hour,
+                       prep_method, log_missing_file):
+    """! Do prep work for IMD production files
+
+         Args:
+             source_file      - source file format (string)
+             dest_file        - destination file (string)
+             init_dt          - initialization date (datetime)
+             forecast_hour    - forecast hour (string)
+             prep_method      - name of prep method to do
+                                (string)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+
+         Returns:
+    """
+    # Environment variables and executables
+    WGRIB2 = os.environ['WGRIB2']
+    # Working file names
+    prepped_file = os.path.join(os.getcwd(),
+                                'atmos.'+dest_file.rpartition('/')[2])
+    # Prep file
+    if check_file_exists_size(source_file):
+        chk_corrupt = subprocess.run(
+            f"{WGRIB2} {source_file}  1> /dev/null 2>&1", shell=True
+        )
+        if chk_corrupt.returncode != 0:
+            print(f"WARNING: {source_file} is corrupt")
+        else:
+            copy_file(source_file, prepped_file)
+    else:
+        log_missing_file_model(log_missing_file, source_file, 'imd',
+                               init_dt, str(forecast_hour).zfill(3))
+    copy_file(prepped_file, dest_file)
 
 def prep_prod_jma_file(source_file_format, dest_file, init_dt, forecast_hour,
                        prep_method, log_missing_file):
