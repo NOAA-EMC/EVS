@@ -52,8 +52,9 @@ wmo_met_par_match_dict = {
 }
 
 # Set input file paths
-input_VDATEm1_daily_rec2_file = (
-    tmp_report_file.replace(VDATE, f"{VDATEm1_dt:%Y%m%d}")
+input_VDATEm1_daily_rec2_file = os.path.join(
+    COMIN, STEP, COMPONENT, f"{MODELNAME}.{VDATEm1_dt:%Y%m%d}",
+    tmp_report_file.rpartition('/')[2].replace(VDATE,f"{VDATEm1_dt:%Y%m%d}")
 )
 have_VDATEm1_daily_rec2 = os.path.exists(input_VDATEm1_daily_rec2_file)
 
