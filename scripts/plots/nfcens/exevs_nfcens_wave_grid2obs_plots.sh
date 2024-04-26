@@ -56,7 +56,7 @@ mkdir -p ${DATA}/stats
 
 plot_start_date=${PDYm90}
 plot_end_date=${VDATE}
-models='nfcens gefs fnmoc'
+export models='nfcens gefs fnmoc'
 
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
