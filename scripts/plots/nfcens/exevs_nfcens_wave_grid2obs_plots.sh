@@ -57,7 +57,7 @@ mkdir -p ${DATA}/stats
 plot_start_date=${PDYm90}
 plot_end_date=${VDATE}
 export models='nfcens gefs fnmoc'
-
+export MODNAMS='NFCENS GEFS FNMOC'
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
 	EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
