@@ -91,7 +91,7 @@ wmo_init_list = ['00', '12']
 if wmo_verif == 'grid2obs_sfc':
     wmo_t_list = ['0', '6', '12', '18']
     if wmo_param == 'tp24':
-        wmo_s_list = [str(fhr) for fhr in range(240,240+24,24)]
+        wmo_s_list = [str(fhr) for fhr in range(24,240+24,24)]
     else:
         wmo_s_list = [str(fhr) for fhr in \
                       [*range(0,72,6), *range(72,240+12,12)]]
@@ -245,7 +245,7 @@ for time_score_iter in time_score_iter_list:
             for wmo_sc in wmo_sc_list:
                 if wmo_sc == 'ct':
                     met_line_type = 'MCTC'
-                    stat_line = met_vx_df[
+                    stat_line = met_vx_mask_df[
                         met_vx_mask_df['COL_NAME:'] == f"{met_line_type}:"
                     ]
                 else:
