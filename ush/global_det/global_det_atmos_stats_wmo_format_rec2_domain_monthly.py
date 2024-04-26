@@ -111,6 +111,7 @@ wmo_verif_info_dict = {
 # Format for WMO daily rec2
 VDATE_monthly_rec2_lines = []
 for wmo_verif in list(wmo_verif_info_dict.keys()):
+    print(f"Gathering stats for {VDATE_dt:%Y%m} for {wmo_verif}")
     wmo_verif_dict = wmo_verif_info_dict[wmo_verif]
     wmo_ref = wmo_verif_dict['wmo_ref']
     met_obtype = wmo_verif_dict['met_obtype']
@@ -130,6 +131,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
             +f"f{wmo_s}.summary.stat"
         )
         if os.path.exists(stat_file):
+            print(f"Reading stats from {stat_file}")
             have_stat_file = True
             stat_file_df = pd.read_csv(
                 stat_file, sep=" ", skiprows=1, skipinitialspace=True,

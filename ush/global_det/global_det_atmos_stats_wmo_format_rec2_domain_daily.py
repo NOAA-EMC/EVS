@@ -112,6 +112,7 @@ wmo_verif_info_dict = {
 # Format for WMO daily rec2
 VDATE_daily_rec2_lines = []
 for wmo_verif in list(wmo_verif_info_dict.keys()):
+    print(f"Gathering stats for {VDATE} for {wmo_verif}")
     wmo_verif_dict = wmo_verif_info_dict[wmo_verif]
     wmo_ref = wmo_verif_dict['wmo_ref']
     met_obtype = wmo_verif_dict['met_obtype']
@@ -136,6 +137,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
             +f"{wmo_s.zfill(2)}0000L_{VDATE}_{wmo_t.zfill(2)}0000V.stat"
         )
         if os.path.exists(stat_file):
+            print(f"Reading stats from {stat_file}")
             stat_file_df = pd.read_csv(
                 stat_file, sep=" ", skiprows=1, skipinitialspace=True,
                 names = gda_util.get_met_line_type_cols('hold', MET_ROOT,
