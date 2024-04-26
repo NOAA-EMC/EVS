@@ -242,6 +242,8 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
 print(f"Writing REC2 daily domain data to {tmp_VDATE_daily_rec2_file}")
 with open(tmp_VDATE_daily_rec2_file, 'w') as f:
     if have_VDATEm1_daily_rec2:
+        print(f"Copying {input_VDATEm1_daily_rec2_file} lines to "
+              +f"{tmp_VDATE_daily_rec2_file}")
         VDATEm1_daily_rec2_lines = open(
             input_VDATEm1_daily_rec2_file, 'r'
         ).readlines()
