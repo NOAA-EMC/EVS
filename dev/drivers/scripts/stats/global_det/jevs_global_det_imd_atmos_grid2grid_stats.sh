@@ -6,7 +6,6 @@
 #PBS -l walltime=00:20:00
 #PBS -l place=vscatter,select=1:ncpus=43:ompthreads=1:mem=50GB
 #PBS -l debug=true
-#PBS -V
 
 set -x
 
