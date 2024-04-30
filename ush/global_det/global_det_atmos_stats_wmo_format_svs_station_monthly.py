@@ -106,11 +106,14 @@ station_info = []
 column_name_list = gda_util.get_met_line_type_cols('hold', MET_ROOT,
                                                    met_ver, 'MPR')
 for station_info_file in tmp_station_info_file_list:
-    station_info.append(
-        pd.read_csv(station_info_file, sep=" ", skiprows=1,
-                    skipinitialspace=True, keep_default_na=False, dtype='str',
-                    header=None, names=column_name_list)
+    station_info_file_df = pd.read_csv(
+        station_info_file, sep=" ", skiprows=1, skipinitialspace=True,
+        keep_default_na=False, dtype='str', header=None, names=column_name_list
     )
+    station_info_file_df = station_info_file_df.drop(
+        station_info_file_df[station_info_file_df['OBS_ELV'] == 'NA'].index
+    )
+    station_info.append(station_info_file_df)
 station_info_df = pd.concat(station_info, axis=0, ignore_index=True)
 if len(station_info_df) == 0:
     have_station_info = False
@@ -118,10 +121,11 @@ if len(station_info_df) == 0:
           +os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*'))
 else:
     have_station_info = True
+del station_info_file_df
 
 # Format for WMO monthly svs
-print(f"Gathering stats for {VDATE_dt:%Y%m} for grid2obs_sfc-{wmo_param}")
 VDATE_monthly_svs_lines = []
+print(f"Gathering stats for {VDATE_dt:%Y%m} for grid2obs_sfc-{wmo_param}")
 for time_score_iter in time_score_iter_list:
     # Set time info and do checks
     wmo_t = str(time_score_iter[0])
@@ -146,6 +150,16 @@ for time_score_iter in time_score_iter_list:
                   +f"FCST_VALID_BEG=*_{wmo_t.zfill(2)}0000")
         else:
             have_time_station_info = True
+            most_recent_station_info_list = []
+            for obs_sid, obs_sid_df \
+                    in time_station_info_df.groupby(by='OBS_SID'):
+                most_recent_station_info_list.append(
+                    obs_sid_df[obs_sid_df['FCST_VALID_BEG'] \
+                    == obs_sid_df['FCST_VALID_BEG'].max()]
+                )
+            most_recent_station_info_df = pd.concat(
+                most_recent_station_info_list, axis=0, ignore_index=True
+            )
     else:
         have_time_station_info = False
     # Set score info
@@ -179,14 +193,13 @@ for time_score_iter in time_score_iter_list:
         have_time_var = False
     # Get scores for stations
     if have_time_var:
-        for met_vx_mask in list(sorted(time_var_df['VX_MASK'].unique())):
-            met_vx_mask_df = time_var_df[time_var_df['VX_MASK'] == met_vx_mask]
+        for met_vx_mask, met_vx_mask_df in time_var_df.groupby(by='VX_MASK'):
             obs_sid = met_vx_mask
             wmo_st = met_vx_mask
             # Get observation station and model grid point information
             if have_time_station_info:
-                obs_sid_info_df = time_station_info_df[
-                    (time_station_info_df['OBS_SID'] == obs_sid)
+                obs_sid_info_df = most_recent_station_info_df[
+                    most_recent_station_info_df['OBS_SID'] == obs_sid
                 ]
                 for info in ['LAT', 'LON', 'ELV']:
                     info_df = obs_sid_info_df[
@@ -204,6 +217,8 @@ for time_score_iter in time_score_iter_list:
                         elif len(dtype_info_values) == 0:
                             dtype_info_value = 'na'
                         else:
+                            print(f"NOTE: {obs_sid} has more than 1 "
+                                  +f"{info} line")
                             dtype_info_values_df = info_df[
                                 info_df[col_name].isin(dtype_info_values)
                             ]
@@ -310,9 +325,8 @@ for time_score_iter in time_score_iter_list:
                         +f"lom={wmo_lom},se={wmo_se},me={wmo_me},sc={wmo_sc},"
                         +f"th={wmo_th},n={wmo_n},v={wmo_v}\n"
                     )
-
-# Write monthly file
 print(f"Writing SVS monthly station data to {tmp_VDATE_monthly_svs_file}")
+# Write monthly file
 with open(tmp_VDATE_monthly_svs_file, 'w') as f:
     for line in VDATE_monthly_svs_lines:
         f.write(line)
