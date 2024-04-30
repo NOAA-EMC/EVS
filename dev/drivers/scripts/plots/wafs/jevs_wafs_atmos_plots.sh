@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:00:00
-#PBS -l place=shared,select=1:ncpus=40:mem=200GB
+#PBS -l place=shared,select=1:ncpus=60:mem=200GB
 #PBS -l debug=true
 #PBS -V
 
@@ -36,7 +36,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 ############################################################
 # environment variables set
 ############################################################
-export envir=dev
+export envir=prod
 
 export NET=evs
 export STEP=plots
@@ -44,7 +44,7 @@ export COMPONENT=wafs
 export RUN=atmos
 export VERIF_CASE=grid2grid
 
-export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/$evs_ver_2d}
+#export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/$evs_ver_2d}
 export COMROOT=/lfs/h2/emc/ptmp/$USER
 
 export USH_DIR=$HOMEevs/ush/$COMPONENT

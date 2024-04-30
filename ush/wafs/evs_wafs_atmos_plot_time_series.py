@@ -486,6 +486,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             pivot_ci_lower2 = pivot_ci_lower2[pivot_ci_lower2.index.isin(indices_in_common2)]
             pivot_ci_upper2 = pivot_ci_upper2[pivot_ci_upper2.index.isin(indices_in_common2)]
     x_vals1 = pivot_metric1.index
+    ndays = (x_vals1[-1] - x_vals1[0]).days
     if metric2_name is not None:
         x_vals2 = pivot_metric2.index
     y_min = y_min_limit
@@ -555,13 +556,22 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             metric1_mean_fmt_string = f'{y_vals_metric1_mean:.2f}'
         else:
             metric1_mean_fmt_string = f'{y_vals_metric1_mean:.2E}'
-        plt.plot(
-            x_vals1_new.tolist(), y_vals_metric1, 
-            marker=mod_setting_dicts[m]['marker'], 
-            c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
-            figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid', 
-            lw=mod_setting_dicts[m]['linewidth']
-        )
+        if ndays >= 365:
+            plt.plot(
+                x_vals1_new.tolist(), y_vals_metric1, 
+                marker='None',
+                c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
+                figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid', 
+                lw=1
+            )
+        else:
+            plt.plot(
+                x_vals1_new.tolist(), y_vals_metric1,
+                marker=mod_setting_dicts[m]['marker'],
+                c=mod_setting_dicts[m]['color'], mew=2., mec='white',
+                figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid',
+                lw=mod_setting_dicts[m]['linewidth']
+            )
         if metric2_name is not None:
             if np.abs(y_vals_metric2_mean) < 1E4:
                 metric2_mean_fmt_string = f'{y_vals_metric2_mean:.2f}'
@@ -692,10 +702,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     ax.set_xticklabels(xtick_labels_with_blanks)
     '''
     # Set xticks and tick labels.
-    ndays = (x_vals1[-1] - x_vals1[0]).days
     if ndays >= 365:
         nintervals = int(ndays / 365)
         majorlocator =  mdates.MonthLocator(interval=nintervals)
+        majorlocator =  mdates.YearLocator()
         minorLocator = mdates.MonthLocator()
         majorFormatter = mdates.ConciseDateFormatter(ax.xaxis.get_major_locator())
     elif ndays >= 180:
@@ -911,8 +921,14 @@ def main():
         init_beg = INIT_BEG
         init_end = INIT_END
     else:
-        valid_beg = presets.date_presets[EVAL_PERIOD]['valid_beg']
-        valid_end = presets.date_presets[EVAL_PERIOD]['valid_end']
+        if 'VALID_BEG' in globals():
+            valid_beg = VALID_BEG
+        else:
+            valid_beg = presets.date_presets[EVAL_PERIOD]['valid_beg']
+        if 'VALID_END' in globals():
+            valid_end = VALID_END
+        else:
+            valid_end = presets.date_presets[EVAL_PERIOD]['valid_end']
         init_beg = presets.date_presets[EVAL_PERIOD]['init_beg']
         init_end = presets.date_presets[EVAL_PERIOD]['init_end']
     if str(DATE_TYPE).upper() == 'VALID':
