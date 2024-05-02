@@ -40,8 +40,18 @@ if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
 for ObsType in ${grid2obs_list}; do
     export ObsType
     case ${ObsType} in
-        aeronet) export obs_var=aod;;
-        airnow)  export obs_var=pm25;;
+        aeronet) export obs_var=aod
+                 export VARID=`echo ${obs_var} | tr a-z A-Z`;;  # config variable
+        airnow)  export obs_var=pm25
+                 if [ "${airnow_hourly_type}" == "aqobs" ]; then
+                   export HOURLY_INPUT_TYPE=hourly_aqobs
+                 else
+                   export HOURLY_INPUT_TYPE=hourly_data
+                 fi
+                 export VARID=`echo ${HOURLY_INPUT_TYPE} | tr a-z A-Z`;;  # config variable
+        *)       echo " ObsType=${ObsType} is not defined, set to default aeronet"
+                 export obs_var=aod
+                 export VARID=`echo ${obs_var} | tr a-z A-Z`;;  # config variable
     esac
 
     export RUNTIME_STATS=${DATA}/point_stat/${MODELNAME}_${ObsType}  # config variable
@@ -68,12 +78,6 @@ for ObsType in ${grid2obs_list}; do
         fi
         echo "index of daily aeronet obs found = ${num_obs_found}"
     elif [ "${ObsType}" == "airnow" ]; then
-        if [ "${airnow_hourly_type}" == "aqobs" ]; then
-          export HOURLY_INPUT_TYPE=hourly_aqobs
-        else
-          export HOURLY_INPUT_TYPE=hourly_data
-        fi
-
         fcstmax=120
 
         cdate=${VDATE}${vhr}
