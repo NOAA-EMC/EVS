@@ -37,11 +37,12 @@ export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}
 export COMINnarre=${COMINnarre:-$(compath.py  $envir/com/narre/$narre_ver)}
 export COMINobsproc=${COMINobsproc:-$(compath.py  $envir/com/obsproc/$obsproc_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/${STEP}/${COMPONENT}
-mkdir -p $COMOUT
+[[ ! -d $COMOUT ]] && mkdir -p $COMOUT
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-mkdir -p $COMOUTfinal $COMOUTsmall
+[[ ! -d $COMOUTfinal ]] && mkdir -p $COMOUTfinal
+[[ ! -d $COMOUTsmall ]] && mkdir -p $COMOUTsmall
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=$HOMEevs/exec
