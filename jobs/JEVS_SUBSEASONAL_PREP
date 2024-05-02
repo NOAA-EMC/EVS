@@ -60,6 +60,7 @@ export DCOMINosi=${DCOMINosi:-$DCOMROOT}
 export DCOMINghrsst=${DCOMINghrsst:-$DCOMROOT}
 export DCOMINumd=${DCOMINumd:-$DCOMROOT}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+export COMINccpa=${COMINccpa:-$(compath.py ${envir}/com/ccpa/${ccpa_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
 
