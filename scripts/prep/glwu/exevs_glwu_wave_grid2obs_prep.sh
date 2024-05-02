@@ -81,23 +81,31 @@ done
 # convert NDBC *.txt files into a netcdf file using ASCII2NC
 ############################################################
 
-export RUN=ndbc
 #mkdir -p $COMOUTprep/glwu.${INITDATE}/$RUN
+mkdir -p ${DATA}/ndbc
 mkdir -p ${DATA}/ncfiles
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
-ndbc_txt_ncount=$(ls -l $DCOMINndbc/$VDATE/validation_data/marine/buoy/*.txt |wc -l)
+ndbc_txt_ncount=$(ls -l $DCOMINndbc/$INITDATE/validation_data/marine/buoy/*.txt |wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
-   run_metplus.py -c $CONFIGevs/metplus_glwu.conf \
-     -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsNDBC.conf
-   export err=$?; err_chk
-   if [ $SENDCOM = YES ]; then
-	   cp -v $DATA/ncfiles/ndbc.${INITDATE}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
-   fi
+	python $USHevs/${COMPONENT}/glwu_wave_prep_read_ndbc.py
+	export err=$?; err_chk
+
+	run_metplus.py -c $PARMevs/metplus_config/machine.conf \
+   	-c $CONFIGevs/$STEP/$COMPONENT/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf
+   	export err=$?; err_chk
+
+   	tmp_ndbc_file=$DATA/ncfiles/ndbc.${INITDATE}.nc
+   	output_ndbc_file=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/ndbc.${INITDATE}.nc
+   	if [ $SENDCOM = YES ]; then
+		if [ -s $tmp_ndbc_file ]; then
+	   		cp -v $tmp_ndbc_file $output_ndbc_file
+	   	fi
+   	fi
 else
 	if [ $SENDMAIL = YES ] ; then
  		export subject="NDBC Data Missing for EVS ${COMPONENT}"
 		echo "Warning: No NDBC data was available for valid date ${INITDATE}." > mailmsg
-		echo "Missing files are located at $COMINobs/${INITDATE}/validation_data/marine/buoy/." >> mailmsg
+		echo "Missing files are located at $DCOMINndbc/${INITDATE}/validation_data/marine/buoy/." >> mailmsg
 		echo "Job ID: $jobid" >> mailmsg
 		cat mailmsg | mail -s "$subject" $MAILTO
 	fi
