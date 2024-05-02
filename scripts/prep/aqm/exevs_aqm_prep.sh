@@ -17,6 +17,7 @@
 ##   11/14/2023   Ho-Chun Huang  Replace cp with cpreq
 ##   01/05/2024   Ho-Chun Huang  modify for AQMv6 verification
 ##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
+##   02/21/2024   Ho-Chun Huang  modify for AQMv7 verification
 ##
 ##
 #######################################################################
@@ -40,8 +41,8 @@ else
     export HOURLY_ASCII2NC_FORMAT=airnowhourly
 fi
  
-export dirname=cs
-export gridspec=148
+export dirname=aqm
+export gridspec=793
 
 export PREP_SAVE_DIR=${DATA}/prepsave
 mkdir -p ${PREP_SAVE_DIR}
@@ -136,7 +137,7 @@ for hour in 06 12; do
         fi
 
         if [ $hour -eq 06 ]; then
-            ozmax8_file=${COMINaqm}/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+            ozmax8_file=${COMINaqm}/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
             if [ -s ${ozmax8_file} ]; then
                 wgrib2 -d 1 ${ozmax8_file} -set_ftime "6-29 hour ave fcst"  -grib out1.grb2
                 wgrib2 -d 2 ${ozmax8_file} -set_ftime "30-53 hour ave fcst" -grib out2.grb2
@@ -162,7 +163,7 @@ for hour in 06 12; do
         
         
         if [ $hour -eq 12 ]; then
-            ozmax8_file=${COMINaqm}/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+            ozmax8_file=${COMINaqm}/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
             if [ -s ${ozmax8_file} ]; then
                 wgrib2 -d 1 ${ozmax8_file} -set_ftime "0-23 hour ave fcst" -grib out1.grb2
                 wgrib2 -d 2 ${ozmax8_file} -set_ftime "24-47 hour ave fcst" -grib out2.grb2

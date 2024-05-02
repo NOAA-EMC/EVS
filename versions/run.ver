@@ -1,4 +1,4 @@
-export evs_ver=v1.0.0
+export evs_ver=v1.0.8
 
 export bacio_ver=2.4.1
 export cdo_ver=1.9.8
@@ -37,7 +37,7 @@ export w3emc_ver=2.9.2
 export wgrib2_ver=2.0.8
 export zlib_ver=1.2.11
 
-export aqm_ver=v6.1
+export aqm_ver=v7.0
 export ccpa_ver=v4.2
 export cfs_ver=v2.3
 export cmc_ver=v1.2
