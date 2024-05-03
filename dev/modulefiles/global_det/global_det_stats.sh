@@ -3,7 +3,7 @@
 
 set -x
 
-module use /apps/ops/para/libs/modulefiles/compiler/intel/19.1.3.304
+module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 export HPC_OPT=/apps/ops/para/libs
 module use /apps/dev/modulefiles
 module load PrgEnv-intel/${PrgEnvintel_ver}
