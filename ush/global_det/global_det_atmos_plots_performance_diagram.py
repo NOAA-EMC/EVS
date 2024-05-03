@@ -480,7 +480,7 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '11.0.2'
+        'version': '12.0'
     }
     # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
