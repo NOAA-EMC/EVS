@@ -2,6 +2,9 @@
 ## modulefile for EVS aqm component prep
 #
 
+module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
+export HPC_OPT=/apps/ops/para/libs
+module use /apps/dev/modulefiles
 module load PrgEnv-intel/${PrgEnv_intel_ver}
 module load intel/${intel}
 module load ve/evs/${ve_evs_ver}
