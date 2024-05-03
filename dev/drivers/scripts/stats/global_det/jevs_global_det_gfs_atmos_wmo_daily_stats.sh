@@ -1,10 +1,10 @@
-#PBS -N jevs_global_det_gfs_atmos_wmo_stats_00
+#PBS -N jevs_global_det_gfs_atmos_wmo_daily_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=05:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=75:ompthreads=1:mem=150GB
+#PBS -l walltime=01:15:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=50:ompthreads=1:mem=100GB
 #PBS -l debug=true
 
 set -x
@@ -17,7 +17,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export SENDMAIL=YES
 export KEEPDATA=YES
-export job=${PBS_JOBNAME:-jevs_global_det_gfs_atmos_wmo_stats}
+export job=${PBS_JOBNAME:-jevs_global_det_gfs_atmos_wmo_daily_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -31,7 +31,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export machine=WCOSS2
 export USE_CFP=YES
-export nproc=75
+export nproc=50
 
 export MAILTO='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
@@ -43,6 +43,8 @@ export RUN=atmos
 export VERIF_CASE=wmo
 export MODELNAME=gfs
 
+export temporal="daily"
+
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
@@ -52,6 +54,6 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 $HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
 
 ######################################################################
-# Purpose: This does the statistics work for the GFS WMO-required
+# Purpose: This does the daily statistics work for the GFS WMO-required
 #          verification
 ######################################################################

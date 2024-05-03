@@ -32,7 +32,11 @@ tmp_report_file = os.environ['tmp_report_file']
 output_report_file = os.environ['output_report_file']
 
 VDATE_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
-VDATEm1_dt = VDATE_dt - datetime.timedelta(days=1)
+month_date_dt = datetime.datetime.strptime(f"{VDATE_dt:%Y%m}01", '%Y%m%d')
+month_date_dt_list = []
+while month_date_dt <= VDATE_dt:
+    month_date_dt_list.append(month_date_dt)
+    month_date_dt = month_date_dt + datetime.timedelta(days=1)
 
 # Check only running for GFS
 if MODELNAME != 'gfs':
@@ -52,11 +56,6 @@ wmo_met_par_match_dict = {
 }
 
 # Set input file paths
-input_VDATEm1_daily_rec2_file = os.path.join(
-    COMIN, STEP, COMPONENT, f"{MODELNAME}.{VDATEm1_dt:%Y%m%d}",
-    tmp_report_file.rpartition('/')[2].replace(VDATE,f"{VDATEm1_dt:%Y%m%d}")
-)
-have_VDATEm1_daily_rec2 = os.path.exists(input_VDATEm1_daily_rec2_file)
 
 # Set output file paths
 tmp_VDATE_daily_rec2_file = tmp_report_file
@@ -127,14 +126,10 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
         wmo_t = str(stat_file_iter[0])
         wmo_s = str(stat_file_iter[1])
         met_line_type = stat_file_iter[2]
-        if wmo_verif == 'grid2grid_upperair':
-            met_tool = 'grid_stat'
-        elif wmo_verif == 'grid2obs_upperair':
-            met_tool = 'point_stat'
         stat_file = os.path.join(
             DATA, f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
-            f"{met_tool}_{wmo_verif}_{met_line_type}_"
-            +f"{wmo_s.zfill(2)}0000L_{VDATE}_{wmo_t.zfill(2)}0000V.stat"
+            f"{MODELNAME}.{wmo_verif}.{VDATE_dt:%Y%m}_{wmo_t.zfill(2)}Z."
+            +f"f{wmo_s}.summary.{met_line_type}.dump_row.stat"
         )
         if os.path.exists(stat_file):
             print(f"Reading stats from {stat_file}")
@@ -164,7 +159,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
             for met_vx_mask in met_vx_mask_list:
                 wmo_dom = met_vx_mask.lower()
                 if have_stat_file:
-                    stat_line = stat_file_df[
+                    stat_lines = stat_file_df[
                         (stat_file_df['MODEL'] == MODELNAME)
                         & (stat_file_df['FCST_LEAD'] \
                            == f"{wmo_s.zfill(2)}0000")
@@ -180,75 +175,81 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
                         & (stat_file_df['VX_MASK'] == met_vx_mask)
                         & (stat_file_df['LINE_TYPE'] == met_line_type)
                     ]
-                    if len(stat_line) == 1:
-                        have_stat_line = True
-                    else:
-                        if len(stat_line) == 0:
-                            note_msg = 'No matching stat line'
-                        elif len(stat_line) > 1:
-                            note_msg = 'Multiple matching stat lines'
-                        print(f"NOTE: {note_msg} in {stat_file} "
-                              +f"matching MODEL={MODELNAME}, "
-                              +f"FCST_LEAD={wmo_s.zfill(2)}0000, "
-                              +f"FCST_VAR={met_var_level.split('/')[0]}, "
-                              +f"FCST_LEV={met_var_level.split('/')[1]}, "
-                              +f"OBS_VAR={met_var_level.split('/')[0]}, "
-                              +f"OBS_LEV={met_var_level.split('/')[1]}, "
-                              +f"OBTYPE={met_obtype}, VX_MASK={met_vx_mask}, "
-                              +f"LINE_TYPE={met_line_type}")
-                        have_stat_line = False
-                else:
-                    have_stat_line = False
-                for met_stat in stat_file_dict[met_line_type]['stat_list']:
-                    if met_line_type == 'VCNT' and met_stat == 'RMSVE':
-                        wmo_sc = 'rmse'
-                    elif met_line_type == 'VCNT' and met_stat == 'SPEED_ERR':
-                        wmo_sc = 'me'
-                    elif met_stat == 'ANOM_CORR':
-                        wmo_sc = 'ccaf'
-                    elif met_stat == 'RMSFA':
-                        wmo_sc = 'rmsaf'
-                    elif met_stat == 'RMSOA':
-                        wmo_sc = 'rmsav'
-                    elif met_stat == 'FSTDEV':
-                        wmo_sc = 'sd'
-                    else:
-                        wmo_sc = met_stat.lower()
-                    if have_stat_line:
-                        wmo_v = str(
-                            round(float(stat_line.iloc[0][met_stat]),3)
-                        )
-                    else:
-                        wmo_v = 'nil'
-                    if wmo_sc == 'sd' and str(wmo_s) == '12':
-                        if have_stat_line:
-                            wmo_v_sd_0 = str(
-                                round(float(stat_line.iloc[0]['OSTDEV']),3)
-                            )
+                    for month_date_dt in month_date_dt_list:
+                        wmo_d = f"{month_date_dt:%Y%m%d}"
+                        stat_line = stat_lines[
+                            stat_lines['FCST_VALID_BEG'] == \
+                            f"{month_date_dt:%Y%m%d}_{wmo_t.zfill(2)}0000"
+                        ]
+                        if len(stat_line) == 1:
+                            have_stat_line = True
                         else:
-                            wmo_v_sd_0 = 'nil'
-                        VDATE_daily_rec2_lines.append(
-                            f"centre={wmo_centre},model={wmo_model},d={wmo_d},"
-                            +f"ref={wmo_ref},par={wmo_par},sc={wmo_sc},"
-                            +f"dom={wmo_dom},t={wmo_t},s=0,v={wmo_v_sd_0}\n"
-                        )
-                    VDATE_daily_rec2_lines.append(
-                        f"centre={wmo_centre},model={wmo_model},d={wmo_d},"
-                        +f"ref={wmo_ref},par={wmo_par},sc={wmo_sc},"
-                        +f"dom={wmo_dom},t={wmo_t},s={wmo_s},v={wmo_v}\n"
-                    )
+                            if len(stat_line) == 0:
+                                note_msg = 'No matching stat line'
+                            elif len(stat_line) > 1:
+                                note_msg = 'Multiple matching stat lines'
+                            print(f"NOTE: {note_msg} in {stat_file} "
+                                  +f"matching MODEL={MODELNAME}, "
+                                  +f"FCST_VALID_BEG={month_date_dt:%Y%m%d}_"
+                                  +f"{wmo_t.zfill(2)}0000, "
+                                  +f"FCST_LEAD={wmo_s.zfill(2)}0000, "
+                                  +f"FCST_VAR={met_var_level.split('/')[0]}, "
+                                  +f"FCST_LEV={met_var_level.split('/')[1]}, "
+                                  +f"OBS_VAR={met_var_level.split('/')[0]}, "
+                                  +f"OBS_LEV={met_var_level.split('/')[1]}, "
+                                  +f"OBTYPE={met_obtype}, "
+                                  +f"VX_MASK={met_vx_mask}, "
+                                  +f"LINE_TYPE={met_line_type}")
+                            have_stat_line = False
+                        for met_stat in stat_file_dict\
+                                [met_line_type]['stat_list']:
+                            if met_line_type == 'VCNT' and met_stat == 'RMSVE':
+                                wmo_sc = 'rmse'
+                            elif met_line_type == 'VCNT' \
+                                    and met_stat == 'SPEED_ERR':
+                                wmo_sc = 'me'
+                            elif met_stat == 'ANOM_CORR':
+                                wmo_sc = 'ccaf'
+                            elif met_stat == 'RMSFA':
+                                wmo_sc = 'rmsaf'
+                            elif met_stat == 'RMSOA':
+                                wmo_sc = 'rmsav'
+                            elif met_stat == 'FSTDEV':
+                                wmo_sc = 'sd'
+                            else:
+                                wmo_sc = met_stat.lower()
+                            if have_stat_line:
+                                wmo_v = str(
+                                    round(float(stat_line.iloc[0][met_stat]),3)
+                                )
+                            else:
+                                wmo_v = 'nil'
+                            if wmo_sc == 'sd' and str(wmo_s) == '12':
+                                if have_stat_line:
+                                    wmo_v_sd_0 = str(
+                                        round(float(
+                                            stat_line.iloc[0]['OSTDEV']
+                                        ),3)
+                                    )
+                                else:
+                                    wmo_v_sd_0 = 'nil'
+                                VDATE_daily_rec2_lines.append(
+                                    f"centre={wmo_centre},model={wmo_model},"
+                                    +f"ref={wmo_ref},t={wmo_t},s=0,"
+                                    +f"par={wmo_par},dom={wmo_dom},"
+                                    +f"d={wmo_d},sc={wmo_sc},"
+                                    +f"v={wmo_v_sd_0}\n"
+                                )
+                            VDATE_daily_rec2_lines.append(
+                                f"centre={wmo_centre},model={wmo_model},"
+                                +f"ref={wmo_ref},t={wmo_t},s={wmo_s},"
+                                +f"par={wmo_par},dom={wmo_dom},"
+                                +f"d={wmo_d},sc={wmo_sc},v={wmo_v}\n"
+                            )
 
 # Write daily file
 print(f"Writing REC2 daily domain data to {tmp_VDATE_daily_rec2_file}")
 with open(tmp_VDATE_daily_rec2_file, 'w') as f:
-    if have_VDATEm1_daily_rec2:
-        print(f"Copying {input_VDATEm1_daily_rec2_file} lines to "
-              +f"{tmp_VDATE_daily_rec2_file}")
-        VDATEm1_daily_rec2_lines = open(
-            input_VDATEm1_daily_rec2_file, 'r'
-        ).readlines()
-        for line in VDATEm1_daily_rec2_lines:
-            f.write(line)
     for line in VDATE_daily_rec2_lines:
         f.write(line)
 

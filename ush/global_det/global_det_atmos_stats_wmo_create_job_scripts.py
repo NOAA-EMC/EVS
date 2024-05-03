@@ -102,7 +102,7 @@ daily_stat_file_format = os.path.join(
 stat_analysis_job_file_format = os.path.join(
     DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     MODELNAME+'.{wmo_verif?fmt=str}.{valid?fmt=%Y%m}_{valid?fmt=%H}Z.'
-    +'f{lead?fmt=%H}.{stat_analysis_job?fmt=str}.stat'
+    +'f{lead?fmt=%H}.{stat_analysis_job?fmt=str}.{line_type?fmt=str}.stat'
 )
 wmo_rec2_report_file_format = os.path.join(
     DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
@@ -974,7 +974,7 @@ elif JOB_GROUP == 'summarize_stats':
         input_date_stat_file = gda_util.format_filler(
             daily_stat_file_format, date_dt, date_dt,
             'anl', {}
-        ).replace(DATA, COMOUT)
+        ).replace(DATA, os.path.join(COMIN, 'stats', COMPONENT))
         tmp_date_stat_file = os.path.join(
             VYYYYmm_daily_stats_dir, input_date_stat_file.rpartition('/')[2]
         )
@@ -1003,25 +1003,26 @@ elif JOB_GROUP == 'summarize_stats':
         job_env_dict['wmo_verif'] = wmo_verif
         if wmo_verif == 'grid2grid_upperair':
             job_env_dict['obtype'] = f"{MODELNAME}_anl"
-            job_env_dict['summary_columns'] = (
-                'VCNT:RMSVE,VCNT:SPEED_ERR,CNT:ME,CNT:RMSE,CNT:ANOM_CORR,'
-                +'GRAD:S1,CNT:MAE,CNT:RMSFA,CNT:RMSOA,CNT:FSTDEV,CNT:OSTDEV'
-            )
-            stat_analysis_job_list = ['summary']
+            stat_analysis_job_dict = {
+                'summary': ['VCNT:RMSVE,SPEED_ERR',
+                            'CNT:ME,RMSE,ANOM_CORR,MAE,'
+                            +'RMSFA,RMSOA,FSTDEV,OSTDEV',
+                            'GRAD:S1']
+            }
         elif wmo_verif == 'grid2obs_upperair':
             job_env_dict['obtype'] = 'ADPUPA'
-            job_env_dict['summary_columns'] = (
-                'VCNT:RMSVE,VCNT:SPEED_ERR,CNT:ME,CNT:RMSE,CNT:MAE'
-            )
-            stat_analysis_job_list = ['summary']
+            stat_analysis_job_dict = {
+                'summary': ['VCNT:RMSVE,SPEED_ERR',
+                            'CNT:ME,RMSE,MAE']
+            }
         elif wmo_verif == 'grid2obs_sfc':
             job_env_dict['obtype'] = 'ADPSFC'
-            job_env_dict['summary_columns'] = (
-                'VCNT:RMSVE,VCNT:SPEED_ERR,VCNT:SPEED_ABSERR,'
-                +'CNT:ME,CNT:RMSE,CNT:MAE'
-            )
-            stat_analysis_job_list = ['summary', 'aggregate']
-        for stat_analysis_job in stat_analysis_job_list:
+            stat_analysis_job_dict = {
+                'summary': ['VCNT:RMSVE,SPEED_ERR,SPEED_ABSERR',
+                            'CNT:ME,RMSE,MAE'],
+                'aggregate': ['MCTC']
+            }
+        for stat_analysis_job in list(stat_analysis_job_dict.keys()):
             wmo_verif_metplus_conf = (
                 f"StatAnalysis_fcstGFS_{stat_analysis_job}.conf"
             )
@@ -1039,82 +1040,113 @@ elif JOB_GROUP == 'summarize_stats':
                                +"WMO required init hours "
                                +f"{wmo_init_hour_list}")
                          continue
-                    tmp_wmo_verif_vhr_stat_file = gda_util.format_filler(
-                        stat_analysis_job_file_format, valid_time_dt,
-                        valid_time_dt, fhr,
-                        {'wmo_verif': wmo_verif,
-                         'stat_analysis_job': stat_analysis_job}
-                    )
-                    job_env_dict['tmp_wmo_verif_vhr_stat_file'] = (
-                        tmp_wmo_verif_vhr_stat_file
-                    )
-                    job_env_dict['tmp_wmo_verif_vhr_dump_row_file'] = (
-                        tmp_wmo_verif_vhr_stat_file.replace(
-                            f".{stat_analysis_job}.",
-                            f".{stat_analysis_job}_dump_row."
+                    for line_type_info \
+                            in stat_analysis_job_dict[stat_analysis_job]:
+                        if stat_analysis_job == 'summary':
+                            line_type = line_type_info.split(':')[0]
+                            line_type_stat_list = (
+                                line_type_info.split(':')[1].split(',')
+                            )
+                            line_type_columns = ''
+                            for stat in line_type_stat_list:
+                                line_type_columns = (line_type_columns
+                                                     +f"{line_type}:{stat}")
+                                if stat != line_type_stat_list[-1]:
+                                    line_type_columns = line_type_columns+','
+                            print(f"{stat_analysis_job} - {line_type_columns}")
+                        elif stat_analysis_job == 'aggregate':
+                            line_type = line_type_info
+                            print(f"{stat_analysis_job} - {line_type}")
+                        job_env_dict['line_type'] = line_type
+                        tmp_stat_analysis_job_file = gda_util.format_filler(
+                            stat_analysis_job_file_format, valid_time_dt,
+                            valid_time_dt, fhr,
+                            {'wmo_verif': wmo_verif,
+                             'stat_analysis_job': stat_analysis_job,
+                             'line_type': line_type}
                         )
-                    )
-                    output_wmo_verif_vhr_stat_file = os.path.join(
-                        COMOUT , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
-                        tmp_wmo_verif_vhr_stat_file.rpartition('/')[2]
-                    )
-                    job_env_dict['output_wmo_verif_vhr_stat_file'] = (
-                        output_wmo_verif_vhr_stat_file
-                    )
-                    job_env_dict['output_wmo_verif_vhr_dump_row_file'] = (
-                        output_wmo_verif_vhr_stat_file.replace(
-                            f".{stat_analysis_job}.",
-                            f".{stat_analysis_job}_dump_row."
+                        job_env_dict['tmp_stat_analysis_job_file'] = (
+                            tmp_stat_analysis_job_file
                         )
-                    )
-                    have_stat = os.path.exists(output_wmo_verif_vhr_stat_file)
-                    njobs+=1
-                    job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                            'job'+str(njobs))
-                    print(f"Creating job script: {job_file}")
-                    job = open(job_file, 'w')
-                    job.write('#!/bin/bash\n')
-                    job.write('set -x\n')
-                    job.write('\n')
-                    for name, value in job_env_dict.items():
-                        job.write(f'export {name}="{value}"\n')
-                    job.write('\n')
-                    if have_stat:
-                        job.write(
-                            'if [ -f $output_wmo_verif_vhr_stat_file ]; then '
-                            +'cp -v $output_wmo_verif_vhr_stat_file '
-                            +'$tmp_wmo_verif_vhr_stat_file; fi\n'
+                        job_env_dict['tmp_stat_analysis_job_dump_row_file'] = (
+                            tmp_stat_analysis_job_file.replace(
+                                f".{line_type}.stat",
+                                f".{line_type}.dump_row.stat"
+                            )
                         )
-                        job.write('export err=$?; err_chk\n')
-                        job.write(
-                            'if [ -f $output_wmo_verif_vhr_dump_row_file ]; '
-                            +'then cp -v $output_wmo_verif_vhr_dump_row_file '
-                            +'$tmp_wmo_verif_vhr_dump_row_file; fi\n'
+                        output_stat_analysis_job_file = os.path.join(
+                            COMOUT , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
+                            tmp_stat_analysis_job_file.rpartition('/')[2]
                         )
-                        job.write('export err=$?; err_chk')
-                    else:
-                        if ndaily_stat_files > 0:
-                            job.write(gda_util.metplus_command(
-                                wmo_verif_metplus_conf
-                            )+'\n')
+                        job_env_dict['output_stat_analysis_job_file'] = (
+                            output_stat_analysis_job_file
+                        )
+                        job_env_dict['output_stat_analysis_job_dump_row_file'] = (
+                            output_stat_analysis_job_file.replace(
+                                f".{line_type}.stat",
+                                f".{line_type}.dump_row.stat"
+                            )
+                        )
+                        print(job_env_dict['tmp_stat_analysis_job_file'])
+                        print(job_env_dict['tmp_stat_analysis_job_dump_row_file'])
+                        print(job_env_dict['output_stat_analysis_job_file'])
+                        print(job_env_dict['output_stat_analysis_job_dump_row_file'])
+                        have_stat = os.path.exists(output_stat_analysis_job_file)
+                        njobs+=1
+                        job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                                'job'+str(njobs))
+                        print(f"Creating job script: {job_file}")
+                        job = open(job_file, 'w')
+                        job.write('#!/bin/bash\n')
+                        job.write('set -x\n')
+                        job.write('\n')
+                        for name, value in job_env_dict.items():
+                            job.write(f'export {name}="{value}"\n')
+                        if stat_analysis_job == 'summary':
+                            job.write('export summary_columns="'
+                                      +f'{line_type_columns}"\n')
+                        job.write('\n')
+                        if have_stat:
+                            job.write(
+                                'if [ -f $output_stat_analysis_job_file ]; '
+                                +'then cp -v '
+                                +'$output_stat_analysis_job_file '
+                                +'$tmp_stat_analysis_job_file; fi\n'
+                            )
                             job.write('export err=$?; err_chk\n')
-                            if SENDCOM == 'YES':
-                                job.write(
-                                    'if [ -f $tmp_wmo_verif_vhr_stat_file ]; '
-                                    +'then cp -v '
-                                    +'$tmp_wmo_verif_vhr_stat_file '
-                                    +'$output_wmo_verif_vhr_stat_file; fi\n'
-                                )
+                            job.write(
+                                'if [ -f '
+                                +'$output_stat_analysis_job_dump_row_file ]; '
+                                +'then cp -v '
+                                +'$output_stat_analysis_job_dump_row_file '
+                                +'$tmp_stat_analysis_job_dump_row_file; fi\n'
+                            )
+                            job.write('export err=$?; err_chk')
+                        else:
+                            if ndaily_stat_files > 0:
+                                job.write(gda_util.metplus_command(
+                                    wmo_verif_metplus_conf
+                                )+'\n')
                                 job.write('export err=$?; err_chk\n')
-                                job.write(
-                                    'if [ -f $tmp_wmo_verif_vhr_dump_row_file ]; '
-                                    +'then cp -v '
-                                    +'$tmp_wmo_verif_vhr_dump_row_file '
-                                    +'$output_wmo_verif_vhr_dump_row_file; '
-                                    +'fi\n'
-                                )
-                                job.write('export err=$?; err_chk')
-                    job.close()
+                                if SENDCOM == 'YES':
+                                    job.write(
+                                        'if [ -f $tmp_stat_analysis_job_file ]'
+                                        +'; then cp -v '
+                                        +'$tmp_stat_analysis_job_file '
+                                        +'$output_stat_analysis_job_file; fi\n'
+                                    )
+                                    job.write('export err=$?; err_chk\n')
+                                    job.write(
+                                        'if [ -f '
+                                        +'$tmp_stat_analysis_job_dump_row_file'
+                                        +' ]; then cp -v '
+                                        +'$tmp_stat_analysis_job_'
+                                        +'dump_row_file '
+                                        +'$output_stat_analysis_job_'
+                                        +'dump_row_file; fi\n'
+                                    )
+                                    job.write('export err=$?; err_chk')
+                        job.close()
 elif JOB_GROUP == 'write_reports':
     job_env_dict = gda_util.initalize_job_env_dict('all', JOB_GROUP,
                                                    VERIF_CASE, 'all')

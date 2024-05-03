@@ -21,8 +21,14 @@ mkdir -p ${VYYYYmm}_daily_stats
 mkdir -p ${VYYYYmm}_station_info
 mkdir -p jobs logs confs tmp
 
-# Create and run job scripts for reformat_data, assemble_data, generate_stats, gather_stats, summarize_stats, and write_reports
-for group in reformat_data assemble_data generate_stats gather_stats summarize_stats write_reports; do
+if [ $temporal = daily ]; then
+    export group_list="reformat_data assemble_data generate_stats gather_stats"
+elif [ $temporal = monthly ]; then
+    export group_list="summarize_stats write_reports"
+fi
+
+# Create and run job scripts
+for group in $group_list; do
     export JOB_GROUP=$group
     mkdir -p jobs/${JOB_GROUP}
     echo "Creating and running jobs for WMO stats: ${JOB_GROUP}"

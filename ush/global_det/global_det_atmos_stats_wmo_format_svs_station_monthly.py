@@ -165,11 +165,18 @@ for time_score_iter in time_score_iter_list:
     # Set score info
     wmo_sc_type = str(time_score_iter[2])
     wmo_sc_list = wmo_sc_dict[wmo_sc_type]
+    if wmo_sc_type == 'aggregate':
+        met_line_type = 'MCTC'
+    else:
+        if met_fcst_var == 'UGRD_VGRD':
+            met_line_type = 'VCNT'
+        else:
+            met_line_type = 'CNT'
     # Read in stat file and trim
     stat_file = os.path.join(
         DATA, f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
         f"{MODELNAME}.{wmo_verif}.{VDATE_dt:%Y%m}_{wmo_t.zfill(2)}Z."
-        +f"f{wmo_s}.{wmo_sc_type}.stat"
+        +f"f{wmo_s}.{wmo_sc_type}.{met_line_type}.stat"
     )
     if os.path.exists(stat_file):
         print(f"Reading stats from {stat_file}")
@@ -259,13 +266,11 @@ for time_score_iter in time_score_iter_list:
             # Get scores
             for wmo_sc in wmo_sc_list:
                 if wmo_sc == 'ct':
-                    met_line_type = 'MCTC'
                     stat_line = met_vx_mask_df[
                         met_vx_mask_df['COL_NAME:'] == f"{met_line_type}:"
                     ]
                 else:
                     if met_fcst_var == 'UGRD_VGRD':
-                        met_line_type = 'VCNT'
                         if wmo_sc == 'me':
                             met_stat = 'SPEED_ERR'
                         elif wmo_sc == 'rmse':
@@ -274,7 +279,6 @@ for time_score_iter in time_score_iter_list:
                             met_stat = 'SPEED_ABSERR'
                     else:
                         met_stat = wmo_sc.upper()
-                        met_line_type = 'CNT'
                     wmo_th='na'
                     stat_line = met_vx_mask_df[
                         (met_vx_mask_df['LINE_TYPE'] == met_line_type)
