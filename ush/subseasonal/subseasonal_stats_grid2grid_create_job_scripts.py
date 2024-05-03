@@ -239,13 +239,52 @@ assemble_data_model_jobs_dict = {
                                                      '$VERIF_CASE',
                                                      'grid_stat_'
                                                      +'${VERIF_TYPE}_'
-                                                     +'${VERIF_TYPE}_'
+                                                     +'TempAnom2m_'
                                                      +'{lead?fmt=%2H}0000L_'
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc'
-                                                    )]
-                                                )]},
+                                                 )]
+                                            )]},
+        'Weeks3_4Avg_Temp2m': {'env': {'var1_name': 'TMP',
+                                       'var1_levels': 'Z2'},
+                               'commands': [sub_util.python_command(
+                                                'subseasonal_'
+                                                +'stats_grid2grid'
+                                                +'_create_weeks3_4_avg.py',
+                                                ['TMP_Z2',
+                                                 os.path.join(
+                                                     '$DATA',
+                                                     '${VERIF_CASE}_'
+                                                     +'${STEP}',
+                                                     'METplus_output',
+                                                     '${RUN}.'
+                                                     +'$DATE',
+                                                     '$MODEL',
+                                                     '$VERIF_CASE',
+                                                     'grid_stat_'
+                                                     +'${VERIF_TYPE}_'
+                                                     +'TempAnom2m_'
+                                                     +'{lead?fmt=%2H}0000L_'
+                                                     +'{valid?fmt=%Y%m%d}_'
+                                                     +'{valid?fmt=%H}0000V_'
+                                                     +'pairs.nc'
+                                                 ),
+                                                 os.path.join(
+                                                     '$COMOUT',
+                                                     '${RUN}.'
+                                                     +'$DATE',
+                                                     '$MODEL',
+                                                     '$VERIF_CASE',
+                                                     'grid_stat_'
+                                                     +'${VERIF_TYPE}_'
+                                                     +'TempAnom2m_'
+                                                     +'{lead?fmt=%2H}0000L_'
+                                                     +'{valid?fmt=%Y%m%d}_'
+                                                     +'{valid?fmt=%H}0000V_'
+                                                     +'pairs.nc'
+                                                 )]
+                                            )]},
     },
     'pres_lvls': {
         'WeeklyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
@@ -684,6 +723,27 @@ generate_stats_jobs_dict = {
                                                     +'obsECMWF_Weeks3_4AvgAnom'
                                                     +'.conf'
                                                 )]},
+        'WeeklyAvg_Temp2m': {'env': {'var1_name': 'TMP',
+                                     'var1_levels': 'Z2'},
+                             'commands': [sub_util.metplus_command(
+                                              'GridStat_fcstSUBSEASONAL_'
+                                              +'obsECMWF_climoERA5_WeeklyAvg'
+                                              +'.conf'
+                                          )]},
+        'Days6_10Avg_Temp2m': {'env': {'var1_name': 'TMP',
+                                       'var1_levels': 'Z2'},
+                               'commands': [sub_util.metplus_command(
+                                                'GridStat_fcstSUBSEASONAL_'
+                                                +'obsECMWF_climoERA5_Days6_10Avg'
+                                                +'.conf'
+                                            )]},
+        'Weeks3_4Avg_Temp2m': {'env': {'var1_name': 'TMP',
+                                       'var1_levels': 'Z2'},
+                               'commands': [sub_util.metplus_command(
+                                                'GridStat_fcstSUBSEASONAL_'
+                                                +'obsECMWF_climoERA5_Weeks3_4Avg'
+                                                +'.conf'
+                                            )]},
     },
     'pres_lvls': {
         'WeeklyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
