@@ -2,6 +2,9 @@
 # modulefile for EVS wafs stat
 set -x
 
+module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
+export HPC_OPT=/apps/ops/para/libs
+module use /apps/dev/modulefiles
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 
