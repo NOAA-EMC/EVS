@@ -8,17 +8,6 @@
 
 set -x
 
-# check if ndbc nc file exists; exit if not
-if [ ! -s $DCOMINndbc/glwu.$VDATE/$RUN/ndbc.${VDATE}.nc ] ; then
-	echo "WARNING: No NDBC data in $DCOMINndbc/${INITDATEp1}/validation_data/marine/buoy"
-	if [ $SENDMAIL = YES ] ; then
-		export subject="NDBC Data Missing for EVS ${COMPONENT}"
-		export maillist=${maillist:-'alicia.bentley@noaa.gov,samira.ardani@noaa.gov'}
-		echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
-		cat mailmsg | mail -s "$subject" $MAILTO
-	fi
-fi
-
 
 ############################
 ## grid2obs wave model stats 
@@ -88,28 +77,28 @@ for vhr in ${vhours} ; do
        match_fhr=$(printf "%02d" "${match_hr}")
        flead=$(printf "%03d" "${lead}")
        flead2=$(printf "%02d" "${lead}")
-       COMINglwufilename=${COMINglwunc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/glwu.${VDATE}${vhr2}.nc 
-       DATAglwuncfilename=${DATA}/ncfiles/glwu.${VDATE}${vhr2}.nc
-       COMINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.nc                  
+       EVSINndbcfilename=${EVSINndbcnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/ndbc.${VDATE}${vhr2}.nc 
+       DATAndbcncfilename=${DATA}/ncfiles/ndbc.${VDATE}${vhr2}.nc
+       EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.nc                  
        DATAmodelfilename=$DATA/gribs/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.nc
-       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGLWU_NDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
-       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGLWU_NDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
        if [[ -s $COMOUTstatfilename ]]; then
 	       cp -v $COMOUTstatfilename $DATAstatfilename
        else
-	       if [[ ! -s $DATAglwuncfilename ]]; then
-		       if [[ -s $COMINglwuncfilename ]]; then
-			       cp -v $COMINglwuncfilename $DATAglwuncfilename
+	       if [[ ! -s $DATAndbcncfilename ]]; then
+		       if [[ -s $EVSINndbcncfilename ]]; then
+			       cp -v $EVSINndbcncfilename $DATAndbcncfilename
 		       else
-			       echo "DOES NOT EXIST $COMINglwuncfilename"
+			       echo "DOES NOT EXIST $EVSINndbcncfilename"
 		       fi
 	       fi
-	       if [[ -s $DATAglwuncfilename ]]; then
+	       if [[ -s $DATAndbcncfilename ]]; then
 		       if [[ ! -s $DATAmodelfilename ]]; then
-			       if [[ -s $COMINmodelfilename ]]; then
-				       cp -v $COMINmodelfilename $DATAmodelfilename
+			       if [[ -s $EVSINmodelfilename ]]; then
+				       cp -v $EVSINmodelfilename $DATAmodelfilename
 			       else
-				       echo "DOES NOT EXIST $COMINmodelfilename"
+				       echo "DOES NOT EXIST $EVSINmodelfilename"
 			       fi
 		       fi
 		       if [[ -s $DATAmodelfilename ]]; then
@@ -118,7 +107,7 @@ for vhr in ${vhours} ; do
 			       echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
 			       echo "export VHR=${vhr}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
 			       echo "export lead=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
+			       echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGLWU_obsNDBC_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
 			       echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
 			       if [ $SENDCOM = YES ]; then
 				       echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
