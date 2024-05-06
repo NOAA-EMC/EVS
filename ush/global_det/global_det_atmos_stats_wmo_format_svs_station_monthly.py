@@ -41,9 +41,6 @@ if MODELNAME != 'gfs':
 
 # Get WMO param as script argument
 wmo_param = sys.argv[1]
-if wmo_param == 'dd10m':
-    print("ERROR: 10m wind direction statistics not supported in MET yet")
-    sys.exit(1)
 
 # WMO rec2 key pair values
 wmo_centre = 'kwbc'
@@ -270,24 +267,41 @@ for time_score_iter in time_score_iter_list:
                         met_vx_mask_df['COL_NAME:'] == f"{met_line_type}:"
                     ]
                 else:
-                    if met_fcst_var == 'UGRD_VGRD':
+                    if wmo_param == 'ff10m':
                         if wmo_sc == 'me':
                             met_stat = 'SPEED_ERR'
                         elif wmo_sc == 'rmse':
                             met_stat = 'RMSVE'
                         elif wmo_sc == 'mae':
                             met_stat = 'SPEED_ABSERR'
+                    elif wmo_param == 'dd10m':
+                        met_stat = f"DIR_{wmo_sc.upper()}"
                     else:
                         met_stat = wmo_sc.upper()
                     wmo_th='na'
-                    stat_line = met_vx_mask_df[
-                        (met_vx_mask_df['LINE_TYPE'] == met_line_type)
-                        & (met_vx_mask_df['COLUMN'] == met_stat)
-                    ]
+                    if wmo_param == 'ff10m':
+                        stat_line = met_vx_mask_df[
+                            (met_vx_mask_df['LINE_TYPE'] == met_line_type)
+                            & (met_vx_mask_df['COLUMN'] == met_stat)
+                            & (met_vx_mask_df['OBS_THRESH'] == '>0')
+                        ]
+                    elif wmo_param == 'dd10m':
+                        stat_line = met_vx_mask_df[
+                            (met_vx_mask_df['LINE_TYPE'] == met_line_type)
+                            & (met_vx_mask_df['COLUMN'] == met_stat)
+                            & (met_vx_mask_df['OBS_THRESH'] == '>=3')
+                        ]
+                        stat_line_gt0 = met_vx_mask_df[
+                            (met_vx_mask_df['LINE_TYPE'] == met_line_type)
+                            & (met_vx_mask_df['COLUMN'] == met_stat)
+                            & (met_vx_mask_df['OBS_THRESH'] == '>0')
+                        ]
+                    else:
+                        stat_line = met_vx_mask_df[
+                            (met_vx_mask_df['LINE_TYPE'] == met_line_type)
+                            & (met_vx_mask_df['COLUMN'] == met_stat)
+                        ]
                 if len(stat_line) == 1:
-                    have_stat_line = True
-                elif len(stat_line) == 2 and met_fcst_var == 'UGRD_VGRD' \
-                        and wmo_sc != 'ct':
                     have_stat_line = True
                 else:
                     have_stat_line = False
@@ -298,12 +312,10 @@ for time_score_iter in time_score_iter_list:
                     print(f"NOTE: {note_msg} for station {met_vx_mask} " 
                           +f"{wmo_sc}")
                 if have_stat_line:
-                    if wmo_param == 'ff10m' and wmo_sc in ['me', 'rmse',
-                                                           'mae']:
-                        stat_line = stat_line[
-                            stat_line['OBS_THRESH'] == '>0'
-                         ]
-                    wmo_n = stat_line['TOTAL'].values[0]
+                    if wmo_param == 'dd10m':
+                        wmo_n = stat_line_gt0['TOTAL'].values[0]
+                    else:
+                        wmo_n = stat_line['TOTAL'].values[0]
                     if wmo_sc == 'ct':
                         wmo_th = (
                             stat_line['FCST_THRESH'].values[0]\

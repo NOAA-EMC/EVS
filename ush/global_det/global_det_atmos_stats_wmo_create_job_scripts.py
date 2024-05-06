@@ -1018,7 +1018,8 @@ elif JOB_GROUP == 'summarize_stats':
         elif wmo_verif == 'grid2obs_sfc':
             job_env_dict['obtype'] = 'ADPSFC'
             stat_analysis_job_dict = {
-                'summary': ['VCNT:RMSVE,SPEED_ERR,SPEED_ABSERR',
+                'summary': ['VCNT:RMSVE,SPEED_ERR,SPEED_ABSERR,'
+                            +'DIR_ME,DIR_MAE,DIR_RMSE',
                             'CNT:ME,RMSE,MAE'],
                 'aggregate': ['MCTC']
             }
