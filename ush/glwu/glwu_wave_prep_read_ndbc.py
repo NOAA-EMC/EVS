@@ -16,7 +16,7 @@ import shutil
 import numpy as np
 import netCDF4 as nc
 
-# Define the variables (later we change it to environmental variables to be compatible with EVS structure)
+# Define the variables
 
 # Read in environment variables to use
 VDATE = os.environ['VDATE']
