@@ -12,33 +12,33 @@
 
 set -x
 
-echo "RUN MODE:$evs_run_mode"
+echo "RUN MODE:${evs_run_mode}"
 
 # Create headline plots
-python $USHevs/global_ens_chem/global_ens_chem_gefs_plots_headline.py
+python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_${MODELNAME}_${STEP}_headline.py
 export err=$?; err_chk
 
 # Copy files to desired location
-if [ $SENDCOM = YES ]; then
+if [ "${SENDCOM}" == "YES" ]; then
     # Make and copy tar file
-    cd $DATA/images
-    tar -cvf $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar *.png
-    if [ -f $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar ]; then
-        cp -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
+    cd ${DATA}/images
+    tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${MODELNAME}.${RUN}.v${VDATE_END}.tar *.png
+    if [ -f ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${MODELNAME}.${RUN}.v${VDATE_END}.tar ]; then
+        cp -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${MODELNAME}.${RUN}.v${VDATE_END}.tar ${COMOUT}/.
     fi
 fi
 
 # Cat the plotting log files
-log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-        echo "Start: $log_file"
-        cat $log_file
-        echo "End: $log_file"
+log_dir=${DATA}/logs
+log_file_count=$(find ${log_dir} -type f |wc -l)
+if [[ ${log_file_count} -ne 0 ]]; then
+    for log_file in ${log_dir}/*; do
+        echo "Start: ${log_file}"
+        cat ${log_file}
+        echo "End: ${log_file}"
     done
 fi
 
-if [ $SENDDBN = YES ]; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar
+if [ "${SENDDBN}" == "YES" ]; then
+    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${MODELNAME}.${RUN}.v${VDATE_END}.tar
 fi
