@@ -1,8 +1,11 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_atmos_grid2grid_plots.sh
-# Developers: Mallory Row / Mallory.Row@noaa.gov
-# Purpose of Script: This script is run for the global_det atmos plots step
+# Name of Script: exevs_global_ens_chem_gefs_grid2grid_plots.sh
+# Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
+#
+# Original Script: exevs_global_det_atmos_grid2grid_plots.sh
+# Original Author: Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_ens_chem_gefs plots step
 #                    for the grid-to-grid verification. It uses EMC-developed
 #                    python scripts to do the plotting.
 ###############################################################################
@@ -28,22 +31,22 @@ total_days=$(expr $diff_days + 1)
 NDAYS=${NDAYS:-$total_days}
 
 # Check user's config settings
-python $USHevs/global_det/global_det_atmos_check_settings.py
+python $USHevs/global_ens_chem/global_ens_chem_gefs_check_settings.py
 export err=$?; err_chk
 
 # Create output directories
-python $USHevs/global_det/global_det_atmos_create_output_dirs.py
+python $USHevs/global_ens_chem/global_ens_chem_gefs_create_output_dirs.py
 export err=$?; err_chk
 
 # Link needed data files and set up model information
-python $USHevs/global_det/global_det_atmos_get_data_files.py
+python $USHevs/global_ens_chem/global_ens_chem_gefs_get_data_files.py
 export err=$?; err_chk
 
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
 for group in condense_stats filter_stats make_plots tar_images; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-grid plots: ${JOB_GROUP}"
-    python $USHevs/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
+    python $USHevs/global_ens_chem/global_ens_chem_gefs_plots_grid2grid_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/*
     nc=1

@@ -1,8 +1,11 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_headline_plots.sh
-# Developers: Mallory Row / Mallory.Row@noaa.gov
-# Purpose of Script: This script is run for the global_det atmos plots step
+# Name of Script: exevs_global_ens_chem_gefs_headline_plots.sh
+# Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
+#
+# Original Name of Script: exevs_global_det_headline_plots.sh
+# Original Developers: Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_ens_chem_gefs plots step
 #                    for the headline verification. It uses EMC-developed
 #                    python scripts to do the plotting.
 ###############################################################################
@@ -12,7 +15,7 @@ set -x
 echo "RUN MODE:$evs_run_mode"
 
 # Create headline plots
-python $USHevs/global_det/global_det_atmos_plots_headline.py
+python $USHevs/global_ens_chem/global_ens_chem_gefs_plots_headline.py
 export err=$?; err_chk
 
 # Copy files to desired location
