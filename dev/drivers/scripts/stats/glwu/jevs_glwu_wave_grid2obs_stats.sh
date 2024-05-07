@@ -33,12 +33,15 @@ export model_ver=$glwu_ver
 ############################################################
 # Load modules
 ############################################################
-#
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
+############################################################
+## set some variables
+#############################################################
 export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
@@ -63,7 +66,7 @@ export SITE=$(cat /etc/cluster_name)
 ## CALL executable job script here
 #############################################################
 
-$HOMEevs/jobs/JEVS_GLWU_WAVE_GRID2OBS_STAT
+$HOMEevs/jobs/JEVS_GLWU_WAVE_GRID2OBS_STATS
 
 ######################################################################
 # Purpose: The job and task scripts work together to create stat

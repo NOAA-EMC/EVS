@@ -40,6 +40,7 @@ fcsts='0 24 48 72 96 120 144'
 #mtypes='glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_sr grlr_500m grlr_500m_lc'
 
 for mtype in glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_sr grlr_500m grlr_500m_lc ; do
+	export mtype=${mtype}
 	if [ "${mtype}" == "grlc_2p5km" ] || [ "${mtype}" == "grlc_2p5km_lc" ]; then
 		for HH in ${HHs} ; do
 			filename="${MODELNAME}.${mtype}.t${HH}z.grib2"

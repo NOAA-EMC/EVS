@@ -3,7 +3,9 @@
 # Name of Script: exevs_glwu_stats.sh
 # Purpose of Script: To create stat files for GLWU forecasts verified with
 #    NDBC buoy data using MET/METplus.
-# Author: Samira Ardani (samira.ardani@noaa.gov)
+# Developer: Samira Ardani (samira.ardani@noaa.gov)
+# Citation:  Deanna Spindler / Deanna.Spindler@noaa.gov (global_det, global_ens)
+#            Mallory Row / Mallory.Row@noaa.gov (global_det, global_ens)
 ###############################################################################
 
 set -x
@@ -33,13 +35,10 @@ mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
 
-vhours='00 06 12 18'
+vhours='01 07 13 19'
 
 lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
-            84 90 96 102 108 114 120 126 132 138 144 150 156 162
-            168 174 180 186 192 198 204 210 216 222 228 234 240 246
-            252 258 264 270 276 282 288 294 300 306 312 318 324 330
-	    336 342 348 354 360 366 372 378 384'
+            84 90 96 102 108 114 120 126 132 138 144'
 
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
 
@@ -52,20 +51,20 @@ echo ' '
 echo 'Creating point_stat files'
 for vhr in ${vhours} ; do
     vhr2=$(printf "%02d" "${vhr}")
-    if [ ${vhr} = '00' ] ; then
+    if [ ${vhr} = '01' ] ; then
        wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
        perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
-    elif [ ${vhr} = '06' ] ; then
+    elif [ ${vhr} = '07' ] ; then
        wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
        perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
-    elif [ ${vhr} = '12' ] ; then
+    elif [ ${vhr} = '13' ] ; then
        wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
        perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
 
-    elif [ ${vhr} = '18' ] ; then
+    elif [ ${vhr} = '19' ] ; then
        wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
        perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
@@ -77,10 +76,10 @@ for vhr in ${vhours} ; do
        match_fhr=$(printf "%02d" "${match_hr}")
        flead=$(printf "%03d" "${lead}")
        flead2=$(printf "%02d" "${lead}")
-       EVSINndbcfilename=${EVSINndbcnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/ndbc.${VDATE}${vhr2}.nc 
-       DATAndbcncfilename=${DATA}/ncfiles/ndbc.${VDATE}${vhr2}.nc
-       EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.nc                  
-       DATAmodelfilename=$DATA/gribs/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.nc
+       EVSINndbcncfilename=${EVSINndbcnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/ndbc.${VDATE}.nc 
+       DATAndbcncfilename=${DATA}/ncfiles/ndbc.${VDATE}.nc
+       EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.grlc_2p5km.${match_date}.t${match_fhr}z.f${flead}.grib2                  
+       DATAmodelfilename=$DATA/gribs/${MODELNAME}.grlc_2p5km.${match_date}.t${match_fhr}z.f${flead}.grib2
        DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
        COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
        if [[ -s $COMOUTstatfilename ]]; then
