@@ -163,7 +163,7 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
           typeset -Z2 mb
 	  apcp24_bc=$origin/geprcp.t${ihour}z.pgrb2a.0p50.bc_24hf${hhh}
           if [ -s $apcp24_bc ]; then
-            $WGRIB2 $apcp24_bc|grep "ENS=+${mbr}"|$WGRIB2 -i $apcp24_bc -grib $WORK/grabmbr.${ihour}.${hhh}
+            $WGRIB2 $apcp24_bc|grep -w "ENS=+${mbr}"|$WGRIB2 -i $apcp24_bc -grib $WORK/grabmbr.${ihour}.${hhh}
             $WGRIB2 $WORK/grabmbr.${ihour}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.grib2
             if [ $SENDCOM="YES" ] ; then
                 if [ -s $WORK/gefs_bc.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.grib2 ]; then
