@@ -4,7 +4,7 @@
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
 # Original Name of Script: exevs_global_det_headline_plots.sh
-# Original Developers: Mallory Row / Mallory.Row@noaa.gov
+# Original Author: Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script is run for the global_ens_chem_gefs plots step
 #                    for the headline verification. It uses EMC-developed
 #                    python scripts to do the plotting.
