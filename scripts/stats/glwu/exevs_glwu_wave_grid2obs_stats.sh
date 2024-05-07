@@ -155,28 +155,6 @@ if [ $gather = yes ] ; then
    fi
 fi
 
-##################################################################
-# Revisit part below later and keep it in case you need to use it:
-
-# run Point_Stat
-run_metplus.py -c $CONFIGevs/metplus_glwu.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstGLWU_obsNDBC_htsgw.conf
-
-# check if stat files exist; exit if not
-if [ ! -s $COMOUTsmall/point_stat_GLWU_NDBC_HTSGW_1440000L_${VDATE}_000000V.stat ] ; then
-   echo "Missing GLWU_NDBC_HTSGW stat files for $VDATE" 
-   exit
-fi
-
-# sum small stat files into one big file using Stat_Analysis
-mkdir -p $COMOUTfinal
-
-run_metplus.py -c $CONFIGevs/metplus_glwu.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstGLWU_obsNDBC.conf
-
-# archive final stat file
-rsync -av $COMOUTfinal $ARCHevs
-
 #############################
 #Cat the stat log files
 #############################
