@@ -13,6 +13,7 @@ import datetime
 import pandas as pd
 import glob
 import global_det_atmos_util as gda_util
+import numpy as np
 
 print("BEGIN: "+os.path.basename(__file__))
 start = datetime.datetime.now()
@@ -332,11 +333,30 @@ for time_score_iter in time_score_iter_list:
                     else:
                         wmo_n = stat_line['TOTAL'].values[0]
                     if wmo_sc == 'ct':
+                        ct_rank = int(stat_line['N_CAT'].values[0])
+                        # Need to rename tcc columns since only 2 thresholds
+                        if wmo_param == 'tcc':
+                            stat_line.replace('', float("NaN"), inplace=True)
+                            stat_line.dropna(how='all', axis=1, inplace=True)
+                            new_stat_line_cols = list(
+                                stat_line.columns[
+                                    :stat_line.columns.get_loc('N_CAT')+1
+                                ]
+                            )
+                            for f in range(1,ct_rank+1,1):
+                                for o in range(1,ct_rank+1,1):
+                                    new_stat_line_cols.append(f"F{f}_O{o}")
+                            new_stat_line_cols.append('EC_VALUE')
+                            tcc_mctc_col_dict = {}
+                            for col in stat_line.columns:
+                                tcc_mctc_col_dict[col] = new_stat_line_cols[
+                                    stat_line.columns.get_loc(col)
+                                ]
+                            stat_line = stat_line.rename(columns=tcc_mctc_col_dict)
                         wmo_th = (
                             stat_line['FCST_THRESH'].values[0]\
                             .replace(',', '/').replace('>=','')
                         )
-                        ct_rank = int(stat_line['N_CAT'].values[0])
                         for o in range(1,ct_rank+1,1):
                             for f in range(ct_rank,0,-1):
                                 if f"F{f}_O{o}" == f"F{ct_rank}_O1":
