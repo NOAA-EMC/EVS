@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=50:ompthreads=1:mem=100GB
+#PBS -l walltime=02:00:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=175GB
 #PBS -l debug=true
 
 set -x
@@ -31,7 +31,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export machine=WCOSS2
 export USE_CFP=YES
-export nproc=50
+export nproc=128
 
 export MAILTO='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 

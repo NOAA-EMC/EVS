@@ -124,9 +124,10 @@ wmo_verif_settings_dict = {
     'grid2obs_upperair': {'valid_hour_list': ['00', '12'],
                           'fhr_list': [str(fhr) for fhr \
                                        in range(12,240+12,12)]},
-    'grid2obs_sfc': {'valid_hour_list': ['00', '06', '12', '18'],
+    'grid2obs_sfc': {'valid_hour_list': ['00', '03', '06', '09',
+                                         '12', '15', '18', '21'],
                      'fhr_list': [str(fhr) for fhr \
-                                  in [*range(0,72,6), *range(72,240+12,12)]]},
+                                  in [*range(0,72,3), *range(72,240+6,6)]]},
 }
 # Set up job directory
 njobs = 0
@@ -150,6 +151,10 @@ if JOB_GROUP == 'reformat_data':
          for vhr in wmo_verif_valid_hour_list:
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
              # Reformat observations
+             for key_chk in ['fhr', 'fhr_file', 'tmp_regriddataplane_file',
+                             'output_regriddataplane_file']:
+                 if key_chk in list(job_env_dict.keys()):
+                     job_env_dict.pop(key_chk)
              # Set input paths
              if wmo_verif == 'grid2obs_upperair':
                  obs_file = gda_util.format_filler(
@@ -162,10 +167,20 @@ if JOB_GROUP == 'reformat_data':
                  )
                  obtype = 'cnvstat'
              elif wmo_verif == 'grid2obs_sfc':
-                 obs_file = gda_util.format_filler(
-                     prepbufr_file_format, valid_time_dt, valid_time_dt,
-                     'anl', {}
-                 )
+                 if int(vhr) % 6 == 0:
+                     obs_file = gda_util.format_filler(
+                         prepbufr_file_format, valid_time_dt, valid_time_dt,
+                         'anl', {}
+                     )
+                     obs_window = '0'
+                 else:
+                     obs_file = gda_util.format_filler(
+                         prepbufr_file_format,
+                         valid_time_dt + datetime.timedelta(hours=3),
+                         valid_time_dt + datetime.timedelta(hours=3),
+                         'anl', {}
+                     )
+                     obs_window = '-10800'
                  obtype = 'prepbufr'
              log_missing_obs_file = os.path.join(
                  DATA, 'mail_missing_'
@@ -201,6 +216,8 @@ if JOB_GROUP == 'reformat_data':
              job_env_dict['output_obs2nc_file'] = output_obs2nc_file
              if wmo_verif == 'grid2obs_upperair':
                  job_env_dict['input_ascii2nc_file'] = input_ascii2nc_file
+             elif wmo_verif == 'grid2obs_sfc':
+                 job_env_dict['obs_window'] = obs_window
              # Make job script
              njobs+=1
              job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
@@ -259,6 +276,7 @@ if JOB_GROUP == 'reformat_data':
                              gda_util.metplus_command('PB2NC_obsPrepbufr.conf')
                              +'\n'
                          )
+                         job.write('export err=$?; err_chk\n')
                      job.write(
                          'if [ -f $tmp_obs2nc_file ]; then '
                          +'chmod 750 $tmp_obs2nc_file; fi\n'
@@ -545,7 +563,7 @@ elif JOB_GROUP == 'assemble_data':
                  job_env_dict.pop('pb2nc_file')
                  job_env_dict.pop('tmp_fhr_elv_correction_stat_file')
                  job_env_dict.pop('output_fhr_elv_correction_stat_file')
-                 for accum in [24]:
+                 for accum in [6, 24]:
                      fhr_maccum = int(fhr)-accum
                      if fhr_maccum < 0:
                          continue
@@ -669,7 +687,9 @@ elif JOB_GROUP == 'generate_stats':
              wmo_verif_metplus_conf_list = [
                  'PointStat_fcstGFS_obsADPSFC_MCTC.conf',
                  'PointStat_fcstGFS_obsADPSFC_VCNT.conf',
+                 'PointStat_fcstGFS_obsADPSFC_CNT.conf',
                  'PointStat_fcstGFS_obsADPSFC_MCTCprecip24H.conf',
+                 'PointStat_fcstGFS_obsADPSFC_MCTCprecip6H.conf',
                  'StatAnalysis_fcstGFS_obsADPSFC_MPRtoCNT.conf'
              ]
          for vhr in wmo_verif_valid_hour_list:
@@ -758,7 +778,7 @@ elif JOB_GROUP == 'generate_stats':
                          have_fhr_elv_correction_stat = (
                              os.path.exists(fhr_stat_elv_correction_file)
                          )
-                         for accum in [24]:
+                         for accum in [6, 24]:
                              fhr_accum_file = gda_util.format_filler(
                                  pcpcombine_file_format, valid_time_dt,
                                  init_time_dt, fhr, {'accum': str(accum)}
@@ -1155,7 +1175,9 @@ elif JOB_GROUP == 'write_reports':
     job_env_dict['VDATE'] = VDATE
     report_list = ['rec2_domain_daily', 'rec2_domain_monthly',
                    'svs_station_monthly/t2m', 'svs_station_monthly/ff10m',
-                   'svs_station_monthly/dd10m', 'svs_station_monthly/tp24']
+                   'svs_station_monthly/dd10m', 'svs_station_monthly/tp24',
+                   'svs_station_monthly/td2m', 'svs_station_monthly/rh2m',
+                   'svs_station_monthly/tcc', 'svs_station_monthly/tp06',]
     for report in report_list:
         if 'rec2' in report:
             report_script = report

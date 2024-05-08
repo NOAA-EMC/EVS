@@ -40,7 +40,7 @@ tmp_fhr_elv_correction_stat_file = (
 valid_date_dt = datetime.datetime.strptime(valid_date, '%Y%m%d%H')
 
 # Set lapse rates set by WMO (K/m)
-elv_correction_var_list = ['TMP/Z2']
+elv_correction_var_list = ['TMP/Z2', 'DPT/Z2']
 tmp2m_lapse_rate = 0.0065
 dpt2m_lapse_rate = 0.0012
 

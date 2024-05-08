@@ -15,7 +15,7 @@ import glob
 import global_det_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
-
+start = datetime.datetime.now()
 # Read in environment variables
 COMIN = os.environ['COMIN']
 SENDCOM = os.environ['SENDCOM']
@@ -57,18 +57,19 @@ tmp_VDATE_monthly_svs_file = tmp_report_file
 output_VDATE_monthly_svs_file = output_report_file
 
 # Set wmo_verif information
-if wmo_param in ['t2m', 'ff10m', 'dd10m', 'tp24']:
+if wmo_param in ['t2m', 'ff10m', 'dd10m', 'tp24',
+                 'td2m', 'rh2m', 'tcc', 'tp06']:
     wmo_verif = 'grid2obs_sfc'
-    if wmo_param in ['t2m', 'dd10m']:
+    if wmo_param in ['t2m', 'dd10m', 'td2m', 'rh2m']:
         wmo_sc_dict = {
             'summary': ['me', 'mae', 'rmse']
         }
-    elif wmo_param == 'ff10m':
+    elif wmo_param in ['ff10m', 'tcc']:
         wmo_sc_dict = {
             'summary': ['me', 'mae', 'rmse'],
             'aggregate': ['ct']
         }
-    elif wmo_param == 'tp24':
+    elif wmo_param in ['tp24', 'tp06']:
         wmo_sc_dict = {
             'aggregate': ['ct']
         }
@@ -84,14 +85,28 @@ elif wmo_param in ['ff10m', 'dd10m']:
 elif wmo_param == 'tp24':
     met_fcst_var = 'APCP'
     met_fcst_lev = 'A24'
+elif wmo_param == 'tp06':
+    met_fcst_var = 'APCP'
+    met_fcst_lev = 'A6'
+elif wmo_param == 'td2m':
+    met_fcst_var = 'DPT'
+    met_fcst_lev = 'Z2'
+elif wmo_param == 'rh2m':
+    met_fcst_var = 'RH'
+    met_fcst_lev = 'Z2'
+elif wmo_param == 'tcc':
+    met_fcst_var = 'TCDC'
+    met_fcst_lev = 'L0'
 wmo_init_list = ['00', '12']
 if wmo_verif == 'grid2obs_sfc':
-    wmo_t_list = ['0', '6', '12', '18']
+    wmo_t_list = ['0', '3', '6', '9', '12', '15', '18', '21']
     if wmo_param == 'tp24':
         wmo_s_list = [str(fhr) for fhr in range(24,240+24,24)]
+    elif wmo_param == 'tp06':
+        wmo_s_list = [str(fhr) for fhr in range(6,240+6,6)]
     else:
         wmo_s_list = [str(fhr) for fhr in \
-                      [*range(0,72,6), *range(72,240+12,12)]]
+                      [*range(0,72,3), *range(72,240+6,6)]]
 time_score_iter_list = list(
     itertools.product(wmo_t_list, wmo_s_list, list(wmo_sc_dict.keys()))
 )
@@ -346,5 +361,6 @@ print(f"Writing SVS monthly station data to {tmp_VDATE_monthly_svs_file}")
 with open(tmp_VDATE_monthly_svs_file, 'w') as f:
     for line in VDATE_monthly_svs_lines:
         f.write(line)
-
+end = datetime.datetime.now()
+print(f"{wmo_param} took {end-start}")
 print("END: "+os.path.basename(__file__))
