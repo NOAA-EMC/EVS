@@ -56,13 +56,13 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 #### assemble_data jobs
 ################################################
 assemble_data_obs_jobs_dict = {
-    'anom': {},
+    'temp': {},
     'pres_lvls': {},
     'seaice': {},
     'sst': {},
 }
 assemble_data_model_jobs_dict = {
-    'anom': {
+    'temp': {
         'WeeklyAvg_TempAnom2m': {'env': {'var1_name': 'TMP',
                                          'var1_levels': 'Z2'},
                                  'commands': [sub_util.python_command(
@@ -692,7 +692,7 @@ assemble_data_model_jobs_dict = {
 #### generate_stats jobs
 ################################################
 generate_stats_jobs_dict = {
-    'anom': {
+    'temp': {
         'WeeklyAvg_TempAnom2m': {'env': {'var1_name': 'TMP',
                                          'var1_levels': 'Z2',
                                          'met_config_overrides': (
@@ -925,7 +925,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     if JOB_GROUP == 'assemble_data':
                         check_truth_files = False
                     elif JOB_GROUP == 'generate_stats':
-                        if verif_type in ['pres_lvls', 'anom']:
+                        if verif_type in ['pres_lvls', 'temp']:
                             check_truth_files = False
                         else:
                             check_truth_files = True
