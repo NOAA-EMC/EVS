@@ -93,13 +93,7 @@ for RESOLUTION in $resolutions ; do
 		yyyy=`echo $day | cut -c 1-4`
 		sourcefile=$COMIN/$yyyy/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    else
-		# need to prepare stat data in case of EVS version upgrades
-		evsdir=`find $COMIN/*/stats/$COMPONENT -name $COMPONENT.$day | tr ' ' '\n' | sort -nr | head -1`
-		if [ ! -z $evsdir ] ; then
-		    sourcefile=$evsdir/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
-		else
-		    sourcefile=not_exist
-		fi
+		sourcefile=$COMIN/stats/$COMPONENT/$COMPONENT.$day/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    fi
 	    targetfile=$OUTPUT_BASE_DIR/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    if [[ ! -f "$targetfile" ]] ; then

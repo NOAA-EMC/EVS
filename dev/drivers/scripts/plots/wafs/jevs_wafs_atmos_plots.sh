@@ -1,4 +1,4 @@
-#PBS -N jevs_wafs_plots
+#PBS -N jevs_wafs_atmos_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -6,7 +6,6 @@
 #PBS -l walltime=01:00:00
 #PBS -l place=shared,select=1:ncpus=60:mem=200GB
 #PBS -l debug=true
-#PBS -V
 
 set -x
 
@@ -47,17 +46,16 @@ export VERIF_CASE=grid2grid
 #export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/$evs_ver_2d}
 export COMROOT=/lfs/h2/emc/ptmp/$USER
 
-export USH_DIR=$HOMEevs/ush/$COMPONENT
 export DAYS_LIST=${DAYS_LIST:-"90 31"}
 
 ############################################################
 # CALL executable job script here
 ############################################################
 export pid=${PBS_JOBID:-$$}
-export job=${PBS_JOBNAME:-jevs_wafs_plots}
+export job=${PBS_JOBNAME:-jevs_wafs_atmos_plots}
 export jobid=$job.$pid
 
-export DATAROOT=/lfs/h2/emc/ptmp/${USER}/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
 export KEEPDATA=YES
 
