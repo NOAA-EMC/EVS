@@ -35,7 +35,7 @@ mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
 
-vhours='01 07 13 19'
+vhours='1 7 13 19'
 
 lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
             84 90 96 102 108 114 120 126 132 138 144'
@@ -51,20 +51,20 @@ echo ' '
 echo 'Creating point_stat files'
 for vhr in ${vhours} ; do
     vhr2=$(printf "%02d" "${vhr}")
-    if [ ${vhr} = '01' ] ; then
+    if [ ${vhr2} = '01' ] ; then
        wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
        perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
-    elif [ ${vhr} = '07' ] ; then
+    elif [ ${vhr2} = '07' ] ; then
        wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
        perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
-    elif [ ${vhr} = '13' ] ; then
+    elif [ ${vhr2} = '13' ] ; then
        wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
        perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
 
-    elif [ ${vhr} = '19' ] ; then
+    elif [ ${vhr2} = '19' ] ; then
        wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
        perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
@@ -80,8 +80,8 @@ for vhr in ${vhours} ; do
        DATAndbcncfilename=${DATA}/ncfiles/ndbc.${VDATE}.nc
        EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.grlc_2p5km.${match_date}.t${match_fhr}z.f${flead}.grib2                  
        DATAmodelfilename=$DATA/gribs/${MODELNAME}.grlc_2p5km.${match_date}.t${match_fhr}z.f${flead}.grib2
-       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
-       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
        if [[ -s $COMOUTstatfilename ]]; then
 	       cp -v $COMOUTstatfilename $DATAstatfilename
        else
@@ -101,15 +101,15 @@ for vhr in ${vhours} ; do
 			       fi
 		       fi
 		       if [[ -s $DATAmodelfilename ]]; then
-			       echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export VHR=${vhr}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export lead=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGLWU_obsNDBC_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
+			       echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+			       echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+			       echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+			       echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+			       echo "export lead=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+			       echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGLWU_obsNDBC_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+			       echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
 			       if [ $SENDCOM = YES ]; then
-				       echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
+				       echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
 			       fi
 			       chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
 			       echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
