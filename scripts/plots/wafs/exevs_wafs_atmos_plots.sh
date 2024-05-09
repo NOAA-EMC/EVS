@@ -50,8 +50,19 @@ export err=$?; err_chk
 cd $DATAplot
 for ndays in $DAYS_LIST ; do
     eval_period="last${ndays}days"
-    tar -cvf $COMOUT/$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar *${eval_period}*png
+    tarball=$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar
+    tar -cvf $tarball *${eval_period}*png
+
+    if [ -s $tarball ]; then
+	if [ $SENDCOM = "YES" ]; then
+	    cp -v $tarball $COMOUT/.
+	fi
+	if [ $SENDDBN = YES ] ; then     
+	    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$tarball
+	fi
+    fi
 done
+
 
 #########################################
 #Cat'ing errfiles to stdout
