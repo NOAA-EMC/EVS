@@ -80,8 +80,8 @@ for vhr in ${vhours} ; do
        DATAndbcncfilename=${DATA}/ncfiles/ndbc.${VDATE}.nc
        EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.grlc_2p5km.${match_date}.t${match_fhr}z.f${flead}.grib2                  
        DATAmodelfilename=$DATA/gribs/${MODELNAME}.grlc_2p5km.${match_date}.t${match_fhr}z.f${flead}.grib2
-       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
-       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsNDBC_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsNDBC_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsNDBC_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
        if [[ -s $COMOUTstatfilename ]]; then
 	       cp -v $COMOUTstatfilename $DATAstatfilename
        else
@@ -111,8 +111,8 @@ for vhr in ${vhours} ; do
 			       if [ $SENDCOM = YES ]; then
 				       echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
 			       fi
-			       chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-			       echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+			       chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+			       echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
 		       fi
 	       fi
        fi
@@ -142,7 +142,7 @@ if [ $gather = yes ] ; then
            echo " Found ${nc} ${DATA}/all_stats/*stat files for ${VDATE}"
 	   mkdir -p ${DATA}/stats
            # Use StatAnalysis to gather the small stat files into one file
-           run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstGLWU_obsGLWU.conf
+           run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstGLWU_obsNDBC.conf
 	   if [ $SENDCOM = YES ]; then
 		   if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
 			   cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
