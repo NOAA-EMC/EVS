@@ -94,8 +94,8 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
 
 def check_empty(df, logger, called_from):
     if df.empty:
-        logger.error(f"Called from {called_from}:")
-        logger.error(f"Empty Dataframe. Continuing onto next plot...")
+        logger.warning(f"Called from {called_from}:")
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         logger.info("========================================")
         return True
     else:
@@ -145,23 +145,23 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             except UnboundLocalError as e:
                 df = df_tmp
         except pd.errors.EmptyDataError as e:
-            logger.error(e)
-            logger.error(f"The file in question:")
-            logger.error(f"{fpath}")
-            logger.error("Continuing ...")
+            logger.warning(e)
+            logger.warning(f"The file in question:")
+            logger.warning(f"{fpath}")
+            logger.warning("Continuing ...")
         except OSError as e:
-            logger.error(e)
-            logger.error(f"The file in question:")
-            logger.error(f"{fpath}")
-            logger.error("Continuing ...")
+            logger.warning(e)
+            logger.warning(f"The file in question:")
+            logger.warning(f"{fpath}")
+            logger.warning("Continuing ...")
     if clear_prune_dir:
         try:
             shutil.rmtree(pruned_data_dir)
         except OSError as e:
-            logger.error(e)
-            logger.error(f"The directory in question:")
-            logger.error(f"{pruned_data_dir}")
-            logger.error("Continuing ...")
+            logger.warning(e)
+            logger.warning(f"The directory in question:")
+            logger.warning(f"{pruned_data_dir}")
+            logger.warning("Continuing ...")
     try:
         if check_empty(df, logger, 'create_df'):
             return None
@@ -169,12 +169,11 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             df.reset_index(drop=True, inplace=True)
             return df
     except UnboundLocalError as e:
-        logger.error(e)
-        logger.error(
-            "Nonexistent dataframe. Check the logfile for more details."
+        logger.warning(e)
+        logger.warning(
+            "Nonexistent dataframe. Stats directory may be empty. Check the logfile for more details."
         )
-        logger.error("Quitting ...")
-        sys.exit(1)
+        return None
 
 def filter_by_level_type(df, logger, verif_type):
     if df is None:
