@@ -30,13 +30,13 @@ VCS_type_env_vars_dict = {
                'start_date', 'end_date', 'make_met_data_by',
                'met_version', 'metplus_version'],
     'grid2grid_stats': ['g2gstats_type_list',
-                        'g2gstats_anom_truth_name_list',
-                        'g2gstats_anom_truth_file_format_list',
-                        'g2gstats_anom_inithour_list', 
-                        'g2gstats_anom_vhr_list',
-                        'g2gstats_anom_fhr_min', 'g2gstats_anom_fhr_max',
-                        'g2gstats_anom_fhr_inc',
-                        'g2gstats_anom_grid', 'g2gstats_anom_gather_by',
+                        'g2gstats_temp_truth_name_list',
+                        'g2gstats_temp_truth_file_format_list',
+                        'g2gstats_temp_inithour_list', 
+                        'g2gstats_temp_vhr_list',
+                        'g2gstats_temp_fhr_min', 'g2gstats_temp_fhr_max',
+                        'g2gstats_temp_fhr_inc',
+                        'g2gstats_temp_grid', 'g2gstats_temp_gather_by',
                         'g2gstats_pres_lvls_truth_name_list',
                         'g2gstats_pres_lvls_truth_file_format_list',
                         'g2gstats_pres_lvls_inithour_list', 
@@ -110,7 +110,7 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 
 # Do check for valid config options
 valid_VCS_type_opts_dict = {
-    'grid2grid_stats': ['anom', 'pres_lvls', 'sst', 'seaice'],
+    'grid2grid_stats': ['temp', 'pres_lvls', 'sst', 'seaice'],
     'grid2obs_stats': ['prepbufr']
 }
 for VCS_type in VCS_type_list:
