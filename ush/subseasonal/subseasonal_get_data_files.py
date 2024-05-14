@@ -74,7 +74,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
             ]
             VERIF_CASE_STEP_type_valid_hr_list = GHRSST_OSPO_valid_hr_list
-        elif VERIF_CASE_STEP_type == 'anom':
+        elif VERIF_CASE_STEP_type == 'temp':
             (ECMWF_valid_hr_start, ECMWF_valid_hr_end,
              ECMWF_valid_hr_inc) = sub_util.get_obs_valid_hrs(
                  'ECMWF'
@@ -213,7 +213,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                         nf+=1
                         del model_file_format
                         mbr = mbr+1
-                elif VERIF_CASE_STEP_type == 'anom':
+                elif VERIF_CASE_STEP_type == 'temp':
                     mbr = 1
                     total = int(members)
                     while mbr <= total:
@@ -386,9 +386,9 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         pres_lvls_dest_file_format
                     )
                     nf+=1
-            elif VERIF_CASE_STEP_type == 'anom':
+            elif VERIF_CASE_STEP_type == 'temp':
                 # ECMWF Analysis
-                anom_truth_file_format = os.path.join(
+                temp_truth_file_format = os.path.join(
                     COMIN+'.{valid?fmt=%Y%m%d}', 'ecmwf',
                     'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
                 )
@@ -397,7 +397,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 if not os.path.exists(VERIF_CASE_STEP_ecmwf_dir):
                     os.makedirs(VERIF_CASE_STEP_ecmwf_dir)
-                anom_dest_file_format = os.path.join(
+                temp_dest_file_format = os.path.join(
                     VERIF_CASE_STEP_ecmwf_dir,
                     'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
                 )
@@ -408,8 +408,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     sub_util.get_truth_file(
                         (VERIF_CASE_STEP_type_valid_time
                         -datetime.timedelta(hours=12*nf)),
-                        anom_truth_file_format,
-                        anom_dest_file_format
+                        temp_truth_file_format,
+                        temp_dest_file_format
                     )
                     nf+=1
             elif VERIF_CASE_STEP_type == 'seaice':

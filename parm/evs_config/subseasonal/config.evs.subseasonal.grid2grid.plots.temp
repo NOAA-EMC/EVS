@@ -42,18 +42,18 @@ export plot_by="VALID"
 ####################################################
 if [ $VERIF_CASE_STEP = grid2grid_plots ]; then
     #g2gplots_model_plot_name_list: list of models reference name on plots
-    #g2gplots_type_list: list type of verifications to run for grid-to-grid:  anom
+    #g2gplots_type_list: list type of verifications to run for grid-to-grid:  temp
     #####    g2gplots_*_inithour_list:   all forecast init hours to be included in verification: HH
     #####    g2gplots_*_fhr_min:         forecast hour to start verification HH[H]
     #####    g2gplots_*_fhr_max:         forecast hour to end verification HH[H]
     #####    g2gplots_*_fhr_inc:         frequency to verify forecast hours at HH[H]
     #####    g2gplots_*_event_eq:        do event equalization (YES) or not (NO)
     export g2gplots_model_plot_name_list="gefs_mean cfs_mean"
-    export g2gplots_type_list="anom"
-    export g2gplots_anom_inithour_list="00"
-    export g2gplots_anom_fhr_min=168
-    export g2gplots_anom_fhr_max=840
-    export g2gplots_anom_fhr_inc=24
+    export g2gplots_type_list="temp"
+    export g2gplots_temp_inithour_list="00"
+    export g2gplots_temp_fhr_min=168
+    export g2gplots_temp_fhr_max=840
+    export g2gplots_temp_fhr_inc=24
     export g2gplots_event_eq="NO"
 fi
 
