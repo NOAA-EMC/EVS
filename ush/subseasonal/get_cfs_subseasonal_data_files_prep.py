@@ -40,7 +40,7 @@ def get_time_info(start_date_str, end_date_str,
              fhr_list       - list of strings of the forecast
                               hours to verify
              date_type      - string defining by what type
-                              date and times to create METplus
+                              date and times to create prep
                               data
 
          Returns:
@@ -209,7 +209,7 @@ cfs_members = os.environ['cfs_members']
 INITDATE = os.environ['INITDATE']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
-make_met_data_by = os.environ['make_met_data_by']
+make_prep_data_by = os.environ['make_prep_data_by']
 machine = os.environ['machine']
 
 # Set some common variables
@@ -224,16 +224,16 @@ if STEP == 'prep':
     ].split(' ')
     vhr_list = os.environ['vhr_list'
     ].split(' ')
-    start_hr = os.environ[make_met_data_by.lower()+'_hr_beg']
-    end_hr = os.environ[make_met_data_by.lower()+'_hr_end']
-    hr_inc = os.environ[make_met_data_by.lower()+'_hr_inc']
+    start_hr = os.environ[make_prep_data_by.lower()+'_hr_beg']
+    end_hr = os.environ[make_prep_data_by.lower()+'_hr_end']
+    hr_inc = os.environ[make_prep_data_by.lower()+'_hr_inc']
     fhr_list = os.environ['fhr_list'
     ].split(', ')
     # Get date and time information
     time_info_dict = get_time_info(
         start_date, end_date, start_hr,
         end_hr, hr_inc,
-        fhr_list, make_met_data_by
+        fhr_list, make_prep_data_by
     )
     # Get CFS forecast files
     for model in model_list:

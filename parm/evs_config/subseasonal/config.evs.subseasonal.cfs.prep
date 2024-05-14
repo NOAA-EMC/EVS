@@ -11,8 +11,6 @@
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 ####################################################
-# WHAT METPLUS USE CASES TO RUN
-####################################################
 ## PREP STEP RETRIEVES DATA TO SAVE IN PREP DIRECTORY
 ####################################################
 # GENERAL SETTINGS APPLIED TO ALL USE CASES
@@ -33,10 +31,10 @@ export OUTPUTROOT="$DATAROOT/$STEP"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDD
 #end_date:         verification end date, format YYYYMMDD
-#make_met_data_by: how to treat dates, "VALID" or "INIT"
+#make_prep_data_by: how to treat dates, "VALID" or "INIT"
 export start_date="$INITDATE"
 export end_date="$INITDATE"
-export make_met_data_by="INIT"
+export make_prep_data_by="INIT"
 ####################################################
 # SETTINGS FOR USE CASES
 ####################################################
@@ -44,6 +42,5 @@ export inithour_list="00"
 export vhr_list="00 06 12 18"
 export fhr_min="00"
 export fhr_max="840"
-export gather_by="INIT"
 
 echo "END: $(basename ${BASH_SOURCE[0]})"

@@ -132,7 +132,8 @@ while valid_hr <= int(valid_hr_end):
                         fcst_var_level = input_var
                     if 'OBS_'+var_level in input_var:
                         obs_var_level = input_var
-                    if job_name == 'Days6_10Avg_GeoHeight':
+                    if job_name in ['Days6_10Avg_GeoHeight',
+                                    'Days6_10Avg_Temp2m']:
                         if 'CLIMO_MEAN_'+var_level in input_var:
                             climo_var_level = input_var
                 if fcst_var_level in input_file_data_var_list:
@@ -147,7 +148,8 @@ while valid_hr <= int(valid_hr_end):
                                            obs_var_level
                                        ][:])
                     days_avg_obs_file_list.append(days_avg_day_fhr_input_file)
-                if job_name == 'Days6_10Avg_GeoHeight':
+                if job_name in ['Days6_10Avg_GeoHeight',
+                                'Days6_10Avg_Temp2m']:
                     if climo_var_level in input_file_data_var_list:
                         days_avg_climo_sum = (days_avg_climo_sum +
                                              input_file_data.variables[
@@ -169,7 +171,8 @@ while valid_hr <= int(valid_hr_end):
             days_avg_obs = (
                 days_avg_obs_sum/len(days_avg_obs_file_list)
             )
-        if job_name == 'Days6_10Avg_GeoHeight':
+        if job_name in ['Days6_10Avg_GeoHeight',
+                        'Days6_10Avg_Temp2m']:
             if len(days_avg_climo_file_list) >= 9:
                 days_avg_climo = (
                     days_avg_climo_sum/len(days_avg_climo_file_list)
@@ -183,7 +186,8 @@ while valid_hr <= int(valid_hr_end):
                                               format='NETCDF3_CLASSIC')
             for attr in input_file_data.ncattrs():
                 if attr == 'FileOrigins':
-                    if job_name == 'Days6_10Avg_GeoHeight':
+                    if job_name in ['Days6_10Avg_GeoHeight',
+                                    'Days6_10Avg_Temp2m']:
                         output_file_data.setncattr(
                             attr, 'Days 6-10 Fcst Mean from '
                             +','.join(days_avg_fcst_file_list)+';'
@@ -208,7 +212,8 @@ while valid_hr <= int(valid_hr_end):
                     dim,
                     len(input_file_data.dimensions[dim])
                 )
-            if job_name == 'Days6_10Avg_GeoHeight':
+            if job_name in ['Days6_10Avg_GeoHeight',
+                            'Days6_10Avg_Temp2m']:
                 for data_name in ['FCST', 'OBS', 'CLIMO_MEAN']:
                     for input_var in input_file_data_var_list:
                         if data_name+'_'+var_level in input_var:

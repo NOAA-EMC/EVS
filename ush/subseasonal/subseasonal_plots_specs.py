@@ -391,7 +391,9 @@ class PlotSpecs:
             'TMP/P925': '925 hPa Temperature',
             'TMP/P1000': '1000 hPa Temperature',
             'TMP/TROPOPAUSE': 'Tropopause Temperature',
-            'TMP/Z2': '2 meter Temperature',
+            'TMP_WEEKLYAVG/Z2': '2 meter Weekly Avg Temperature',
+            'TMP_DAYS6_10AVG/Z2': '2 meter Days 6-10 Avg Temperature',
+            'TMP_WEEKS3_4AVG/Z2': '2 meter Weeks 3-4 Avg Temperature',
             'TMP_ANOM_WEEKLYAVG/Z2': '2 meter Weekly Avg Temperature Anomaly',
             'TMP_ANOM_DAYS6_10AVG/Z2': ('2 meter Days 6-10 Avg Temperature ' 
                                         +'Anomaly'),

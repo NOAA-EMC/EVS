@@ -63,6 +63,6 @@ $HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
 
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
-#          subseasonal grid-to-grid 500mb height anomaly statistical plots
+#          subseasonal grid-to-grid 500mb height statistical plots
 #          for the GEFS and CFS models for past 90 days.
 ######################################################################
