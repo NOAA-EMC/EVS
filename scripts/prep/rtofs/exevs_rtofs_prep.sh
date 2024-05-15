@@ -76,59 +76,58 @@ done
 #  RUN is the validation source: ghrsst, smos, smap etc.
 ##########################
 for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
-    export RUN=$rcase
-    for lead in ${leads}; do
-        if [ $lead = n024 ]; then
-            fhr=000
-        else
-            fhr=$(echo $lead | cut -c 2-4)
-        fi
-        INITDATE=$($NDATE -${fhr} ${VDATE}${vhr} | cut -c 1-8)
-        if [ ! -d $COMOUTprep/rtofs.$INITDATE/$RUN ]; then
-            mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
-        fi
-        mkdir -p $DATA/rtofs.$INITDATE/$RUN
-        for ftype in prog diag ice; do
-            rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
-            rtofs_native_filename=$EVSINprep/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
-            tmp_rtofs_latlon_filename=$DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
-            output_rtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
-            if [ ! -s $output_rtofs_latlon_filename ]; then
-                if [ -s $rtofs_native_filename ]; then
-                    cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
-                    export err=$?; err_chk
-                    if [ $SENDCOM = "YES" ]; then
-                        if [ -s $tmp_rtofs_latlon_filename ]; then
-			    cp -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
-			fi
-                    fi
-                else
-                    echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
-                fi
-            fi
-        done
-        if [ $RUN = 'argo' ] ; then
-            for ftype in t s; do
-                rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
-                rtofs_native_filename=$EVSINprep/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
-                tmp_rtofs_latlon_filename=$DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
-                output_rtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
-                if [ ! -s $output_rtofs_latlon_filename ]; then
-                    if [ -s $rtofs_native_filename ]; then
-                        cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
-                        export err=$?; err_chk
-                        if [ $SENDCOM = "YES" ]; then
-                            if [ -s $tmp_rtofs_latlon_filename ]; then
-				cp -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
-			    fi
-                        fi
-                    else
-                        echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
-                    fi
-                fi
-            done
-        fi
-    done
+	export RUN=$rcase
+	for lead in ${leads}; do
+		if [ $lead = n024 ]; then
+			fhr=000
+		else
+			fhr=$(echo $lead | cut -c 2-4)
+		fi
+		if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
+			mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
+        	fi
+        	mkdir -p $DATA/rtofs.$VDATE/$RUN
+        	for ftype in prog diag ice; do
+			rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
+			rtofs_native_filename=$EVSINprep/rtofs.$VDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
+			tmp_rtofs_latlon_filename=$DATA/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
+			output_rtofs_latlon_filename=$COMOUTprep/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
+			if [ ! -s $output_rtofs_latlon_filename ]; then
+                		if [ -s $rtofs_native_filename ]; then
+                    			cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
+                    			export err=$?; err_chk
+                    			if [ $SENDCOM = "YES" ]; then
+                        			if [ -s $tmp_rtofs_latlon_filename ]; then
+			    				cp -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
+						fi
+                    			fi
+                		else
+                    			echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
+                		fi
+            		fi
+        	done
+        	if [ $RUN = 'argo' ] ; then
+			for ftype in t s; do
+                		rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
+                		rtofs_native_filename=$EVSINprep/rtofs.$VDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
+                		tmp_rtofs_latlon_filename=$DATA/rtofs.$VDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
+                		output_rtofs_latlon_filename=$COMOUTprep/rtofs.$VDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
+                		if [ ! -s $output_rtofs_latlon_filename ]; then
+                    			if [ -s $rtofs_native_filename ]; then
+                        			cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
+                        			export err=$?; err_chk
+                        			if [ $SENDCOM = "YES" ]; then
+                            				if [ -s $tmp_rtofs_latlon_filename ]; then
+								cp -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
+			    				fi
+                        			fi
+                    			else
+                        			echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
+                    			fi
+                		fi
+            		done
+        	fi
+	done
 done
 
 ##########################
@@ -138,86 +137,86 @@ min_size=2404
 # convert OSI-SAF data into lat-lon grid
 export RUN=osisaf
 if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
-    mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
+	mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
 fi
 mkdir -p $DATA/rtofs.$VDATE/$RUN
 for ftype in nh sh; do
-    osi_saf_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
-    input_osisaf_file=$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
-    tmp_osisaf_file=$DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
-    output_osisaf_file=$COMOUTprep/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
-    if [ -s $input_osisaf_file ]; then
-    	actual_size_osisaf=$(wc -c <"$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc")
-    fi
-    if [[ ! -s $input_osisaf_file || $actual_size_osisaf -lt $min_size ]]; then
-	    echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $VDATE."
-	    if [ $SENDMAIL = YES ] ; then
-		    export subject="OSI-SAF Data Missing for EVS RTOFS"
-		    echo "Warning: No OSI-SAF ${ftype} data was available for valid date $VDATE." > mailmsg
-		    echo "Missing file is $input_osisaf_file" >> mailmsg
-		    cat mailmsg | mail -s "$subject" $MAILTO
-	    fi
-    fi
-    if [ ! -s $output_osisaf_file ]; then
-        if [ -s $input_osisaf_file ]; then
-            cdo remapbil,$osi_saf_grid_file $input_osisaf_file $tmp_osisaf_file
-            export err=$?; err_chk
-            if [ $SENDCOM = "YES" ]; then
-                if [ -s $tmp_osisaf_file ]; then
-		    cp -v $tmp_osisaf_file $output_osisaf_file
-		fi
-            fi
-        else
-	    echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $VDATE."
-            if [ $SENDMAIL = YES ] ; then
-                export subject="OSI-SAF Data Missing for EVS RTOFS"
-                echo "Warning: No OSI-SAF ${ftype} data was available for valid date $VDATE." > mailmsg
-                echo "Missing file is $input_osisaf_file" >> mailmsg
-                cat mailmsg | mail -s "$subject" $MAILTO
-            fi
-        fi
-    fi
+	osi_saf_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
+	input_osisaf_file=$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
+	tmp_osisaf_file=$DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
+	output_osisaf_file=$COMOUTprep/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
+	if [ -s $input_osisaf_file ]; then
+    		actual_size_osisaf=$(wc -c <"$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc")
+    	fi
+    	if [[ ! -s $input_osisaf_file || $actual_size_osisaf -lt $min_size ]]; then
+	    	echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $VDATE."
+	    	if [ $SENDMAIL = YES ] ; then
+			export subject="OSI-SAF Data Missing for EVS RTOFS"
+		    	echo "Warning: No OSI-SAF ${ftype} data was available for valid date $VDATE." > mailmsg
+		    	echo "Missing file is $input_osisaf_file" >> mailmsg
+		    	cat mailmsg | mail -s "$subject" $MAILTO
+	    	fi
+    	fi
+    	if [ ! -s $output_osisaf_file ]; then
+        	if [ -s $input_osisaf_file ]; then
+            		cdo remapbil,$osi_saf_grid_file $input_osisaf_file $tmp_osisaf_file
+            		export err=$?; err_chk
+            		if [ $SENDCOM = "YES" ]; then
+                		if [ -s $tmp_osisaf_file ]; then
+		    			cp -v $tmp_osisaf_file $output_osisaf_file
+				fi
+            		fi
+        	else
+			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $VDATE."
+            		if [ $SENDMAIL = YES ] ; then
+                		export subject="OSI-SAF Data Missing for EVS RTOFS"
+                		echo "Warning: No OSI-SAF ${ftype} data was available for valid date $VDATE." > mailmsg
+                		echo "Missing file is $input_osisaf_file" >> mailmsg
+                		cat mailmsg | mail -s "$subject" $MAILTO
+            		fi
+        	fi
+    	fi
 done
 # convert NDBC *.txt files into a netcdf file using ASCII2NC
 export RUN=ndbc
 if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
-    mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
+	mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
 fi
 if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN/buoy ]; then
-    mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN/buoy
+    	mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN/buoy
 fi
 mkdir -p $DATA/rtofs.$VDATE/$RUN
 mkdir -p $DATA/rtofs.$VDATE/$RUN/buoy
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
 ndbc_txt_ncount=$(find $DCOMROOT/$VDATE/validation_data/marine/buoy -type f -name "*.txt" |wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
-    python $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_trim_ndbc_files.py
-    export err=$?; err_chk
-    tmp_ndbc_file=$DATA/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
-    output_ndbc_file=$COMOUTprep/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
-    if [ ! -s $output_ndbc_file ]; then
-        run_metplus.py -c $PARMevs/metplus_config/machine.conf \
-        -c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsNDBC.conf
-        export err=$?; err_chk
-         if [ $SENDCOM = YES ]; then
-             if [ -s $tmp_ndbc_file ] ; then
-		 cp -v $tmp_ndbc_file $output_ndbc_file
-	     fi
-         fi
-    fi
+	python $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_trim_ndbc_files.py
+    	export err=$?; err_chk
+    	tmp_ndbc_file=$DATA/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
+    	output_ndbc_file=$COMOUTprep/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
+    	if [ ! -s $output_ndbc_file ]; then
+        	run_metplus.py -c $PARMevs/metplus_config/machine.conf \
+        	-c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsNDBC.conf
+        	export err=$?; err_chk
+         	if [ $SENDCOM = YES ]; then
+             		if [ -s $tmp_ndbc_file ] ; then
+				cp -v $tmp_ndbc_file $output_ndbc_file
+			fi
+         	fi
+   	 fi
 else
-  echo "WARNING: No NDBC data was available for valid date $VDATE."	
-  if [ $SENDMAIL = YES ] ; then
-    export subject="NDBC Data Missing for EVS RTOFS"
-    echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
-    echo "Missing files are located at $DCOMROOT/$VDATE/validation_data/marine/buoy" >> mailmsg
-    cat mailmsg | mail -s "$subject" $MAILTO
-  fi
+	echo "WARNING: No NDBC data was available for valid date $VDATE."	
+  	if [ $SENDMAIL = YES ] ; then
+    		export subject="NDBC Data Missing for EVS RTOFS"
+    		echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
+    		echo "Missing files are located at $DCOMROOT/$VDATE/validation_data/marine/buoy" >> mailmsg
+    		cat mailmsg | mail -s "$subject" $MAILTO
+  	fi
 fi
 # convert Argo basin files into a netcdf file using python embedding
 export RUN=argo
 if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
-    mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
+	mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
 fi
 mkdir -p $DATA/rtofs.$VDATE/$RUN
 if [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc ] && [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc ] && [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc ]; then
