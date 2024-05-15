@@ -18,4 +18,3 @@ export sp_ver=2.4.0
 export w3emc_ver=2.9.2
 export wgrib2_ver=2.0.8
 export zlib_ver=1.2.11
-export bufr_ver=12.0.0
