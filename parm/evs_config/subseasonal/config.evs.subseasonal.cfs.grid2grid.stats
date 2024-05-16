@@ -44,9 +44,9 @@ export metplus_version="$metplus_ver"
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
 if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
-    #g2gstats_type_list: list type of verifications to run for grid-to-grid: anom, pres_lvls, sst, seaice
+    #g2gstats_type_list: list type of verifications to run for grid-to-grid: temp, pres_lvls, sst, seaice
     #
-    #        anom:      2-m temperature anomaly to compare to ECMWF 
+    #        temp:      2-m temperature (including anomaly) to compare to ECMWF 
     #        pres_lvls: pressure level variables to compare to GFS 
     #        sst:       compare to GHRSST OSPO 
     #        seaice:    compare to OSI-SAF
@@ -59,16 +59,16 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     #g2gstats_*_fhr_inc:                    frequency to verify forecast hours at HH[H]
     #g2gstats_*_grid:                   NCEP grid to do verification on
     #g2gstats_*_gather_by:              how to group the verification data, VSDB, VALID, INIT
-    export g2gstats_type_list="sst seaice anom pres_lvls"
-    export g2gstats_anom_truth_name_list="ecmwf_anl"
-    export g2gstats_anom_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/ecmwf/ecmwf.{valid?fmt=%Y%m%d%H}.anl"
-    export g2gstats_anom_inithour_list="00"
-    export g2gstats_anom_vhr_list="00 12"
-    export g2gstats_anom_fhr_min="24"
-    export g2gstats_anom_fhr_max="840"
-    export g2gstats_anom_fhr_inc=12
-    export g2gstats_anom_grid="G003" 
-    export g2gstats_anom_gather_by="VALID"
+    export g2gstats_type_list="sst seaice temp pres_lvls"
+    export g2gstats_temp_truth_name_list="ecmwf_anl"
+    export g2gstats_temp_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/ecmwf/ecmwf.{valid?fmt=%Y%m%d%H}.anl"
+    export g2gstats_temp_inithour_list="00"
+    export g2gstats_temp_vhr_list="00 12"
+    export g2gstats_temp_fhr_min="24"
+    export g2gstats_temp_fhr_max="840"
+    export g2gstats_temp_fhr_inc=12
+    export g2gstats_temp_grid="G003" 
+    export g2gstats_temp_gather_by="VALID"
     export g2gstats_pres_lvls_truth_name_list="gfs_anl"
     export g2gstats_pres_lvls_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/gfs/gfs.{valid?fmt=%Y%m%d%H}.anl"
     export g2gstats_pres_lvls_inithour_list="00"
