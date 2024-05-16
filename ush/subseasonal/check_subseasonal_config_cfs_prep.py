@@ -24,9 +24,8 @@ env_vars_dict = {
                'model_dir_list', 'model_prep_dir_list',
                'cfs_file_type',
                'model_file_format_list', 'OUTPUTROOT',
-               'start_date', 'end_date', 'make_met_data_by',
-               'inithour_list', 'vhr_list', 'fhr_min', 'fhr_max',
-               'gather_by']
+               'start_date', 'end_date', 'make_prep_data_by',
+               'inithour_list', 'vhr_list', 'fhr_min', 'fhr_max']
 }
 env_check_list = ['shared']
 for env_check in env_check_list:
@@ -81,8 +80,7 @@ for config_var in check_config_var_len_list:
 
 # Do check for valid list config variable options
 valid_config_var_values_dict = {
-    'make_met_data_by': ['VALID', 'INIT'],
-    'gather_by': ['VALID', 'INIT']
+    'make_prep_data_by': ['VALID', 'INIT']
 }
         
 

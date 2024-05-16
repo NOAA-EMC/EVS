@@ -141,7 +141,7 @@ while valid_hr <= int(valid_hr_end):
                       +weeks_avg_day_fhr_DATAROOT_input_file+" or "
                       +weeks_avg_day_fhr_COMIN_input_file)
             weeks_avg_day_fhr+=12
-        weeks_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
+        weeks_avg_df_list = []
         if os.path.exists(output_COMOUT_file):
             sub_util.copy_file(output_COMOUT_file, output_DATA_file)
             make_weeks_avg_output_file = False
@@ -172,8 +172,9 @@ while valid_hr <= int(valid_hr_end):
                                                 skipinitialspace=True, header=None,
                                                 names=MET_MPR_column_list,
                                                 na_filter=False, dtype=str)
-                all_weeks_avg_df = all_weeks_avg_df.append(weeks_avg_file_df,
-                                                           ignore_index=True)
+                all_weeks_avg_df = pd.concat(
+                    [all_weeks_avg_df, weeks_avg_file_df], ignore_index=True
+                )
             for obtype in all_weeks_avg_df['OBTYPE'].unique():
                 all_weeks_avg_obtype_df = all_weeks_avg_df.loc[
                     all_weeks_avg_df['OBTYPE'] == obtype
@@ -239,10 +240,12 @@ while valid_hr <= int(valid_hr_end):
                         weeks_avg_obtype_sid_vx_mask_df['OBS'] = str(
                             all_weeks_avg_obtype_sid_vx_mask_obs_mean
                         )
-                        weeks_avg_df = weeks_avg_df.append(
-                            weeks_avg_obtype_sid_vx_mask_df,
-                            ignore_index=True
+                        weeks_avg_df_list.append(
+                            weeks_avg_obtype_sid_vx_mask_df
                         )
+            weeks_avg_df = pd.concat(
+                weeks_avg_df_list, axis=1, ignore_index=True
+            ).T
             weeks_avg_df.to_csv(
                 output_DATA_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
