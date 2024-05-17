@@ -1,6 +1,7 @@
 export evs_ver=v2.0.0
 
 export bacio_ver=2.4.1
+export bufr_ver=12.0.0
 export cdo_ver=1.9.8
 export cfp_ver=2.0.4
 export craympich_ver=8.1.19

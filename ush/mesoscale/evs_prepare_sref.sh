@@ -2,7 +2,12 @@
 #**************************************************************************
 #  Purpose: Get required input forecast and validation data files
 #           for sref stat jobs
-#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update: 
+#               05/04/2024, (1) change gfs to gdas for prepbufr files
+#                           (2) split the prepbufr files before running METplus PB2NC
+#                               to save walltime
+#                             by Binbin Zhou Lynker@EMC/NCEP
+#               10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
 #************************************************************************
 set -x
 
@@ -201,13 +206,20 @@ if [ $modnam = prepbufr ] && [ ! -e $DATA/prepbufr.missing ] ; then
 
 export output_base=${WORK}/pb2nc
 
- if [ -s ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr ] ; then
+ if [ -s ${COMINobsproc}/gdas.${vday}/??/atmos/gdas.t??z.prepbufr ] ; then
 
    for vhr in 00  06  12  18  ; do
 
      export vbeg=${vhr}
      export vend=${vhr}
 
+     #Split the prepbufr data files into specifiically required data types to reduce
+     #the walltime
+     >$WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
+     split_by_subset ${COMINobsproc}/gdas.${vday}/$vhr/atmos/gdas.t${vhr}z.prepbufr
+     cat $WORK/ADPSFC $WORK/SFCSHP $WORK/ADPUPA >> $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
+
+     export bufrpath=$WORK
      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf
      export err=$?; err_chk
      if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
@@ -216,11 +228,11 @@ export output_base=${WORK}/pb2nc
    done
 
  else
-  echo "WARNING: Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr"
+  echo "WARNING: Missing file is ${COMINobsproc}/gdas.${vday}/??/atmos/gdas.t??z.prepbufr"
   if [ $SENDMAIL = YES ] ; then
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
    echo "WARNING:  No Prepbufr data available for ${VDATE}" > mailmsg
-   echo "Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr"  >> mailmsg
+   echo "Missing file is ${COMINobsproc}/gdas.${vday}/??/atmos/gdas.t??z.prepbufr"  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $MAILTO 
   fi
