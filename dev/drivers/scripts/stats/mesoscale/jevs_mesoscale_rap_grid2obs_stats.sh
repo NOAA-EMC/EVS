@@ -2,8 +2,8 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
-#PBS -A VERF-DEV
-#PBS -l walltime=4:59:00
+#PBS -A EVS-DEV
+#PBS -l walltime=7:00:00
 #PBS -l place=vscatter:exclhost,select=3:ncpus=128:ompthreads=1:mem=150GB
 #PBS -l debug=true
 #PBS -V
@@ -37,7 +37,7 @@ set -x
   export evs_run_mode="production"
 
 # EVS Settings
-  export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 
 # EVS configuration
