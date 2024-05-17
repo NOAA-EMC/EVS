@@ -225,6 +225,69 @@ generate_stats_jobs_dict = {
                                                    +'Weeks3_4MPRtoSL1L2.conf'
                                                ),
                                                'fi']},
+        'WeeklyAvg_Temp2m': {'env': {'prepbufr': 'nam',
+                                     'obs_window': '900',
+                                     'msg_type': 'ADPSFC',
+                                     'var1_fcst_name': 'TMP',
+                                     'var1_fcst_levels': 'Z2',
+                                     'var1_fcst_options': '',
+                                     'var1_obs_name': 'TMP',
+                                     'var1_obs_levels': 'Z2',
+                                     'var1_obs_options': '',
+                                     'met_config_overrides': ("'climo_mean "
+                                                              +"= fcst;'")},
+                             'commands': [sub_util.python_command(
+                                             'subseasonal_stats_'
+                                             'grid2obs_create_weekly_'
+                                             'avg.py',
+                                             ['TMP_Z2',
+                                               os.path.join(
+                                                   '$DATA',
+                                                   '${VERIF_CASE}_${STEP}',
+                                                   'METplus_output',
+                                                   '${RUN}.'
+                                                   +'$DATE',
+                                                   '$MODEL', '$VERIF_CASE',
+                                                   'point_stat_'
+                                                   +'${VERIF_TYPE}_'
+                                                   +'TempAnom2m_'
+                                                   +'{lead?fmt=%2H}0000L_'
+                                                   +'{valid?fmt=%Y%m%d}_'
+                                                   +'{valid?fmt=%H}0000V'
+                                                   +'.stat'
+                                             ),
+                                             os.path.join(
+                                                 '$COMOUT',
+                                                 '${RUN}.$DATE',
+                                                 '$MODEL', '$VERIF_CASE',
+                                                 'point_stat_'
+                                                 +'${VERIF_TYPE}_'
+                                                 +'TempAnom2m_'
+                                                 +'{lead?fmt=%2H}0000L_'
+                                                 +'{valid?fmt=%Y%m%d}_'
+                                                 +'{valid?fmt=%H}0000V'
+                                                 +'.stat'
+                                             )]
+                                         ),
+                                         'nweekly_avg_stat_files='
+                                         +'$(ls '+os.path.join(
+                                             '$DATA',
+                                             '${VERIF_CASE}_${STEP}',
+                                             'METplus_output',
+                                             '${RUN}.${DATE}',
+                                             '$MODEL', '$VERIF_CASE',
+                                             'weekly_avg_*.stat'
+                                         )+'|wc -l)',
+                                         ('if [ $nweekly_avg_stat_files '
+                                         +'-ne 0 ]; then'),
+                                         sub_util.metplus_command(
+                                             'StatAnalysis_'
+                                             +'fcstSUBSEASONAL_'
+                                             +'obsPrepbufr_'
+                                             +'climoERA5_'
+                                             +'WeeklyMPRtoSL1L2.conf'
+                                         ),
+                                         'fi']},
     }
 }
 
