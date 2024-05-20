@@ -64,7 +64,7 @@ export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 
 mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
 
-$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 
 export err=$?; err_chk
 

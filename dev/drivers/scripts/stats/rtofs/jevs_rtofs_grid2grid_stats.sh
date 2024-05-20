@@ -1,10 +1,10 @@
-#PBS -N jevs_rtofs_prep
+#PBS -N jevs_rtofs_grid2grid_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=06:00:00
-#PBS -l place=shared,select=1:ncpus=1:mem=200GB
+#PBS -l place=exclhost,select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
 ############################################################
@@ -24,7 +24,9 @@ export SENDMAIL=NO
 # specify environment variables
 export envir=prod
 export NET=evs
-export STEP=prep
+export STEP=stats
+#export RUN=aviso
+export VERIF_CASE=grid2grid
 export COMPONENT=rtofs
 
 source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
@@ -42,11 +44,10 @@ export jobid=$job.${PBS_JOBID:-$$}
 export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,samira.ardani@noaa.gov'}
 
 # call j-job
-$HOMEevs/jobs/JEVS_RTOFS_PREP
+$HOMEevs/jobs/JEVS_RTOFS_STATS
 
 ######################################################################
-# Purpose: The job and task scripts work together to pre-process RTOFS
-#          forecast data into the same spatial and temporal scales
-#          as validation data.
+# Purpose: The job and task scripts work together to create stat
+#          files for RTOFS forecast verification using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ######################################################################
