@@ -296,7 +296,7 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
             'TOTAL', 'FABAR', 'OABAR', 'FOABAR', 'FFABAR', 'OOABAR', 'MAE'
          ]
    elif line_type == 'VL1L2':
-      elif met_version >= 12.0:
+      if met_version >= 12.0:
          stat_file_line_type_columns = [
             'TOTAL', 'UFBAR', 'VFBAR', 'UOBAR', 'VOBAR', 'UVFOBAR',
             'UVFFBAR', 'UVOOBAR', 'F_SPEED_BAR', 'O_SPEED_BAR', 'DIR_ME',
@@ -356,7 +356,7 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
             'O_RATE', 'O_RATE_BCL', 'O_RATE_BCU'
          ]
    elif line_type == 'ECNT':
-      elif met_version >= 12.0:
+      if met_version >= 12.0:
          stat_file_line_type_columns = [
              'TOTAL', 'N_ENS', 'CRPS', 'CRPSS', 'IGN', 'ME', 'RMSE', 'SPREAD',
              'ME_OERR', 'RMSE_OERR', 'SPREAD_OERR', 'SPREAD_PLUS_OERR',
