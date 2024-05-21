@@ -42,7 +42,7 @@ min_size=2404
 #####################################################
 
 for Rcase in smos smap ghrsst aviso; do
-	export RUN=${Rcase}
+#	export RUN=${Rcase}
 	if [ $Rcase = smos ]; then
 		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc
 		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$Rcase/rtofs_glo_2ds_f000_ice.$Rcase.nc
@@ -67,7 +67,7 @@ for Rcase in smos smap ghrsst aviso; do
 		export RUNupper=$(echo $Rcase | tr '[a-z]' '[A-Z]')
 		CLIMO=WOA23
 
-	elif [ $Rcase = aviso ]; then
+	else
 		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/aviso/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc
 		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$Rcase/rtofs_glo_2ds_f000_ice.$Rcase.nc
 		export ftype="diag"
@@ -85,14 +85,15 @@ for Rcase in smos smap ghrsst aviso; do
         				fhr2=$(printf "%02d" "${fhr}")
         				export fhr3=$(printf "%03d" "${fhr}")
 					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-					COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$Rcase/rtofs_glo_2ds_f${fhr3}_${ftype}.$Rcase.nc
+					COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.${match_date}/$Rcase/rtofs_glo_2ds_f${fhr3}_${ftype}.$Rcase.nc
 					if [ -s $COMINrtofsfilename ] ; then
           					for vari in ${VARS}; do
             						export VAR=$vari
             						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
+							export RUN=${Rcase}
             						mkdir -p $STATSDIR/${Rcase}.$VDATE/$VAR
-            						if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${match_date}_000000V.stat ]; then
-              							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${match_date}_000000V.stat $STATSDIR/${Rcase}.$VDATE/$VAR/.
+            						if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
+              							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${Rcase}.$VDATE/$VAR/.
             						else
               							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obs${RUNupper}_climo$CLIMO.conf

@@ -55,6 +55,7 @@ export VDATE=${VDATE:-$PDYm2}
 export NET=${NET:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-rtofs}
+#export RUN=${Rcase}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}

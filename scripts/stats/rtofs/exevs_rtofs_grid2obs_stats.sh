@@ -81,9 +81,9 @@ for Rcase in argo ndbc; do
       	if [ $Rcase = argo ]; then
 		export VARS="temp psal"
 		export RUNupper=$(echo $Rcase | tr '[a-z]' '[A-Z]')
+		export RUN=${Rcase}
 		EVSINfilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/argo.$VDATE.nc
 		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc
-		COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$RUN.nc
   		if [ -s $EVSINargofilename ] ; then
     			if [ -s $COMINicefilename ] ; then
       				for fday in 0 1 2 3 4 5 6 7 8; do
@@ -91,7 +91,8 @@ for Rcase in argo ndbc; do
         				fhr2=$(printf "%02d" "${fhr}")
         				export fhr3=$(printf "%03d" "${fhr}")
 					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-					if [ -s $COMIN/prep/$COMPONENT/rtofs.${match_date}/$RUN/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$RUN.nc ] ; then
+					COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$RUN.nc
+					if [ -s $COMINrtofsfilename ] ; then
           				for vari in ${VARS}; do
             					export VAR=$vari
             					mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
