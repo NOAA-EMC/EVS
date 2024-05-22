@@ -37,42 +37,81 @@ fi
 export JDATE=$(date2jday.sh $VDATE)
 min_size=2404
 
-#####################################################
-# GridStat for smos, smap, ghrsst and aviso
-#####################################################
+#########################################################################################
+# GridStat
+########################################################################################
 
-for Rcase in smos smap ghrsst aviso; do
-#	export RUN=${Rcase}
-	if [ $Rcase = smos ]; then
+if [ $RUN = osisaf ]; then
+	export VARS="sic"
+	export RUNupper=$(echo $RUN | tr '[a-z]' '[A-Z]')
+	for hem in nh sh; do
+		EVSINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/ice_conc_${hem}_polstere-100_multi_${VDATE}1200.nc
+		if [ -s $EVSINicefilename ] ; then
+			for fday in 0 1 2 3 4 5 6 7 8; do
+				fhr=$(($fday * 24))
+				fhr2=$(printf "%02d" "${fhr}")
+			        export fhr3=$(printf "%03d" "${fhr}")
+				match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
+				COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.${match_date}/$RUN/rtofs_glo_2ds_f${fhr3}_ice.$RUN.nc
+			        if [ -s $COMINrtofsfilename ] ; then
+					for vari in ${VARS}; do
+						export VAR=$vari
+						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
+						mkdir -p $STATSDIR/${RUN}.$VDATE/$VAR
+						if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
+							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$VAR/.
+						else
+							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+						       -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsOSISAF_${hem}.conf
+							export err=$?; err_chk           
+							if [ $SENDCOM = "YES" ]; then
+								mkdir -p $COMOUTsmall/$VAR
+								if [ -s $STATSDIR/${RUN}.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+						                	cp -v $STATSDIR/${RUN}.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+								fi
+							fi
+						fi
+					done
+				else
+					echo "WARNING: Missing RTOFS f${fhr3} ice file for $VDATE: ${COMINrtofsfilename}"
+				fi
+			done
+		else
+			echo "WARNING: Missing OSI-SAF ${hem} data file for $VDATE: $EVSINicefilename"
+		fi
+	done
+else
+
+	if [ $RUN = smos ]; then
 		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc
-		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$Rcase/rtofs_glo_2ds_f000_ice.$Rcase.nc
+		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc
 		export ftype="prog"
 		export VARS="sss"
-		export RUNupper=$(echo $Rcase | tr '[a-z]' '[A-Z]')
+		export RUNupper=$(echo $RUN | tr '[a-z]' '[A-Z]')
 		CLIMO=WOA23
 
-	elif [ $Rcase = smap ]; then
+	elif [ $RUN = smap ]; then
 		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc
-		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$Rcase/rtofs_glo_2ds_f000_ice.$Rcase.nc
+		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc
 		export ftype="prog"
 		export VARS="sss"
-		export RUNupper=$(echo $Rcase | tr '[a-z]' '[A-Z]')
+		export RUNupper=$(echo $RUN | tr '[a-z]' '[A-Z]')
 		CLIMO=WOA23
 
-	elif [ $Rcase = ghrsst ]; then
+	elif [ $RUN = ghrsst ]; then
 		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.nc
-		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$Rcase/rtofs_glo_2ds_f000_ice.$Rcase.nc
+		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc
 		export ftype="prog"
 		export VARS="sst"
-		export RUNupper=$(echo $Rcase | tr '[a-z]' '[A-Z]')
+		export RUNupper=$(echo $RUN | tr '[a-z]' '[A-Z]')
 		CLIMO=WOA23
 
-	else
-		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/aviso/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc
-		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$Rcase/rtofs_glo_2ds_f000_ice.$Rcase.nc
+	elif [ $RUN = aviso ]; then
+		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc
+		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc
 		export ftype="diag"
 		export VARS="ssh"
-		export RUNupper=$(echo $Rcase | tr '[a-z]' '[A-Z]')
+		export RUNupper=$(echo $RUN | tr '[a-z]' '[A-Z]')
 		CLIMO=HYCOM
 	fi
 
@@ -85,23 +124,22 @@ for Rcase in smos smap ghrsst aviso; do
         				fhr2=$(printf "%02d" "${fhr}")
         				export fhr3=$(printf "%03d" "${fhr}")
 					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-					COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.${match_date}/$Rcase/rtofs_glo_2ds_f${fhr3}_${ftype}.$Rcase.nc
+					COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.${match_date}/$RUN/rtofs_glo_2ds_f${fhr3}_${ftype}.$RUN.nc
 					if [ -s $COMINrtofsfilename ] ; then
           					for vari in ${VARS}; do
             						export VAR=$vari
             						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
-							export RUN=${Rcase}
-            						mkdir -p $STATSDIR/${Rcase}.$VDATE/$VAR
+            						mkdir -p $STATSDIR/${RUN}.$VDATE/$VAR
             						if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${Rcase}.$VDATE/$VAR/.
+              							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$VAR/.
             						else
               							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obs${RUNupper}_climo$CLIMO.conf
               							export err=$?; err_chk
               							if [ $SENDCOM = "YES" ]; then
                   							mkdir -p $COMOUTsmall/$VAR
-									if [ -s $STATSDIR/$Rcase.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-                  								cp -v $STATSDIR/${Rcase}.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+									if [ -s $STATSDIR/$RUN.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+                  								cp -v $STATSDIR/${RUN}.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
 									fi
               							fi
             						fi
@@ -131,56 +169,7 @@ for Rcase in smos smap ghrsst aviso; do
 			cat mailmsg | mail -s "$subject" $MAILTO
 		fi
 	fi
-
-done
-
-################################
-# GridStat for osisaf
-################################
-
-for Rcase in osisaf; do
-	export RUN=${Rcase}
-	export VARS="sic"
-	export RUNupper=$(echo $Rcase | tr '[a-z]' '[A-Z]')
-	for hem in nh sh; do
-		EVSINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$Rcase/ice_conc_${hem}_polstere-100_multi_${VDATE}1200.nc
-		if [ -s $EVSINicefilename ] ; then
-			for fday in 0 1 2 3 4 5 6 7 8; do
-				fhr=$(($fday * 24))
-				fhr2=$(printf "%02d" "${fhr}")
-			        export fhr3=$(printf "%03d" "${fhr}")
-				match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-				COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.${match_date}/$Rcase/rtofs_glo_2ds_f${fhr3}_ice.$Rcase.nc
-			        if [ -s $COMINrtofsfilename ] ; then
-					for vari in ${VARS}; do
-						export VAR=$vari
-						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
-						mkdir -p $STATSDIR/${Rcase}.$VDATE/$VAR
-						if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${Rcase}.$VDATE/$VAR/.
-						else
-							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
-						       -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsOSISAF_${hem}.conf
-							export err=$?; err_chk           
-							if [ $SENDCOM = "YES" ]; then
-								mkdir -p $COMOUTsmall/$VAR
-								if [ -s $STATSDIR/${Rcase}.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-						                	cp -v $STATSDIR/${Rcase}.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
-								fi
-							fi
-						fi
-					done
-				else
-					echo "WARNING: Missing RTOFS f${fhr3} ice file for $VDATE: ${COMINrtofsfilename}"
-				fi
-			done
-		else
-			echo "WARNING: Missing OSI-SAF ${hem} data file for $VDATE: $EVSINicefilename"
-		fi
-	done
-done
-
-
+fi
 
 #########################################################################
 # check if stat files exist
@@ -189,7 +178,7 @@ done
 for vari in ${VARS}; do
   export VAR=$vari
   export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
-  export STATSOUT=$STATSDIR/$Rcase.$VDATE/$VAR
+  export STATSOUT=$STATSDIR/$RUN.$VDATE/$VAR
   mkdir -p $STATSOUT
   VAR_file_count=$(find $STATSOUT -type f -name "*.stat" |wc -l)
   if [[ $VAR_file_count -ne 0 ]]; then
@@ -198,12 +187,12 @@ for vari in ${VARS}; do
     -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
     export err=$?; err_chk
     if [ $SENDCOM = "YES" ]; then
-	    if [ -s $STATSOUT/evs.stats.${COMPONENT}.${Rcase}.${VERIF_CASE}_${VAR}.v${VDATE}.stat ]; then
-      		cp -v $STATSOUT/evs.stats.${COMPONENT}.${Rcase}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
+	    if [ -s $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat ]; then
+      		cp -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
 	    fi
     fi
   else
-     echo "WARNING: Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE in $STATSDIR/$Rcase.$VDATE/$VAR/*.stat" 
+     echo "WARNING: Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE in $STATSDIR/$RUN.$VDATE/$VAR/*.stat" 
   fi
 done
 
