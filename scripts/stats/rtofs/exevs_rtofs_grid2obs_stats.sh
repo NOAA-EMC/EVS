@@ -3,8 +3,11 @@
 # Name of Script: exevs_rtofs_grid2obs_stats.sh
 # Purpose of Script: To create stat files for RTOFS ocean temperature and
 #    salinity forecasts verified with Argo and NDBC data using MET/METplus.
-# Developer: Samira Ardani (samira.ardani@noaa.gov)   
-# Cited to: L. Gwen Chen (lichuan.chen@noaa.gov)
+# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+# Modified for EVSv2:
+# By: Samira Ardani (samira.ardani@noaa.gov)
+# 05/2024: Combined the stats scripts into two scripts "grid2obs" and "grid2grid"
+#          and modified the paths to small/large stats files
 ###############################################################################
 
 set -x

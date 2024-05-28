@@ -2,8 +2,11 @@
 ###############################################################################
 # Name of Script: exevs_rtofs_grid2grid_stats.sh
 # Purpose of Script: To create stat files for RTOFS, grid2grid verification cases.
-# Author: Samira Ardani (samira.ardani@noaa.gov)
-# Altered from L. Gwen Chen's files
+# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+# Modified for EVSv2:
+# By: Samira Ardani (samira.ardani@noaa.gov)
+# 05/2024: Combined the stats scripts into two scripts "grid2obs" and "grid2grid"
+# 	   and modified the paths to small/large stats files
 ###############################################################################
 
 set -x

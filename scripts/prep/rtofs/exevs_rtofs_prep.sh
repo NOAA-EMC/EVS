@@ -1,10 +1,14 @@
 #!/bin/bash
-###############################################################################
+#############################################################################################
 # Name of Script: exevs_rtofs_prep.sh
 # Purpose of Script: To copy RTOFS production data, convert RTOFS forecasts grids,
 #                    process obs, create masking files
-# Author: Mallory Row (mallory.row@noaa.gov)
-###############################################################################
+# Authors: Mallory Row (mallory.row@noaa.gov)
+#		
+# Modified for EVSv2:
+# By: Samira Ardani (samira.ardani@noaa.gov)
+# 05/2024: Modified the code so that the RTOFS prep job writes to one rtofs.YYYMMDD directory.
+#############################################################################################
 
 set -x
 
