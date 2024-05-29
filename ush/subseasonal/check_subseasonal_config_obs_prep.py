@@ -21,9 +21,8 @@ RUN = os.environ['RUN']
 # Do check for all environment variables needed by config
 env_vars_dict = {
     'shared': ['OUTPUTROOT',
-               'start_date', 'end_date', 'make_met_data_by',
-               'inithour_list', 'vhr_list', 'fhr_min', 'fhr_max',
-               'gather_by']
+               'start_date', 'end_date', 'make_prep_data_by',
+               'inithour_list', 'vhr_list', 'fhr_min', 'fhr_max']
 }
 env_check_list = ['shared']
 for env_check in env_check_list:
@@ -64,8 +63,7 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 
 # Do check for valid list config variable options
 valid_config_var_values_dict = {
-    'make_met_data_by': ['VALID', 'INIT'],
-    'gather_by': ['VALID', 'INIT']
+    'make_prep_data_by': ['VALID', 'INIT']
 }
         
 

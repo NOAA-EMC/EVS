@@ -39,7 +39,7 @@ for model in model_list:
     data_dir_list.append(os.path.join(data_base_dir, model))
 if VERIF_CASE_STEP == 'grid2grid_stats':
     for VCS_type in VCS_type_list:
-        if VCS_type == 'anom':
+        if VCS_type == 'temp':
             data_dir_list.append(os.path.join(data_base_dir, 'ecmwf'))
         elif VCS_type == 'pres_lvls':
             data_dir_list.append(os.path.join(data_base_dir, 'gfs'))

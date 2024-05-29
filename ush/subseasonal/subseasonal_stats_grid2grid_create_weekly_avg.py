@@ -132,7 +132,8 @@ while valid_hr <= int(valid_hr_end):
                         fcst_var_level = input_var
                     if 'OBS_'+var_level in input_var:
                         obs_var_level = input_var
-                    if job_name == 'WeeklyAvg_GeoHeight':
+                    if job_name in ['WeeklyAvg_GeoHeight',
+                                    'WeeklyAvg_Temp2m']:
                         if 'CLIMO_MEAN_'+var_level in input_var:
                             climo_var_level = input_var
                 if fcst_var_level in input_file_data_var_list:
@@ -147,7 +148,8 @@ while valid_hr <= int(valid_hr_end):
                                              obs_var_level
                                          ][:])
                     weekly_avg_obs_file_list.append(weekly_avg_day_fhr_input_file)
-                if job_name == 'WeeklyAvg_GeoHeight':
+                if job_name in ['WeeklyAvg_GeoHeight',
+                                'WeeklyAvg_Temp2m']:
                     if climo_var_level in input_file_data_var_list:
                         weekly_avg_climo_sum = (weekly_avg_climo_sum +
                                                input_file_data.variables[
@@ -169,7 +171,8 @@ while valid_hr <= int(valid_hr_end):
             weekly_avg_obs = (
                 weekly_avg_obs_sum/len(weekly_avg_obs_file_list)
             )
-        if job_name == 'WeeklyAvg_GeoHeight':
+        if job_name in ['WeeklyAvg_GeoHeight',
+                        'WeeklyAvg_Temp2m']:
             if len(weekly_avg_climo_file_list) >= 12:
                 weekly_avg_climo = (
                     weekly_avg_climo_sum/len(weekly_avg_climo_file_list)
@@ -183,7 +186,8 @@ while valid_hr <= int(valid_hr_end):
                                               format='NETCDF3_CLASSIC')
             for attr in input_file_data.ncattrs():
                 if attr == 'FileOrigins':
-                    if job_name == 'WeeklyAvg_GeoHeight':
+                    if job_name in ['WeeklyAvg_GeoHeight',
+                                    'WeeklyAvg_Temp2m']:
                         output_file_data.setncattr(
                             attr, 'Weekly Fcst Mean from '
                             +','.join(weekly_avg_fcst_file_list)+';'
@@ -208,7 +212,8 @@ while valid_hr <= int(valid_hr_end):
                     dim,
                     len(input_file_data.dimensions[dim])
                 )
-            if job_name == 'WeeklyAvg_GeoHeight':
+            if job_name in ['WeeklyAvg_GeoHeight',
+                            'WeeklyAvg_Temp2m']:
                 for data_name in ['FCST', 'OBS', 'CLIMO_MEAN']:
                     for input_var in input_file_data_var_list:
                         if data_name+'_'+var_level in input_var:
