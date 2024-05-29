@@ -105,7 +105,7 @@ for dom in CONUS Alaska ; do
          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_SFC.conf " >> run_href_${domain}.${valid_at}_system.sh
          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_SFC_prob.conf " >> run_href_${domain}.${valid_at}_system.sh
 
-         echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}_system.sh
+	 echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${domain}.${valid_at}_system.sh
 
          chmod +x run_href_${domain}.${valid_at}_system.sh
          echo "${DATA}/run_href_${domain}.${valid_at}_system.sh" >> run_all_href_system_poe.sh
@@ -163,7 +163,8 @@ for dom in CONUS Alaska ; do
 
 	 echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_SFC_prob.conf " >> run_href_${domain}.${valid_at}_system.sh
 
-	 echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}_system.sh
+	 echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${domain}.${valid_at}_system.sh
+
          chmod +x run_href_${domain}.${valid_at}_system.sh
          echo "${DATA}/run_href_${domain}.${valid_at}_system.sh" >> run_all_href_system_poe.sh
 
