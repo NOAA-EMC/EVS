@@ -35,7 +35,9 @@ mkdir -p ${DATA}/gribs
 echo 'Copying GLWU wave grib2 and nc files'
 
 HHs='01 07 13 19'
-fcsts='0 24 48 72 96 120 144'
+#fcsts='0 24 48 72 96 120 144'
+
+fcsts="$(seq -s ' ' 0 144)"
 
 #mtypes='glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_sr grlr_500m grlr_500m_lc'
 
