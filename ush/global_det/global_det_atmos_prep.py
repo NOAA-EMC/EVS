@@ -367,6 +367,11 @@ for MODEL in MODELNAME:
                                                         str(fcst_hr),
                                                         'precip',
                                                         log_missing_file)
+                        elif MODEL == 'cmc_regional':
+                            gda_util.prep_prod_cmc_regional_file(
+                                input_precip_file, tmp_precip_file, CDATE_dt,
+                                str(fcst_hr), 'precip', log_missing_file
+                            )
                         else:
                             gda_util.copy_file(input_precip_file,
                                                tmp_precip_file)
