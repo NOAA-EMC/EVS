@@ -64,5 +64,5 @@ $HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
 #          subseasonal grid-to-obs 2-m temperature statistical plots
-#          for the GEFS and CFS models for past 31 days.
+#          for the GEFS and CFS models for past 90 days.
 ######################################################################
