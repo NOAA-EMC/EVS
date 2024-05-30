@@ -843,11 +843,17 @@ def prep_prod_ukmet_file(source_file_format, dest_file, init_dt,
             source_file = source_file_format.replace('{letter?fmt=str}',
                                                      fhr_id)
             if check_file_exists_size(source_file):
-                run_shell_command(
-                    [WGRIB+' '+source_file+' | grep "'+wgrib_fhr
-                     +'" | '+WGRIB+' '+source_file+' -i -grib -o '
-                     +working_file1]
+                chk_corrupt = subprocess.run(
+                    f"{WGRIB} {source_file}  1> /dev/null 2>&1", shell=True
                 )
+                if chk_corrupt.returncode != 0:
+                    print(f"WARNING: {source_file} is corrupt")
+                else:
+                    run_shell_command(
+                        [WGRIB+' '+source_file+' | grep "'+wgrib_fhr
+                         +'" | '+WGRIB+' '+source_file+' -i -grib -o '
+                         +working_file1]
+                    )
             else:
                 log_missing_file_model(log_missing_file, source_file, 'ukmet',
                                        init_dt, str(forecast_hour).zfill(3))
@@ -858,10 +864,16 @@ def prep_prod_ukmet_file(source_file_format, dest_file, init_dt,
         source_file = source_file_format
         source_file_accum = 12
         if check_file_exists_size(source_file):
-            run_shell_command(
-                [WGRIB2+' '+source_file+' -if ":TWATP:" -set_var "APCP" '
-                 +'-fi -grib '+working_file1]
+            chk_corrupt = subprocess.run(
+                f"{WGRIB2} {source_file}  1> /dev/null 2>&1", shell=True
             )
+            if chk_corrupt.returncode != 0:
+                print(f"WARNING: {source_file} is corrupt")
+            else:
+                run_shell_command(
+                    [WGRIB2+' '+source_file+' -if ":TWATP:" -set_var "APCP" '
+                     +'-fi -grib '+working_file1]
+                )
         else:
             log_missing_file_model(log_missing_file, source_file, 'ukmet',
                                    init_dt, str(forecast_hour).zfill(3))
