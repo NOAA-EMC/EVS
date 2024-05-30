@@ -966,12 +966,18 @@ def prep_prod_metfra_file(source_file, dest_file, init_dt, forecast_hour,
         if check_file_exists_size(working_file2):
             file_accum = 24
             fhr_accum_start = int(forecast_hour)-file_accum
-            run_shell_command(
-                [WGRIB+' '+working_file2+' | grep "'
-                 +str(fhr_accum_start)+'-'
-                 +forecast_hour+'hr" | '+WGRIB+' '+working_file2
-                 +' -i -grib -o '+prepped_file]
+            chk_corrupt = subprocess.run(
+                f"{WGRIB} {working_file2}  1> /dev/null 2>&1", shell=True
             )
+            if chk_corrupt.returncode != 0:
+                print(f"WARNING: {working_file2} is corrupt")
+            else:
+                run_shell_command(
+                    [WGRIB+' '+working_file2+' | grep "'
+                     +str(fhr_accum_start)+'-'
+                     +forecast_hour+'hr" | '+WGRIB+' '+working_file2
+                     +' -i -grib -o '+prepped_file]
+                )
             copy_file(prepped_file, dest_file)
 
 def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
