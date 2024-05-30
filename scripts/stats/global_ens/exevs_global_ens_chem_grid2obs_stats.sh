@@ -100,7 +100,6 @@ for ObsType in ${grid2obs_list}; do
         echo "index of hourly AirNOW obs found = ${num_obs_found}"
     fi
 
-    #LEAD_SEQ = 0, 3, 6, 9, 12, 15, 18, 21
     for mdl_cyc in ${vld_cyc}; do
       export mdl_cyc    ## variable used in *.conf
 
