@@ -744,11 +744,17 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
         else:
             wgrib_fhr = ':'+forecast_hour+'hr'
         if check_file_exists_size(source_file):
-            run_shell_command(
-                [WGRIB+' '+source_file+' | grep "'+wgrib_fhr+'" | '
-                 +WGRIB+' '+source_file+' -i -grib -o '
-                 +working_file1]
+            chk_corrupt = subprocess.run(
+                f"{WGRIB} {source_file}  1> /dev/null 2>&1", shell=True
             )
+            if chk_corrupt.returncode != 0:
+                print(f"WARNING: {source_file} is corrupt")
+            else:
+                run_shell_command(
+                    [WGRIB+' '+source_file+' | grep "'+wgrib_fhr+'" | '
+                     +WGRIB+' '+source_file+' -i -grib -o '
+                     +working_file1]
+                )
         else:
             log_missing_file_model(log_missing_file, source_file, 'ecmwf',
                                    init_dt, str(forecast_hour).zfill(3))
@@ -760,9 +766,15 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
             )
     elif 'precip' in prep_method:
         if check_file_exists_size(source_file):
-            run_shell_command(
-                [PCPCONFORM, 'ecmwf', source_file, prepped_file]
+            chk_corrupt = subprocess.run(
+                f"{WGRIB} {source_file}  1> /dev/null 2>&1", shell=True
             )
+            if chk_corrupt.returncode != 0:
+                print(f"WARNING: {source_file} is corrupt")
+            else:
+                run_shell_command(
+                    [PCPCONFORM, 'ecmwf', source_file, prepped_file]
+                )
         else:
             if int(datetime.datetime.now().strftime('%H')) > 18:
                 log_missing_file_model(log_missing_file, source_file, 'ecmwf',
