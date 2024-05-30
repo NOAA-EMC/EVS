@@ -93,17 +93,17 @@ if [ $RUN = argo ]; then
 					if [ -s $COMINrtofsfilename ] ; then
           					for vari in ${VARS}; do
             						export VAR=$vari
-            						mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
+            						mkdir -p $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR
             						if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
+              							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/.
            						else
               							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${RUNupper}_climoWOA23_$VAR.conf
               							export err=$?; err_chk
               							if [ $SENDCOM = "YES" ]; then
                   							mkdir -p $COMOUTsmall/$VAR
-		  							if [ -s $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-                  								cp -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+		  							if [ -s $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+                  								cp -v $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
 									fi
 								fi
 							fi
@@ -137,17 +137,17 @@ elif [ $RUN = ndbc ]; then
 					for vari in ${VARS}; do
 						export VAR=$vari
 						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
-						mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
+						mkdir -p $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR
 						if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
+							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUNmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/.
 						else
 							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf
 							export err=$?; err_chk
 							if [ $SENDCOM = "YES" ]; then
 								mkdir -p $COMOUTsmall/$VAR
-								if [ -s $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-									cp -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+								if [ -s $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+									cp -v $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
 								fi
 							fi
 						fi
@@ -170,8 +170,8 @@ fi
 
 for vari in ${VARS}; do
   export VAR=$vari
-  export STATSOUT=$STATSDIR/$RUN.$VDATE/$VAR
-  VAR_file_count=$(ls -l $STATSDIR/$RUN.$VDATE/$VAR/*.stat |wc -l)
+  export STATSOUT=$STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR
+  VAR_file_count=$(ls -l $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/*.stat |wc -l)
   if [[ $VAR_file_count -ne 0 ]]; then
     # sum small stat files into one big file using Stat_Analysis
     run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
@@ -183,7 +183,7 @@ for vari in ${VARS}; do
       fi
     fi
   else
-     echo "WARNING: Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE in $STATSDIR/$RUN.$VDATE/$VAR/*.stat" 
+     echo "WARNING: Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE in $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/*.stat" 
   fi
 done
 
