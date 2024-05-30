@@ -898,8 +898,14 @@ def main():
         init_beg = INIT_BEG
         init_end = INIT_END
     else:
-        valid_beg = presets.date_presets[EVAL_PERIOD]['valid_beg']
-        valid_end = presets.date_presets[EVAL_PERIOD]['valid_end']
+        if 'VALID_BEG' in globals():
+            valid_beg = VALID_BEG
+        else:
+            valid_beg = presets.date_presets[EVAL_PERIOD]['valid_beg']
+        if 'VALID_END' in globals():
+            valid_end = VALID_END
+        else:
+            valid_end = presets.date_presets[EVAL_PERIOD]['valid_end']
         init_beg = presets.date_presets[EVAL_PERIOD]['init_beg']
         init_end = presets.date_presets[EVAL_PERIOD]['init_end']
     if str(DATE_TYPE).upper() == 'VALID':

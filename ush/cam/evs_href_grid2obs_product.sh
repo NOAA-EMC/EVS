@@ -107,7 +107,7 @@ for prod in mean prob ; do
 
          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
 
-  	 echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid_run}_product.sh
+	 echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
        chmod +x run_href_${model}.${dom}.${valid_run}_product.sh
        echo "${DATA}/run_href_${model}.${dom}.${valid_run}_product.sh" >> run_all_href_product_poe.sh
@@ -174,7 +174,9 @@ for prod in mean prob ; do
 
  
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
-       echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid_run}_product.sh
+
+       echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}_product.sh
+
        chmod +x run_href_${model}.${dom}.${valid_run}_product.sh
        echo "${DATA}/run_href_${model}.${dom}.${valid_run}_product.sh" >> run_all_href_product_poe.sh
 

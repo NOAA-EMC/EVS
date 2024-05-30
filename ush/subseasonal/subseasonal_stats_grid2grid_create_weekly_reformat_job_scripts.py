@@ -59,7 +59,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 #### reformat_data jobs
 ################################################
 reformat_data_obs_jobs_dict = {
-    'anom': {},
+    'temp': {},
     'pres_lvls': {},
     'seaice': {},
     'sst': {},
@@ -98,7 +98,7 @@ reformat_data_gefs_jobs_dict = {
                                             )]
                                        )]},
     },
-    'anom': {},
+    'temp': {},
     'seaice': {},
     'sst': {},
 }
@@ -136,12 +136,12 @@ reformat_data_cfs_jobs_dict = {
                                             )]
                                        )]},
     },
-    'anom': {},
+    'temp': {},
     'seaice': {},
     'sst': {},
 }
 reformat_data_model_jobs_dict = {
-    'anom': {
+    'temp': {
         'TempAnom2m': {'env': {'var1_name': 'TMP',
                                'var1_levels': 'Z2'},
                        'commands': [sub_util.metplus_command(
@@ -241,7 +241,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
             ) 
             # Loop through and write job script for dates and models
             if JOB_GROUP == 'reformat_data':
-                if verif_type in ['sst', 'seaice', 'anom', 'pres_lvls']:
+                if verif_type in ['sst', 'seaice', 'temp', 'pres_lvls']:
                     job_env_dict['valid_hr_start'] = '00'
                     job_env_dict['valid_hr_end'] = '00'
                     job_env_dict['valid_hr_inc'] = '12'
@@ -292,7 +292,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         job_env_dict.pop('fhr_end')
                         job_env_dict.pop('fhr_inc')
                     if JOB_GROUP == 'reformat_data':
-                        if verif_type in ['anom', 'pres_lvls'] \
+                        if verif_type in ['temp', 'pres_lvls'] \
                                 and verif_type_job in ['TempAnom2m',
                                                        'GeoHeightAnom']:
                             check_truth_files = True
