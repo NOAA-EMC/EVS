@@ -502,12 +502,19 @@ def prep_prod_fnmoc_file(source_file, dest_file, init_dt, forecast_hour,
          Returns:
     """
     # Environment variables and executables
+    WGRIB2 = os.environ['WGRIB2']
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
     # Prep file
     if check_file_exists_size(source_file):
-        convert_grib2_grib2(source_file, prepped_file)
+        chk_corrupt = subprocess.run(
+            f"{WGRIB2} {source_file}  1> /dev/null 2>&1", shell=True
+        )
+        if chk_corrupt.returncode != 0:
+            print(f"WARNING: {source_file} is corrupt")
+        else:
+            convert_grib2_grib2(source_file, prepped_file)
     else:
         log_missing_file_model(log_missing_file, source_file, 'fnmoc',
                                init_dt, str(forecast_hour).zfill(3))
