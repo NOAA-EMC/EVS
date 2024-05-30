@@ -671,11 +671,17 @@ def prep_prod_jma_file(source_file_format, dest_file, init_dt, forecast_hour,
             elif hem == 's':
                 working_file = working_file2
             if check_file_exists_size(hem_source_file):
-                run_shell_command(
-                    [WGRIB+' '+hem_source_file+' | grep "'+wgrib_fhr+'" | '
-                     +WGRIB+' '+hem_source_file+' -i -grib -o '
-                     +working_file]
+                chk_corrupt = subprocess.run(
+                    f"{WGRIB} {hem_source_file}  1> /dev/null 2>&1", shell=True
                 )
+                if chk_corrupt.returncode != 0:
+                    print(f"WARNING: {hem_source_file} is corrupt")
+                else:
+                    run_shell_command(
+                        [WGRIB+' '+hem_source_file+' | grep "'+wgrib_fhr+'" | '
+                         +WGRIB+' '+hem_source_file+' -i -grib -o '
+                         +working_file]
+                    )
             else:
                 log_missing_file_model(log_missing_file, hem_source_file,
                                        'jma', init_dt,
@@ -688,11 +694,17 @@ def prep_prod_jma_file(source_file_format, dest_file, init_dt, forecast_hour,
     elif 'precip' in prep_method:
         source_file = source_file_format
         if check_file_exists_size(source_file):
-            run_shell_command(
-                [WGRIB+' '+source_file+' | grep "0-'
-                 +forecast_hour+'hr" | '+WGRIB+' '+source_file
-                 +' -i -grib -o '+prepped_file]
+            chk_corrupt = subprocess.run(
+                f"{WGRIB} {source_file}  1> /dev/null 2>&1", shell=True
             )
+            if chk_corrupt.returncode != 0:
+                print(f"WARNING: {source_file} is corrupt")
+            else:
+                run_shell_command(
+                    [WGRIB+' '+source_file+' | grep "0-'
+                     +forecast_hour+'hr" | '+WGRIB+' '+source_file
+                     +' -i -grib -o '+prepped_file]
+                )
         else:
             log_missing_file_model(log_missing_file, source_file, 'jma',
                                    init_dt, str(forecast_hour).zfill(3))
