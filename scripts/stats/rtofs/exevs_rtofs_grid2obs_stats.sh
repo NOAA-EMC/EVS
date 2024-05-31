@@ -167,25 +167,46 @@ fi
 ######################################
 # check if stat files exist
 ######################################
-
-for vari in ${VARS}; do
-  export VAR=$vari
-  export STATSOUT=$STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR
-  VAR_file_count=$(ls -l $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/*.stat |wc -l)
-  if [[ $VAR_file_count -ne 0 ]]; then
-    # sum small stat files into one big file using Stat_Analysis
-    run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
-    -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
-    export err=$?; err_chk
-    if [ $SENDCOM = "YES" ]; then
-      if [ -s $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat ] ; then
-	    cp -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
-      fi
-    fi
-  else
-     echo "WARNING: Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE in $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/*.stat" 
-  fi
-done
+if [ $RUN = argo ]; then
+	for vari in ${VARS}; do
+  		export VAR=$vari
+  		export STATSOUT=$STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR
+  		VAR_file_count=$(ls -l $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/*.stat |wc -l)
+  		if [[ $VAR_file_count -ne 0 ]]; then
+    		# sum small stat files into one big file using Stat_Analysis
+    			run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+    			-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
+    			export err=$?; err_chk
+    			if [ $SENDCOM = "YES" ]; then
+      				if [ -s $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat ] ; then
+	    				cp -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
+      				fi
+    			fi
+  		else
+     			echo "WARNING: Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE in $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/*.stat" 
+  		fi
+	done
+elif [ $RUN = ndbc ]; then
+	
+	for vari in ${VARS}; do
+  		export VAR=$vari
+  		export STATSOUT=$STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR
+  		VAR_file_count=$(ls -l $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/*.stat |wc -l)
+  		if [[ $VAR_file_count -ne 0 ]]; then
+    		# sum small stat files into one big file using Stat_Analysis
+    			run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+    			-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS_obsNDBC.conf
+    			export err=$?; err_chk
+    			if [ $SENDCOM = "YES" ]; then
+      				if [ -s $STATSOUT/evs.stats.${COMPONENT}.ndbc_standard.${VERIF_CASE}_${VAR}.v${VDATE}.stat ] ; then
+	    				cp -v $STATSOUT/evs.stats.${COMPONENT}.ndbc_standard.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
+      				fi
+    			fi
+  		else
+     			echo "WARNING: Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE in $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/*.stat" 
+  		fi
+	done
+fi
 
 ############################
 # Cat the METplus log files
