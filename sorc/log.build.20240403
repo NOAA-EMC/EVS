@@ -1,0 +1,151 @@
+++++ readlink -f -n ./build.sh
++++ dirname /lfs/h1/ops/para/packages/evs.v1.0.8/sorc/build.sh
+++ cd /lfs/h1/ops/para/packages/evs.v1.0.8/sorc/..
+++ pwd -P
++ readonly pkg_root=/lfs/h1/ops/para/packages/evs.v1.0.8
++ pkg_root=/lfs/h1/ops/para/packages/evs.v1.0.8
++ BUILD_DEBUG=NO
++ BUILD_CLEAN=YES
++ BUILD_VERBOSE=YES
++ export EXECevs=/lfs/h1/ops/para/packages/evs.v1.0.8/exec
++ EXECevs=/lfs/h1/ops/para/packages/evs.v1.0.8/exec
++ source /lfs/h1/ops/para/packages/evs.v1.0.8/versions/build.ver
+++ export evs_ver=v1.0.0
+++ evs_ver=v1.0.0
+++ export bacio_ver=2.4.1
+++ bacio_ver=2.4.1
+++ export craympich_ver=8.1.19
+++ craympich_ver=8.1.19
+++ export craypals_ver=1.2.2
+++ craypals_ver=1.2.2
+++ export craype_ver=2.7.17
+++ craype_ver=2.7.17
+++ export g2_ver=3.4.5
+++ g2_ver=3.4.5
+++ export intel_ver=19.1.3.304
+++ intel_ver=19.1.3.304
+++ export ip_ver=3.3.3
+++ ip_ver=3.3.3
+++ export jasper_ver=2.0.25
+++ jasper_ver=2.0.25
+++ export libjpeg_ver=9c
+++ libjpeg_ver=9c
+++ export libpng_ver=1.6.37
+++ libpng_ver=1.6.37
+++ export PrgEnvintel_ver=8.3.3
+++ PrgEnvintel_ver=8.3.3
+++ export sigio_ver=2.3.2
+++ sigio_ver=2.3.2
+++ export sp_ver=2.4.0
+++ sp_ver=2.4.0
+++ export w3emc_ver=2.9.2
+++ w3emc_ver=2.9.2
+++ export wgrib2_ver=2.0.8
+++ wgrib2_ver=2.0.8
+++ export zlib_ver=1.2.11
+++ zlib_ver=1.2.11
++ set +x
+Resetting modules to system default. Reseting $MODULEPATH back to system default. All extra directories will be removed from $MODULEPATH.
+
+Currently Loaded Modules:
+  1) craype-x86-rome     (H)   3) craype-network-ofi (H)   5) PrgEnv-intel/8.3.3   7) craype/2.7.17       9) cray-pals/1.2.2  11) w3emc/2.9.2  13) sp/2.4.0  15) jasper/2.0.25  17) zlib/1.2.11
+  2) libfabric/1.11.0.0. (H)   4) envvar/1.0               6) intel/19.1.3.304     8) cray-mpich/8.1.19  10) bacio/2.4.1      12) ip/3.3.3     14) g2/3.4.5  16) libpng/1.6.37
+
+  Where:
+   H:  Hidden Module
+
+ 
+
+++ echo libw3emc_4.a
++ w3emc_lib4_name=libw3emc_4.a
+++ echo libw3emc_4.a
+++ sed -e s/lib//g
+++ sed -e 's/\.a//g'
++ export W3EMCLIB=w3emc_4
++ W3EMCLIB=w3emc_4
+++ echo /apps/ops/prod/libs/intel/19.1.3.304/w3emc/2.9.2/lib64/libw3emc_4.a
+++ sed -e 's/\/libw3emc_4.a//g'
++ export LIBDIRW3EMC=/apps/ops/prod/libs/intel/19.1.3.304/w3emc/2.9.2/lib64
++ LIBDIRW3EMC=/apps/ops/prod/libs/intel/19.1.3.304/w3emc/2.9.2/lib64
+++ echo libbacio_4.a
++ bacio_lib4_name=libbacio_4.a
+++ echo libbacio_4.a
+++ sed -e s/lib//g
+++ sed -e 's/\.a//g'
++ export BACIOLIB=bacio_4
++ BACIOLIB=bacio_4
+++ echo /apps/ops/prod/libs/intel/19.1.3.304/bacio/2.4.1/lib/libbacio_4.a
+++ sed -e 's/\/libbacio_4.a//g'
++ export LIBDIRBACIO=/apps/ops/prod/libs/intel/19.1.3.304/bacio/2.4.1/lib
++ LIBDIRBACIO=/apps/ops/prod/libs/intel/19.1.3.304/bacio/2.4.1/lib
++ export FC=ftn
++ FC=ftn
++ export 'FFLAGS=-g -traceback'
++ FFLAGS='-g -traceback'
++ '[' '!' -d /lfs/h1/ops/para/packages/evs.v1.0.8/exec ']'
++ '[' YES = YES ']'
++ echo 'Doing clean build for /lfs/h1/ops/para/packages/evs.v1.0.8/exec'
+Doing clean build for /lfs/h1/ops/para/packages/evs.v1.0.8/exec
++ rm -rf /lfs/h1/ops/para/packages/evs.v1.0.8/exec
++ mkdir -p /lfs/h1/ops/para/packages/evs.v1.0.8/exec
++ for code in ecm_gfs_look_alike_new jma_merge ukm_hires_merge pcpconform sref_precip evs_g2g_adjustCMC
++ cd /lfs/h1/ops/para/packages/evs.v1.0.8/sorc/ecm_gfs_look_alike_new.fd
++ '[' YES = YES ']'
++ make VERBOSE=YES clean
+rm -f *.o ecm_gfs_look_alike_new
++ '[' NO = YES ']'
++ make VERBOSE=YES
+ftn -g -traceback -O2 -convert big_endian -mkl -free ecm_gfs_look_alike_new.f90 -L/apps/ops/prod/libs/intel/19.1.3.304/w3emc/2.9.2/lib64 -lw3emc_4 -L/apps/ops/prod/libs/intel/19.1.3.304/bacio/2.4.1/lib -lbacio_4 -o ecm_gfs_look_alike_new
++ make VERBOSE=YES install
+mv ecm_gfs_look_alike_new /lfs/h1/ops/para/packages/evs.v1.0.8/exec/.
++ for code in ecm_gfs_look_alike_new jma_merge ukm_hires_merge pcpconform sref_precip evs_g2g_adjustCMC
++ cd /lfs/h1/ops/para/packages/evs.v1.0.8/sorc/jma_merge.fd
++ '[' YES = YES ']'
++ make VERBOSE=YES clean
+rm -f *.o jma_merge
++ '[' NO = YES ']'
++ make VERBOSE=YES
+ftn -g -traceback -O2 -convert big_endian -mkl jma_merge.f90 -L/apps/ops/prod/libs/intel/19.1.3.304/w3emc/2.9.2/lib64 -lw3emc_4 -L/apps/ops/prod/libs/intel/19.1.3.304/bacio/2.4.1/lib -lbacio_4 -o jma_merge
++ make VERBOSE=YES install
+mv jma_merge /lfs/h1/ops/para/packages/evs.v1.0.8/exec/.
++ for code in ecm_gfs_look_alike_new jma_merge ukm_hires_merge pcpconform sref_precip evs_g2g_adjustCMC
++ cd /lfs/h1/ops/para/packages/evs.v1.0.8/sorc/ukm_hires_merge.fd
++ '[' YES = YES ']'
++ make VERBOSE=YES clean
+rm -f *.o ukm_hires_merge
++ '[' NO = YES ']'
++ make VERBOSE=YES
+ftn -g -traceback -O2 -convert big_endian -mkl ukm_hires_merge.f90 -L/apps/ops/prod/libs/intel/19.1.3.304/w3emc/2.9.2/lib64 -lw3emc_4 -L/apps/ops/prod/libs/intel/19.1.3.304/bacio/2.4.1/lib -lbacio_4 -o ukm_hires_merge
++ make VERBOSE=YES install
+mv ukm_hires_merge /lfs/h1/ops/para/packages/evs.v1.0.8/exec/.
++ for code in ecm_gfs_look_alike_new jma_merge ukm_hires_merge pcpconform sref_precip evs_g2g_adjustCMC
++ cd /lfs/h1/ops/para/packages/evs.v1.0.8/sorc/pcpconform.fd
++ '[' YES = YES ']'
++ make VERBOSE=YES clean
+rm -f *.o *.lst pcpconform
++ '[' NO = YES ']'
++ make VERBOSE=YES
+ftn -g -traceback -FR -cpp  -c -o pcpconform.o pcpconform.f
+ftn  -o pcpconform pcpconform.o /apps/ops/prod/libs/intel/19.1.3.304/w3emc/2.9.2/lib64/libw3emc_4.a /apps/ops/prod/libs/intel/19.1.3.304/bacio/2.4.1/lib/libbacio_4.a
++ make VERBOSE=YES install
+mv pcpconform /lfs/h1/ops/para/packages/evs.v1.0.8/exec/.
++ for code in ecm_gfs_look_alike_new jma_merge ukm_hires_merge pcpconform sref_precip evs_g2g_adjustCMC
++ cd /lfs/h1/ops/para/packages/evs.v1.0.8/sorc/sref_precip.fd
++ '[' YES = YES ']'
++ make VERBOSE=YES clean
+rm -f *.o sref_precip.x
++ '[' NO = YES ']'
++ make VERBOSE=YES
+ftn -g -traceback -O3 -auto -convert big_endian -I /apps/ops/prod/libs/intel/19.1.3.304/g2/3.4.5/include_4 -o sref_precip.x sref_precip.f /apps/ops/prod/libs/intel/19.1.3.304/ip/3.3.3/lib/libip_4.a /apps/ops/prod/libs/intel/19.1.3.304/w3emc/2.9.2/lib64/libw3emc_4.a /apps/ops/prod/libs/intel/19.1.3.304/bacio/2.4.1/lib/libbacio_4.a  /apps/ops/prod/libs/intel/19.1.3.304/sp/2.4.0/lib64/libsp_4.a /apps/ops/prod/libs/intel/19.1.3.304/g2/3.4.5/lib64/libg2_4.a /apps/spack/jasper/2.0.25/intel/19.1.3.304/sjib74krrorkyczqpqah4tvewmlnqdx4/lib64/libjasper.a /apps/spack/libpng/1.6.37/intel/19.1.3.304/4ohkronuhlyherusoszzrmur5ewvlwzh/lib/libpng.a /apps/spack/zlib/1.2.11/intel/19.1.3.304/hjotqkckeoyt6j6tibalwzrlfljcjtdh/lib/libz.a
++ make VERBOSE=YES install
+mv sref_precip.x  /lfs/h1/ops/para/packages/evs.v1.0.8/exec/.
++ for code in ecm_gfs_look_alike_new jma_merge ukm_hires_merge pcpconform sref_precip evs_g2g_adjustCMC
++ cd /lfs/h1/ops/para/packages/evs.v1.0.8/sorc/evs_g2g_adjustCMC.fd
++ '[' YES = YES ']'
++ make VERBOSE=YES clean
+rm -f *.o evs_g2g_adjustCMC.x
++ '[' NO = YES ']'
++ make VERBOSE=YES
+ftn -g -traceback -O3 -auto -convert big_endian -I /apps/ops/prod/libs/intel/19.1.3.304/g2/3.4.5/include_4 -o evs_g2g_adjustCMC.x  evs_g2g_adjustCMC.f /apps/ops/prod/libs/intel/19.1.3.304/ip/3.3.3/lib/libip_4.a /apps/ops/prod/libs/intel/19.1.3.304/w3emc/2.9.2/lib64/libw3emc_4.a /apps/ops/prod/libs/intel/19.1.3.304/bacio/2.4.1/lib/libbacio_4.a  /apps/ops/prod/libs/intel/19.1.3.304/sp/2.4.0/lib64/libsp_4.a /apps/ops/prod/libs/intel/19.1.3.304/g2/3.4.5/lib64/libg2_4.a /apps/spack/jasper/2.0.25/intel/19.1.3.304/sjib74krrorkyczqpqah4tvewmlnqdx4/lib64/libjasper.a /apps/spack/libpng/1.6.37/intel/19.1.3.304/4ohkronuhlyherusoszzrmur5ewvlwzh/lib/libpng.a /apps/spack/zlib/1.2.11/intel/19.1.3.304/hjotqkckeoyt6j6tibalwzrlfljcjtdh/lib/libz.a
++ make VERBOSE=YES install
+mv evs_g2g_adjustCMC.x /lfs/h1/ops/para/packages/evs.v1.0.8/exec/.
