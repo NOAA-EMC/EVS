@@ -587,7 +587,7 @@ suite evs_nco
               time 07:00
               edit VHR '07'
             task jevs_mesoscale_rap_grid2obs_stats
-              time 05:00
+              time 05:30
               edit VHR '07'
             task jevs_mesoscale_nam_snowfall_stats_vhr_06
               time 06:00
