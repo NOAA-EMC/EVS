@@ -1,7 +1,9 @@
 #!/bin/ksh
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the sref precip plotting python script
-# Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
+# Last updated: 
+#                04/10/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
+#                10/27/2023, Binbin Zhou Lynker@EMC/NCEP
 # ******************************************************************************
 set -x 
 
@@ -16,6 +18,11 @@ mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
+
+restart=$COMOUTplots/restart/$past_days/sref_precip_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi
 
 
 export eval_period='TEST'
@@ -57,12 +64,15 @@ done
 VX_MASK_LIST="CONUS"
 																  
 export fcst_init_hour="0,3,6,9,12,15,18,21"
-#export fcst_valid_hours="0 3 6 9 12 15 18 21"
 export fcst_valid_hours="0,3  6,9  12,15 18,21"
 valid_time='valid00z_03z_06z_09z_12z_15z_18z_21z'
 init_time='init00_to_21z'
 
 export plot_dir=$DATA/out/precip/${valid_beg}-${valid_end}
+#For restart:
+if [ ! -d $plot_dir ] ; then
+ mkdir -p $plot_dir
+fi
 
 
 verif_case=precip
@@ -102,13 +112,8 @@ elif [ $stats = fss ] ; then
  for score_type in $score_types ; do
 
   if [ $score_type = lead_average ] ; then
-	if [ $stats = fss ] ; then
-	  #threshes='>=0.1,>=1,>=5,>=10,>=25,>=50'
-	  threshes='>=0.1 >=1 >=5 >=10 >=25 >=50'
-	else
-	  threshes='>=0.1 >=1 >=5 >=10 >=25 >=50'
-        fi
-         export fcst_leads="24,36,48,60,72,84"
+        threshes='>=0.1 >=1 >=5 >=10 >=25 >=50'
+        export fcst_leads="24,36,48,60,72,84"
   elif [ $score_type = threshold_average ] ; then
 	threshes='>=0.1,>=1,>=5,>=10,>=25,>=50'
 	export fcst_leads="24 36 48 60 72 84"
@@ -160,6 +165,11 @@ elif [ $stats = fss ] ; then
 	 #*********************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh  
 
+        #*******************************************************************************************************************
+	#  Check if this sub-job has been completed in the previous run for restart
+	    if [ ! -e $restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed ] ; then
+	#*******************************************************************************************************************
+
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
         echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
@@ -199,9 +209,21 @@ elif [ $stats = fss ] ; then
 
          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
+         ####################################################################
+         #Save for restart:
+         ####################################################################
+         echo "cp ${plot_dir}/${score_type}*${stats}*.png $restart/." >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+         echo "[[ $? = 0 ]] && >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh" >> run_all_poe.sh
 
+        else 
+      
+	 #For restart: copy existing png files from pevious runs
+	 cp $restart/${score_type}*${stats}*.png ${plot_dir}/. 
+       
+	fi 
 
        done #end of thresh
 
