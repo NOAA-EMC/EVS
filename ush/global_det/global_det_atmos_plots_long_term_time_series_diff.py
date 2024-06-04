@@ -393,11 +393,14 @@ class LongTermTimeSeriesDiff:
                             np.ma.count_masked(
                                 model_forecast_day_running_mean
                             ):
-                        if np.ma.count_masked(model_forecast_day[-1]) == 1:
+                        legend_mean = np.ma.mean(
+                            model_forecast_day_running_mean
+                        )
+                        if np.ma.is_masked(legend_mean):
                             model_label = f"{model} --"
                         else:
                             model_label = (f"{model} "
-                                           +f"{model_forecast_day[-1]:.3f}")
+                                           +f"{legend_mean:.3f}")
                         ax1.plot_date(
                             run_length_date_dt_list,
                             model_forecast_day_running_mean,
@@ -488,11 +491,6 @@ class LongTermTimeSeriesDiff:
                     mean_date_strf = '%b %Y'
                 elif self.time_range == 'yearly':
                     mean_date_strf = '%Y'
-                ax1.text(0.5, 0.09,
-                         run_length_date_dt_list[-1].strftime(mean_date_strf)
-                         +' Mean',
-                         fontsize=16, ha='center', va='center',
-                         transform=ax1.transAxes)
                 if len(ax1.lines) != 0:
                     y_axis_min = ax1.get_yticks()[0]
                     y_axis_max = ax1.get_yticks()[-1]
