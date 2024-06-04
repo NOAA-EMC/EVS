@@ -245,6 +245,72 @@ def convert_grib2_grib2(grib2_fileA, grib2_fileB):
     os.system(cnvgrib+' -g22 '+grib2_fileA+' '
               +grib2_fileB+' > /dev/null 2>&1')
 
+def check_grib1_file_corrupt(grib1_file):
+    """! Checks if GRIB1 file is corrupt
+
+         Args:
+             grib1_file - string of the path to
+                          the GRIB1 file to
+                          convert
+         Returns:
+             file_is_corrupt - True means file is corrupt
+                               False means file is not corrupt
+    """
+    WGRIB = os.environ['WGRIB']
+    chk_corrupt = subprocess.run(
+        f"{WGRIB} {grib1_file}  1> /dev/null 2>&1", shell=True
+    )
+    if chk_corrupt.returncode != 0:
+        print(f"WARNING: {grib1_file} is corrupt")
+        file_is_corrupt = True
+    else:
+        file_is_corrupt = False
+    return file_is_corrupt
+
+def check_grib2_file_corrupt(grib2_file):
+    """! Checks if GRIB2 file is corrupt
+
+         Args:
+             grib2_file - string of the path to
+                          the GRIB2 file to
+                          convert
+         Returns:
+             file_is_corrupt - True means file is corrupt
+                               False means file is not corrupt
+    """
+    WGRIB2 = os.environ['WGRIB2']
+    chk_corrupt = subprocess.run(
+        f"{WGRIB2} {grib2_file}  1> /dev/null 2>&1", shell=True
+    )
+    if chk_corrupt.returncode != 0:
+        print(f"WARNING: {grib2_file} is corrupt")
+        file_is_corrupt = True
+    else:
+        file_is_corrupt = False
+    return file_is_corrupt
+
+def check_netcdf_file_corrupt(netcdf_file):
+    """! Checks if netCDF file is corrupt
+                
+         Args:
+             netcdf_file - string of the path to
+                           the netCDF file to 
+                           convert
+         Returns:
+             file_is_corrupt - True means file is corrupt
+                               False means file is not corrupt
+    """
+    chk_corrupt = subprocess.run(
+        f"ncks -H {netcdf_file}  1> /dev/null 2>&1", shell=True
+    )
+    if chk_corrupt.returncode != 0:
+        print(f"WARNING: {netcdf_file} is corrupt")
+        file_is_corrupt = True
+    else:
+        file_is_corrupt = False
+    return file_is_corrupt
+
+
 def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
                   fhr_list):
     """! Creates a list of dictionaries containing information
@@ -507,9 +573,72 @@ def prep_prod_fnmoc_file(source_file, dest_file, init_dt, forecast_hour,
                                 'atmos.'+dest_file.rpartition('/')[2])
     # Prep file
     if check_file_exists_size(source_file):
-        convert_grib2_grib2(source_file, prepped_file)
+        if not check_grib2_file_corrupt(source_file):
+            convert_grib2_grib2(source_file, prepped_file)
     else:
         log_missing_file_model(log_missing_file, source_file, 'fnmoc',
+                               init_dt, str(forecast_hour).zfill(3))
+    copy_file(prepped_file, dest_file)
+
+def prep_prod_cmc_file(source_file, dest_file, init_dt, forecast_hour,
+                       prep_method, log_missing_file):
+    """! Do prep work for CMC production files
+
+         Args:
+             source_file      - source file format (string)
+             dest_file        - destination file (string)
+             init_dt          - initialization date (datetime)
+             forecast_hour    - forecast hour (string)
+             prep_method      - name of prep method to do
+                                (string)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+
+         Returns:
+    """
+    # Environment variables and executables
+    # Working file names
+    prepped_file = os.path.join(os.getcwd(),
+                                'atmos.'+dest_file.rpartition('/')[2])
+    # Prep file
+    if check_file_exists_size(source_file):
+        if prep_method == 'precip':
+            if not check_grib2_file_corrupt(source_file):
+                copy_file(source_file, prepped_file)
+        else:
+            if not check_grib1_file_corrupt(source_file):
+                copy_file(source_file, prepped_file)
+    else:
+        log_missing_file_model(log_missing_file, source_file, 'cmc',
+                               init_dt, str(forecast_hour).zfill(3))
+    copy_file(prepped_file, dest_file)
+
+def prep_prod_cmc_regional_file(source_file, dest_file, init_dt, forecast_hour,
+                                prep_method, log_missing_file):
+    """! Do prep work for CMC regional production files
+
+         Args:
+             source_file      - source file format (string)
+             dest_file        - destination file (string)
+             init_dt          - initialization date (datetime)
+             forecast_hour    - forecast hour (string)
+             prep_method      - name of prep method to do
+                                (string)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+
+         Returns:
+    """
+    # Environment variables and executables
+    # Working file names
+    prepped_file = os.path.join(os.getcwd(),
+                                'atmos.'+dest_file.rpartition('/')[2])
+    # Prep file
+    if check_file_exists_size(source_file):
+        if not check_grib2_file_corrupt(source_file):
+            copy_file(source_file, prepped_file)
+    else:
+        log_missing_file_model(log_missing_file, source_file, 'cmc_regional',
                                init_dt, str(forecast_hour).zfill(3))
     copy_file(prepped_file, dest_file)
 
@@ -530,18 +659,12 @@ def prep_prod_imd_file(source_file, dest_file, init_dt, forecast_hour,
          Returns:
     """
     # Environment variables and executables
-    WGRIB2 = os.environ['WGRIB2']
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
     # Prep file
     if check_file_exists_size(source_file):
-        chk_corrupt = subprocess.run(
-            f"{WGRIB2} {source_file}  1> /dev/null 2>&1", shell=True
-        )
-        if chk_corrupt.returncode != 0:
-            print(f"WARNING: {source_file} is corrupt")
-        else:
+        if not check_grib2_file_corrupt(source_file):
             copy_file(source_file, prepped_file)
     else:
         log_missing_file_model(log_missing_file, source_file, 'imd',
@@ -588,11 +711,12 @@ def prep_prod_jma_file(source_file_format, dest_file, init_dt, forecast_hour,
             elif hem == 's':
                 working_file = working_file2
             if check_file_exists_size(hem_source_file):
-                run_shell_command(
-                    [WGRIB+' '+hem_source_file+' | grep "'+wgrib_fhr+'" | '
-                     +WGRIB+' '+hem_source_file+' -i -grib -o '
-                     +working_file]
-                )
+                if not check_grib1_file_corrupt(hem_source_file):
+                    run_shell_command(
+                        [WGRIB+' '+hem_source_file+' | grep "'+wgrib_fhr+'" | '
+                         +WGRIB+' '+hem_source_file+' -i -grib -o '
+                         +working_file]
+                    )
             else:
                 log_missing_file_model(log_missing_file, hem_source_file,
                                        'jma', init_dt,
@@ -605,11 +729,12 @@ def prep_prod_jma_file(source_file_format, dest_file, init_dt, forecast_hour,
     elif 'precip' in prep_method:
         source_file = source_file_format
         if check_file_exists_size(source_file):
-            run_shell_command(
-                [WGRIB+' '+source_file+' | grep "0-'
-                 +forecast_hour+'hr" | '+WGRIB+' '+source_file
-                 +' -i -grib -o '+prepped_file]
-            )
+            if not check_grib1_file_corrupt(source_file):
+                run_shell_command(
+                    [WGRIB+' '+source_file+' | grep "0-'
+                     +forecast_hour+'hr" | '+WGRIB+' '+source_file
+                     +' -i -grib -o '+prepped_file]
+                )
         else:
             log_missing_file_model(log_missing_file, source_file, 'jma',
                                    init_dt, str(forecast_hour).zfill(3))
@@ -649,11 +774,12 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
         else:
             wgrib_fhr = ':'+forecast_hour+'hr'
         if check_file_exists_size(source_file):
-            run_shell_command(
-                [WGRIB+' '+source_file+' | grep "'+wgrib_fhr+'" | '
-                 +WGRIB+' '+source_file+' -i -grib -o '
-                 +working_file1]
-            )
+            if not check_grib1_file_corrupt(source_file):
+                run_shell_command(
+                    [WGRIB+' '+source_file+' | grep "'+wgrib_fhr+'" | '
+                     +WGRIB+' '+source_file+' -i -grib -o '
+                     +working_file1]
+                )
         else:
             log_missing_file_model(log_missing_file, source_file, 'ecmwf',
                                    init_dt, str(forecast_hour).zfill(3))
@@ -665,9 +791,10 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
             )
     elif 'precip' in prep_method:
         if check_file_exists_size(source_file):
-            run_shell_command(
-                [PCPCONFORM, 'ecmwf', source_file, prepped_file]
-            )
+            if not check_grib1_file_corrupt(source_file):
+                run_shell_command(
+                    [PCPCONFORM, 'ecmwf', source_file, prepped_file]
+                )
         else:
             if int(datetime.datetime.now().strftime('%H')) > 18:
                 log_missing_file_model(log_missing_file, source_file, 'ecmwf',
@@ -748,11 +875,12 @@ def prep_prod_ukmet_file(source_file_format, dest_file, init_dt,
             source_file = source_file_format.replace('{letter?fmt=str}',
                                                      fhr_id)
             if check_file_exists_size(source_file):
-                run_shell_command(
-                    [WGRIB+' '+source_file+' | grep "'+wgrib_fhr
-                     +'" | '+WGRIB+' '+source_file+' -i -grib -o '
-                     +working_file1]
-                )
+                if not check_grib1_file_corrupt(source_file):
+                    run_shell_command(
+                        [WGRIB+' '+source_file+' | grep "'+wgrib_fhr
+                         +'" | '+WGRIB+' '+source_file+' -i -grib -o '
+                         +working_file1]
+                    )
             else:
                 log_missing_file_model(log_missing_file, source_file, 'ukmet',
                                        init_dt, str(forecast_hour).zfill(3))
@@ -763,10 +891,11 @@ def prep_prod_ukmet_file(source_file_format, dest_file, init_dt,
         source_file = source_file_format
         source_file_accum = 12
         if check_file_exists_size(source_file):
-            run_shell_command(
-                [WGRIB2+' '+source_file+' -if ":TWATP:" -set_var "APCP" '
-                 +'-fi -grib '+working_file1]
-            )
+            if not check_grib2_file_corrupt(source_file):
+                run_shell_command(
+                    [WGRIB2+' '+source_file+' -if ":TWATP:" -set_var "APCP" '
+                     +'-fi -grib '+working_file1]
+                )
         else:
             log_missing_file_model(log_missing_file, source_file, 'ukmet',
                                    init_dt, str(forecast_hour).zfill(3))
@@ -814,7 +943,8 @@ def prep_prod_dwd_file(source_file, dest_file, init_dt, forecast_hour,
     # Prep file
     if 'precip' in prep_method:
         if check_file_exists_size(source_file):
-            convert_grib2_grib1(source_file, working_file1)
+            if not check_grib2_file_corrupt(source_file):
+                convert_grib2_grib1(source_file, working_file1)
         else:
             log_missing_file_model(log_missing_file, source_file, 'dwd',
                                    init_dt, str(forecast_hour).zfill(3))
@@ -864,12 +994,13 @@ def prep_prod_metfra_file(source_file, dest_file, init_dt, forecast_hour,
         if check_file_exists_size(working_file2):
             file_accum = 24
             fhr_accum_start = int(forecast_hour)-file_accum
-            run_shell_command(
-                [WGRIB+' '+working_file2+' | grep "'
-                 +str(fhr_accum_start)+'-'
-                 +forecast_hour+'hr" | '+WGRIB+' '+working_file2
-                 +' -i -grib -o '+prepped_file]
-            )
+            if not check_grib1_file_corrupt(working_file2):
+                run_shell_command(
+                    [WGRIB+' '+working_file2+' | grep "'
+                     +str(fhr_accum_start)+'-'
+                     +forecast_hour+'hr" | '+WGRIB+' '+working_file2
+                     +' -i -grib -o '+prepped_file]
+                )
             copy_file(prepped_file, dest_file)
 
 def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
@@ -889,7 +1020,8 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +daily_dest_file.rpartition('/')[2])
     if check_file_exists_size(daily_source_file):
-        copy_file(daily_source_file, prepped_file)
+        if not check_netcdf_file_corrupt(daily_source_file):
+            copy_file(daily_source_file, prepped_file)
         if check_file_exists_size(prepped_file):
             prepped_data = netcdf.Dataset(prepped_file, 'a')
             prepped_data.variables['time'][:] = (
@@ -923,7 +1055,8 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
                                 +source_file.rpartition('/')[2])
     # Prep file
     if check_file_exists_size(source_file):
-        copy_file(source_file, prepped_file)
+        if not check_netcdf_file_corrupt(source_file):
+            copy_file(source_file, prepped_file)
     else:
         log_missing_file_truth(log_missing_file, source_file,
                                'GHRSST OSPO', date_dt)
@@ -955,7 +1088,8 @@ def prep_prod_get_d_file(source_file, dest_file, date_dt,
                                 +source_file.rpartition('/')[2])
     # Prep file
     if check_file_exists_size(source_file):
-        copy_file(prepped_file, dest_file)
+        if not check_netcdf_file_corrupt(source_file):
+            copy_file(prepped_file, dest_file)
     else:
         log_missing_file_truth(log_missing_file, source_file,
                                'GET-D', date_dt)
