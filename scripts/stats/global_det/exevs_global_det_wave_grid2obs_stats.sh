@@ -282,17 +282,6 @@ else
     echo "WARNING: No large stat file found at ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
 fi
 
-# Cat the METplus log files
-log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-        echo "Start: $log_file"
-        cat $log_file
-        echo "End: $log_file"
-    done
-fi
-
 msg="JOB $job HAS COMPLETED NORMALLY."
 
 echo ' '
