@@ -74,17 +74,6 @@ if [ $SENDMAIL = YES ] ; then
     fi
 fi
 
-# Cat the METplus log files
-log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-        echo "Start: $log_file"
-        cat $log_file
-        echo "End: $log_file"
-    done
-fi
-
 # Combine monthly files into 1
 tmp_monthly_stats_summary_file_wildcard=${DATA}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gfs.*.${VYYYYmm}_*Z.f*.summary.stat
 tmp_monthly_stat_summary_file_count=$(ls $tmp_monthly_stats_summary_file_wildcard 2> /dev/null | wc -l)
