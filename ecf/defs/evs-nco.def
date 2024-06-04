@@ -512,7 +512,7 @@ suite evs_nco
             task jevs_global_ens_gefs_atmos_grid2grid_stats
               trigger :TIME >= 0830 and ../../../../00/evs/prep/global_ens/jevs_global_ens_atmos_prep == complete    # walltime=03:30:00
             task jevs_global_ens_gefs_atmos_grid2obs_stats
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_global_ens_atmos_prep == complete
+              trigger :TIME >= 0945 and ../../../../00/evs/prep/global_ens/jevs_global_ens_atmos_prep == complete
             task jevs_global_ens_gefs_atmos_precip_stats
               trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_global_ens_atmos_prep == complete
             task jevs_global_ens_cmce_atmos_grid2grid_stats
@@ -587,7 +587,7 @@ suite evs_nco
               time 07:00
               edit VHR '07'
             task jevs_mesoscale_rap_grid2obs_stats
-              time 07:00
+              time 05:30
               edit VHR '07'
             task jevs_mesoscale_nam_snowfall_stats_vhr_06
               time 06:00
@@ -794,7 +794,7 @@ suite evs_nco
               trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_namnest_severe_prep_vhr_00 == complete and ../../../../06/evs/prep/cam/jevs_cam_namnest_severe_prep_vhr_06 == complete
               edit VHR '08'
             task jevs_cam_href_grid2obs_stats
-              time 08:30
+              time 07:30
             task jevs_cam_href_precip_stats
               time 08:30
             task jevs_cam_href_spcoutlook_stats
