@@ -96,9 +96,9 @@ for HH in ${HHs} ; do
 		FCST=$(printf "%03d" "$fcst")
 		COMINfilenamefnmoc="${COMINfnmoc}/${MODEL2NAME}_${RUN}.${INITDATE}/wave_${INITDATE}${HH}f${FCST}"
 		DATAfilenamefnmoc="${DATA}/gribs/wave_${INITDATE}${HH}f${FCST}"
-		DATAfilenamefnmoc_new="${DATA}/gribs/wave_${INITDATE}${HH}f${FCST}.grib2"
+		DATAfilenamefnmoc_new="${DATA}/gribs/wave_${INITDATE}${HH}.f${FCST}.grib2"
 		fnmoc_old_name="wave_${INITDATE}${HH}f${FCST}"
-		fnmoc_new_name="wave_${INITDATE}${HH}f${FCST}.grib2"
+		fnmoc_new_name="wave_${INITDATE}${HH}.f${FCST}.grib2"
 		if [ ! -s $COMINfilenamefnmoc ]; then
 			if [ $SENDMAIL = YES ]; then
 				export subject="FNMOC Forecast Data Missing for EVS ${COMPONENT}"
