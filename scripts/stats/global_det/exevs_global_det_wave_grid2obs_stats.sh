@@ -57,7 +57,7 @@ output_ascii2nc_ndbc_file=$COMOUTndbc/ndbc.${VDATE}.nc
 if [[ $input_ascii2nc_ndbc_path == *"/com/"* ]] || [[ $input_ascii2nc_ndbc_path == *"/dcom/"* ]]; then
     alert_word="WARNING"
 else
-￼   alert_word="NOTE"
+    alert_word="NOTE"
 fi
 if [[ -s $output_ascii2nc_ndbc_file ]]; then
     cp -v $output_ascii2nc_ndbc_file $tmp_ascii2nc_ndbc_file
