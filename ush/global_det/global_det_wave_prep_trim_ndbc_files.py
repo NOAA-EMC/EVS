@@ -62,9 +62,10 @@ for ndbc_input_file in glob.glob(os.path.join(DCOMINndbc,
     if not os.path.exists(ndbc_output_file):
         print(f"Trimming {ndbc_input_file} for {INITDATE_dt:%Y%m%d}")
         ndbc_input_file_df = pd.read_csv(
-            ndbc_input_file, sep=" ", skiprows=2, skipinitialspace=True,
+            ndbc_input_file, sep=" ", skipinitialspace=True,
             keep_default_na=False, dtype='str', header=None,
-            names=ndbc_header1[1:].split()
+            names=ndbc_header1[1:].split(), index_col=False,
+            on_bad_lines='warn'
         )
         INITDATE_ndbc_input_file_df = ndbc_input_file_df[
             (ndbc_input_file_df['YY'] == f"{INITDATE_dt:%Y}") \
