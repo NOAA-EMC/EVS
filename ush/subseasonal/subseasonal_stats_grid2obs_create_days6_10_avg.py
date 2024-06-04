@@ -141,7 +141,7 @@ while valid_hr <= int(valid_hr_end):
                       +days_avg_day_fhr_DATAROOT_input_file+" or "
                       +days_avg_day_fhr_COMIN_input_file)
             days_avg_day_fhr+=12
-        days_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
+        days_avg_df_list = []
         if os.path.exists(output_COMOUT_file):
             sub_util.copy_file(output_COMOUT_file, output_DATA_file)
             make_days_avg_output_file = False
@@ -172,8 +172,9 @@ while valid_hr <= int(valid_hr_end):
                                                 skipinitialspace=True, header=None,
                                                 names=MET_MPR_column_list,
                                                 na_filter=False, dtype=str)
-                all_days_avg_df = all_days_avg_df.append(days_avg_file_df,
-                                                           ignore_index=True)
+                all_days_avg_df = pd.concat(
+                    [all_days_avg_df, days_avg_file_df], ignore_index=True
+                )
             for obtype in all_days_avg_df['OBTYPE'].unique():
                 all_days_avg_obtype_df = all_days_avg_df.loc[
                     all_days_avg_df['OBTYPE'] == obtype
@@ -239,10 +240,12 @@ while valid_hr <= int(valid_hr_end):
                         days_avg_obtype_sid_vx_mask_df['OBS'] = str(
                             all_days_avg_obtype_sid_vx_mask_obs_mean
                         )
-                        days_avg_df = days_avg_df.append(
-                            days_avg_obtype_sid_vx_mask_df,
-                            ignore_index=True
+                        days_avg_df_list.append(
+                            days_avg_obtype_sid_vx_mask_df
                         )
+            days_avg_df = pd.concat(
+                days_avg_df_list, axis=1, ignore_index=True
+            ).T
             days_avg_df.to_csv(
                 output_DATA_file, header=input_file_header,
                 index=None, sep=' ', mode='w'

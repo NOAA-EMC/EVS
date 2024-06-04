@@ -63,7 +63,6 @@ export MODELNAME=${MODELNAME:-wafs}
 # COMIN folder of analysis and forecast grib2 data
 # gfs_ver defined in versions/run.ver
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export EVSINstat=$COMIN/stats/$COMPONENT  # will be appended with wafs.$VDATE or gfs.$VDATE
 
 # COMOUT folder
 # evs_ver defined in versions/run.ver
@@ -91,48 +90,11 @@ export USH_DIR=${USH_DIR:-$HOMEevs/ush/$COMPONENT}
 # Execute the script.
 ############################################
 export DAYS_LIST=${DAYS_LIST:-"90 31"}
-
-export DATAplot=$DATA/plot
-mkdir -p $DATAplot
-
-export MPIRUN=${MPIRUN:-"mpiexec"}
-
-OBSERVATIONS="GCIP GFS"
-
-if [ -s wafs_plots.cmdfile ];then
-	rm wafs_plots.cmdfile
-else
-	echo "WARNING: wafs_plots.cmdfile DOES NOT EXIST"
-fi
-
-ic=0
-export VX_MASK_ALL="GLB ASIA AUNZ EAST NAMER NATL_AR2 NHEM NPO SHEM TROPICS"
-for observation in $OBSERVATIONS ; do
-    for ndays in $DAYS_LIST ; do
-	for subregion in $VX_MASK_ALL ; do
-	    if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
-		echo $ic $SCRIPTSevs/exevs_wafs_atmos_plots.sh $observation $ndays $subregion >> wafs_plots.cmdfile
-	    else
-		echo $SCRIPTSevs/exevs_wafs_atmos_plots.sh $observation $ndays $subregion >> wafs_plots.cmdfile
-		export MP_PGMMODEL=mpmd
-	    fi
-	    ic=$(( ic + 1 ))
-	done
-    done
-done
-export MPIRUN="$MPIRUN -np $ic -cpu-bind verbose,core cfp"
-$MPIRUN wafs_plots.cmdfile
+$SCRIPTSevs/exevs_wafs_atmos_plots.sh
 
 export err=$?; err_chk
 
-cd $DATAplot
-for ndays in $DAYS_LIST ; do
-    eval_period="last${ndays}days"
-    tar -cvf $COMOUT/$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar *${eval_period}*png
-done
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-echo $msg
+echo "JOB $job HAS COMPLETED NORMALLY."
 
 if [ "$KEEPDATA" != "YES" ] ; then
   rm -rf $DATA
@@ -140,4 +102,3 @@ fi
 
 date
 
-exit
