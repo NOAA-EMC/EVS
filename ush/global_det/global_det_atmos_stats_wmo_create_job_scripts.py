@@ -1074,10 +1074,8 @@ elif JOB_GROUP == 'summarize_stats':
                                                      +f"{line_type}:{stat}")
                                 if stat != line_type_stat_list[-1]:
                                     line_type_columns = line_type_columns+','
-                            print(f"{stat_analysis_job} - {line_type_columns}")
                         elif stat_analysis_job == 'aggregate':
                             line_type = line_type_info
-                            print(f"{stat_analysis_job} - {line_type}")
                         job_env_dict['line_type'] = line_type
                         tmp_stat_analysis_job_file = gda_util.format_filler(
                             stat_analysis_job_file_format, valid_time_dt,
@@ -1108,10 +1106,6 @@ elif JOB_GROUP == 'summarize_stats':
                                 f".{line_type}.dump_row.stat"
                             )
                         )
-                        print(job_env_dict['tmp_stat_analysis_job_file'])
-                        print(job_env_dict['tmp_stat_analysis_job_dump_row_file'])
-                        print(job_env_dict['output_stat_analysis_job_file'])
-                        print(job_env_dict['output_stat_analysis_job_dump_row_file'])
                         have_stat = os.path.exists(output_stat_analysis_job_file)
                         njobs+=1
                         job_file = os.path.join(JOB_GROUP_jobs_dir,
