@@ -48,7 +48,6 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
-
 #*************************************************************************
 # Virtual link the  sref's stat data files of past 90 days
 #**************************************************************************

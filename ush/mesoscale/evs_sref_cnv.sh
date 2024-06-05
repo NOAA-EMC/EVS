@@ -145,12 +145,3 @@ for log_dir in $log_dirs; do
 done
 echo "Print stat generation metplus log files end"
 
-#***********************************************
-# Gather small stat files to forma big stat file
-# **********************************************
-#if [ $gather = yes ] ; then 
-#  $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE
-#  export err=$?; err_chk
-#fi
-
-

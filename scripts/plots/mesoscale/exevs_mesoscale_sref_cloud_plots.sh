@@ -234,7 +234,6 @@ else
    export err=$?; err_chk
 fi
 
-
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************

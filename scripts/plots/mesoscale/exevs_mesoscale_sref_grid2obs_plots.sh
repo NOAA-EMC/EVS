@@ -206,8 +206,6 @@ for fcst_valid_hour in $fcst_valid_hours ; do
            verif_type=conus_sfc
         fi
 
-      	
-
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
         echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
