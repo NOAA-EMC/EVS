@@ -116,7 +116,7 @@ for ObsType in ${grid2obs_list}; do
         aday=`echo ${adate} |cut -c1-8`
         acyc=`echo ${adate} |cut -c9-10`
         if [ "${acyc}" == "${mdl_cyc}" ]; then
-          fcst_file=${EVSINgefs}/${RUN}.${aday}/${MODELNAME}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.grib2
+          fcst_file=${EVSINgefs}/${RUN}.${aday}/${MODELNAME}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.reduced.grib2
           if [ -s ${fcst_file} ]; then
             echo "${fhr} found"
             echo ${fhr} >> ${recorded_temp_list}

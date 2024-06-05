@@ -18,8 +18,7 @@ set -x
 cd ${DATA}
 ########################################################################
 ## Pre-Processed Observations
-########################################################################
-#
+
 ## For temporary stoage on the working dirary before moving to COMOUT with SENDCOM setting
 #
 export finalprep=${DATA}/final
@@ -37,8 +36,13 @@ for OBTTYPE in ${obstype}; do
     export obstype=`echo ${OBTTYPE} | tr a-z A-Z`
     prep_config_file=${CONFIGevs}/ASCII2NC_obs${obstype}.conf
 
+    if [ "${DCOMIN}" == "${DCOMROOT}" ]; then
+        export RUNTIME_DCOM=${DCOMIN}
+    else 
+        export RUNTIME_DCOM=${DCOMIN}/${OBTTYPE}
+    fi
     if [ "${OBTTYPE}" == "aeronet" ]; then
-        checkfile=${DCOMIN}/${VDATE}/validation_data/aq/${OBTTYPE}/${VDATE}.lev15
+        checkfile=${RUNTIME_DCOM}/${VDATE}/validation_data/aq/${OBTTYPE}/${VDATE}.lev15
         if [ -s ${checkfile} ]; then
             if [ -s ${prep_config_file} ]; then
                 run_metplus.py ${prep_config_file} ${config_common}
@@ -82,7 +86,7 @@ for OBTTYPE in ${obstype}; do
         let endvhr=23
         while [ ${ic} -le ${endvhr} ]; do
             vldhr=$(printf %2.2d ${ic})
-            checkfile=${DCOMIN}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
+            checkfile=${RUNTIME_DCOM}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
             if [ -s ${checkfile} ]; then
                 export VHOUR=${vldhr}
                 if [ -s ${prep_config_file} ]; then
@@ -115,46 +119,83 @@ for OBTTYPE in ${obstype}; do
 done
 #
 ########################################################################
-## Backup GEFS-aerosol output for global_ens_chem_grid2obs stats step
+##  Extract variables from full GEFS-aerosol output to be verified
+##    against observation and option to used already recuded
+##    GEFS-aerosol output (suitable for restrospective run)
+##  Backup GEFS-aerosol reduced output for global_ens_chem_grid2obs
+##    stats step due to insuccficent retention time (at least 6 days)
 ########################################################################
-if [ ${SENDCOM} = "YES" ]; then
-    NOW=${VDATE}
-    declare -a cyc_opt=( 00 06 12 18 )
-    let inc=3
-    for mdl_cyc in "${cyc_opt[@]}"; do
-        com_gefs=${COMINgefs}/${MODELNAME}.${NOW}/${mdl_cyc}/${RUN}/pgrb2ap25
-        if [ -d ${com_gefs} ]; then
-            prep_gefs=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
-	    mkdir -p ${prep_gefs}
-            let hour_now=3
-            let max_hour=120
-            while [ ${hour_now} -le ${max_hour} ]; do
-                fhr=`printf %3.3d ${hour_now}`
-                cpfile=${com_gefs}/${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2
-                if [ -s ${cpfile} ]; then
-                    cp -v ${cpfile} ${prep_gefs}
+NOW=${VDATE}
+match_aod_1=":AOTK:"
+match_aod_2="aerosol=Total Aerosol"
+match_aod_3="aerosol_size <2e-05"
+match_aod_4="aerosol_wavelength >=5.45e-07,<=5.65e-07"
+match_pm25_1="PMTF"
+match_pm25_2="aerosol=Total Aerosol"
+match_pm25_3="aerosol_size <2.5e-06"
+declare -a cyc_opt=( 00 06 12 18 )
+let inc=3
+for mdl_cyc in "${cyc_opt[@]}"; do
+    com_gefs=${COMINgefs}/${MODELNAME}.${NOW}/${mdl_cyc}/${RUN}/pgrb2ap25
+    if [ -d ${com_gefs} ]; then
+        prep_gefs=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
+        mkdir -p ${prep_gefs}
+        let hour_now=3
+        let max_hour=120
+        while [ ${hour_now} -le ${max_hour} ]; do
+            fhr=`printf %3.3d ${hour_now}`
+            mdl_full_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2
+            reduced_rec_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.reduced.grib2
+            if [ "${USED_REDUCED_INPUT}" == "yes" ] || [ "${USED_REDUCED_INPUT}" == "YES" ]; then
+                check_file=${com_gefs}/${reduced_rec_grib2}
+                if [ -s ${check_file} ]; then
+                    if [ ${SENDCOM} = "YES" ]; then
+                        cp -v ${check_file} ${prep_gefs}
+                    fi
                 else
                     if [ ${SENDMAIL} = "YES" ]; then
                         echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
-                        echo "Missing file is ${cpfile}" >> mailmsg
+                        echo "Missing file is ${check_file}" >> mailmsg
                         echo "==============" >> mailmsg
                         flag_send_message=YES
                     fi
                     echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
-                    echo "Missing file is ${cpfile}" >> mailmsg
+                    echo "Missing file is ${check_file}" >> mailmsg
                 fi
-                ((hour_now+=${inc}))
-            done
-        else
-            if [ ${SENDMAIL} = "YES" ]; then
-                echo "WARNING: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
-                echo "==============" >> mailmsg
-                flag_send_message=YES
+            else
+                check_file=${com_gefs}/${mdl_full_grib2}
+                if [ -s ${check_file} ]; then
+
+                    if [ -e extract_aod ]; then /bin/rm -rf extract_aod; fi
+                    if [ -e extract_pm25 ]; then /bin/rm -rf extract_pm25; fi
+                    wgrib2 -match "${match_aod_1}" -match "${match_aod_2}" -match "${match_aod_3}" -match "${match_aod_4}" ${check_file} -grib extract_aod
+                    wgrib2 -match "${match_pm25_1}" -match "${match_pm25_2}" -match "${match_pm25_3}" ${check_file} -grib extract_pm25
+                    cat extract_aod extract_pm25 > ${reduced_rec_grib2}
+                    if [ ${SENDCOM} = "YES" ]; then
+                        cp -v ${reduced_rec_grib2} ${prep_gefs}
+                    fi
+                else
+                    if [ ${SENDMAIL} = "YES" ]; then
+                        echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
+                        echo "Missing file is ${check_file}" >> mailmsg
+                        echo "==============" >> mailmsg
+                        flag_send_message=YES
+                    fi
+                    echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
+                    echo "Missing file is ${check_file}" >> mailmsg
+                fi
             fi
+            ((hour_now+=${inc}))
+        done
+    else
+        if [ ${SENDMAIL} = "YES" ]; then
             echo "WARNING: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
+            echo "==============" >> mailmsg
+            flag_send_message=YES
         fi
-    done
-fi
+        echo "WARNING: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
+    fi
+done
 #
 if [ "${flag_send_message}" == "YES" ]; then
     export subject="AEORNET Level 1.5 NC or AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}_${RUN}"
