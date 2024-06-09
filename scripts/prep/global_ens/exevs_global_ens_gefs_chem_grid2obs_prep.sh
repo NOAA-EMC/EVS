@@ -86,7 +86,7 @@ for OBTTYPE in ${obstype}; do
         let endvhr=23
         while [ ${ic} -le ${endvhr} ]; do
             vldhr=$(printf %2.2d ${ic})
-            checkfile=${RUNTIME_DCOM}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
+            checkfile=${RUNTIME_DCOM}/${VDATE}/${OBTTYPE}/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
             if [ -s ${checkfile} ]; then
                 export VHOUR=${vldhr}
                 if [ -s ${prep_config_file} ]; then
@@ -146,44 +146,31 @@ for mdl_cyc in "${cyc_opt[@]}"; do
             fhr=`printf %3.3d ${hour_now}`
             mdl_full_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2
             reduced_rec_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.reduced.grib2
-            if [ "${USED_REDUCED_INPUT}" == "yes" ] || [ "${USED_REDUCED_INPUT}" == "YES" ]; then
-                check_file=${com_gefs}/${reduced_rec_grib2}
-                if [ -s ${check_file} ]; then
-                    if [ ${SENDCOM} = "YES" ]; then
-                        cp -v ${check_file} ${prep_gefs}
-                    fi
-                else
-                    if [ ${SENDMAIL} = "YES" ]; then
-                        echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
-                        echo "Missing file is ${check_file}" >> mailmsg
-                        echo "==============" >> mailmsg
-                        flag_send_message=YES
-                    fi
-                    echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
-                    echo "Missing file is ${check_file}" >> mailmsg
+            check_full_file=${com_gefs}/${mdl_full_grib2}
+            check_reduced_file=${com_gefs}/${reduced_rec_grib2}
+            if [ -s ${check_reduced_file} ]; then
+                echo "Found file ${check_reduced_file}"
+                if [ ${SENDCOM} = "YES" ]; then
+                    cp -v ${check_reduced_file} ${prep_gefs}
+                fi
+            elif [ -s ${check_full_file} ]; then
+                if [ -e extract_aod ]; then /bin/rm -rf extract_aod; fi
+                if [ -e extract_pm25 ]; then /bin/rm -rf extract_pm25; fi
+                wgrib2 -match "${match_aod_1}" -match "${match_aod_2}" -match "${match_aod_3}" -match "${match_aod_4}" ${check_full_file} -grib extract_aod
+                wgrib2 -match "${match_pm25_1}" -match "${match_pm25_2}" -match "${match_pm25_3}" ${check_full_file} -grib extract_pm25
+                cat extract_aod extract_pm25 > ${reduced_rec_grib2}
+                if [ ${SENDCOM} = "YES" ]; then
+                    cp -v ${reduced_rec_grib2} ${prep_gefs}
                 fi
             else
-                check_file=${com_gefs}/${mdl_full_grib2}
-                if [ -s ${check_file} ]; then
-
-                    if [ -e extract_aod ]; then /bin/rm -rf extract_aod; fi
-                    if [ -e extract_pm25 ]; then /bin/rm -rf extract_pm25; fi
-                    wgrib2 -match "${match_aod_1}" -match "${match_aod_2}" -match "${match_aod_3}" -match "${match_aod_4}" ${check_file} -grib extract_aod
-                    wgrib2 -match "${match_pm25_1}" -match "${match_pm25_2}" -match "${match_pm25_3}" ${check_file} -grib extract_pm25
-                    cat extract_aod extract_pm25 > ${reduced_rec_grib2}
-                    if [ ${SENDCOM} = "YES" ]; then
-                        cp -v ${reduced_rec_grib2} ${prep_gefs}
-                    fi
-                else
-                    if [ ${SENDMAIL} = "YES" ]; then
-                        echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
-                        echo "Missing file is ${check_file}" >> mailmsg
-                        echo "==============" >> mailmsg
-                        flag_send_message=YES
-                    fi
+                if [ ${SENDMAIL} = "YES" ]; then
                     echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
-                    echo "Missing file is ${check_file}" >> mailmsg
+                    echo "Missing file is ${check_full_file}" >> mailmsg
+                    echo "==============" >> mailmsg
+                    flag_send_message=YES
                 fi
+                echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
+                echo "Missing file is ${check_full_file}" >> mailmsg
             fi
             ((hour_now+=${inc}))
         done
@@ -209,4 +196,3 @@ exit
 # Define INPUT OBS DATA TYPE for ASCII2NC 
 #######################################################################
 #
-

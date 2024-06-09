@@ -71,9 +71,6 @@ mkdir -p ${COMOUT} ${COMOUTprep}
 # alternative choice is an option different from aqobs
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 
-# Option to used archived reduced model input
-export USED_REDUCED_INPUT=${USED_REDUCED_INPUT:-no}
-#
 #######################################################################
 # Execute the script.
 #######################################################################
