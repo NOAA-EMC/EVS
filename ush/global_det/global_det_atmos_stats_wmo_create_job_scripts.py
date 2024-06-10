@@ -1043,24 +1043,24 @@ elif JOB_GROUP == 'summarize_stats':
                             'CNT:ME,RMSE,MAE'],
                 'aggregate': ['MCTC']
             }
-        for stat_analysis_job in list(stat_analysis_job_dict.keys()):
-            wmo_verif_metplus_conf = (
-                f"StatAnalysis_fcstGFS_{stat_analysis_job}.conf"
-            )
-            for vhr in wmo_verif_settings_dict[wmo_verif]['valid_hour_list']:
-                job_env_dict['valid_hour'] = vhr
-                valid_time_dt = datetime.datetime.strptime(VDATE+vhr,
-                                                           '%Y%m%d%H')
-                for fhr in wmo_verif_settings_dict[wmo_verif]['fhr_list']:
-                    job_env_dict['fhr'] = fhr
-                    init_time_dt = (valid_time_dt
-                                    - datetime.timedelta(hours=int(fhr)))
-                    if f"{init_time_dt:%H}" not in wmo_init_hour_list:
-                         print(f"Skipping forecast hour {fhr} with init "
-                               +f"{init_time_dt:%H} as init hour not in "
-                               +"WMO required init hours "
-                               +f"{wmo_init_hour_list}")
-                         continue
+        for vhr in wmo_verif_settings_dict[wmo_verif]['valid_hour_list']:
+            job_env_dict['valid_hour'] = vhr
+            valid_time_dt = datetime.datetime.strptime(VDATE+vhr,
+                                                       '%Y%m%d%H')
+            for fhr in wmo_verif_settings_dict[wmo_verif]['fhr_list']:
+                job_env_dict['fhr'] = fhr
+                init_time_dt = (valid_time_dt
+                                - datetime.timedelta(hours=int(fhr)))
+                if f"{init_time_dt:%H}" not in wmo_init_hour_list:
+                     print(f"Skipping forecast hour {fhr} with init "
+                           +f"{init_time_dt:%H} as init hour not in "
+                           +"WMO required init hours "
+                           +f"{wmo_init_hour_list}")
+                     continue
+                for stat_analysis_job in list(stat_analysis_job_dict.keys()):
+                    wmo_verif_metplus_conf = (
+                        f"StatAnalysis_fcstGFS_{stat_analysis_job}.conf"
+                    )
                     for line_type_info \
                             in stat_analysis_job_dict[stat_analysis_job]:
                         if stat_analysis_job == 'summary':
@@ -1093,6 +1093,12 @@ elif JOB_GROUP == 'summarize_stats':
                                 f".{line_type}.dump_row.stat"
                             )
                         )
+                        job_env_dict['tmp_stat_analysis_job_grep_file'] = (
+                            tmp_stat_analysis_job_file.replace(
+                                f".{line_type}.stat",
+                                f".{line_type}.grep.stat"
+                            )
+                        )
                         output_stat_analysis_job_file = os.path.join(
                             COMOUT , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
                             tmp_stat_analysis_job_file.rpartition('/')[2]
@@ -1106,7 +1112,15 @@ elif JOB_GROUP == 'summarize_stats':
                                 f".{line_type}.dump_row.stat"
                             )
                         )
-                        have_stat = os.path.exists(output_stat_analysis_job_file)
+                        job_env_dict['output_stat_analysis_job_grep_file'] = (
+                            output_stat_analysis_job_file.replace(
+                                f".{line_type}.stat",
+                                f".{line_type}.grep.stat"
+                            )
+                        )
+                        have_stat = os.path.exists(
+                            output_stat_analysis_job_file
+                        )
                         njobs+=1
                         job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                 'job'+str(njobs))
@@ -1122,6 +1136,14 @@ elif JOB_GROUP == 'summarize_stats':
                                       +f'{line_type_columns}"\n')
                         job.write('\n')
                         if have_stat:
+                            job.write(
+                                'if [ -f '
+                                +'$output_stat_analysis_job_grep_file ]; '
+                                +'then cp -v '
+                                +'$output_stat_analysis_job_grep_file '
+                                +'$tmp_stat_analysis_job_grep_file; fi\n'
+                            )
+                            job.write('export err=$?; err_chk')
                             job.write(
                                 'if [ -f $output_stat_analysis_job_file ]; '
                                 +'then cp -v '
@@ -1139,11 +1161,38 @@ elif JOB_GROUP == 'summarize_stats':
                             job.write('export err=$?; err_chk')
                         else:
                             if ndaily_stat_files > 0:
-                                job.write(gda_util.metplus_command(
-                                    wmo_verif_metplus_conf
-                                )+'\n')
+                                job.write(
+                                    'grep -h '
+                                    +f'"{wmo_verif}.*{fhr.zfill(2)}0000 '
+                                    +f'.*{VYYYYmm}.*_{vhr}0000 .* '
+                                    +f'{line_type} " '
+                                    +f"{VYYYYmm_daily_stats_dir}/"
+                                    +f"evs.stats.gfs.atmos.wmo.v{VYYYYmm}"
+                                    +'*.stat >& '
+                                    +'$tmp_stat_analysis_job_grep_file\n'
+                                )
+                                job.write('export err=$?; err_chk\n')
+                                job.write(
+                                    'if [ -f '
+                                    +'$tmp_stat_analysis_job_grep_file '
+                                    +']; then '
+                                    +gda_util.metplus_command(
+                                         wmo_verif_metplus_conf
+                                    )
+                                    +'; fi\n'
+                                )
                                 job.write('export err=$?; err_chk\n')
                                 if SENDCOM == 'YES':
+                                    job.write(
+                                        'if [ -f '
+                                        +'$tmp_stat_analysis_job_grep_file'
+                                        +' ]; then cp -v '
+                                        +'$tmp_stat_analysis_job_'
+                                        +'grep_file '
+                                        +'$output_stat_analysis_job_'
+                                        +'grep_file; fi\n'
+                                    )
+                                    job.write('export err=$?; err_chk\n')
                                     job.write(
                                         'if [ -f $tmp_stat_analysis_job_file ]'
                                         +'; then cp -v '
