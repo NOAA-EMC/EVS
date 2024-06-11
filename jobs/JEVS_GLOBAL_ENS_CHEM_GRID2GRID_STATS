@@ -56,7 +56,7 @@ export USHevs=${USHevs:-${HOMEevs}/ush/${COMPONENT}}
 export EXECevs=${EXECevs:-${HOMEevs}/exec}
 export PARMevs=${PARMevs:-${HOMEevs}/parm}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
-## to be determined export MASKS=${MASKS:-${FIXevs}/masks}
+export MASK_DIR=${MASK_DIR:-$FIXevs/masks}
 
 ## PDYm2 for abi, viirs
 ## PDYm3 for goes5, icap
