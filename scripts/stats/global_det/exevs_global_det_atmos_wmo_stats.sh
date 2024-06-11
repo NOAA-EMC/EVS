@@ -21,6 +21,7 @@ mkdir -p ${VYYYYmm}_daily_stats
 mkdir -p ${VYYYYmm}_station_info
 mkdir -p jobs logs confs tmp
 
+# Set jobs for temporal run
 if [ $temporal = daily ]; then
     export group_list="reformat_data assemble_data generate_stats gather_stats"
 elif [ $temporal = monthly ]; then
@@ -32,7 +33,7 @@ for group in $group_list; do
     export JOB_GROUP=$group
     mkdir -p jobs/${JOB_GROUP}
     echo "Creating and running jobs for WMO stats: ${JOB_GROUP}"
-    python $USHevs/global_det/global_det_atmos_stats_wmo_create_job_scripts.py
+    python $USHevs/global_det/global_det_atmos_stats_wmo_create_${temporal}_job_scripts.py
     export err=$?; err_chk
     chmod u+x jobs/$group/*
     nc=1
