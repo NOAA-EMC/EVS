@@ -30,6 +30,7 @@ export VERIF_CASE=${VERIF_CASE:-grid2grid}
 export MODELNAME=${MODELNAME:-gefs}
 export machine=${machine:-WCOSS2}
 export evs_run_mode=${evs_run_mode:-production}
+export mod_ver=${mod_ver:-${gefs_ver}}
 
 ####################################
 # Set EVS directories
