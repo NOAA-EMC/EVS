@@ -932,6 +932,11 @@ elif JOB_GROUP == 'gather_stats':
             have_stat = os.path.exists(output_stat_file)
         elif metplus_conf == 'filter_station_info':
             job_env_dict['tmp_stat_file'] = tmp_stat_station_file
+            job_env_dict['tmp_stat_unfiltered_file'] = (
+                tmp_stat_station_file.replace(
+                    '.station_info.', '.station_info.unfiltered.'
+                )
+            )
             job_env_dict['output_stat_file'] = output_stat_station_file
             have_stat = os.path.exists(output_stat_station_file)
         # Make job script
@@ -961,6 +966,13 @@ elif JOB_GROUP == 'gather_stats':
                     +'\n'
                 )
                 job.write('export err=$?; err_chk\n')
+                if metplus_conf == 'filter_station_info':
+                    job.write(
+                        gda_util.python_command('global_det_atmos_stats_wmo_'
+                                                +'filter_stations.py', [])
+                        +'\n'
+                    )
+                    job.write('export err=$?; err_chk\n')
                 if SENDCOM == 'YES':
                     job.write(
                         'if [ -f $tmp_stat_file ]; then '
