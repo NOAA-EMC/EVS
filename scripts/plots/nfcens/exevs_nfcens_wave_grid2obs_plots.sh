@@ -58,6 +58,7 @@ plot_start_date=${PDYm90}
 plot_end_date=${VDATE}
 export models='nfcens gefs fnmoc'
 export MODNAMS='NFCENS GEFS FNMOC'
+export model_list=${MODNAMS}
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
 	EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
@@ -74,26 +75,30 @@ done
 ####################
 # quick error check 
 ####################
-nc=`ls ${DATA}/stats/evs*stat | wc -l | awk '{print $1}'`
-nc1=`ls ${DATA}/stats/evs*gefs | wc -l | awk '{print $1}'`
-nc2=`ls ${DATA}/stats/evs*fnmoc | wc -l | awk '{print $1}'`
-echo " Found ${nc} ${DATA}/stats/evs*stat file for ${VDATE} "
+nc=`ls ${DATA}/stats/evs.stats.nfcens*stat | wc -l | awk '{print $1}'`
+nc1=`ls ${DATA}/stats/evs.stats.gefs*stat | wc -l | awk '{print $1}'`
+nc2=`ls ${DATA}/stats/evs.stats.fnmoc*stat | wc -l | awk '{print $1}'`
+
+echo " Found ${nc} ${DATA}/stats/evs.stats.nfcens*stat file for ${VDATE} "
 if [ "${nc}" != '0' ]
 	then
   	set -x
   	echo "Successfully copied the NFCENS *.stat file for ${VDATE}"
   	[[ "$LOUD" = YES ]] && set -x
+	
 	if [ "${nc1}" != '0' ]; then
-		echo "Successfully copied the GEFS *.stat file for ${VDATE}"	
+		 echo "Successfully copied the GEFS *.stat file for ${VDATE}"
 	else
-		echo "WARNING: Did not copy the GEFS *.stat files for ${VDATE}"
+		 echo "WARNING: Did not copy the GEFS *.stat files for ${VDATE}" 
+	fi
 
-	fi
+	
 	if [ "${nc2}" != '0' ]; then
-		echo "Successfully copied the FNMOC *.stat file for ${VDATE}"
+		 echo "Successfully copied the FNMOC *.stat file for ${VDATE}"
 	else
-		echo "WARNING: Did not copy the FNMOC *.stat files for ${VDATE}"
+		 echo "WARNING: Did not copy the FNMOC *.stat files for ${VDATE}" 
 	fi
+	
 else
   set -x
   echo ' '
