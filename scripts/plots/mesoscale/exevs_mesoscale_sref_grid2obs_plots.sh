@@ -255,7 +255,7 @@ for fcst_valid_hour in $fcst_valid_hours ; do
          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
 	 #Save for restart:
-         echo "cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png $restart/." >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z*.png $restart/." >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	 echo "[[ $? = 0 ]] && >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh 
@@ -265,7 +265,7 @@ for fcst_valid_hour in $fcst_valid_hours ; do
        else
 
 	 #For restart
-	 cp $restart/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png  ${plot_dir}/.	 
+	 cp $restart/${score_type}_regional_conus_valid_${vld}z*.png  ${plot_dir}/.	 
       
        fi	 
       done #end of line_type
