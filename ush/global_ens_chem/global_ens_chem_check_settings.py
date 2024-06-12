@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_check_settings.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun huang@noaa.gov)
 Abstract: This does a check on the run's configuration
-          settings for global_det atmos stats and plots jobs.
-Run By: scripts/stats/global_det/exevs_global_ens_chem_grid2grid_stats.sh
-        scripts/stats/global_det/exevs_global_ens_chem_grid2obs_stats.sh
-        scripts/plots/global_det/exevs_global_ens_chem_grid2grid_plots.sh
+          settings for global_ens chem plots jobs.
+Run By: scripts/plots/global_det/exevs_global_ens_chem_grid2grid_plots.sh
         scripts/plots/global_det/exevs_global_ens_chem_grid2obs_plots.sh
 '''
 
@@ -58,13 +56,8 @@ VERIF_CASE_STEP_type_list = (
     os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
 )
 valid_VERIF_CASE_STEP_type_opts_dict = {
-    'RUN_GRID2GRID_STATS': ['flux', 'means', 'ozone', 'precip_accum24hr',
-                            'precip_accum3hr', 'pres_levs', 'sea_ice',
-                            'snow', 'sst'],
-    'RUN_GRID2GRID_PLOTS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
-                            'sea_ice', 'snow', 'sst'],
-    'RUN_GRID2OBS_STATS': ['pres_levs', 'ptype', 'sfc'],
-    'RUN_GRID2OBS_PLOTS': ['pres_levs', 'ptype', 'sfc']
+    'RUN_GRID2GRID_PLOTS': ['viirs', 'abi', 'sfc'  ],
+    'RUN_GRID2OBS_PLOTS': ['airnow', 'aeronet', 'sfc' ]
 }
 for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
     if VERIF_CASE_STEP_type \
@@ -100,26 +93,14 @@ else:
         'METviewer_AWS_scripts_dir', 'DATAROOT', 'COMROOT', 'COMIN', 'COMOUT',
         'VERIF_CASE_STEP_abbrev'
 ]
-if STEP.upper() == 'STATS':
-    evs_global_ens_chem_settings_dict['evs'].extend(
-            ['COMINccpa', 'DCOMINnohrsc', 'COMINobsproc']
-    )
 evs_global_ens_chem_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
     'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM'
 ]
 evs_global_ens_chem_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
-evs_global_ens_chem_settings_dict['RUN_GRID2GRID_STATS'] = [
-    'g2gs_type_list', 'g2gs_mv_database_name', 'g2gs_mv_database_group',
-    'g2gs_mv_database_desc'
-]
 evs_global_ens_chem_settings_dict['RUN_GRID2GRID_PLOTS'] = [
     'g2gp_model_plot_name_list', 'g2gp_type_list',
     'g2gp_event_equalization'
-]
-evs_global_ens_chem_settings_dict['RUN_GRID2OBS_STATS'] = [
-    'g2os_type_list', 'g2os_mv_database_name', 'g2os_mv_database_group',
-    'g2os_mv_database_desc'
 ]
 evs_global_ens_chem_settings_dict['RUN_GRID2OBS_PLOTS'] = [
     'g2op_model_plot_name_list', 'g2op_type_list',
@@ -127,38 +108,14 @@ evs_global_ens_chem_settings_dict['RUN_GRID2OBS_PLOTS'] = [
 ]
 
 verif_case_step_settings_dict = {
-    'RUN_GRID2GRID_STATS': {
-        'flux': ['init_hr_list'],
-        'means': ['init_hr_list', 'valid_hr_list'],
-        'ozone': ['init_hr_list'],
-        'precip_accum24hr': ['file_format_list', 'file_accum_list', 'var_list',
-                             'init_hr_list'],
-        'precip_accum3hr': ['file_format_list', 'file_accum_list', 'var_list',
-                            'init_hr_list'],
-        'pres_levs': ['truth_name_list', 'truth_format_list',
-                      'init_hr_list', 'valid_hr_list'],
-        'sea_ice': ['init_hr_list'],
-        'snow': ['init_hr_list'],
-        'sst': ['init_hr_list']
-    },
     'RUN_GRID2GRID_PLOTS': {
-        'flux': [],
-        'means': ['init_hr_list', 'valid_hr_list'],
-        'ozone': [],
-        'precip': ['init_hr_list'],
-        'pres_levs': ['truth_name_list', 'init_hr_list', 'valid_hr_list'],
-        'sea_ice': [],
-        'snow': ['init_hr_list'],
-        'sst': []
-    },
-    'RUN_GRID2OBS_STATS': {
-        'pres_levs': ['init_hr_list', 'valid_hr_list'],
-        'ptype': ['init_hr_list', 'valid_hr_list'],
-        'sfc': ['init_hr_list', 'valid_hr_list']
+        'viirs': ['init_hr_list', 'valid_hr_list'],
+        'abi': ['init_hr_list', 'valid_hr_list'],
+        'sfc': []
     },
     'RUN_GRID2OBS_PLOTS': {
-        'pres_levs': ['init_hr_list', 'valid_hr_list'],
-        'ptype': ['init_hr_list', 'valid_hr_list'],
+        'airnow': ['init_hr_list', 'valid_hr_list'],
+        'aeronet': ['init_hr_list', 'valid_hr_list'],
         'sfc': ['init_hr_list', 'valid_hr_list']
     }
 }
@@ -212,37 +169,14 @@ if STEP.upper() == 'PLOTS':
     check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
                                      +'_model_plot_name_list')
 verif_case_step_check_len_dict = {
-    'RUN_GRID2GRID_STATS': {
-        'flux': [],
-        'means': [],
-        'ozone': [],
-        'precip_accum24hr': ['file_format_list', 'file_accum_list',
-                             'var_list'],
-        'precip_accum3hr': ['file_format_list', 'file_accum_list',
-                            'var_list'],
-        'pres_levs': ['truth_name_list', 'truth_format_list'],
-        'sea_ice': [],
-        'snow': [],
-        'sst': []
-    },
     'RUN_GRID2GRID_PLOTS': {
-        'flux': [],
-        'means': [],
-        'ozone': [],
-        'precip': [],
-        'pres_levs': ['truth_name_list'],
-        'sea_ice': [],
-        'snow': [],
-        'sst': []
-    },
-    'RUN_GRID2OBS_STATS': {
-        'pres_levs': [],
-        'ptype': [],
+        'viirs': [],
+        'abi': [],
         'sfc': []
     },
     'RUN_GRID2OBS_PLOTS': {
-        'pres_levs': [],
-        'ptype': [],
+        'airnow': [],
+        'aeronet': [],
         'sfc': []
     },
 }

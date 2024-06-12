@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_create_output_dirs.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun huang@noaa.gov)
 Abstract: This creates the base directories and their subdirectories.
-Run By: scripts/stats/global_det/exevs_global_ens_chem_grid2grid_stats.sh
-        scripts/stats/global_det/exevs_global_ens_chem_grid2obs_stats.sh
-        scripts/plots/global_det/exevs_global_ens_chem_grid2grid_plots.sh
+Run By: scripts/plots/global_det/exevs_global_ens_chem_grid2grid_plots.sh
         scripts/plots/global_det/exevs_global_ens_chem_grid2obs_plots.sh
 '''
 
@@ -40,44 +38,18 @@ data_base_dir = os.path.join(DATA, VERIF_CASE_STEP, 'data')
 data_dir_list = [data_base_dir]
 for model in model_list:
     data_dir_list.append(os.path.join(data_base_dir, model))
-if VERIF_CASE_STEP == 'grid2grid_stats':
+if VERIF_CASE_STEP == 'grid2grid_plots':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-        if VERIF_CASE_STEP_type == 'flux':
-            data_dir_list.append(os.path.join(data_base_dir, 'get_d'))
-        elif VERIF_CASE_STEP_type in ['precip_accum24hr', 'precip_accum3hr']:
-            data_dir_list.append(os.path.join(data_base_dir, 'ccpa'))
-        elif VERIF_CASE_STEP_type == 'sea_ice':
-            data_dir_list.append(os.path.join(data_base_dir, 'osi_saf'))
-        elif VERIF_CASE_STEP_type == 'snow':
-            data_dir_list.append(os.path.join(data_base_dir, 'nohrsc'))
-        elif VERIF_CASE_STEP_type == 'sst':
-            data_dir_list.append(os.path.join(data_base_dir, 'ghrsst_ospo'))
-elif VERIF_CASE_STEP == 'grid2obs_stats':
-    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-        if VERIF_CASE_STEP_type == 'pres_levs':
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_gdas'))
-        elif VERIF_CASE_STEP_type == 'sfc':
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_gdas'))
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap'))
-        elif VERIF_CASE_STEP_type == 'ptype':
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap'))
-elif VERIF_CASE_STEP == 'grid2grid_plots':
-    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-        if VERIF_CASE_STEP_type == 'precip':
-            data_dir_list.append(os.path.join(data_base_dir, 'ccpa'))
-        elif VERIF_CASE_STEP_type == 'snow':
-            data_dir_list.append(os.path.join(data_base_dir, 'nohrsc'))
+        if VERIF_CASE_STEP_type == 'viirs':
+            data_dir_list.append(os.path.join(data_base_dir, 'viirs'))
+        elif VERIF_CASE_STEP_type == 'abi':
+            data_dir_list.append(os.path.join(data_base_dir, 'abi'))
 
 # Create data directories
 for data_dir in data_dir_list:
     gda_util.make_dir(data_dir)
 
 # Create job script base directory
-if STEP == 'stats':
-    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
-                                   'METplus_job_scripts')
 elif STEP == 'plots':
    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                    'plot_job_scripts')
@@ -87,68 +59,7 @@ if not os.path.exists(job_scripts_dir):
 # Build information of working and COMOUT output directories
 working_dir_list = []
 COMOUT_dir_list = []
-if STEP == 'stats':
-    working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
-                                           'METplus_output')
-    working_dir_list.append(working_output_base_dir)
-    working_dir_list.append(os.path.join(working_output_base_dir, 'confs'))
-    working_dir_list.append(os.path.join(working_output_base_dir, 'logs'))
-    working_dir_list.append(os.path.join(working_output_base_dir, 'tmp'))
-    date_dt = start_date_dt
-    while date_dt <= end_date_dt:
-        for model in model_list:
-            COMOUT_dir_list.append(
-                os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'), model,
-                             VERIF_CASE)
-            )
-            COMOUT_dir_list.append(
-                os.path.join(COMOUT, model+'.'+date_dt.strftime('%Y%m%d'))
-            )
-            working_dir_list.append(
-                os.path.join(working_output_base_dir,
-                             RUN+'.'+date_dt.strftime('%Y%m%d'), model,
-                             VERIF_CASE)
-            )
-            working_dir_list.append(
-                os.path.join(working_output_base_dir,
-                             model+'.'+date_dt.strftime('%Y%m%d'))
-            )
-        if VERIF_CASE_STEP == 'grid2grid_stats':
-            for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-                if VERIF_CASE_STEP_type in ['precip_accum24hr', 'precip_accum3hr']:
-                    COMOUT_dir_list.append(
-                        os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
-                                     'ccpa', VERIF_CASE)
-                    )
-                    working_dir_list.append(
-                        os.path.join(working_output_base_dir,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
-                                     VERIF_CASE)
-                    )
-                elif VERIF_CASE_STEP_type in 'sea_ice':
-                    COMOUT_dir_list.append(
-                        os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
-                                     'osi_saf', VERIF_CASE)
-                    )
-                    working_dir_list.append(
-                        os.path.join(working_output_base_dir,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'osi_saf',
-                                     VERIF_CASE)
-                    )
-        elif VERIF_CASE_STEP == 'grid2obs_stats':
-            for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-                if VERIF_CASE_STEP_type in ['pres_levs', 'sfc', 'ptype']:
-                    COMOUT_dir_list.append(
-                        os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
-                                     'prepbufr', VERIF_CASE)
-                    )
-                    working_dir_list.append(
-                        os.path.join(working_output_base_dir,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
-                                     VERIF_CASE)
-                    )
-        date_dt = date_dt + datetime.timedelta(days=1)
-elif STEP == 'plots':
+if STEP == 'plots':
     NDAYS = str(os.environ['NDAYS'])
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'plot_output')
