@@ -107,6 +107,11 @@ elif [ ${MODELNAME} = namnest ] || [ ${MODELNAME} = rrfs ] || [ ${MODELNAME} = r
 
 fi
 
+if [ ${MODELNAME} = rrfs ]; then
+   mod="rrfs.ctl"
+else
+   mod="${MODELNAME}"
+fi
 
 ###################################################################
 # Check for forecast files to process
@@ -128,8 +133,8 @@ while [ $fhr -le $fhr_max ]; do
    export IDATE=`$NDATE -$fhr ${VDATE}12 | cut -c 1-8`
    export INIT_HR=`$NDATE -$fhr ${VDATE}12 | cut -c 9-10`
 
-   export fcst_file=${modsys}.${IDATE}/${MODELNAME}.t${INIT_HR}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr}.nc
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${MODELNAME}.t{init?fmt=%2H}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f{lead?fmt=%2H}.nc
+   export fcst_file=${modsys}.${IDATE}/${mod}.t${INIT_HR}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr}.nc
+   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${mod}.t{init?fmt=%2H}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f{lead?fmt=%2H}.nc
 
    if [ -s $EVSINfcst/${fcst_file} ]; then
       echo $fhr >> $DATA/fcst_list
