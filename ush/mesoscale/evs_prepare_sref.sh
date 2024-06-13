@@ -247,7 +247,7 @@ export output_base=${WORK}/pb2nc
 
      #*******************************************************************************
      # Using the bufr module tool: split_by_subset to split the prepbufr data files
-     #  into specifiically required data types to reduce the walltime
+     #  into specifically required data types to reduce the walltime
      #*******************************************************************************
      >$WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
      split_by_subset ${COMINobsproc}/gdas.${vday}/$vhr/atmos/gdas.t${vhr}z.prepbufr
