@@ -59,7 +59,7 @@ if [ -e $DATA/prepbufr.missing ] || [ -e $DATA/sref_mbrs.missing ]; then
   echo "WARNING: either prepbufr or sref members are missing"
 else
 
-  if [ ! -e $COMOUTrestar/evs_sref_cnv.completed ] ; then
+  if [ ! -e $COMOUTrestart/evs_sref_cnv.completed ] ; then
     $USHevs/mesoscale/evs_sref_cnv.sh
     export err=$?; err_chk
   fi
