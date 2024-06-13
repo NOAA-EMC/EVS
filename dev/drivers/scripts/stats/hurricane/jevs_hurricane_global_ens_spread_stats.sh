@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -N jevs_hurricane_global_ens_tropcyc_stats
+#PBS -N jevs_hurricane_global_ens_spread_stats
 #PBS -j oe
 #PBS -A ENSTRACK-DEV
 #PBS -q dev
@@ -23,7 +23,7 @@ export NET=evs
 export COMPONENT=hurricane
 export RUN=global_ens
 export STEP=stats
-export VERIF_CASE=tropcyc
+export VERIF_CASE=spread
 export envir=dev
 export cyc=00
 export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
