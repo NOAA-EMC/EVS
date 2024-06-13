@@ -62,9 +62,9 @@ for  obsv in ccpa ; do
 
     #############################################################################################################
     # Adding following "if blocks"  for restart capability: 
-    #  1. check if *.completed files for 5  METplus processes (gneensprod, ens, mean and prob) exist, respectively
+    #  1. check if *.completed files for 5  METplus processes (genensprod, ens, mean and prob) exist, respectively
     #  2. if any of the 5 not exist, then run its METplus, then mark it completed for restart checking next time
-    #  3. if any one of the 5 exits, skip it. But for gneensprod, all of the nc files generated from previous run
+    #  3. if any one of the 5 exits, skip it. But for genensprod, all of the nc files generated from previous run
     #       are copied back to the output_base/stat directory
     ###############################################################################################################
     if [ ! -e $COMOUTrestart/run_sref_mpi_${domain}.${obsv}.${fhr}.completed ] ; then
