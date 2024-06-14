@@ -2,7 +2,10 @@
 #################################################################
 # Purpose:   Setup some paths and run sref grid2obs stat ush scripts
 #
-# Last updated 10/27/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+# Last updated 
+#               04/10/2024: Add restart capability, Binbin Zhou, Lynker@EMC/NCEP
+#                           Combine cnv into grid2obs job
+#               10/27/2023: Binbin Zhou, Lynker@EMC/NCEP
 #################################################################
 #
 set -x
@@ -21,6 +24,10 @@ export GRID2OBS_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
+export COMOUTrestart=$COMOUTsmall/restart
+if [ ! -d $COMOUTrestart ] ; then
+  mkdir -p $COMOUTrestart
+fi
 
 #********************************************
 # Check the input data files availability
@@ -51,12 +58,14 @@ export err=$?; err_chk
 if [ -e $DATA/prepbufr.missing ] || [ -e $DATA/sref_mbrs.missing ]; then
   echo "WARNING: either prepbufr or sref members are missing"
 else
- if [ $just_cnv = yes ] ; then
-   $USHevs/mesoscale/evs_sref_cnv.sh
-   export err=$?; err_chk
- else
+
+  if [ ! -e $COMOUTrestart/evs_sref_cnv.completed ] ; then
+    $USHevs/mesoscale/evs_sref_cnv.sh
+    export err=$?; err_chk
+  fi
+
    $USHevs/mesoscale/evs_sref_grid2obs.sh
    export err=$?; err_chk
- fi
+
 fi
 

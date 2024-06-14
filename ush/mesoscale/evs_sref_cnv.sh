@@ -1,7 +1,9 @@
 #!/bin/ksh
 #***********************************************************************************
 #  Purpose: Run cnv job by using the mean CTC obtained from evs_sref_average_cnv.sh
-#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update: 
+#              04/10/2024, add restart capability,  Binbin Zhou Lynker@EMC/NCEP
+#  10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
 #************************************************************************
 
 set -x
@@ -25,17 +27,32 @@ for  obsv in prepbufr ; do
 
  export domain=CONUS
 
-  #***********************************************
+  #**************************************************************
   # Get prepbufr data files for validation
-  #***********************************************
-  $USHevs/mesoscale/evs_prepare_sref.sh prepbufr 
-  export err=$?; err_chk
+  # In case of restart, First check if prepbufr directory exists
+  # if yes, copy it to the working directory 
+  # otherwise, run $USHevs/mesoscale/evs_prepare_sref.sh prepbufr
+  #*************************************************************
+  if [ ! -d $COMOUTrestart/prepbufr.${VDATE} ] ; then
+    $USHevs/mesoscale/evs_prepare_sref.sh prepbufr 
+    export err=$?; err_chk
+  else
+    #Restart: copy saved stat files from previous runs
+    cp -r $COMOUTrestart/prepbufr.${VDATE} $WORK/.
+  fi
+
 
   #*******************************************************
   # Build sub-jobs
+  # First check if the sub-task has been done in the previous run
+  # if yes, skip this sub-task, in this case the sub-task script
+  # file run_sref_cnv_${fhr}.sh is 0-size in the working directory
+  # otherwise, continue building this sub-task
   #*****************************************************
   for fhr in 3 9 15 21 27 33 39 45 51 57 63 69 75 81 87 ; do
        >run_sref_cnv_${fhr}.sh
+
+    if [ ! -e $COMOUTrestart/run_sref_cnv_${fhr}.completed ] ; then
 
        echo  "#!/bin/ksh" >> run_sref_cnv_${fhr}.sh
        echo  "export output_base=$WORK/grid2obs/run_sref_cnv_${fhr}" >> run_sref_cnv_${fhr}.sh 
@@ -72,8 +89,6 @@ for  obsv in prepbufr ; do
          done
        done
        
-
-
        echo "cd \$output_base/stat" >> run_sref_cnv_${fhr}.sh 
        echo "$USHevs/mesoscale/evs_sref_average_cnv.sh $fhr" >> run_sref_cnv_${fhr}.sh
 
@@ -84,9 +99,13 @@ for  obsv in prepbufr ; do
        echo " cp \$output_base/stat/*CNV*.stat $COMOUTsmall" >> run_sref_cnv_${fhr}.sh
        echo "fi" >> run_sref_cnv_${fhr}.sh
 
+       #For restart: 
+       echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_cnv_${fhr}.completed" >> run_sref_cnv_${fhr}.sh
+      
        chmod +x run_sref_cnv_${fhr}.sh
        echo "${DATA}/run_sref_cnv_${fhr}.sh" >> run_all_sref_cnv_poe.sh
 
+    fi # check restart for the sub-job
 
   done
 
@@ -102,6 +121,10 @@ else
    ${DATA}/run_all_sref_cnv_poe.sh
 fi 
 export err=$?; err_chk
+
+if [ $? = 0 ] ; then
+  >$COMOUTrestart/evs_sref_cnv.completed 
+fi 
 
 echo "Print stat generation metplus log files begin:"
 log_dirs="$DATA/grid2obs/*/logs"
@@ -121,13 +144,4 @@ for log_dir in $log_dirs; do
     fi
 done
 echo "Print stat generation metplus log files end"
-
-#***********************************************
-# Gather small stat files to forma big stat file
-# **********************************************
-if [ $gather = yes ] ; then 
-  $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE
-  export err=$?; err_chk
-fi
-
 
