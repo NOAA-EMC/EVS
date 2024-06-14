@@ -16,7 +16,7 @@ import global_det_atmos_util as gda_util
 import numpy as np
 
 print("BEGIN: "+os.path.basename(__file__))
-start = datetime.datetime.now()
+
 # Read in environment variables
 COMIN = os.environ['COMIN']
 SENDCOM = os.environ['SENDCOM']
@@ -43,14 +43,30 @@ if MODELNAME != 'gfs':
 # Get WMO param as script argument
 wmo_param = sys.argv[1]
 
+# Get WMO s and t information
+wmo_init_list = ['00', '12']
+if len(sys.argv) == 4:
+    wmo_t_list = [sys.argv[2]]
+    wmo_s_list = [sys.argv[3]]
+else:
+    wmo_t_list = ['0', '3', '6', '9', '12', '15', '18', '21']
+    if wmo_param == 'tp24':
+        wmo_s_list = [str(fhr) for fhr in range(24,240+24,24)]
+    elif wmo_param == 'tp06':
+        wmo_s_list = [str(fhr) for fhr in range(6,240+6,6)]
+    else:
+        wmo_s_list = [str(fhr) for fhr in \
+                      [*range(0,72,3), *range(72,240+6,6)]]
+
 # WMO rec2 key pair values
 wmo_centre = 'kwbc'
 wmo_model = MODELNAME
 wmo_d = f"{VDATE_dt:%Y%m}"
 
 # Set input file paths
-tmp_station_info_file_list = glob.glob(
-    os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*')
+tmp_station_info_file = os.path.join(
+    DATA, f"{VDATE_dt:%Y%m}_station_info",
+    f"evs.stats.gfs.atmos.wmo.station_info.v{VDATE_dt:%Y%m}.stat"
 )
 
 # Set output file paths
@@ -98,51 +114,35 @@ elif wmo_param == 'rh2m':
 elif wmo_param == 'tcc':
     met_fcst_var = 'TCDC'
     met_fcst_lev = 'L0'
-wmo_init_list = ['00', '12']
-if wmo_verif == 'grid2obs_sfc':
-    wmo_t_list = ['0', '3', '6', '9', '12', '15', '18', '21']
-    if wmo_param == 'tp24':
-        wmo_s_list = [str(fhr) for fhr in range(24,240+24,24)]
-    elif wmo_param == 'tp06':
-        wmo_s_list = [str(fhr) for fhr in range(6,240+6,6)]
-    else:
-        wmo_s_list = [str(fhr) for fhr in \
-                      [*range(0,72,3), *range(72,240+6,6)]]
 time_score_iter_list = list(
     itertools.product(wmo_t_list, wmo_s_list, list(wmo_sc_dict.keys()))
 )
 
 # Read in station information
-print('Gathering station information from '
-      +os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*'))
-station_info = []
+print(f"Reading station information from {tmp_station_info_file}")
 column_name_list = gda_util.get_met_line_type_cols('hold', MET_ROOT,
                                                    met_ver, 'MPR')
-for station_info_file in tmp_station_info_file_list:
-    station_info_file_df = pd.read_csv(
-        station_info_file, sep=" ", skiprows=1, skipinitialspace=True,
-        keep_default_na=False, dtype='str', header=None, names=column_name_list
-    )
-    station_info_file_df = station_info_file_df.drop(
-        station_info_file_df[station_info_file_df['OBS_ELV'] == 'NA'].index
-    )
-    station_info.append(station_info_file_df)
-station_info_df = pd.concat(station_info, axis=0, ignore_index=True)
+station_info_df = pd.read_csv(
+    tmp_station_info_file, sep=" ", skiprows=1, skipinitialspace=True,
+    keep_default_na=False, dtype='str', header=None, names=column_name_list,
+    usecols=['FCST_LEAD', 'FCST_VALID_BEG', 'FCST_VAR', 'OBS_SID',
+             'OBS_LAT', 'OBS_LON', 'OBS_ELV', 'FCST']
+)
 if len(station_info_df) == 0:
     have_station_info = False
-    print("NOTE: Could not read in station information from file "
-          +os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*'))
+    print('NOTE: Could not read in station information from file '
+          +tmp_station_info_file)
 else:
     have_station_info = True
-del station_info_file_df
 
 # Format for WMO monthly svs
 VDATE_monthly_svs_lines = []
-print(f"Gathering stats for {VDATE_dt:%Y%m} for grid2obs_sfc-{wmo_param}")
 for time_score_iter in time_score_iter_list:
     # Set time info and do checks
     wmo_t = str(time_score_iter[0])
     wmo_s = str(time_score_iter[1])
+    print(f"Gathering stats for {VDATE_dt:%Y%m} valid {wmo_t}Z "
+          +f"forecast lead {wmo_s} for grid2obs_sfc-{wmo_param}")
     t_s_init_hour = (
         (VDATE_dt+datetime.timedelta(hours=int(wmo_t)))
         -datetime.timedelta(hours=int(wmo_s))
@@ -163,16 +163,6 @@ for time_score_iter in time_score_iter_list:
                   +f"FCST_VALID_BEG=*_{wmo_t.zfill(2)}0000")
         else:
             have_time_station_info = True
-            most_recent_station_info_list = []
-            for obs_sid, obs_sid_df \
-                    in time_station_info_df.groupby(by='OBS_SID'):
-                most_recent_station_info_list.append(
-                    obs_sid_df[obs_sid_df['FCST_VALID_BEG'] \
-                    == obs_sid_df['FCST_VALID_BEG'].max()]
-                )
-            most_recent_station_info_df = pd.concat(
-                most_recent_station_info_list, axis=0, ignore_index=True
-            )
     else:
         have_time_station_info = False
     # Set score info
@@ -193,10 +183,19 @@ for time_score_iter in time_score_iter_list:
     )
     if os.path.exists(stat_file):
         print(f"Reading stats from {stat_file}")
-        stat_file_df = pd.read_csv(
-            stat_file, sep=" ", skiprows=1, skipinitialspace=True,
-            keep_default_na=False, dtype='str', header=0
-        )
+        if wmo_sc_type == 'summary':
+            stat_file_df = pd.read_csv(
+                stat_file, sep=" ", skiprows=1, skipinitialspace=True,
+                keep_default_na=False, dtype='str', header=0,
+                usecols=['FCST_VAR', 'FCST_LEV', 'FCST_LEAD',
+                         'VX_MASK', 'COL_NAME:', 'LINE_TYPE', 'COLUMN',
+                         'OBS_THRESH', 'TOTAL', 'MEAN']
+            )
+        elif wmo_sc_type == 'aggregate':
+            stat_file_df = pd.read_csv(
+                stat_file, sep=" ", skiprows=1, skipinitialspace=True,
+                keep_default_na=False, dtype='str', header=0
+            )
         time_var_df = stat_file_df[
             (stat_file_df['FCST_VAR'] == met_fcst_var)
             & (stat_file_df['FCST_LEV'] == met_fcst_lev)
@@ -218,8 +217,8 @@ for time_score_iter in time_score_iter_list:
             wmo_st = met_vx_mask
             # Get observation station and model grid point information
             if have_time_station_info:
-                obs_sid_info_df = most_recent_station_info_df[
-                    most_recent_station_info_df['OBS_SID'] == obs_sid
+                obs_sid_info_df = time_station_info_df[
+                    time_station_info_df['OBS_SID'] == obs_sid
                 ]
                 for info in ['LAT', 'LON', 'ELV']:
                     info_df = obs_sid_info_df[
@@ -376,11 +375,11 @@ for time_score_iter in time_score_iter_list:
                         +f"lom={wmo_lom},se={wmo_se},me={wmo_me},sc={wmo_sc},"
                         +f"th={wmo_th},n={wmo_n},v={wmo_v}\n"
                     )
-print(f"Writing SVS monthly station data to {tmp_VDATE_monthly_svs_file}")
+
 # Write monthly file
+print(f"Writing SVS monthly station data to {tmp_VDATE_monthly_svs_file}")
 with open(tmp_VDATE_monthly_svs_file, 'w') as f:
     for line in VDATE_monthly_svs_lines:
         f.write(line)
-end = datetime.datetime.now()
-print(f"{wmo_param} took {end-start}")
+
 print("END: "+os.path.basename(__file__))
