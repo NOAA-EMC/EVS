@@ -110,7 +110,7 @@ fi
 
 if [ $MODELNAME = sref ] ; then
   export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}	
-  mkdir -p $COMOUTplots
+  [[ ! -d $COMOUTplots ]] && mkdir -p $COMOUTplots
 else
   export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats
   mkdir -p $COMOUT
