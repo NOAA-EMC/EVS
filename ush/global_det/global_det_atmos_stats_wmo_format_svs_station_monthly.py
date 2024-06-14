@@ -106,7 +106,7 @@ elif wmo_param == 'tp06':
     met_fcst_var = 'APCP'
     met_fcst_lev = 'A6'
 elif wmo_param == 'td2m':
-    met_fcst_var = 'DPT'
+    met_fcst_var = 'DPT_EC'
     met_fcst_lev = 'Z2'
 elif wmo_param == 'rh2m':
     met_fcst_var = 'RH'
