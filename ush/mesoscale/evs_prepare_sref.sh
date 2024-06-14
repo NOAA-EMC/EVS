@@ -3,10 +3,11 @@
 #  Purpose: Get required input forecast and validation data files
 #           for sref stat jobs
 #  Last update: 
+#               06/05/2024, add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               05/04/2024, (1) change gfs to gdas for prepbufr files
 #                           (2) split the prepbufr files before running METplus PB2NC
-#                               to save walltime
-#                             by Binbin Zhou Lynker@EMC/NCEP
+#                               to reduce the walltime
+#                               by Binbin Zhou Lynker@EMC/NCEP
 #               10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
 #************************************************************************
 set -x
@@ -26,7 +27,7 @@ export vday=$VDATE
 #**************************************************************
 if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 
-  export output_base=${WORK}/sref.${vday}
+  export output_base=${WORK}/sref
   export fhr
   export mb
   export base
@@ -44,13 +45,33 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
       if [ ! -d $WORK/sref.${fday} ] ; then
        mkdir $WORK/sref.${fday}
       fi
+
+      #Create for  restart
+      if [ ! -d $COMOUTrestart/sref.${fday} ] ; then
+        mkdir -p $COMOUTrestart/sref.${fday}
+      fi
+
       for base in arw nmb ; do
         for mb in ctl n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ; do
-         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
-         export err=$?; err_chk
-	 if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
-	   mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
+
+	 #################################################################################################
+	 #Check if $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc exists
+	 #         if not existing, run metplus to get it
+	 #         if yes, copy it to the working directory (restart case)  
+	 ##################################################################################################
+	 if [ ! -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
+           export err=$?; err_chk
+	   if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+	     cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
+	     #save for restart:
+	     mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${fday}/.
+	   fi
+	 else
+	   #Restart:
+	   cp $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}
 	 fi
+
        done
      done 
    done
@@ -60,8 +81,8 @@ fi
 
 #********************************************************************************
 # Get sref's 24hr APCP forecast files
-#  First get operational sref's 3hr APCP mean grib2 files 
-#  Then use Pcpcombine to get 24hr APCP netCDF files
+#    First get operational sref's 3hr APCP mean grib2 files 
+#    Then use Pcpcombine to get 24hr APCP netCDF files
 #********************************************************************************
 if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
   export output_base=${WORK}/sref.${vday}
@@ -92,8 +113,12 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 
   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP24h.conf
   export err=$?; err_chk
-  mkdir -p ${COMOUTfinal}/apcp24mean
+  
+  #Save for restart:
   if [ -s $output_base/*24mean*.nc ] ; then
+    if [ ! -d ${COMOUTfinal}/apcp24mean ] ; then
+        mkdir -p ${COMOUTfinal}/apcp24mean
+    fi
     cp $output_base/*24mean*.nc ${COMOUTfinal}/apcp24mean
   fi
 fi  
@@ -102,6 +127,7 @@ fi
 #********************************************************************
 # Get 3hr CCPA observation data over grid212 and grid240 by using MET
 #  RegridDataPlane tool
+# Note: checking the restart files is set in evs_sref_precip.sh   
 #*******************************************************************
 if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
 
@@ -156,7 +182,7 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
 
 
   #************************************************************************
-  # Get 06hr CCPA data from previously obtained 3hr CCPA data files by usin
+  # Get 06hr CCPA data from previously obtained 3hr CCPA data files by using
   #   MET PcpCombine tool
   #************************************************************************
   ccpa06_G212=${WORK}/ccpa.${vday}/ccpa06_G212
@@ -193,6 +219,12 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
     cat mailmsg | mail -s "$subject" $MAILTO  
   fi
  fi
+
+ #Save for restart
+ if [ -d ${WORK}/ccpa.${vday} ] ; then
+   cp -r ${WORK}/ccpa.${vday} $COMOUTrestart
+ fi
+
 fi
 
 
@@ -213,9 +245,10 @@ export output_base=${WORK}/pb2nc
      export vbeg=${vhr}
      export vend=${vhr}
 
-     #Split the prepbufr data files into specifiically required data types to reduce
-     #the walltime
-     #use bufr module tool: split_by_subset
+     #*******************************************************************************
+     # Using the bufr module tool: split_by_subset to split the prepbufr data files
+     #  into specifically required data types to reduce the walltime
+     #*******************************************************************************
      >$WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
      split_by_subset ${COMINobsproc}/gdas.${vday}/$vhr/atmos/gdas.t${vhr}z.prepbufr
      cat $WORK/ADPSFC $WORK/SFCSHP $WORK/ADPUPA >> $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
@@ -239,6 +272,10 @@ export output_base=${WORK}/pb2nc
   fi
  fi
 
+  #Save for restart
+  if [ -d $WORK/prepbufr.${vday} ] ; then
+    cp -r $WORK/prepbufr.${vday} $COMOUTrestart
+  fi
 
 fi 
 
