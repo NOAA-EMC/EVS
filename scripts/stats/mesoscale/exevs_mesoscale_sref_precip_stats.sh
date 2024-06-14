@@ -2,7 +2,9 @@
 #################################################################
 # Purpose:   Setup some paths and run sref precip stat ush scripts
 #
-# Last updated 10/27/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+# Last updated 
+#              04/10/2024: Add restart, Binbin Zhou, Lynker@EMC/NCEP
+#              10/27/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 ##################################################################
 #
 set -x
@@ -17,6 +19,11 @@ export gather=${gather:-'yes'}
 export PRECIP_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
+
+export COMOUTrestart=$COMOUTsmall/restart
+if [ ! -d $COMOUTrestart ] ; then
+  mkdir -p $COMOUTrestart
+fi
 
 #********************************************
 # Check the input data files availability
