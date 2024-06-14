@@ -65,12 +65,15 @@ wmo_rec2_report_file_format = os.path.join(
     DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
     '{valid?fmt=%Y%m}_kwbc_{temporal?fmt=str}.rec2'
 )
-wmo_svs_report_file_format = os.path.join(
+wmo_svs_report_vhr_fhr_file_format = os.path.join(
     DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     '{valid?fmt=%Y%m}_kwbc_{param?fmt=str}_'
     +'valid{valid?fmt=%H}Z_fhr{lead?fmt=%3H}.svs'
 )
-
+wmo_svs_report_file_format = os.path.join(
+    DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
+    '{valid?fmt=%Y%m}_kwbc_{param?fmt=str}.svs'
+)
 
 # WMO Verifcations
 wmo_verif_list = ['grid2grid_upperair', 'grid2obs_upperair', 'grid2obs_sfc']
@@ -444,7 +447,7 @@ elif JOB_GROUP == 'write_reports':
                            +f"{wmo_init_hour_list}")
                      continue
                 tmp_report_file = gda_util.format_filler(
-                    wmo_svs_report_file_format,
+                    wmo_svs_report_vhr_fhr_file_format,
                     valid_time_dt+datetime.timedelta(hours=int(vhr)),
                     valid_time_dt+datetime.timedelta(hours=int(vhr)),
                     fhr, {'param': param}
@@ -486,6 +489,62 @@ elif JOB_GROUP == 'write_reports':
                                   +'cp -v $tmp_report_file '
                                   +'$output_report_file; fi\n')
                         job.write('export err=$?; err_chk')
+elif JOB_GROUP == 'concatenate_reports':
+    job_env_dict = gda_util.initalize_job_env_dict('all', JOB_GROUP,
+                                                   VERIF_CASE, 'all')
+    valid_time_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
+    job_env_dict['VDATE'] = VDATE
+    # Write jobs for svs
+    for param in ['t2m', 'ff10m', 'dd10m', 'tp24', 'td2m', 'rh2m',
+                  'tcc', 'tp06']:
+        tmp_report_file = gda_util.format_filler(
+            wmo_svs_report_file_format, valid_time_dt,
+            valid_time_dt, 'anl', {'param': param}
+        )
+        output_report_file = os.path.join(
+            COMOUT, f"{MODELNAME}.{valid_time_dt:%Y%m%d}",
+            tmp_report_file.rpartition('/')[2]
+        )
+        job_env_dict['tmp_report_file'] = tmp_report_file
+        job_env_dict['output_report_file'] = output_report_file
+        have_report = os.path.exists(output_report_file)
+        # Make job script
+        njobs+=1
+        job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
+        print(f"Creating job script: {job_file}")
+        job = open(job_file, 'w')
+        job.write('#!/bin/bash\n')
+        job.write('set -x\n')
+        job.write('\n')
+        for name, value in job_env_dict.items():
+            job.write(f'export {name}="{value}"\n')
+        job.write('\n')
+        if have_report:
+            job.write('if [ -f $output_report_file ]; then '
+                      +'cp -v $output_report_file $tmp_report_file; '
+                      +'fi\n')
+            job.write('export err=$?; err_chk')
+        else:
+            svs_param_vhr_fhr_wildcard = os.path.join(
+                DATA, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME, VERIF_CASE,
+                f"{valid_time_dt:%Y%m}_kwbc_{param}_valid*Z_fhr*.svs"
+            )
+            svs_param_vhr_fhr_files = glob.glob(
+                svs_param_vhr_fhr_wildcard
+            )
+            if len(svs_param_vhr_fhr_files) > 0:
+                job.write(
+                    f"cat {' '.join(svs_param_vhr_fhr_files)} >& "
+                    +'$tmp_report_file\n'
+                )
+                if SENDCOM == 'YES':
+                    job.write('if [ -f $tmp_report_file ]; then '
+                              +'cp -v $tmp_report_file '
+                              +'$output_report_file; fi\n')
+                    job.write('export err=$?; err_chk')
+            else:
+                job.write('echo "No files matching '
+                          +svs_param_vhr_fhr_wildcard+'"')
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':

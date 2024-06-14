@@ -2341,7 +2341,8 @@ def initalize_job_env_dict(verif_type, group,
         'COMOUT', 'evs_run_mode'
     ]
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
-                 'gather_stats', 'summarize_stats', 'write_reports']:
+                 'gather_stats', 'summarize_stats', 'write_reports',
+                 'concatenate_reports']:
         if os.environ['VERIF_CASE'] == 'wmo':
            os.environ['MET_TMP_DIR'] = os.path.join(
                 os.environ['DATA'], 'tmp'

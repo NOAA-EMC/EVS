@@ -25,7 +25,7 @@ mkdir -p jobs logs confs tmp
 if [ $temporal = daily ]; then
     export group_list="reformat_data assemble_data generate_stats gather_stats"
 elif [ $temporal = monthly ]; then
-    export group_list="summarize_stats write_reports"
+    export group_list="summarize_stats write_reports concatenate_reports"
 fi
 
 # Create and run job scripts
