@@ -99,11 +99,12 @@ elif [ $MODELNAME = sref ]; then
   export EVSINsrefmean=${EVSINsrefmean:-$COMIN/prep/$COMPONENT}
 
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
-  mkdir -p $COMOUT
+  [[ ! -d $COMOUT ]] && mkdir -p $COMOUT
 
   export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-  mkdir -p $COMOUTfinal $COMOUTsmall
+  [[ ! -d $COMOUTfinal ]] && mkdir -p $COMOUTfinal 
+  [[ ! -d $COMOUTsmall ]] && mkdir -p $COMOUTsmall
 else
   echo "Improper MODELNAME: $MODELNAME"
   exit
