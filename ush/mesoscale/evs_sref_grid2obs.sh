@@ -1,7 +1,9 @@
 #!/bin/ksh
 #***********************************************************************************
 ##  Purpose: Run sref's grid2obs stat job
-##  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update: 
+#  04/10/2024, add restart capability,  Binbin Zhou Lynker@EMC/NCEP
+#  10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
 ##************************************************************************
 set -x 
 
@@ -27,15 +29,27 @@ for  obsv in prepbufr ; do
 
   #*************************************************
   # Get prepbufr data files for validation
+  # Check if the prepbufr directory exists saved from 
+  #             previous run
+  # (1) if not, run evs_prepare_sref.sh
+  # (2) else,  copy the existing prepbufr directory to the 
+  #             working directory (restart)
   # ***********************************************
-  $USHevs/mesoscale/evs_prepare_sref.sh prepbufr 
-  export err=$?; err_chk
+  if [ ! -d $COMOUTrestart/prepbufr.${VDATE} ] ; then
+     $USHevs/mesoscale/evs_prepare_sref.sh prepbufr 
+     export err=$?; err_chk
+  else
+     #Restart: copy saved stat files from previous runs
+     cp -r $COMOUTrestart/prepbufr.${VDATE} $WORK/.
+  fi
 
   #*****************************************
   # Build sub-jobs
   #*****************************************
   for fhr in fhr1 fhr2 ; do
        >run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+
+    if [ ! -e $COMOUTrestart/run_sref_g2o_${domain}.${obsv}.${fhr}.completed ] ; then
 
        echo  "#!/bin/ksh" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export output_base=$WORK/grid2obs/${domain}.${obsv}.${fhr}" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh 
@@ -66,17 +80,50 @@ for  obsv in prepbufr ; do
        echo  "export modeltail='.grib2'" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export extradir=''" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
 
-       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstSREF_obsPREPBUFR.conf " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstSREF_obsPREPBUFR.conf " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_mean.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_prob.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       ###########################################################################################################
+       # Adding following "if blocks"  for restart capability:
+       #  1. check if *.completed files for 4  METplus processes (gneensprod, ens, mean and prob) exist, respectively
+       #  2. if any of the 4 not exist, then run its METplus, then mark it completed for restart checking next time 
+       #  3. if any one of the 4 exits, skip it. But for gneensprod, all of the nc files generated from previous run
+       #       are copied back to the output_base/stat directory
+       # ###########################################################################################################
+       echo "if [ ! -e $COMOUTrestart/run_sref_g2o_genensprod_${domain}.${obsv}.${fhr}.completed ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstSREF_obsPREPBUFR.conf " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo " if [ -s \$output_base/stat/GenEnsProd_SREF_PREPBUFR*.nc ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "   cp \$output_base/stat/GenEnsProd_SREF_PREPBUFR*.nc $COMOUTrestart" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo " fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo " [[ \$? = 0 ]] &&  >$COMOUTrestart/run_sref_g2o_genensprod_${domain}.${obsv}.${fhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "else " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "  mkdir -p \$output_base/stat" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "  cp $COMOUTrestart/GenEnsProd_SREF_PREPBUFR*.nc \$output_base/stat" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "fi" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+
+       echo "if [ ! -e $COMOUTrestart/run_sref_g2o_ens_${domain}.${obsv}.${fhr}.completed ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstSREF_obsPREPBUFR.conf " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "   [[ \$? = 0 ]] && >$COMOUTrestart/run_sref_g2o_ens_${domain}.${obsv}.${fhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+
+       echo "if [ ! -e $COMOUTrestart/run_sref_g2o_mean_${domain}.${obsv}.${fhr}.completed ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_mean.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "   [[ \$? = 0 ]] &&  >$COMOUTrestart/run_sref_g2o_mean_${domain}.${obsv}.${fhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+
+       echo "if [ ! -e $COMOUTrestart/run_sref_g2o_prob_${domain}.${obsv}.${fhr}.completed ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_prob.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "   [[ \$? = 0 ]] &&  >$COMOUTrestart/run_sref_g2o_prob_${domain}.${obsv}.${fhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
 
        echo "if [ -s \$output_base/stat/*.stat ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       echo "  cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       echo "fi" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo " cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo "fi" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh 
+
+       #Mark that all of the 4 METplus processes are completed for next restart run:       
+       echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_g2o_${domain}.${obsv}.${fhr}.completed" >>run_sref_g2o_${domain}.${obsv}.${fhr}.sh
 
        chmod +x run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo "${DATA}/run_sref_g2o_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_g2o_poe.sh
+
+     fi  # check restart for the sub-job
 
   done
 
