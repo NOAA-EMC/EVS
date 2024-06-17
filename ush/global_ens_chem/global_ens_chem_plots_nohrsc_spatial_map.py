@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_plots_nohrsc_spatial_map.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a spatial map for 24 hour NOHRSC snowfall.
           (lat-lon plots; contours: snowfall)
           (EVS Graphics Naming Convention: nohrsc.vYYYYmmdd12.024h.conus.[gif][png])

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_plots_time_series_multifhr.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a time series plot with
           multiple forecast hours for 1 model.
           (x-axis: dates; y-axis: statistics value)

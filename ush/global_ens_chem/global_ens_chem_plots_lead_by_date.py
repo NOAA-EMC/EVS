@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_plots_lead_by_date.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a lead by date plot.
           (x-axis: forecast hour; y-axis: dates; contours: statistics values)
           (EVS Graphics Naming Convention: leaddate)

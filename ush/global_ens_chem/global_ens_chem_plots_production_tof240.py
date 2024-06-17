@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_plots_production_tof240.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This is the driver script for creating plots.
           It is only used in production to generate plots to
           forecast hour 240.

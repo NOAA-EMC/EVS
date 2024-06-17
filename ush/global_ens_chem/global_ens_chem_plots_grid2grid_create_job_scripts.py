@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_plots_grid2grid_create_job_scripts.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun huang@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
           jobs scripts contain all the necessary environment variables
           and commands to needed to run them.

@@ -31,22 +31,22 @@ total_days=$(expr ${diff_days} + 1)
 NDAYS=${NDAYS:-${total_days}}
 
 # Check user's config settings
-python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_${MODELNAME}_check_settings.py
+python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_check_settings.py
 export err=$?; err_chk
 
 # Create output directories
-python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_${MODELNAME}_create_output_dirs.py
+python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_create_output_dirs.py
 export err=$?; err_chk
 
 # Link needed data files and set up model information
-python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_${MODELNAME}_get_data_files.py
+python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_get_data_files.py
 export err=$?; err_chk
 
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
 for group in condense_stats filter_stats make_plots tar_images; do
     export JOB_GROUP=${group}
     echo "Creating and running jobs for grid-to-obs plots: ${JOB_GROUP}"
-    python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_${MODELNAME}_${STEP}_${VERIF_CASE}}_create_job_scripts.py
+    python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_${STEP}_${VERIF_CASE}}_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/*
     nc=1

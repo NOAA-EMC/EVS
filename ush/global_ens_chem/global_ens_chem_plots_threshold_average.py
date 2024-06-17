@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_plots_threshold_average.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a threshold average plot.
           (x-axis: threshold value; y-axis: statistics value)
           (EVS Graphics Naming Convention: threshmean)

@@ -9,8 +9,10 @@ do
   ((count++))
 done<tlist
 
-old_ver='global_det_atmos'
-new_ver='global_ens_chem'
+old_ver='mallory.row'
+new_ver='ho-chun.huang'
+old_ver='Mallory Row'
+new_ver='Ho-Chun Huang'
 for i in "${shfile[@]}"
 do
    echo ${i}

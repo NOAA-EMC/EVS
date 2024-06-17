@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_plots_stat_by_level.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a stat by level plot.
           (x-axis: statistics value; y-axis: pressure levels)
           (EVS Graphics Naming Convention: vertprof)
