@@ -65,9 +65,7 @@ generate_stats_jobs_dict = {
                                          'var1_fcst_options': '',
                                          'var1_obs_name': 'TMP',
                                          'var1_obs_levels': 'Z2',
-                                         'var1_obs_options': '',
-                                         'met_config_overrides': ("'climo_mean "
-                                                                  +"= fcst;'")},
+                                         'var1_obs_options': ''},
                                  'commands': [sub_util.python_command(
                                                  'subseasonal_stats_'
                                                  'grid2obs_create_weekly_'
@@ -102,7 +100,9 @@ generate_stats_jobs_dict = {
                                                  'METplus_output',
                                                  '${RUN}.${DATE}',
                                                  '$MODEL', '$VERIF_CASE',
-                                                 'weekly_avg_*.stat'
+                                                 'weekly_avg_prepbufr_'
+                                                 +'WeeklyAvg_'
+                                                 +'TempAnom2m_*.stat'
                                              )+'|wc -l)',
                                              ('if [ $nweekly_avg_stat_files '
                                              +'-ne 0 ]; then'),
@@ -121,9 +121,7 @@ generate_stats_jobs_dict = {
                                            'var1_fcst_options': '',
                                            'var1_obs_name': 'TMP',
                                            'var1_obs_levels': 'Z2',
-                                           'var1_obs_options': '',
-                                           'met_config_overrides': ("'climo_mean "
-                                                                    +"= fcst;'")},
+                                           'var1_obs_options': ''},
                                    'commands': [sub_util.python_command(
                                                    'subseasonal_stats_'
                                                    'grid2obs_create_days6_10_'
@@ -158,7 +156,9 @@ generate_stats_jobs_dict = {
                                                    'METplus_output',
                                                    '${RUN}.${DATE}',
                                                    '$MODEL', '$VERIF_CASE',
-                                                   'days6_10_avg_*.stat'
+                                                   'days6_10_avg_prepbufr_'
+                                                   +'Days6_10Avg_'
+                                                   +'TempAnom2m_*.stat'
                                                )+'|wc -l)',
                                                ('if [ $ndays6_10_avg_stat_files '
                                                +'-ne 0 ]; then'),
@@ -177,9 +177,7 @@ generate_stats_jobs_dict = {
                                            'var1_fcst_options': '',
                                            'var1_obs_name': 'TMP',
                                            'var1_obs_levels': 'Z2',
-                                           'var1_obs_options': '',
-                                           'met_config_overrides': ("'climo_mean "
-                                                                    +"= fcst;'")},
+                                           'var1_obs_options': ''},
                                    'commands': [sub_util.python_command(
                                                    'subseasonal_stats_'
                                                    'grid2obs_create_weeks3_4_'
@@ -214,7 +212,9 @@ generate_stats_jobs_dict = {
                                                    'METplus_output',
                                                    '${RUN}.${DATE}',
                                                    '$MODEL', '$VERIF_CASE',
-                                                   'weeks3_4_avg_*.stat'
+                                                   'weeks3_4_avg_prepbufr_'
+                                                   +'Weeks3_4Avg_'
+                                                   +'TempAnom2m_*.stat'
                                                )+'|wc -l)',
                                                ('if [ $nweeks3_4_avg_stat_files '
                                                +'-ne 0 ]; then'),
@@ -225,6 +225,195 @@ generate_stats_jobs_dict = {
                                                    +'Weeks3_4MPRtoSL1L2.conf'
                                                ),
                                                'fi']},
+        'WeeklyAvg_Temp2m': {'env': {'prepbufr': 'nam',
+                                     'obs_window': '900',
+                                     'msg_type': 'ADPSFC',
+                                     'var1_fcst_name': 'TMP',
+                                     'var1_fcst_levels': 'Z2',
+                                     'var1_fcst_options': '',
+                                     'var1_obs_name': 'TMP',
+                                     'var1_obs_levels': 'Z2',
+                                     'var1_obs_options': ''},
+                             'commands': [sub_util.python_command(
+                                             'subseasonal_stats_'
+                                             'grid2obs_create_weekly_'
+                                             'avg.py',
+                                             ['TMP_Z2',
+                                               os.path.join(
+                                                   '$DATA',
+                                                   '${VERIF_CASE}_${STEP}',
+                                                   'METplus_output',
+                                                   '${RUN}.'
+                                                   +'$DATE',
+                                                   '$MODEL', '$VERIF_CASE',
+                                                   'point_stat_'
+                                                   +'${VERIF_TYPE}_'
+                                                   +'TempAnom2m_'
+                                                   +'{lead?fmt=%2H}0000L_'
+                                                   +'{valid?fmt=%Y%m%d}_'
+                                                   +'{valid?fmt=%H}0000V'
+                                                   +'.stat'
+                                             ),
+                                             os.path.join(
+                                                 '$COMOUT',
+                                                 '${RUN}.$DATE',
+                                                 '$MODEL', '$VERIF_CASE',
+                                                 'point_stat_'
+                                                 +'${VERIF_TYPE}_'
+                                                 +'TempAnom2m_'
+                                                 +'{lead?fmt=%2H}0000L_'
+                                                 +'{valid?fmt=%Y%m%d}_'
+                                                 +'{valid?fmt=%H}0000V'
+                                                 +'.stat'
+                                             )]
+                                         ),
+                                         'nweekly_avg_stat_files='
+                                         +'$(ls '+os.path.join(
+                                             '$DATA',
+                                             '${VERIF_CASE}_${STEP}',
+                                             'METplus_output',
+                                             '${RUN}.${DATE}',
+                                             '$MODEL', '$VERIF_CASE',
+                                             'weekly_avg_prepbufr_'
+                                             +'WeeklyAvg_'
+                                             +'Temp2m_*.stat'
+                                         )+'|wc -l)',
+                                         ('if [ $nweekly_avg_stat_files '
+                                         +'-ne 0 ]; then'),
+                                         sub_util.metplus_command(
+                                             'StatAnalysis_'
+                                             +'fcstSUBSEASONAL_'
+                                             +'obsPrepbufr_'
+                                             +'climoERA5_'
+                                             +'WeeklyMPRtoSAL1L2.conf'
+                                         ),
+                                         'fi']},
+        'Days6_10Avg_Temp2m': {'env': {'prepbufr': 'nam',
+                                       'obs_window': '900',
+                                       'msg_type': 'ADPSFC',
+                                       'var1_fcst_name': 'TMP',
+                                       'var1_fcst_levels': 'Z2',
+                                       'var1_fcst_options': '',
+                                       'var1_obs_name': 'TMP',
+                                       'var1_obs_levels': 'Z2',
+                                       'var1_obs_options': ''},
+                               'commands': [sub_util.python_command(
+                                               'subseasonal_stats_'
+                                               'grid2obs_create_days6_10_'
+                                               'avg.py',
+                                               ['TMP_Z2',
+                                                 os.path.join(
+                                                     '$DATA',
+                                                     '${VERIF_CASE}_${STEP}',
+                                                     'METplus_output',
+                                                     '${RUN}.'
+                                                     +'$DATE',
+                                                     '$MODEL', '$VERIF_CASE',
+                                                     'point_stat_'
+                                                     +'${VERIF_TYPE}_'
+                                                     +'TempAnom2m_'
+                                                     +'{lead?fmt=%2H}0000L_'
+                                                     +'{valid?fmt=%Y%m%d}_'
+                                                     +'{valid?fmt=%H}0000V'
+                                                     +'.stat'
+                                               ),
+                                               os.path.join(
+                                                   '$COMOUT',
+                                                   '${RUN}.$DATE',
+                                                   '$MODEL', '$VERIF_CASE',
+                                                   'point_stat_'
+                                                   +'${VERIF_TYPE}_'
+                                                   +'TempAnom2m_'
+                                                   +'{lead?fmt=%2H}0000L_'
+                                                   +'{valid?fmt=%Y%m%d}_'
+                                                   +'{valid?fmt=%H}0000V'
+                                                   +'.stat'
+                                               )]
+                                           ),
+                                           'ndays6_10_avg_stat_files='
+                                           +'$(ls '+os.path.join(
+                                               '$DATA',
+                                               '${VERIF_CASE}_${STEP}',
+                                               'METplus_output',
+                                               '${RUN}.${DATE}',
+                                               '$MODEL', '$VERIF_CASE',
+                                               'days6_10_avg_prepbufr_'
+                                               +'Days6_10Avg_'
+                                               +'Temp2m_*.stat'
+                                           )+'|wc -l)',
+                                           ('if [ $ndays6_10_avg_stat_files '
+                                           +'-ne 0 ]; then'),
+                                           sub_util.metplus_command(
+                                               'StatAnalysis_'
+                                               +'fcstSUBSEASONAL_'
+                                               +'obsPrepbufr_'
+                                               +'climoERA5_'
+                                               +'Days6_10MPRtoSAL1L2.conf'
+                                           ),
+                                           'fi']},
+        'Weeks3_4Avg_Temp2m': {'env': {'prepbufr': 'nam',
+                                       'obs_window': '900',
+                                       'msg_type': 'ADPSFC',
+                                       'var1_fcst_name': 'TMP',
+                                       'var1_fcst_levels': 'Z2',
+                                       'var1_fcst_options': '',
+                                       'var1_obs_name': 'TMP',
+                                       'var1_obs_levels': 'Z2',
+                                       'var1_obs_options': ''},
+                               'commands': [sub_util.python_command(
+                                               'subseasonal_stats_'
+                                               'grid2obs_create_weeks3_4_'
+                                               'avg.py',
+                                               ['TMP_Z2',
+                                                 os.path.join(
+                                                     '$DATA',
+                                                     '${VERIF_CASE}_${STEP}',
+                                                     'METplus_output',
+                                                     '${RUN}.'
+                                                     +'$DATE',
+                                                     '$MODEL', '$VERIF_CASE',
+                                                     'point_stat_'
+                                                     +'${VERIF_TYPE}_'
+                                                     +'TempAnom2m_'
+                                                     +'{lead?fmt=%2H}0000L_'
+                                                     +'{valid?fmt=%Y%m%d}_'
+                                                     +'{valid?fmt=%H}0000V'
+                                                     +'.stat'
+                                               ),
+                                               os.path.join(
+                                                   '$COMOUT',
+                                                   '${RUN}.$DATE',
+                                                   '$MODEL', '$VERIF_CASE',
+                                                   'point_stat_'
+                                                   +'${VERIF_TYPE}_'
+                                                   +'TempAnom2m_'
+                                                   +'{lead?fmt=%2H}0000L_'
+                                                   +'{valid?fmt=%Y%m%d}_'
+                                                   +'{valid?fmt=%H}0000V'
+                                                   +'.stat'
+                                               )]
+                                           ),
+                                           'nweeks3_4_avg_stat_files='
+                                           +'$(ls '+os.path.join(
+                                               '$DATA',
+                                               '${VERIF_CASE}_${STEP}',
+                                               'METplus_output',
+                                               '${RUN}.${DATE}',
+                                               '$MODEL', '$VERIF_CASE',
+                                               'weeks3_4_avg_prepbufr_'
+                                               +'Weeks3_4Avg_'
+                                               +'Temp2m_*.stat'
+                                           )+'|wc -l)',
+                                           ('if [ $nweeks3_4_avg_stat_files '
+                                           +'-ne 0 ]; then'),
+                                           sub_util.metplus_command(
+                                               'StatAnalysis_'
+                                               +'fcstSUBSEASONAL_'
+                                               +'obsPrepbufr_'
+                                               +'climoERA5_'
+                                               +'Weeks3_4MPRtoSAL1L2.conf'
+                                           ),
+                                           'fi']},
     }
 }
 
