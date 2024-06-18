@@ -30,7 +30,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_list:                 model names
 #model_evs_data_dir_list:    base path to "evs_data" directory
 #model_file_format_list:     file format of model files
-export model_list="gefs"
+export model_list="gefsv12"
 export model_evs_data_dir_list="${COMIN}/stats/${COMPONENT}/${MODELNAME}"
 export model_file_format_list="${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t{init?fmt=%2H}z.a2d_0p25.f{lead?fmt=%3H}.grib2"
 ## OUTPUT DATA SETTINGS
@@ -59,7 +59,7 @@ if [ "${RUN_GRID2GRID_PLOTS}" == "YES" ]; then
     #    g2gp_*_fhr_min: forecast hour to start verification: HH[H]
     #    g2gp_*_fhr_max: forecast hour to end verification: HH[H]
     #    g2gp_*_fhr_inc: frequency to verify forecast hours: HH[H]
-    export g2gp_model_plot_name_list="gefs"
+    export g2gp_model_plot_name_list="gefsv12"
     export g2gp_type_list="abi"
     export g2gp_obs_list="aod"
     export g2gp_event_equalization="NO"
