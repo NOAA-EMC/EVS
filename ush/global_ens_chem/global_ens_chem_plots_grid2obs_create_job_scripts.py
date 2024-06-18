@@ -83,13 +83,13 @@ for aeronet_job in list(condense_stats_jobs_dict['aeronet'].keys()):
     else:
         aeronet_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['aeronet'][aeronet_job]['line_types'] = aeronet_job_line_types
-#### arinow
-for arinow_job in list(condense_stats_jobs_dict['arinow'].keys()):
-    if arinow_job in [ 'PM25' ]:
-        arinow_job_line_types = ['SL1L2', 'CTC' ]
+#### airnow
+for airnow_job in list(condense_stats_jobs_dict['airnow'].keys()):
+    if airnow_job in [ 'PM25' ]:
+        airnow_job_line_types = ['SL1L2', 'CTC' ]
     else:
-        arinow_job_line_types = ['SL1L2']
-    condense_stats_jobs_dict['arinow'][arinow_job]['line_types'] = arinow_job_line_types
+        airnow_job_line_types = ['SL1L2']
+    condense_stats_jobs_dict['airnow'][airnow_job]['line_types'] = airnow_job_line_types
 if JOB_GROUP == 'condense_stats':
     JOB_GROUP_dict = condense_stats_jobs_dict
 
@@ -128,7 +128,7 @@ for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
         filter_stats_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]['line_types'] = [
             'CTC'
         ]
-        if aeronet_job == 'Dewpoint2m':
+        if aeronet_job == 'AOD':
             (filter_stats_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
                  'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
@@ -161,21 +161,21 @@ for airnow_job in list(filter_stats_jobs_dict['airnow'].keys()):
     filter_stats_jobs_dict['airnow'][airnow_job]['obs_var_dict']['threshs'] = (
         airnow_job_obs_threshs
     )
-    if arinow_job in ['PM25']:
-        filter_stats_jobs_dict['arinow'][arinow_job]['line_types'] = ['SL1L2']
-        filter_stats_jobs_dict['arinow'][f"{arinow_job}_Thresh"] = copy.deepcopy(
-            filter_stats_jobs_dict['arinow'][arinow_job]
+    if airnow_job in ['PM25']:
+        filter_stats_jobs_dict['airnow'][airnow_job]['line_types'] = ['SL1L2']
+        filter_stats_jobs_dict['airnow'][f"{airnow_job}_Thresh"] = copy.deepcopy(
+            filter_stats_jobs_dict['airnow'][airnow_job]
         )
-        filter_stats_jobs_dict['arinow'][f"{arinow_job}_Thresh"]['line_types'] = [
+        filter_stats_jobs_dict['airnow'][f"{airnow_job}_Thresh"]['line_types'] = [
             'CTC'
         ]
-        if arinow_job == 'PM25':
-            (filter_stats_jobs_dict['arinow'][f"{arinow_job}_Thresh"]\
+        if airnow_job == 'PM25':
+            (filter_stats_jobs_dict['airnow'][f"{airnow_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
                  'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
                  'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
              ]
-            (filter_stats_jobs_dict['arinow'][f"{arinow_job}_Thresh"]\
+            (filter_stats_jobs_dict['airnow'][f"{airnow_job}_Thresh"]\
              ['obs_var_dict']['threshs']) = [
                  'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
                  'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
