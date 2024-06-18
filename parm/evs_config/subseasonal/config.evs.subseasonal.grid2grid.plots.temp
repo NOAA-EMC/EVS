@@ -11,8 +11,6 @@
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 ####################################################
-# WHAT METPLUS USE CASES TO RUN
-####################################################
 ## PLOTS STEP PRODUCES PLOTS FOR STATISTICS FROM .STAT FILES
 export VERIF_CASE_STEP=${VERIF_CASE}_${STEP}
 ####################################################

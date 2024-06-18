@@ -1,8 +1,11 @@
 #!/bin/ksh
-#*******************************************************************************
+#*************************************************************************************
 # Purpose: setup environment, paths, and run the sref grid2obs plotting python script
-# Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
-# ******************************************************************************
+# Last updated:
+#               04/10/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
+#               10/27/2023, Add comments,           Binbin Zhou Lynker@EMC/NCEP
+#
+# ************************************************************************************
 set -x 
 
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
@@ -17,6 +20,10 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
+restart=$COMOUTplots/restart/$past_days/sref_grid2obs_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi
 
 export eval_period='TEST'
 
@@ -62,7 +69,9 @@ export fcst_valid_hours="0 6 12 18"
 init_time='init00_to_21z'
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-
+if [ ! -d $plot_dir ] ; then
+ mkdir -p $plot_dir
+fi
 
 verif_case=$VERIF_CASE
 #*****************************************
@@ -71,6 +80,10 @@ verif_case=$VERIF_CASE
 > run_all_poe.sh
 
 for fcst_valid_hour in $fcst_valid_hours ; do
+ vld=$fcst_valid_hour
+ typeset -Z2 vld
+ 
+  
 
  for stats in  crps rmse_spread me ets_fbias; do 
   if [ $stats = crps ] ; then
@@ -122,8 +135,54 @@ for fcst_valid_hour in $fcst_valid_hours ; do
        elif [ $VAR = HGT ] ; then
 	  FCST_LEVEL_values="P500 P700"
        fi
-
+      
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
+
+       if [ $VAR = TMP2m ] ; then
+          level_var=2m_tmp
+       elif [ $VAR = DPT2m ] ; then
+          level_var=2m_dpt
+       elif [ $VAR = RH2m ] ; then
+          level_var=2m_rh
+       elif [ $VAR = UGRD10m ] ; then 
+          level_var=10m_ugrd
+       elif [ $VAR = VGRD10m ] ; then
+          level_var=10m_vgrd
+       elif [ $VAR = PRMSL ] ; then
+          level_var=prmsl
+       elif [ $VAR = CAPEsfc ] ; then 
+          level_var=cape
+       elif [ $VAR = TCDC ] ; then
+          level_var=tcdc
+       elif [ $VAR = UGRD ] ; then
+          if [ $FCST_LEVEL_value = P850 ] ; then
+	    level_var=850mb_ugrd
+	  elif [ $FCST_LEVEL_value = P500 ] ; then
+            level_var=500mb_ugrd
+          elif [ $FCST_LEVEL_value = P250 ] ; then
+	    level_var=250mb_ugrd  
+          fi
+       elif [ $VAR = VGRD ] ; then
+	  if [ $FCST_LEVEL_value = P850 ] ; then
+	    level_var=850mb_vgrd
+	  elif [ $FCST_LEVEL_value = P500 ] ; then
+	    level_var=500mb_vgrd
+	  elif [ $FCST_LEVEL_value = P250 ] ; then
+	    level_var=250mb_vgrd          
+          fi
+       elif [ $VAR = TMP ] ; then
+          if [ $FCST_LEVEL_value = P850 ] ; then
+            level_var=850mb_tmp
+	  elif [ $FCST_LEVEL_value = P500 ] ; then
+            level_var=500mb_tmp
+	  fi
+	elif [ $VAR = HGT ] ; then
+          if [ $FCST_LEVEL_value = P700 ] ; then
+            level_var=700mb_hgt
+	  elif [ $FCST_LEVEL_value = P500 ] ; then
+            level_var=500mb_hgt
+          fi
+	fi
 
 	OBS_LEVEL_value=$FCST_LEVEL_value
 
@@ -136,6 +195,11 @@ for fcst_valid_hour in $fcst_valid_hours ; do
 	 #*********************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh  
 
+	#*******************************************************************************************************************
+	#  Check if this sub-job has been completed in the previous run for restart
+	 if [ ! -e $restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed ] ; then
+	#******************************************************************************************************************* 
+   	 
 	if [ $VAR = UGRD ] || [ $VAR = VGRD ] || [ $VAR = HGT ] || [ $VAR = TMP ] ; then
 	   verif_type=upper_air
         else	   
@@ -190,9 +254,20 @@ for fcst_valid_hour in $fcst_valid_hours ; do
 
          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
+	 #Save for restart:
+         echo "cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z*.png $restart/." >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "[[ $? = 0 ]] && >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_all_poe.sh
 
+
+       else
+
+	 #For restart
+	 cp $restart/${score_type}_regional_conus_valid_${vld}z*.png  ${plot_dir}/.	 
+      
+       fi	 
       done #end of line_type
 
      done #end of FCST_LEVEL_value
