@@ -207,6 +207,13 @@ while valid_hr <= int(valid_hr_end):
                                 .values, dtype=float
                             ).mean()
                         )
+                        if job_name == 'Days6_10Avg_Temp2m':
+                            all_days_avg_obtype_sid_vx_mask_climo_mean = (
+                                np.array(
+                                    all_days_avg_obtype_sid_vx_mask_df['CLIMO_MEAN']\
+                                    .values, dtype=float
+                                ).mean()
+                            )
                         days_avg_obtype_sid_vx_mask_df = pd.DataFrame.copy(
                             all_days_avg_obtype_sid_vx_mask_df.iloc[0,:],
                             deep=True
@@ -240,6 +247,10 @@ while valid_hr <= int(valid_hr_end):
                         days_avg_obtype_sid_vx_mask_df['OBS'] = str(
                             all_days_avg_obtype_sid_vx_mask_obs_mean
                         )
+                        if job_name == 'Days6_10Avg_Temp2m':
+                            days_avg_obtype_sid_vx_mask_df['CLIMO_MEAN'] = str(
+                                all_days_avg_obtype_sid_vx_mask_climo_mean
+                            )
                         days_avg_df_list.append(
                             days_avg_obtype_sid_vx_mask_df
                         )
