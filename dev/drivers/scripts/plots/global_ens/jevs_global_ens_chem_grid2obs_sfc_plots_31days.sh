@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_chem_grid2obs_sfc_plots_31days_00
+#PBS -N jevs_global_ens_chem_grid2obs_aeronet_plots_31days_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -18,7 +18,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=NO
-export job=${PBS_JOBNAME:-jevs_global_ens_chem_grid2obs_sfc_plots_31days}
+export job=${PBS_JOBNAME:-jevs_global_ens_chem_grid2obs_aeronet_plots_31days}
 export jobid=${job}.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -40,7 +40,7 @@ export STEP=plots
 export COMPONENT=global_ens
 export RUN=chem
 export VERIF_CASE=grid2obs
-export VERIF_TYPE=sfc
+export VERIF_TYPE=aeronet
 export NDAYS=31
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
@@ -55,9 +55,9 @@ export config=${HOMEevs}/parm/evs_config/${COMPONENT}/config.${NET}.${envir}.${S
 echo ${config}
 
 # CALL executable job script here
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-observations sfc for last 31 days
+#          atmospheric grid-to-observations aeronet for last 31 days
 ######################################################################
