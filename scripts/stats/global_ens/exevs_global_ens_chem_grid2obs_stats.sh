@@ -23,6 +23,8 @@ export finalstat=${DATA}/final  # config variable
 mkdir -p ${finalstat}
 
 export CMODEL=`echo ${MODELNAME} | tr a-z A-Z`  # define config variable
+vmodel=`echo ${gefs_ver} | awk -F"." '{print $1}'`
+export VMODEL=${MODELNAME}${vmodel}
 
 export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}}
 export config_common=${PARMevs}/metplus_config/machine.conf
@@ -182,7 +184,7 @@ for ObsType in ${grid2obs_list}; do
 
 done
 if [ "${flag_send_message}" == "YES" ]; then
-    export subject="${OBSTYPE} Obs or ${CMODLE} Fcst files Missing for EVS ${COMPONENT} ${RUN} ${VERIF_CASE}"
+    export subject="${OBSTYPE} Obs or ${CMODEL} Fcst files Missing for EVS ${COMPONENT} ${RUN} ${VERIF_CASE}"
     echo "Job ID: ${jobid}" >> mailmsg
     cat mailmsg | mail -s "${subject}" ${MAILTO}
 fi 

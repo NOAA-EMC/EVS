@@ -45,7 +45,7 @@ if STEP == 'plots' :
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
                         'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'.'
-                        +'v'+date_dt.strftime('%Y%m%d')+'.stat'
+                        +obstype+"_"+obsvar+"."+'v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
                 else:
                     ## model_evs_data_dir = ${COMIN}/stats/${COMPONENT}/gefs

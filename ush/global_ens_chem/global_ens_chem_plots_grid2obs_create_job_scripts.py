@@ -99,6 +99,7 @@ if JOB_GROUP == 'condense_stats':
 filter_stats_jobs_dict = copy.deepcopy(condense_stats_jobs_dict)
 #### aeronet
 for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
+    ## column of "DESC" values
     filter_stats_jobs_dict['aeronet'][aeronet_job]['grid'] = 'G004'
     if 'aeronet' in aeronet_job:
         filter_stats_jobs_dict['aeronet'][aeronet_job]['interps'] = ['NEAREST/1']
@@ -119,6 +120,25 @@ for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
     filter_stats_jobs_dict['aeronet'][aeronet_job]['obs_var_dict']['threshs'] = (
         aeronet_job_obs_threshs
     )
+    if aeronet_job in ['AOD']:
+        filter_stats_jobs_dict['aeronet'][aeronet_job]['line_types'] = ['SL1L2']
+        filter_stats_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"] = copy.deepcopy(
+            filter_stats_jobs_dict['aeronet'][aeronet_job]
+        )
+        filter_stats_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]['line_types'] = [
+            'CTC'
+        ]
+        if aeronet_job == 'Dewpoint2m':
+            (filter_stats_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]\
+             ['fcst_var_dict']['threshs']) = [
+                 'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
+                 'ge1.5', 'ge2.0'
+             ]
+            (filter_stats_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]\
+             ['obs_var_dict']['threshs']) = [
+                 'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
+                 'ge1.5', 'ge2.0'
+             ]
 #### airnow
 for airnow_job in list(filter_stats_jobs_dict['airnow'].keys()):
     filter_stats_jobs_dict['airnow'][airnow_job]['grid'] = 'G004'
@@ -141,6 +161,25 @@ for airnow_job in list(filter_stats_jobs_dict['airnow'].keys()):
     filter_stats_jobs_dict['airnow'][airnow_job]['obs_var_dict']['threshs'] = (
         airnow_job_obs_threshs
     )
+    if arinow_job in ['PM25']:
+        filter_stats_jobs_dict['arinow'][arinow_job]['line_types'] = ['SL1L2']
+        filter_stats_jobs_dict['arinow'][f"{arinow_job}_Thresh"] = copy.deepcopy(
+            filter_stats_jobs_dict['arinow'][arinow_job]
+        )
+        filter_stats_jobs_dict['arinow'][f"{arinow_job}_Thresh"]['line_types'] = [
+            'CTC'
+        ]
+        if arinow_job == 'PM25':
+            (filter_stats_jobs_dict['arinow'][f"{arinow_job}_Thresh"]\
+             ['fcst_var_dict']['threshs']) = [
+                 'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
+                 'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
+             ]
+            (filter_stats_jobs_dict['arinow'][f"{arinow_job}_Thresh"]\
+             ['obs_var_dict']['threshs']) = [
+                 'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
+                 'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
+             ]
 if JOB_GROUP == 'filter_stats':
     JOB_GROUP_dict = filter_stats_jobs_dict
 
@@ -152,7 +191,7 @@ make_plots_jobs_dict = copy.deepcopy(filter_stats_jobs_dict)
 for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
     del make_plots_jobs_dict['aeronet'][aeronet_job]['line_types']
     if aeronet_job in ['AOD']:
-        aeronet_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME', 'CTC/FBIAS']
+        aeronet_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME', 'CTC/CSI']
         make_plots_jobs_dict['aeronet'][aeronet_job+'_FBAR_OBAR'] = copy.deepcopy(
             make_plots_jobs_dict['aeronet'][aeronet_job]
         )
@@ -166,13 +205,18 @@ for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
         make_plots_jobs_dict['aeronet'][aeronet_job+'_FBAR_OBAR']['plots'] = [
             'time_series', 'lead_average', 'threshold_average'
         ]
+    elif aeronet_job in ['AOD_Thresh']:
+        aeronet_job_line_type_stats = ['CTC/CSI']
     else:
         aeronet_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
+
     make_plots_jobs_dict['aeronet'][aeronet_job]['line_type_stats'] = (
         aeronet_job_line_type_stats
     )
 
     if aeronet_job in ['AOD']:
+        aeronet_job_plots = ['time_series', 'lead_average', 'threshold_average']
+    elif aeronet_job in ['AOD_Thresh']:
         aeronet_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
         aeronet_job_plots = ['time_series', 'lead_average']
@@ -191,7 +235,7 @@ for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
 for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
     del make_plots_jobs_dict['airnow'][airnow_job]['line_types']
     if airnow_job in ['PM25']:
-        airnow_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME', 'CTC/FBIAS']
+        airnow_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME', 'CTC/CSI']
         make_plots_jobs_dict['airnow'][airnow_job+'_FBAR_OBAR'] = copy.deepcopy(
             make_plots_jobs_dict['airnow'][airnow_job]
         )
@@ -205,6 +249,8 @@ for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
         make_plots_jobs_dict['airnow'][airnow_job+'_FBAR_OBAR']['plots'] = [
             'time_series', 'lead_average', 'threshold_average'
         ]
+    elif airnow_job in ['PM25_Thresh']:
+        airnow_job_line_type_stats = ['CTC/CSI']
     else:
         airnow_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
     make_plots_jobs_dict['airnow'][airnow_job]['line_type_stats'] = (
@@ -212,6 +258,8 @@ for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
     )
 
     if airnow_job in ['PM25']:
+        airnow_job_plots = ['time_series', 'lead_average', 'threshold_average']
+    elif airnow_job in ['PM25_Thresh']:
         airnow_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
         airnow_job_plots = ['time_series', 'lead_average']
@@ -233,10 +281,16 @@ if JOB_GROUP == 'make_plots':
 #### tar_images jobs
 ################################################
 tar_images_jobs_dict = {
-    'sfc': {
+    'aeronet': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_sfc",
+                                        f"{VERIF_CASE}_aeronet",
+                                        f"last{NDAYS}days")
+    }
+    'airnow': {
+        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                        'plot_output', f"{RUN}.{end_date}",
+                                        f"{VERIF_CASE}_airnow",
                                         f"last{NDAYS}days")
     }
 }
@@ -503,12 +557,12 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         gda_util.make_dir(output_dir)
                     run_global_ens_chem_plots = ['global_ens_chem_plots.py']
                     if evs_run_mode == 'production' and \
-                            verif_type in ['pres_levs', 'sfc'] and \
+                            verif_type in ['aeronet', 'airnow'] and \
                             job_env_dict['plot'] in \
                             ['lead_average', 'lead_by_level',
                              'lead_by_date']:
                         run_global_ens_chem_plots.append(
-                            'global_ens_chem_plots_production_tof240.py'
+                            'global_ens_chem_plots_production_tof120.py'
                         )
                     for run_global_ens_chem_plot in run_global_ens_chem_plots:
                         # Create job file
