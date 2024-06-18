@@ -248,6 +248,8 @@ class PlotSpecs:
         """
         var_name_level = var_name+'/'+var_level
         var_plot_name_dict = {
+            'AOTK/L0': 'Aerosol Optical Depth at 550nm',
+            'PMTF/L0': 'Particulate matter with diameters that are generally 2.5 micrometers and smaller'
             'APCP/A24': '24 hour Accumulated Precipitation',
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
@@ -480,10 +482,12 @@ class PlotSpecs:
                                      (string)
         """
         vx_mask_plot_name_dict = {
+             'AFRICA': 'Africa',
              'Alaska': 'Alaska',
              'ANTARCTIC': 'Antarctic 50S-90S',
              'Appalachia': 'Appalachia',
              'ARCTIC': 'Arctic 50N-90N',
+             'ASIA': 'Asia',
              'ATL_MDR': 'Atlantic Main Development Region',
              'CONUS': 'CONUS',
              'CONUS_Central': 'CONUS - Central',
@@ -499,6 +503,7 @@ class PlotSpecs:
              'Mezquital': 'Mezquital',
              'MidAtlantic': 'Mid-Atlantic',
              'N60N90': '60N-90N',
+             'NAMERICA': 'North America',
              'NAO': 'Northern Atlantic Ocean',
              'NPO': 'Northern Pacific Ocean',
              'NHEM': 'Northern Hemisphere 20N-80N',
@@ -509,6 +514,7 @@ class PlotSpecs:
              'PacificSW': 'Pacific Southwest',
              'Prairie': 'Prairie',
              'S60S90': '60S-90S',
+             'SAMERICA': 'South America',
              'SAO': 'Southern Atlantic Ocean',
              'SPO': 'Southern Pacific Ocean',
              'SHEM': 'Southern Hemisphere 20S-80S',
@@ -830,11 +836,13 @@ class PlotSpecs:
             )
         grid_savefig_name = plot_info_dict['grid']
         region_savefig_dict = {
+            'AFRICA': 'africa',
             'Alaska': 'alaska',
             'Appalachia': 'buk_apl',
             'ANTARCTIC': 'antarctic',
             'ARCTIC': 'arctic',
             'ATL_MDR': 'al_mdr',
+            'ASIA': 'asia',
             'CONUS': 'buk_conus',
             'CONUS_East': 'buk_conus_e',
             'CONUS_Central': 'buk_conus_c',
@@ -849,6 +857,7 @@ class PlotSpecs:
             'Mezqutial': 'buk_mez',
             'MidAtlantic': 'buk_matl',
             'N60N90': 'n60',
+            'NAMERICA': 'n_america',
             'NAO': 'nao',
             'NHEM': 'nhem',
             'NorthAtlantic': 'buk_ne',
@@ -859,6 +868,7 @@ class PlotSpecs:
             'PacificSW': 'buk_psw',
             'Prairie': 'buk_pra',
             'S60S90': 's60',
+            'SAMERICA': 's_america',
             'SAO': 'sao',
             'SHEM': 'shem',
             'Southeast': 'buk_se',

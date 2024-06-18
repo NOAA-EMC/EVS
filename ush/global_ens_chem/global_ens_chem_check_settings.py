@@ -56,8 +56,8 @@ VERIF_CASE_STEP_type_list = (
     os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
 )
 valid_VERIF_CASE_STEP_type_opts_dict = {
-    'RUN_GRID2GRID_PLOTS': ['viirs', 'abi', 'sfc'  ],
-    'RUN_GRID2OBS_PLOTS': ['airnow', 'aeronet', 'sfc' ]
+    'RUN_GRID2GRID_PLOTS': ['sfc'  ],
+    'RUN_GRID2OBS_PLOTS': ['sfc' ]
 }
 for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
     if VERIF_CASE_STEP_type \
@@ -109,13 +109,9 @@ evs_global_ens_chem_settings_dict['RUN_GRID2OBS_PLOTS'] = [
 
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_PLOTS': {
-        'viirs': ['init_hr_list', 'valid_hr_list'],
-        'abi': ['init_hr_list', 'valid_hr_list'],
-        'sfc': []
+        'sfc': ['init_hr_list', 'valid_hr_list']
     },
     'RUN_GRID2OBS_PLOTS': {
-        'airnow': ['init_hr_list', 'valid_hr_list'],
-        'aeronet': ['init_hr_list', 'valid_hr_list'],
         'sfc': ['init_hr_list', 'valid_hr_list']
     }
 }
@@ -170,13 +166,9 @@ if STEP.upper() == 'PLOTS':
                                      +'_model_plot_name_list')
 verif_case_step_check_len_dict = {
     'RUN_GRID2GRID_PLOTS': {
-        'viirs': [],
-        'abi': [],
         'sfc': []
     },
     'RUN_GRID2OBS_PLOTS': {
-        'airnow': [],
-        'aeronet': [],
         'sfc': []
     },
 }

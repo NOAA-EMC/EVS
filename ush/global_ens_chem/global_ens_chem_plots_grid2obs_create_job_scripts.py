@@ -5,7 +5,7 @@ Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
           jobs scripts contain all the necessary environment variables
           and commands to needed to run them.
-Run By: scripts/plots/global_det/exevs_global_ens_chem_grid2obs_plots.sh
+Run By: scripts/plots/global_ens_chem/exevs_global_ens_chem_grid2obs_plots.sh
 '''
 
 import sys
@@ -51,8 +51,8 @@ gda_util.make_dir(JOB_GROUP_jobs_dir)
 #### Base/Common Plotting Information
 ################################################
 base_plot_jobs_info_dict = {
-    'sfc': {
-        'aeronet': {'vx_masks': ['GLOBAL', 'NAMERICA', 'SAMERICA', 'AFRICA',
+    'aeronet': {
+        'AOD': {'vx_masks': ['GLOBAL', 'NAMERICA', 'SAMERICA', 'AFRICA',
                                           'ASIA', 'CONUS', 'CONUS_Central',
                                           'CONUS_East', 'CONUS_South', 'CONUS_West'],
                            'fcst_var_dict': {'name': 'AOTK',
@@ -60,7 +60,8 @@ base_plot_jobs_info_dict = {
                            'obs_var_dict': {'name': 'AOD',
                                             'levels': ['Z550']},
                            'obs_name': 'AERONET_AOD'},
-        'airnow': {'vx_masks': ['GLOBAL', 'NAMERICA', 'SAMERICA', 'AFRICA',
+    'airnow': {
+        'PM25': {'vx_masks': ['GLOBAL', 'NAMERICA', 'SAMERICA', 'AFRICA',
                                           'ASIA', 'CONUS', 'CONUS_Central',
                                           'CONUS_East', 'CONUS_South', 'CONUS_West'],
                            'fcst_var_dict': {'name': 'PMTF',
@@ -75,29 +76,20 @@ base_plot_jobs_info_dict = {
 #### condense_stats jobs
 ################################################
 condense_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
-#### pres_levs
-for pres_levs_job in list(condense_stats_jobs_dict['pres_levs'].keys()):
-    if pres_levs_job == 'VectorWind':
-        pres_levs_job_line_types = ['VL1L2']
+#### aeronet
+for aeronet_job in list(condense_stats_jobs_dict['aeronet'].keys()):
+    if aeronet_job in [ 'AOD' ]:
+        aeronet_job_line_types = ['SL1L2', 'CTC' ]
     else:
-        pres_levs_job_line_types = ['SL1L2']
-    condense_stats_jobs_dict['pres_levs'][pres_levs_job]['line_types'] = (
-        pres_levs_job_line_types
-    )
-#### ptype
-for ptype_job in list(condense_stats_jobs_dict['ptype'].keys()):
-    condense_stats_jobs_dict['ptype'][ptype_job]['line_types'] = ['CTC']
-#### sfc
-for sfc_job in list(condense_stats_jobs_dict['sfc'].keys()):
-    if sfc_job == 'VectorWind10m':
-        sfc_job_line_types = ['VL1L2']
-    elif sfc_job in ['Dewpoint2m', 'CAPESfcBased', 'CAPEMixedLayer']:
-        sfc_job_line_types = ['SL1L2', 'CTC']
-    elif sfc_job in ['Visibility', 'Ceiling']:
-        sfc_job_line_types = ['CTC']
+        aeronet_job_line_types = ['SL1L2']
+    condense_stats_jobs_dict['aeronet'][aeronet_job]['line_types'] = aeronet_job_line_types
+#### arinow
+for arinow_job in list(condense_stats_jobs_dict['arinow'].keys()):
+    if arinow_job in [ 'PM25' ]:
+        arinow_job_line_types = ['SL1L2', 'CTC' ]
     else:
-        sfc_job_line_types = ['SL1L2']
-    condense_stats_jobs_dict['sfc'][sfc_job]['line_types'] = sfc_job_line_types
+        arinow_job_line_types = ['SL1L2']
+    condense_stats_jobs_dict['arinow'][arinow_job]['line_types'] = arinow_job_line_types
 if JOB_GROUP == 'condense_stats':
     JOB_GROUP_dict = condense_stats_jobs_dict
 
@@ -105,92 +97,50 @@ if JOB_GROUP == 'condense_stats':
 #### filter_stats jobs
 ################################################
 filter_stats_jobs_dict = copy.deepcopy(condense_stats_jobs_dict)
-#### pres_levs
-for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
-    filter_stats_jobs_dict['pres_levs'][pres_levs_job]['grid'] = 'G004'
-    (filter_stats_jobs_dict['pres_levs'][pres_levs_job]\
-     ['fcst_var_dict']['threshs']) = ['NA']
-    (filter_stats_jobs_dict['pres_levs'][pres_levs_job]\
-     ['obs_var_dict']['threshs']) = ['NA']
-    filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = [
-        'BILIN/4'
-    ]
-#### ptype
-for ptype_job in list(filter_stats_jobs_dict['ptype'].keys()):
-    filter_stats_jobs_dict['ptype'][ptype_job]['grid'] = 'G104'
-    filter_stats_jobs_dict['ptype'][ptype_job]['interps'] = ['NEAREST/1']
-    filter_stats_jobs_dict['ptype'][ptype_job]['fcst_var_dict']['threshs'] = [
-        'ge1.0'
-    ]
-    if ptype_job == 'Rain':
-        ptype_job_obs_threshs = ['ge161&&le163']
-    elif ptype_job == 'Snow':
-        ptype_job_obs_threshs = ['ge171&&le173']
-    elif ptype_job == 'FrzRain':
-        ptype_job_obs_threshs = ['ge164&&le166']
-    elif ptype_job == 'IcePel':
-        ptype_job_obs_threshs = ['ge174&&le176']
-    filter_stats_jobs_dict['ptype'][ptype_job]['obs_var_dict']['threshs'] = (
-        ptype_job_obs_threshs
-    )
-#### sfc
-for sfc_job in list(filter_stats_jobs_dict['sfc'].keys()):
-    filter_stats_jobs_dict['sfc'][sfc_job]['grid'] = 'G104'
-    filter_stats_jobs_dict['sfc'][sfc_job]['interps'] = ['BILIN/4']
-    if 'CAPE' in sfc_job:
-        sfc_job_fcst_threshs = ['gt0||']
-        sfc_job_obs_threshs = ['gt0']
-    elif sfc_job == 'Ceiling':
-        sfc_job_fcst_threshs = [
-            'lt152', 'lt305', 'lt914', 'ge914', 'lt1524', 'lt3048'
+#### aeronet
+for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
+    filter_stats_jobs_dict['aeronet'][aeronet_job]['grid'] = 'G004'
+    if 'aeronet' in aeronet_job:
+        filter_stats_jobs_dict['aeronet'][aeronet_job]['interps'] = ['NEAREST/1']
+        aeronet_job_fcst_threshs = [
+            'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
+            'ge1.5', 'ge2.0'
         ]
-        sfc_job_obs_threshs = [
-            'lt152', 'lt305', 'lt914', 'ge914', 'lt1524', 'lt3048'
-        ]
-    elif sfc_job == 'Visibility':
-        sfc_job_fcst_threshs = [
-            'lt805', 'lt1609', 'lt4828', 'lt8045', 'ge8045', 'lt16090'
-        ]
-        sfc_job_obs_threshs = [
-            'lt805', 'lt1609', 'lt4828', 'lt8045', 'ge8045', 'lt16090'
+        aeronet_job_obs_threshs = [
+            'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
+            'ge1.5', 'ge2.0'
         ]
     else:
-        sfc_job_fcst_threshs = ['NA']
-        sfc_job_obs_threshs = ['NA']
-    filter_stats_jobs_dict['sfc'][sfc_job]['fcst_var_dict']['threshs'] = (
-        sfc_job_fcst_threshs
+        aeronet_job_fcst_threshs = ['NA']
+        aeronet_job_obs_threshs = ['NA']
+    filter_stats_jobs_dict['aeronet'][aeronet_job]['fcst_var_dict']['threshs'] = (
+        aeronet_job_fcst_threshs
     )
-    filter_stats_jobs_dict['sfc'][sfc_job]['obs_var_dict']['threshs'] = (
-        sfc_job_obs_threshs
+    filter_stats_jobs_dict['aeronet'][aeronet_job]['obs_var_dict']['threshs'] = (
+        aeronet_job_obs_threshs
     )
-    if sfc_job in ['Dewpoint2m', 'CAPESfcBased', 'CAPEMixedLayer']:
-        filter_stats_jobs_dict['sfc'][sfc_job]['line_types'] = ['SL1L2']
-        filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"] = copy.deepcopy(
-            filter_stats_jobs_dict['sfc'][sfc_job]
-        )
-        filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]['line_types'] = [
-            'CTC'
+#### airnow
+for airnow_job in list(filter_stats_jobs_dict['airnow'].keys()):
+    filter_stats_jobs_dict['airnow'][airnow_job]['grid'] = 'G004'
+    if airnow_job == 'airnow':
+        filter_stats_jobs_dict['airnow'][airnow_job]['interps'] = ['BILIN/4']
+        airnow_job_fcst_threshs = [
+            'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
+            'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
         ]
-        if 'CAPE' in sfc_job:
-            (filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]\
-             ['fcst_var_dict']['threshs']) = [
-                'ge500', 'ge1000', 'ge1500', 'ge2000', 'ge3000', 'ge4000',
-                'ge5000'
-             ]
-            (filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]\
-             ['obs_var_dict']['threshs']) = [
-                'ge500', 'ge1000', 'ge1500', 'ge2000', 'ge3000', 'ge4000',
-                'ge5000'
-             ]
-        elif sfc_job == 'Dewpoint2m':
-            (filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]\
-             ['fcst_var_dict']['threshs']) = [
-                 'ge277.594', 'ge283.15', 'ge288.706', 'ge294.261'
-             ]
-            (filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]\
-             ['obs_var_dict']['threshs']) = [
-                 'ge277.594', 'ge283.15', 'ge288.706', 'ge294.261'
-             ]
+        airnow_job_obs_threshs = [
+            'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
+            'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
+        ]
+    else:
+        airnow_job_fcst_threshs = ['NA']
+        airnow_job_obs_threshs = ['NA']
+    filter_stats_jobs_dict['airnow'][airnow_job]['fcst_var_dict']['threshs'] = (
+        airnow_job_fcst_threshs
+    )
+    filter_stats_jobs_dict['airnow'][airnow_job]['obs_var_dict']['threshs'] = (
+        airnow_job_obs_threshs
+    )
 if JOB_GROUP == 'filter_stats':
     JOB_GROUP_dict = filter_stats_jobs_dict
 
@@ -198,71 +148,82 @@ if JOB_GROUP == 'filter_stats':
 #### make_plots jobs
 ################################################
 make_plots_jobs_dict = copy.deepcopy(filter_stats_jobs_dict)
-#### pres_levs
-for pres_levs_job in list(make_plots_jobs_dict['pres_levs'].keys()):
-    del make_plots_jobs_dict['pres_levs'][pres_levs_job]['line_types']
-    if pres_levs_job == 'VectorWind':
-        pres_levs_job_line_type_stats = ['VL1L2/ME', 'VL1L2/RMSE']
-    else:
-        pres_levs_job_line_type_stats = ['SL1L2/ME', 'SL1L2/RMSE']
-    make_plots_jobs_dict['pres_levs'][pres_levs_job]['line_type_stats'] = (
-        pres_levs_job_line_type_stats
-    )
-    make_plots_jobs_dict['pres_levs'][pres_levs_job]['plots'] = [
-        'time_series', 'lead_average', 'stat_by_level', 'lead_by_level'
-    ]
-#### ptype
-for ptype_job in list(make_plots_jobs_dict['ptype'].keys()):
-    del make_plots_jobs_dict['ptype'][ptype_job]['line_types']
-    make_plots_jobs_dict['ptype'][ptype_job]['line_type_stats'] = ['CTC/FBIAS']
-    make_plots_jobs_dict['ptype'][ptype_job]['plots'] = [
-        'time_series', 'lead_average'
-    ]
-#### sfc
-for sfc_job in list(make_plots_jobs_dict['sfc'].keys()):
-    del make_plots_jobs_dict['sfc'][sfc_job]['line_types']
-    if sfc_job in ['CAPEMixedLayer', 'CAPESfcBased', 'PBLHeight',
-                   'TotCloudCover']:
-        sfc_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
-        make_plots_jobs_dict['sfc'][sfc_job+'_FBAR_OBAR'] = copy.deepcopy(
-            make_plots_jobs_dict['sfc'][sfc_job]
+#### aeronet
+for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
+    del make_plots_jobs_dict['aeronet'][aeronet_job]['line_types']
+    if aeronet_job in ['AOD']:
+        aeronet_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME', 'CTC/FBIAS']
+        make_plots_jobs_dict['aeronet'][aeronet_job+'_FBAR_OBAR'] = copy.deepcopy(
+            make_plots_jobs_dict['aeronet'][aeronet_job]
         )
-        make_plots_jobs_dict['sfc'][sfc_job+'_FBAR_OBAR']['line_type_stats']=[
+        make_plots_jobs_dict['aeronet'][aeronet_job+'_FBAR_OBAR']['line_type_stats']=[
             'SL1L2/FBAR_OBAR'
         ]
-        make_plots_jobs_dict['sfc'][sfc_job+'_FBAR_OBAR']['vx_masks']=[
+        make_plots_jobs_dict['aeronet'][aeronet_job+'_FBAR_OBAR']['vx_masks']=[
+            'GLOBAL', 'NAMERICA', 'SAMERICA', 'AFRICA', 'ASIA',
             'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South'
         ]
-        make_plots_jobs_dict['sfc'][sfc_job+'_FBAR_OBAR']['plots'] = [
-            'time_series'
+        make_plots_jobs_dict['aeronet'][aeronet_job+'_FBAR_OBAR']['plots'] = [
+            'time_series', 'lead_average', 'threshold_average'
         ]
-    elif sfc_job in ['CAPEMixedLayer_Thresh', 'CAPESfcBased_Thresh',
-                     'Dewpoint2m_Thresh']:
-        sfc_job_line_type_stats = ['CTC/FBIAS']
-    elif sfc_job in ['Ceiling', 'Visibility']:
-        sfc_job_line_type_stats = ['CTC/FBIAS', 'CTC/ETS']
-    elif sfc_job == 'VectorWind10m':
-        sfc_job_line_type_stats = ['VL1L2/RMSE', 'VL1L2/ME']
     else:
-        sfc_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
-    if sfc_job in ['CAPEMixedLayer', 'CAPESfcBased', 'Dewpoint2m', 'Temp2m']:
-        sfc_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
-    elif sfc_job in ['CAPEMixedLayer_Thresh', 'CAPESfcBased_Thresh',
-                     'Dewpoint2m_Thresh']:
-        sfc_job_plots = ['time_series', 'lead_average', 'threshold_average']
+        aeronet_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
+    make_plots_jobs_dict['aeronet'][aeronet_job]['line_type_stats'] = (
+        aeronet_job_line_type_stats
+    )
+
+    if aeronet_job in ['AOD']:
+        aeronet_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
-        sfc_job_plots = ['time_series', 'lead_average']
-    make_plots_jobs_dict['sfc'][sfc_job]['line_type_stats'] = (
-        sfc_job_line_type_stats
+        aeronet_job_plots = ['time_series', 'lead_average']
+    make_plots_jobs_dict['aeronet'][aeronet_job]['plots'] = aeronet_job_plots
+
+for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
+    make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"] = copy.deepcopy(
+        make_plots_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]
     )
-    make_plots_jobs_dict['sfc'][sfc_job]['plots'] = sfc_job_plots
-for cape_level in ['MixedLayer', 'SfcBased']:
-    make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDiag"] = copy.deepcopy(
-        make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_Thresh"]
-    )
-    (make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDiag"]\
+    (make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]\
      ['line_type_stats']) = ['CTC/PERFDIAG']
-    make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDiag"]['plots'] = [
+    make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]['plots'] = [
+        'performance_diagram'
+    ]
+#### airnow
+for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
+    del make_plots_jobs_dict['airnow'][airnow_job]['line_types']
+    if airnow_job in ['PM25']:
+        airnow_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME', 'CTC/FBIAS']
+        make_plots_jobs_dict['airnow'][airnow_job+'_FBAR_OBAR'] = copy.deepcopy(
+            make_plots_jobs_dict['airnow'][airnow_job]
+        )
+        make_plots_jobs_dict['airnow'][airnow_job+'_FBAR_OBAR']['line_type_stats']=[
+            'SL1L2/FBAR_OBAR'
+        ]
+        make_plots_jobs_dict['airnow'][airnow_job+'_FBAR_OBAR']['vx_masks']=[
+            'GLOBAL', 'NAMERICA', 'SAMERICA', 'AFRICA', 'ASIA',
+            'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South'
+        ]
+        make_plots_jobs_dict['airnow'][airnow_job+'_FBAR_OBAR']['plots'] = [
+            'time_series', 'lead_average', 'threshold_average'
+        ]
+    else:
+        airnow_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
+    make_plots_jobs_dict['airnow'][airnow_job]['line_type_stats'] = (
+        airnow_job_line_type_stats
+    )
+
+    if airnow_job in ['PM25']:
+        airnow_job_plots = ['time_series', 'lead_average', 'threshold_average']
+    else:
+        airnow_job_plots = ['time_series', 'lead_average']
+    make_plots_jobs_dict['airnow'][airnow_job]['plots'] = airnow_job_plots
+
+for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
+    make_plots_jobs_dict['airnow'][f"{airnow_job}_PerfDiag"] = copy.deepcopy(
+        make_plots_jobs_dict['airnow'][f"{airnow_job}_Thresh"]
+    )
+    (make_plots_jobs_dict['airnow'][f"{airnow_job}_PerfDiag"]\
+     ['line_type_stats']) = ['CTC/PERFDIAG']
+    make_plots_jobs_dict['airnow'][f"{airnow_job}_PerfDiag"]['plots'] = [
         'performance_diagram'
     ]
 if JOB_GROUP == 'make_plots':
@@ -272,18 +233,6 @@ if JOB_GROUP == 'make_plots':
 #### tar_images jobs
 ################################################
 tar_images_jobs_dict = {
-    'pres_levs': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_pres_levs",
-                                        f"last{NDAYS}days")
-    },
-    'ptype': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_ptype",
-                                        f"last{NDAYS}days")
-    },
     'sfc': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
@@ -552,7 +501,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     for output_dir in [job_env_dict['DATAjob'],
                                        job_env_dict['COMOUTjob']]:
                         gda_util.make_dir(output_dir)
-                    run_global_ens_chem_plots = ['global_det_atmos_plots.py']
+                    run_global_ens_chem_plots = ['global_ens_chem_plots.py']
                     if evs_run_mode == 'production' and \
                             verif_type in ['pres_levs', 'sfc'] and \
                             job_env_dict['plot'] in \
@@ -561,7 +510,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         run_global_ens_chem_plots.append(
                             'global_ens_chem_plots_production_tof240.py'
                         )
-                    for run_global_ens_chem_plot in run_global_det_atmos_plots:
+                    for run_global_ens_chem_plot in run_global_ens_chem_plots:
                         # Create job file
                         njobs+=1
                         job_file = os.path.join(JOB_GROUP_jobs_dir,
