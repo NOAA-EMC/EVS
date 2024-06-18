@@ -116,7 +116,7 @@ for HH in ${HHs} ; do
                     		cp -v $DATAfilenamefnmoc_new ${ARCmodel}/.
                 	fi
 		fi
-		fcst=$(( $fcst+ 24 ))
+		fcst=$(( $fcst+ 6 ))
 	done
 done
 
@@ -145,7 +145,7 @@ for HH in ${HHs} ; do
                     		cp -v $DATAfilenamegefs ${ARCmodel}/.
                 	fi
 		fi
-		fcst=$(( $fcst+ 24 ))
+		fcst=$(( $fcst+ 6 ))
 	done
 done
 
