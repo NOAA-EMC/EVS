@@ -28,6 +28,9 @@ export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-atmos}
 export machine=${machine:-WCOSS2}
 export evs_run_mode=${evs_run_mode:-production}
+if [ $VERIF_CASE = wmo ]; then
+    export temporal=${temporal:-daily}
+fi
 
 ####################################
 # Set EVS directories

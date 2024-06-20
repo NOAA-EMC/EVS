@@ -1550,6 +1550,8 @@ suite evs_nco
               trigger :TIME >= 1845 and ../../prep/global_det/jevs_global_det_atmos_prep == complete
             task jevs_global_det_gfs_atmos_grid2grid_stats
               trigger :TIME >= 1845 and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+            task jevs_global_det_gfs_atmos_wmo_daily_stats
+              trigger :TIME >= 1845 and ../../prep/global_det/jevs_global_det_atmos_prep == complete
             task jevs_global_det_fnmoc_atmos_grid2obs_stats
               trigger :TIME >= 1845 and ../../prep/global_det/jevs_global_det_atmos_prep == complete
             task jevs_global_det_fnmoc_atmos_grid2grid_stats
