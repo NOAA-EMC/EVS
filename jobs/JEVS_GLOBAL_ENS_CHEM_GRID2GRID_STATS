@@ -41,6 +41,9 @@ export envir=${envir:-prod}
 
 echo ${COMPATH}
 
+####################################
+# Define NET/RUN variables
+####################################
 export NET=${NET:-evs}
 export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_ens}

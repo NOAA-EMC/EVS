@@ -19,6 +19,8 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p ${DATA}
 cd ${DATA}
 
+export envir=${envir:-prod}
+
 ####################################
 # Define NET/RUN variables
 ####################################
@@ -27,7 +29,7 @@ export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-global_ens}
 export RUN=${RUN:-chem}
 export VERIF_CASE=${VERIF_CASE:-grid2grid}
-export VERIF_TYPE=${VERIF_TYPE:-abi}
+export DATA_TYPE=${VERIF_TYPE:-abi}
 export MODELNAME=${MODELNAME:-gefs}
 export machine=${machine:-WCOSS2}
 export evs_run_mode=${evs_run_mode:-production}
@@ -67,11 +69,12 @@ export SENDMAIL=${SENDMAIL:-NO}
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export DCOMINnohrsc=${DCOMINnohrsc:-${DCOMROOT}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END})}
-mkdir -p ${COMOUT}
 mkdir -p ${COMOUT}/${RUN}_${VERIF_CASE}/last${NDAYS}days
 #######################################################################
 # Execute the script
 #######################################################################
+export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
+
 env
 
 if [ "${RUN}" == "headline" ]; then

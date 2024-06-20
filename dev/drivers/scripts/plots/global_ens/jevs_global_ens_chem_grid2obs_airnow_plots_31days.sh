@@ -40,7 +40,7 @@ export STEP=plots
 export COMPONENT=global_ens
 export RUN=chem
 export VERIF_CASE=grid2obs
-export VERIF_TYPE=airnow
+export DATA_TYPE=airnow
 export NDAYS=31
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
@@ -51,7 +51,7 @@ export VDATE_END=$(finddate.sh ${today} d-1)
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END}
 
 # Set config file
-export config=${HOMEevs}/parm/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
+export config=${HOMEevs}/parm/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}
 echo ${config}
 
 # CALL executable job script here
