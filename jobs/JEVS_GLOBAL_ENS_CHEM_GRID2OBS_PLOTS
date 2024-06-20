@@ -27,7 +27,6 @@ export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-global_ens}
 export RUN=${RUN:-chem}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export VERIF_TYPE=${VERIF_TYPE:-aeronet}
 export MODELNAME=${MODELNAME:-gefs}
 export machine=${machine:-WCOSS2}
 export evs_run_mode=${evs_run_mode:-production}
@@ -72,6 +71,9 @@ mkdir -p ${COMOUT}/${RUN}_${VERIF_CASE}/last${NDAYS}days
 #######################################################################
 # Execute the script
 #######################################################################
+
+export DATA_TYPE=${DATA_TYPE:-aeronet}
+
 env
 
 if [ "${RUN}" == "headline" ]; then
