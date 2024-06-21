@@ -44,11 +44,11 @@ export err=$?; err_chk
 
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
 ## for group in condense_stats filter_stats make_plots tar_images; do
-declare -a proc_list=( condense_stats filter_stats make_plots tar_images )
+## declare -a proc_list=( condense_stats filter_stats make_plots tar_images )
 ## declare -a proc_list=( filter_stats )
 ## declare -a proc_list=( make_plots )
 ## declare -a proc_list=( tar_images )
-## declare -a proc_list=( condense_stats )
+declare -a proc_list=( condense_stats )
 for group in "${proc_list[@]}"; do
     export JOB_GROUP=${group}
     echo "Creating and running jobs for grid-to-obs plots: ${JOB_GROUP}"

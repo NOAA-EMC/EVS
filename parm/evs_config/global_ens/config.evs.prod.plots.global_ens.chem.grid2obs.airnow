@@ -32,7 +32,7 @@ export RUN_GRID2OBS_PLOTS="YES"
 #model_file_format_list:     file format of model files
 export model_list="gefs"
 export model_evs_data_dir_list="${COMIN}/stats/${COMPONENT}/gefs"
-export model_file_format_list="${COMROOT}/${MODELNAME}/${${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${RUN}/${MODELNAME}.${RUN}.t{init?fmt=%2H}z.a2d_0p25.f{lead?fmt=%3H}.grib2.grib2"
+export model_file_format_list="${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t{init?fmt=%2H}z.a2d_0p25.f{lead?fmt=%3H}.grib2"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
 export OUTPUTROOT="${DATAROOT}"
