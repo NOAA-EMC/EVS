@@ -224,14 +224,15 @@ for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
     make_plots_jobs_dict['aeronet'][aeronet_job]['plots'] = aeronet_job_plots
 
 for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
+    if aeronet_job in ['AOD']:
     make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"] = copy.deepcopy(
-        make_plots_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]
-    )
-    (make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]\
-     ['line_type_stats']) = ['CTC/PERFDIAG']
-    make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]['plots'] = [
-        'performance_diagram'
-    ]
+         make_plots_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]
+        )
+        (make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]\
+         ['line_type_stats']) = ['CTC/PERFDIAG']
+         make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]['plots'] = [
+            'performance_diagram'
+        ]
 #### airnow
 for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
     del make_plots_jobs_dict['airnow'][airnow_job]['line_types']
@@ -267,14 +268,15 @@ for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
     make_plots_jobs_dict['airnow'][airnow_job]['plots'] = airnow_job_plots
 
 for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
-    make_plots_jobs_dict['airnow'][f"{airnow_job}_PerfDiag"] = copy.deepcopy(
-        make_plots_jobs_dict['airnow'][f"{airnow_job}_Thresh"]
-    )
-    (make_plots_jobs_dict['airnow'][f"{airnow_job}_PerfDiag"]\
-     ['line_type_stats']) = ['CTC/PERFDIAG']
-    make_plots_jobs_dict['airnow'][f"{airnow_job}_PerfDiag"]['plots'] = [
-        'performance_diagram'
-    ]
+    if airnow_job in ['PM25']:
+        make_plots_jobs_dict['airnow'][f"{airnow_job}_PerfDiag"] = copy.deepcopy(
+            make_plots_jobs_dict['airnow'][f"{airnow_job}_Thresh"]
+        )
+        (make_plots_jobs_dict['airnow'][f"{airnow_job}_PerfDiag"]\
+         ['line_type_stats']) = ['CTC/PERFDIAG']
+        make_plots_jobs_dict['airnow'][f"{airnow_job}_PerfDiag"]['plots'] = [
+            'performance_diagram'
+        ]
 if JOB_GROUP == 'make_plots':
     JOB_GROUP_dict = make_plots_jobs_dict
 
