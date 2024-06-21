@@ -38,8 +38,7 @@ then
 	fi
 
         DATE=${VDATE}${vhr}
-        let "vhrp1=vhr+1"
-        ENDDATE=${PDYm3}${vhrp1}
+        ENDDATE=`$NDATE -23 $DATE`
         while [ $DATE -ge $ENDDATE ]; do
         echo $DATE > curdate
         DAY=`cut -c 1-8 curdate`
