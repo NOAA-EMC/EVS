@@ -53,22 +53,23 @@ gda_util.make_dir(JOB_GROUP_jobs_dir)
 base_plot_jobs_info_dict = {
     'aeronet': {
         'AOD': {'vx_masks': ['GLOBAL', 'NAMERICA', 'SAMERICA', 'AFRICA',
-                                          'ASIA', 'CONUS', 'CONUS_Central',
-                                          'CONUS_East', 'CONUS_South', 'CONUS_West'],
-                           'fcst_var_dict': {'name': 'AOTK',
-                                             'levels': ['L0']},
-                           'obs_var_dict': {'name': 'AOD',
-                                            'levels': ['Z550']},
-                           'obs_name': 'AERONET_AOD'},
+                             'ASIA', 'CONUS', 'CONUS_Central',
+                             'CONUS_East', 'CONUS_South', 'CONUS_West'],
+                'fcst_var_dict': {'name': 'AOTK',
+                                  'levels': ['L0']},
+                'obs_var_dict': {'name': 'AOD',
+                                 'levels': ['Z550']},
+                'obs_name': 'AERONET_AOD'}
+    },
     'airnow': {
         'PM25': {'vx_masks': ['GLOBAL', 'NAMERICA', 'SAMERICA', 'AFRICA',
-                                          'ASIA', 'CONUS', 'CONUS_Central',
-                                          'CONUS_East', 'CONUS_South', 'CONUS_West'],
-                           'fcst_var_dict': {'name': 'PMTF',
-                                             'levels': ['L0']},
-                           'obs_var_dict': {'name': 'PM25',
-                                            'levels': ['A1']},
-                           'obs_name': 'AIRNOW_HOURLY_AQOBS'},
+                              'ASIA', 'CONUS', 'CONUS_Central',
+                              'CONUS_East', 'CONUS_South', 'CONUS_West'],
+                 'fcst_var_dict': {'name': 'PMTF',
+                                   'levels': ['L0']},
+                 'obs_var_dict': {'name': 'PM25',
+                                  'levels': ['A1']},
+                 'obs_name': 'AIRNOW_HOURLY_AQOBS'}
     }
 }
 
