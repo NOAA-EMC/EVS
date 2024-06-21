@@ -287,7 +287,7 @@ tar_images_jobs_dict = {
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_aeronet",
                                         f"last{NDAYS}days")
-    }
+    },
     'airnow': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
