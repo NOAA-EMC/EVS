@@ -230,7 +230,7 @@ for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
             )
         (make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]\
          ['line_type_stats']) = ['CTC/PERFDIAG']
-         make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]['plots'] = [
+        make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]['plots'] = [
             'performance_diagram'
         ]
 #### airnow
