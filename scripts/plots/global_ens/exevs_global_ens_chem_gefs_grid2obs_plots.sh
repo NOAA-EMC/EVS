@@ -52,7 +52,7 @@ declare -a proc_list=( condense_stats )
 for group in "${proc_list[@]}"; do
     export JOB_GROUP=${group}
     echo "Creating and running jobs for grid-to-obs plots: ${JOB_GROUP}"
-    python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_${STEP}_${VERIF_CASE}}_create_job_scripts.py
+    python ${USHevs}/${COMPONENT}_${RUN}/${COMPONENT}_${RUN}_${STEP}_${VERIF_CASE}_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/*
     nc=1
