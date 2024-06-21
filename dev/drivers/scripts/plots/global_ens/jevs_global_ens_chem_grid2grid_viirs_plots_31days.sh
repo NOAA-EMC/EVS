@@ -39,7 +39,7 @@ export NET=evs
 export STEP=plots
 export COMPONENT=global_ens
 export RUN=chem
-export VERIF_CASE=griod2grid
+export VERIF_CASE=grid2grid
 export DATA_TYPE=viirs
 export NDAYS=31
 

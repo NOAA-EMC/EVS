@@ -34,6 +34,24 @@ VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
 USER = os.environ['USER']
 evs_run_mode = os.environ['evs_run_mode']
 DCOMINnohrsc = os.environ['DCOMINnohrsc']
+
+if evs_run_mode != 'production':
+    QUEUESERV = os.environ['QUEUESERV']
+    ACCOUNT = os.environ['ACCOUNT']
+    machine = os.environ['machine']
+VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
+
+# Set archive paths
+if evs_run_mode != 'production':
+    archive_obs_data_dir = os.environ['archive_obs_data_dir']
+else:
+    archive_obs_data_dir = '/dev/null'
+
+# Make sure in right working directory
+cwd = os.getcwd()
+if cwd != DATA:
+    os.chdir(DATA)
+
 if STEP == 'plots' :
     # Read in VERIF_CASE_STEP related environment variables
     # Get model stat files
