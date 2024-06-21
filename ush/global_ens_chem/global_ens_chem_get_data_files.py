@@ -24,6 +24,16 @@ COMIN = os.environ['COMIN']
 model_list = os.environ['model_list'].split(' ')
 g2op_type_list = os.environ['g2op_type_list'].split(' ')
 g2op_obs_list = os.environ['g2op_obs_list'].split(' ')
+model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
+model_file_format_list = os.environ['model_file_format_list'].split(' ')
+start_date = os.environ['start_date']
+end_date = os.environ['end_date']
+VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
+VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
+                             .split(' '))
+USER = os.environ['USER']
+evs_run_mode = os.environ['evs_run_mode']
+DCOMINnohrsc = os.environ['DCOMINnohrsc']
 if STEP == 'plots' :
     # Read in VERIF_CASE_STEP related environment variables
     # Get model stat files
