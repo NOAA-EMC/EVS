@@ -17,6 +17,7 @@ print("BEGIN: "+os.path.basename(__file__))
 RUN = os.environ['RUN']
 NET = os.environ['NET']
 COMPONENT = os.environ['COMPONENT']
+MODELNAME = os.environ['MODELNAME']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 DATA = os.environ['DATA']
@@ -72,7 +73,7 @@ if STEP == 'plots' :
                     ## evs.stats.gfs.atmos.grid2obs.v20240610.stat
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
-                        'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'_'
+                        'evs.stats.'+MODELNAME+'.'+RUN+'.'+VERIF_CASE+'_'
                         +obstype+"_"+obsvar+"."+'v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
                 else:
@@ -83,7 +84,7 @@ if STEP == 'plots' :
                     ##     model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
-                        'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'_'
+                        'evs.stats.'+MODELNAME+'.'+RUN+'.'+VERIF_CASE+'_'
                         +obstype+"_"+obsvar+"."+'v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
                 dest_model_date_stat_file = os.path.join(
