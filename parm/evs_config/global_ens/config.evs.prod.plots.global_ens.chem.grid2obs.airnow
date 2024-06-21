@@ -57,7 +57,7 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #    g2op_*_fhr_min: forecast hour to start verification: HH[H]
     #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
     #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
-    export g2op_model_plot_name_list="gefs"
+    export g2op_model_plot_name_list="gefsv12"
     export g2op_type_list="airnow"
     export g2op_obs_list="pm25"
     export g2op_event_equalization="NO"
