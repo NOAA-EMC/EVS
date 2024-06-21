@@ -50,7 +50,7 @@ for data_dir in data_dir_list:
     gda_util.make_dir(data_dir)
 
 # Create job script base directory
-elif STEP == 'plots':
+if STEP == 'plots':
    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                    'plot_job_scripts')
 if not os.path.exists(job_scripts_dir):
