@@ -225,9 +225,9 @@ for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
 
 for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
     if aeronet_job in ['AOD']:
-    make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"] = copy.deepcopy(
-         make_plots_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]
-        )
+        make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"] = copy.deepcopy(
+             make_plots_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]
+            )
         (make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]\
          ['line_type_stats']) = ['CTC/PERFDIAG']
          make_plots_jobs_dict['aeronet'][f"{aeronet_job}_PerfDiag"]['plots'] = [
