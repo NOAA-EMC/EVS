@@ -249,7 +249,7 @@ class PlotSpecs:
         var_name_level = var_name+'/'+var_level
         var_plot_name_dict = {
             'AOTK/L0': 'Aerosol Optical Depth at 550nm',
-            'PMTF/L0': 'Particulate matter with diameters that are generally 2.5 micrometers and smaller'
+            'PMTF/L0': 'Particulate matter with diameters that are generally 2.5 micrometers and smaller',
             'APCP/A24': '24 hour Accumulated Precipitation',
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
