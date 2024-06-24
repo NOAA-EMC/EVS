@@ -103,18 +103,8 @@ for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
     ## column of "DESC" values
     filter_stats_jobs_dict['aeronet'][aeronet_job]['grid'] = 'G004'
     filter_stats_jobs_dict['aeronet'][aeronet_job]['interps'] = ['NEAREST/1']
-    if aeronet_job == 'AOD':
-        aeronet_job_fcst_threshs = [
-            'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
-            'ge1.5', 'ge2.0'
-        ]
-        aeronet_job_obs_threshs = [
-            'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
-            'ge1.5', 'ge2.0'
-        ]
-    else:
-        aeronet_job_fcst_threshs = ['NA']
-        aeronet_job_obs_threshs = ['NA']
+    aeronet_job_fcst_threshs = ['NA']
+    aeronet_job_obs_threshs = ['NA']
     filter_stats_jobs_dict['aeronet'][aeronet_job]['fcst_var_dict']['threshs'] = (
         aeronet_job_fcst_threshs
     )
@@ -145,18 +135,8 @@ for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
 for airnow_job in list(filter_stats_jobs_dict['airnow'].keys()):
     filter_stats_jobs_dict['airnow'][airnow_job]['grid'] = 'G004'
     filter_stats_jobs_dict['airnow'][airnow_job]['interps'] = ['BILIN/4']
-    if airnow_job == 'PM25':
-        airnow_job_fcst_threshs = [
-            'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
-            'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
-        ]
-        airnow_job_obs_threshs = [
-            'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
-            'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
-        ]
-    else:
-        airnow_job_fcst_threshs = ['NA']
-        airnow_job_obs_threshs = ['NA']
+    airnow_job_fcst_threshs = ['NA']
+    airnow_job_obs_threshs = ['NA']
     filter_stats_jobs_dict['airnow'][airnow_job]['fcst_var_dict']['threshs'] = (
         airnow_job_fcst_threshs
     )
@@ -194,7 +174,7 @@ make_plots_jobs_dict = copy.deepcopy(filter_stats_jobs_dict)
 for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
     del make_plots_jobs_dict['aeronet'][aeronet_job]['line_types']
     if aeronet_job in ['AOD']:
-        aeronet_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME', 'CTC/CSI']
+        aeronet_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
         make_plots_jobs_dict['aeronet'][aeronet_job+'_FBAR_OBAR'] = copy.deepcopy(
             make_plots_jobs_dict['aeronet'][aeronet_job]
         )
@@ -218,7 +198,7 @@ for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
     )
 
     if aeronet_job in ['AOD']:
-        aeronet_job_plots = ['time_series', 'lead_average', 'threshold_average']
+        aeronet_job_plots = ['time_series', 'lead_average']
     elif aeronet_job in ['AOD_Thresh']:
         aeronet_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
@@ -239,7 +219,7 @@ for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
 for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
     del make_plots_jobs_dict['airnow'][airnow_job]['line_types']
     if airnow_job in ['PM25']:
-        airnow_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME', 'CTC/CSI']
+        airnow_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
         make_plots_jobs_dict['airnow'][airnow_job+'_FBAR_OBAR'] = copy.deepcopy(
             make_plots_jobs_dict['airnow'][airnow_job]
         )
@@ -262,7 +242,7 @@ for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
     )
 
     if airnow_job in ['PM25']:
-        airnow_job_plots = ['time_series', 'lead_average', 'threshold_average']
+        airnow_job_plots = ['time_series', 'lead_average']
     elif airnow_job in ['PM25_Thresh']:
         airnow_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
