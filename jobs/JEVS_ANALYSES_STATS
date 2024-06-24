@@ -47,7 +47,12 @@ export cycle=t${vhr}z
 setpdy.sh
 . ./PDY
 
-export VDATE=${VDATE:-$PDYm2}
+if [ $VERIF_CASE = grid2obs ]; then
+  export VDATE=${VDATE:-$PDYm1}
+else
+  export VDATE=${VDATE:-$PDYm3}
+fi
+
 
 ####################################
 ## Define NET/RUN variables
