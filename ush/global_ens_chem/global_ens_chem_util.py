@@ -2,7 +2,7 @@
 '''
 Name: global_ens_chem_util.py
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
-Abstract: This contains many functions used across global_det atmos.
+Abstract: This contains many functions used across global_ens chem.
 '''
 
 import os
@@ -141,13 +141,13 @@ def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
             lmf.write("#!/bin/bash\n")
             if fhr == 'anl':
                 lmf.write(f'export subject="{model.upper()} Analysis '
-                          +'Data Missing for EVS global_det"\n')
+                          +'Data Missing for EVS global_ens_chem"\n')
                 lmf.write(f'echo "Warning: No {model.upper()} analysis was '
                           +f'available for valid date {init_dt:%Y%m%d%H}" '
                           +'> mailmsg\n')
             else:
                 lmf.write(f'export subject="F{fhr} {model.upper()} Forecast '
-                          +'Data Missing for EVS global_det"\n')
+                          +'Data Missing for EVS global_ens_chem"\n')
                 lmf.write(f'echo "Warning: No {model.upper()} forecast was '
                           +f'available for {init_dt:%Y%m%d%H}f{fhr}" '
                           +'> mailmsg\n')
@@ -169,7 +169,7 @@ def log_missing_file_truth(log_missing_file, missing_file, obs, valid_dt):
         with open(log_missing_file, "a") as lmf:
             lmf.write("#!/bin/bash\n")
             lmf.write(f'export subject="{obs} Data Missing for EVS '
-                      +'global_det"\n')
+                      +'global_ens chem"\n')
             lmf.write(f'echo "Warning: No {obs} data was available for '
                       +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
             lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
@@ -2513,7 +2513,7 @@ def get_daily_stat_file(model_name, source_stats_base_dir,
     """! Link model daily stat files
          Args:
              model_name                - name of model (string)
-             source_stats_base_dir     - full path to stats/global_det
+             source_stats_base_dir     - full path to stats/global_ens_chem
                                          source directory (string)
              dest_model_name_stats_dir - full path to model
                                          destintion directory (string)

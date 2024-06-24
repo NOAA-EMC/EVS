@@ -3,8 +3,8 @@
 Name: global_ens_chem_get_data_files.py
 Contact(s): Ho-Chun Huang(ho-chun.huang@noaa.gov)
 Abstract: This gets the necessary data files for verification.
-Run By: scripts/plots/global_det/exevs_global_ens_chem_grid2grid_plots.sh
-        scripts/plots/global_det/exevs_global_ens_chem_grid2obs_plots.sh
+Run By: scripts/plots/global_ens_chem/exevs_global_ens_chem_grid2grid_plots.sh
+        scripts/plots/global_ens_chem/exevs_global_ens_chem_grid2obs_plots.sh
 '''
 
 import os
@@ -69,7 +69,7 @@ if STEP == 'plots' :
         while date_dt <= end_date_dt:
             if date_type == 'VALID':
                 if evs_run_mode == 'production':
-                    ## model_evs_data_dir = /lfs/h1/ops/prod/com/evs/v1.0/stats/global_det/gfs
+                    ## model_evs_data_dir = /lfs/h1/ops/prod/com/evs/v1.0/stats/global_ens_chem/gfs
                     ## evs.stats.gfs.atmos.grid2obs.v20240610.stat
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),

@@ -745,7 +745,7 @@ class PlotSpecs:
                  image_path - full path of the name the plot will
                               be saved as (string)
         """
-        component_savefig_name = 'global_det'
+        component_savefig_name = 'global_ens_chem'
         if plot_info_dict['stat'] == 'PERFDIAG':
             metric_savefig_name = 'ctc'
         else:

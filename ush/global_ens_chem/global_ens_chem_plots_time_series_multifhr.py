@@ -303,8 +303,8 @@ class TimeSeriesMultiFhr:
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         image_name = image_name.replace(
-            'evs.global_det.',
-            'evs.global_det.'+self.model_info_dict['model1']['name'].lower()
+            'evs.global_ens_chem.',
+            'evs.global_ens_chem.'+self.model_info_dict['model1']['name'].lower()
             +'.'
         )
         # Create plot

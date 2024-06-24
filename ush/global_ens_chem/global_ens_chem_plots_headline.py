@@ -3,7 +3,7 @@
 Name: global_ens_chem_headline_plots.py
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This is the driver script for creating headline plots.
-Run By: scripts/plots/global_det/exevs_global_ens_chem_headline_plots.sh
+Run By: scripts/plots/global_ens_chem/exevs_global_ens_chem_headline_plots.sh
 '''
 
 import os
@@ -291,9 +291,9 @@ for stat in ['ME', 'RMSE']:
         shutil.copy2(headline2_image_name, headline2_copy_image_name)
 
 if evs_run_mode == 'production' and envir != 'dev':
-    print("\nAll production global_det atmos headline plots produced")
+    print("\nAll production global_ens chem headline plots produced")
 else:
-    print("\nMaking development global_det atmos headline plots")
+    print("\nMaking development global_ens chem headline plots")
     ### Headline Score Plot 3: Grid-to-Grid -
     ### Geopotential Height 500-hPa ACC Day 5 NH 00Z Annual Means
     print("\nHeadline Score Plot 3: Grid-to-Grid - Geopotential Height 500-hPa"

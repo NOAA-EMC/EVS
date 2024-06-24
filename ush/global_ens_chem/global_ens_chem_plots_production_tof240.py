@@ -6,8 +6,8 @@ Abstract: This is the driver script for creating plots.
           It is only used in production to generate plots to
           forecast hour 240.
 Run By: individual plotting job scripts generated through
-        ush/global_det/global_ens_chem_plots_grid2obs_create_job_scripts.py
-        and ush/global_det/global_ens_chem_plots_grid2grid_create_job_scripts.py
+        ush/global_ens_chem/global_ens_chem_plots_grid2obs_create_job_scripts.py
+        and ush/global_ens_chem/global_ens_chem_plots_grid2grid_create_job_scripts.py
 '''
 
 import os

@@ -79,14 +79,14 @@ base_plot_jobs_info_dict = {
 condense_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
 #### aeronet
 for aeronet_job in list(condense_stats_jobs_dict['aeronet'].keys()):
-    if aeronet_job in [ 'AOD' ]:
+    if aeronet_job == 'AOD':
         aeronet_job_line_types = ['SL1L2', 'CTC' ]
     else:
         aeronet_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['aeronet'][aeronet_job]['line_types'] = aeronet_job_line_types
 #### airnow
 for airnow_job in list(condense_stats_jobs_dict['airnow'].keys()):
-    if airnow_job in [ 'PM25' ]:
+    if airnow_job == 'PM25':
         airnow_job_line_types = ['SL1L2', 'CTC' ]
     else:
         airnow_job_line_types = ['SL1L2']
@@ -102,8 +102,8 @@ filter_stats_jobs_dict = copy.deepcopy(condense_stats_jobs_dict)
 for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
     ## column of "DESC" values
     filter_stats_jobs_dict['aeronet'][aeronet_job]['grid'] = 'G004'
-    if 'aeronet' in aeronet_job:
-        filter_stats_jobs_dict['aeronet'][aeronet_job]['interps'] = ['NEAREST/1']
+    filter_stats_jobs_dict['aeronet'][aeronet_job]['interps'] = ['NEAREST/1']
+    if aeronet_job == 'AOD':
         aeronet_job_fcst_threshs = [
             'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
             'ge1.5', 'ge2.0'
@@ -122,7 +122,8 @@ for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
         aeronet_job_obs_threshs
     )
     if aeronet_job in ['AOD']:
-        filter_stats_jobs_dict['aeronet'][aeronet_job]['line_types'] = ['SL1L2']
+        ## Already defined above, only add line for variables not defined above
+        ## filter_stats_jobs_dict['aeronet'][aeronet_job]['line_types'] = ['SL1L2']
         filter_stats_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"] = copy.deepcopy(
             filter_stats_jobs_dict['aeronet'][aeronet_job]
         )
@@ -143,8 +144,8 @@ for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
 #### airnow
 for airnow_job in list(filter_stats_jobs_dict['airnow'].keys()):
     filter_stats_jobs_dict['airnow'][airnow_job]['grid'] = 'G004'
-    if airnow_job == 'airnow':
-        filter_stats_jobs_dict['airnow'][airnow_job]['interps'] = ['BILIN/4']
+    filter_stats_jobs_dict['airnow'][airnow_job]['interps'] = ['BILIN/4']
+    if airnow_job == 'PM25':
         airnow_job_fcst_threshs = [
             'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
             'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
@@ -163,7 +164,8 @@ for airnow_job in list(filter_stats_jobs_dict['airnow'].keys()):
         airnow_job_obs_threshs
     )
     if airnow_job in ['PM25']:
-        filter_stats_jobs_dict['airnow'][airnow_job]['line_types'] = ['SL1L2']
+        ## Already defined above, only add line for variables not defined above
+        ## filter_stats_jobs_dict['airnow'][airnow_job]['line_types'] = ['SL1L2']
         filter_stats_jobs_dict['airnow'][f"{airnow_job}_Thresh"] = copy.deepcopy(
             filter_stats_jobs_dict['airnow'][airnow_job]
         )
