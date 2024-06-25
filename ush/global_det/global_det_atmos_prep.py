@@ -24,6 +24,7 @@ DATA = os.environ['DATA']
 COMINcfs = os.environ['COMINcfs']
 COMINcmc = os.environ['COMINcmc']
 COMINgfs = os.environ['COMINgfs']
+COMINccpa = os.environ['COMINccpa']
 DCOMINcmc_precip = os.environ['DCOMINcmc_precip']
 DCOMINcmc_regional_precip = os.environ['DCOMINcmc_regional_precip']
 DCOMINdwd_precip = os.environ['DCOMINdwd_precip']
@@ -537,7 +538,7 @@ for MODEL in MODELNAME:
 # Get operational observation data
 # Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
 # Group for High Resolution Sea Surface Temperature (GHRSST) Level 4 SST analysis for Office of Satellite and Product Operations (OSPO)- ghrsst_ospo
-
+# NCEP's Climatology-Calibrated Precipitation Analysis to 24 hour accumulation- ccpa_accum24hr
 global_det_obs_dict = {
     'osi_saf': {'input_file_format': os.path.join(DCOMINosi_saf,
                                                   '{init_shift?fmt=%Y%m%d'
@@ -570,6 +571,20 @@ global_det_obs_dict = {
                                                     +'?shift=-24}to'
                                                     +'{init?fmt=%Y%m%d%H}.nc'),
                     'inithours': ['00']},
+    'ccpa_accum24hr': {'input_file_format': os.path.join(COMINccpa,'ccpa.'
+                                                         +'{init?fmt=%Y%m%d}',
+                                                         '{init?fmt=%H}',
+                                                         'ccpa.t{init?fmt=%H}z'
+                                                         +'.06h.hrap.conus.'
+                                                         +'gb2'),
+                       'tmp_file_format': os.path.join(DATA, f"{RUN}.{INITDATE}",
+                                                       'ccpa_accum24hr',
+                                                       'pcp_combine_'
+                                                       +'precip_accum24hr_'
+                                                       +'24hrCCPA_valid'
+                                                       +'{init?fmt=%Y%m%d%H}'
+                                                       +'.nc'),
+                       'inithours': ['12']},
 }
 
 for OBS in OBSNAME:
@@ -593,11 +608,6 @@ for OBS in OBSNAME:
             output_INITDATE, OBS, tmp_file.rpartition('/')[2]
         )
         tmp_file_dir = tmp_file.rpartition('/')[0]
-        gda_util.make_dir(tmp_file_dir)
-        log_missing_file = os.path.join(
-            DATA, 'mail_missing_'+OBS+'_valid'
-            +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
-        )
         if OBS == 'osi_saf':
             for hem in ['nh', 'sh']:
                 log_missing_file = os.path.join(
@@ -609,6 +619,7 @@ for OBS in OBSNAME:
                 output_hem_file = output_file.replace('{hem?fmt=str}', hem)
                 if not os.path.exists(output_hem_file):
                     print("----> Trying to create "+tmp_hem_file)
+                    gda_util.make_dir(tmp_file_dir)
                     gda_util.prep_prod_osi_saf_file(
                         input_hem_file, tmp_hem_file, CDATE_dt,
                         log_missing_file
@@ -624,6 +635,7 @@ for OBS in OBSNAME:
             )
             if not os.path.exists(output_file):
                 print("----> Trying to create "+tmp_file)
+                gda_util.make_dir(tmp_file_dir)
                 gda_util.prep_prod_ghrsst_ospo_file(
                     input_file, tmp_file, CDATE_dt,
                     log_missing_file
@@ -632,5 +644,22 @@ for OBS in OBSNAME:
                     gda_util.copy_file(tmp_file, output_file)
             else:
                 print(f"{output_file} exists")
+        elif OBS == 'ccpa_accum24hr':
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
+            if not os.path.exists(output_file):
+                gda_util.make_dir(tmp_file_dir)
+                print("----> Trying to create "+tmp_file)
+                gda_util.prep_prod_ccpa_accum24hr(
+                    obs_dict['input_file_format'], tmp_file, CDATE_dt,
+                    log_missing_file
+                )
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(tmp_file, output_file)
+            else:
+                print(f"{output_file} exists")
+
 
 print("END: "+os.path.basename(__file__))

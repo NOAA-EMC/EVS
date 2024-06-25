@@ -1174,6 +1174,62 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
         prepped_data.close()
     copy_file(prepped_file, dest_file)
 
+def prep_prod_ccpa_accum24hr(source_file_format, dest_file, date_dt,
+                             log_missing_file):
+    """! Do prep work for 24 hour accumulation CCPA production files
+
+         Args:
+             source_file_format - source file format (string)
+             dest_file          - destination file (string)
+             date_dt            - date (datetime object)
+             log_missing_file   - text file path to write that
+                                  production file is missing (string)
+         Returns:
+    """
+    # Environment variables and executables
+    RUN_METPLUS = os.path.join(
+        os.environ['METPLUS_PATH'], 'ush','run_metplus.py'
+    )
+    # Set configuration file paths
+    machine_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', 'machine.conf'
+    )
+    pcp_combine_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', os.environ['STEP'],
+        os.environ['COMPONENT'], f"{os.environ['RUN']}_grid2grid",
+        'PCPCombine_obs24hrCCPA.conf'
+    )
+    # Temporary file names
+    prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                +dest_file.rpartition('/')[2])
+    # Get needed files for accumulation (4 6 hour accumulation files)
+    have_all_files = True
+    nfile = 1
+    make_dir(os.path.join(os.getcwd(), 'ccpa'))
+    while nfile <= 4:
+        nfile_date_dt = date_dt - datetime.timedelta(hours=(nfile-1)*6)
+        nfile_source = format_filler(source_file_format, nfile_date_dt,
+                                     nfile_date_dt, 'anl', {})
+        nfile_working = os.path.join(os.getcwd(), 'ccpa', 'ccpa.6H.'
+                                     +f"{nfile_date_dt:%Y%m%d%H}")
+        log_missing_nfile = log_missing_file.replace(
+            f"{date_dt:%Y%m%d%H}", f"{nfile_date_dt:%Y%m%d%H}"
+        )
+        if check_file_exists_size(nfile_source):
+            copy_file(nfile_source, nfile_working)
+        else:
+            have_all_files = False
+            log_missing_file_truth(log_missing_nfile, nfile_source,
+                                   "CCPA 6 hour accum ", nfile_date_dt)
+        nfile+=1
+    if have_all_files:
+        subprocess.run(
+            f"{RUN_METPLUS} {machine_conf} {pcp_combine_conf}",
+            shell=True
+        )
+        copy_file(prepped_file, dest_file)
+
+
 def prep_prod_get_d_file(source_file, dest_file, date_dt,
                          log_missing_files):
     """! Do prep work for ALEXI GET-D production files
