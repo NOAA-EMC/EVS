@@ -2162,7 +2162,7 @@ def initalize_job_env_dict(verif_type, group,
             job_env_dict['fhr_list'] = ', '.join(fhr_list)
         else:
             job_env_dict['fhr_list'] = "'"+', '.join(fhr_list)+"'"
-        if verif_type in ['pres_levs', 'means', 'sfc', 'ptype']:
+        if verif_type in ['pres_levs', 'means', 'sfc', 'ptype', 'abi', 'viirs', 'aeronet', 'airnow']:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
                 .split(' ')
