@@ -548,9 +548,10 @@ global_det_obs_dict = {
                                                   +'{init_shift?fmt=%Y%m%d%H'
                                                   +'?shift=-12}00.nc'),
                 'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                'osi_saf', 'osi_saf.multi.'
-                                                +'{hem?fmt=str}.'
-                                                +'{init_shift?fmt=%Y%m%d%H'
+                                                'osi_saf', 'regrid_data_plane'
+                                                +'_sea_ice_DailyAvg_'
+                                                +'Concentration_{hem?fmt=str}'
+                                                +'_valid{init_shift?fmt=%Y%m%d%H'
                                                 +'?shift=-24}to'
                                                 +'{init?fmt=%Y%m%d%H}.nc'),
                 'inithours': ['00']},
