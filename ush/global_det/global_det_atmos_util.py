@@ -1174,8 +1174,8 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
         prepped_data.close()
     copy_file(prepped_file, dest_file)
 
-def prep_prod_ccpa_accum24hr(source_file_format, dest_file, date_dt,
-                             log_missing_file):
+def prep_prod_ccpa_accum24hr_file(source_file_format, dest_file, date_dt,
+                                  log_missing_file):
     """! Do prep work for 24 hour accumulation CCPA production files
 
          Args:
@@ -1222,6 +1222,7 @@ def prep_prod_ccpa_accum24hr(source_file_format, dest_file, date_dt,
             log_missing_file_truth(log_missing_nfile, nfile_source,
                                    "CCPA 6 hour accum ", nfile_date_dt)
         nfile+=1
+    # Prep file
     if have_all_files:
         subprocess.run(
             f"{RUN_METPLUS} {machine_conf} {pcp_combine_conf}",
@@ -1229,6 +1230,52 @@ def prep_prod_ccpa_accum24hr(source_file_format, dest_file, date_dt,
         )
         copy_file(prepped_file, dest_file)
 
+def prep_prod_prepbufr_gdas_file(source_file, dest_file, date_dt, filter_type,
+                                 log_missing_file):
+    """! Do prep work for obsproc GDAS production files
+
+         Args:
+             source_file      - source file (string)
+             dest_file        - destination file (string)
+             date_dt          - date (datetime object)
+             filter_type      - observation type to filter for (string)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+         Returns:
+    """
+    # Environment variables and executables
+    RUN_METPLUS = os.path.join(
+        os.environ['METPLUS_PATH'], 'ush','run_metplus.py'
+    )
+    # Set configuration file paths
+    machine_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', 'machine.conf'
+    )
+    pb2nc_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', os.environ['STEP'],
+        os.environ['COMPONENT'], f"{os.environ['RUN']}_grid2obs",
+        f"PB2NC_obsPrepbufrGDAS_{filter_type}.conf"
+    )
+    # Temporary file names
+    working_file = os.path.join(os.getcwd(), 'atmos.prepbufr.'
+                                +f"gdas.{date_dt:%Y%m%d%H}")
+    prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                +dest_file.rpartition('/')[2])
+    # Prep file
+    if check_file_exists_size(source_file):
+        copy_file(source_file, working_file)
+    else:
+        if not os.path.exists(log_missing_file):
+            log_missing_file_truth(log_missing_file, source_file,
+                                   'Prebufr GDAS', date_dt)
+    if check_file_exists_size(working_file):
+        subprocess.run(
+            f"{RUN_METPLUS} -c {machine_conf} -c {pb2nc_conf} "
+            +f"-c config.VALID_BEG={date_dt:%Y%m%d%H} "
+            +f"-c config.VALID_END={date_dt:%Y%m%d%H}",
+            shell=True
+        )
+        copy_file(prepped_file, dest_file)
 
 def prep_prod_get_d_file(source_file, dest_file, date_dt,
                          log_missing_files):

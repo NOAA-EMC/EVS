@@ -25,6 +25,7 @@ COMINcfs = os.environ['COMINcfs']
 COMINcmc = os.environ['COMINcmc']
 COMINgfs = os.environ['COMINgfs']
 COMINccpa = os.environ['COMINccpa']
+COMINobsproc = os.environ['COMINobsproc']
 DCOMINcmc_precip = os.environ['DCOMINcmc_precip']
 DCOMINcmc_regional_precip = os.environ['DCOMINcmc_regional_precip']
 DCOMINdwd_precip = os.environ['DCOMINdwd_precip']
@@ -585,6 +586,19 @@ global_det_obs_dict = {
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'.nc'),
                        'inithours': ['12']},
+    'prepbufr_gdas': {'input_file_format': os.path.join(COMINobsproc, 'gdas.'
+                                                        +'{init?fmt=%Y%m%d}',
+                                                        '{init?fmt=%H}',
+                                                        'atmos', 'gdas.t'
+                                                        +'{init?fmt=%H}'
+                                                        +'z.prepbufr'),
+                      'tmp_file_format': os.path.join(DATA, f"{RUN}.{INITDATE}",
+                                                      'prepbufr_gdas', 'pb2nc_'
+                                                      +'{vtype?fmt=str}_gdas_'
+                                                      +'valid'
+                                                      +'{init?fmt=%Y%m%d%H}'
+                                                      +'.nc'),
+                      'inithours': ['00', '06', '12', '18']},
 }
 
 for OBS in OBSNAME:
@@ -652,7 +666,7 @@ for OBS in OBSNAME:
             if not os.path.exists(output_file):
                 gda_util.make_dir(tmp_file_dir)
                 print("----> Trying to create "+tmp_file)
-                gda_util.prep_prod_ccpa_accum24hr(
+                gda_util.prep_prod_ccpa_accum24hr_file(
                     obs_dict['input_file_format'], tmp_file, CDATE_dt,
                     log_missing_file
                 )
@@ -660,6 +674,26 @@ for OBS in OBSNAME:
                     gda_util.copy_file(tmp_file, output_file)
             else:
                 print(f"{output_file} exists")
+        elif OBS == 'prepbufr_gdas':
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
+            for vtype in ['pres_levs', 'sfc']:
+                tmp_vtype_file = tmp_file.replace('{vtype?fmt=str}', vtype)
+                output_vtype_file = output_file.replace('{vtype?fmt=str}',
+                                                        vtype)
+                if not os.path.exists(output_vtype_file):
+                    print("----> Trying to create "+tmp_vtype_file)
+                    gda_util.make_dir(tmp_file_dir)
+                    gda_util.prep_prod_prepbufr_gdas_file(
+                        input_file, tmp_vtype_file, CDATE_dt, vtype,
+                        log_missing_file
+                    )
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(tmp_vtype_file, output_vtype_file)
+                else:
+                    print(f"{output_type_file} exists")
 
 
 print("END: "+os.path.basename(__file__))
