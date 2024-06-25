@@ -551,6 +551,92 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                                           filled_file_format_chunk)
     return filled_file_format
 
+def prep_prod_gfs_file(source_file, dest_file, init_dt, forecast_hour,
+                       prep_method, log_missing_file):
+    """! Do prep work for GFS production files
+
+         Args:
+             source_file      - source file (string)
+             dest_file        - destination file (string)
+             init_dt          - initialization date (datetime)
+             forecast_hour    - forecast hour (string)
+             prep_method      - name of prep method to do
+                                (string)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+
+         Returns:
+    """
+    if prep_method != 'wmo':
+        print("ERROR: prep for gfs only for wmo")
+        sys.exit(1)
+    # Environment variables and executables
+    WGRIB2 = os.environ['WGRIB2']
+    # Working file names
+    prepped_file = os.path.join(os.getcwd(),
+                                'atmos.'+dest_file.rpartition('/')[2])
+    working_file5 = prepped_file+'.tmp5'
+    # Prep file
+    if check_file_exists_size(source_file):
+        for num in range(1,5,1):
+            working_filenum = prepped_file+'.tmp'+str(num)
+            if num == 1:
+                num_match = (':(HGT|UGRD|VGRD|TMP|RH):'
+                             +'(925|850|700|500|250|100) mb:')
+            elif num == 2:
+                num_match = ':HGT:surface:'
+            elif num == 3:
+                num_match = ':(DPT|TMP|RH|UGRD|VGRD):(2|10) m above ground:'
+            elif num == 4:
+                if int(forecast_hour) == 0:
+                    num_match = ':TCDC:entire atmosphere:anl:'
+                else:
+                    num_match = (':TCDC:entire atmosphere:'
+                                 +forecast_hour+' hour fcst:')
+            run_shell_command(
+                [WGRIB2+' '+source_file+' -match "'+num_match+'" '
+                 +'-grib '+working_filenum]
+            )
+        if int(forecast_hour) <= 6:
+            wgrib2_apcp_grep = subprocess.run(
+                WGRIB2+' '+source_file+' | grep "APCP"',
+                shell=True, capture_output=True, encoding="utf8"
+            )
+            if wgrib2_apcp_grep.returncode == 0:
+                first_apcp_rec = wgrib2_apcp_grep.stdout.split(':')[0]
+                run_shell_command(
+                    [WGRIB2+' '+source_file+' '
+                     +"-match '^("+first_apcp_rec+"):' "
+                     +'-grib '+working_file5]
+                )
+        else:
+            if int(forecast_hour) % 24 == 0:
+                continuous_bucket = ('0-'+str(int(int(forecast_hour)/24))
+                                     +' day acc fcst')
+            else:
+                continuous_bucket = '0-'+forecast_hour+' hour acc fcst'
+            sixhr_bucket = (str(int(forecast_hour)-(6-int(forecast_hour)%6))
+                            +'-'+forecast_hour+' hour acc fcst')
+            run_shell_command(
+                [WGRIB2+' '+source_file
+                 +' -match ":APCP:surface:('+continuous_bucket+'|'
+                 +sixhr_bucket+'):" '
+                 +'-grib '+working_file5]
+            )
+        run_shell_command(['>', prepped_file])
+        if int(forecast_hour) == 0:
+            file_range = range(1,5,1)
+        else:
+            file_range = range(1,6,1)
+        for num in file_range:
+            working_filenum = prepped_file+'.tmp'+str(num)
+            if check_file_exists_size(working_filenum):
+                run_shell_command(['cat', working_filenum, '>>', prepped_file])
+    else:
+        log_missing_file_model(log_missing_file, source_file, 'gfs',
+                               init_dt, str(forecast_hour).zfill(3))
+    copy_file(prepped_file, dest_file)
+
 def prep_prod_fnmoc_file(source_file, dest_file, init_dt, forecast_hour,
                          prep_method, log_missing_file):
     """! Do prep work for FNMOC production files
@@ -2251,18 +2337,26 @@ def initalize_job_env_dict(verif_type, group,
     """
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
-        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM', 'COMOUT',
-        'evs_run_mode'
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
+        'COMOUT', 'evs_run_mode'
     ]
-    if group in ['reformat_data', 'assemble_data', 'generate_stats', 'gather_stats']:
-        os.environ['MET_TMP_DIR'] = os.path.join(
-            os.environ['DATA'],
-            os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
-            'METplus_output', 'tmp'
-        )
+    if group in ['reformat_data', 'assemble_data', 'generate_stats',
+                 'gather_stats', 'summarize_stats', 'write_reports',
+                 'concatenate_reports']:
+        if os.environ['VERIF_CASE'] == 'wmo':
+           os.environ['MET_TMP_DIR'] = os.path.join(
+                os.environ['DATA'], 'tmp'
+           )
+           job_env_var_list.extend(['met_ver'])
+        else:
+            os.environ['MET_TMP_DIR'] = os.path.join(
+                os.environ['DATA'],
+                os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
+                'METplus_output', 'tmp'
+            )
         make_dir(os.environ['MET_TMP_DIR'])
         job_env_var_list.extend(
-            ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR', 'COMROOT']
+            ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR']
         )
     elif group in ['condense_stats', 'filter_stats', 'make_plots',
                    'tar_images']:
@@ -2272,6 +2366,10 @@ def initalize_job_env_dict(verif_type, group,
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
+    if os.environ['VERIF_CASE'] == 'wmo':
+        for env_var in ['MODELNAME', 'COMINgfs', 'JOB_GROUP']:
+            job_env_dict[env_var] = os.environ[env_var]
+        return job_env_dict
     if group in ['condense_stats', 'filter_stats', 'make_plots',
                  'tar_images']:
         job_env_dict['plot_verbosity'] = 'DEBUG'

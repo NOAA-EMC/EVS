@@ -23,6 +23,7 @@ print("Working in: "+cwd)
 DATA = os.environ['DATA']
 COMINcfs = os.environ['COMINcfs']
 COMINcmc = os.environ['COMINcmc']
+COMINgfs = os.environ['COMINgfs']
 DCOMINcmc_precip = os.environ['DCOMINcmc_precip']
 DCOMINcmc_regional_precip = os.environ['DCOMINcmc_regional_precip']
 DCOMINdwd_precip = os.environ['DCOMINdwd_precip']
@@ -53,6 +54,7 @@ gda_util.make_dir(output_INITDATE)
 
 ###### MODELS
 # Get operational global deterministic model data
+# Global Forecast System - gfs
 # Climate Forecast System - cfs
 # Japan Meteorological Agency - jma
 # European Centre for Medium-Range Weather Forecasts - ecmwf
@@ -126,6 +128,13 @@ global_det_model_dict = {
                                                     +'NOAA-halfdeg.gr2'),
               'inithours': ['00', '12'],
               'fcst_hrs': range(0, 180+6, 6)},
+    'gfs': {'input_wmo_file_format': os.path.join(COMINgfs, '{init?fmt=%2H}',
+                                                  'atmos', 'gfs.'
+                                                  +'t{init?fmt=%2H}z.master.'
+                                                  +'grb2f{lead?fmt=%3H}'),
+            'inithours': ['00', '12'],
+            'fcst_hrs': list(range(0, 72+3, 3))
+                        + list(range(78, 240+6, 6))},
     'imd': {'input_fcst_file_format': os.path.join(DCOMINimd,
                                                    'gdas1.t{init?fmt=%2H}z.'
                                                    +'grbf{lead?fmt=%2H}'),
@@ -174,6 +183,11 @@ tmp_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                       '{model?fmt=%str}.precip.'
                                       +'t{init?fmt=%2H}z.'
                                       +'f{lead?fmt=%3H}')
+tmp_wmo_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
+                                   '{model?fmt=%str}',
+                                   '{model?fmt=%str}.wmo.'
+                                   +'t{init?fmt=%2H}z.'
+                                   +'f{lead?fmt=%3H}')
 
 for MODEL in MODELNAME:
     if MODEL not in list(global_det_model_dict.keys()):
@@ -195,6 +209,7 @@ for MODEL in MODELNAME:
             fcst_hrs = model_dict['fcst_hrs']
         for fcst_hr in fcst_hrs:
             VDATE_dt = CDATE_dt + datetime.timedelta(hours=int(fcst_hr))
+            # Forecast files
             if 'input_fcst_file_format' in list(model_dict.keys()):
                 input_fcst_file = gda_util.format_filler(
                     model_dict['input_fcst_file_format'], VDATE_dt, CDATE_dt,
@@ -284,6 +299,7 @@ for MODEL in MODELNAME:
                             )
                 else:
                     print(f"{output_fcst_file} exists")
+            # Forecast files: Precip
             if 'input_precip_file_format' in list(model_dict.keys()):
                 input_precip_file = gda_util.format_filler(
                     model_dict['input_precip_file_format'], VDATE_dt,
@@ -393,6 +409,43 @@ for MODEL in MODELNAME:
                                 )
                 else:
                     print(f"{output_precip_file} exists")
+            # Forecast files: WMO
+            if 'input_wmo_file_format' in list(model_dict.keys()):
+                input_wmo_file = gda_util.format_filler(
+                    model_dict['input_wmo_file_format'], VDATE_dt, CDATE_dt,
+                    str(fcst_hr), {}
+                )
+                tmp_wmo_file = gda_util.format_filler(
+                    tmp_wmo_file_format, VDATE_dt,
+                    CDATE_dt, str(fcst_hr), {'model': MODEL}
+                )
+                output_wmo_file = os.path.join(
+                    output_INITDATE, MODEL, tmp_wmo_file.rpartition('/')[2]
+                )
+                if not os.path.exists(output_wmo_file):
+                    print("----> Trying to create "+tmp_wmo_file)
+                    log_missing_file = os.path.join(
+                        DATA, 'mail_missing_'+MODEL+'_fhr'
+                        +str(fcst_hr).zfill(3)+'_init'
+                        +CDATE_dt.strftime('%Y%m%d%H')+'_wmo.sh'
+                    )
+                    tmp_wmo_file_dir = (
+                        tmp_wmo_file.rpartition('/')[0]
+                    )
+                    gda_util.make_dir(tmp_wmo_file_dir)
+                    if MODEL == 'gfs':
+                        gda_util.prep_prod_gfs_file(input_wmo_file,
+                                                    tmp_wmo_file,
+                                                    CDATE_dt, str(fcst_hr),
+                                                    'wmo', log_missing_file)
+                    else:
+                        print("ERROR: WMO file generation only for gfs")
+                        sys.exit(1)
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(tmp_wmo_file,
+                                           output_wmo_file)
+                else:
+                    print(f"{output_wmo_file} exists")
         # Analysis file
         if 'input_anl_file_format' in list(model_dict.keys()):
             input_anl_file = gda_util.format_filler(
