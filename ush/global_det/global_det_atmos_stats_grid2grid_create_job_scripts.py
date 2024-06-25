@@ -1151,7 +1151,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         # UKMET does not have winds at P200 past fhr120
                         if verif_type == 'pres_levs' \
                                 and verif_type_job == 'WindShear' \
-                                and job_env_dict['MODEL'] == 'ukmet':
+                                and job_env_dict['MODEL'] == 'ukmet' \
+                                and job_env_dict['fhr_list'] != "''":
                             ukmet_fhr_list = []
                             ukmet_fhr_rm_list = []
                             for fhr_chk in (job_env_dict['fhr_list']\
@@ -1276,12 +1277,12 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                         )
                                 (model_fhr_lev_dict[runN]\
                                  [f"var1_levels"]) = (
-                                     +', '.join(mod_runN_level_list)
+                                     ', '.join(mod_runN_level_list)
                                 )
                                 if verif_type_job == 'VectorWind':
                                     (model_fhr_lev_dict[runN]\
                                      [f"var2_levels"]) = (
-                                         +', '.join(mod_runN_level_list)
+                                         ', '.join(mod_runN_level_list)
                                     )
                             for run1_key \
                                     in list(model_fhr_lev_dict['run1'].keys()):
