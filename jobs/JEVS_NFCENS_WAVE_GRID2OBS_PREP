@@ -26,6 +26,7 @@ export NEXTDATE=${NEXTDATE:-${PDY}}
 ####################################
 # Set EVS directories               
 ####################################
+export NET=${NET:-evs}
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
@@ -43,7 +44,6 @@ export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Define NET/RUN variables          
 ####################################
-export NET=${NET:-evs}
 export MODEL=${MODEL:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-nfcens}

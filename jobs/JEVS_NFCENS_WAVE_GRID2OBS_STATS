@@ -33,6 +33,7 @@ export SENDDBN=${SENDDBN:-YES}
 ####################################
 # Set EVS directories               
 ####################################
+export NET=${NET:-evs}
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
@@ -43,7 +44,6 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 ####################################
 # Define NET/RUN variables          
 ####################################
-export NET=${NET:-evs}
 export MODEL=${MODEL:-evs}
 export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-nfcens}
