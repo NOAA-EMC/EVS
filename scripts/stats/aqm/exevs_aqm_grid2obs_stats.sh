@@ -18,6 +18,7 @@
 ##   01/05/2024   Ho-Chun Huang  modify for AQMv6 verification
 ##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
 ##   02/21/2024   Ho-Chun Huang  modify for AQMv7 verification
+##   06/25/2024   Ho-Chun Huang  Remove concatenating log file sections
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
