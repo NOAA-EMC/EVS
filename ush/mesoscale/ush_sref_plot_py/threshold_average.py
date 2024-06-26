@@ -465,6 +465,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         connect_points = True
     else:
         connect_points = False
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -491,9 +492,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             else:
                 y_vals_metric_min = np.nanmin(y_vals_metric)
                 y_vals_metric_max = np.nanmax(y_vals_metric)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
+                n_mods+=1
             else:
                 if math.isinf(y_mod_min):
                     y_mod_min = y_vals_metric_min
