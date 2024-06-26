@@ -28,7 +28,8 @@ def run_shell_command(command):
 
     """
     print("Running  "+' '.join(command))
-    if any(mark in ' '.join(command) for mark in ['"', "'", '|', '*', '>']):
+    if any(mark in ' '.join(command) for mark in ['"', "'", '|', '*', '>',
+                                                  '-']):
         run_command = subprocess.run(
             ' '.join(command), shell=True
         )
@@ -1103,10 +1104,8 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
     """
     if '_nh_' in daily_source_file:
         hem = 'nh'
-        hem_grid = 'G219'
     elif '_sh_' in daily_source_file:
         hem = 'sh'
-        hem_grid = 'G220'
     # Environment variables and executables
     RUN_METPLUS = os.path.join(
         os.environ['METPLUS_PATH'], 'ush','run_metplus.py'
@@ -1134,12 +1133,10 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
                working1_data.variables['time'][:] + 43200
             )
             working1_data.close()
-            subprocess.run(
-                f"{RUN_METPLUS} -c {machine_conf} "
-                +f"-c {regrid_data_plane_conf} "
-                +f"-c config.hem={hem} "
-                +f"-c config.hem_grid={hem_grid}",
-                shell=True
+            run_shell_command(
+                [RUN_METPLUS, '-c', machine_conf,
+                 '-c', regrid_data_plane_conf,
+                 '-c', f"config.PROCESS_LIST='RegridDataPlane({hem})'"]
             )
             copy_file(prepped_file, daily_dest_file)
     else:
@@ -1229,20 +1226,20 @@ def prep_prod_ccpa_accum24hr_file(source_file_format, dest_file, date_dt,
         nfile+=1
     # Prep file
     if have_all_files:
-        subprocess.run(
-            f"{RUN_METPLUS} {machine_conf} {pcp_combine_conf}",
-            shell=True
+        run_shell_command(
+            [RUN_METPLUS, '-c', machine_conf, '-c', pcp_combine_conf]
         )
         copy_file(prepped_file, dest_file)
 
-def prep_prod_prepbufr_gdas_file(source_file, dest_file, date_dt, filter_type,
-                                 log_missing_file):
-    """! Do prep work for obsproc GDAS production files
+def prep_prod_prepbufr_file(source_file, dest_file, date_dt, prepbufr_type,
+                            filter_type, log_missing_file):
+    """! Do prep work for obsproc prepbufr production files
 
          Args:
              source_file      - source file (string)
              dest_file        - destination file (string)
              date_dt          - date (datetime object)
+             prepbufr_type    - prepbufr type (string)
              filter_type      - observation type to filter for (string)
              log_missing_file - text file path to write that
                                 production file is missing (string)
@@ -1259,11 +1256,11 @@ def prep_prod_prepbufr_gdas_file(source_file, dest_file, date_dt, filter_type,
     pb2nc_conf = os.path.join(
         os.environ['PARMevs'], 'metplus_config', os.environ['STEP'],
         os.environ['COMPONENT'], f"{os.environ['RUN']}_grid2obs",
-        f"PB2NC_obsPrepbufrGDAS_{filter_type}.conf"
+        f"PB2NC_obsPrepbufr.conf"
     )
     # Temporary file names
     working_file = os.path.join(os.getcwd(), 'atmos.prepbufr.'
-                                +f"gdas.{date_dt:%Y%m%d%H}")
+                                +f"{prepbufr_type}.{date_dt:%Y%m%d%H}")
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +dest_file.rpartition('/')[2])
     # Prep file
@@ -1272,61 +1269,17 @@ def prep_prod_prepbufr_gdas_file(source_file, dest_file, date_dt, filter_type,
     else:
         if not os.path.exists(log_missing_file):
             log_missing_file_truth(log_missing_file, source_file,
-                                   'Prebufr GDAS', date_dt)
+                                   f"Prepbufr {prepbufr_type.upper()}",
+                                   date_dt)
+    run_shell_command(
+        [RUN_METPLUS, '-c', machine_conf,
+         '-c', pb2nc_conf,
+         '-c', f"config.VALID_BEG={date_dt:%Y%m%d%H}",
+         '-c', f"config.VALID_END={date_dt:%Y%m%d%H}",
+         '-c', "config.PROCESS_LIST='PB2NC"
+         +f"({prepbufr_type}_{filter_type})'"]
+    )
     if check_file_exists_size(working_file):
-        subprocess.run(
-            f"{RUN_METPLUS} -c {machine_conf} -c {pb2nc_conf} "
-            +f"-c config.VALID_BEG={date_dt:%Y%m%d%H} "
-            +f"-c config.VALID_END={date_dt:%Y%m%d%H}",
-            shell=True
-        )
-        copy_file(prepped_file, dest_file)
-
-def prep_prod_prepbufr_nam_file(source_file, dest_file, date_dt, filter_type,
-                                 log_missing_file):
-    """! Do prep work for obsproc NAM production files
-
-         Args:
-             source_file      - source file (string)
-             dest_file        - destination file (string)
-             date_dt          - date (datetime object)
-             filter_type      - observation type to filter for (string)
-             log_missing_file - text file path to write that
-                                production file is missing (string)
-         Returns:
-    """
-    # Environment variables and executables
-    RUN_METPLUS = os.path.join(
-        os.environ['METPLUS_PATH'], 'ush','run_metplus.py'
-    )
-    # Set configuration file paths
-    machine_conf = os.path.join(
-        os.environ['PARMevs'], 'metplus_config', 'machine.conf'
-    )
-    pb2nc_conf = os.path.join(
-        os.environ['PARMevs'], 'metplus_config', os.environ['STEP'],
-        os.environ['COMPONENT'], f"{os.environ['RUN']}_grid2obs",
-        f"PB2NC_obsPrepbufrNAM_{filter_type}.conf"
-    )
-    # Temporary file names
-    working_file = os.path.join(os.getcwd(), 'atmos.prepbufr.'
-                                +f"nam.{date_dt:%Y%m%d%H}")
-    prepped_file = os.path.join(os.getcwd(), 'atmos.'
-                                +dest_file.rpartition('/')[2])
-    # Prep file
-    if check_file_exists_size(source_file):
-        copy_file(source_file, working_file)
-    else:
-        if not os.path.exists(log_missing_file):
-            log_missing_file_truth(log_missing_file, source_file,
-                                   'Prebufr NAM', date_dt)
-    if check_file_exists_size(working_file):
-        subprocess.run(
-            f"{RUN_METPLUS} -c {machine_conf} -c {pb2nc_conf} "
-            +f"-c config.VALID_BEG={date_dt:%Y%m%d%H} "
-            +f"-c config.VALID_END={date_dt:%Y%m%d%H}",
-            shell=True
-        )
         copy_file(prepped_file, dest_file)
 
 def prep_prod_get_d_file(source_file, dest_file, date_dt,
