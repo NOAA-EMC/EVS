@@ -35,6 +35,15 @@ then
 	if [ -e $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv ]
 	then
 	 obfound=1
+	else
+	 echo "WARNING: $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv is missing, METplus will not run"
+          if [ $SENDMAIL = "YES" ]; then
+	    export subject="CoCoRaHS Data Missing for EVS ${COMPONENT}"
+	    echo "Warning: The CoCoRaHS file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+	    echo "Missing file is $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv" >> mailmsg
+	    echo "Job ID: $jobid" >> mailmsg
+	    cat mailmsg | mail -s "$subject" $MAILTO
+	  fi
 	fi
 
 	DATE=${VDATE}${vhr}
@@ -45,10 +54,17 @@ then
 	HOUR=`cut -c 9-10 curdate`
 	if [ -e $EVSINccpa/ccpa.${DAY}/ccpa.t${HOUR}z.01h.hrap.conus.gb2 ]
         then
-#         ccpafound=1
          let "ccpanum=ccpanum+1"
 	 cp $EVSINccpa/ccpa.${DAY}/ccpa.t${HOUR}z.01h.hrap.conus.gb2  $DATA/ccpa
-#	 cp $EVSINccpa/ccpa.${PDYm3}/ccpa.t*z.01h.hrap.conus.gb2  $DATA/ccpa
+        else
+         echo  "WARNING: $EVSINccpa/ccpa.${DAY}/ccpa.t${HOUR}z.01h.hrap.conus.gb2 is missing, METplus will not run"
+         if [ $SENDMAIL = "YES" ]; then
+           export subject="CONUS Precip Analysis Missing for EVS ${COMPONENT}"
+           echo "Warning: The CONUS Analysis file is missing for valid date ${DAY}. METplus will not run." > mailmsg
+           echo "Missing file is $EVSINccpa/ccpa.${DAY}/ccpa.t${HOUR}z.01h.hrap.conus.gb2" >> mailmsg
+           echo "Job ID: $jobid" >> mailmsg
+           cat mailmsg | mail -s "$subject" $MAILTO
+         fi
         fi
 	DATE=`$NDATE -1 $DATE`
         done
@@ -57,6 +73,8 @@ fi
 echo "Number of CCPA files found is $ccpanum"
 if [ $ccpanum -eq 24 ];then
  ccpafound=1
+else
+ echo "WARNING: Fewer than 24 files found, found only $ccpanum. METplus will not run"
 fi
 
 

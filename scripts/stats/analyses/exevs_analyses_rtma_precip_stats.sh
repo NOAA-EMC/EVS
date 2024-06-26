@@ -35,6 +35,15 @@ then
 	if [ -e $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv ]
 	then
 	 obfound=1
+	else
+         echo "WARNING: $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv is missing, METplus will not run"
+         if [ $SENDMAIL = "YES" ]; then
+            export subject="CoCoRaHS Data Missing for EVS ${COMPONENT}"
+            echo "Warning: The CoCoRaHS file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+            echo "Missing file is $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv" >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $MAILTO
+         fi
 	fi
 
 	DATE=${VDATE}${vhr}
@@ -48,6 +57,15 @@ then
         then
          let "rtmanum=rtmanum+1"
 	 cp $COMINrtma/pcp${modnam}.${DAY}/pcp${modnam}2.${DAY}${HOUR}.grb2  $DATA/pcp${modnam}
+        else
+         echo  "WARNING: $COMINrtma/pcp${modnam}.${DAY}/pcp${modnam}2.${DAY}${HOUR}.grb2 is missing, METplus will not run"
+         if [ $SENDMAIL = "YES" ]; then
+          export subject="CONUS Precip Analysis Missing for EVS ${COMPONENT}"
+          echo "Warning: The CONUS Analysis file is missing for valid date ${DAY}. METplus will not run." > mailmsg
+          echo "Missing file is $COMINrtma/pcp${modnam}.${DAY}/pcp${modnam}2.${DAY}${HOUR}.grb2" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+         fi
         fi
 	DATE=`$NDATE -1 $DATE`
         done
@@ -56,6 +74,8 @@ fi
 echo "Number of RTMA files found is $rtmanum"
 if [ $rtmanum -eq 24 ];then
    rtmafound=1
+else
+   echo "WARNING: Fewer than 24 files found, found only $rtmanum. METplus will not run"
 fi
 
 if [ $rtmafound -eq 1 -a $obfound -eq 1 ]
