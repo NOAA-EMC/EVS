@@ -44,7 +44,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN
 
 export MODELNAME="cfs cmc cmc_regional dwd fnmoc gfs imd jma metfra ukmet ecmwf"
-export OBSNAME="osi_saf ghrsst_ospo ccpa_accum24hr"
+export OBSNAME="osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_nam"
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_GLOBAL_DET_PREP

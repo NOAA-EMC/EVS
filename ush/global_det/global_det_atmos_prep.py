@@ -599,6 +599,20 @@ global_det_obs_dict = {
                                                       +'{init?fmt=%Y%m%d%H}'
                                                       +'.nc'),
                       'inithours': ['00', '06', '12', '18']},
+    'prepbufr_nam': {'input_file_format': os.path.join(COMINobsproc, 'nam.'
+                                                       +'{init?fmt=%Y%m%d}',
+                                                       'nam.t'
+                                                       +'{init?fmt=%H}'
+                                                       +'z.prepbufr.tm'
+                                                       +'{offset_hr?fmt=str}'),
+                     'tmp_file_format': os.path.join(DATA, f"{RUN}.{INITDATE}",
+                                                     'prepbufr_nam', 'pb2nc_'
+                                                     +'{vtype?fmt=str}_nam_'
+                                                     +'valid'
+                                                     +'{init?fmt=%Y%m%d%H}'
+                                                     +'.nc'),
+                      'inithours': ['00', '03', '06', '09', '12',
+                                    '15', '18', '21']},
 }
 
 for OBS in OBSNAME:
@@ -693,7 +707,32 @@ for OBS in OBSNAME:
                     if SENDCOM == 'YES':
                         gda_util.copy_file(tmp_vtype_file, output_vtype_file)
                 else:
-                    print(f"{output_type_file} exists")
-
+                    print(f"{output_vtype_file} exists")
+        elif OBS == 'prepbufr_nam':
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
+            offset_hr = int(f"{CDATE_dt:%H}")%6
+            offset_date_dt = CDATE_dt + datetime.timedelta(hours=offset_hr)
+            input_file = gda_util.format_filler(
+                obs_dict['input_file_format'], offset_date_dt, offset_date_dt,
+                'anl', {'offset_hr': str(offset_hr).zfill(2)}
+            )
+            for vtype in ['sfc', 'ptype']:
+                tmp_vtype_file = tmp_file.replace('{vtype?fmt=str}', vtype)
+                output_vtype_file = output_file.replace('{vtype?fmt=str}',
+                                                        vtype)
+                if not os.path.exists(output_vtype_file):
+                    print("----> Trying to create "+tmp_vtype_file)
+                    gda_util.make_dir(tmp_file_dir)
+                    gda_util.prep_prod_prepbufr_nam_file(
+                        input_file, tmp_vtype_file, CDATE_dt, vtype,
+                        log_missing_file
+                    )
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(tmp_vtype_file, output_vtype_file)
+                else:
+                    print(f"{output_vtype_file} exists")
 
 print("END: "+os.path.basename(__file__))
