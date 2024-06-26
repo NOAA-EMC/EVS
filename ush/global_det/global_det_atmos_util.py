@@ -1103,8 +1103,10 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
     """
     if '_nh_' in daily_source_file:
         hem = 'nh'
+        hem_grid = 'G219'
     elif '_sh_' in daily_source_file:
         hem = 'sh'
+        hem_grid = 'G220'
     # Environment variables and executables
     RUN_METPLUS = os.path.join(
         os.environ['METPLUS_PATH'], 'ush','run_metplus.py'
@@ -1113,10 +1115,10 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
     machine_conf = os.path.join(
         os.environ['PARMevs'], 'metplus_config', 'machine.conf'
     )
-    regrid_data_plane_hem_conf = os.path.join(
+    regrid_data_plane_conf = os.path.join(
         os.environ['PARMevs'], 'metplus_config', os.environ['STEP'],
         os.environ['COMPONENT'], f"{os.environ['RUN']}_grid2grid",
-        f"RegridDataPlane_obsOSI-SAF_{hem}.conf"
+        f"RegridDataPlane_obsOSI-SAF.conf"
     )
     # Temporary file names
     working_file1 = os.path.join(os.getcwd(), 'atmos.'
@@ -1133,7 +1135,10 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
             )
             working1_data.close()
             subprocess.run(
-                f"{RUN_METPLUS} {machine_conf} {regrid_data_plane_hem_conf}",
+                f"{RUN_METPLUS} -c {machine_conf} "
+                +f"-c {regrid_data_plane_conf} "
+                +f"-c config.hem={hem} "
+                +f"-c config.hem_grid={hem_grid}",
                 shell=True
             )
             copy_file(prepped_file, daily_dest_file)
