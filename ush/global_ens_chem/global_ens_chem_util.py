@@ -2592,7 +2592,7 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
             )
             for model_stat_file in model_stat_files:
                 logger.debug(f"Getting data from {model_stat_file}")
-                ps = subprocess.Popen(
+                ps = subprocess.run(
                     'grep -R "'+model+' " '+model_stat_file+grep_opts,
                     shell=True, stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT, encoding='UTF-8'
