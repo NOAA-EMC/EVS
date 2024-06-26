@@ -175,7 +175,7 @@ for vhr in ${vhours} ; do
         ##############################################################################
 
         if [[ -s $COMOUTfnmocstatfilename ]]; then
-            cp -v $COMOUTfnmocstatfilename $DATAgefsstatfilename
+            cp -v $COMOUTfnmocstatfilename $DATAfnmocstatfilename
         else
             if [[ ! -s $DATAgdasncfilename ]]; then
                 if [[ -s $EVSINgdasncfilename ]]; then
