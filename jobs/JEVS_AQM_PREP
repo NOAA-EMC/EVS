@@ -40,6 +40,15 @@ setpdy.sh
 
 export envir=${envir:-prod}
 
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-aqm}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-aqm}
+export modsys=${modsys:-aqm}
+export mod_ver=${mod_ver:-${aqm_ver}}
+
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
@@ -51,16 +60,6 @@ export MASKS=${MASKS:-$FIXevs/masks}
 # Define COMIN/COMOUT variables:
 
 echo $COMPATH
-
-export NET=${NET:-evs}
-export STEP=${STEP:-prep}
-export COMPONENT=${COMPONENT:-aqm}
-export RUN=${RUN:-atmos}
-export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export MODELNAME=${MODELNAME:-aqm}
-export modsys=${modsys:-aqm}
-export mod_ver=${mod_ver:-${aqm_ver}}
-
 
 #
 #  The AirNOW obs in DCOM will continue to be updated after first
