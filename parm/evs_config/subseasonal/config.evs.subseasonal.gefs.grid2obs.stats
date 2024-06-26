@@ -45,7 +45,7 @@ export metplus_version="$metplus_ver"
 ####################################################
 if [ $VERIF_CASE_STEP = grid2obs_stats ]; then
     #g2ostats_type_list: list type of verifications to run for grid-to-obs: prepbufr
-    #### prepbufr:  compare 2m temp anomalies to NAM prepbufr obs
+    #### prepbufr:  compare 2m temp (and anomalies) to NAM prepbufr obs
     #####    g2ostats_[type]_inithour_list: all forecast init hours to be included in verification: HH
     #####    g2ostats_[type]_vhr_list:      all valid hours to be included in verification: HH
     #####    g2ostats_[type]_fhr_min:       forecast hour to start verification HH[H]
