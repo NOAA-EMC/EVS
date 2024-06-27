@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
-#PBS -l place=shared,select=1:ncpus=1:mem=15GB
+#PBS -l walltime=00:20:00
+#PBS -l place=shared,select=1:ncpus=1:mem=125GB
 #PBS -l debug=true
 #PBS -V
 
@@ -44,7 +44,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN
 
 export MODELNAME="gfs"
-export OBSNAME="ndbc"
+export OBSNAME="prepbufr_gdas ndbc"
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_GLOBAL_DET_PREP
