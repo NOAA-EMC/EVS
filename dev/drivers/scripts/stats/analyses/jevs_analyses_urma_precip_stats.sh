@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_analyses_precip/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
