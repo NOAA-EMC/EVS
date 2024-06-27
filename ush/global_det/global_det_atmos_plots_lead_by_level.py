@@ -84,6 +84,10 @@ class LeadByLevel:
         if self.plot_info_dict['fcst_var_name'] == 'O3MR' and \
                 self.plot_info_dict['vert_profile'] in ['all', 'strat']:
             vert_profile_levels.append('P1')
+            if self.plot_info_dict['vert_profile'] == 'all':
+                for lvl in ['P1000', 'P850', 'P700', 'P500', 'P300',
+                            'P250', 'P200']:
+                    vert_profile_levels.remove(lvl)
         vert_profile_levels_int = np.empty(len(vert_profile_levels),
                                            dtype=int)
         self.plot_info_dict['fcst_var_level'] = (
@@ -304,7 +308,8 @@ class LeadByLevel:
                 xtick_intvl = int(len(xticks)/n_xticks)
                 xticks = xticks[::xtick_intvl]
         vert_profile_levels_int_ticks = vert_profile_levels_int
-        if self.plot_info_dict['vert_profile'] == 'all':
+        if self.plot_info_dict['vert_profile'] == 'all' \
+                and self.plot_info_dict['fcst_var_name'] != 'O3MR':
             for del_lev in [925, 700, 500, 250, 100]:
                 vert_profile_levels_int_ticks = np.delete(
                     vert_profile_levels_int_ticks,

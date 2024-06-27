@@ -881,8 +881,12 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         ['fcst_var_dict']['threshs']
                     )
                 if job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
-                    plot_fcst_levels_loop = ['all', 'trop', 'strat',
-                                             'ltrop', 'utrop']
+                    if verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['name'] == 'O3MR':
+                        plot_fcst_levels_loop = ['all', 'strat']
+                    else:
+                        plot_fcst_levels_loop = ['all', 'trop', 'strat',
+                                                 'ltrop', 'utrop']
                 else:
                     plot_fcst_levels_loop = (
                         verif_type_plot_jobs_dict[verif_type_job]\
