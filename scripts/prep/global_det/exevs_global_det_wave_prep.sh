@@ -61,8 +61,46 @@ done
 for OBS in $OBSNAME; do
     echo " *** ${OBSNAME}-${RUN} prep ***"
     mkdir -p ${DATA}/${OBS}
+    # Run PB2NC for GDAS prepbufr files
+    if [ $OBS == "prepbufr_gdas" ]; then
+        for ihour in 00 06 12 18; do
+            input_prepbufr_file=${COMINobsproc}/gdas.${INITDATE}/${ihour}/atmos/gdas.t${ihour}z.prepbufr
+            tmp_pb2nc_file=${DATA}/${OBS}/gdas.${INITDATE}${ihour}.nc
+            output_pb2nc_file=${COMOUT}.${INITDATE}/${OBS}/gdas.${INITDATE}${ihour}.nc
+            if [ ! -s $output_pb2nc_file ]; then
+                if [ ! -s $input_prepbufr_file ]; then
+                    echo "WARNING: ${input_prepbufr_file} does not exist"
+                    if [ $SENDMAIL = YES ] ; then
+                        export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
+                        echo "Warning: No GDAS Prepbufr was available for valid date ${INITDATE}${ihour}" > mailmsg
+                        echo "Missing file is $input_prepbufr_file" >> mailmsg
+                        echo "Job ID: $jobid" >> mailmsg
+                        cat mailmsg | mail -s "$subject" $MAILTO
+                    fi
+                else
+                    export init_hour=${ihour}
+                    run_metplus.py \
+                    -c ${PARMevs}/metplus_config/machine.conf \
+                    -c ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_grid2obs/PB2NC_obsPrepbufrGDAS.conf
+                    export err=$?; err_chk
+                    if [ -s $tmp_pb2nc_file ]; then
+                        chmod 640 $tmp_pb2nc_file
+                        chgrp rstprod $tmp_pb2nc_file
+                        if [ ${SENDCOM} = YES ]; then
+                            cp -v ${tmp_pb2nc_file} ${output_pb2nc_file}
+                            if [ -s $output_pb2nc_file ]; then
+                                chmod 640 $output_pb2nc_file
+                                chgrp rstprod $output_pb2nc_file
+                            fi
+                        fi
+                    fi
+                fi
+            else
+                echo "${output_pb2nc_file} already exists"
+            fi
+        done
     # Trim down the NDBC buoy files and run ASCII2NC
-    if [ $OBS == "ndbc" ]; then
+    elif [ $OBS == "ndbc" ]; then
         export INITDATEp1=$($NDATE +24 ${INITDATE}${vhr} | cut -c 1-8)
         input_ndbc_dir=${DCOMINndbc}/${INITDATEp1}/validation_data/marine/buoy
         tmp_ndbc_file=${DATA}/${OBS}/${OBS}.${INITDATE}.nc
@@ -73,7 +111,7 @@ for OBS in $OBSNAME; do
                 echo "WARNING: No NDBC data in ${input_ndbc_dir}"
                 if [ $SENDMAIL = YES ] ; then
                     export subject="NDBC Data Missing for EVS ${COMPONENT}"
-                    echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
+                    echo "Warning: No NDBC data was available for valid date ${INITDATE}" > mailmsg
                     echo "Missing files are located at ${input_ndbc_dir}" >> msg
                     echo "Job ID: $jobid" >> mailmsg
                     cat mailmsg | mail -s "$subject" $MAILTO
