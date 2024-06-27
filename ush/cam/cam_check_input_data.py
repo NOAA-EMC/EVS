@@ -90,6 +90,8 @@ if proceed:
             COMINfcst = os.environ['COMINhiresw']
         elif MODELNAME == 'hrrr':
             COMINfcst = os.environ['COMINhrrr']
+        elif MODELNAME == 'rrfs':
+            COMINfcst = os.environ['COMINrrfs']
         else:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized. Quitting ...")
             sys.exit(1)
@@ -422,6 +424,42 @@ if proceed:
                     'hrrr.{IDATE}',
                     'conus',
                     'hrrr.t{IHOUR}z.wrfsfcf{FHR}.grib2'
+                ))
+        elif MODELNAME == 'rrfs':
+            if NEST == 'conus':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfs.{IDATE}',
+                    '{IHOUR}',
+                    'rrfs.t{IHOUR}z.prslev.f0{FHR}.grib2'
+                ))
+            elif NEST == 'ak':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfs.{IDATE}',
+                    '{IHOUR}',
+                    'rrfs.t{IHOUR}z.prslev.f0{FHR}.ak.grib2'
+                ))
+            elif NEST == 'hi':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfs.{IDATE}',
+                    '{IHOUR}',
+                    'rrfs.t{IHOUR}z.prslev.f0{FHR}.hi.grib2'
+                ))
+            elif NEST == 'pr':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfs.{IDATE}',
+                    '{IHOUR}',
+                    'rrfs.t{IHOUR}z.prslev.f0{FHR}.pr.grib2'
+                ))
+            else:
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfs.{IDATE}',
+                    '{IHOUR}',
+                    'rrfs.t{IHOUR}z.prslev.f0{FHR}.grib2'
                 ))
         else:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized."

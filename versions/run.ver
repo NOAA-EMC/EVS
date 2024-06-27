@@ -56,6 +56,7 @@ export nfcens_ver=v1.3
 export nwps_ver=v1.4
 export obsproc_ver=v1.1
 export rap_ver=v5.1
+export rrfs_ver=na
 export rtma_ver=v2.10
 export rtofs_ver=v2.3
 export sref_ver=v7.1
