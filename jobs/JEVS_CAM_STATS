@@ -109,6 +109,7 @@ export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CAS
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 export COMINhiresw=${COMINhiresw:-$(compath.py $envir/com/hiresw/$hiresw_ver)}
 export COMINhref=${COMINhref:-$(compath.py $envir/com/href/$href_ver)}
+export COMINrefs=${COMINrefs:-$(compath.py $envir/com/refs/$href_ver)}
 export COMINhrrr=${COMINhrrr:-$(compath.py $envir/com/hrrr/$hrrr_ver)}
 export COMINnam=${COMINnam:-$(compath.py $envir/com/nam/$nam_ver)}
 export COMINobsproc=${COMINobsproc:-$(compath.py $envir/com/obsproc/$obsproc_ver)}
