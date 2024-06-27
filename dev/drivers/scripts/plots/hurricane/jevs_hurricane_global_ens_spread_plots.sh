@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -N jevs_hurricane_regional_late_tropcyc_ops_plots
+#PBS -N jevs_hurricane_global_ens_tropcyc_plots
 #PBS -j oe
 #PBS -A ENSTRACK-DEV
 #PBS -q dev
@@ -21,9 +21,9 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export NET=evs
 export COMPONENT=hurricane
-export RUN=regional_late
+export RUN=global_ens
 export STEP=plots
-export VERIF_CASE=tropcyc_ops
+export VERIF_CASE=tropcyc
 export envir=dev
 export cyc=00
 export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
@@ -42,6 +42,9 @@ export PDY=20231231
 #Define the directory for TC-stats file 
 export COMINstats=/lfs/h2/emc/vpppg/noscrub/$USER/evs/${evs_ver_2d}/stats/${COMPONENT}/${RUN}/${VERIF_CASE}
 
+#Define the directories of your NOAA/NWS logos
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+
 #Define TC-vital file, and the directory for Bdeck files
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/syndat_tcvitals.2023
 export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
@@ -50,7 +53,6 @@ export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
 export DATAROOT=/lfs/h2/emc/stmp/$USER
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export KEEPDATA=YES
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_HURRICANE_PLOTS
