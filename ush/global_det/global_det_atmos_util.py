@@ -1271,15 +1271,15 @@ def prep_prod_prepbufr_file(source_file, dest_file, date_dt, prepbufr_type,
             log_missing_file_truth(log_missing_file, source_file,
                                    f"Prepbufr {prepbufr_type.upper()}",
                                    date_dt)
-    run_shell_command(
-        [RUN_METPLUS, '-c', machine_conf,
-         '-c', pb2nc_conf,
-         '-c', f"config.VALID_BEG={date_dt:%Y%m%d%H}",
-         '-c', f"config.VALID_END={date_dt:%Y%m%d%H}",
-         '-c', "config.PROCESS_LIST='PB2NC"
-         +f"({prepbufr_type}_{filter_type})'"]
-    )
     if check_file_exists_size(working_file):
+        run_shell_command(
+            [RUN_METPLUS, '-c', machine_conf,
+             '-c', pb2nc_conf,
+             '-c', f"config.VALID_BEG={date_dt:%Y%m%d%H}",
+             '-c', f"config.VALID_END={date_dt:%Y%m%d%H}",
+             '-c', "config.PROCESS_LIST='PB2NC"
+             +f"({prepbufr_type}_{filter_type})'"]
+        )
         copy_file(prepped_file, dest_file)
 
 def prep_prod_get_d_file(source_file, dest_file, date_dt,
