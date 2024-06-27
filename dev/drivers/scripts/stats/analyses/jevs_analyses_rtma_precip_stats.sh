@@ -58,7 +58,7 @@ export mod_ver=${rtma_ver}
 export modsys=rtma
 export MODELNAME=rtma
 
-####export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
+export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_ANALYSES_STATS
