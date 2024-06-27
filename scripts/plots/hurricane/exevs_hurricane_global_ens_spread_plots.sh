@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-export PS4=' + exevs_hurricane_global_ens_tropcyc_plots.sh line $LINENO: '
+export PS4=' + exevs_hurricane_global_ens_spread_plots.sh line $LINENO: '
 
 export stormYear=${YYYY}
 export basinlist="al ep wp"
@@ -69,38 +69,68 @@ echo "Name_${stormName}_Name"
 echo "${stormBasin}, ${stormNumber}, ${stormYear}, ${stormName}"
 
 #---Storm Plots 
-export LOGOroot=${FIXevs}/logos
-export PLOTDATA=${STORMroot}
+#export LOGOroot=${FIXevs}/logos
+#export PLOTDATA=${STORMroot}
+export PLOTDATA1=${STORMroot}
 #export RUN="tropcyc"
 export img_quality="low"
 
-export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
+#export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
 export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
-export model_plot_name_list="GEFS,EENS,CENS,UKMN"
+export model_plot_name_list="GEFSerror,HENSerror,GEFSspread,HENSspread"
 export plot_CI_bars="NO"
 export under="_"
 export tc_name=${stbasin}${under}${stormYear}${under}${stormName}
 export basin=${stbasin}
 export tc_num=${stormNumber}
 export tropcyc_model_type="global"
-python ${USHevs}/${COMPONENT}/plot_tropcyc_lead_average.py
+
+#--update the file: ${PLOTDATA1}/tc_stat/tc_stat.out
+# merge track/intensity error/spread into 6-models: MD01,MD02,MD03,MD04,MD05,MD06
+cd ${PLOTDATA1}/tc_stat
+cp tc_stat.out tc_stat.out_org
+grep "JOB_LIST:" tc_stat.out > tc_stat.JOB_LIST
+grep "COL_NAME:" tc_stat.out > tc_stat.COL_NAME
+
+grep "SUMMARY:  ABS(AMAX_WIND-BMAX_WIND)" tc_stat.out > tc_stat.intensity.ERR
+grep "SUMMARY:  ABS(MAX_WIND_STDEV)" tc_stat.out > tc_stat.intensity.STDEV
+sed -i 's/ABS(MAX_WIND_STDEV)     /ABS(AMAX_WIND-BMAX_WIND)/' tc_stat.intensity.STDEV
+sed -i 's/MD01/MD03/' tc_stat.intensity.STDEV
+sed -i 's/MD02/MD04/' tc_stat.intensity.STDEV
+#sed -i 's/MD03/MD06/' tc_stat.intensity.STDEV
+
+grep "SUMMARY:  ABS(TK_ERR)" tc_stat.out > tc_stat.track.ERR
+grep "SUMMARY:  ABS(TRACK_SPREAD)" tc_stat.out > tc_stat.track.spread
+sed -i 's/ABS(TRACK_SPREAD)/ABS(TK_ERR)      /' tc_stat.track.spread
+sed -i 's/MD01/MD03/' tc_stat.track.spread
+sed -i 's/MD02/MD04/' tc_stat.track.spread
+#sed -i 's/MD03/MD06/' tc_stat.track.spread
+
+cat tc_stat.JOB_LIST tc_stat.COL_NAME tc_stat.intensity.ERR tc_stat.intensity.STDEV tc_stat.track.ERR tc_stat.track.spread > tc_stat.NEW
+#sed -i 's/-amodel MD01 -amodel MD02 -amodel MD03/-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04 -amodel MD05 -amodel MD06/' tc_stat.NEW
+sed -i 's/-amodel MD01 -amodel MD02 /-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04/' tc_stat.NEW
+
+sed -i 's/-column AMAX_WIND-BMAX_WIND -column ABS(AMAX_WIND-BMAX_WIND) -column ALTK_ERR -column CRTK_ERR -column ABS(TK_ERR) -column ABS(TRACK_SPREAD) -column ABS(MAX_WIND_STDEV)/-column ABS(AMAX_WIND-BMAX_WIND) -column ABS(TK_ERR)/' tc_stat.NEW
+cp tc_stat.NEW tc_stat.out
+rm -f tc_stat.JOB_LIST tc_stat.COL_NAME tc_stat.intensity.* tc_stat.track.* tc_stat.NEW
+#--ending for the update the file: ${PLOTDATA1}/tc_stat/tc_stat.out
+
+export LOGOroot=${FIXevs}/logos
+export PLOTDATA=${STORMroot}
+cd $STORMdata
+
+python ${USHevs}/${COMPONENT}/plot_tropcyc_lead_spread.py
 
 #/lfs/h2/emc/ptmp/jiayi.peng/metTC/wp02/plot/WP_2022_MALAKAS/images
 nimgs=$(ls ${STORMroot}/plot/${tc_name}/images/* |wc -l)
 if [ $nimgs -ne 0 ]; then
   cd ${STORMroot}/plot/${tc_name}/images
   convert ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.png ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif
-  convert AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.png AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif
   convert ABSTK_ERR_fhrmean_${tc_name}_global.png ABSTK_ERR_fhrmean_${tc_name}_global.gif
-  convert ALTK_ERR_fhrmean_${tc_name}_global.png ALTK_ERR_fhrmean_${tc_name}_global.gif
-  convert CRTK_ERR_fhrmean_${tc_name}_global.png CRTK_ERR_fhrmean_${tc_name}_global.gif
   rm -f *.png
   if [ "$SENDCOM" = 'YES' ]; then
-    cp ${STORMroot}/plot/${tc_name}/images/ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.abswind_err.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
-    cp ${STORMroot}/plot/${tc_name}/images/AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.wind_bias.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png 
-    cp ${STORMroot}/plot/${tc_name}/images/ABSTK_ERR_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.abstk_err.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
-    cp ${STORMroot}/plot/${tc_name}/images/ALTK_ERR_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.altk_bias.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
-    cp ${STORMroot}/plot/${tc_name}/images/CRTK_ERR_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.crtk_bias.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
+    cp ${STORMroot}/plot/${tc_name}/images/ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_spread.abswind_err.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
+    cp ${STORMroot}/plot/${tc_name}/images/ABSTK_ERR_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_spread.abstk_err.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
   fi
 fi
 
@@ -136,37 +166,66 @@ elif [ ${stormBasin} = "wp" ]; then
 fi
 
 #--- Basin-Storms Plots 
-export LOGOroot=${FIXevs}/logos
-export PLOTDATA=${metTCcomout}
+#export LOGOroot=${FIXevs}/logos
+#export PLOTDATA=${metTCcomout}
 #export RUN="tropcyc"
 export img_quality="low"
 
-export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
+#export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
 export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
-export model_plot_name_list="GEFS,EENS,CENS,UKMN"
+export model_plot_name_list="GEFSerror,HENSerror,GEFSspread,HENSspread"
 export plot_CI_bars="NO"
 export stormNameB=Basin
 export tc_name=${stbasin}${under}${stormYear}${under}${stormNameB}
 export basin=${stbasin}
 export tc_num= 
 export tropcyc_model_type="global"
-python ${USHevs}/${COMPONENT}/plot_tropcyc_lead_average.py
+
+# update the file: ${PLOTDATA1}/tc_stat/tc_stat.out
+# merge track/intensity error/spread into 6-models: MD01,MD02,MD03,MD04,MD05,MD06
+cd ${PLOTDATA1}/tc_stat
+cp tc_stat.out tc_stat.out_org
+grep "JOB_LIST:" tc_stat.out > tc_stat.JOB_LIST
+grep "COL_NAME:" tc_stat.out > tc_stat.COL_NAME
+
+grep "SUMMARY:  ABS(AMAX_WIND-BMAX_WIND)" tc_stat.out > tc_stat.intensity.ERR
+grep "SUMMARY:  ABS(MAX_WIND_STDEV)" tc_stat.out > tc_stat.intensity.STDEV
+sed -i 's/ABS(MAX_WIND_STDEV)     /ABS(AMAX_WIND-BMAX_WIND)/' tc_stat.intensity.STDEV
+sed -i 's/MD01/MD03/' tc_stat.intensity.STDEV
+sed -i 's/MD02/MD04/' tc_stat.intensity.STDEV
+#sed -i 's/MD03/MD06/' tc_stat.intensity.STDEV
+
+grep "SUMMARY:  ABS(TK_ERR)" tc_stat.out > tc_stat.track.ERR
+grep "SUMMARY:  ABS(TRACK_SPREAD)" tc_stat.out > tc_stat.track.spread
+sed -i 's/ABS(TRACK_SPREAD)/ABS(TK_ERR)      /' tc_stat.track.spread
+sed -i 's/MD01/MD03/' tc_stat.track.spread
+sed -i 's/MD02/MD04/' tc_stat.track.spread
+#sed -i 's/MD03/MD06/' tc_stat.track.spread
+
+cat tc_stat.JOB_LIST tc_stat.COL_NAME tc_stat.intensity.ERR tc_stat.intensity.STDEV tc_stat.track.ERR tc_stat.track.spread > tc_stat.NEW
+sed -i 's/-amodel MD01 -amodel MD02/-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04/' tc_stat.NEW
+#sed -i 's/-amodel MD01 -amodel MD02 -amodel MD03/-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04 -amodel MD05 -amodel MD06/' tc_stat.NEW
+
+sed -i 's/-column AMAX_WIND-BMAX_WIND -column ABS(AMAX_WIND-BMAX_WIND) -column ALTK_ERR -column CRTK_ERR -column ABS(TK_ERR) -column ABS(TRACK_SPREAD) -column ABS(MAX_WIND_STDEV)/-column ABS(AMAX_WIND-BMAX_WIND) -column ABS(TK_ERR)/' tc_stat.NEW
+cp tc_stat.NEW tc_stat.out
+rm -f tc_stat.JOB_LIST tc_stat.COL_NAME tc_stat.intensity.* tc_stat.track.* tc_stat.NEW
+# ending for the update the file: ${PLOTDATA1}/tc_stat/tc_stat.out
+
+export LOGOroot=${FIXevs}/logos
+export PLOTDATA=${metTCcomout}
+cd $metTCcomout
+
+python ${USHevs}/${COMPONENT}/plot_tropcyc_lead_spread.py
 
 bimgs=$(ls ${metTCcomout}/plot/${tc_name}/images/* |wc -l)
 if [ $bimgs -ne 0 ]; then
   cd ${metTCcomout}/plot/${tc_name}/images
   convert ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.png ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif
-  convert AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.png AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif
   convert ABSTK_ERR_fhrmean_${tc_name}_global.png ABSTK_ERR_fhrmean_${tc_name}_global.gif
-  convert ALTK_ERR_fhrmean_${tc_name}_global.png ALTK_ERR_fhrmean_${tc_name}_global.gif
-  convert CRTK_ERR_fhrmean_${tc_name}_global.png CRTK_ERR_fhrmean_${tc_name}_global.gif
   rm -f *.png
   if [ "$SENDCOM" = 'YES' ]; then
-    cp -r ${metTCcomout}/plot/${tc_name}/images/ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.abswind_err.${stormBasin}.${stormYear}.season.png
-    cp -r ${metTCcomout}/plot/${tc_name}/images/AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.wind_bias.${stormBasin}.${stormYear}.season.png
-    cp -r ${metTCcomout}/plot/${tc_name}/images/ABSTK_ERR_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.abstk_err.${stormBasin}.${stormYear}.season.png
-    cp -r ${metTCcomout}/plot/${tc_name}/images/ALTK_ERR_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.altk_bias.${stormBasin}.${stormYear}.season.png
-    cp -r ${metTCcomout}/plot/${tc_name}/images/CRTK_ERR_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.crtk_bias.${stormBasin}.${stormYear}.season.png
+    cp -r ${metTCcomout}/plot/${tc_name}/images/ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_spread.abswind_err.${stormBasin}.${stormYear}.season.png
+    cp -r ${metTCcomout}/plot/${tc_name}/images/ABSTK_ERR_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_spread.abstk_err.${stormBasin}.${stormYear}.season.png
   fi
 fi
 ### bas do loop end
