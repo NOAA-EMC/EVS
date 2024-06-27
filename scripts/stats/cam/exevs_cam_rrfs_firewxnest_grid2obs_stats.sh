@@ -12,9 +12,9 @@ mkdir -p $DATA/statanalysis
 export machine=${machine:-"WCOSS2"}
 export OBSDIR=OBS
 mkdir -p $DATA/$OBSDIR
-export modsys=nam
-export regionnest=firewxnest
-export outtyp=hiresf
+export modsys=rrfs
+export regionnest=firewx
+export outtyp=prslev
 
 model1=`echo $MODELNAME | tr a-z A-Z`
 export model1
@@ -29,10 +29,13 @@ fcstmiss=0
 obfound=0
 while [ $shr -le $fcstmax ]
 do
-     fhr=$shr
+     fhr=0$shr
      if [ $shr -lt 10 ]
      then
-       fhr=0$shr
+       fhr=00$shr
+     elif [ $shr -ge 100 ]
+     then
+       fhr=$shr
      fi
      export fhr
 
@@ -41,18 +44,18 @@ do
      aday=`echo $adate |cut -c1-8`
      acyc=`echo $adate |cut -c9-10`
      if [ $acyc = 00 -o $acyc = 06 -o $acyc = 12 -o $acyc = 18 ]; then
-     if [ -e $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 ]
+     if [ -e $COMINrrfs/rrfs.${aday}/${acyc}/rrfs.t${acyc}z.${outtyp}.f${fhr}.${regionnest}.grib2 ]
      then
        echo $fhr >> $DATA/fcstlist
        let "fcstnum=fcstnum+1"
      else
        echo $fhr >> $DATA/fcstmiss
        let "fcstmiss=fcstmiss+1"
-       echo "WARNING: File $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 is missing."
+       echo "WARNING: File $COMINrrfs/rrfs.${aday}/${acyc}/rrfs.t${acyc}z.${outtyp}.f${fhr}.${regionnest}.grib2 is missing."
        if [ $SENDMAIL = "YES" ]; then
-        export subject="NAM Firewx File Missing for EVS ${COMPONENT}"
-        echo "Warning: The NAM Firewx file is missing for valid date ${VDATE}." > mailmsg
-        echo "Missing file is $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2" >> mailmsg
+        export subject="RRFS Firewx File Missing for EVS ${COMPONENT}"
+        echo "Warning: The RRFS Firewx file is missing for valid date ${VDATE}." > mailmsg
+        echo "Missing file is $COMINrrfs/rrfs.${aday}/${acyc}/rrfs.t${acyc}z.${outtyp}.f${fhr}.${regionnest}.grib2" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
        fi
@@ -133,7 +136,7 @@ echo $obfound
 if [ $obfound = 1 -a $fcstnum -gt 0 ]
 then
 
-  run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstNAM_FIREWXNEST_obsPREPBUFR.conf $PARMevs/metplus_config/machine.conf
+  run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstRRFS_FIREWXNEST_obsPREPBUFR.conf $PARMevs/metplus_config/machine.conf
   export err=$?; err_chk
 
   mkdir -p $COMOUTsmall
@@ -151,10 +154,10 @@ then
   then
        mkdir -p $COMOUTfinal
        cd $DATA/statanalysis
-       run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstNAM_FIREWXNEST_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstRRFS_FIREWXNEST_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
 
-       run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstNAM_FIREWXNEST_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstRRFS_FIREWXNEST_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
 
        cat *ADPUPA >> evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat
