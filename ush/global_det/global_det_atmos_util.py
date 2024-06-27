@@ -1266,6 +1266,9 @@ def prep_prod_prepbufr_file(source_file, dest_file, date_dt, prepbufr_type,
     # Prep file
     if check_file_exists_size(source_file):
         copy_file(source_file, working_file)
+        if os.path.exists(working_file):
+            run_shell_command(['chmod', '750', working_file])
+            run_shell_command(['chgrp', 'rstprod', working_file])
     else:
         if not os.path.exists(log_missing_file):
             log_missing_file_truth(log_missing_file, source_file,
@@ -1280,7 +1283,13 @@ def prep_prod_prepbufr_file(source_file, dest_file, date_dt, prepbufr_type,
              '-c', "config.PROCESS_LIST='PB2NC"
              +f"({prepbufr_type}_{filter_type})'"]
         )
+        if os.path.exists(prepped_file):
+            run_shell_command(['chmod', '750', prepped_file])
+            run_shell_command(['chgrp', 'rstprod', prepped_file])
         copy_file(prepped_file, dest_file)
+        if os.path.exists(dest_file):
+            run_shell_command(['chmod', '750', dest_file])
+            run_shell_command(['chgrp', 'rstprod', dest_file])
 
 def prep_prod_get_d_file(source_file, dest_file, date_dt,
                          log_missing_files):

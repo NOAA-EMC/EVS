@@ -717,6 +717,11 @@ for OBS in OBSNAME:
                     )
                     if SENDCOM == 'YES':
                         gda_util.copy_file(tmp_vtype_file, output_vtype_file)
+                        if os.path.exists(output_vtype_file):
+                            gda_util.run_shell_command(['chmod', '750',
+                                                        output_vtype_file])
+                            gda_util.run_shell_command(['chgrp', 'rstprod',
+                                                        output_vtype_file])
                 else:
                     print(f"{output_vtype_file} exists")
 
