@@ -17,7 +17,7 @@ export MET_CONFIG_OVERRIDES=""
 
 # Restart Settings
 export RESTART_DIR="${COMOUTsmall}/restart/c${vhr}"
-export COMPLETED_JOBS_FILES="completed_jobs.txt"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
 
 # Time Settings
 
