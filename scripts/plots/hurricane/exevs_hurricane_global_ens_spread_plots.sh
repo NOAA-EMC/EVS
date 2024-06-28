@@ -75,9 +75,9 @@ export PLOTDATA1=${STORMroot}
 #export RUN="tropcyc"
 export img_quality="low"
 
-#export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
-export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
-export model_plot_name_list="GEFSerror,HENSerror,GEFSspread,HENSspread"
+export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
+export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04,MD05,MD06"
+export model_plot_name_list="GEFSerror,EENSerror,CENSerror,GEFSspread,EENSspread,CENSspread"
 export plot_CI_bars="NO"
 export under="_"
 export tc_name=${stbasin}${under}${stormYear}${under}${stormName}
@@ -95,20 +95,20 @@ grep "COL_NAME:" tc_stat.out > tc_stat.COL_NAME
 grep "SUMMARY:  ABS(AMAX_WIND-BMAX_WIND)" tc_stat.out > tc_stat.intensity.ERR
 grep "SUMMARY:  ABS(MAX_WIND_STDEV)" tc_stat.out > tc_stat.intensity.STDEV
 sed -i 's/ABS(MAX_WIND_STDEV)     /ABS(AMAX_WIND-BMAX_WIND)/' tc_stat.intensity.STDEV
-sed -i 's/MD01/MD03/' tc_stat.intensity.STDEV
-sed -i 's/MD02/MD04/' tc_stat.intensity.STDEV
-#sed -i 's/MD03/MD06/' tc_stat.intensity.STDEV
+sed -i 's/MD01/MD04/' tc_stat.intensity.STDEV
+sed -i 's/MD02/MD05/' tc_stat.intensity.STDEV
+sed -i 's/MD03/MD06/' tc_stat.intensity.STDEV
 
 grep "SUMMARY:  ABS(TK_ERR)" tc_stat.out > tc_stat.track.ERR
 grep "SUMMARY:  ABS(TRACK_SPREAD)" tc_stat.out > tc_stat.track.spread
 sed -i 's/ABS(TRACK_SPREAD)/ABS(TK_ERR)      /' tc_stat.track.spread
-sed -i 's/MD01/MD03/' tc_stat.track.spread
-sed -i 's/MD02/MD04/' tc_stat.track.spread
-#sed -i 's/MD03/MD06/' tc_stat.track.spread
+sed -i 's/MD01/MD04/' tc_stat.track.spread
+sed -i 's/MD02/MD05/' tc_stat.track.spread
+sed -i 's/MD03/MD06/' tc_stat.track.spread
 
 cat tc_stat.JOB_LIST tc_stat.COL_NAME tc_stat.intensity.ERR tc_stat.intensity.STDEV tc_stat.track.ERR tc_stat.track.spread > tc_stat.NEW
-#sed -i 's/-amodel MD01 -amodel MD02 -amodel MD03/-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04 -amodel MD05 -amodel MD06/' tc_stat.NEW
-sed -i 's/-amodel MD01 -amodel MD02 /-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04/' tc_stat.NEW
+sed -i 's/-amodel MD01 -amodel MD02 -amodel MD03/-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04 -amodel MD05 -amodel MD06/' tc_stat.NEW
+#sed -i 's/-amodel MD01 -amodel MD02 /-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04/' tc_stat.NEW
 
 sed -i 's/-column AMAX_WIND-BMAX_WIND -column ABS(AMAX_WIND-BMAX_WIND) -column ALTK_ERR -column CRTK_ERR -column ABS(TK_ERR) -column ABS(TRACK_SPREAD) -column ABS(MAX_WIND_STDEV)/-column ABS(AMAX_WIND-BMAX_WIND) -column ABS(TK_ERR)/' tc_stat.NEW
 cp tc_stat.NEW tc_stat.out
@@ -171,9 +171,9 @@ fi
 #export RUN="tropcyc"
 export img_quality="low"
 
-#export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
-export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
-export model_plot_name_list="GEFSerror,HENSerror,GEFSspread,HENSspread"
+export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
+export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04,MD05,MD06"
+export model_plot_name_list="GEFSerror,EENSerror,CENSerror,GEFSspread,EENSspread,CENSspread"
 export plot_CI_bars="NO"
 export stormNameB=Basin
 export tc_name=${stbasin}${under}${stormYear}${under}${stormNameB}
@@ -191,20 +191,20 @@ grep "COL_NAME:" tc_stat.out > tc_stat.COL_NAME
 grep "SUMMARY:  ABS(AMAX_WIND-BMAX_WIND)" tc_stat.out > tc_stat.intensity.ERR
 grep "SUMMARY:  ABS(MAX_WIND_STDEV)" tc_stat.out > tc_stat.intensity.STDEV
 sed -i 's/ABS(MAX_WIND_STDEV)     /ABS(AMAX_WIND-BMAX_WIND)/' tc_stat.intensity.STDEV
-sed -i 's/MD01/MD03/' tc_stat.intensity.STDEV
-sed -i 's/MD02/MD04/' tc_stat.intensity.STDEV
-#sed -i 's/MD03/MD06/' tc_stat.intensity.STDEV
+sed -i 's/MD01/MD04/' tc_stat.intensity.STDEV
+sed -i 's/MD02/MD05/' tc_stat.intensity.STDEV
+sed -i 's/MD03/MD06/' tc_stat.intensity.STDEV
 
 grep "SUMMARY:  ABS(TK_ERR)" tc_stat.out > tc_stat.track.ERR
 grep "SUMMARY:  ABS(TRACK_SPREAD)" tc_stat.out > tc_stat.track.spread
 sed -i 's/ABS(TRACK_SPREAD)/ABS(TK_ERR)      /' tc_stat.track.spread
-sed -i 's/MD01/MD03/' tc_stat.track.spread
-sed -i 's/MD02/MD04/' tc_stat.track.spread
-#sed -i 's/MD03/MD06/' tc_stat.track.spread
+sed -i 's/MD01/MD04/' tc_stat.track.spread
+sed -i 's/MD02/MD05/' tc_stat.track.spread
+sed -i 's/MD03/MD06/' tc_stat.track.spread
 
 cat tc_stat.JOB_LIST tc_stat.COL_NAME tc_stat.intensity.ERR tc_stat.intensity.STDEV tc_stat.track.ERR tc_stat.track.spread > tc_stat.NEW
-sed -i 's/-amodel MD01 -amodel MD02/-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04/' tc_stat.NEW
-#sed -i 's/-amodel MD01 -amodel MD02 -amodel MD03/-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04 -amodel MD05 -amodel MD06/' tc_stat.NEW
+#sed -i 's/-amodel MD01 -amodel MD02/-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04/' tc_stat.NEW
+sed -i 's/-amodel MD01 -amodel MD02 -amodel MD03/-amodel MD01 -amodel MD02 -amodel MD03 -amodel MD04 -amodel MD05 -amodel MD06/' tc_stat.NEW
 
 sed -i 's/-column AMAX_WIND-BMAX_WIND -column ABS(AMAX_WIND-BMAX_WIND) -column ALTK_ERR -column CRTK_ERR -column ABS(TK_ERR) -column ABS(TRACK_SPREAD) -column ABS(MAX_WIND_STDEV)/-column ABS(AMAX_WIND-BMAX_WIND) -column ABS(TK_ERR)/' tc_stat.NEW
 cp tc_stat.NEW tc_stat.out
