@@ -81,14 +81,6 @@ if [ $RUN = atmos ]; then
         mkdir -p $COMOUTprepbufr
     fi
 fi
-if [ $RUN = wave ]; then
-    if [ $VERIF_CASE == grid2obs ]; then
-        export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
-        mkdir -p $COMOUTprepbufr
-        export COMOUTndbc=$COMOUT/$RUN.$VDATE/ndbc/$VERIF_CASE
-        mkdir -p $COMOUTndbc
-    fi
-fi
 
 #######################################################################
 # Execute the script
