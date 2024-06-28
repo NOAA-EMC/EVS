@@ -209,6 +209,7 @@ if [ "$data" = "apcp24h_conus" ] ; then
       export modelpath=${COMREFS}/refs.${fyyyymmdd}/ensprod
       export prod
       for prod in mean avrg pmmn lpmm ; do
+	if [ -s $modelpath/refs.t${fcyc}z.${domain}.${prod}.f${fhr}.grib2 ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstREFS_APCP24h.conf
          export err=$?; err_chk
          mv $output_base/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/.
@@ -216,6 +217,7 @@ if [ "$data" = "apcp24h_conus" ] ; then
          if [ -s $WORK/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
             cp $WORK/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/refs.${fyyyymmdd}/precip_mean24
          fi
+	fi
       done
    done
 fi
@@ -245,11 +247,13 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       export modelpath=${COMREFS}/refs.${fyyyymmdd}/ensprod
       export prod
       for prod in mean avrg pmmn lpmm ; do
+       if [ -s $modelpath/refs.t${fcyc}z.${domain}.${prod}.f${fhr}.grib2 ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstREFS_APCP24h.conf
          export err=$?; err_chk
          if [ -s $output_base/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
             mv $output_base/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/.
          fi
+       fi
       done
    done
 fi
