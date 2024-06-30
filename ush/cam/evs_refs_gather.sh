@@ -83,8 +83,13 @@ chmod 775 run_gather_all_poe.sh
 #*****************************
 #  Run the POE script
 #*****************************
-${DATA}/run_gather_all_poe.sh
-export err=$?; err_chk
+  if [ $run_mpi = yes ] ; then
+    mpiexec -np 3 -ppn 3 --cpu-bind verbose,depth cfp ${DATA}/run_gather_all_poe.sh
+    export err=$?; err_chk
+  else   
+    ${DATA}/run_gather_all_poe.sh
+    export err=$?; err_chk
+  fi 
 
 else
   echo "NO stat files exsist in $COMOUTsmall directory"
