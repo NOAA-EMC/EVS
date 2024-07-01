@@ -221,10 +221,12 @@ bimgs=$(ls ${metTCcomout}/plot/${tc_name}/images/* |wc -l)
 if [ $bimgs -ne 0 ]; then
   cd ${metTCcomout}/plot/${tc_name}/images
   convert ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.png ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif
+  convert ABSMAX_WIND_STDEV_fhrmean_${tc_name}_global.png ABSMAX_WIND_STDEV_fhrmean_${tc_name}_global.gif
   convert ABSTK_ERR_fhrmean_${tc_name}_global.png ABSTK_ERR_fhrmean_${tc_name}_global.gif
   rm -f *.png
   if [ "$SENDCOM" = 'YES' ]; then
     cp -r ${metTCcomout}/plot/${tc_name}/images/ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_spread.abswind_err.${stormBasin}.${stormYear}.season.png
+    cp -r ${metTCcomout}/plot/${tc_name}/images/ABSMAX_WIND_STDEV_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_spread.abswind_stdev.${stormBasin}.${stormYear}.season.png
     cp -r ${metTCcomout}/plot/${tc_name}/images/ABSTK_ERR_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_spread.abstk_err.${stormBasin}.${stormYear}.season.png
   fi
 fi
