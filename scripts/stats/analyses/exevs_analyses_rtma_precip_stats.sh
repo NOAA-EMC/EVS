@@ -8,7 +8,7 @@ mkdir -p $finalstat
 export regionnest=rtma
 export fcstmax=$g2os_sfc_fhr_max
 
-export maskdir=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
+export maskdir=$MASKS
 
 # search to see if obs file exists
 
