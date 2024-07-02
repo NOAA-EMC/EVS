@@ -69,12 +69,20 @@ global_det_obs_dict = {
                                                   +'{init_shift?fmt=%Y%m%d%H'
                                                   +'?shift=-12}00.nc'),
                 'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                'osi_saf', 'regrid_data_plane'
-                                                +'_sea_ice_DailyAvg_'
-                                                +'Concentration_{hem?fmt=str}'
-                                                +'_valid{init_shift?fmt=%Y%m%d%H'
+                                                'osi_saf', 'osi_saf.multi.'
+                                                +'{hem?fmt=str}.'
+                                                +'{init_shift?fmt=%Y%m%d%H'
                                                 +'?shift=-24}to'
                                                 +'{init?fmt=%Y%m%d%H}.nc'),
+                'tmp_regrid_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                       'osi_saf', 'regrid_data_plane'
+                                                       +'_sea_ice_DailyAvg_'
+                                                       +'Concentration_'
+                                                       +'{grid?fmt=str}'
+                                                       +'_valid{init_shift?'
+                                                       +'fmt=%Y%m%d%H'
+                                                       +'?shift=-24}to'
+                                                       +'{init?fmt=%Y%m%d%H}.nc'),
                 'inithours': ['00']},
     'ghrsst_ospo': {'input_file_format': os.path.join(DCOMINghrsst_ospo,
                                                       '{init_shift?fmt=%Y%m%d'
@@ -156,25 +164,46 @@ for OBS in OBSNAME:
         )
         tmp_file_dir = tmp_file.rpartition('/')[0]
         if OBS == 'osi_saf':
+            tmp_regrid_file = gda_util.format_filler(
+                obs_dict['tmp_regrid_file_format'], CDATE_dt, CDATE_dt,
+                'anl', {}
+            )
+            output_regrid_file = os.path.join(
+                output_INITDATE, OBS, tmp_regrid_file.rpartition('/')[2]
+            )
             for hem in ['nh', 'sh']:
                 log_missing_file = os.path.join(
                     DATA, 'mail_missing_'+OBS+'_'+hem+'_valid'
                     +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
                 )
+                if hem == 'nh':
+                    grid = 'G219'
+                elif hem == 'sh':
+                    grid = 'G220'
                 input_hem_file = input_file.replace('{hem?fmt=str}', hem)
                 tmp_hem_file = tmp_file.replace('{hem?fmt=str}', hem)
+                tmp_grid_file = tmp_regrid_file.replace('{grid?fmt=str}', grid)
                 output_hem_file = output_file.replace('{hem?fmt=str}', hem)
-                if not os.path.exists(output_hem_file):
-                    print("----> Trying to create "+tmp_hem_file)
+                output_grid_file = output_regrid_file.replace(
+                    '{grid?fmt=str}', grid
+                )
+                if not os.path.exists(output_hem_file) \
+                    or not os.path.exists(output_grid_file):
+                    print("----> Trying to create "+tmp_hem_file+" and "
+                          +tmp_grid_file)
                     gda_util.make_dir(tmp_file_dir)
                     gda_util.prep_prod_osi_saf_file(
-                        input_hem_file, tmp_hem_file, CDATE_dt,
+                        input_hem_file, tmp_hem_file, tmp_grid_file, CDATE_dt,
                         log_missing_file
                     )
                     if SENDCOM == 'YES':
                         gda_util.copy_file(tmp_hem_file, output_hem_file)
+                        gda_util.copy_file(tmp_grid_file, output_grid_file)
                 else:
-                    print(f"{output_hem_file} exists")
+                    if os.path.exists(output_hem_file):
+                        print(f"{output_hem_file} exists")
+                    if os.path.exists(output_grid_file):
+                        print(f"{output_grid_file} exists")
         elif OBS == 'ghrsst_ospo':
             log_missing_file = os.path.join(
                 DATA, 'mail_missing_'+OBS+'_valid'

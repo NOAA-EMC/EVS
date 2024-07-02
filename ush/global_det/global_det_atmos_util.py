@@ -1091,15 +1091,17 @@ def prep_prod_metfra_file(source_file, dest_file, init_dt, forecast_hour,
             copy_file(prepped_file, dest_file)
 
 def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
-                           date_dt, log_missing_file):
+                           daily_dest_grid_file, date_dt, log_missing_file):
     """! Do prep work for OSI-SAF production files
 
          Args:
-             daily_source_file - daily source file (string)
-             daily_dest_file   - daily destination file (string)
-             date_dt           - date (datetime object)
-             log_missing_file  - text file path to write that
-                                 production file is missing (string)
+             daily_source_file    - daily source file (string)
+             daily_dest_file      - daily destination file (string)
+             daily_dest_grid_file - daily destination regrid_data_plane
+                                    file (string)
+             date_dt              - date (datetime object)
+             log_missing_file     - text file path to write that
+                                    production file is missing (string)
          Returns:
     """
     if '_nh_' in daily_source_file:
@@ -1120,25 +1122,26 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
         f"RegridDataPlane_obsOSI-SAF.conf"
     )
     # Temporary file names
-    working_file1 = os.path.join(os.getcwd(), 'atmos.'
-                                 +daily_source_file.rpartition('/')[2])
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +daily_dest_file.rpartition('/')[2])
+    prepped_grid_file = os.path.join(os.getcwd(), 'atmos.'
+                                     +daily_dest_grid_file.rpartition('/')[2])
     if check_file_exists_size(daily_source_file):
         if not check_netcdf_file_corrupt(daily_source_file):
-            copy_file(daily_source_file, working_file1)
-        if check_file_exists_size(working_file1):
-            working1_data = netcdf.Dataset(working_file1, 'a')
-            working1_data.variables['time'][:] = (
-               working1_data.variables['time'][:] + 43200
+            copy_file(daily_source_file, prepped_file)
+        if check_file_exists_size(prepped_file):
+            prepped_data = netcdf.Dataset(prepped_file, 'a')
+            prepped_data.variables['time'][:] = (
+               prepped_data.variables['time'][:] + 43200
             )
-            working1_data.close()
+            prepped_data.close()
+            copy_file(prepped_file, daily_dest_file)
             run_shell_command(
                 [RUN_METPLUS, '-c', machine_conf,
                  '-c', regrid_data_plane_conf,
                  '-c', f"config.PROCESS_LIST='RegridDataPlane({hem})'"]
             )
-            copy_file(prepped_file, daily_dest_file)
+            copy_file(prepped_grid_file, daily_dest_grid_file)
     else:
         log_missing_file_truth(log_missing_file, daily_source_file,
                                f"OSI-SAF {hem.upper()}", date_dt)
