@@ -75,6 +75,16 @@ for stats in me rmse acc; do
   export err=$?; err_chk
 done
 
+# Cat the plotting log files
+log_dir=$DATA/logs/rtofs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+	for log_file in $log_dir/*; do
+		echo "Start: $log_file"
+		cat $log_file
+		echo "End: $log_file"
+	done
+fi
 
 # tar all plots together
 cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
