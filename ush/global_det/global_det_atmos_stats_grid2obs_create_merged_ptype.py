@@ -114,7 +114,7 @@ while valid_date_dt <= ENDDATE_dt:
                                            output_COMOUT_merged_ptype_file)
             else:
                 make_merged_ptype_output_file = False
-                print("WARNING: Cannot make merged ptype file "
+                print("NOTE: Cannot make merged ptype file "
                       +f"{output_DATA_merged_ptype_file} - "
                       +"missing one of the input files "
                       +f"{', '.join(missing_input_ptype_file_list)}")

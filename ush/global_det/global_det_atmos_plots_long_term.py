@@ -280,8 +280,8 @@ for model_num in list(yyyymm_acc_model_info_dict.keys()):
                 os.symlink(source_model_date_stat_file,
                            dest_model_date_stat_file)
             else:
-                acc_logger.warning(source_model_date_stat_file+" "
-                                    +"DOES NOT EXIST")
+                acc_logger.debug(source_model_date_stat_file+" "
+                                 +"DOES NOT EXIST")
         date_dt = date_dt + datetime.timedelta(days=1)
     acc_logger.info("Condensing model .stat files for job")
     gda_util.condense_model_stat_files(

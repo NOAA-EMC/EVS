@@ -115,7 +115,7 @@ while valid_date_dt <= ENDDATE_dt:
                         gda_util.copy_file(output_DATA_file,
                                            output_COMOUT_file)
         else:
-            print(f"WARNING: Cannot make anomaly file {output_DATA_file} - "
+            print(f"NOTE: Cannot make anomaly file {output_DATA_file} - "
                   +f"{input_file} does not exist")
             make_anomaly_output_file = False
         if make_anomaly_output_file:

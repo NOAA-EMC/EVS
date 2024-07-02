@@ -149,7 +149,7 @@ while valid_hr <= int(valid_hr_end):
                         gda_util.copy_file(output_DATA_file,
                                            output_COMOUT_file)
             else:
-                print("WARNING: Need 2 files to create daily average")
+                print("NOTE: Need 2 files to create daily average")
                 make_daily_avg_output_file = False
         if make_daily_avg_output_file:
             print(f"DATA Output File: {output_DATA_file}")

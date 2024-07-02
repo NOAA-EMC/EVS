@@ -2803,8 +2803,8 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
         +f"{vx_mask.lower()}.stat"
     )
     if len(model_stat_files) == 0:
-        logger.warning(f"No stat files matching "
-                       +f"{model_stat_files_wildcard}")
+        logger.debug(f"No stat files matching "
+                     +f"{model_stat_files_wildcard}")
     else:
         if not os.path.exists(output_file):
             logger.info(f"Condensing down stat files matching "
@@ -3038,12 +3038,12 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                     index=None, sep=' ', mode='w'
                 )
             else:
-                logger.warning(f"{condensed_model_file} does not exist")
+                logger.debug(f"{condensed_model_file} does not exist")
             if os.path.exists(filtered_model_stat_file):
                 logger.info(f"Filtered {model_dict['name']} file "
                             +f"at {filtered_model_stat_file}")
             else:
-                logger.warning(f"Could not create {filtered_model_stat_file}")
+                logger.debug(f"Could not create {filtered_model_stat_file}")
         model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
                                     columns=met_version_line_type_col_list)
         if read_filtered_stat_file:
@@ -3090,7 +3090,7 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                         [:]
                     )
             else:
-                logger.warning(f"{filtered_model_stat_file} does not exist")
+                logger.debug(f"{filtered_model_stat_file} does not exist")
         if model_num == 'model1':
             all_model_df = model_num_df
         else:
