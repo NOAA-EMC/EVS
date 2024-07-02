@@ -1320,9 +1320,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                         )
                                         for export_key in export_key_list:
                                             job.write('export '
-                                                      +export_key+'='
+                                                      +export_key+'="'
                                                       +model_fhr_lev_dict[runN]\
-                                                       [export_key]+'\n')
+                                                       [export_key]+'"\n')
                                         for cmd in verif_type_job_commands_list:
                                             job.write(cmd+'\n')
                                             job.write('export err=$?; err_chk'
