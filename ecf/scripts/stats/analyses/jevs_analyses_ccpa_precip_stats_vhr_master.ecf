@@ -1,4 +1,4 @@
-#PBS -N evs_analyses_ccpa_grid2obs_stats_vhr_%VHR%
+#PBS -N evs_analyses_ccpa_precip_stats_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%

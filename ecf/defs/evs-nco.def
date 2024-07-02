@@ -960,7 +960,7 @@ suite evs_nco
             task jevs_analyses_urma_precip_stats_vhr_10
               time 10:00
               edit VHR '10'
-            task jevs_analyses_urma_precip_stats_vhr_05
+            task jevs_analyses_urma_precip_stats_vhr_11
               time 11:00
               edit VHR '11'
             task jevs_analyses_ccpa_precip_stats_vhr_06

@@ -1,4 +1,4 @@
-#PBS -N evs_analyses_urma_grid2obs_stats_vhr_%VHR%
+#PBS -N evs_analyses_urma_precip_stats_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
