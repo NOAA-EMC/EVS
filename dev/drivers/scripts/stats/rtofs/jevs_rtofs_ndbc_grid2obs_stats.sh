@@ -1,9 +1,9 @@
-#PBS -N jevs_rtofs_argo_stats
+#PBS -N jevs_rtofs_ndbc_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=03:00:00
+#PBS -l walltime=06:00:00
 #PBS -l place=exclhost,select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
@@ -25,7 +25,7 @@ export SENDMAIL=YES
 export envir=prod
 export NET=evs
 export STEP=stats
-export RUN=argo
+export RUN=ndbc
 export VERIF_CASE=grid2obs
 export COMPONENT=rtofs
 
@@ -48,6 +48,7 @@ $HOMEevs/jobs/JEVS_RTOFS_STATS
 
 ######################################################################
 # Purpose: The job and task scripts work together to create stat
-#          files for RTOFS forecast verification using MET/METplus.
+#          files for RTOFS forecasts verified with NDBC data using
+#          MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ######################################################################

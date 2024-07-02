@@ -1,9 +1,9 @@
-#PBS -N jevs_rtofs_osisaf_stats
+#PBS -N jevs_rtofs_argo_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:00:00
+#PBS -l walltime=03:00:00
 #PBS -l place=exclhost,select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
@@ -25,8 +25,8 @@ export SENDMAIL=YES
 export envir=prod
 export NET=evs
 export STEP=stats
-export RUN=osisaf
-export VERIF_CASE=grid2grid
+export RUN=argo
+export VERIF_CASE=grid2obs
 export COMPONENT=rtofs
 
 source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
