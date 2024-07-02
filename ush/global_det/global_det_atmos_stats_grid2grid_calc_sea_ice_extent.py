@@ -117,7 +117,7 @@ CLIMO_CDF = 'NA'
 
 # Calculate observation sea-ice extent
 obs_file = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'data', 'osi_saf',
-                        'osi_saf.multi.'+hemisphere+'.'
+                        'osi_saf.multi.'+grid+'.'
                         +DATEm1_end_dt.strftime('%Y%m%d%H')
                         +'to'+DATE_end_dt.strftime('%Y%m%d%H')+'.nc')
 if gda_util.check_file_exists_size(obs_file):
