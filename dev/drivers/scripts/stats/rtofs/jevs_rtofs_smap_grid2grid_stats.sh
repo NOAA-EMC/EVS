@@ -1,4 +1,4 @@
-#PBS -N jevs_rtofs_aviso_stats
+#PBS -N jevs_rtofs_smap_grid2grid_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -25,7 +25,7 @@ export SENDMAIL=YES
 export envir=prod
 export NET=evs
 export STEP=stats
-export RUN=aviso
+export RUN=smap
 export VERIF_CASE=grid2grid
 export COMPONENT=rtofs
 
