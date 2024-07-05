@@ -121,11 +121,11 @@ then
  mkdir -p $DATA/$OBSDIR/nam.${obday}
   cpreq $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
 else
-  echo "WARNING: File $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum} is missing."
+  echo "WARNING: File $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} is missing."
   if [ $SENDMAIL = "YES" ]; then
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
    echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-   echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum}" >> mailmsg
+   echo "Missing file is $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}" >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $MAILTO
   fi
