@@ -1,0 +1,56 @@
+#PBS -N evs_analyses_ccpa_precip_stats_vhr_%VHR%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=00:30:00
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
+#PBS -l debug=true
+
+export model=evs
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+set -x
+export COMPONENT=analyses
+export STEP=stats
+
+module load PrgEnv-intel/${PrgEnvintel_ver}
+module load intel/${intel_ver}
+module load ve/evs/${ve_evs_ver}
+module load cray-mpich/${craympich_ver}
+module load cray-pals/${craypals_ver}
+module load libjpeg/${libjpeg_ver}
+module load grib_util/${grib_util_ver}
+module load wgrib2/${wgrib2_ver}
+module load gsl/${gsl_ver}
+module load met/${met_ver}
+module load metplus/${metplus_ver}
+module list
+
+############################################################
+# Specify environment variables
+############################################################
+export vhr=%VHR%
+export NET=evs
+export RUN=atmos
+export VERIF_CASE=precip
+export MODELNAME=ccpa
+export modsys=ccpa
+
+############################################################
+# Execute j-job
+############################################################
+$HOMEevs/jobs/JEVS_ANALYSES_STATS
+if [ $? -ne 0 ]; then
+   ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
+   ecflow_client --abort
+   exit
+fi
+
+%include <tail.h>
+%manual
+%end
