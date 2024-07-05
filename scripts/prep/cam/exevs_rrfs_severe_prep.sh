@@ -91,7 +91,8 @@ njob=$((njob+1))
 
 
 for member in {1..5}; do
-   MEMNUM="mem000${member}"
+   MEMNUM="${member}"
+
    echo "${USHevs}/${COMPONENT}/evs_rrfs_severe_prep.sh $MEMNUM $njob" >> $DATA/poescript
    njob=$((njob+1))
 done
