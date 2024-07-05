@@ -44,6 +44,7 @@ export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Define NET/RUN variables          
 ####################################
+export NET=${NET:-evs}
 export MODEL=${MODEL:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-nfcens}
@@ -56,6 +57,15 @@ export MOD2NAM=echo $MODEL2NAME | tr '[a-z]' '[A-Z]'
 export OBTYPE=${OBTYPE:-GDAS}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
+
+###################################
+# Set EVS directories               
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
 
 ####################################
 # Define COMIN/COMOUT variables     

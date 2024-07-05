@@ -31,9 +31,21 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 
 ####################################
-# Set EVS directories               
+# Define NET/RUN variables          
 ####################################
 export NET=${NET:-evs}
+export MODEL=${MODEL:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-nfcens}
+export MODELNAME=${MODELNAME:-nfcens}
+export MODNAM=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
+export OBTYPE=${OBTYPE:-GDAS}
+export RUN=${RUN:-wave}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+
+####################################
+# Set EVS directories               
+####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
@@ -43,6 +55,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 ####################################
 # Define NET/RUN variables          
 ####################################
+export NET=${NET:-evs}
 export MODEL=${MODEL:-evs}
 export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-nfcens}
