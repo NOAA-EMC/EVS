@@ -194,6 +194,34 @@ if [ $SENDDBN = YES ]; then
 	done
 fi
 
+
+#########################################
+## copy log files into logs and cat them
+#########################################
+
+cd ${DATA}
+mkdir -p ${DATA}/logs
+log_dir=$DATA/logs
+
+extns='out log'
+for extn in ${extns} ; do
+	count=$(find ${DATA} -type f -name "*.${extn}"|wc -l)
+	if [ $count != 0 ] ; then
+		cp ${DATA}/*.${extn} ${log_dir}
+
+	fi
+done	
+
+
+log_file_count=$(find ${DATA} -type f -name "*.out" -o -name ".log" |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+	for log_file in $log_dir/*; do
+		echo "Start: $log_file"
+		cat $log_file
+		echo "End: $log_file"
+	done
+fi
+
 # --------------------------------------------------------------------------- #
 # Ending output                                                                
 
