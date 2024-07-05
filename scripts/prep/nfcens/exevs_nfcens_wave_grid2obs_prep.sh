@@ -49,6 +49,7 @@ for HH in ${HHs} ; do
     COMINfilename="${COMINnfcens}/${MODELNAME}.${INITDATE}/HTSGW_mean.t${HH}z.grib2"
     DATAfilename="${DATA}/gribs/HTSGW_mean.${INITDATE}.t${HH}z.grib2"
     if [ ! -s $COMINfilename ]; then
+	    echo "WARNING: $COMINfilename  does not exist"
 	    if [ $SENDMAIL = YES ]; then
 		    export subject="NFCENS Forecast Data Missing for EVS ${COMPONENT}"
 		    echo "WARNING: No NFCENS forecast was available for ${INITDATE}${HH}" > mailmsg
@@ -100,6 +101,7 @@ for HH in ${HHs} ; do
 		fnmoc_old_name="wave_${INITDATE}${HH}f${FCST}"
 		fnmoc_new_name="wave_${INITDATE}${HH}.f${FCST}.grib2"
 		if [ ! -s $COMINfilenamefnmoc ]; then
+			echo "WARNING: $COMINfilenamefnmoc does not exist"
 			if [ $SENDMAIL = YES ]; then
 				export subject="FNMOC Forecast Data Missing for EVS ${COMPONENT}"
 				echo "WARNING: No FNMOC forecast was available for ${INITDATE}" > mailmsg
@@ -132,6 +134,7 @@ for HH in ${HHs} ; do
 		COMINfilenamegefs="${COMINgefs}/gefs.${INITDATE}/${HH}/wave/gridded/gefs.wave.t${HH}z.mean.global.0p25.f${FCST}.grib2"
 		DATAfilenamegefs="${DATA}/gribs/gefs.wave.${INITDATE}.t${HH}z.mean.global.0p25.f${FCST}.grib2"
 		if [ ! -s $COMINfilenamegefs ]; then
+			echo "WARNING: $COMINfilenamegefs does not exist"
 			if [ $SENDMAIL = YES ]; then
 				export subject="GEFS wave Forecast Data Missing for EVS ${COMPONENT}"
 				echo "WARNING: No GEFS wave forecast was available for ${INITDATE}${HH}" > mailmsg
