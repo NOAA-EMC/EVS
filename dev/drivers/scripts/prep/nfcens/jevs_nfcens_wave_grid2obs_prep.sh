@@ -6,7 +6,6 @@
 #PBS -l walltime=00:15:00
 #PBS -l place=shared,select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
-#PBS -V
 
 set -x 
 
@@ -43,7 +42,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-YES}
-export SENDMAIL=YES
+export SENDMAIL=${SENDMAIL:-YES}
 
 export MAILTO='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
 
