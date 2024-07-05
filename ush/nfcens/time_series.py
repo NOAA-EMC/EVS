@@ -575,7 +575,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             ]
     else:
         handles = []
-        #labels = []
         labels = [model_list[0].upper()]
     handles = []
     labels = []
