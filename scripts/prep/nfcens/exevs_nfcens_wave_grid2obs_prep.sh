@@ -49,7 +49,7 @@ for HH in ${HHs} ; do
     COMINfilename="${COMINnfcens}/${MODELNAME}.${INITDATE}/HTSGW_mean.t${HH}z.grib2"
     DATAfilename="${DATA}/gribs/HTSGW_mean.${INITDATE}.t${HH}z.grib2"
     if [ ! -s $COMINfilename ]; then
-	    echo "WARNING: $COMINfilename  does not exist"
+	    echo "WARNING: $COMINfilename does not exist"
 	    if [ $SENDMAIL = YES ]; then
 		    export subject="NFCENS Forecast Data Missing for EVS ${COMPONENT}"
 		    echo "WARNING: No NFCENS forecast was available for ${INITDATE}${HH}" > mailmsg
