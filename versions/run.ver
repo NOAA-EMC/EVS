@@ -65,4 +65,5 @@ export rtofs_ver=v2.3
 export sref_ver=v7.1
 export st4_ver=v4.1
 export urma_ver=v2.10
+export fnmoc_ver=v1.1
 
