@@ -55,16 +55,17 @@ export VDATE=${VDATE:-$PDYm2}
 export NET=${NET:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-rtofs}
+export RUNsmall=${RUNsmall:-ocean}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}
-export COMOUTsmall=${COMOUTsmall:-$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE}
+export COMOUTsmall=${COMOUTsmall:-$COMOUT/$STEP/$COMPONENT/${RUNsmall}.$VDATE}/$RUN/${VERIF_CASE}
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 
 mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
 
-$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 
 export err=$?; err_chk
 

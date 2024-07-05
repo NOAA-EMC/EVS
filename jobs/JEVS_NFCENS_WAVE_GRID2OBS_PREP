@@ -24,15 +24,6 @@ export INITDATE=${INITDATE:-${PDYm1}}
 export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ####################################
-# Set EVS directories               
-####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export USHevs=${USHevs:-$HOMEevs/ush}
-
-####################################
 # Set data directives
 ####################################
 export SENDECF=${SENDECF:-YES}
@@ -48,16 +39,33 @@ export MODEL=${MODEL:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-nfcens}
 export MODELNAME=${MODELNAME:-nfcens}
+export MODEL1NAME=${MODEL1NAME:-gefs}
+export MODEL2NAME=${MODEL2NAME:-fnmoc}
 export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
+export MOD1NAM=echo $MODE1LNAME | tr '[a-z]' '[A-Z]'
+export MOD2NAM=echo $MODEL2NAME | tr '[a-z]' '[A-Z]'
 export OBTYPE=${OBTYPE:-GDAS}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
+
+###################################
+# Set EVS directories               
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
 
 ####################################
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMINnfcens=${COMINnfcens:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${nfcens_ver})} 
+export COMINgefs=${COMINngefs:-$(compath.py ${envir}/com/${MODEL1NAME}/${gefs_ver})} 
+export COMINfnmoc=${COMINfnmoc:-$(compath.py ${envir}/com/${MODEL2NAME}_${RUN}/${fnmoc_ver})} 
+
+
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}/${RUN}}
 export ARCmodel=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
