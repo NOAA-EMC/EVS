@@ -53,19 +53,6 @@ export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
 ####################################
-# Define NET/RUN variables          
-####################################
-export NET=${NET:-evs}
-export MODEL=${MODEL:-evs}
-export STEP=${STEP:-plots}
-export COMPONENT=${COMPONENT:-nfcens}
-export MODELNAME=${MODELNAME:-nfcens}
-export MODNAM=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
-export OBTYPE=${OBTYPE:-GDAS}
-export RUN=${RUN:-wave}
-export VERIF_CASE=${VERIF_CASE:-grid2obs}
-
-####################################
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
