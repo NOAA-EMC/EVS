@@ -31,15 +31,6 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 
 ####################################
-# Set EVS directories               
-####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export USHevs=${USHevs:-$HOMEevs/ush}
-
-####################################
 # Define NET/RUN variables          
 ####################################
 export NET=${NET:-evs}
@@ -53,11 +44,22 @@ export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 
 ####################################
+# Set EVS directories               
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+####################################
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 export EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
+export EVSINgefs=${COMIN}/stats/${COMPONENT}/${MODEL1NAME}.${VDATE}
+export EVSINfnmoc=${COMIN}/stats/${COMPONENT}/${MODEL2NAME}.${VDATE}
 export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}
 
 # make the directory where the plots will be kept
