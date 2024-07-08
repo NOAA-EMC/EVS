@@ -6,9 +6,11 @@ export MetOnMachine=${MetOnMachine:-$MET_ROOT}
 export LEAD_List="-lead 000000 -lead 120000 -lead 240000 -lead 360000 -lead 480000 -lead 600000 -lead 720000 -lead 840000 -lead 960000 -lead 1080000 -lead 1200000 -lead 1320000 -lead 1440000 -lead 1560000 -lead 1680000"
 
 export stormYear=${YYYY}
-export basinlist="al ep wp"
-export numlist="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \
-	        21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40"
+export basinlist="al"
+#export basinlist="al ep wp"
+export numlist="13"
+#export numlist="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \
+#	        21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40"
 
 for bas in $basinlist; do
 ### bas do loop start
@@ -77,18 +79,18 @@ echo "${stormBasin}, ${stormNumber}, ${stormYear}, ${stormName}"
 #---get the model forecast tracks "GEFS/EENS/CENS/UENS members" from archive file "tracks.atcfunix.${YY23}"
 grep "${stbasin}, ${stormNumber}" ${COMINtrack} > tracks.atcfunix.${YY23}_${stormBasin}${stormNumber}
 grep "03, AP" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} > a${stormBasin}${stormNumber}${stormYear}.dat
-grep "03, EN" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
-grep "03, EP" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
-grep "03, CP" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
-grep "03, UE" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+#grep "03, EN" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+#grep "03, EP" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+#grep "03, CP" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+#grep "03, UE" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} > a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, AEMN/03, MD01/' a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, EEMN/03, MD02/' a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, CEMN/03, MD03/' a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, UKMN/03, MD04/' a${stormBasin}${stormNumber}${stormYear}.dat
-#export Model_List="MD01,MD02,MD03"
-export Model_List="MD01,MD02,MD03,MD04"
-#export Model_Plot="GEFS,EENS,CENS"
-export Model_Plot="GEFS,EENS,CENS,UENS"
+export Model_List="MD01"
+#export Model_List="MD01,MD02,MD03,MD04"
+export Model_Plot="GEFS"
+#export Model_Plot="GEFS,EENS,CENS,UENS"
 
 #---get the $startdate, $enddate[YYMMDDHH] from the best track file  
 echo $(head -n 1 ${bdeckfile}) > head.txt
