@@ -120,7 +120,7 @@ for HH in ${HHs} ; do
                     			cp -v $DATAfilenamefnmoc_new ${ARCmodel}/.
                 		fi
 			else
-				echo "FNMOC Forecast Data file is corrupted"
+				echo "WARNING: FNMOC Forecast Data file does not have required wave field."
 			fi
 		fi
 		fcst=$(( $fcst+ 6 ))
