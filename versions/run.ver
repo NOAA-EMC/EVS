@@ -45,6 +45,7 @@ export aqm_ver=v7.0
 export ccpa_ver=v4.2
 export cfs_ver=v2.3
 export cmc_ver=v1.2
+export fnmoc_ver=v1.1
 export gefs_ver=v12.3
 export gfs_ver=v16.3
 export glwu_ver=v1.1
@@ -65,5 +66,4 @@ export rtofs_ver=v2.3
 export sref_ver=v7.1
 export st4_ver=v4.1
 export urma_ver=v2.10
-export fnmoc_ver=v1.1
 
