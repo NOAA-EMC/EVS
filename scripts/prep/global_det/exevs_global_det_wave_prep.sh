@@ -65,8 +65,8 @@ for OBS in $OBSNAME; do
     if [ $OBS == "prepbufr_gdas" ]; then
         for ihour in 00 06 12 18; do
             input_prepbufr_file=${COMINobsproc}/gdas.${INITDATE}/${ihour}/atmos/gdas.t${ihour}z.prepbufr
-            tmp_pb2nc_file=${DATA}/${OBS}/gdas.${INITDATE}${ihour}.nc
-            output_pb2nc_file=${COMOUT}.${INITDATE}/${OBS}/gdas.${INITDATE}${ihour}.nc
+            tmp_pb2nc_file=${DATA}/${OBS}/gdas.SFCSHP.${INITDATE}${ihour}.nc
+            output_pb2nc_file=${COMOUT}.${INITDATE}/${OBS}/gdas.SFCSHP.${INITDATE}${ihour}.nc
             if [ ! -s $output_pb2nc_file ]; then
                 if [ ! -s $input_prepbufr_file ]; then
                     echo "WARNING: ${input_prepbufr_file} does not exist"
@@ -79,10 +79,15 @@ for OBS in $OBSNAME; do
                     fi
                 else
                     export init_hour=${ihour}
-                    run_metplus.py \
-                    -c ${PARMevs}/metplus_config/machine.conf \
-                    -c ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_grid2obs/PB2NC_obsPrepbufrGDAS.conf
+                    # Split by subset
+                    split_by_subset $input_prepbufr_file
                     export err=$?; err_chk
+                    if [ -s ${DATA}/SFCSHP ]; then
+                        run_metplus.py \
+                        -c ${PARMevs}/metplus_config/machine.conf \
+                        -c ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_grid2obs/PB2NC_obsPrepbufrGDAS.conf
+                        export err=$?; err_chk
+                    fi
                     if [ -s $tmp_pb2nc_file ]; then
                         chmod 640 $tmp_pb2nc_file
                         chgrp rstprod $tmp_pb2nc_file

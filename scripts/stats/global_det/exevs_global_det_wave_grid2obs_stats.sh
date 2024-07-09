@@ -72,8 +72,8 @@ echo ' '
 echo 'Getting GDAS pb2nc files'
 for valid_hour in ${valid_hours} ; do
     valid_hour2=$(printf "%02d" "${valid_hour}")
-    input_pb2nc_gdas_file=$COMIN/prep/${COMPONENT}/wave.${VDATE}/prepbufr_gdas/gdas.${VDATE}${valid_hour2}.nc
-    tmp_pb2nc_gdas_file=${DATA}/ncfiles/gdas.${VDATE}${valid_hour2}.nc
+    input_pb2nc_gdas_file=$COMIN/prep/${COMPONENT}/wave.${VDATE}/prepbufr_gdas/gdas.SFCSHP.${VDATE}${valid_hour2}.nc
+    tmp_pb2nc_gdas_file=${DATA}/ncfiles/gdas.SFCSHP.${VDATE}${valid_hour2}.nc
     if [[ -s $input_pb2nc_gdas_file ]]; then
         echo "Copying $input_pb2nc_gdas_file to $tmp_pb2nc_gdas_file"
         cp -v $input_pb2nc_gdas_file $tmp_pb2nc_gdas_file
@@ -92,8 +92,8 @@ done
 ####################
 # quick error check
 ####################
-nc=$(ls ${DATA}/ncfiles/gdas.${VDATE}*.nc | wc -l | awk '{print $1}')
-echo " Found ${DATA}/ncfiles/gdas.${VDATE}*.nc for ${VDATE}"
+nc=$(ls ${DATA}/ncfiles/gdas.SFCSHP.${VDATE}*.nc | wc -l | awk '{print $1}')
+echo " Found ${DATA}/ncfiles/gdas.SFCSHP.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} GDAS pb2nc files for valid date ${VDATE}"
 else
@@ -158,7 +158,7 @@ for valid_hour in ${valid_hours} ; do
         if [[ -s $tmp_model_file ]]; then
             for OBSNAME in GDAS NDBC; do
                 if [ $OBSNAME = GDAS ]; then
-                    tmp_OBSNAME_file=${DATA}/ncfiles/gdas.${VDATE}${valid_hour2}.nc
+                    tmp_OBSNAME_file=${DATA}/ncfiles/gdas.SFCSHP.${VDATE}${valid_hour2}.nc
                 elif [ $OBSNAME = NDBC ]; then
                     tmp_OBSNAME_file=${DATA}/ncfiles/ndbc.${VDATE}.nc
                 fi
