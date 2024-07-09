@@ -1249,6 +1249,9 @@ def prep_prod_prepbufr_file(source_file, dest_file, date_dt, prepbufr_type,
          Returns:
     """
     # Environment variables and executables
+    SPLIT_BY_SUBSET = os.path.join(
+        os.environ['bufr_ROOT'], 'bin', 'split_by_subset'
+    )
     RUN_METPLUS = os.path.join(
         os.environ['METPLUS_PATH'], 'ush','run_metplus.py'
     )
@@ -1266,18 +1269,23 @@ def prep_prod_prepbufr_file(source_file, dest_file, date_dt, prepbufr_type,
                                 +f"{prepbufr_type}.{date_dt:%Y%m%d%H}")
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +dest_file.rpartition('/')[2])
+    if prepbufr_type == 'gdas':
+        split_file = os.path.join(os.getcwd(), 'ADPUPA')
+    elif prepbufr_type == 'nam':
+        split_file = os.path.join(os.getcwd(), 'ADPSFC')
     # Prep file
     if check_file_exists_size(source_file):
         copy_file(source_file, working_file)
         if os.path.exists(working_file):
             run_shell_command(['chmod', '750', working_file])
             run_shell_command(['chgrp', 'rstprod', working_file])
+            run_shell_command([SPLIT_BY_SUBSET, working_file])
     else:
         if not os.path.exists(log_missing_file):
             log_missing_file_truth(log_missing_file, source_file,
                                    f"Prepbufr {prepbufr_type.upper()}",
                                    date_dt)
-    if check_file_exists_size(working_file):
+    if check_file_exists_size(split_file):
         run_shell_command(
             [RUN_METPLUS, '-c', machine_conf,
              '-c', pb2nc_conf,

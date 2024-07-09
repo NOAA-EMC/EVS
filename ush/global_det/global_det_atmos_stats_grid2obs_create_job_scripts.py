@@ -179,7 +179,7 @@ generate_stats_jobs_dict = {
     'pres_levs': {
         'GeoHeight': {'env': {'prepbufr': 'gdas',
                               'obs_window': '1800',
-                              'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                              'msg_type': "'ADPUPA'",
                               'var1_fcst_name': 'HGT',
                               'var1_fcst_levels': ("'P1000, P925, P850, "
                                                    +"P700, P500, P400, "
@@ -201,7 +201,7 @@ generate_stats_jobs_dict = {
                                    )]},
         'RelHum': {'env': {'prepbufr': 'gdas',
                            'obs_window': '1800',
-                           'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                           'msg_type': "'ADPUPA'",
                            'var1_fcst_name': 'RH',
                            'var1_fcst_levels': ("'P1000, P925, P850, "
                                                 +"P700, P500, P400, "
@@ -223,7 +223,7 @@ generate_stats_jobs_dict = {
                                 )]},
         'SpefHum': {'env': {'prepbufr': 'gdas',
                             'obs_window': '1800',
-                            'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                            'msg_type': "'ADPUPA'",
                             'var1_fcst_name': 'SPFH',
                             'var1_fcst_levels': ("'P1000, P925, P850, "
                                                  +"P700, P500, P400, "
@@ -249,7 +249,7 @@ generate_stats_jobs_dict = {
                                  )]},
         'Temp': {'env': {'prepbufr': 'gdas',
                          'obs_window': '1800',
-                         'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                         'msg_type': "'ADPUPA'",
                          'var1_fcst_name': 'TMP',
                          'var1_fcst_levels': ("'P1000, P925, P850, "
                                               +"P700, P500, P400, "
@@ -271,7 +271,7 @@ generate_stats_jobs_dict = {
                               )]},
         'UWind': {'env': {'prepbufr': 'gdas',
                           'obs_window': '1800',
-                          'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                          'msg_type': "'ADPUPA'",
                           'var1_fcst_name': 'UGRD',
                           'var1_fcst_levels': ("'P1000, P925, P850, "
                                                +"P700, P500, P400, "
@@ -293,7 +293,7 @@ generate_stats_jobs_dict = {
                                )]},
         'VWind': {'env': {'prepbufr': 'gdas',
                           'obs_window': '1800',
-                          'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                          'msg_type': "'ADPUPA'",
                           'var1_fcst_name': 'VGRD',
                           'var1_fcst_levels': ("'P1000, P925, P850, "
                                                +"P700, P500, P400, "
@@ -315,7 +315,7 @@ generate_stats_jobs_dict = {
                                )]},
         'VectorWind': {'env': {'prepbufr': 'gdas',
                                'obs_window': '1800',
-                               'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                               'msg_type': "'ADPUPA'",
                                'var1_fcst_name': 'UGRD',
                                'var1_fcst_levels': ("'P1000, P925, P850, "
                                                     +"P700, P500, P400, "
@@ -435,7 +435,7 @@ generate_stats_jobs_dict = {
     'sfc': {
         'CAPEMixedLayer': {'env': {'prepbufr': 'gdas',
                                    'obs_window': '1800',
-                                   'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                                   'msg_type': "'ADPUPA'",
                                    'var1_fcst_name': 'CAPE',
                                    'var1_fcst_levels': "'P90-0'",
                                    'var1_fcst_options': ("'cnt_thresh = "
@@ -461,7 +461,7 @@ generate_stats_jobs_dict = {
                                         )]},
         'CAPESfcBased': {'env': {'prepbufr': 'gdas',
                                  'obs_window': '1800',
-                                 'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                                 'msg_type': "'ADPUPA'",
                                  'var1_fcst_name': 'CAPE',
                                  'var1_fcst_levels': 'Z0',
                                  'var1_fcst_options': ("'cnt_thresh = "
@@ -581,7 +581,7 @@ generate_stats_jobs_dict = {
                                     )]},
         'PBLHeight': {'env': {'prepbufr': 'gdas',
                               'obs_window': '1800',
-                              'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                              'msg_type': "'ADPUPA'",
                               'var1_fcst_name': 'HPBL',
                               'var1_fcst_levels': 'L0',
                               'var1_fcst_options': '',
