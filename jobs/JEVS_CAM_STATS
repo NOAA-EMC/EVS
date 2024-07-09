@@ -123,14 +123,15 @@ export EVSINspclsr=${EVSINspclsr:-$COMIN/prep/$COMPONENT}
 
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 
-mkdir -p $COMOUT
+[[ ! -d $COMOUT ]] && mkdir -p $COMOUT
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 if [ $VERIF_CASE = severe ]; then
    mkdir -p $COMOUTfinal
 else
-   mkdir -p $COMOUTfinal $COMOUTsmall
+   [[ ! -d $COMOUTfinal ]] && mkdir -p $COMOUTfinal 
+   [[ ! -d $COMOUTsmall ]] && mkdir -p $COMOUTsmall
 fi
 
 ####################################

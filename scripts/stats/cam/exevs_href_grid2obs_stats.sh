@@ -2,7 +2,9 @@
 #####################################################################
 # Purpose:   Setup some paths and run href grid2obs stat ush scripts
 # 
-# Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+# Last updated 
+#              06/25/2024: add restart: by  Binbin Zhou, Lynker@EMC/NCEP
+#              10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 #####################################################################
 set -x
 
@@ -45,6 +47,15 @@ export vday=$VDATE
 #  domain = conus or alaska or all
 export domain="all"
 #export domain="HI"
+
+export COMOUTrestart=$COMOUTsmall/restart
+[[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
+[[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
+[[ ! -d $COMOUTrestart/prepare/prepbufr.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/prepbufr.${vday}
+[[ ! -d $COMOUTrestart/system ]]  &&  mkdir -p $COMOUTrestart/system
+[[ ! -d $COMOUTrestart/profile ]] &&  mkdir -p $COMOUTrestart/profile
+[[ ! -d $COMOUTrestart/product ]] &&  mkdir -p $COMOUTrestart/product
+
 
 #***************************************
 # Prepare the prepbufr data

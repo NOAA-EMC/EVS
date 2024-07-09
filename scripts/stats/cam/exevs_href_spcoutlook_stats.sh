@@ -2,7 +2,9 @@
 ##############################################################
 # Purpose:   Setup some paths and run href spcoutlook job
 # 
-# Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+# Last updated 
+#       05/04/2024: add restart, Binbin Zhou, Lynker@EMC/NCEP
+#       10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 ##############################################################
 set -x
 
@@ -51,6 +53,14 @@ export SPCoutlookMask=$EVSINspcotlk/$MODELNAME/spc.$VDATE
 #  domain = conus or alaska or all
 export domain="all"
 #export domain="HI"
+
+export COMOUTrestart=$COMOUTsmall/restart
+[[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
+[[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
+[[ ! -d $COMOUTrestart/prepare/prepbufr.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/prepbufr.${vday}
+[[ ! -d $COMOUTrestart/spcoutlook ]] &&  mkdir -p $COMOUTrestart/spcoutlook
+
+
 
 #*********************************
 # Prepare prepbufr data files

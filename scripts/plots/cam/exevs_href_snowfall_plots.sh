@@ -1,7 +1,9 @@
 #!/bin/ksh
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href snowfall plotting python script
-# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+# Last updated:
+#              07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP 
+#              05/30/2024, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
 set -x 
 
@@ -17,6 +19,10 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
+restart=$COMOUT/restart/$past_days/href_snowfall_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi 
 
 export eval_period='TEST'
 
@@ -55,6 +61,10 @@ while [ $n -le $past_days ] ; do
 done 
 
 export plot_dir=$DATA/out/precip/${valid_beg}-${valid_end}
+#For restart:
+if [ ! -d $plot_dir ] ; then
+  mkdir -p $plot_dir
+fi
 
 verif_case=precip
 verif_type=ccpa
@@ -65,7 +75,9 @@ verif_type=ccpa
 > run_all_poe.sh
 
 for VX_MASK_LIST in $VX_MASK_LISTs ; do
- 	
+ 
+   domain=`echo $VX_MASK_LIST | tr '[A-Z]' '[a-z]'`
+
 for stats in ets_fbias ratio_pod_csi fss ; do 
  if [ $stats = ets_fbias ] ; then
     stat_list='ets, fbias'
@@ -93,6 +105,8 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
   for VAR in $VARs ; do
 
+     var=`echo $VAR | tr '[A-Z]' '[a-z]'`
+
      for FCST_LEVEL_value in A06 A24 ; do
  
 	 OBS_LEVEL_value=$FCST_LEVEL_value
@@ -100,9 +114,11 @@ for stats in ets_fbias ratio_pod_csi fss ; do
     	 if [ $FCST_LEVEL_value  = A06 ] ; then
             export fcst_leads='6,12,18,24,30,36,42,48'
             export fcst_valid_hour='0,6,12,18'
+	    valid_rst=00z_06z_12z_18z
          elif [ $FCST_LEVEL_value = A24 ] ; then
             export fcst_leads='24,30,36,42,48'
             export fcst_valid_hour='0,12'
+	    valid_rst=00z_12z
          fi
 
 
@@ -117,6 +133,12 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 	 # ****************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh  
 
+      #***********************************************************************************************************************************
+      #  Check if this sub-job has been completed in the previous run for restart
+      if [ ! -e $restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.completed ] ; then
+      #***********************************************************************************************************************************
+      
+	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh 
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
         echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
         echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
@@ -158,8 +180,19 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
 
+	 #Save for restart
+	 echo "if [ -s ${plot_dir}/${score_type}_regional_${domain}_valid_${valid_rst}_*${var}*.png ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+         echo "  cp -v ${plot_dir}/${score_type}_regional_${domain}_valid_${valid_rst}_*${var}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+	 echo "  >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh" >> run_all_poe.sh
+
+	else
+	 #Restart from existing png files of previous run
+	 cp  $restart/${score_type}_regional_${domain}_valid_${valid_rst}_*${var}*.png ${plot_dir}/.
+        fi
 
       done #end of line_type
 
@@ -185,6 +218,7 @@ else
   ${DATA}/run_all_poe.sh
 fi
 export err=$?; err_chk
+
 
 #**************************************************
 # Change plot file names to meet the EVS standard

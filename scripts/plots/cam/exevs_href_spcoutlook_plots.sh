@@ -2,7 +2,9 @@
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href spcoutlook plotting python 
 #          script
-# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+# Last updated: 
+#               07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP
+#               05/30/2025, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
 set -x 
 
@@ -18,6 +20,10 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
+restart=$COMOUT/restart/$past_days/href_spcoutlook_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi
 
 export eval_period='TEST'
 
@@ -56,6 +62,10 @@ export fcst_init_hour="0,6,12,18"
 export fcst_valid_hour="0,12"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+#For restart:
+if [ ! -d $plot_dir ] ; then
+  mkdir -p $plot_dir
+fi
 
 export fcst_init_hour="0,6,12,18"
 export fcst_valid_hour="0,12"
@@ -68,6 +78,7 @@ verif_case=grid2obs
 # Total SPC outlook area masks = 6 x 3 = 18
 #********************************************
 VX_MASK_LIST="DAY1_MRGL,  DAY2_MRGL, DAY3_MRGL, DAY1_TSTM,  DAY2_TSTM, DAY3_TSTM,  DAY1_SLGT,  DAY2_SLGT, DAY3_SLGT, DAY1_ENH,  DAY2_ENH, DAY3_ENH, DAY1_MDT,  DAY2_MDT, DAY3_MDT, DAY1_HIGH,  DAY2_HIGH, DAY3_HIGH"
+
 
 #*********************************************
 # Build a POE file to collect sub-jobs
@@ -90,6 +101,12 @@ for stats in csi_fbias ratio_pod_csi ; do
  fi   
 
  for score_type in $score_types ; do
+ 
+  if [ $score_type = lead_average ] ; then
+    valid_rst=valid_all_times
+  else
+    valid_rst=valid_00z_12z
+  fi
 
   #no space between fcst_lead hour, so take it as one string! 	 
   export fcst_leads="6,12,15,24,30,36,42,48"
@@ -102,8 +119,10 @@ for stats in csi_fbias ratio_pod_csi ; do
 	    
        if [ $VAR = CAPEsfc ] ; then
           FCST_LEVEL_values="L0"
+	  var_rst=cape
        elif [ $VAR = MLCAPE ] ; then
 	  FCST_LEVEL_values="ML"
+	  var_rst=mlcape
        fi 	  
 
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
@@ -116,9 +135,14 @@ for stats in csi_fbias ratio_pod_csi ; do
 	 #  Build sub-jobs
 	 #****************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
+       #***********************************************************************************************************************************
+       #  Check if this sub-job has been completed in the previous run for restart
+       if [ ! -e $restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.completed ] ; then
+       #***********************************************************************************************************************************
 
         verif_type=conus_sfc
 
+	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
         echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
         echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
@@ -150,10 +174,21 @@ for stats in csi_fbias ratio_pod_csi ; do
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
-         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+
+	 #Save for restart
+         echo "if [ -s ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "  cp -v ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "  >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+
+       else
+	 #Restart from png files of previous runs
+         cp $restart/${score_type}_regional_*_${valid_rst}_${var_rst}*.png ${plot_dir}/.
+       fi
 
       done #end of line_type
 
