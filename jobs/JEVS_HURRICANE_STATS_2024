@@ -134,7 +134,7 @@ postmsg "$jlogfile" "$msg"
 
 #############################################################
 # Execute the script
-${SCRIPTSevs}/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh.2024
+${SCRIPTSevs}/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_2024.sh
 export err=$?; err_chk
 
 #############################################################
