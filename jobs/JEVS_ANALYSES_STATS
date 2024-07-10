@@ -47,7 +47,12 @@ export cycle=t${vhr}z
 setpdy.sh
 . ./PDY
 
-export VDATE=${VDATE:-$PDYm1}
+if [ $VERIF_CASE = grid2obs ]; then
+  export VDATE=${VDATE:-$PDYm1}
+else
+  export VDATE=${VDATE:-$PDYm3}
+fi
+
 
 ####################################
 ## Define NET/RUN variables
@@ -70,6 +75,8 @@ export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/$evs_ver)}
 export COMINrtma=${COMINrtma:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMINurma=${COMINurma:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+export DCOMIN=${DCOMIN:-${DCOMROOT}}
+export EVSINccpa=${EVSINccpa:-${COMIN}/prep/cam}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 mkdir -p $COMOUT
 export COMOUTsmall=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}

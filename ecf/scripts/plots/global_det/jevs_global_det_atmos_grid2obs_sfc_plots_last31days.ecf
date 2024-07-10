@@ -1,0 +1,69 @@
+#PBS -N evs_global_det_atmos_grid2obs_sfc_plots_last31days
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=00:50:00
+#PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=500GB
+#PBS -l debug=true
+
+export model=evs
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+set -x
+export COMPONENT=global_det
+export STEP=plots
+
+module load PrgEnv-intel/${PrgEnvintel_ver}
+module load intel/${intel_ver}
+module load ve/evs/${ve_evs_ver}
+module load gsl/${gsl_ver}
+module load netcdf/${netcdf_ver}
+module load cray-pals/${craypals_ver}
+module load cfp/${cfp_ver}
+module load libjpeg/${libjpeg_ver}
+module load libpng/${libpng_ver}
+module load zlib/${zlib_ver}
+module load jasper/${jasper_ver}
+module load udunits/${udunits_ver}
+module load grib_util/${grib_util_ver}
+module load wgrib2/${wgrib2_ver}
+module load imagemagick/${imagemagick_ver}
+module load met/${met_ver}
+module load metplus/${metplus_ver}
+module list
+
+############################################################
+# Specify environment variables
+############################################################
+if [ -n "%VHR:%" ]; then
+  export vhr=${vhr:-%VHR:%}
+else
+  export vhr=00
+fi
+export nproc=128
+export USE_CFP=YES
+export NET=evs
+export RUN=atmos
+export VERIF_CASE=grid2obs
+export VERIF_TYPE=sfc
+export NDAYS=31
+export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
+
+############################################################
+# Execute j-job
+############################################################
+$HOMEevs/jobs/JEVS_GLOBAL_DET_PLOTS
+if [ $? -ne 0 ]; then
+   ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
+   ecflow_client --abort
+   exit
+fi
+
+%include <tail.h>
+%manual
+%end

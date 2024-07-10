@@ -575,8 +575,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             ]
     else:
         handles = []
-        #labels = []
         labels = [model_list[0].upper()]
+    handles = []
+    labels = []
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -735,8 +736,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 labels+=[
                     f'{model_plot_name} ({metric1_mean_fmt_string})'
                 ]
-#        else:
-#            labels+=[f'{model_plot_name}']
+        else:
+            labels+=[f'{model_plot_name}']
 # Removes the model legend after all the metrics
 
     # Zero line
