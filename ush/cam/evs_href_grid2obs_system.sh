@@ -123,7 +123,7 @@ for dom in CONUS Alaska ; do
 	 echo "  [[ \$? = 0 ]] &&  >$COMOUTrestart/system/run_href_${domain}.${valid_at}_system.GenEnsProd.completed" >> run_href_${domain}.${valid_at}_system.sh
 	 echo "else " >> run_href_${domain}.${valid_at}_system.sh
 	 echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}_system.sh
-	 echo " cp $COMOUTrestart/GenEnsProd*CONUS*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}_system.sh
+	 echo " cp $COMOUTrestart/system/GenEnsProd*CONUS*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}_system.sh
          echo "fi" >> run_href_${domain}.${valid_at}_system.sh
 
 	 echo "if [ ! -e $COMOUTrestart/system/run_href_${domain}.${valid_at}_system.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}_system.sh

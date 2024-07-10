@@ -117,7 +117,7 @@ for dom in $domains ; do
         echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 	echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  cp $COMOUTrestart/GenEnsProd*CONUS*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "  cp $COMOUTrestart/profile/GenEnsProd*CONUS*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 	echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
@@ -213,7 +213,7 @@ for dom in $domains ; do
         echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  cp $COMOUTrestart/GenEnsProd*Alaska*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  cp $COMOUTrestart/profile/GenEnsProd*Alaska*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
@@ -306,7 +306,7 @@ for dom in $domains ; do
         echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  cp $COMOUTrestart/GenEnsProd*_HI_*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  cp $COMOUTrestart/profile/GenEnsProd*_HI_*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
@@ -398,7 +398,7 @@ for dom in $domains ; do
         echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  cp $COMOUTrestart/GenEnsProd*_PR_*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  cp $COMOUTrestart/profile/GenEnsProd*_PR_*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
