@@ -87,19 +87,20 @@ chmod 775 run_href_all_grid2obs_poe
 #****************************************
 # Run POE script to get small stat files
 # ***************************************
-if [ $run_mpi = yes ] ; then
+if [ -s run_href_all_grid2obs_poe ] ; then
+ if [ $run_mpi = yes ] ; then
     mpiexec -np 4 -ppn 4 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
-else
+ else
     ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
-
+ fi
 fi
 
 #*******************************************************************
 # Run gather job to combine small stat files to form a big stat file
 # ******************************************************************
-if [ $gather = yes ] && [ -s ${DATA}/run_href_all_grid2obs_poe ] ; then
+if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then
   $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
   export err=$?; err_chk
 fi
