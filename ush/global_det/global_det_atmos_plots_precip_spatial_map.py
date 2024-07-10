@@ -28,7 +28,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class PrecipSpatialMap:
     """
-    Create a precipitation spatial map graphic
+    Make a precipitation spatial map graphic
     """
 
     def __init__(self, logger, input_dir, DATA_output_dir, COMOUT_output_dir,
@@ -59,11 +59,11 @@ class PrecipSpatialMap:
         self.logo_dir = logo_dir
 
     def make_precip_spatial_map(self):
-        """! Create the precipitation spatial map graphic
+        """! Make the precipitation spatial map graphic
              Args:
              Returns:
         """
-        self.logger.info(f"Creating preciptation spatial map...")
+        self.logger.info(f"Plot Type: Preciptation Spatial Map")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.DATA_output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -151,8 +151,7 @@ class PrecipSpatialMap:
                     make_png = True
                 else:
                     make_png = False
-                    self.logger.info(f"{model_num_file} does not exist, "
-                                     +"not making plot")
+                    self.logger.info(f"{model_num_file} does not exist")
             else:
                 make_png = False
             if model_num_name != 'gfs' \
@@ -162,7 +161,7 @@ class PrecipSpatialMap:
                 gda_util.copy_file(COMOUT_png_name, DATA_png_name)
                 make_png = False
             if make_png:
-                self.logger.debug("Plotting data from "+model_num_file)
+                self.logger.info(f"Plotting data from {model_num_file}")
                 precip_data = netcdf.Dataset(model_num_file)
                 precip_lat = precip_data.variables['lat'][:]
                 precip_lon = precip_data.variables['lon'][:]
@@ -186,14 +185,14 @@ class PrecipSpatialMap:
                     file_valid_time, '%Y%m%d_%H%M%S'
                 )
                 if valid_date_dt != file_valid_time_dt:
-                    self.logger.error(f"FILE VALID TIME {file_valid_time_dt} "
-                                      +"DOES NOT MATCH EXPECTED VALID TIME "
+                    self.logger.error(f"File valid time {file_valid_time_dt} "
+                                      +"does not match expected valid time "
                                       +f"{valid_date_dt}")
                     sys.exit(1)
                 if model_num != 'obs':
                     if init_date_dt != file_init_time_dt:
-                        self.logger.error(f"FILE INIT TIME {file_init_time_dt} "
-                                          +"DOES NOT MATCH EXPECTED INIT TIME "
+                        self.logger.error(f"File init time {file_init_time_dt} "
+                                          +"does not match expected init time "
                                           +f"{init_date_dt}")
                         sys.exit(1)
                 if var_units in ['mm', 'kg/m^2']:
@@ -201,7 +200,7 @@ class PrecipSpatialMap:
                                      +"inches")
                     precip_APCP_A24 = precip_APCP_A24 * 0.0393701
                     var_units = 'inches'
-                self.logger.info(f"Doing plot set up")
+                self.logger.info(f"Setting up plot")
                 plot_specs_psm = PlotSpecs(self.logger, 'precip_spatial_map')
                 plot_specs_psm.set_up_plot()
                 forecast_day = int(self.date_info_dict['forecast_hour'])/24.
@@ -231,7 +230,6 @@ class PrecipSpatialMap:
                         .strftime('%d%b%Y %H')+'Z to '
                         +valid_date_dt.strftime('%d%b%Y %H')+'Z'
                     )
-                plot_left_logo = False
                 plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
                 if os.path.exists(plot_left_logo_path):
                     plot_left_logo = True
@@ -245,7 +243,9 @@ class PrecipSpatialMap:
                              plt.rcParams['figure.dpi']
                         )
                     )
-                plot_right_logo = False
+                else:
+                    plot_left_logo = False
+                    self.logger.debug(f"{plot_left_logo_path} does not exist")
                 plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
                 if os.path.exists(plot_right_logo_path):
                     plot_right_logo = True
@@ -259,6 +259,9 @@ class PrecipSpatialMap:
                             plt.rcParams['figure.dpi']
                         )
                     )
+                else:
+                    plot_right_logo = False
+                    self.logger.debug(f"{plot_right_logo_path} does not exist")
                 if var_units == 'inches':
                     clevs = clevs_in
                     cmap = matplotlib.colors.ListedColormap(colorlist_in)
@@ -268,8 +271,8 @@ class PrecipSpatialMap:
                     cmap = matplotlib.colors.ListedColormap(colorlist_mm)
                     cmap_over_color = cmap_over_color_mm
                 norm = matplotlib.colors.BoundaryNorm(clevs, cmap.N)
-                # Create plot
-                self.logger.info(f"Creating plot for {model_num_file}")
+                # Making plot
+                self.logger.info(f"Making plot")
                 fig = plt.figure(figsize=(plot_specs_psm.fig_size[0],
                                           plot_specs_psm.fig_size[1]))
                 gs_hspace, gs_wspace = 0, 0
@@ -347,7 +350,7 @@ class PrecipSpatialMap:
                             str(round(tick,3)).rstrip('0')
                         )
                 cbar.ax.set_xticklabels(cbar_tick_labels_list)
-                self.logger.info("Saving image as "+DATA_png_name)
+                self.logger.info(f"Saving image as {DATA_png_name}")
                 plt.savefig(DATA_png_name)
                 plt.clf()
                 plt.close('all')
@@ -374,8 +377,7 @@ class PrecipSpatialMap:
                     )
                     gda_util.copy_file(DATA_gif_name, COMOUT_gif_name)
                 else:
-                    self.logger.warning("convert executable not in PATH, "
-                                        "not creating gif of image")
+                    self.logger.warning("convert executable not in PATH")
 
 def main():
     # Need settings
@@ -420,9 +422,9 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '11.0.2'
+        'version': '12.0'
     }
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

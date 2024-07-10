@@ -34,7 +34,7 @@ DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_list = os.environ['fhr_list'].split(',')
+fhr_list = os.environ['fhr_list'].split(', ')
 #fhr_start = os.environ['fhr_start']
 #fhr_end = os.environ['fhr_end']
 #fhr_inc = os.environ['fhr_inc']
@@ -109,12 +109,12 @@ while valid_date_dt <= ENDDATE_dt:
                             gda_util.copy_file(output_DATA_file,
                                                output_COMOUT_file)
             else:
-                print(f"WARNING: Cannot make anomaly file {output_DATA_file} - "
+                print(f"NOTE: Cannot make anomaly file {output_DATA_file} - "
                       +f"{input_file} does not contain CLIMO_MEAN_{var_level}")
                 make_anomaly_output_file = False
             input_file_data.close()
         else:
-           print(f"WARNING: Cannot make anomaly file {output_DATA_file} - "
+           print(f"NOTE: Cannot make anomaly file {output_DATA_file} - "
                  +f"{input_file} does not exist")
            make_anomaly_output_file = False
         if make_anomaly_output_file:
@@ -187,7 +187,7 @@ while valid_date_dt <= ENDDATE_dt:
                             input_file_data.variables[climo_var_level][:]
                         )
                 else:
-                    print(f"WARNING: No {data_name} anomaly data for "
+                    print(f"NOTE: No {data_name} anomaly data for "
                           +f"{output_DATA_file} - {input_file} does not "
                           +f"contain {data_name}_{var_level}")
             output_file_data.close()

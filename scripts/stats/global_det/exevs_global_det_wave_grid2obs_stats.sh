@@ -57,7 +57,7 @@ output_ascii2nc_ndbc_file=$COMOUTndbc/ndbc.${VDATE}.nc
 if [[ $input_ascii2nc_ndbc_path == *"/com/"* ]] || [[ $input_ascii2nc_ndbc_path == *"/dcom/"* ]]; then
     alert_word="WARNING"
 else
-￼   alert_word="NOTE"
+    alert_word="NOTE"
 fi
 if [[ -s $output_ascii2nc_ndbc_file ]]; then
     cp -v $output_ascii2nc_ndbc_file $tmp_ascii2nc_ndbc_file
@@ -280,17 +280,6 @@ if [ "${nc}" != '0' ]; then
     fi
 else
     echo "WARNING: No large stat file found at ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
-fi
-
-# Cat the METplus log files
-log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-        echo "Start: $log_file"
-        cat $log_file
-        echo "End: $log_file"
-    done
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."

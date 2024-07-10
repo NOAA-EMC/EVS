@@ -20,6 +20,19 @@ mkdir -p $DATA
 cd $DATA
 
 ####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-global_det}
+export RUN=${RUN:-atmos}
+export machine=${machine:-WCOSS2}
+export evs_run_mode=${evs_run_mode:-production}
+if [ $VERIF_CASE = wmo ]; then
+    export temporal=${temporal:-daily}
+fi
+
+####################################
 # Set EVS directories
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
@@ -46,20 +59,6 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
-# Define NET/RUN variables
-####################################
-export NET=${NET:-evs}
-export STEP=${STEP:-stats}
-export COMPONENT=${COMPONENT:-global_det}
-export RUN=${RUN:-atmos}
-export VERIF_CASE=${VERIF_CASE:-grid2grid}
-export machine=${machine:-WCOSS2}
-export evs_run_mode=${evs_run_mode:-production}
-if [ $VERIF_CASE = wmo ]; then
-    export temporal=${temporal:-daily}
-fi
-
-####################################
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver)}
@@ -75,6 +74,8 @@ if [ $RUN = atmos ]; then
     if [ $VERIF_CASE == grid2grid ]; then
         export COMOUTccpa=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
         mkdir -p $COMOUTccpa
+        export COMOUTosisaf=$COMOUT/$RUN.$VDATE/osi_saf/$VERIF_CASE
+        mkdir -p $COMOUTosisaf
     fi
     if [ $VERIF_CASE == grid2obs ]; then
         export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE

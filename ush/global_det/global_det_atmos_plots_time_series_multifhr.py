@@ -13,7 +13,6 @@ import os
 import logging
 import datetime
 import glob
-import subprocess
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
 #pd.plotting.register_matplotlib_converters()
@@ -27,7 +26,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class TimeSeriesMultiFhr:
     """
-    Create a time series multiple forecast hour graphic
+    Make a time series multiple forecast hour graphic
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
@@ -56,13 +55,13 @@ class TimeSeriesMultiFhr:
         self.logo_dir = logo_dir
 
     def make_time_series_multifhr(self):
-        """! Create the time series multiple foreast hours graphic
+        """! Make the time series multiple foreast hours graphic
 
              Args:
 
              Returns:
         """
-        self.logger.info(f"Creating time series...")
+        self.logger.info(f"Plot Type: Time Series (Multiple Forecast Hours)")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -95,14 +94,14 @@ class TimeSeriesMultiFhr:
             self.date_info_dict['forecast_hours'] = (
                 self.date_info_dict['forecast_hours'][:4]
             )
-        # Create dataframe for all forecast hours
+        # Make dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
         fcst_units = []
         for forecast_hour in self.date_info_dict['forecast_hours']:
             self.logger.debug("Building data for forecast hour "
                               +f"{forecast_hour}")
             # Get dates to plot
-            self.logger.info("Creating valid and init date arrays")
+            self.logger.debug("Making valid and init date arrays")
             valid_dates, init_dates = gda_util.get_plot_dates(
                 self.logger,
                 self.date_info_dict['date_type'],
@@ -179,7 +178,7 @@ class TimeSeriesMultiFhr:
             # Read in data
             self.logger.info(f"Reading in model stat files from {self.input_dir}")
             all_model_df = gda_util.build_df(
-                self.logger, self.input_dir, self.output_dir,
+                'make_plots', self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],
                 self.plot_info_dict['fcst_var_level'],
@@ -244,7 +243,7 @@ class TimeSeriesMultiFhr:
             all_forecast_hour_stat_df.to_numpy()
         )
         # Set up plot
-        self.logger.info(f"Doing plot set up")
+        self.logger.info(f"Setting up plot")
         plot_specs_tsmf = PlotSpecs(self.logger, 'time_series_multifhr')
         plot_specs_tsmf.set_up_plot()
         n_xticks = 5
@@ -270,7 +269,6 @@ class TimeSeriesMultiFhr:
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
@@ -283,7 +281,9 @@ class TimeSeriesMultiFhr:
                     plot_specs_tsmf.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
@@ -296,6 +296,9 @@ class TimeSeriesMultiFhr:
                     plot_specs_tsmf.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         all_forecast_hour_plot_settings_dict = (
             plot_specs_tsmf.get_forecast_hour_plot_settings()
         )
@@ -307,8 +310,8 @@ class TimeSeriesMultiFhr:
             'evs.global_det.'+self.model_info_dict['model1']['name'].lower()
             +'.'
         )
-        # Create plot
-        self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
+        # Make plot
+        self.logger.info(f"Making plot")
         fig, ax = plt.subplots(1,1,figsize=(plot_specs_tsmf.fig_size[0],
                                             plot_specs_tsmf.fig_size[1]))
         ax.grid(True)
@@ -369,8 +372,8 @@ class TimeSeriesMultiFhr:
             masked_plot_dates = np.ma.masked_where(
                 np.ma.getmask(masked_forecast_hour_data), plot_dates
             )
+            self.logger.debug(f"Plotting {forecast_hour}")
             if forecast_hour_npts != 0:
-                self.logger.debug(f"Plotting {forecast_hour}")
                 if np.abs(forecast_hour_avg) >= 10:
                     forecast_hour_avg_label = format(
                         round(forecast_hour_avg, 2), '.2f'
@@ -509,9 +512,9 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '11.0.2'
+        'version': '12.0'
     }
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

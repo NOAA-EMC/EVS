@@ -77,7 +77,7 @@ for avg_time_range in avg_time_range_list:
     # Make plots for groupings
     for model_group in list(model_group_dict.keys()):
         model_list = model_group_dict[model_group]
-        print(f"Working on model group {model_group}: "
+        print(f"Doing  model group {model_group}: "
               +f"{' '.join(model_list)}")
         now = datetime.datetime.now()
         logging_file = os.path.join(
@@ -121,8 +121,8 @@ for avg_time_range in avg_time_range_list:
                 var_level = plot_loop[0]
                 vx_mask = plot_loop[1]
                 stat = plot_loop[2]
-                logger.info(f"Working on {var_name} {var_level} {vx_mask} "
-                            +f"{stat}")
+                logger.info(f"Working on {avg_time_range} {model_group}: "
+                            +f"{var_name} {var_level} {vx_mask} {stat}")
                 if avg_time_range == 'monthly':
                     import global_det_atmos_plots_long_term_time_series_diff \
                         as gdap_lttsd
@@ -280,8 +280,8 @@ for model_num in list(yyyymm_acc_model_info_dict.keys()):
                 os.symlink(source_model_date_stat_file,
                            dest_model_date_stat_file)
             else:
-                acc_logger.warning(source_model_date_stat_file+" "
-                                    +"DOES NOT EXIST")
+                acc_logger.debug(source_model_date_stat_file+" "
+                                 +"DOES NOT EXIST")
         date_dt = date_dt + datetime.timedelta(days=1)
     acc_logger.info("Condensing model .stat files for job")
     gda_util.condense_model_stat_files(
