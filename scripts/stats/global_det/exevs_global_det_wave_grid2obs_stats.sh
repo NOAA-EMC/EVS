@@ -62,7 +62,14 @@ if [[ -s $input_ascii2nc_ndbc_file ]]; then
     echo "Copying $input_ascii2nc_ndbc_file to $tmp_ascii2nc_ndbc_file"
     cp -v $input_ascii2nc_ndbc_file $tmp_ascii2nc_ndbc_file
 else
-    echo "${alert word}: ${input_ascii2nc_ndbc_file} does not exist"
+    echo "${alert_word}: ${input_ascii2nc_ndbc_file} does not exist"
+    if [ $SENDMAIL = YES ]; then
+        export subject="NDBC Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
+        echo "Missing file is ${input_ascii2nc_ndbc_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $MAILTO
+    fi
 fi
 
 ############################################
@@ -86,6 +93,13 @@ for valid_hour in ${valid_hours} ; do
             alert_word="NOTE"
         fi
         echo "${alert_word}: $input_pb2nc_gdas_file does not exist"
+        if [ $SENDMAIL = YES ] ; then
+            export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
+            echo "Warning: No GDAS Prepbufr was available for valid date ${VDATE}${valid_hour2}" > mailmsg
+            echo "Missing file is $input_pb2nc_gdas_file" >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $MAILTO
+        fi
     fi
 done
 
@@ -139,6 +153,7 @@ for valid_hour in ${valid_hours} ; do
         match_fhr=$(printf "%02d" "${match_hr}")
         flead=$(printf "%03d" "${fhr}")
         flead2=$(printf "%02d" "${fhr}")
+        MODELNAME_upper=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
         if [ $MODELNAME == "gfs" ]; then
             input_model_file=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
         fi
@@ -154,6 +169,13 @@ for valid_hour in ${valid_hours} ; do
                 alert_word="NOTE"
             fi
             echo "${alert_word}: $input_model_file does not exist"
+            if [ $SENDMAIL = YES ]; then
+                export subject="F${flead} ${MODELNAME_upper} Forecast Data Missing for EVS ${COMPONENT}"
+                echo "Warning: No ${MODELNAME_upper} forecast was available for ${matchtime}f${flead}" > mailmsg
+                echo "Missing file is ${input_model_file}" >> mailmsg
+                echo "Job ID: $jobid" >> mailmsg
+                cat mailmsg | mail -s "$subject" $MAILTO
+            fi
         fi
         if [[ -s $tmp_model_file ]]; then
             for OBSNAME in GDAS NDBC; do
