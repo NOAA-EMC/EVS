@@ -16,7 +16,7 @@ set -x
 
 # set up plot variables
 
-periods="PAST${NDAYS}DAYS"
+periods="LAST${NDAYS}DAYS"
 
 valid_hours='00 12'
 fhrs='000 024 048 072 096 120 144 168
@@ -112,7 +112,7 @@ for period in ${periods} ; do
                   output_job_dir=$COMOUT/$VERIF_CASE/last${NDAYS}days/sl1l2/${image_var}_${image_level}/${regionl}/${image_stat}
                   mkdir -p $output_job_dir
                   #Define DATA and COMOUT image name
-                  imagename=evs.${COMPONENT}.${image_stat}.${image_var}_${image_level}_${obtypel}.past${NDAYS}days.timeseries_valid${valid_hour}z_f${fhr}.latlon_0p25_${regionl}.png
+                  imagename=evs.${COMPONENT}.${image_stat}.${image_var}_${image_level}_${obtypel}.last${NDAYS}days.timeseries_valid${valid_hour}z_f${fhr}.latlon_0p25_${regionl}.png
                   output_image=$output_job_dir/$imagename
                   tmp_image=$DATA/images/$imagename
                   # Add commands
