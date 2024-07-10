@@ -56,28 +56,28 @@ reformat_data_jobs_dict = {
     'ptype': {
         'Rain': {'env': {'var1_name': 'CRAIN',
                          'var1_level': 'L0',
-                         'var1_options': "'GRIB2_pdt = 0'",
+                         'var1_options': 'GRIB2_pdt = 0',
                          'grid': 'G104'},
                  'commands': [gda_util.metplus_command(
                                   'RegridDataPlane_fcstGLOBAL_DET.conf'
                               )]},
         'Snow': {'env': {'var1_name': 'CSNOW',
                          'var1_level': 'L0',
-                         'var1_options': "'GRIB2_pdt = 0'",
+                         'var1_options': 'GRIB2_pdt = 0',
                          'grid': 'G104'},
                  'commands': [gda_util.metplus_command(
                                   'RegridDataPlane_fcstGLOBAL_DET.conf'
                               )]},
         'FrzRain': {'env': {'var1_name': 'CFRZR',
                             'var1_level': 'L0',
-                            'var1_options': "'GRIB2_pdt = 0'",
+                            'var1_options': 'GRIB2_pdt = 0',
                             'grid': 'G104'},
                     'commands': [gda_util.metplus_command(
                                      'RegridDataPlane_fcstGLOBAL_DET.conf'
                                  )]},
         'IcePel': {'env': {'var1_name': 'CICEP',
                            'var1_level': 'L0',
-                           'var1_options': "'GRIB2_pdt = 0'",
+                           'var1_options': 'GRIB2_pdt = 0',
                            'grid': 'G104'},
                    'commands': [gda_util.metplus_command(
                                     'RegridDataPlane_fcstGLOBAL_DET.conf'
@@ -142,8 +142,8 @@ assemble_data_jobs_dict = {
                                'var1_obs_name': 'TMP',
                                'var1_obs_levels': 'Z2',
                                'var1_obs_options': '',
-                               'met_config_overrides': ("'climo_mean "
-                                                        +"= fcst;'")},
+                               'met_config_overrides': ('climo_mean '
+                                                        +'= fcst;')},
                        'commands': [gda_util.metplus_command(
                                         'PointStat_fcstGLOBAL_DET_'
                                         +'obsPrepbufr_climoERA5_'
@@ -181,18 +181,18 @@ generate_stats_jobs_dict = {
                               'obs_window': '1800',
                               'msg_type': "'ADPUPA'",
                               'var1_fcst_name': 'HGT',
-                              'var1_fcst_levels': ("'P1000, P925, P850, "
-                                                   +"P700, P500, P400, "
-                                                   +"P300, P250, P200, "
-                                                   +"P150, P100, P50, "
-                                                   +"P20, P10, P5, P1'"),
+                              'var1_fcst_levels': ('P1000, P925, P850, '
+                                                   +'P700, P500, P400, '
+                                                   +'P300, P250, P200, '
+                                                   +'P150, P100, P50, '
+                                                   +'P20, P10, P5, P1'),
                               'var1_fcst_options': '',
                               'var1_obs_name': 'HGT',
-                              'var1_obs_levels': ("'P1000, P925, P850, "
-                                                  +"P700, P500, P400, "
-                                                  +"P300, P250, P200, "
-                                                  +"P150, P100, P50, "
-                                                  +"P20, P10, P5, P1'"),
+                              'var1_obs_levels': ('P1000, P925, P850, '
+                                                  +'P700, P500, P400, '
+                                                  +'P300, P250, P200, '
+                                                  +'P150, P100, P50, '
+                                                  +'P20, P10, P5, P1'),
                               'var1_obs_options': '',
                               'met_config_overrides': ''},
                       'commands': [gda_util.metplus_command(
@@ -203,18 +203,18 @@ generate_stats_jobs_dict = {
                            'obs_window': '1800',
                            'msg_type': "'ADPUPA'",
                            'var1_fcst_name': 'RH',
-                           'var1_fcst_levels': ("'P1000, P925, P850, "
-                                                +"P700, P500, P400, "
-                                                +"P300, P250, P200, "
-                                                +"P150, P100, P50, "
-                                                +"P20, P10, P5, P1'"),
+                           'var1_fcst_levels': ('P1000, P925, P850, '
+                                                +'P700, P500, P400, '
+                                                +'P300, P250, P200, '
+                                                +'P150, P100, P50, '
+                                                +'P20, P10, P5, P1'),
                            'var1_fcst_options': '',
                            'var1_obs_name': 'RH',
-                           'var1_obs_levels': ("'P1000, P925, P850, "
-                                               +"P700, P500, P400, "
-                                               +"P300, P250, P200, "
-                                               +"P150, P100, P50, "
-                                               +"P20, P10, P5, P1'"),
+                           'var1_obs_levels': ('P1000, P925, P850, '
+                                               +'P700, P500, P400, '
+                                               +'P300, P250, P200, '
+                                               +'P150, P100, P50, '
+                                               +'P20, P10, P5, P1'),
                            'var1_obs_options': '',
                            'met_config_overrides': ''},
                    'commands': [gda_util.metplus_command(
@@ -225,23 +225,21 @@ generate_stats_jobs_dict = {
                             'obs_window': '1800',
                             'msg_type': "'ADPUPA'",
                             'var1_fcst_name': 'SPFH',
-                            'var1_fcst_levels': ("'P1000, P925, P850, "
-                                                 +"P700, P500, P400, "
-                                                 +"P300, P250, P200, "
-                                                 +"P150, P100, P50, "
-                                                 +"P20, P10, P5, P1'"),
-                            'var1_fcst_options': ("'set_attr_units = "
-                                                  +'"g/kg"; convert(x)=x*1000'
-                                                  +"'"),
+                            'var1_fcst_levels': ('P1000, P925, P850, '
+                                                 +'P700, P500, P400, '
+                                                 +'P300, P250, P200, '
+                                                 +'P150, P100, P50, '
+                                                 +'P20, P10, P5, P1'),
+                            'var1_fcst_options': ('set_attr_units = '
+                                                  +'"g/kg"; convert(x)=x*1000'),
                             'var1_obs_name': 'SPFH',
-                            'var1_obs_levels': ("'P1000, P925, P850, "
-                                                +"P700, P500, P400, "
-                                                +"P300, P250, P200, "
-                                                +"P150, P100, P50, "
-                                                +"P20, P10, P5, P1'"),
-                            'var1_obs_options': ("'set_attr_units = "
-                                                 +'"g/kg"; convert(x)=x*1000'
-                                                 +"'"),
+                            'var1_obs_levels': ('P1000, P925, P850, '
+                                                +'P700, P500, P400, '
+                                                +'P300, P250, P200, '
+                                                +'P150, P100, P50, '
+                                                +'P20, P10, P5, P1'),
+                            'var1_obs_options': ('set_attr_units = '
+                                                 +'"g/kg"; convert(x)=x*1000'),
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
@@ -250,19 +248,20 @@ generate_stats_jobs_dict = {
         'Temp': {'env': {'prepbufr': 'gdas',
                          'obs_window': '1800',
                          'msg_type': "'ADPUPA'",
+                         'msg_type': 'AIRUPA, ADPUPA, ANYAIR',
                          'var1_fcst_name': 'TMP',
-                         'var1_fcst_levels': ("'P1000, P925, P850, "
-                                              +"P700, P500, P400, "
-                                              +"P300, P250, P200, "
-                                              +"P150, P100, P50, "
-                                              +"P20, P10, P5, P1'"),
+                         'var1_fcst_levels': ('P1000, P925, P850, '
+                                              +'P700, P500, P400, '
+                                              +'P300, P250, P200, '
+                                              +'P150, P100, P50, '
+                                              +'P20, P10, P5, P1'),
                          'var1_fcst_options': '',
                          'var1_obs_name': 'TMP',
-                         'var1_obs_levels': ("'P1000, P925, P850, "
-                                             +"P700, P500, P400, "
-                                             +"P300, P250, P200, "
-                                             +"P150, P100, P50, "
-                                             +"P20, P10, P5, P1'"),
+                         'var1_obs_levels': ('P1000, P925, P850, '
+                                             +'P700, P500, P400, '
+                                             +'P300, P250, P200, '
+                                             +'P150, P100, P50, '
+                                             +'P20, P10, P5, P1'),
                          'var1_obs_options': '',
                          'met_config_overrides': ''},
                  'commands': [gda_util.metplus_command(
@@ -273,18 +272,18 @@ generate_stats_jobs_dict = {
                           'obs_window': '1800',
                           'msg_type': "'ADPUPA'",
                           'var1_fcst_name': 'UGRD',
-                          'var1_fcst_levels': ("'P1000, P925, P850, "
-                                               +"P700, P500, P400, "
-                                               +"P300, P250, P200, "
-                                               +"P150, P100, P50, "
-                                               +"P20, P10, P5, P1'"),
+                          'var1_fcst_levels': ('P1000, P925, P850, '
+                                               +'P700, P500, P400, '
+                                               +'P300, P250, P200, '
+                                               +'P150, P100, P50, '
+                                               +'P20, P10, P5, P1'),
                           'var1_fcst_options': '',
                           'var1_obs_name': 'UGRD',
-                          'var1_obs_levels': ("'P1000, P925, P850, "
-                                              +"P700, P500, P400, "
-                                              +"P300, P250, P200, "
-                                              +"P150, P100, P50, "
-                                              +"P20, P10, P5, P1'"),
+                          'var1_obs_levels': ('P1000, P925, P850, '
+                                              +'P700, P500, P400, '
+                                              +'P300, P250, P200, '
+                                              +'P150, P100, P50, '
+                                              +'P20, P10, P5, P1'),
                           'var1_obs_options': '',
                           'met_config_overrides': ''},
                   'commands': [gda_util.metplus_command(
@@ -295,18 +294,18 @@ generate_stats_jobs_dict = {
                           'obs_window': '1800',
                           'msg_type': "'ADPUPA'",
                           'var1_fcst_name': 'VGRD',
-                          'var1_fcst_levels': ("'P1000, P925, P850, "
-                                               +"P700, P500, P400, "
-                                               +"P300, P250, P200, "
-                                               +"P150, P100, P50, "
-                                               +"P20, P10, P5, P1'"),
+                          'var1_fcst_levels': ('P1000, P925, P850, '
+                                               +'P700, P500, P400, '
+                                               +'P300, P250, P200, '
+                                               +'P150, P100, P50, '
+                                               +'P20, P10, P5, P1'),
                           'var1_fcst_options': '',
                           'var1_obs_name': 'VGRD',
-                          'var1_obs_levels': ("'P1000, P925, P850, "
-                                              +"P700, P500, P400, "
-                                              +"P300, P250, P200, "
-                                              +"P150, P100, P50, "
-                                              +"P20, P10, P5, P1'"),
+                          'var1_obs_levels': ('P1000, P925, P850, '
+                                              +'P700, P500, P400, '
+                                              +'P300, P250, P200, '
+                                              +'P150, P100, P50, '
+                                              +'P20, P10, P5, P1'),
                           'var1_obs_options': '',
                           'met_config_overrides': ''},
                   'commands': [gda_util.metplus_command(
@@ -317,32 +316,32 @@ generate_stats_jobs_dict = {
                                'obs_window': '1800',
                                'msg_type': "'ADPUPA'",
                                'var1_fcst_name': 'UGRD',
-                               'var1_fcst_levels': ("'P1000, P925, P850, "
-                                                    +"P700, P500, P400, "
-                                                    +"P300, P250, P200, "
-                                                    +"P150, P100, P50, "
-                                                    +"P20, P10, P5, P1'"),
+                               'var1_fcst_levels': ('P1000, P925, P850, '
+                                                    +'P700, P500, P400, '
+                                                    +'P300, P250, P200, '
+                                                    +'P150, P100, P50, '
+                                                    +'P20, P10, P5, P1'),
                                'var1_fcst_options': '',
                                'var1_obs_name': 'UGRD',
-                               'var1_obs_levels': ("'P1000, P925, P850, "
-                                                   +"P700, P500, P400, "
-                                                   +"P300, P250, P200, "
-                                                   +"P150, P100, P50, "
-                                                   +"P20, P10, P5, P1'"),
+                               'var1_obs_levels': ('P1000, P925, P850, '
+                                                   +'P700, P500, P400, '
+                                                   +'P300, P250, P200, '
+                                                   +'P150, P100, P50, '
+                                                   +'P20, P10, P5, P1'),
                                'var1_obs_options': '',
                                'var2_fcst_name': 'VGRD',
-                               'var2_fcst_levels': ("'P1000, P925, P850, "
-                                                    +"P700, P500, P400, "
-                                                    +"P300, P250, P200, "
-                                                    +"P150, P100, P50, "
-                                                    +"P20, P10, P5, P1'"),
+                               'var2_fcst_levels': ('P1000, P925, P850, '
+                                                    +'P700, P500, P400, '
+                                                    +'P300, P250, P200, '
+                                                    +'P150, P100, P50, '
+                                                    +'P20, P10, P5, P1'),
                                'var2_fcst_options': '',
                                'var2_obs_name': 'VGRD',
-                               'var2_obs_levels': ("'P1000, P925, P850, "
-                                                   +"P700, P500, P400, "
-                                                   +"P300, P250, P200, "
-                                                   +"P150, P100, P50, "
-                                                   +"P20, P10, P5, P1'"),
+                               'var2_obs_levels': ('P1000, P925, P850, '
+                                                   +'P700, P500, P400, '
+                                                   +'P300, P250, P200, '
+                                                   +'P150, P100, P50, '
+                                                   +'P20, P10, P5, P1'),
                                'var2_obs_options': '',
                                'met_config_overrides': ''},
                        'commands': [gda_util.metplus_command(
@@ -353,17 +352,17 @@ generate_stats_jobs_dict = {
     'ptype': {
         'Rain': {'env': {'prepbufr': 'nam',
                          'obs_window': '900',
-                         'msg_type': "'ADPSFC'",
+                         'msg_type': 'ADPSFC',
                          'var1_fcst_name': 'CRAIN',
                          'var1_fcst_levels': 'L0',
-                         'var1_fcst_options': ("'set_attr_units = "
+                         'var1_fcst_options': ('set_attr_units = '
                                                +'"unitless"; '
-                                               +'GRIB2_pdt = 0'+"'"),
-                         'var1_fcst_threshs': "'ge1.0'",
+                                               +'GRIB2_pdt = 0'),
+                         'var1_fcst_threshs': 'ge1.0',
                          'var1_obs_name': 'PRWE',
                          'var1_obs_levels': 'Z0',
                          'var1_obs_options': '',
-                         'var1_obs_threshs': "'ge161&&le163'",
+                         'var1_obs_threshs': 'ge161&&le163',
                          'met_config_overrides': ''},
                  'commands': [gda_util.metplus_command(
                                   'PointStat_fcstGLOBAL_DET_'
@@ -371,17 +370,17 @@ generate_stats_jobs_dict = {
                               )]},
         'Snow': {'env': {'prepbufr': 'nam',
                          'obs_window': '900',
-                         'msg_type': "'ADPSFC'",
+                         'msg_type': 'ADPSFC',
                          'var1_fcst_name': 'CSNOW',
                          'var1_fcst_levels': 'L0',
-                         'var1_fcst_options': ("'set_attr_units = "
+                         'var1_fcst_options': ('set_attr_units = '
                                                +'"unitless"; '
-                                               +'GRIB2_pdt = 0'+"'"),
-                         'var1_fcst_threshs': "'ge1.0'",
+                                               +'GRIB2_pdt = 0'),
+                         'var1_fcst_threshs': 'ge1.0',
                          'var1_obs_name': 'PRWE',
                          'var1_obs_levels': 'Z0',
                          'var1_obs_options': '',
-                         'var1_obs_threshs': "'ge171&&le173'",
+                         'var1_obs_threshs': 'ge171&&le173',
                          'met_config_overrides': ''},
                  'commands': [gda_util.metplus_command(
                                   'PointStat_fcstGLOBAL_DET_'
@@ -389,17 +388,17 @@ generate_stats_jobs_dict = {
                               )]},
         'FrzRain': {'env': {'prepbufr': 'nam',
                             'obs_window': '900',
-                            'msg_type': "'ADPSFC'",
+                            'msg_type': 'ADPSFC',
                             'var1_fcst_name': 'CFRZR',
                             'var1_fcst_levels': 'L0',
-                            'var1_fcst_options': ("'set_attr_units = "
+                            'var1_fcst_options': ('set_attr_units = '
                                                   +'"unitless"; '
-                                                  +'GRIB2_pdt = 0'+"'"),
-                            'var1_fcst_threshs': "'ge1.0'",
+                                                  +'GRIB2_pdt = 0'),
+                            'var1_fcst_threshs': 'ge1.0',
                             'var1_obs_name': 'PRWE',
                             'var1_obs_levels': 'Z0',
                             'var1_obs_options': '',
-                            'var1_obs_threshs': "'ge164&&le166'",
+                            'var1_obs_threshs': 'ge164&&le166',
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
@@ -407,17 +406,17 @@ generate_stats_jobs_dict = {
                                  )]},
         'IcePel': {'env': {'prepbufr': 'nam',
                            'obs_window': '900',
-                           'msg_type': "'ADPSFC'",
+                           'msg_type': 'ADPSFC',
                            'var1_fcst_name': 'CICEP',
                            'var1_fcst_levels': 'L0',
-                           'var1_fcst_options': ("'set_attr_units = "
+                           'var1_fcst_options': ('set_attr_units = '
                                                  +'"unitless";'
-                                                 +'GRIB2_pdt = 0'+"'"),
-                           'var1_fcst_threshs': "'ge1.0'",
+                                                 +'GRIB2_pdt = 0'),
+                           'var1_fcst_threshs': 'ge1.0',
                            'var1_obs_name': 'PRWE',
                            'var1_obs_levels': 'Z0',
                            'var1_obs_options': '',
-                           'var1_obs_threshs': "'ge174&&le176'",
+                           'var1_obs_threshs': 'ge174&&le176',
                            'met_config_overrides': ''},
                    'commands': [gda_util.metplus_command(
                                     'PointStat_fcstGLOBAL_DET_'
@@ -425,7 +424,7 @@ generate_stats_jobs_dict = {
                                 )]},
         'Ptype': {'env': {'prepbufr': 'nam',
                           'obs_window': '900',
-                          'msg_type': "'ADPSFC'",
+                          'msg_type': 'ADPSFC',
                           'met_config_overrides': ''},
                   'commands': [gda_util.metplus_command(
                                    'PointStat_fcstGLOBAL_DET_'
@@ -437,23 +436,23 @@ generate_stats_jobs_dict = {
                                    'obs_window': '1800',
                                    'msg_type': "'ADPUPA'",
                                    'var1_fcst_name': 'CAPE',
-                                   'var1_fcst_levels': "'P90-0'",
-                                   'var1_fcst_options': ("'cnt_thresh = "
-                                                         +"[ >0 ];'"),
-                                   'var1_fcst_threshs': ("'ge500, ge1000, "
-                                                         +"ge1500, ge2000, "
-                                                         +"ge3000, ge4000, "
-                                                         +"ge5000'"),
+                                   'var1_fcst_levels': 'P90-0',
+                                   'var1_fcst_options': ('cnt_thresh = '
+                                                         +'[ >0 ];'),
+                                   'var1_fcst_threshs': ('ge500, ge1000, '
+                                                         +'ge1500, ge2000, '
+                                                         +'ge3000, ge4000, '
+                                                         +'ge5000'),
                                    'var1_obs_name': 'MLCAPE',
-                                   'var1_obs_levels': "'L0-90000'",
-                                   'var1_obs_options': ("'cnt_thresh = "
-                                                        +"[ >0 ]; "
-                                                        +"cnt_logic = "
-                                                        +"UNION;'"),
-                                   'var1_obs_threshs': ("'ge500, ge1000, "
-                                                        +"ge1500, ge2000, "
-                                                        +"ge3000, ge4000, "
-                                                        +"ge5000'"),
+                                   'var1_obs_levels': 'L0-90000',
+                                   'var1_obs_options': ('cnt_thresh = '
+                                                        +'[ >0 ]; '
+                                                        +'cnt_logic = '
+                                                        +'UNION;'),
+                                   'var1_obs_threshs': ('ge500, ge1000, '
+                                                        +'ge1500, ge2000, '
+                                                        +'ge3000, ge4000, '
+                                                        +'ge5000'),
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'PointStat_fcstGLOBAL_DET_'
@@ -464,22 +463,22 @@ generate_stats_jobs_dict = {
                                  'msg_type': "'ADPUPA'",
                                  'var1_fcst_name': 'CAPE',
                                  'var1_fcst_levels': 'Z0',
-                                 'var1_fcst_options': ("'cnt_thresh = "
-                                                       +"[ >0 ];'"),
-                                 'var1_fcst_threshs': ("'ge500, ge1000, "
-                                                       +"ge1500, ge2000, "
-                                                       +"ge3000, ge4000, "
-                                                       +"ge5000'"),
+                                 'var1_fcst_options': ('cnt_thresh = '
+                                                       +'[ >0 ];'),
+                                 'var1_fcst_threshs': ('ge500, ge1000, '
+                                                       +'ge1500, ge2000, '
+                                                       +'ge3000, ge4000, '
+                                                       +'ge5000'),
                                  'var1_obs_name': 'CAPE',
-                                 'var1_obs_levels': "'L0-100000'",
-                                 'var1_obs_options': ("'cnt_thresh = "
-                                                      +"[ >0 ]; "
-                                                      +"cnt_logic = "
-                                                      +"UNION;'"),
-                                 'var1_obs_threshs': ("'ge500, ge1000, "
-                                                      +"ge1500, ge2000, "
-                                                      +"ge3000, ge4000, "
-                                                      +"ge5000'"),
+                                 'var1_obs_levels': 'L0-100000',
+                                 'var1_obs_options': ('cnt_thresh = '
+                                                      +'[ >0 ]; '
+                                                      +'cnt_logic = '
+                                                      +'UNION;'),
+                                 'var1_obs_threshs': ('ge500, ge1000, '
+                                                      +'ge1500, ge2000, '
+                                                      +'ge3000, ge4000, '
+                                                      +'ge5000'),
                                  'met_config_overrides': ''},
                          'commands': [gda_util.metplus_command(
                                           'PointStat_fcstGLOBAL_DET_'
@@ -490,18 +489,18 @@ generate_stats_jobs_dict = {
                             'msg_type': 'ADPSFC',
                             'var1_fcst_name': 'HGT',
                             'var1_fcst_levels': 'L0',
-                            'var1_fcst_options': ("'GRIB_lvl_typ = 215;"
-                                                  +"set_attr_level = "
-                                                  +'"CEILING";'+"'"),
-                            'var1_fcst_threshs': ("'lt152, lt305, "
-                                                  +"lt914, ge914, "
-                                                  +"lt1524, lt3048'"),
+                            'var1_fcst_options': ('GRIB_lvl_typ = 215;'
+                                                  +'set_attr_level = '
+                                                  +'"CEILING";'),
+                            'var1_fcst_threshs': ('lt152, lt305, '
+                                                  +'lt914, ge914, '
+                                                  +'lt1524, lt3048'),
                             'var1_obs_name': 'CEILING',
                             'var1_obs_levels': 'L0',
                             'var1_obs_options': '',
-                            'var1_obs_threshs': ("'lt152, lt305, "
-                                                 +"lt914, ge914, "
-                                                 +"lt1524, lt3048'"),
+                            'var1_obs_threshs': ('lt152, lt305, '
+                                                 +'lt914, ge914, '
+                                                 +'lt1524, lt3048'),
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
@@ -516,8 +515,8 @@ generate_stats_jobs_dict = {
                                         'var1_obs_name': 'TMP',
                                         'var1_obs_levels': 'Z2',
                                         'var1_obs_options': '',
-                                        'met_config_overrides': ("'climo_mean "
-                                                                 +"= fcst;'")},
+                                        'met_config_overrides': ('climo_mean '
+                                                                 +'= fcst;')},
                                 'commands': [gda_util.python_command(
                                                 'global_det_atmos_stats_'
                                                 'grid2obs_create_daily_avg.py',
@@ -567,13 +566,13 @@ generate_stats_jobs_dict = {
                                'var1_fcst_name': 'DPT',
                                'var1_fcst_levels': 'Z2',
                                'var1_fcst_options': '',
-                               'var1_fcst_threshs': ("'ge277.594, ge283.15, "
-                                                     +"ge288.706, ge294.261'"),
+                               'var1_fcst_threshs': ('ge277.594, ge283.15, '
+                                                     +'ge288.706, ge294.261'),
                                'var1_obs_name': 'DPT',
                                'var1_obs_levels': 'Z2',
                                'var1_obs_options': '',
-                               'var1_obs_threshs': ("'ge277.594, ge283.15, "
-                                                    +"ge288.706, ge294.261'"),
+                               'var1_obs_threshs': ('ge277.594, ge283.15, '
+                                                    +'ge288.706, ge294.261'),
                                'met_config_overrides': ''},
                        'commands': [gda_util.metplus_command(
                                         'PointStat_fcstGLOBAL_DET_'
@@ -585,11 +584,11 @@ generate_stats_jobs_dict = {
                               'var1_fcst_name': 'HPBL',
                               'var1_fcst_levels': 'L0',
                               'var1_fcst_options': '',
-                              'var1_fcst_threshs': "'le500, ge2000'",
+                              'var1_fcst_threshs': 'le500, ge2000',
                               'var1_obs_name': 'HPBL',
                               'var1_obs_levels': 'L0',
                               'var1_obs_options': '',
-                              'var1_obs_threshs': "'le500, ge2000'",
+                              'var1_obs_threshs': 'le500, ge2000',
                               'met_config_overrides': ''},
                       'commands': [gda_util.metplus_command(
                                        'PointStat_fcstGLOBAL_DET_'
@@ -601,11 +600,11 @@ generate_stats_jobs_dict = {
                              'var1_fcst_name': 'RH',
                              'var1_fcst_levels': 'Z2',
                              'var1_fcst_options': '',
-                             'var1_fcst_threshs': "'le15, le20, le25, le30'",
+                             'var1_fcst_threshs': 'le15, le20, le25, le30',
                              'var1_obs_name': 'RH',
                              'var1_obs_levels': 'Z2',
                              'var1_obs_options': '',
-                             'var1_obs_threshs': "'le15, le20, le25, le30'",
+                             'var1_obs_threshs': 'le15, le20, le25, le30',
                              'met_config_overrides': ''},
                      'commands': [gda_util.metplus_command(
                                       'PointStat_fcstGLOBAL_DET_'
@@ -616,16 +615,14 @@ generate_stats_jobs_dict = {
                                  'msg_type': 'ADPSFC',
                                  'var1_fcst_name': 'PRMSL',
                                  'var1_fcst_levels': 'Z0',
-                                 'var1_fcst_options': ("'set_attr_units = "
+                                 'var1_fcst_options': ('set_attr_units = '
                                                        +'"hPa"; convert(p)='
-                                                       +'PA_to_HPA(p)'
-                                                       +"'"),
+                                                       +'PA_to_HPA(p)'),
                                  'var1_obs_name': 'PRMSL',
                                  'var1_obs_levels': 'Z0',
-                                 'var1_obs_options': ("'set_attr_units = "
+                                 'var1_obs_options': ('set_attr_units = '
                                                       +'"hPa"; convert(p)='
-                                                      +'PA_to_HPA(p)'
-                                                      +"'"),
+                                                      +'PA_to_HPA(p)'),
                                  'met_config_overrides': ''},
                          'commands': [gda_util.metplus_command(
                                           'PointStat_fcstGLOBAL_DET_'
@@ -650,15 +647,15 @@ generate_stats_jobs_dict = {
                                   'msg_type': 'ADPSFC',
                                   'var1_fcst_name': 'TCDC',
                                   'var1_fcst_levels': 'L0',
-                                  'var1_fcst_options': ("'GRIB_lvl_typ = 10; "
+                                  'var1_fcst_options': ('GRIB_lvl_typ = 10; '
                                                         +'GRIB2_pdt = 0; '
                                                         +'set_attr_level = '
-                                                        +'"TOTAL";'+"'"),
-                                  'var1_fcst_threshs': "'lt10, gt10, gt50, gt90'",
+                                                        +'"TOTAL";'),
+                                  'var1_fcst_threshs': 'lt10, gt10, gt50, gt90',
                                   'var1_obs_name': 'TCDC',
                                   'var1_obs_levels': 'L0',
                                   'var1_obs_options': '',
-                                  'var1_obs_threshs': "'lt10, gt10, gt50, gt90'",
+                                  'var1_obs_threshs': 'lt10, gt10, gt50, gt90',
                                   'met_config_overrides': ''},
                           'commands': [gda_util.metplus_command(
                                            'PointStat_fcstGLOBAL_DET_'
@@ -683,19 +680,19 @@ generate_stats_jobs_dict = {
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'VIS',
                                'var1_fcst_levels': 'Z0',
-                               'var1_fcst_options': ("'censor_thresh = gt16090;"
-                                                     +"censor_val = 16090;'"),
-                               'var1_fcst_threshs': ("'lt805, lt1609, "
-                                                     +"lt4828, lt8045, "
-                                                     +"ge8045, "
-                                                     +"lt16090'"),
+                               'var1_fcst_options': ('censor_thresh = gt16090;'
+                                                     +'censor_val = 16090;'),
+                               'var1_fcst_threshs': ('lt805, lt1609, '
+                                                     +'lt4828, lt8045, '
+                                                     +'ge8045, '
+                                                     +'lt16090'),
                                'var1_obs_name': 'VIS',
                                'var1_obs_levels': 'Z0',
                                'var1_obs_options': '',
-                               'var1_obs_threshs': ("'lt805, lt1609, "
-                                                    +"lt4828, lt8045, "
-                                                    +"ge8045, "
-                                                    +"lt16090'"),
+                               'var1_obs_threshs': ('lt805, lt1609, '
+                                                    +'lt4828, lt8045, '
+                                                    +'ge8045, '
+                                                    +'lt16090'),
                                'met_config_overrides': ''},
                        'commands': [gda_util.metplus_command(
                                         'PointStat_fcstGLOBAL_DET_'
@@ -769,8 +766,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
     elif JOB_GROUP == 'generate_stats':
         JOB_GROUP_jobs_dict = generate_stats_jobs_dict
     for verif_type in VERIF_CASE_STEP_type_list:
-        print("----> Making job scripts for "+VERIF_CASE_STEP+" "
-              +verif_type+" for job group "+JOB_GROUP)
+        print(f"----> Making job scripts for {VERIF_CASE_STEP} {verif_type} "
+              +f"for job group {JOB_GROUP}")
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +verif_type)
         # Read in environment variables for verif_type
@@ -835,7 +832,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job_env_dict['job_num'] = str(njobs)
                     # Create job file
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-                    print("Creating job script: "+job_file)
+                    print(f"Creating job script: {job_file}")
                     job = open(job_file, 'w')
                     job.write('#!/bin/bash\n')
                     job.write('set -x\n')
@@ -891,12 +888,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     if JOB_GROUP == 'generate_stats':
                         if verif_type_job == 'DailyAvg_TempAnom2m':
                             job_fhr_list = []
-                            for fhr in (full_job_fhr_list\
-                                        .replace("'",'').split(', ')):
+                            for fhr in (full_job_fhr_list.split(', ')):
                                 if int(fhr) % 24 == 0:
                                     job_fhr_list.append(fhr)
-                                job_env_dict['fhr_list'] = (
-                                    "'"+', '.join(job_fhr_list)+"'"
+                                job_env_dict['fhr_list'] = ', '.join(
+                                    job_fhr_list
                                 )
                     # Do file checks
                     check_model_files = True
@@ -905,8 +901,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                          model_copy_output_DATA2COMOUT_list) = (
                             gda_util.check_model_files(job_env_dict)
                         )
-                        job_env_dict['fhr_list'] = (
-                            "'"+', '.join(valid_date_fhr_list)+"'"
+                        job_env_dict['fhr_list'] = ', '.join(
+                            valid_date_fhr_list
                         )
                     if JOB_GROUP == 'assemble_data':
                         check_truth_files = False
@@ -967,18 +963,18 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             for dtype in ['fcst', 'obs']:
                                 dtype_level_list = (
                                     job_env_dict[f"var1_{dtype}_levels"]\
-                                    .replace("'",'').split(', ')
+                                    .split(', ')
                                 )
                                 mod_dtype_level_list = []
                                 for level_chk in dtype_level_list:
                                     if level_chk not in mod_rm_level_list:
                                         mod_dtype_level_list.append(level_chk)
                                 job_env_dict[f"var1_{dtype}_levels"] = (
-                                    "'"+', '.join(mod_dtype_level_list)+"'"
+                                    ', '.join(mod_dtype_level_list)
                                 )
                                 if verif_type_job == 'VectorWind':
                                     job_env_dict[f"var2_{dtype}_levels"] = (
-                                        "'"+', '.join(mod_dtype_level_list)+"'"
+                                        ', '.join(mod_dtype_level_list)
                                     )
                         # ECMWF, UKMET, and JMA have variables at
                         # different levels depending on if past
@@ -1033,10 +1029,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     ]
                             mod_lefhr_list = []
                             mod_gtfhr_list = []
-                            if job_env_dict['fhr_list'] != "''":
+                            if job_env_dict['fhr_list'] != '':
                                 mod_full_fhr_list = (
-                                    job_env_dict['fhr_list']\
-                                    .replace("'",'').split(', ')
+                                    job_env_dict['fhr_list'].split(', ')
                                 )
                                 for fhr_chk in mod_full_fhr_list:
                                     if int(fhr_chk) <= mod_fhr_thresh:
@@ -1064,12 +1059,12 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                         mod_rm_gtfhr_level_list
                                     )
                                 model_fhr_lev_dict[runN]['fhr_list'] = (
-                                    "'"+', '.join(mod_runN_fhr_list)+"'"
+                                    ', '.join(mod_runN_fhr_list)
                                 )
                                 for dtype in ['fcst', 'obs']:
                                     dtype_level_list = (
                                         job_env_dict[f"var1_{dtype}_levels"]\
-                                        .replace("'",'').split(', ')
+                                        .split(', ')
                                     )
                                     mod_runN_dtype_level_list = []
                                     for level_chk in dtype_level_list:
@@ -1080,16 +1075,12 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                             )
                                     (model_fhr_lev_dict[runN]\
                                      [f"var1_{dtype}_levels"]) = (
-                                         "'"
-                                         +', '.join(mod_runN_dtype_level_list)
-                                         +"'"
+                                         ', '.join(mod_runN_dtype_level_list)
                                     )
                                     if verif_type_job == 'VectorWind':
                                         (model_fhr_lev_dict[runN]\
                                          [f"var2_{dtype}_levels"]) = (
-                                             "'"
-                                             +', '.join(mod_runN_dtype_level_list)
-                                             +"'"
+                                             ', '.join(mod_runN_dtype_level_list)
                                         )
                             for run1_key \
                                     in list(model_fhr_lev_dict['run1'].keys()):
@@ -1099,7 +1090,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             if job_env_dict['MODEL'] == 'jma' \
                                     and run_jma_fhr000:
                                 model_fhr_lev_dict['run3'] = {
-                                    'fhr_list': "'0'",
+                                    'fhr_list': '0',
                                 }
                                 jma_fhr000_list = ['P1000', 'P850', 'P700',
                                                    'P500', 'P400', 'P300',
@@ -1108,20 +1099,19 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 for dtype in ['fcst', 'obs']:
                                     (model_fhr_lev_dict['run3']\
                                      [f"var1_{dtype}_levels"]) = (
-                                         "'"
-                                         +', '.join(jma_fhr000_list)
-                                         +"'"
+                                         ', '.join(jma_fhr000_list)
                                     )
                                     if verif_type_job == 'VectorWind':
                                         (model_fhr_lev_dict['run3']\
                                          [f"var2_{dtype}_levels"]) = (
-                                            "'"
-                                            +', '.join(jma_fhr000_list)
-                                            +"'"
+                                            ', '.join(jma_fhr000_list)
                                         )
                     # Write environment variables
                     for name, value in job_env_dict.items():
-                        job.write('export '+name+'='+value+'\n')
+                        if '"' in value:
+                            job.write(f"export {name}='{value}'\n")
+                        else:
+                            job.write(f'export {name}="{value}"\n')
                     # Write job commands
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
@@ -1140,15 +1130,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 )[1:]
                                 for runN in rerun_key_list:
                                     if (model_fhr_lev_dict[runN]['fhr_list']) \
-                                            != "''":
+                                            != '':
                                         export_key_list = list(
                                             model_fhr_lev_dict[runN].keys()
                                         )
                                         for export_key in export_key_list:
                                             job.write('export '
-                                                      +export_key+'='
+                                                      +export_key+'="'
                                                       +model_fhr_lev_dict[runN]\
-                                                       [export_key]+'\n')
+                                                       [export_key]+'"\n')
                                         for cmd in verif_type_job_commands_list:
                                             job.write(cmd+'\n')
                                             job.write('export err=$?; err_chk'
@@ -1163,13 +1153,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     else:
                         if JOB_GROUP == 'assemble_data':
                             if verif_type_job == 'TempAnom2m':
-                                if job_env_dict['fhr_list'] != "''":
+                                if job_env_dict['fhr_list'] != '':
                                     job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':
-    print("----> Making job scripts for "+VERIF_CASE_STEP+" "
-      +"for job group "+JOB_GROUP)
+    print(f"----> Making job scripts for {VERIF_CASE_STEP} "
+          +f"for job group {JOB_GROUP}")
     # Initialize job environment dictionary
     job_env_dict = gda_util.initalize_job_env_dict(
         JOB_GROUP, JOB_GROUP,
@@ -1184,7 +1174,7 @@ elif JOB_GROUP == 'gather_stats':
             njobs+=1
             # Create job file
             job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-            print("Creating job script: "+job_file)
+            print(f"Creating job script: {job_file}")
             job = open(job_file, 'w')
             job.write('#!/bin/bash\n')
             job.write('set -x\n')
@@ -1192,7 +1182,10 @@ elif JOB_GROUP == 'gather_stats':
             # Set any environment variables for special cases
             # Write environment variables
             for name, value in job_env_dict.items():
-                job.write('export '+name+'='+value+'\n')
+                if '"' in value:
+                    job.write(f"export {name}='{value}'\n")
+                else:
+                    job.write(f'export {name}="{value}"\n')
             job.write('\n')
             # Do file checks
             stat_files_exist = gda_util.check_stat_files(job_env_dict)

@@ -20,6 +20,14 @@ mkdir -p $DATA
 cd $DATA
 
 ####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-global_det}
+export RUN=${RUN:-long_term}
+
+####################################
 # Set EVS directories
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
@@ -45,14 +53,6 @@ export VDATEmm=${VDATEmm:-$(date -d "1 month ago" '+%m')}
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
-
-####################################
-# Define NET/RUN variables
-####################################
-export NET=${NET:-evs}
-export STEP=${STEP:-plots}
-export COMPONENT=${COMPONENT:-global_det}
-export RUN=${RUN:-long_term}
 
 ####################################
 # Define COMIN/COMOUT variables

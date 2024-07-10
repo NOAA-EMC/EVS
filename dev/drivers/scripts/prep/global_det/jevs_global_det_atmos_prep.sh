@@ -6,7 +6,6 @@
 #PBS -l walltime=01:00:00
 #PBS -l place=exclhost,select=1:ncpus=1:mem=125GB
 #PBS -l debug=true
-#PBS -V
 
 set -x 
 

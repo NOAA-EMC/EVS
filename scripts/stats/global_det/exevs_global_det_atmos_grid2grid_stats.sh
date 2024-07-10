@@ -77,17 +77,6 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
     fi
 done
 
-# Cat the METplus log files
-log_dir=$DATA/${VERIF_CASE}_${STEP}/METplus_output/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-        echo "Start: $log_file"
-        cat $log_file
-        echo "End: $log_file"
-    done
-fi
-
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Copy model files
