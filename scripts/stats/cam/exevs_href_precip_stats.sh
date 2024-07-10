@@ -106,7 +106,7 @@ fi
 #******************************************************************
 # Run gather job to combine the small stats to form a big stat file
 #******************************************************************
-if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then
+if [ $gather = yes ] && [ -s $COMOUTsmall/*/*.stat ] ; then
   $USHevs/cam/evs_href_gather.sh precip
   export err=$?; err_chk
 fi
