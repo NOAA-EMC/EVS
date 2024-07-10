@@ -20,6 +20,14 @@ mkdir -p $DATA
 cd $DATA
 
 ####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-global_det}
+export RUN=${RUN:-atmos}
+
+####################################
 # Set EVS directories
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
@@ -44,14 +52,6 @@ export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
-
-####################################
-# Define NET/RUN variables
-####################################
-export NET=${NET:-evs}
-export STEP=${STEP:-prep}
-export COMPONENT=${COMPONENT:-global_det}
-export RUN=${RUN:-atmos}
 
 ####################################
 # Define COMIN/COMOUT variables

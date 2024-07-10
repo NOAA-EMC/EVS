@@ -6,8 +6,6 @@
 #PBS -l walltime=00:10:00
 #PBS -l place=shared,select=1:ncpus=1:mem=35GB
 #PBS -l debug=true
-#PBS -V
-
 
 set -x
 
@@ -43,7 +41,7 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 today=$(cut -c7-14 ${COMROOT}/date/t${vhr}z)
-export VDATE_END=$(finddate.sh $today d-1)
+export VDATE_END=${VDATE_END:-$(finddate.sh $today d-1)}
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN.$VDATE_END
 
 # CALL executable job script here

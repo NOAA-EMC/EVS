@@ -86,7 +86,7 @@ reformat_data_model_jobs_dict = {
                                   'var1_levels': 'P500',
                                   'grid': 'G004',
                                   'met_config_overrides': (
-                                      "'climo_mean = fcst;'"
+                                      'climo_mean = fcst;'
                                   )},
                           'commands': [gda_util.metplus_command(
                                            'GridStat_fcstGLOBAL_DET_'
@@ -111,9 +111,9 @@ reformat_data_model_jobs_dict = {
                                              )]
                                        )]},
         'WindShear': {'env': {'var1_name': 'UGRD',
-                              'var1_levels': '"P850, P200"',
+                              'var1_levels': 'P850, P200',
                               'var2_name': 'VGRD',
-                              'var2_levels': '"P850, P200"',
+                              'var2_levels': 'P850, P200',
                               'grid': 'G004',
                               'met_config_overrides': ''},
                       'commands': [gda_util.metplus_command(
@@ -403,9 +403,9 @@ generate_stats_jobs_dict = {
                                     )]},
         'GeoHeightTropopause': {'env': {'var1_name': 'HGT',
                                         'var1_level': 'L0',
-                                        'var1_options': ("'GRIB_lvl_typ = 7; "
+                                        'var1_options': ('GRIB_lvl_typ = 7; '
                                                          +'set_attr_level = '
-                                                         +'"TROPOPAUSE";'+"'")},
+                                                         +'"TROPOPAUSE";')},
                                 'commands': [gda_util.metplus_command(
                                                  'GridStat_fcstGLOBAL_DET.conf'
                                              )]},
@@ -423,29 +423,26 @@ generate_stats_jobs_dict = {
                                      )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_level': 'Z0',
-                                 'var1_options': ("'set_attr_units = "
+                                 'var1_options': ('set_attr_units = '
                                                   +'"hPa"; convert(p)='
-                                                  +'PA_to_HPA(p)'
-                                                  +"'")},
+                                                  +'PA_to_HPA(p)')},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET.conf'
                                       )]},
         'PresSfc': {'env': {'var1_name': 'PRES',
                             'var1_level': 'Z0',
-                            'var1_options': ("'set_attr_units = "
-                                             +'"hPa"; convert(p)=PA_to_HPA(p)'
-                                             +"'")},
+                            'var1_options': ('set_attr_units = '
+                                             +'"hPa"; convert(p)=PA_to_HPA(p)')},
                     'commands': [gda_util.metplus_command(
                                      'GridStat_fcstGLOBAL_DET.conf'
                                  )]},
         'PresTropopause': {'env': {'var1_name': 'PRES',
                                    'var1_level': 'L0',
-                                   'var1_options': ("'GRIB_lvl_typ = 7; "
+                                   'var1_options': ('GRIB_lvl_typ = 7; '
                                                     +'set_attr_level = '
                                                     +'"TROPOPAUSE";'
                                                     +'set_attr_units = "hPa"; '
-                                                    +'convert(p)=PA_to_HPA(p)'
-                                                    +"'")},
+                                                    +'convert(p)=PA_to_HPA(p)')},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET.conf'
                                         )]},
@@ -457,16 +454,15 @@ generate_stats_jobs_dict = {
                                   )]},
         'SnowWaterEqv': {'env': {'var1_name': 'WEASD',
                                  'var1_level': 'Z0',
-                                 'var1_options': ("'set_attr_units = "
-                                                  +'"mm";'+"'")},
+                                 'var1_options': ('set_attr_units = '
+                                                  +'"mm";')},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET.conf'
                                       )]},
         'SpefHum2m': {'env': {'var1_name': 'SPFH',
                               'var1_level': 'Z2',
-                              'var1_options': ("'set_attr_units = "
-                                               +'"g/kg"; convert(x)=x*1000'
-                                               +"'")},
+                              'var1_options': ('set_attr_units = '
+                                               +'"g/kg"; convert(x)=x*1000')},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET.conf'
                                    )]},
@@ -478,9 +474,9 @@ generate_stats_jobs_dict = {
                                 )]},
         'TempTropopause': {'env': {'var1_name': 'TMP',
                                    'var1_level': 'L0',
-                                   'var1_options': ("'GRIB_lvl_typ = 7; "
+                                   'var1_options': ('GRIB_lvl_typ = 7; '
                                                     +'set_attr_level = '
-                                                    +'"TROPOPAUSE";'+"'")},
+                                                    +'"TROPOPAUSE";')},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET.conf'
                                         )]},
@@ -506,7 +502,8 @@ generate_stats_jobs_dict = {
                                          'var1_level': 'Z0-0.1',
                                          'var1_options': ''},
                                  'commands': [gda_util.metplus_command(
-                                                  'GridStat_fcstGLOBAL_DET.conf'
+                                                  'GridStat_fcstGLOBAL_DET'
+                                                  +'.conf'
                                               )]},
         'VWind10m': {'env': {'var1_name': 'VGRD',
                              'var1_level': 'Z10',
@@ -538,50 +535,50 @@ generate_stats_jobs_dict = {
                                            'GridStat_fcstGLOBAL_DET_'
                                            +'obs24hrCCPA.conf'
                                        )]},
-        '24hrCCPA_Nbrhd1': {'env': {'nbhrd_list': ("'1,3,5,7,9,11,13,"
-                                                   +"15,17,19'"),
+        '24hrCCPA_Nbrhd1': {'env': {'nbhrd_list': ('1,3,5,7,9,11,13,'
+                                                   +'15,17,19'),
                                     'met_config_overrides': ''},
                             'commands': [gda_util.metplus_command(
                                              'GridStat_fcstGLOBAL_DET_'
                                              +'obs24hrCCPA_Nbrhd.conf'
                                          )]},
-        '24hrCCPA_Nbrhd2': {'env': {'nbhrd_list': "'21,23,25,27,29'",
+        '24hrCCPA_Nbrhd2': {'env': {'nbhrd_list': '21,23,25,27,29',
                                     'met_config_overrides': ''},
                             'commands': [gda_util.metplus_command(
                                              'GridStat_fcstGLOBAL_DET_'
                                              +'obs24hrCCPA_Nbrhd.conf'
                                          )]},
-        '24hrCCPA_Nbrhd3': {'env': {'nbhrd_list': "'31,33,35,37'",
+        '24hrCCPA_Nbrhd3': {'env': {'nbhrd_list': '31,33,35,37',
                                     'met_config_overrides': ''},
                             'commands': [gda_util.metplus_command(
                                              'GridStat_fcstGLOBAL_DET_'
                                              +'obs24hrCCPA_Nbrhd.conf'
                                          )]},
-        '24hrCCPA_Nbrhd4': {'env': {'nbhrd_list': "'39,41,43'",
+        '24hrCCPA_Nbrhd4': {'env': {'nbhrd_list': '39,41,43',
                                     'met_config_overrides': ''},
                             'commands': [gda_util.metplus_command(
                                              'GridStat_fcstGLOBAL_DET_'
                                              +'obs24hrCCPA_Nbrhd.conf'
                                          )]},
-        '24hrCCPA_Nbrhd5': {'env': {'nbhrd_list': "'45,47,49'",
+        '24hrCCPA_Nbrhd5': {'env': {'nbhrd_list': '45,47,49',
                                     'met_config_overrides': ''},
                             'commands': [gda_util.metplus_command(
                                              'GridStat_fcstGLOBAL_DET_'
                                              +'obs24hrCCPA_Nbrhd.conf'
                                          )]},
-        '24hrCCPA_Nbrhd6': {'env': {'nbhrd_list': "'51,53,55'",
+        '24hrCCPA_Nbrhd6': {'env': {'nbhrd_list': '51,53,55',
                                     'met_config_overrides': ''},
                             'commands': [gda_util.metplus_command(
                                              'GridStat_fcstGLOBAL_DET_'
                                              +'obs24hrCCPA_Nbrhd.conf'
                                          )]},
-        '24hrCCPA_Nbrhd7': {'env': {'nbhrd_list': "'57,59'",
+        '24hrCCPA_Nbrhd7': {'env': {'nbhrd_list': '57,59',
                                     'met_config_overrides': ''},
                             'commands': [gda_util.metplus_command(
                                              'GridStat_fcstGLOBAL_DET_'
                                              +'obs24hrCCPA_Nbrhd.conf'
                                          )]},
-        '24hrCCPA_Nbrhd8': {'env': {'nbhrd_list': "'61,63'",
+        '24hrCCPA_Nbrhd8': {'env': {'nbhrd_list': '61,63',
                                     'met_config_overrides': ''},
                             'commands': [gda_util.metplus_command(
                                              'GridStat_fcstGLOBAL_DET_'
@@ -595,50 +592,50 @@ generate_stats_jobs_dict = {
                                           'GridStat_fcstGLOBAL_DET_'
                                           +'obs3hrCCPA.conf'
                                       )]},
-        '3hrCCPA_Nbrhd1': {'env': {'nbhrd_list': ("'1,3,5,7,9,11,13,"
-                                                  +"15,17,19'"),
+        '3hrCCPA_Nbrhd1': {'env': {'nbhrd_list': ('1,3,5,7,9,11,13,'
+                                                  +'15,17,19'),
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
                                             +'obs3hrCCPA_Nbrhd.conf'
                                         )]},
-        '3hrCCPA_Nbrhd2': {'env': {'nbhrd_list': "'21,23,25,27,29'",
+        '3hrCCPA_Nbrhd2': {'env': {'nbhrd_list': '21,23,25,27,29',
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
                                             +'obs3hrCCPA_Nbrhd.conf'
                                         )]},
-        '3hrCCPA_Nbrhd3': {'env': {'nbhrd_list': "'31,33,35,37'",
+        '3hrCCPA_Nbrhd3': {'env': {'nbhrd_list': '31,33,35,37',
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
                                             +'obs3hrCCPA_Nbrhd.conf'
                                         )]},
-        '3hrCCPA_Nbrhd4': {'env': {'nbhrd_list': "'39,41,43'",
+        '3hrCCPA_Nbrhd4': {'env': {'nbhrd_list': '39,41,43',
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
                                             +'obs3hrCCPA_Nbrhd.conf'
                                         )]},
-        '3hrCCPA_Nbrhd5': {'env': {'nbhrd_list': "'45,47,49'",
+        '3hrCCPA_Nbrhd5': {'env': {'nbhrd_list': '45,47,49',
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
                                             +'obs3hrCCPA_Nbrhd.conf'
                                         )]},
-        '3hrCCPA_Nbrhd6': {'env': {'nbhrd_list': "'51,53,55'",
+        '3hrCCPA_Nbrhd6': {'env': {'nbhrd_list': '51,53,55',
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
                                             +'obs3hrCCPA_Nbrhd.conf'
                                         )]},
-        '3hrCCPA_Nbrhd7': {'env': {'nbhrd_list': "'57,59'",
+        '3hrCCPA_Nbrhd7': {'env': {'nbhrd_list': '57,59',
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
                                             +'obs3hrCCPA_Nbrhd.conf'
                                         )]},
-        '3hrCCPA_Nbrhd8': {'env': {'nbhrd_list': "'61,63'",
+        '3hrCCPA_Nbrhd8': {'env': {'nbhrd_list': '61,63',
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
@@ -647,18 +644,18 @@ generate_stats_jobs_dict = {
     },
     'pres_levs': {
         'GeoHeight': {'env': {'var1_name': 'HGT',
-                              'var1_levels': "'P1000, P700, P500, P250'",
+                              'var1_levels': 'P1000, P700, P500, P250',
                               'var1_options': '',
-                              'met_config_overrides': "'climo_mean = fcst;'"},
+                              'met_config_overrides': 'climo_mean = fcst;'},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET_'
                                        +'obsModelAnalysis_climoERA5.conf'
                                    )]},
         'GeoHeight_FourierDecomp': {'env': {'var1_name': 'HGT',
                                             'var1_levels': 'P500',
-                                            'met_config_overrides': ("'climo_"
-                                                                     +"mean = "
-                                                                     +"fcst;'")},
+                                            'met_config_overrides': ('climo_'
+                                                                     +'mean = '
+                                                                     +'fcst;')},
                                     'commands': [gda_util.metplus_command(
                                                      'GridStat_fcstGLOBAL_DET_'
                                                      +'obsModelAnalysis_'
@@ -668,7 +665,7 @@ generate_stats_jobs_dict = {
         'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                            'var1_levels': 'P500',
                                            'met_config_overrides': (
-                                               "'climo_mean = fcst;'"
+                                               'climo_mean = fcst;'
                                            )},
                                    'commands': [gda_util.metplus_command(
                                                     'GridStat_fcstGLOBAL_DET_'
@@ -676,55 +673,54 @@ generate_stats_jobs_dict = {
                                                     +'.conf'
                                                 )]},
         'Ozone': {'env': {'var1_name': 'O3MR',
-                          'var1_levels': ("'P925, P100, P70, P50, P30, P20, "
-                                          +"P10, P5, P1'"),
-                          'var1_options': ("'set_attr_units = "
-                                           +'"ppm"; convert(x)=x*1000000'
-                                           +"'"),
-                          'met_config_overrides': "'climo_mean = fcst;'"},
+                          'var1_levels': ('P925, P100, P70, P50, P30, P20, '
+                                          +'P10, P5, P1'),
+                          'var1_options': ('set_attr_units = '
+                                           +'"ppm"; convert(x)=x*1000000'),
+                          'met_config_overrides': 'climo_mean = fcst;'},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
                                    +'obsModelAnalysis_climoERA5.conf'
                                )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_levels': 'Z0',
-                                 'var1_options': ("'set_attr_units = "
-                                                  +'"hPa"; convert(p)=PA_to_HPA(p)'
-                                                  +"'"),
-                                 'met_config_overrides': "'climo_mean = fcst;'"},
+                                 'var1_options': ('set_attr_units = '
+                                                  +'"hPa"; convert(p)='
+                                                  +'PA_to_HPA(p)'),
+                                 'met_config_overrides': 'climo_mean = fcst;'},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET_'
                                           +'obsModelAnalysis_climoERA5.conf'
                                       )]},
         'Temp': {'env': {'var1_name': 'TMP',
-                         'var1_levels': "'P850, P500, P250'",
+                         'var1_levels': 'P850, P500, P250',
                          'var1_options': '',
-                         'met_config_overrides': "'climo_mean = fcst;'"},
+                         'met_config_overrides': 'climo_mean = fcst;'},
                  'commands': [gda_util.metplus_command(
                                   'GridStat_fcstGLOBAL_DET_'
                                   +'obsModelAnalysis_climoERA5.conf'
                               )]},
         'UWind': {'env': {'var1_name': 'UGRD',
-                          'var1_levels': "'P850, P500, P250'",
+                          'var1_levels': 'P850, P500, P250',
                           'var1_options': '',
-                          'met_config_overrides': "'climo_mean = fcst;'"},
+                          'met_config_overrides': 'climo_mean = fcst;'},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
                                    +'obsModelAnalysis_climoERA5.conf'
                                )]},
         'VWind': {'env': {'var1_name': 'VGRD',
-                          'var1_levels': "'P850, P500, P250'",
+                          'var1_levels': 'P850, P500, P250',
                           'var1_options': '',
-                          'met_config_overrides': "'climo_mean = fcst;'"},
+                          'met_config_overrides': 'climo_mean = fcst;'},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
                                    +'obsModelAnalysis_climoERA5.conf'
                                )]},
         'VectorWind': {'env': {'var1_name': 'UGRD',
-                               'var1_levels': "'P850, P500, P250'",
+                               'var1_levels': 'P850, P500, P250',
                                'var2_name': 'VGRD',
-                               'var2_levels': "'P850, P500, P250'",
-                               'met_config_overrides': "'climo_mean = fcst;'"},
+                               'var2_levels': 'P850, P500, P250',
+                               'met_config_overrides': 'climo_mean = fcst;'},
                        'commands': [gda_util.metplus_command(
                                         'GridStat_fcstGLOBAL_DET_'
                                         +'obsModelAnalysis_climoERA5_'
@@ -818,8 +814,8 @@ generate_stats_jobs_dict = {
                                                    +'obs24hrNOHRSC.conf'
                                                )]},
         '24hrNOHRSC_WaterEqv_Nbrhd1': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': ("'1,3,5,7,9,11,"
-                                                              +"13,15,17,19'"),
+                                               'nbhrd_list': ('1,3,5,7,9,11,'
+                                                              +'13,15,17,19'),
                                                'var1_name': 'WEASD',
                                                'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
@@ -827,8 +823,8 @@ generate_stats_jobs_dict = {
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
                                                    )]},
         '24hrNOHRSC_WaterEqv_Nbrhd2': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': ("'21,23,25,27,"
-                                                              +"29'"),
+                                               'nbhrd_list': ('21,23,25,27,'
+                                                              +'29'),
                                                'var1_name': 'WEASD',
                                                'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
@@ -836,7 +832,7 @@ generate_stats_jobs_dict = {
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
                                                    )]},
         '24hrNOHRSC_WaterEqv_Nbrhd3': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'31,33,35,37'",
+                                               'nbhrd_list': '31,33,35,37',
                                                'var1_name': 'WEASD',
                                                'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
@@ -844,7 +840,7 @@ generate_stats_jobs_dict = {
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
                                                    )]},
         '24hrNOHRSC_WaterEqv_Nbrhd4': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'39,41,43'",
+                                               'nbhrd_list': '39,41,43',
                                                'var1_name': 'WEASD',
                                                'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
@@ -852,7 +848,7 @@ generate_stats_jobs_dict = {
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
                                                    )]},
         '24hrNOHRSC_WaterEqv_Nbrhd5': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'45,47,49'",
+                                               'nbhrd_list': '45,47,49',
                                                'var1_name': 'WEASD',
                                                'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
@@ -860,7 +856,7 @@ generate_stats_jobs_dict = {
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
                                                    )]},
         '24hrNOHRSC_WaterEqv_Nbrhd6': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'51,53,55'",
+                                               'nbhrd_list': '51,53,55',
                                                'var1_name': 'WEASD',
                                                'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
@@ -868,7 +864,7 @@ generate_stats_jobs_dict = {
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
                                                    )]},
         '24hrNOHRSC_WaterEqv_Nbrhd7': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'57,59'",
+                                               'nbhrd_list': '57,59',
                                                'var1_name': 'WEASD',
                                                'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
@@ -876,7 +872,7 @@ generate_stats_jobs_dict = {
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
                                                    )]},
         '24hrNOHRSC_WaterEqv_Nbrhd8': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'61,63'",
+                                               'nbhrd_list': '61,63',
                                                'var1_name': 'WEASD',
                                                'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
@@ -884,8 +880,8 @@ generate_stats_jobs_dict = {
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
                                                    )]},
         '24hrNOHRSC_Depth_Nbrhd1': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': ("'1,3,5,7,9,11,13,"
-                                                           +"15,17,19'"),
+                                            'nbhrd_list': ('1,3,5,7,9,11,13,'
+                                                           +'15,17,19'),
                                             'var1_name': 'SNOD',
                                             'var1_convert': '1'},
                                     'commands': [gda_util.metplus_command(
@@ -893,7 +889,7 @@ generate_stats_jobs_dict = {
                                                      +'obs24hrNOHRSC_Nbrhd.conf'
                                                  )]},
         '24hrNOHRSC_Depth_Nbrhd2': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'21,23,25,27,29'",
+                                            'nbhrd_list': '21,23,25,27,29',
                                             'var1_name': 'SNOD',
                                             'var1_convert': '1'},
                                     'commands': [gda_util.metplus_command(
@@ -901,7 +897,7 @@ generate_stats_jobs_dict = {
                                                      +'obs24hrNOHRSC_Nbrhd.conf'
                                                  )]},
         '24hrNOHRSC_Depth_Nbrhd3': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'31,33,35,37'",
+                                            'nbhrd_list': '31,33,35,37',
                                             'var1_name': 'SNOD',
                                             'var1_convert': '1'},
                                     'commands': [gda_util.metplus_command(
@@ -909,7 +905,7 @@ generate_stats_jobs_dict = {
                                                      +'obs24hrNOHRSC_Nbrhd.conf'
                                                  )]},
         '24hrNOHRSC_Depth_Nbrhd4': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'39,41,43'",
+                                            'nbhrd_list': '39,41,43',
                                             'var1_name': 'SNOD',
                                             'var1_convert': '1'},
                                     'commands': [gda_util.metplus_command(
@@ -917,7 +913,7 @@ generate_stats_jobs_dict = {
                                                      +'obs24hrNOHRSC_Nbrhd.conf'
                                                  )]},
         '24hrNOHRSC_Depth_Nbrhd5': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'45,47,49'",
+                                            'nbhrd_list': '45,47,49',
                                             'var1_name': 'SNOD',
                                             'var1_convert': '1'},
                                     'commands': [gda_util.metplus_command(
@@ -925,7 +921,7 @@ generate_stats_jobs_dict = {
                                                      +'obs24hrNOHRSC_Nbrhd.conf'
                                                  )]},
         '24hrNOHRSC_Depth_Nbrhd6': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'51,53,55'",
+                                            'nbhrd_list': '51,53,55',
                                             'var1_name': 'SNOD',
                                             'var1_convert': '1'},
                                     'commands': [gda_util.metplus_command(
@@ -933,7 +929,7 @@ generate_stats_jobs_dict = {
                                                      +'obs24hrNOHRSC_Nbrhd.conf'
                                                  )]},
         '24hrNOHRSC_Depth_Nbrhd7': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'57,59'",
+                                            'nbhrd_list': '57,59',
                                             'var1_name': 'SNOD',
                                             'var1_convert': '1'},
                                     'commands': [gda_util.metplus_command(
@@ -941,7 +937,7 @@ generate_stats_jobs_dict = {
                                                      +'obs24hrNOHRSC_Nbrhd.conf'
                                                  )]},
         '24hrNOHRSC_Depth_Nbrhd8': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'61,63'",
+                                            'nbhrd_list': '61,63',
                                             'var1_name': 'SNOD',
                                             'var1_convert': '1'},
                                     'commands': [gda_util.metplus_command(
@@ -975,8 +971,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
     elif JOB_GROUP == 'generate_stats':
         JOB_GROUP_jobs_dict = generate_stats_jobs_dict
     for verif_type in VERIF_CASE_STEP_type_list:
-        print("----> Making job scripts for "+VERIF_CASE_STEP+" "
-              +verif_type+" for job group "+JOB_GROUP)
+        print(f"----> Making job scripts for {VERIF_CASE_STEP} {verif_type} "
+              +f"for job group {JOB_GROUP}")
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +verif_type)
         # Read in environment variables for verif_type
@@ -1051,7 +1047,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job_env_dict['job_num'] = str(njobs)
                     # Create job file
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-                    print("Creating job script: "+job_file)
+                    print(f"Creating job script: {job_file}")
                     job = open(job_file, 'w')
                     job.write('#!/bin/bash\n')
                     job.write('set -x\n')
@@ -1062,7 +1058,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             job_env_dict['TRUTH'] = os.environ[
                                 VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
                             ].split(' ')[model_idx]
-                    if JOB_GROUP == 'assemble_data':
+                    elif JOB_GROUP == 'assemble_data':
                         if verif_type in ['precip_accum24hr',
                                           'precip_accum3hr']:
                             job_env_dict['MODEL_var'] = (
@@ -1084,12 +1080,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if verif_type == 'pres_levs' \
                                 and verif_type_job == 'DailyAvg_GeoHeightAnom':
                             job_fhr_list = []
-                            for fhr in (full_job_fhr_list.replace("'",'')
-                                        .split(', ')):
+                            for fhr in full_job_fhr_list.split(', '):
                                 if int(fhr) % 24 == 0 and int(fhr) >= 24:
                                     job_fhr_list.append(fhr)
                                 job_env_dict['fhr_list'] = (
-                                    "'"+', '.join(job_fhr_list)+"'"
+                                    ', '.join(job_fhr_list)
                                 )
                     elif JOB_GROUP == 'generate_stats':
                         if verif_type == 'pres_levs':
@@ -1098,12 +1093,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             ].split(' ')[model_idx]
                             if verif_type_job == 'DailyAvg_GeoHeightAnom':
                                 job_fhr_list = []
-                                for fhr in (full_job_fhr_list.replace("'",'')
-                                            .split(', ')):
+                                for fhr in full_job_fhr_list.split(', '):
                                     if int(fhr) % 24 == 0 and int(fhr) >= 24:
                                         job_fhr_list.append(fhr)
-                                    job_env_dict['fhr_list'] = (
-                                        "'"+', '.join(job_fhr_list)+"'"
+                                    job_env_dict['fhr_list'] = ', '.join(
+                                        job_fhr_list
                                     )
                     # Do file checks
                     all_truth_file_exist = False
@@ -1116,7 +1110,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             gda_util.check_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
-                            "'"+', '.join(valid_date_fhr_list)+"'"
+                            ', '.join(valid_date_fhr_list)
                         )
                     if JOB_GROUP == 'reformat_data':
                         if verif_type == 'pres_levs' \
@@ -1157,17 +1151,18 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         # UKMET does not have winds at P200 past fhr120
                         if verif_type == 'pres_levs' \
                                 and verif_type_job == 'WindShear' \
-                                and job_env_dict['MODEL'] == 'ukmet':
+                                and job_env_dict['MODEL'] == 'ukmet' \
+                                and job_env_dict['fhr_list'] != "''":
                             ukmet_fhr_list = []
                             ukmet_fhr_rm_list = []
                             for fhr_chk in (job_env_dict['fhr_list']\
-                                            .replace("'",'').split(', ')):
+                                            .split(', ')):
                                 if int(fhr_chk) <= 120:
                                     ukmet_fhr_list.append(fhr_chk)
                                 else:
                                     ukmet_fhr_rm_list.append(fhr_chk)
                             job_env_dict['fhr_list'] = (
-                                "'"+', '.join(ukmet_fhr_list)+"'"
+                                ', '.join(ukmet_fhr_list)
                             )
                     elif JOB_GROUP == 'assemble_data':
                         # JMA does not have the forecast hour frequency
@@ -1189,12 +1184,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 and verif_type_job == 'Ozone' \
                                 and job_env_dict['MODEL'] == 'imd':
                             imd_ozone_level_list = (
-                                job_env_dict['var1_levels']\
-                                .replace("'",'').split(', ')
+                                job_env_dict['var1_levels'].split(', ')
                             )
                             imd_ozone_level_list.remove('P925')
-                            job_env_dict['var1_levels'] = (
-                                "'"+', '.join(imd_ozone_level_list)+"'"
+                            job_env_dict['var1_levels'] = ', '.join(
+                                imd_ozone_level_list
                             )
                         # UKMET does not have winds at P200 past fhr120
                         if verif_type == 'pres_levs' \
@@ -1204,13 +1198,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             ukmet_fhr_list = []
                             ukmet_fhr_rm_list = []
                             for fhr_chk in (job_env_dict['fhr_list']\
-                                            .replace("'",'').split(', ')):
+                                            .split(', ')):
                                 if int(fhr_chk) <= 120:
                                     ukmet_fhr_list.append(fhr_chk)
                                 else:
                                     ukmet_fhr_rm_list.append(fhr_chk)
-                            job_env_dict['fhr_list'] = (
-                                "'"+', '.join(ukmet_fhr_list)+"'"
+                            job_env_dict['fhr_list'] = ', '.join(
+                                ukmet_fhr_list
                             )
                         # JMA does not have the forecast hour frequency
                         # to do daily average Geopotential Height anomalies
@@ -1248,10 +1242,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     ]
                             mod_lefhr_list = []
                             mod_gtfhr_list = []
-                            if job_env_dict['fhr_list'] != "''":
+                            if job_env_dict['fhr_list'] != '':
                                 mod_full_fhr_list = (
-                                    job_env_dict['fhr_list']\
-                                    .replace("'",'').split(', ')
+                                    job_env_dict['fhr_list'].split(', ')
                                 )
                                 for fhr_chk in mod_full_fhr_list:
                                     if int(fhr_chk) <= mod_fhr_thresh:
@@ -1270,11 +1263,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                         mod_rm_gtfhr_level_list
                                     )
                                 model_fhr_lev_dict[runN]['fhr_list'] = (
-                                    "'"+', '.join(mod_runN_fhr_list)+"'"
+                                    ', '.join(mod_runN_fhr_list)
                                 )
                                 level_list = (
-                                    job_env_dict[f"var1_levels"]\
-                                    .replace("'",'').split(', ')
+                                    job_env_dict[f"var1_levels"].split(', ')
                                 )
                                 mod_runN_level_list = []
                                 for level_chk in level_list:
@@ -1285,16 +1277,12 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                         )
                                 (model_fhr_lev_dict[runN]\
                                  [f"var1_levels"]) = (
-                                     "'"
-                                     +', '.join(mod_runN_level_list)
-                                     +"'"
+                                     ', '.join(mod_runN_level_list)
                                 )
                                 if verif_type_job == 'VectorWind':
                                     (model_fhr_lev_dict[runN]\
                                      [f"var2_levels"]) = (
-                                         "'"
-                                         +', '.join(mod_runN_level_list)
-                                         +"'"
+                                         ', '.join(mod_runN_level_list)
                                     )
                             for run1_key \
                                     in list(model_fhr_lev_dict['run1'].keys()):
@@ -1303,7 +1291,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 )
                     # Write environment variables
                     for name, value in job_env_dict.items():
-                        job.write('export '+name+'='+value+'\n')
+                        if '"' in value:
+                            job.write(f"export {name}='{value}'\n")
+                        else:
+                            job.write(f'export {name}="{value}"\n')
                     job.write('\n')
                     # Write job commands
                     if write_job_cmds:
@@ -1323,15 +1314,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 )[1:]
                                 for runN in rerun_key_list:
                                     if (model_fhr_lev_dict[runN]['fhr_list']) \
-                                            != "''":
+                                            != '':
                                         export_key_list = list(
                                             model_fhr_lev_dict[runN].keys()
                                         )
                                         for export_key in export_key_list:
                                             job.write('export '
-                                                      +export_key+'='
+                                                      +export_key+'="'
                                                       +model_fhr_lev_dict[runN]\
-                                                       [export_key]+'\n')
+                                                       [export_key]+'"\n')
                                         for cmd in verif_type_job_commands_list:
                                             job.write(cmd+'\n')
                                             job.write('export err=$?; err_chk'
@@ -1349,7 +1340,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                      and int(job_env_dict['valid_hr_start']) \
                                      % 12 == 0) \
                                     or verif_type_job == 'WindShear':
-                                if job_env_dict['fhr_list'] != "''":
+                                if job_env_dict['fhr_list'] != '':
                                     job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
@@ -1396,7 +1387,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     njobs+=1
                     # Create job file
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-                    print("Creating job script: "+job_file)
+                    print(f"Creating job script: {job_file}")
                     job = open(job_file, 'w')
                     job.write('#!/bin/bash\n')
                     job.write('set -x\n')
@@ -1413,7 +1404,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         write_job_cmds = False
                     # Write environment variables
                     for name, value in job_env_dict.items():
-                        job.write('export '+name+'='+value+'\n')
+                        if '"' in value:
+                            job.write(f"export {name}='{value}'\n")
+                        else:
+                            job.write(f'export {name}="{value}"\n')
                     job.write('\n')
                     # Write job commands
                     if write_job_cmds:
@@ -1430,8 +1424,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':
-    print("----> Making job scripts for "+VERIF_CASE_STEP+" "
-      +"for job group "+JOB_GROUP)
+    print(f"----> Making job scripts for {VERIF_CASE_STEP} "
+          +"for job group {JOB_GROUP}")
     # Initialize job environment dictionary
     job_env_dict = gda_util.initalize_job_env_dict(
         JOB_GROUP, JOB_GROUP,
@@ -1446,7 +1440,7 @@ elif JOB_GROUP == 'gather_stats':
             njobs+=1
             # Create job file
             job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-            print("Creating job script: "+job_file)
+            print(f"Creating job script: {job_file}")
             job = open(job_file, 'w')
             job.write('#!/bin/bash\n')
             job.write('set -x\n')
@@ -1454,7 +1448,10 @@ elif JOB_GROUP == 'gather_stats':
             # Set any environment variables for special cases
             # Write environment variables
             for name, value in job_env_dict.items():
-                job.write('export '+name+'='+value+'\n')
+                if '"' in value:
+                    job.write(f"export {name}='{value}'\n")
+                else:
+                    job.write(f'export {name}="{value}"\n')
             job.write('\n')
             # Do file checks
             stat_files_exist = gda_util.check_stat_files(job_env_dict)
