@@ -797,13 +797,10 @@ elif STEP == 'plots' :
                       +int(VERIF_CASE_STEP_precip_fhr_inc),
                       int(VERIF_CASE_STEP_precip_fhr_inc))
             )
-        COMINccpa = os.path.join(
-            COMIN, 'stats', COMPONENT,
-            RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-            'ccpa', 'grid2grid'
-        )
         source_ccpa_pcp_combine_file = os.path.join(
-            COMINccpa, 'pcp_combine_precip_accum24hr_24hrCCPA_valid'
+            COMIN, 'prep', COMPONENT,
+            RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+            'ccpa_accum24hr', 'pcp_combine_precip_accum24hr_24hrCCPA_valid'
             +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
         )
         dest_ccpa_pcp_combine_file = os.path.join(
@@ -819,19 +816,17 @@ elif STEP == 'plots' :
                            dest_ccpa_pcp_combine_file)
         for model_idx in range(len(model_list)):
             model = model_list[model_idx]
-            COMINmodel = os.path.join(
-                COMIN, 'stats', COMPONENT,
-                RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                model, 'grid2grid'
-            )
             for fhr in VERIF_CASE_STEP_precip_fhr_list:
                 init_dt = (
                     end_date_dt
                     + datetime.timedelta(hours=int(CCPA24hr_valid_hr_list[0]))
                 )- datetime.timedelta(hours=fhr)
                 source_model_fhr_pcp_combine_file = os.path.join(
-                    COMINmodel, 'pcp_combine_precip_accum24hr_24hrAccum_init'
-                    +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)+'.nc'
+                    COMIN, 'stats', COMPONENT,
+                    RUN+'.'+end_date_dt.strftime('%Y%m%d'), model, 'grid2grid',
+                    'pcp_combine_precip_accum24hr_24hrAccum_init'
+                    +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)
+                    +'.nc'
                 )
                 dest_model_fhr_pcp_combine_file = os.path.join(
                     VERIF_CASE_STEP_data_dir, model,
