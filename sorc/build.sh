@@ -20,13 +20,15 @@ module load craype/${craype_ver}
 module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
 module load bacio/${bacio_ver}
-module load w3emc/${w3emc_ver}
+#module load w3emc/${w3emc_ver}
 module load ip/${ip_ver}
 module load sp/${sp_ver}
 module load g2/${g2_ver}
 module load jasper/${jasper_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
+module use /lfs/h2/emc/eib/save/Hang.Lei/forgdit/nco_wcoss2/install/modulefiles/compiler/intel/19.1.3.304
+module load w3emc/${w3emc_ver}
 module list
 set -x
 w3emc_lib4_name=$(echo ${W3EMC_LIB4##*/})
