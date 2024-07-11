@@ -1584,7 +1584,7 @@ suite evs_nco
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/prep'
           family global_det
             task jevs_global_det_atmos_prep
-              time 18:15
+              time 18:10
           endfamily
           family cam
             task jevs_cam_radar_prep_vhr_18
