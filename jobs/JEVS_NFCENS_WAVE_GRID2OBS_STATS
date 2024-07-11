@@ -31,16 +31,6 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 
 ####################################
-# Set EVS directories               
-####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export USHevs=${USHevs:-$HOMEevs/ush}
-
-
-####################################
 # Define NET/RUN variables          
 ####################################
 export NET=${NET:-evs}
@@ -48,10 +38,23 @@ export MODEL=${MODEL:-evs}
 export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-nfcens}
 export MODELNAME=${MODELNAME:-nfcens}
+export MODEL1NAME=${MODEL1NAME:-gefs}
+export MODEL2NAME=${MODEL2NAME:-fnmoc}
 export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
+export MOD1NAM=`echo $MODEL1NAME | tr '[a-z]' '[A-Z]'`
+export MOD2NAM=`echo $MODEL2NAME | tr '[a-z]' '[A-Z]'`
 export OBTYPE=${OBTYPE:-GDAS}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
+
+####################################
+# Set EVS directories               
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
 
 ####################################
 # Define COMIN/COMOUT variables     

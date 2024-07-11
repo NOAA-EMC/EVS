@@ -11,6 +11,8 @@ export regrid='NONE'
 modnam=href
 verify=$1
 
+get_gather=no
+
 if [ $verify = precip ] ; then
  if [ "$verif_precip" = "no" ] ; then
   MODELS='HREF_SNOW'
@@ -19,11 +21,24 @@ if [ $verify = precip ] ; then
  else
   MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB HREF_EAS HREF_SNOW'
  fi
+  for MODL in $MODELS ; do
+    if [ -s $COMOUTsmall/${MODL}/*.stat ] ; then
+      get_gather=yes
+    fi
+  done
 elif [ $verify = grid2obs ] ; then
  MODELS='HREF HREF_MEAN HREF_PROB'
+ if [ -s $COMOUTsmall/*.stat ] ; then
+    get_gather=yes
+ fi
 elif [ $verify = spcoutlook ] ; then
  MODELS='HREF_MEAN'
+ if [ -s $COMOUTsmall/*.stat ] ; then
+    get_gather=yes
+ fi
 fi 
+
+if [ $get_gather = yes ] ; then
 
 #****************************************
 # Build a POE script to collect sub-jobs
@@ -72,3 +87,8 @@ chmod 775 run_gather_all_poe.sh
 #*****************************
 ${DATA}/run_gather_all_poe.sh
 export err=$?; err_chk
+
+else
+  echo "NO stat files exsist in $COMOUTsmall directory" 
+fi 
+

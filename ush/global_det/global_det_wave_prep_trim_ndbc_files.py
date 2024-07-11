@@ -28,6 +28,7 @@ FIXevs = os.environ['FIXevs']
 # Set up dates
 INITDATE_dt = datetime.datetime.strptime(INITDATE, '%Y%m%d')
 INITDATEp1_dt = datetime.datetime.strptime(INITDATEp1, '%Y%m%d')
+INITDATEm1_dt = INITDATE_dt - datetime.timedelta(days=1)
 
 # Assign header columns in NDBC individual buoy files
 ndbc_header1 = ("#YY  MM DD hh mm WDIR WSPD GST  WVHT   DPD   APD MWD   "
@@ -61,20 +62,29 @@ for ndbc_input_file in glob.glob(os.path.join(DCOMINndbc,
     if not os.path.exists(ndbc_output_file):
         print(f"Trimming {ndbc_input_file} for {INITDATE_dt:%Y%m%d}")
         ndbc_input_file_df = pd.read_csv(
-            ndbc_input_file, sep=" ", skiprows=2, skipinitialspace=True,
+            ndbc_input_file, sep=" ", skipinitialspace=True,
             keep_default_na=False, dtype='str', header=None,
-            names=ndbc_header1[1:].split()
+            names=ndbc_header1[1:].split(), index_col=False,
+            on_bad_lines='warn'
         )
-        trimmed_ndbc_input_file_df = ndbc_input_file_df[
+        INITDATE_ndbc_input_file_df = ndbc_input_file_df[
             (ndbc_input_file_df['YY'] == f"{INITDATE_dt:%Y}") \
              & (ndbc_input_file_df['MM'] == f"{INITDATE_dt:%m}") \
              & (ndbc_input_file_df['DD'] == f"{INITDATE_dt:%d}")
+        ]
+        INITDATEm1_ndbc_input_file_df = ndbc_input_file_df[
+            (ndbc_input_file_df['YY'] == f"{INITDATEm1_dt:%Y}") \
+             & (ndbc_input_file_df['MM'] == f"{INITDATEm1_dt:%m}") \
+             & (ndbc_input_file_df['DD'] == f"{INITDATEm1_dt:%d}")
         ]
         ndbc_tmp_file_data = open(ndbc_tmp_file, 'w')
         ndbc_tmp_file_data.write(ndbc_header1)
         ndbc_tmp_file_data.write(ndbc_header2)
         ndbc_tmp_file_data.close()
-        trimmed_ndbc_input_file_df.to_csv(
+        INITDATE_ndbc_input_file_df.to_csv(
+            ndbc_tmp_file, header=None, index=None, sep=' ', mode='a'
+        )
+        INITDATEm1_ndbc_input_file_df.to_csv(
             ndbc_tmp_file, header=None, index=None, sep=' ', mode='a'
         )
         if SENDCOM == 'YES':

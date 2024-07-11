@@ -10,7 +10,7 @@
 export STAT_ANALYSIS_OUTPUT_DIR=$DATA/${OBSERVATION}_${RESOLUTION}_${CENTER}_stat
 
 if [ $OBSERVATION = "GCIP" ] ; then
-    export FHOURS="06 09 12 15 18 21 24 27 30 33 36"
+    export FHOURS=${FHOURS:-"06 09 12 15 18 21 24 27 30 33 36"}
     export FHOURS_EVSlist=${FHOURS// /, }
 
     export valid_inc=3
@@ -31,7 +31,7 @@ if [ $OBSERVATION = "GCIP" ] ; then
 	
     fi
 elif [ $OBSERVATION = "GFS" ] ; then
-    export FHOURS="06 12 18 24 30 36"
+    export FHOURS=${FHOURS:-"06 12 18 24 30 36"}
     export FHOURS_EVSlist=${FHOURS// /, }
 
     export valid_inc=6
@@ -40,9 +40,9 @@ elif [ $OBSERVATION = "GFS" ] ; then
     if [ $RESOLUTION = "1P25" ] ; then
         export REGRID=G045
 	if [[ $WDIR = 'yes' ]] ; then
-            export VAR_NAME="TMP, WIND, WIND80, WDIR" # For plotting only
+            export VAR_NAME=${VAR_NAME_GFS:-"TMP, WIND, WIND80, WDIR"} # For plotting only
 	else
-            export VAR_NAME="TMP, WIND, WIND80" # For plotting only
+            export VAR_NAME=${VAR_NAME_GFS:-"TMP, WIND, WIND80"} # For plotting only
 	fi
 	export VAR_LEVELS="P850, P700, P600, P500, P400, P300, P250, P200, P150, P100"
 

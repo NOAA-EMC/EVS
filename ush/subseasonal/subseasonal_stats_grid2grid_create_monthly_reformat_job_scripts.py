@@ -59,13 +59,13 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 #### reformat_data jobs
 ################################################
 reformat_data_obs_jobs_dict = {
-    'anom': {},
+    'temp': {},
     'pres_lvls': {},
     'seaice': {},
     'sst': {},
 }
 reformat_data_model_jobs_dict = {
-    'anom': {},
+    'temp': {},
     'pres_lvls': {},
     'seaice': {
         'Concentration': {'env': {'var1_name': 'ICEC',
