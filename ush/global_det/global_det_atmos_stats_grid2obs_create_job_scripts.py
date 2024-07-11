@@ -846,6 +846,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 'G004_TROPICS', 'Bukovsky_G004_CONUS',
                                 'Alaska_G004'
                             ]
+                            if job_env_dict['MODEL'] == 'gfs':
+                                mask_list.append('G221_NAMER')
                         elif verif_type in ['sfc', 'ptype']:
                             job_env_dict['grid'] = 'G104'
                             mask_list = [
