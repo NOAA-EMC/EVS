@@ -302,7 +302,7 @@ for valid in 00z 12z ; do
           var_new='windspeed.ge.40kt.p850'	
         elif [ $var = 850mb_tmp_ens_freq_lt273.15 ] ; then
 	  var_new='tmp.lt.0C.p850'
-          end=eq273.15.png
+          end=bss_smpl.png
 	fi
       else
         level=''
@@ -316,10 +316,17 @@ for valid in 00z 12z ; do
           new_lead=$lead
         fi
 
-       if [ ${score_type} = lead_average ] ; then	
+       if [ ${score_type} = lead_average ] ; then
+
+	 if [ $var = 850mb_tmp_ens_freq_lt273.15 ] ; then 
+	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${end} ] ; then
+	       mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${end}  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+	  fi
+         else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end} ] ; then
              mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end}  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
           fi 
+	 fi
        else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png ] ; then
    	     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}_${new_lead}.${new_domain}.png
