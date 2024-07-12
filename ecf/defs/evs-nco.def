@@ -49,6 +49,9 @@ suite evs_nco
             task jevs_cam_radar_prep_vhr_05
               time 05:05
               edit VHR '05'
+            task jevs_cam_rrfs_precip_prep_vhr_00
+              time 00:00
+              edit VHR '00'
             task jevs_cam_namnest_precip_prep_vhr_00
               time 00:00
               edit VHR '00'
@@ -70,6 +73,9 @@ suite evs_nco
             task jevs_cam_namnest_severe_prep_vhr_00
               time 00:00
               edit VHR '00'
+            task jevs_cam_rrfs_severe_prep_vhr_00
+              time 00:00
+              edit VHR '00'
             task jevs_cam_hireswarw_severe_prep_vhr_00
               time 00:00
               edit VHR '00'
@@ -80,7 +86,7 @@ suite evs_nco
               time 00:00
               edit VHR '00'
             task jevs_cam_href_severe_prep_vhr_00
-              trigger ./jevs_cam_hireswarw_severe_prep_vhr_00 == complete and ./jevs_cam_hireswarwmem2_severe_prep_vhr_00 == complete and ./jevs_cam_hireswfv3_severe_prep_vhr_00 == complete and ./jevs_cam_hrrr_severe_prep_vhr_00 == complete and ./jevs_cam_namnest_severe_prep_vhr_00 == complete
+              trigger ./jevs_cam_hireswarw_severe_prep_vhr_00 == complete and ./jevs_cam_hireswarwmem2_severe_prep_vhr_00 == complete and ./jevs_cam_hireswfv3_severe_prep_vhr_00 == complete and ./jevs_cam_hrrr_severe_prep_vhr_00 == complete and ./jevs_cam_namnest_severe_prep_vhr_00 == complete and ./jevs_cam_rrfs_severe_prep_vhr_00 == complete 
               edit VHR '00'
           endfamily
           family aqm
@@ -151,6 +157,24 @@ suite evs_nco
               time 04:00
               edit VHR '04'
             task jevs_cam_nam_firewxnest_grid2obs_stats_vhr_05
+              time 05:00
+              edit VHR '05'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_00
+              time 00:00
+              edit VHR '00'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_01
+              time 01:00
+              edit VHR '01'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_02
+              time 02:00
+              edit VHR '02'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_03
+              time 03:00
+              edit VHR '03'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_04
+              time 04:00
+              edit VHR '04'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_05
               time 05:00
               edit VHR '05'
             task jevs_cam_hireswarwmem2_radar_stats_vhr_00
@@ -261,6 +285,24 @@ suite evs_nco
             task jevs_cam_namnest_radar_stats_vhr_05
               time 05:40
               edit VHR '05'
+            task jevs_cam_rrfs_radar_stats_vhr_00
+              time 00:40
+              edit VHR '00'
+            task jevs_cam_rrfs_radar_stats_vhr_01
+              time 01:40
+              edit VHR '01'
+            task jevs_cam_rrfs_radar_stats_vhr_02
+              time 02:40
+              edit VHR '02'
+            task jevs_cam_rrfs_radar_stats_vhr_03
+              time 03:40
+              edit VHR '03'
+            task jevs_cam_rrfs_radar_stats_vhr_04
+              time 04:40
+              edit VHR '04'
+            task jevs_cam_rrfs_radar_stats_vhr_05
+              time 05:40
+              edit VHR '05'
             task jevs_cam_hireswarw_snowfall_stats_vhr_00
               time 00:30
               edit VHR '00'
@@ -274,6 +316,9 @@ suite evs_nco
               time 00:30
               edit VHR '00'
             task jevs_cam_namnest_snowfall_stats_vhr_00
+              time 00:30
+              edit VHR '00'
+            task jevs_cam_rrfs_snowfall_stats_vhr_00
               time 00:30
               edit VHR '00'
             task jevs_cam_hireswarw_grid2obs_stats_vhr_02
@@ -304,6 +349,12 @@ suite evs_nco
               time 02:00
               edit VHR '02'
             task jevs_cam_namnest_grid2obs_stats_vhr_03
+              time 03:00
+              edit VHR '03'
+            task jevs_cam_rrfs_grid2obs_stats_vhr_02
+              time 02:00
+              edit VHR '02'
+            task jevs_cam_rrfs_grid2obs_stats_vhr_03
               time 03:00
               edit VHR '03'
           endfamily
@@ -467,6 +518,8 @@ suite evs_nco
           family cam
             task jevs_cam_nam_firewxnest_grid2obs_plots
               time 00:30
+            task jevs_cam_rrfs_firewxnest_grid2obs_plots
+              time 00:30
           endfamily
           family aqm
             task jevs_aqm_plots
@@ -516,6 +569,9 @@ suite evs_nco
             task jevs_cam_radar_prep_vhr_11
               time 11:05
               edit VHR '11'
+            task jevs_cam_rrfs_precip_prep_vhr_06
+              time 06:00
+              edit VHR '06'
             task jevs_cam_namnest_precip_prep_vhr_06
               time 06:00
               edit VHR '06'
@@ -535,6 +591,9 @@ suite evs_nco
               time 06:00
               edit VHR '06'
             task jevs_cam_namnest_severe_prep_vhr_06
+              time 06:00
+              edit VHR '06'
+            task jevs_cam_rrfs_severe_prep_vhr_06
               time 06:00
               edit VHR '06'
             task jevs_cam_severe_prep
@@ -674,6 +733,24 @@ suite evs_nco
             task jevs_cam_nam_firewxnest_grid2obs_stats_vhr_11    # walltime=02:00:00
               time 10:10
               edit VHR '11'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_06
+              time 06:00
+              edit VHR '06'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_07
+              time 07:00
+              edit VHR '07'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_08
+              time 08:00
+              edit VHR '08'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_09
+              time 09:00
+              edit VHR '09'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_10
+              time 10:00
+              edit VHR '10'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_11    # walltime=02:00:00
+              time 10:10
+              edit VHR '11'
             task jevs_cam_hireswarwmem2_radar_stats_vhr_06
               time 06:40
               edit VHR '06'
@@ -782,6 +859,24 @@ suite evs_nco
             task jevs_cam_namnest_radar_stats_vhr_11
               time 11:40
               edit VHR '11'
+            task jevs_cam_rrfs_radar_stats_vhr_06
+              time 06:40
+              edit VHR '06'
+            task jevs_cam_rrfs_radar_stats_vhr_07
+              time 07:40
+              edit VHR '07'
+            task jevs_cam_rrfs_radar_stats_vhr_08
+              time 08:40
+              edit VHR '08'
+            task jevs_cam_rrfs_radar_stats_vhr_09
+              time 09:40
+              edit VHR '09'
+            task jevs_cam_rrfs_radar_stats_vhr_10
+              time 10:40
+              edit VHR '10'
+            task jevs_cam_rrfs_radar_stats_vhr_11
+              time 11:40
+              edit VHR '11'
             task jevs_cam_hireswarw_snowfall_stats_vhr_06
               time 06:30
               edit VHR '06'
@@ -795,6 +890,9 @@ suite evs_nco
               time 06:30
               edit VHR '06'
             task jevs_cam_namnest_snowfall_stats_vhr_06
+              time 06:30
+              edit VHR '06'
+            task jevs_cam_rrfs_snowfall_stats_vhr_06
               time 06:30
               edit VHR '06'
             task jevs_cam_hireswarw_grid2obs_stats_vhr_06
@@ -827,6 +925,12 @@ suite evs_nco
             task jevs_cam_namnest_grid2obs_stats_vhr_09
               time 09:00
               edit VHR '09'
+            task jevs_cam_rrfs_grid2obs_stats_vhr_06
+              time 06:00
+              edit VHR '06'
+            task jevs_cam_rrfs_grid2obs_stats_vhr_09
+              time 09:00
+              edit VHR '09'
             task jevs_cam_hireswarwmem2_severe_stats
               trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_hireswarwmem2_severe_prep_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_cam_hireswarwmem2_severe_prep_vhr_12 == complete
               edit VHR '08'
@@ -844,6 +948,9 @@ suite evs_nco
               edit VHR '08'
             task jevs_cam_namnest_severe_stats
               trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_namnest_severe_prep_vhr_00 == complete and ../../../../06/evs/prep/cam/jevs_cam_namnest_severe_prep_vhr_06 == complete
+              edit VHR '08'
+            task jevs_cam_rrfs_severe_stats
+              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_rrfs_severe_prep_vhr_00 == complete and ../../../../06/evs/prep/cam/jevs_cam_rrfs_severe_prep_vhr_06 == complete
               edit VHR '08'
             task jevs_cam_href_grid2obs_stats
               time 07:30
@@ -1043,6 +1150,9 @@ suite evs_nco
             task jevs_cam_radar_prep_vhr_17
               time 17:05
               edit VHR '17'
+            task jevs_cam_rrfs_precip_prep_vhr_12
+              time 12:00
+              edit VHR '12'
             task jevs_cam_namnest_precip_prep_vhr_12
               time 12:00
               edit VHR '12'
@@ -1064,6 +1174,9 @@ suite evs_nco
             task jevs_cam_namnest_severe_prep_vhr_12
               time 12:00
               edit VHR '12'
+            task jevs_cam_rrfs_severe_prep_vhr_12
+              time 12:00
+              edit VHR '12'
             task jevs_cam_hireswarw_severe_prep_vhr_12
               time 12:00
               edit VHR '12'
@@ -1074,7 +1187,7 @@ suite evs_nco
               time 12:00
               edit VHR '12'
             task jevs_cam_href_severe_prep_vhr_12
-              trigger ./jevs_cam_hireswarw_severe_prep_vhr_12 == complete and ./jevs_cam_hireswarwmem2_severe_prep_vhr_12 == complete and ./jevs_cam_hireswfv3_severe_prep_vhr_12 == complete and ./jevs_cam_hrrr_severe_prep_vhr_12 == complete and ./jevs_cam_namnest_severe_prep_vhr_12 == complete
+              trigger ./jevs_cam_hireswarw_severe_prep_vhr_12 == complete and ./jevs_cam_hireswarwmem2_severe_prep_vhr_12 == complete and ./jevs_cam_hireswfv3_severe_prep_vhr_12 == complete and ./jevs_cam_hrrr_severe_prep_vhr_12 == complete and ./jevs_cam_namnest_severe_prep_vhr_12 == complete and ./jevs_cam_rrfs_severe_prep_vhr_12 == complete 
               edit VHR '12'
           endfamily
         endfamily   # 12 prep
@@ -1159,6 +1272,24 @@ suite evs_nco
               time 16:00
               edit VHR '16'
             task jevs_cam_nam_firewxnest_grid2obs_stats_vhr_17    # walltime=02:00:00
+              time 16:10
+              edit VHR '17'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_12
+              time 12:15
+              edit VHR '12'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_13
+              time 13:00
+              edit VHR '13'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_14
+              time 14:00
+              edit VHR '14'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_15
+              time 15:00
+              edit VHR '15'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_16
+              time 16:00
+              edit VHR '16'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_17    # walltime=02:00:00
               time 16:10
               edit VHR '17'
             task jevs_cam_hireswarwmem2_radar_stats_vhr_12
@@ -1269,6 +1400,24 @@ suite evs_nco
             task jevs_cam_namnest_radar_stats_vhr_17
               time 17:40
               edit VHR '17'
+            task jevs_cam_rrfs_radar_stats_vhr_12
+              time 12:40
+              edit VHR '12'
+            task jevs_cam_rrfs_radar_stats_vhr_13
+              time 13:40
+              edit VHR '13'
+            task jevs_cam_rrfs_radar_stats_vhr_14
+              time 14:40
+              edit VHR '14'
+            task jevs_cam_rrfs_radar_stats_vhr_15
+              time 15:40
+              edit VHR '15'
+            task jevs_cam_rrfs_radar_stats_vhr_16
+              time 16:40
+              edit VHR '16'
+            task jevs_cam_rrfs_radar_stats_vhr_17
+              time 17:40
+              edit VHR '17'
             task jevs_cam_hireswarw_snowfall_stats_vhr_12
               time 12:30
               edit VHR '12'
@@ -1282,6 +1431,9 @@ suite evs_nco
               time 12:30
               edit VHR '12'
             task jevs_cam_namnest_snowfall_stats_vhr_12
+              time 12:30
+              edit VHR '12'
+            task jevs_cam_rrfs_snowfall_stats_vhr_12
               time 12:30
               edit VHR '12'
             task jevs_cam_hireswarw_grid2obs_stats_vhr_12
@@ -1312,6 +1464,12 @@ suite evs_nco
               time 12:15
               edit VHR '12'
             task jevs_cam_namnest_grid2obs_stats_vhr_15
+              time 15:00
+              edit VHR '15'
+            task jevs_cam_rrfs_grid2obs_stats_vhr_12
+              time 12:15
+              edit VHR '12'
+            task jevs_cam_rrfs_grid2obs_stats_vhr_15
               time 15:00
               edit VHR '15'
           endfamily
@@ -1605,6 +1763,9 @@ suite evs_nco
             task jevs_cam_radar_prep_vhr_23
               time 23:05
               edit VHR '23'
+            task jevs_cam_rrfs_precip_prep_vhr_18
+              time 18:15
+              edit VHR '18'
             task jevs_cam_namnest_precip_prep_vhr_18
               time 18:15
               edit VHR '18'
@@ -1624,6 +1785,9 @@ suite evs_nco
               time 18:15
               edit VHR '18'
             task jevs_cam_namnest_severe_prep_vhr_18
+              time 18:15
+              edit VHR '18'
+            task jevs_cam_rrfs_severe_prep_vhr_18
               time 18:15
               edit VHR '18'
 
@@ -1752,6 +1916,24 @@ suite evs_nco
             task jevs_cam_nam_firewxnest_grid2obs_stats_vhr_23
               trigger :TIME >= 2300 and ../../../../06/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_06 == complete and ../../../../06/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_07 == complete and ../../../../06/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_08 == complete and ../../../../06/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_09 == complete and ../../../../06/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_10 == complete and ../../../../06/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_11 == complete and ../../../../12/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_12 == complete and ../../../../12/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_13 == complete and ../../../../12/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_14 == complete and ../../../../12/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_15 == complete and ../../../../12/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_16 == complete and ../../../../12/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_17 == complete and ../../../../18/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_18 == complete and ../../../../18/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_19 == complete and ../../../../18/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_20 == complete and ../../../../18/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_21 == complete and ../../../../18/evs/stats/cam/jevs_cam_nam_firewxnest_grid2obs_stats_vhr_22 == complete
               edit VHR '23'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_18
+              time 18:15
+              edit VHR '18'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_19
+              time 19:00
+              edit VHR '19'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_20
+              time 20:00
+              edit VHR '20'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_21
+              time 21:00
+              edit VHR '21'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_22
+              time 22:00
+              edit VHR '22'
+            task jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_23
+              trigger :TIME >= 2300 and ../../../../06/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_06 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_07 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_08 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_09 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_10 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_11 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_12 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_13 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_14 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_15 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_16 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_17 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_18 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_19 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_20 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_21 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_firewxnest_grid2obs_stats_vhr_22 == complete
+              edit VHR '23'
             task jevs_cam_hireswarwmem2_radar_stats_vhr_18
               time 18:40
               edit VHR '18'
@@ -1860,6 +2042,24 @@ suite evs_nco
             task jevs_cam_namnest_radar_stats_vhr_23
               trigger :TIME >= 2340 and ../../../../06/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_06 == complete and ../../../../06/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_07 == complete and ../../../../06/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_08 == complete and ../../../../06/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_09 == complete and ../../../../06/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_10 == complete and ../../../../06/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_11 == complete and ../../../../12/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_12 == complete and ../../../../12/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_13 == complete and ../../../../12/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_14 == complete and ../../../../12/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_15 == complete and ../../../../12/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_16 == complete and ../../../../12/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_17 == complete and ../../../../18/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_18 == complete and ../../../../18/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_19 == complete and ../../../../18/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_20 == complete and ../../../../18/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_21 == complete and ../../../../18/evs/stats/cam/jevs_cam_namnest_radar_stats_vhr_22 == complete
               edit VHR '23'
+            task jevs_cam_rrfs_radar_stats_vhr_18
+              time 18:40
+              edit VHR '18'
+            task jevs_cam_rrfs_radar_stats_vhr_19
+              time 19:40
+              edit VHR '19'
+            task jevs_cam_rrfs_radar_stats_vhr_20
+              time 20:40
+              edit VHR '20'
+            task jevs_cam_rrfs_radar_stats_vhr_21
+              time 21:40
+              edit VHR '21'
+            task jevs_cam_rrfs_radar_stats_vhr_22
+              time 22:40
+              edit VHR '22'
+            task jevs_cam_rrfs_radar_stats_vhr_23
+              trigger :TIME >= 2340 and ../../../../06/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_06 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_07 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_08 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_09 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_10 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_11 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_12 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_13 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_14 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_15 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_16 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_17 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_18 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_19 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_20 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_21 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_radar_stats_vhr_22 == complete
+              edit VHR '23'
             task jevs_cam_hireswarw_snowfall_stats_vhr_18
               trigger :TIME >= 1830 and ../../../../06/evs/stats/cam/jevs_cam_hireswarw_snowfall_stats_vhr_06 == complete and ../../../../12/evs/stats/cam/jevs_cam_hireswarw_snowfall_stats_vhr_12 == complete
               edit VHR '18'
@@ -1874,6 +2074,9 @@ suite evs_nco
               edit VHR '18'
             task jevs_cam_namnest_snowfall_stats_vhr_18
               trigger :TIME >= 1830 and ../../../../06/evs/stats/cam/jevs_cam_namnest_snowfall_stats_vhr_06 == complete and ../../../../12/evs/stats/cam/jevs_cam_namnest_snowfall_stats_vhr_12 == complete
+              edit VHR '18'
+            task jevs_cam_rrfs_snowfall_stats_vhr_18
+              trigger :TIME >= 1830 and ../../../../06/evs/stats/cam/jevs_cam_rrfs_snowfall_stats_vhr_06 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_snowfall_stats_vhr_12 == complete
               edit VHR '18'
             task jevs_cam_hireswarwmem2_precip_stats_vhr_19
               time 19:00
@@ -1935,6 +2138,18 @@ suite evs_nco
             task jevs_cam_namnest_precip_stats_vhr_22
               trigger :TIME >= 2200 and ./jevs_cam_namnest_precip_stats_vhr_19 == complete and ./jevs_cam_namnest_precip_stats_vhr_20 == complete and ./jevs_cam_namnest_precip_stats_vhr_21 == complete
               edit VHR '22'
+            task jevs_cam_rrfs_precip_stats_vhr_19
+              time 19:00
+              edit VHR '19'
+            task jevs_cam_rrfs_precip_stats_vhr_20
+              time 20:00
+              edit VHR '20'
+            task jevs_cam_rrfs_precip_stats_vhr_21
+              time 21:00
+              edit VHR '21'
+            task jevs_cam_rrfs_precip_stats_vhr_22
+              trigger :TIME >= 2200 and ./jevs_cam_rrfs_precip_stats_vhr_19 == complete and ./jevs_cam_rrfs_precip_stats_vhr_20 == complete and ./jevs_cam_rrfs_precip_stats_vhr_21 == complete
+              edit VHR '22'
             task jevs_cam_hireswarw_grid2obs_stats_vhr_18
               time 18:15
               edit VHR '18'
@@ -1964,6 +2179,12 @@ suite evs_nco
               edit VHR '18'
             task jevs_cam_namnest_grid2obs_stats_vhr_21
               trigger :TIME >= 2100 and ../../../../06/evs/stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_06 == complete and ../../../../06/evs/stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_09 == complete and ../../../../12/evs/stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_12 == complete and ../../../../12/evs/stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_15 == complete and ../../../../18/evs/stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_18 == complete
+              edit VHR '21'
+            task jevs_cam_rrfs_grid2obs_stats_vhr_18
+              time 18:15
+              edit VHR '18'
+            task jevs_cam_rrfs_grid2obs_stats_vhr_21
+              trigger :TIME >= 2100 and ../../../../06/evs/stats/cam/jevs_cam_rrfs_grid2obs_stats_vhr_06 == complete and ../../../../06/evs/stats/cam/jevs_cam_rrfs_grid2obs_stats_vhr_09 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_grid2obs_stats_vhr_12 == complete and ../../../../12/evs/stats/cam/jevs_cam_rrfs_grid2obs_stats_vhr_15 == complete and ../../../../18/evs/stats/cam/jevs_cam_rrfs_grid2obs_stats_vhr_18 == complete
               edit VHR '21'
           endfamily
           family aqm
@@ -2169,16 +2390,16 @@ suite evs_nco
           family cam
             task jevs_cam_precip_plots
               edit VHR '21'
-              trigger ../../stats/cam/jevs_cam_hireswarw_precip_stats_vhr_22 == complete and  ../../stats/cam/jevs_cam_hireswarwmem2_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hireswfv3_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hrrr_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_namnest_precip_stats_vhr_22 == complete
+              trigger ../../stats/cam/jevs_cam_hireswarw_precip_stats_vhr_22 == complete and  ../../stats/cam/jevs_cam_hireswarwmem2_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hireswfv3_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hrrr_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_namnest_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_rrfs_precip_stats_vhr_22 == complete
             task jevs_cam_snowfall_plots
               edit VHR '21'
-              trigger ../../stats/cam/jevs_cam_hireswarw_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hireswfv3_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hrrr_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_namnest_snowfall_stats_vhr_18 == complete
+              trigger ../../stats/cam/jevs_cam_hireswarw_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hireswfv3_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hrrr_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_namnest_snowfall_stats_vhr_18 == complete ../../stats/cam/jevs_cam_rrfs_snowfall_stats_vhr_18 == complete
             task jevs_cam_grid2obs_plots
               edit VHR '21'
-              trigger ../../stats/cam/jevs_cam_hireswarw_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswfv3_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hrrr_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_21 == complete
+              trigger ../../stats/cam/jevs_cam_hireswarw_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswfv3_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hrrr_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_rrfs_grid2obs_stats_vhr_21 == complete
             task jevs_cam_headline_plots
               edit VHR '21'
-              trigger ../../stats/cam/jevs_cam_hireswarw_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswfv3_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hrrr_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_21 == complete
+              trigger ../../stats/cam/jevs_cam_hireswarw_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswfv3_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hrrr_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_rrfs_grid2obs_stats_vhr_21 == complete
           endfamily 
         endfamily   # 18 plots
       endfamily  # evs

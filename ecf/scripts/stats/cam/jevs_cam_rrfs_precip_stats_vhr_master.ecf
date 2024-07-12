@@ -1,10 +1,10 @@
-#PBS -N evs_cam_nam_firewxnest_grid2obs_plots
+#PBS -N evs_cam_rrfs_precip_stats_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:50:00
-#PBS -l place=shared,select=1:ncpus=1:mem=100GB
+#PBS -l walltime=03:15:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=256GB
 #PBS -l debug=true
 
 export model=evs
@@ -15,8 +15,8 @@ export model=evs
 # Load modules
 ############################################################
 set -x
-export COMPONENT=cam
-export STEP=plots
+export COMPONENT="cam"
+export STEP="stats"
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
@@ -35,9 +35,6 @@ module load nco/${nco_ver}
 module load cdo/${cdo_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
-module load proj/${proj_ver}
-module load geos/${geos_ver}
-module load imagemagick/${imagemagick_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module list
@@ -50,16 +47,18 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export NET=evs
-export RUN=atmos
-export VERIF_CASE=grid2obs
-export MODELNAME=nam_firewxnest
-export modsys=nam
+export nproc=128
+export USE_CFP=YES
+export NET="evs"
+export RUN="atmos"
+export VERIF_CASE="precip"
+export MODELNAME="rrfs"
+export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_CAM_PLOTS
+${HOMEevs}/jobs/JEVS_CAM_STATS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
