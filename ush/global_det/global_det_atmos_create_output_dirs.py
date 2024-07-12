@@ -59,10 +59,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
         elif VERIF_CASE_STEP_type == 'sfc':
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_gdas'))
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap'))
         elif VERIF_CASE_STEP_type == 'ptype':
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap'))
 elif VERIF_CASE_STEP == 'grid2grid_plots':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         if VERIF_CASE_STEP_type == 'precip':
@@ -113,40 +111,6 @@ if STEP == 'stats':
                 os.path.join(working_output_base_dir,
                              model+'.'+date_dt.strftime('%Y%m%d'))
             )
-        if VERIF_CASE_STEP == 'grid2grid_stats':
-            for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-                if VERIF_CASE_STEP_type in ['precip_accum24hr', 'precip_accum3hr']:
-                    COMOUT_dir_list.append(
-                        os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
-                                     'ccpa', VERIF_CASE)
-                    )
-                    working_dir_list.append(
-                        os.path.join(working_output_base_dir,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
-                                     VERIF_CASE)
-                    )
-                elif VERIF_CASE_STEP_type in 'sea_ice':
-                    COMOUT_dir_list.append(
-                        os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
-                                     'osi_saf', VERIF_CASE)
-                    )
-                    working_dir_list.append(
-                        os.path.join(working_output_base_dir,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'osi_saf',
-                                     VERIF_CASE)
-                    )
-        elif VERIF_CASE_STEP == 'grid2obs_stats':
-            for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-                if VERIF_CASE_STEP_type in ['pres_levs', 'sfc', 'ptype']:
-                    COMOUT_dir_list.append(
-                        os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
-                                     'prepbufr', VERIF_CASE)
-                    )
-                    working_dir_list.append(
-                        os.path.join(working_output_base_dir,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
-                                     VERIF_CASE)
-                    )
         date_dt = date_dt + datetime.timedelta(days=1)
 elif STEP == 'plots':
     NDAYS = str(os.environ['NDAYS'])
