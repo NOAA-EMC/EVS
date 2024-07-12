@@ -36,7 +36,6 @@ evs_run_mode = os.environ['evs_run_mode']
 DCOMINnohrsc = os.environ['DCOMINnohrsc']
 if STEP == 'stats':
     COMINccpa = os.environ['COMINccpa']
-    COMINobsproc = os.environ['COMINobsproc']
 if evs_run_mode != 'production':
     QUEUESERV = os.environ['QUEUESERV']
     ACCOUNT = os.environ['ACCOUNT']
@@ -364,6 +363,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 VERIF_CASE_STEP_get_d_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'get_d'
                 )
+                gda_util.make_dir(VERIF_CASE_STEP_get_d_dir)
                 get_d_dest_file_format = os.path.join(
                     VERIF_CASE_STEP_get_d_dir,
                     'get_d.{valid_shift?fmt=%Y%m%d%H?shift='
@@ -374,25 +374,43 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     get_d_prod_file_format, get_d_arch_file_format,
                     evs_run_mode, get_d_dest_file_format
                 )
-            elif VERIF_CASE_STEP_type in ['precip_accum24hr',
-                                          'precip_accum3hr']:
+            elif VERIF_CASE_STEP_type == 'precip_accum24hr':
+                # global_det prep - pcp_combine CCPA 24 hour accumulation
+                ccpa_prod_file_format = os.path.join(
+                    COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                    'ccpa_accum24hr', 'pcp_combine_precip_accum24hr_24hrCCPA_'
+                    +'valid{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ccpa_arch_file_format = os.path.join(
+                    archive_obs_data_dir, 'ccpa_accum24hr',
+                    'pcp_combine_precip_accum24hr_24hrCCPA_'
+                    +'valid{valid?fmt=%Y%m%d%H}.nc'
+                )
+                VERIF_CASE_STEP_ccpa_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'ccpa'
+                )
+                gda_util.make_dir(VERIF_CASE_STEP_ccpa_dir)
+                ccpa_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_ccpa_dir, 'ccpa.'
+                    +'24H.{valid?fmt=%Y%m%d%H}'
+                )
+                gda_util.get_truth_file(
+                    VERIF_CASE_STEP_type_valid_time, 'CCPA Accum 24hr',
+                    ccpa_prod_file_format, ccpa_arch_file_format,
+                    evs_run_mode, ccpa_dest_file_format
+                )
+            elif VERIF_CASE_STEP_type == 'precip_accum3hr':
                 # CCPA
-                if VERIF_CASE_STEP_type == 'precip_accum24hr':
-                    ccpa_accum_intvl = 6
-                    accum = 24
-                elif VERIF_CASE_STEP_type == 'precip_accum3hr':
-                    ccpa_accum_intvl = 3
-                    accum = 3
                 VERIF_CASE_STEP_ccpa_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'ccpa'
                 )
                 ccpa_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_ccpa_dir, 'ccpa.'+str(ccpa_accum_intvl)
-                    +'H.{valid?fmt=%Y%m%d%H}'
+                    VERIF_CASE_STEP_ccpa_dir, 'ccpa.'
+                    +'3H.{valid?fmt=%Y%m%d%H}'
                 )
                 gda_util.make_dir(VERIF_CASE_STEP_ccpa_dir)
                 accum_valid_start = (VERIF_CASE_STEP_type_valid_time -
-                                     datetime.timedelta(hours=accum))
+                                     datetime.timedelta(hours=3))
                 accum_valid_end = VERIF_CASE_STEP_type_valid_time
                 accum_valid = accum_valid_end
                 while accum_valid > accum_valid_start:
@@ -401,29 +419,25 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         ccpa_prod_file_format = os.path.join(
                             COMINccpa, 'ccpa.{valid_shift?fmt=%Y%m%d?shift=3}',
                            '{valid_shift?fmt=%H?shift=3}',
-                           'ccpa.t{valid?fmt=%H}z.'
-                           +str(ccpa_accum_intvl).zfill(2)+'h.hrap.conus.gb2'
+                           'ccpa.t{valid?fmt=%H}z.03h.hrap.conus.gb2'
                         )
                     else:
                         ccpa_prod_file_format = os.path.join(
                             COMINccpa, 'ccpa.{valid?fmt=%Y%m%d}',
-                           '{valid?fmt=%H}', 'ccpa.t{valid?fmt=%H}z.'
-                           +str(ccpa_accum_intvl).zfill(2)+'h.hrap.conus.gb2'
+                           '{valid?fmt=%H}', 'ccpa.t{valid?fmt=%H}z.03h.'
+                           +'hrap.conus.gb2'
                         )
                     ccpa_arch_file_format = os.path.join(
-                        archive_obs_data_dir, 'ccpa_accum'
-                        +str(ccpa_accum_intvl)+'hr',
-                        'ccpa.hrap.{valid?fmt=%Y%m%d%H}.'
-                        +str(ccpa_accum_intvl)+'h'
+                        archive_obs_data_dir, 'ccpa_accum3hr',
+                        'ccpa.hrap.{valid?fmt=%Y%m%d%H}.3h'
                     )
                     gda_util.get_truth_file(
-                        accum_valid, 'CCPA Accum '
-                        +str(ccpa_accum_intvl).zfill(2)+'hr',
+                        accum_valid, 'CCPA Accum 3 hr',
                         ccpa_prod_file_format, ccpa_arch_file_format,
                         evs_run_mode, ccpa_dest_file_format
                     )
                     accum_valid = (accum_valid -
-                                   datetime.timedelta(hours=ccpa_accum_intvl))
+                                   datetime.timedelta(hours=3))
             elif VERIF_CASE_STEP_type == 'pres_levs':
                 # Model Analysis
                 for model_idx in range(len(model_list)):
@@ -452,6 +466,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 gda_util.make_dir(VERIF_CASE_STEP_osi_saf_dir)
                 for hem in ['nh', 'sh']:
+                    # raw netCDF file
                     osi_saf_hem_prod_file_format = os.path.join(
                         COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
                         'osi_saf', 'osi_saf.multi.'+hem+'.'
@@ -477,6 +492,37 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         osi_saf_hem_arch_file_format, evs_run_mode,
                         osi_saf_hem_dest_file_format
                     )
+                    # regrid_data_plane file
+                    if hem == 'nh':
+                        grid = 'G219'
+                    elif hem == 'sh':
+                        grid = 'G220'
+                    osi_saf_hem_prod_file_format = os.path.join(
+                        COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                        'osi_saf',
+                        'regrid_data_plane_sea_ice_DailyAvg_Concentration_'
+                        +grid+'_valid{valid_shift?fmt=%Y%m%d%H?shift=-24}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
+                    osi_saf_hem_arch_file_format = os.path.join(
+                        archive_obs_data_dir, 'osi_saf',
+                        'regrid_data_plane_sea_ice_DailyAvg_Concentration_'
+                        +grid+'_valid{valid_shift?fmt=%Y%m%d%H?shift=-24}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
+                    osi_saf_hem_dest_file_format = os.path.join(
+                        VERIF_CASE_STEP_osi_saf_dir,
+                        'osi_saf.multi.'+grid+'.'
+                        +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                        +'{valid?fmt=%Y%m%d%H}.nc'
+                    )
+                    gda_util.get_truth_file(
+                        VERIF_CASE_STEP_type_valid_time,
+                        f"OSI-SAF {hem.upper()}",
+                        osi_saf_hem_prod_file_format,
+                        osi_saf_hem_arch_file_format, evs_run_mode,
+                        osi_saf_hem_dest_file_format
+                    )
             elif VERIF_CASE_STEP_type == 'snow':
                 # NOHRSC
                 nohrsc_prod_file_format = os.path.join(
@@ -491,6 +537,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 VERIF_CASE_STEP_nohrsc_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'nohrsc'
                 )
+                gda_util.make_dir(VERIF_CASE_STEP_nohrsc_dir)
                 nohrsc_dest_file_format = os.path.join(
                     VERIF_CASE_STEP_nohrsc_dir,
                     'nohrsc.24H.{valid?fmt=%Y%m%d%H}'
@@ -627,22 +674,24 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                 if VERIF_CASE_STEP_type_valid_time.strftime('%H') \
                         in ['00', '06', '12', '18']:
                     gdas_prod_file_format = os.path.join(
-                        COMINobsproc, 'gdas.{valid?fmt=%Y%m%d}',
-                        '{valid?fmt=%H}', 'atmos',
-                        'gdas.t{valid?fmt=%H}z.prepbufr'
+                        COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                        'prepbufr_gdas', 'pb2nc_gdas_'+VERIF_CASE_STEP_type
+                        +'_valid{valid?fmt=%Y%m%d%H}.nc'
                     )
                     gdas_arch_file_format = os.path.join(
-                        archive_obs_data_dir, 'prepbufr', 'gdas',
-                        'prepbufr.gdas.{valid?fmt=%Y%m%d%H}'
+                        archive_obs_data_dir, 'pb2nc_gdas',
+                        'pb2nc_gdas_'+VERIF_CASE_STEP_type
+                        +'_valid{valid?fmt=%Y%m%d%H}.nc'
                     )
                     VERIF_CASE_STEP_gdas_dir = os.path.join(
                         VERIF_CASE_STEP_data_dir, 'prepbufr_gdas'
                     )
+                    gda_util.make_dir(VERIF_CASE_STEP_gdas_dir)
                     gdas_dest_file_format = os.path.join(
                         VERIF_CASE_STEP_gdas_dir,
-                        'prepbufr.gdas.{valid?fmt=%Y%m%d%H}'
+                        'prepbufr.gdas.'+VERIF_CASE_STEP_type
+                        +'.{valid?fmt=%Y%m%d%H}'
                     )
-                    gda_util.make_dir(VERIF_CASE_STEP_gdas_dir)
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time, 'Prepbufr GDAS',
                         gdas_prod_file_format, gdas_arch_file_format,
@@ -650,69 +699,29 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     )
             if VERIF_CASE_STEP_type in ['sfc', 'ptype']:
                 # NAM prepbufr
-                offset_hr = str(
-                    int(VERIF_CASE_STEP_type_valid_time.strftime('%H'))%6
-                ).zfill(2)
-                offset_valid_time_dt = (
-                    VERIF_CASE_STEP_type_valid_time
-                    + datetime.timedelta(hours=int(offset_hr))
-                )
                 nam_prod_file_format = os.path.join(
-                    COMINobsproc, 'nam.{valid?fmt=%Y%m%d}',
-                    'nam.t{valid?fmt=%H}z.prepbufr.tm'+offset_hr
-                )
-                nam_prod_file = gda_util.format_filler(
-                    nam_prod_file_format, offset_valid_time_dt,
-                    offset_valid_time_dt, ['anl'], {}
+                    COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                    'prepbufr_nam', 'pb2nc_nam_'+VERIF_CASE_STEP_type
+                    +'_valid{valid?fmt=%Y%m%d%H}.nc'
                 )
                 nam_arch_file_format = os.path.join(
-                    archive_obs_data_dir, 'prepbufr',
-                    'nam', 'nam.{valid?fmt=%Y%m%d}',
-                    'nam.t{valid?fmt=%H}z.prepbufr.tm'+offset_hr
-                )
-                nam_arch_file = gda_util.format_filler(
-                    nam_arch_file_format, offset_valid_time_dt,
-                    offset_valid_time_dt, ['anl'], {}
+                     archive_obs_data_dir, 'prepbufr_gdas',
+                     'pb2nc_nam_'+VERIF_CASE_STEP_type
+                     +'_valid{valid?fmt=%Y%m%d%H}.nc'
                 )
                 VERIF_CASE_STEP_nam_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'prepbufr_nam'
                 )
+                gda_util.make_dir(VERIF_CASE_STEP_nam_dir)
                 nam_dest_file_format = os.path.join(
                     VERIF_CASE_STEP_nam_dir,
-                    'prepbufr.nam.{valid?fmt=%Y%m%d%H}'
+                    'prepbufr.nam.'+VERIF_CASE_STEP_type+'.'
+                    +'{valid?fmt=%Y%m%d%H}'
                 )
-                nam_dest_file = gda_util.format_filler(
-                    nam_dest_file_format, VERIF_CASE_STEP_type_valid_time,
-                    VERIF_CASE_STEP_type_valid_time, ['anl'], {}
-                )
-                gda_util.make_dir(VERIF_CASE_STEP_nam_dir)
                 gda_util.get_truth_file(
                     VERIF_CASE_STEP_type_valid_time, 'Prepbufr NAM',
-                    nam_prod_file, nam_arch_file, evs_run_mode,
-                    nam_dest_file
-                )
-                # RAP prepbufr
-                rap_prod_file_format = os.path.join(
-                    COMINobsproc, 'rap.{valid?fmt=%Y%m%d}',
-                    'rap.t{valid?fmt=%H}z.prepbufr.tm00'
-                )
-                rap_arch_file_format = os.path.join(
-                    archive_obs_data_dir, 'prepbufr',
-                    'rap', 'rap.{valid?fmt=%Y%m%d}',
-                    'rap.t{valid?fmt=%H}z.prepbufr.tm00'
-                )
-                VERIF_CASE_STEP_rap_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'prepbufr_rap'
-                )
-                rap_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_rap_dir,
-                    'prepbufr.rap.{valid?fmt=%Y%m%d%H}'
-                )
-                gda_util.make_dir(VERIF_CASE_STEP_rap_dir)
-                gda_util.get_truth_file(
-                    VERIF_CASE_STEP_type_valid_time, 'Prepbufr RAP',
-                    rap_prod_file_format, rap_arch_file_format,
-                    evs_run_mode, rap_dest_file_format
+                    nam_prod_file_format, nam_arch_file_format, evs_run_mode,
+                    nam_dest_file_format
                 )
 elif STEP == 'plots' :
     # Read in VERIF_CASE_STEP related environment variables
@@ -788,13 +797,10 @@ elif STEP == 'plots' :
                       +int(VERIF_CASE_STEP_precip_fhr_inc),
                       int(VERIF_CASE_STEP_precip_fhr_inc))
             )
-        COMINccpa = os.path.join(
-            COMIN, 'stats', COMPONENT,
-            RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-            'ccpa', 'grid2grid'
-        )
         source_ccpa_pcp_combine_file = os.path.join(
-            COMINccpa, 'pcp_combine_precip_accum24hr_24hrCCPA_valid'
+            COMIN, 'prep', COMPONENT,
+            RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+            'ccpa_accum24hr', 'pcp_combine_precip_accum24hr_24hrCCPA_valid'
             +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
         )
         dest_ccpa_pcp_combine_file = os.path.join(
@@ -810,19 +816,17 @@ elif STEP == 'plots' :
                            dest_ccpa_pcp_combine_file)
         for model_idx in range(len(model_list)):
             model = model_list[model_idx]
-            COMINmodel = os.path.join(
-                COMIN, 'stats', COMPONENT,
-                RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                model, 'grid2grid'
-            )
             for fhr in VERIF_CASE_STEP_precip_fhr_list:
                 init_dt = (
                     end_date_dt
                     + datetime.timedelta(hours=int(CCPA24hr_valid_hr_list[0]))
                 )- datetime.timedelta(hours=fhr)
                 source_model_fhr_pcp_combine_file = os.path.join(
-                    COMINmodel, 'pcp_combine_precip_accum24hr_24hrAccum_init'
-                    +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)+'.nc'
+                    COMIN, 'stats', COMPONENT,
+                    RUN+'.'+end_date_dt.strftime('%Y%m%d'), model, 'grid2grid',
+                    'pcp_combine_precip_accum24hr_24hrAccum_init'
+                    +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)
+                    +'.nc'
                 )
                 dest_model_fhr_pcp_combine_file = os.path.join(
                     VERIF_CASE_STEP_data_dir, model,
