@@ -12,7 +12,6 @@ import logging
 import datetime
 import calendar
 import glob
-import subprocess
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
 #pd.plotting.register_matplotlib_converters()
@@ -189,7 +188,7 @@ def create_avg_time_range_stat_df(logger, time_range, model_info_dict,
                              for d in range(len(init_dates))]
         nvalues_time_range_min = round(0.75 * len(valid_dates))
         all_model_df = gda_util.build_df(
-            logger, input_dir, output_dir,
+            'make_plots', logger, input_dir, output_dir,
             model_info_dict, met_info_dict,
             var_name, var_level, var_thresh,
             var_name, var_level, var_thresh,

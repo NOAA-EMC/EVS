@@ -34,7 +34,7 @@ DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_list = os.environ['fhr_list'].split(',')
+fhr_list = os.environ['fhr_list'].split(', ')
 #fhr_start = os.environ['fhr_start']
 #fhr_end = os.environ['fhr_end']
 #fhr_inc = os.environ['fhr_inc']
@@ -105,13 +105,13 @@ while valid_date_dt <= ENDDATE_dt:
             else:
                 for req_var_level in req_var_level_list:
                     if req_var_level not in input_file_data_var_list:
-                        print("WARNING: Cannot make wind shear file "
+                        print("NOTE: Cannot make wind shear file "
                               +f"{output_DATA_file} - {input_file} does "
                               +f"not contain variable {req_var_level}")
                 make_wind_shear_output_file = False
             input_file_data.close()
         else:
-            print("WARNING: Cannot make wind shear file "
+            print("NOTE: Cannot make wind shear file "
                   +f"{output_DATA_file} - {input_file} "
                   +"does not exist")
             make_wind_shear_output_file = False

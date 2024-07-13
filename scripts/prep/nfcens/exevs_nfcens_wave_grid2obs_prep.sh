@@ -99,6 +99,7 @@ for HH in ${HHs} ; do
 		DATAfilenamefnmoc="${DATA}/gribs/wave_${INITDATE}${HH}f${FCST}"
 		DATAfilenamefnmoc_new="${DATA}/gribs/wave_${INITDATE}${HH}.f${FCST}.grib2"
 		fnmoc_old_name="wave_${INITDATE}${HH}f${FCST}"
+		fnmoc_a_name="HTSGW_wave_${INITDATE}${HH}.f${FCST}.grib2"
 		fnmoc_new_name="wave_${INITDATE}${HH}.f${FCST}.grib2"
 		if [ ! -s $COMINfilenamefnmoc ]; then
 			echo "WARNING: $COMINfilenamefnmoc does not exist"
@@ -112,11 +113,15 @@ for HH in ${HHs} ; do
 		else
 			cp -v $COMINfilenamefnmoc $DATAfilenamefnmoc
 			cd ${DATA}/gribs
-			cnvgrib -g12 $fnmoc_old_name $fnmoc_new_name > /dev/null 2>&1
-
-			if [ $SENDCOM = YES ]; then
-                    		cp -v $DATAfilenamefnmoc_new ${ARCmodel}/.
-                	fi
+			cnvgrib -g12 $fnmoc_old_name $fnmoc_a_name > /dev/null 2>&1
+			wgrib2 $fnmoc_a_name -if ":HTSGW:" -grib $fnmoc_new_name
+			if [ -s $DATAfilenamefnmoc_new ]; then
+				if [ $SENDCOM = YES ]; then
+                    			cp -v $DATAfilenamefnmoc_new ${ARCmodel}/.
+                		fi
+			else
+				echo "WARNING: FNMOC Forecast Data file does not have required wave field."
+			fi
 		fi
 		fcst=$(( $fcst+ 6 ))
 	done

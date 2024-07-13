@@ -12,7 +12,6 @@ import os
 import logging
 import datetime
 import glob
-import subprocess
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
 #pd.plotting.register_matplotlib_converters()
@@ -27,7 +26,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class LeadByDate:
     """
-    Create a lead by date graphic
+    Make a lead by date graphic
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
@@ -56,13 +55,13 @@ class LeadByDate:
         self.logo_dir = logo_dir
 
     def make_lead_by_date(self):
-        """! Create the lead_by_date graphic
+        """! Make the lead_by_date graphic
 
              Args:
 
              Returns:
         """
-        self.logger.info(f"Creating lead by date...")
+        self.logger.info(f"Plot Type: Lead By Date")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -76,14 +75,15 @@ class LeadByDate:
             self.logger.error("Cannot make lead_by_date for stat "
                               +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
-        # Create dataframe for all forecast hours
+        # Make dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
+        self.logger.info(f"Reading in model stat files from {self.input_dir}")
         forecast_hours_stat_df_dict = {}
         fcst_units = []
         for forecast_hour in self.date_info_dict['forecast_hours']:
-            self.logger.debug(f"Building data for forecast hour {forecast_hour}")
+            self.logger.info(f"Building data for forecast hour {forecast_hour}")
             # Get dates to plot
-            self.logger.info("Creating valid and init date arrays")
+            self.logger.debug("Making valid and init date arrays")
             valid_dates, init_dates = gda_util.get_plot_dates(
                 self.logger,
                 self.date_info_dict['date_type'],
@@ -157,9 +157,8 @@ class LeadByDate:
                 else:
                     plot_dates = init_dates
             # Read in data
-            self.logger.info(f"Reading in model stat files from {self.input_dir}")
             all_model_df = gda_util.build_df(
-                self.logger, self.input_dir, self.output_dir,
+                'make_plots', self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],
                 self.plot_info_dict['fcst_var_level'],
@@ -187,7 +186,7 @@ class LeadByDate:
                 self.plot_info_dict['stat']
             )
             if self.plot_info_dict['event_equalization'] == 'YES':
-                self.logger.debug("Doing event equalization")
+                self.logger.info("Doing event equalization")
                 masked_stat_array = np.ma.masked_invalid(stat_array)
                 stat_array = np.ma.mask_cols(masked_stat_array)
                 stat_array = stat_array.filled(fill_value=np.nan)
@@ -205,7 +204,7 @@ class LeadByDate:
         forecast_hours_stat_df = pd.concat(forecast_hours_stat_df_dict,
                                            names=['fhr', 'model', 'valid_dates'])
         # Set up plot
-        self.logger.info(f"Doing plot set up")
+        self.logger.info(f"Setting up plot")
         plot_specs_lbd = PlotSpecs(self.logger, 'lead_by_date')
         plot_specs_lbd.set_up_plot()
         fhr_idx_list = (
@@ -259,7 +258,7 @@ class LeadByDate:
             cbar_bottom = 0.04
             cbar_height = 0.02
         else:
-            self.logger.error("TOO MANY SUBPLOTS REQUESTED, MAXIMUM IS 10")
+            self.logger.error("Too many subplots requested, maximum is 10")
             sys.exit(1)
         if nsubplots <= 2:
             plot_specs_lbd.fig_size = (16., 8.)
@@ -300,7 +299,6 @@ class LeadByDate:
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
@@ -313,7 +311,9 @@ class LeadByDate:
                     plot_specs_lbd.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
@@ -326,6 +326,9 @@ class LeadByDate:
                     plot_specs_lbd.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         image_name = plot_specs_lbd.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
@@ -353,8 +356,8 @@ class LeadByDate:
             )
         )
         make_colorbar = False
-        # Create plot
-        self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
+        # Make plot
+        self.logger.info(f"Making plot")
         fig = plt.figure(figsize=(plot_specs_lbd.fig_size[0],
                                   plot_specs_lbd.fig_size[1]))
         gs = gridspec.GridSpec(gs_row, gs_col,
@@ -410,11 +413,12 @@ class LeadByDate:
             else:
                 plt.setp(ax.get_yticklabels(), visible=False)
             if model_idx == model_idx_list[0]:
-                self.logger.debug(f"Plotting {model_num} - {model_num_name} "
-                                  +f"- {model_num_plot_name}")
                 ax.set_title(model_num_plot_name)
+                subplot0_name = model_num_name
                 subplot0_plot_name = model_num_plot_name
                 subplot0_data = masked_model_num_data
+                self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}]")
                 if not subplot0_data.mask.all():
                     if have_subplot0_levs:
                         CF0 = ax.contourf(xmesh, ymesh, subplot0_data,
@@ -446,18 +450,20 @@ class LeadByDate:
                                 self.plot_info_dict['stat']
                             )
                 else:
-                    self.logger.debug(f"Fully masked array for {model_num}, "
-                                      +"no plotting")
+                    self.logger.debug(f"{model_num} [{model_num_name},"
+                                      +f"{model_num_plot_name}] is fully "
+                                      +"masked")
             else:
                 if self.plot_info_dict['stat'] in ['BIAS', 'ME',' FBIAS']:
-                    self.logger.debug(f"Plotting {model_num} - {model_num_name} "
-                                      +f"- {model_num_plot_name}")
+                    self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                                      +f"{model_num_plot_name}]")
                     ax.set_title(model_num_plot_name)
                     subplotN_data = masked_model_num_data
                 else:
-                    self.logger.debug(f"Plotting {model_num} - {model_num_name} "
-                                      +f"- {model_num_plot_name} difference from "
-                                      +f"{subplot0_plot_name}")
+                    self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                                      +f"{model_num_plot_name}] difference from "
+                                      +f"model1 [{subplot0_name},"
+                                      +f"{subplot0_plot_name}]")
                     ax.set_title(model_num_plot_name+'-'+subplot0_plot_name)
                     subplotN_data = masked_model_num_data - subplot0_data
                 if not subplotN_data.mask.all():
@@ -496,10 +502,21 @@ class LeadByDate:
                                 cbar_label = 'Difference'
                     else:
                         self.logger.debug("Do not have contour levels "
-                                          +"to plot, not plotting")
+                                          +"to plot")
                 else:
-                    self.logger.debug(f"Fully masked array for {model_num}, "
-                                      +"no plotting")
+                    if self.plot_info_dict['stat'] in ['BIAS', 'ME',' FBIAS']:
+                        self.logger.debug(f"{model_num} "
+                                          +f"[{model_num_name},"
+                                          +f"{model_num_plot_name}] "
+                                          +f"is fully masked")
+                    else:
+                        self.logger.debug(f"{model_num} "
+                                          +f"[{model_num_name},"
+                                          +f"{model_num_plot_name}] "
+                                          +f"difference from "
+                                          +f"model1 [{subplot0_name},"
+                                          +f"{subplot0_plot_name}] is fully "
+                                          +"masked")
         if make_colorbar:
             cbar_left = gs.get_grid_positions(fig)[2][0]
             cbar_width = (gs.get_grid_positions(fig)[3][-1]
@@ -567,9 +584,9 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '11.0.2'
+        'version': '12.0'
     }
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
