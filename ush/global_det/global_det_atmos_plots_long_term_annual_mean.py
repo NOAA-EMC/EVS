@@ -29,7 +29,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class LongTermAnnualMean:
     """
-    Create long term annual means
+    Make long term annual means
     """
 
     def __init__(self, logger, input_dir, output_dir, logo_dir,
@@ -78,21 +78,21 @@ class LongTermAnnualMean:
         self.run_length_list = run_length_list
 
     def make_long_term_annual_mean(self):
-        """! Create the long term annual mean graphic
+        """! Make the long term annual mean graphic
              Args:
              Returns:
         """
-        self.logger.info(f"Creating long term annual mean...")
+        self.logger.info(f"Plot Type: Long-Term Annual Mean")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Logo directory: {self.logo_dir}")
         self.logger.debug(f"Time Range: {self.time_range}")
         if self.time_range == 'monthly':
-            self.logger.error("CAN ONLY MAKE ANNUAL MEAN PLOT FOR "
-                              +"annual TIME RANGE")
+            self.logger.error("Can only make annual mean plot for "
+                              +"time range of annual")
             sys.exit(1)
         self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y}"
-                          +f"-{self.date_dt_list[-1]:%Y}")
+                           +f"-{self.date_dt_list[-1]:%Y}")
         self.logger.debug(f"Model Group: {self.model_group}")
         self.logger.debug(f"Models: {', '.join(self.model_list)}")
         self.logger.debug(f"Variable Name: {self.var_name}")
@@ -109,7 +109,7 @@ class LongTermAnnualMean:
         output_image_dir = os.path.join(self.output_dir, 'images')
         gda_util.make_dir(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
-        # Create merged dataset of verification systems
+        # Make merged dataset of verification systems
         if self.var_name == 'APCP':
             model_group_merged_df = (
                 gdalt_util.merge_precip_long_term_stats_datasets(
@@ -128,7 +128,7 @@ class LongTermAnnualMean:
                     self.vx_grid, self.vx_mask, self.stat, self.nbrhd
                 )
             )
-        # Create plots
+        # Make plots
         date_list = (model_group_merged_df.index.get_level_values(1)\
                      .unique().tolist())
         if self.var_name == 'HGT':
@@ -144,16 +144,20 @@ class LongTermAnnualMean:
             model_hour = 'valid 12Z'
         else:
             model_hour = 'valid 00Z'
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
             left_logo_img_array = matplotlib.image.imread(plot_left_logo_path)
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
             right_logo_img_array = matplotlib.image.imread(plot_right_logo_path)
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         for run_length in self.run_length_list:
             if run_length == 'allyears':
                 run_length_running_mean = 3
@@ -190,11 +194,10 @@ class LongTermAnnualMean:
                 self.logger.warning(f"{run_length} not recongized, skipping,"
                                     +"use allyears or past10year")
                 continue
-            self.logger.info(f"Working on plot for {run_length}: "
+            # Make annual mean
+            self.logger.info(f"Making annual mean plot for {run_length}: "
                              +f"{run_length_date_list[0]}-"
                              +f"{run_length_date_list[-1]}")
-            self.logger.debug("Creating annual mean plot")
-            # Make annual mean
             plot_specs_ltam = PlotSpecs(self.logger,
                                          'long_term_annual_mean')
             plot_specs_ltam.set_up_plot()
@@ -255,7 +258,7 @@ class LongTermAnnualMean:
                 x_legend, y_legend, legend_factor = 0.95, 0.9, 0.02
                 legend_fontsize = 18
             else:
-                self.logger.error("TOO MANY SUBPLOTS REQUESTED, MAXIMUM IS 10")
+                self.logger.error("Too many subplots requested, maximum is 10")
                 sys.exit(1)
             if nsubplots <= 2:
                 plot_specs_ltam.fig_size = (16., 8.)
@@ -341,6 +344,7 @@ class LongTermAnnualMean:
             stat_min = model_group_merged.min()
             stat_max = model_group_merged.max()
             for model in self.model_list:
+                self.logger.debug(f"Plotting {model}")
                 ax = plt.subplot(gs[self.model_list.index(model)])
                 ax.set_title(model, loc='left')
                 ax.grid(True)
@@ -434,7 +438,7 @@ def main():
     NBRHD = 'NBHRD'
     FORECAST_DAY_LIST = ['1', '2']
     RUN_LENGTH_LIST = ['allyears', 'past10years']
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

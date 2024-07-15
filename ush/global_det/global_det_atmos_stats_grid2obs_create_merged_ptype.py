@@ -34,7 +34,7 @@ DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_list = os.environ['fhr_list'].split(',')
+fhr_list = os.environ['fhr_list'].split(', ')
 
 # Process run time agruments
 if len(sys.argv) != 5:
@@ -114,7 +114,7 @@ while valid_date_dt <= ENDDATE_dt:
                                            output_COMOUT_merged_ptype_file)
             else:
                 make_merged_ptype_output_file = False
-                print("WARNING: Cannot make merged ptype file "
+                print("NOTE: Cannot make merged ptype file "
                       +f"{output_DATA_merged_ptype_file} - "
                       +"missing one of the input files "
                       +f"{', '.join(missing_input_ptype_file_list)}")

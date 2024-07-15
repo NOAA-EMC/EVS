@@ -29,7 +29,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class LongTermLeadByDate:
     """
-    Create long term lead by date
+    Make long term lead by date
     """
 
     def __init__(self, logger, input_dir, output_dir, logo_dir,
@@ -78,18 +78,18 @@ class LongTermLeadByDate:
         self.run_length_list = run_length_list
 
     def make_long_term_lead_by_date(self):
-        """! Create the long term lead by date graphic
+        """! Make the long term lead by date graphic
              Args:
              Returns:
         """
-        self.logger.info(f"Creating long term lead by date...")
+        self.logger.info(f"Plot Type: Long-Term Lead By Date")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Logo directory: {self.logo_dir}")
         self.logger.debug(f"Time Range: {self.time_range}")
         if self.time_range not in ['monthly', 'yearly']:
-            self.logger.error("CAN ONLY RUN LEAD BY DATE FOR "
-                              +"TIME RANGE VALUES OF monthly OR yearly")
+            self.logger.error("Can only run lead by date for "
+                              +"time range values of monthly or yearly")
             sys.exit(1)
         if self.time_range == 'monthly':
             self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y%m}"
@@ -113,7 +113,7 @@ class LongTermLeadByDate:
         output_image_dir = os.path.join(self.output_dir, 'images')
         gda_util.make_dir(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
-        # Create merged dataset of verification systems
+        # Make merged dataset of verification systems
         if self.var_name == 'APCP':
             model_group_merged_df = (
                 gdalt_util.merge_precip_long_term_stats_datasets(
@@ -132,7 +132,7 @@ class LongTermLeadByDate:
                     self.vx_grid, self.vx_mask, self.stat, self.nbrhd
                 )
             )
-        # Create plots
+        # Make plots
         date_list = (model_group_merged_df.index.get_level_values(1)\
                      .unique().tolist())
         if self.var_name == 'HGT':
@@ -148,16 +148,20 @@ class LongTermLeadByDate:
             model_hour = 'valid 12Z'
         else:
             model_hour = 'valid 00Z'
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
             left_logo_img_array = matplotlib.image.imread(plot_left_logo_path)
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
             right_logo_img_array = matplotlib.image.imread(plot_right_logo_path)
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         for run_length in self.run_length_list:
             if run_length == 'allyears':
                 run_length_running_mean = 3
@@ -194,9 +198,6 @@ class LongTermLeadByDate:
                 self.logger.warning(f"{run_length} not recongized, skipping,"
                                     +"use allyears or past10year")
                 continue
-            self.logger.info(f"Working on plot for {run_length}: "
-                             +f"{run_length_date_list[0]}-"
-                             +f"{run_length_date_list[-1]}")
             run_length_model_group_running_mean_df = pd.DataFrame(
                 index=run_length_model_group_merged_df.index,
                 columns=[f"DAY{str(x)}" for x in self.forecast_day_list]
@@ -221,8 +222,10 @@ class LongTermLeadByDate:
             ]
             ymesh, xmesh = np.meshgrid(run_length_date_dt_list,
                                        forecast_day_float_list)
-            self.logger.debug("Creating lead by date plot")
             # Make lead by date
+            self.logger.info(f"Making lead by date plot for {run_length}: "
+                             +f"{run_length_date_list[0]}-"
+                             +f"{run_length_date_list[-1]}")
             plot_specs_ltlbd = PlotSpecs(self.logger,
                                          'long_term_lead_by_date')
             plot_specs_ltlbd.set_up_plot()
@@ -286,7 +289,7 @@ class LongTermLeadByDate:
                 cbar_bottom = 0.04
                 cbar_height = 0.02
             else:
-                self.logger.error("TOO MANY SUBPLOTS REQUESTED, MAXIMUM IS 10")
+                self.logger.error("Too many subplots requested, maximum is 10")
                 sys.exit(1)
             if nsubplots <= 2:
                 plot_specs_ltlbd.fig_size = (16., 8.)
@@ -414,6 +417,7 @@ class LongTermLeadByDate:
                     .to_numpy(dtype=float)
                 )
                 if model == self.model_list[0]:
+                    self.logger.debug(f"Plotting {model}")
                     ax.set_title(model)
                     if not model0_running_mean.mask.all():
                         if have_subplot0_levs:
@@ -443,7 +447,11 @@ class LongTermLeadByDate:
                             C0_fmt[lev] = label
                         ax.clabel(C0, C0.levels, fmt=C0_fmt, inline=True,
                                   fontsize=12.5)
+                    else:
+                        self.logger.debug(f"{model} is fully masked")
                 else:
+                    self.logger.debug(f"Plotting {model} difference from "
+                                      +f"{self.model_list[0]}")
                     ax.set_title(model+'-'+self.model_list[0])
                     subplotN_data = model_running_mean-model0_running_mean
                     if not subplotN_data.mask.all():
@@ -452,11 +460,18 @@ class LongTermLeadByDate:
                                               levels=subplotsN_levs,
                                               cmap=subplotsN_cmap,
                                               extend='both')
+                        else:
+                            self.logger.debug("Do not have contour levels "
+                                              +"to plot")
                         if not make_colorbar:
                             make_colorbar = True
                             cbar_CF = CFN
                             cbar_ticks = CFN.levels
                             cbar_label = 'Difference'
+                    else:
+                        self.logger.debug(f"{model} difference from "
+                                          +f"{self.model_list[0]} is fully "
+                                          +"masked")
                 ax.set_xticks(forecast_day_float_list)
                 ax.set_xticklabels(self.forecast_day_list)
                 ax.set_xlim([forecast_day_float_list[0],
@@ -525,7 +540,7 @@ def main():
     NBRHD = 'NBHRD'
     FORECAST_DAY_LIST = ['1', '2']
     RUN_LENGTH_LIST = ['allyears', 'past10years']
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

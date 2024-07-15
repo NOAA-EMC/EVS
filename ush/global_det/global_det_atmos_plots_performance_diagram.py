@@ -12,7 +12,6 @@ import os
 import logging
 import datetime
 import glob
-import subprocess
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
 #pd.plotting.register_matplotlib_converters()
@@ -26,7 +25,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class PerformanceDiagram:
     """
-    Create a performance_diagram graphic
+    Make a performance_diagram graphic
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
@@ -55,13 +54,13 @@ class PerformanceDiagram:
         self.logo_dir = logo_dir
 
     def make_performance_diagram(self):
-        """! Create the performance_diagram graphic
+        """! Make the performance_diagram graphic
 
              Args:
 
              Returns:
         """
-        self.logger.info(f"Creating performance_diagrams...")
+        self.logger.info(f"Plot Type: Performance Diagram")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -78,7 +77,7 @@ class PerformanceDiagram:
         # Set stats to calculate for diagram
         perf_diag_stat_list = ['SRATIO', 'POD', 'CSI']
         # Get dates to plot
-        self.logger.info("Creating valid and init date arrays")
+        self.logger.debug("Making valid and init date arrays")
         valid_dates, init_dates = gda_util.get_plot_dates(
             self.logger,
             self.date_info_dict['date_type'],
@@ -115,7 +114,7 @@ class PerformanceDiagram:
             plot_dates = init_dates
         # Read in data
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
-        # Create dataframe for all thresholds
+        # Make dataframe for all thresholds
         self.logger.info("Building dataframe for all thresholds")
         fcst_units = []
         for fcst_var_thresh in self.plot_info_dict['fcst_var_threshs']:
@@ -126,7 +125,7 @@ class PerformanceDiagram:
             obs_var_thresh = (self.plot_info_dict['obs_var_threshs']\
                               [fcst_var_thresh_idx])
             all_model_df = gda_util.build_df(
-                self.logger, self.input_dir, self.output_dir,
+                'make_plots', self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],
                 self.plot_info_dict['fcst_var_level'],
@@ -170,7 +169,7 @@ class PerformanceDiagram:
                     stat_df.index.get_level_values(0).unique().tolist()
                 )
                 if self.plot_info_dict['event_equalization'] == 'YES':
-                    self.logger.debug("Doing event equalization")
+                    self.logger.info("Doing event equalization")
                     masked_stat_array = np.ma.masked_invalid(stat_array)
                     stat_array = np.ma.mask_cols(masked_stat_array)
                     stat_array = stat_array.filled(fill_value=np.nan)
@@ -201,7 +200,7 @@ class PerformanceDiagram:
                             model_idx_fcst_var_thresh_avg
                         )
         # Set up plot
-        self.logger.info(f"Doing plot set up")
+        self.logger.info(f"Setting up plot")
         plot_specs_pd = PlotSpecs(self.logger, 'performance_diagram')
         plot_specs_pd.set_up_plot()
         csi_colors = ['#ffffff', '#f5f5f5', '#ececec', '#dfdfdf', '#cbcbcb',
@@ -231,7 +230,6 @@ class PerformanceDiagram:
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
@@ -244,7 +242,9 @@ class PerformanceDiagram:
                     plot_specs_pd.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
@@ -257,10 +257,14 @@ class PerformanceDiagram:
                     plot_specs_pd.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         image_name = plot_specs_pd.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
-        self.logger.info(f"Creating performance diagram")
+        # Make plot
+        self.logger.info(f"Making plot")
         fig, ax = plt.subplots(1,1, figsize=(plot_specs_pd.fig_size[0],
                                              plot_specs_pd.fig_size[1]))
         fig.suptitle(plot_title)
@@ -314,12 +318,12 @@ class PerformanceDiagram:
         )
         if len(self.plot_info_dict['fcst_var_threshs']) > \
                 len(list(thresh_marker_plot_settings_dict.keys())):
-          self.logger.error("REQUESTED NUMBER OF THRESHOLDS ("
+          self.logger.error("Requested number of thresholds ("
                             +f"{len(self.plot_info_dict['fcst_var_threshs'])} "
                             +", "
                             +','.join(self.plot_info_dict['fcst_var_threshs'])
-                            +") EXCEEDS PRESET MARKER SETTING, REDUCE NUMBER "
-                            +"OF THRESHOLDS TO <= "
+                            +") exceeds the preset marking settings, "
+                            +"reduce number of thresholds to <= "
                             +f"{len(list(thresh_marker_plot_settings_dict.keys()))}")
           sys.exit(1)
         thresh_legend_handles = []
@@ -387,9 +391,9 @@ class PerformanceDiagram:
                 len(masked_model_num_POD)
                 - np.ma.count_masked(masked_model_num_POD)
             )
+            self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                              +f"{model_num_plot_name}]")
             if model_num_npts_SRATIO != 0 and model_num_npts_POD != 0:
-                self.logger.debug(f"Plotting {model_num} - {model_num_name} "
-                                  +f"- {model_num_plot_name}")
                 ax.plot(
                     masked_model_num_SRATIO, masked_model_num_POD,
                     color = model_num_plot_settings_dict['color'],
@@ -418,6 +422,9 @@ class PerformanceDiagram:
                         s = thresh_mark_dict[fcst_var_thresh]['markersize']**2,
                         zorder=40
                     )
+            else:
+                self.logger.debug(f"{model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}] has no points")
         inv = ax.transData.inverted()
         legend_box = thresh_legend.get_frame().get_bbox()
         legend_box_inv = inv.transform([(legend_box.x0,legend_box.y0),
@@ -473,9 +480,9 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '11.0.2'
+        'version': '12.0'
     }
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

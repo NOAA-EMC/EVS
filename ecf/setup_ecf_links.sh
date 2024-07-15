@@ -128,5 +128,11 @@ cyc=$(seq 0 23)
 link_master_to_cyc "jevs_analyses_rtma_ru_grid2obs_stats_vhr" "$cyc"
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_analyses_rtma_grid2obs_stats_vhr" "$cyc"
+cyc=$(seq 0 23)
+link_master_to_cyc "jevs_analyses_urma_precip_stats_vhr" "$cyc"
+cyc=$(seq 0 23)
+link_master_to_cyc "jevs_analyses_rtma_precip_stats_vhr" "$cyc"
+cyc=$(seq 0 23)
+link_master_to_cyc "jevs_analyses_ccpa_precip_stats_vhr" "$cyc"
 
 echo "Done."

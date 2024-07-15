@@ -3160,13 +3160,113 @@ def check_model_files(job_dict):
                         +'_SL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
                         +'to{valid?fmt=%Y%m%d%H}.stat'
                     )
+                elif job_dict['VERIF_TYPE'] == 'prepbufr' \
+                        and job_dict['job_name'] == 'WeeklyAvg_Temp2m':
+                    input_file_format = os.path.join(verif_case_dir,
+                                                     'METplus_output',
+                                                     job_dict['RUN']+'.'
+                                                     +job_dict['DATE'],
+                                                     job_dict['MODEL'],
+                                                     job_dict['VERIF_CASE'],
+                                                     'point_stat_'
+                                                     +job_dict['VERIF_TYPE']+'_'
+                                                     +'TempAnom2m_'
+                                                     +'{lead?fmt=%2H}0000L_'
+                                                     +'{valid?fmt=%Y%m%d}_'
+                                                     +'{valid?fmt=%H}0000V'
+                                                     +'.stat')
+                    output_DATA_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'],
+                        'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
+                        +job_dict['prepbufr']+'_'+job_dict['job_name']
+                        +'_SAL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
+                        +'to{valid?fmt=%Y%m%d%H}.stat'
+                    )
+                    output_COMOUT_file_format = os.path.join(
+                        job_dict['COMOUT'],
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'],
+                        'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
+                        +job_dict['prepbufr']+'_'+job_dict['job_name']
+                        +'_SAL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
+                        +'to{valid?fmt=%Y%m%d%H}.stat'
+                    )
+                elif job_dict['VERIF_TYPE'] == 'prepbufr' \
+                        and job_dict['job_name'] == 'Days6_10Avg_Temp2m':
+                    input_file_format = os.path.join(verif_case_dir,
+                                                     'METplus_output',
+                                                     job_dict['RUN']+'.'
+                                                     +job_dict['DATE'],
+                                                     job_dict['MODEL'],
+                                                     job_dict['VERIF_CASE'],
+                                                     'point_stat_'
+                                                     +job_dict['VERIF_TYPE']+'_'
+                                                     +'TempAnom2m_'
+                                                     +'{lead?fmt=%2H}0000L_'
+                                                     +'{valid?fmt=%Y%m%d}_'
+                                                     +'{valid?fmt=%H}0000V'
+                                                     +'.stat')
+                    output_DATA_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'],
+                        'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
+                        +job_dict['prepbufr']+'_'+job_dict['job_name']
+                        +'_SAL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
+                        +'to{valid?fmt=%Y%m%d%H}.stat'
+                    )
+                    output_COMOUT_file_format = os.path.join(
+                        job_dict['COMOUT'],
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'],
+                        'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
+                        +job_dict['prepbufr']+'_'+job_dict['job_name']
+                        +'_SAL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
+                        +'to{valid?fmt=%Y%m%d%H}.stat'
+                    )
+                elif job_dict['VERIF_TYPE'] == 'prepbufr' \
+                        and job_dict['job_name'] == 'Weeks3_4Avg_Temp2m':
+                    input_file_format = os.path.join(verif_case_dir,
+                                                     'METplus_output',
+                                                     job_dict['RUN']+'.'
+                                                     +job_dict['DATE'],
+                                                     job_dict['MODEL'],
+                                                     job_dict['VERIF_CASE'],
+                                                     'point_stat_'
+                                                     +job_dict['VERIF_TYPE']+'_'
+                                                     +'TempAnom2m_'
+                                                     +'{lead?fmt=%2H}0000L_'
+                                                     +'{valid?fmt=%Y%m%d}_'
+                                                     +'{valid?fmt=%H}0000V'
+                                                     +'.stat')
+                    output_DATA_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'],
+                        'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
+                        +job_dict['prepbufr']+'_'+job_dict['job_name']
+                        +'_SAL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
+                        +'to{valid?fmt=%Y%m%d%H}.stat'
+                    )
+                    output_COMOUT_file_format = os.path.join(
+                        job_dict['COMOUT'],
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'],
+                        'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
+                        +job_dict['prepbufr']+'_'+job_dict['job_name']
+                        +'_SAL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
+                        +'to{valid?fmt=%Y%m%d%H}.stat'
+                    )
                 else:
                     input_file_format = os.path.join(
                         verif_case_dir, 'data', model,
                         model+'.{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}'
                     )
                 if job_dict['VERIF_TYPE'] == 'prepbufr' \
-                        and job_dict['job_name'] == 'WeeklyAvg_TempAnom2m':
+                        and job_dict['job_name'] in ['WeeklyAvg_TempAnom2m',
+                                                     'WeeklyAvg_Temp2m']:
                     if str(fhr) in ['168', '336', '504', '672', '840']:
                         nf = 0
                         while nf <= 14:
@@ -3183,7 +3283,8 @@ def check_model_files(job_dict):
                             'forecast_hour': str(fhr)
                         }
                 elif job_dict['VERIF_TYPE'] == 'prepbufr' \
-                        and job_dict['job_name'] == 'Days6_10Avg_TempAnom2m':
+                        and job_dict['job_name'] in ['Days6_10Avg_TempAnom2m',
+                                                     'Days6_10Avg_Temp2m']:
                     if fhr == 240:
                         nf = 0
                         while nf <= 10:
@@ -3200,7 +3301,8 @@ def check_model_files(job_dict):
                             'forecast_hour': str(fhr)
                         }
                 elif job_dict['VERIF_TYPE'] == 'prepbufr' \
-                        and job_dict['job_name'] == 'Weeks3_4Avg_TempAnom2m':
+                        and job_dict['job_name'] in ['Weeks3_4Avg_TempAnom2m',
+                                                     'Weeks3_4Avg_Temp2m']:
                     if fhr == 672:
                         nf = 0
                         while nf <= 28:

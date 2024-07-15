@@ -1,8 +1,10 @@
 #!/bin/ksh
-#*******************************************************************************
+#**********************************************************************************
 # Purpose: setup environment, paths, and run the sref cloud plotting python script
-# Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
-#******************************************************************************
+# Last updated: 
+#               04/10/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
+#               10/27/2023, Add comments,           Binbin Zhou Lynker@EMC/NCEP
+#**********************************************************************************
 set -x 
 
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
@@ -17,6 +19,10 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
+restart=$COMOUTplots/restart/$past_days/sref_cloud_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi   
 
 export eval_period='TEST'
 
@@ -59,7 +65,9 @@ export fcst_init_hour="0,3,6,9,12,15,18,21"
 init_time='init00_to_21z'
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-
+if [ ! -d $plot_dir ] ; then
+ mkdir -p $plot_dir
+fi
 
 verif_case=grid2obs
 line_type='ctc'
@@ -128,7 +136,12 @@ for stat in  ets fbias; do
 	 #*********************
          > run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh  
 
-        verif_type=conus_sfc
+	 #*******************************************************************************************************************
+	 #  Check if this sub-job has been completed in the previous run for restart
+	 if [ ! -e $restart/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed ] ; then
+         #*******************************************************************************************************************
+
+ 	 verif_type=conus_sfc
 
         echo "export PLOT_TYPE=$score_type" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
@@ -175,8 +188,28 @@ for stat in  ets fbias; do
 
          echo "${DATA}/run_py.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-         chmod +x  run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh 
-         echo "${DATA}/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_all_poe.sh
+         #Save for restart:
+	 echo "if [ ${score_type} = lead_average ] ; then " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_*${thresh}.png $restart/." >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "else" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "  cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_*.png $restart/." >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "[[ $? = 0 ]] && >$restart/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+
+	 chmod +x  run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "${DATA}/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_all_poe.sh
+
+       else
+
+	    #For restart
+	    if [ ${score_type} = lead_average ] ; then
+	      cp $restart/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_*${thresh}.png ${plot_dir}/.
+	    else
+	      cp $restart/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_*.png ${plot_dir}/.
+	    fi
+
+       fi
+	   
 
     done # enf of threshold
 
