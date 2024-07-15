@@ -40,14 +40,18 @@ source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export PDY=20241231
 
 #Define TC-vital file, TC track file and the directory for Bdeck files
-export COMINvit=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2024/TCvital/syndat_tcvitals.2024
-export COMINtrack=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2024/globalTrack/tracks.atcfunix.24
-export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2024/bdeck
-export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2024/bdeck
-#export COMINvit=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/tcskill/syndat_tcvitals.2023
-#export COMINtrack=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/tcskill/tracks.atcfunix.23
-#export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/tcskill/bdeck
-#export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/tcskill/bdeck
+export COMINvit=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/beryl/data/two/syndat_tcvitals.2024
+export COMINtrack=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/beryl/data/two/tracks.atcfunix.24
+export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/beryl/data/two/bdeck
+export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/beryl/data/two/bdeck
+#export COMINvit=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2024/TCvital/syndat_tcvitals.2024
+#export COMINtrack=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2024/globalTrack/tracks.atcfunix.24
+#export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2024/bdeck
+#export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2024/bdeck
+##export COMINvit=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/tcskill/syndat_tcvitals.2023
+##export COMINtrack=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/tcskill/tracks.atcfunix.23
+##export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/tcskill/bdeck
+##export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/tcskill/bdeck
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d

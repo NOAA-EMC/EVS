@@ -82,14 +82,14 @@ grep "03, AP" tracks.atcfunix.${YY24}_${stormBasin}${stormNumber} > a${stormBasi
 grep "03, EN" tracks.atcfunix.${YY24}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
 grep "03, EP" tracks.atcfunix.${YY24}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
 grep "03, CP" tracks.atcfunix.${YY24}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
-#grep "03, UE" tracks.atcfunix.${YY24}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+grep -a "03, UE" tracks.atcfunix.${YY24}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, AEMN/03, MD01/' a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, EEMN/03, MD02/' a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, CEMN/03, MD03/' a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, UKMN/03, MD04/' a${stormBasin}${stormNumber}${stormYear}.dat
-export Model_List="MD01,MD02,MD03"
+export Model_List="MD01,MD02,MD03,MD04"
 #export Model_List="MD01,MD02,MD03,MD04"
-export Model_Plot="GEFS,EENS,CENS"
+export Model_Plot="GEFS,EENS,CENS,UENS"
 #export Model_Plot="GEFS,EENS,CENS,UENS"
 
 #---get the $startdate, $enddate[YYMMDDHH] from the best track file  
@@ -181,73 +181,73 @@ fi
 ### num do loop end
 done
 
-#---  Atlantic/EastPacific/WestPacific Basin TC_Stat 
-if [ ${stormBasin} = "al" ]; then
-  export comoutbas=${comoutatl}
-elif [ ${stormBasin} = "ep" ]; then
-  export comoutbas=${comoutepa}
-elif [ ${stormBasin} = "wp" ]; then
-  export comoutbas=${comoutwpa}
-fi
+##---  Atlantic/EastPacific/WestPacific Basin TC_Stat 
+#if [ ${stormBasin} = "al" ]; then
+#  export comoutbas=${comoutatl}
+#elif [ ${stormBasin} = "ep" ]; then
+#  export comoutbas=${comoutepa}
+#elif [ ${stormBasin} = "wp" ]; then
+#  export comoutbas=${comoutwpa}
+#fi
 
-# remove previously generated basin stats
-if [ -d ${comoutbas}/tc_stat ]; then
-  rm -rf ${comoutbas}/tc_stat
-fi
+## remove previously generated basin stats
+#if [ -d ${comoutbas}/tc_stat ]; then
+#  rm -rf ${comoutbas}/tc_stat
+#fi
 
-nfile=$(ls ${comoutbas}/*.tcst |wc -l)
-if [ $nfile -ne 0 ]; then
+#nfile=$(ls ${comoutbas}/*.tcst |wc -l)
+#if [ $nfile -ne 0 ]; then
 
-export mdh=010100
-export startdateB=${YYYY}${mdh}
-export metTCcomin=${comoutbas}
+#export mdh=010100
+#export startdateB=${YYYY}${mdh}
+#export metTCcomin=${comoutbas}
 
-if [ ${stormBasin} = "al" ]; then
-  export metTCcomout=${DATA}/metTC/atlantic
-  if [ ! -d $metTCcomout ]; then mkdir -p $metTCcomout; fi
-elif [ ${stormBasin} = "ep" ]; then
-  export metTCcomout=${DATA}/metTC/eastpacific
-  if [ ! -d $metTCcomout ]; then mkdir -p $metTCcomout; fi
-elif [ ${stormBasin} = "wp" ]; then
-  export metTCcomout=${DATA}/metTC/westpacific
-  if [ ! -d $metTCcomout ]; then mkdir -p $metTCcomout; fi
-fi
+#if [ ${stormBasin} = "al" ]; then
+#  export metTCcomout=${DATA}/metTC/atlantic
+#  if [ ! -d $metTCcomout ]; then mkdir -p $metTCcomout; fi
+#elif [ ${stormBasin} = "ep" ]; then
+#  export metTCcomout=${DATA}/metTC/eastpacific
+#  if [ ! -d $metTCcomout ]; then mkdir -p $metTCcomout; fi
+#elif [ ${stormBasin} = "wp" ]; then
+#  export metTCcomout=${DATA}/metTC/westpacific
+#  if [ ! -d $metTCcomout ]; then mkdir -p $metTCcomout; fi
+#fi
 
-cd $metTCcomout
-#export SEARCH1=INPUT_BASE_template
-#export SEARCH2=OUTPUT_BASE_template
-#export SEARCH3=INIT_BEG_template
-#export SEARCH4=INIT_END_template
+#cd $metTCcomout
+##export SEARCH1=INPUT_BASE_template
+##export SEARCH2=OUTPUT_BASE_template
+##export SEARCH3=INIT_BEG_template
+##export SEARCH4=INIT_END_template
 
-cp ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/TCStat_spread_template_basin.conf .
+#cp ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/TCStat_spread_template_basin.conf .
 
-#export SEARCHy="LEAD_template"
-sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_spread_template_basin.conf
-sed -i "s|$SEARCH1|$metTCcomin|g" TCStat_spread_template_basin.conf
-sed -i "s|$SEARCH2|$metTCcomout|g" TCStat_spread_template_basin.conf
-sed -i "s|$SEARCH3|$startdateB|g" TCStat_spread_template_basin.conf
-sed -i "s|$SEARCH4|$startdateB|g" TCStat_spread_template_basin.conf
-sed -i "s|$SEARCHx|$Model_List|g" TCStat_spread_template_basin.conf
-sed -i "s|$SEARCHy|$LEAD_List|g" TCStat_spread_template_basin.conf
+##export SEARCHy="LEAD_template"
+#sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_spread_template_basin.conf
+#sed -i "s|$SEARCH1|$metTCcomin|g" TCStat_spread_template_basin.conf
+#sed -i "s|$SEARCH2|$metTCcomout|g" TCStat_spread_template_basin.conf
+#sed -i "s|$SEARCH3|$startdateB|g" TCStat_spread_template_basin.conf
+#sed -i "s|$SEARCH4|$startdateB|g" TCStat_spread_template_basin.conf
+#sed -i "s|$SEARCHx|$Model_List|g" TCStat_spread_template_basin.conf
+#sed -i "s|$SEARCHy|$LEAD_List|g" TCStat_spread_template_basin.conf
 
-#export SEARCH7="TC_STAT_INIT_BEG_temp"
-#export SEARCH8="TC_STAT_INIT_END_temp"
-export firstday="0101_00"
-export lastday="1231_18"
-export symdhB=${YYYY}${firstday}
-export eymdhB=${YYYY}${lastday}
-echo "$symdhB, $eymdhB"
+##export SEARCH7="TC_STAT_INIT_BEG_temp"
+##export SEARCH8="TC_STAT_INIT_END_temp"
+#export firstday="0101_00"
+#export lastday="1231_18"
+#export symdhB=${YYYY}${firstday}
+#export eymdhB=${YYYY}${lastday}
+#echo "$symdhB, $eymdhB"
 
-sed -i "s|$SEARCH7|$symdhB|g" TCStat_spread_template_basin.conf
-sed -i "s|$SEARCH8|$eymdhB|g" TCStat_spread_template_basin.conf
+#sed -i "s|$SEARCH7|$symdhB|g" TCStat_spread_template_basin.conf
+#sed -i "s|$SEARCH8|$eymdhB|g" TCStat_spread_template_basin.conf
 
-run_metplus.py -c ${metTCcomout}/TCStat_spread_template_basin.conf
-if [ "$SENDCOM" = 'YES' ]; then
-  if [ ! -d ${comoutbas}/tc_stat ]; then mkdir -p ${comoutbas}/tc_stat; fi
-  cp ${metTCcomout}/tc_stat/tc_stat.out ${comoutbas}/tc_stat/tc_stat_basin.out
-  cp ${metTCcomout}/tc_stat/tc_stat_summary.tcst ${comoutbas}/tc_stat/tc_stat_summary_basin.tcst
-fi
-fi
+#run_metplus.py -c ${metTCcomout}/TCStat_spread_template_basin.conf
+#if [ "$SENDCOM" = 'YES' ]; then
+#  if [ ! -d ${comoutbas}/tc_stat ]; then mkdir -p ${comoutbas}/tc_stat; fi
+#  cp ${metTCcomout}/tc_stat/tc_stat.out ${comoutbas}/tc_stat/tc_stat_basin.out
+#  cp ${metTCcomout}/tc_stat/tc_stat_summary.tcst ${comoutbas}/tc_stat/tc_stat_summary_basin.tcst
+#fi
+#fi
 
 ### bas do loop end
 done
