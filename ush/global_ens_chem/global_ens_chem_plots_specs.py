@@ -156,7 +156,7 @@ class PlotSpecs:
             self.legend_font_size = 16
             self.fig_title_size = 18
         else:
-            self.logger.error(f"{self.plot_type} NOT RECOGNIZED")
+            self.logger.error(f"{self.plot_type} not recongized")
             sys.exit(1)
 
     def set_up_plot(self):

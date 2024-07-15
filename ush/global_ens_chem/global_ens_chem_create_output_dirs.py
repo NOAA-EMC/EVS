@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_create_output_dirs.py
-Contact(s): Ho-Chun Huang (ho-chun huang@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This creates the base directories and their subdirectories.
 Run By: scripts/plots/global_ens_chem/exevs_global_ens_chem_grid2grid_plots.sh
         scripts/plots/global_ens_chem/exevs_global_ens_chem_grid2obs_plots.sh

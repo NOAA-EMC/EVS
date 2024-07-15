@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_check_settings.py
-Contact(s): Ho-Chun Huang (ho-chun huang@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This does a check on the run's configuration
           settings for global_ens chem plots jobs.
 Run By: scripts/plots/global_ens_chem/exevs_global_ens_chem_grid2grid_plots.sh
