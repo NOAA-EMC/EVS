@@ -30,7 +30,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class LongTermUsefulForecastDays:
     """
-    Create long term time useful forecast days plots
+    Make long term time useful forecast days plots
     """
 
     def __init__(self, logger, input_dir, output_dir, logo_dir,
@@ -77,20 +77,21 @@ class LongTermUsefulForecastDays:
         self.run_length_list = run_length_list
 
     def make_long_term_useful_forecast_days_time_series(self):
-        """! Create the long term useful forecast days
+        """! Make the long term useful forecast days
              time series graphics
 
              Args:
              Returns:
         """
-        self.logger.info(f"Creating long term useful forecast day time series...")
+        self.logger.info(f"Plot Type: Long-term Useful Forecast Day "
+                         +f"Time Series")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Logo directory: {self.logo_dir}")
         self.logger.debug(f"Time Range: {self.time_range}")
         if self.time_range not in ['monthly', 'yearly']:
-            self.logger.error("CAN ONLY RUN USEFUL FORECAST DAYS FOR "
-                              +"TIME RANGE VALUES OF monthly OR yearly")
+            self.logger.error("Can only run useful forecast days for "
+                              +"time range values of monthly or yearly")
             sys.exit(1)
         if self.time_range == 'monthly':
             self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y%m}"
@@ -112,7 +113,7 @@ class LongTermUsefulForecastDays:
         output_image_dir = os.path.join(self.output_dir, 'images')
         gda_util.make_dir(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
-        # Create merged dataset of verification systems
+        # Make merged dataset of verification systems
         if self.var_name == 'APCP':
             model_group_merged_df = (
                 gdalt_util.merge_precip_long_term_stats_datasets(
@@ -137,7 +138,7 @@ class LongTermUsefulForecastDays:
                 model_group_merged_df_fcst_day_list.append(
                     col.replace('DAY', '')
                 )
-        # Create plots
+        # Make plots
         date_list = (model_group_merged_df.index.get_level_values(1)\
                      .unique().tolist())
         if self.var_name == 'HGT':
@@ -150,16 +151,20 @@ class LongTermUsefulForecastDays:
             model_hour = 'init 00Z, 06Z, 12Z, 18Z'
         else:
             model_hour = 'valid 00Z'
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
             left_logo_img_array = matplotlib.image.imread(plot_left_logo_path)
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
             right_logo_img_array = matplotlib.image.imread(plot_right_logo_path)
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         if self.stat == 'ACC':
             ufd_stat_threshold_colors_dict = {'0.6': '#000000',
                                               '0.65': '#FB2020',
@@ -170,7 +175,7 @@ class LongTermUsefulForecastDays:
                                               '0.9': '#A0E632',
                                               '0.95': '#A000C8'}
         else:
-            self.logger.error(f"THRESHOLDS TO USE FOR {self.stat} NOT KNOWN")
+            self.logger.error(f"Thresholds to use for {self.stat} not known")
             sys.exit(1)
         model_group_useful_fday_df = pd.DataFrame(
             index=model_group_merged_df.index,
@@ -237,9 +242,6 @@ class LongTermUsefulForecastDays:
                 self.logger.warning(f"{run_length} not recongized, skipping,"
                                     +"use allyears or past10year")
                 continue
-            self.logger.info(f"Working on plots for {run_length}: "
-                             +f"{run_length_date_list[0]}-"
-                             +f"{run_length_date_list[-1]}")
             run_length_model_group_useful_fday_running_mean_df = pd.DataFrame(
                 index=run_length_model_group_useful_fday_df.index,
                 columns=run_length_model_group_useful_fday_df.columns
@@ -281,7 +283,10 @@ class LongTermUsefulForecastDays:
                 )
             )
             for model in self.model_list:
-                self.logger.debug("Creating time series plot for "
+                self.logger.debug("Making time series plot for "
+                                  +f"{run_length}: "
+                                  +f"{run_length_date_list[0]}-"
+                                  +f"{run_length_date_list[-1]} for "
                                   +f"{model} useful forecast days, where "
                                   +f"{self.stat} is "
                                   +f"{', '.join(ufd_thresh_list)}")
@@ -372,6 +377,7 @@ class LongTermUsefulForecastDays:
                         alpha=right_logo_alpha
                     )
                 for ufd_thresh in ufd_thresh_list:
+                    self.logger.info(f"Plotting {ufd_thresh}")
                     ax.plot_date(
                         run_length_date_dt_list,
                         np.ma.masked_invalid(
@@ -409,7 +415,10 @@ class LongTermUsefulForecastDays:
             )
             if self.stat == 'ACC':
                 ufd_two_thresh = ['0.6', '0.8']
-            self.logger.debug("Creating time series plot for "
+            self.logger.debug("Making time series plot for "
+                              +f"{run_length}: "
+                              +f"{run_length_date_list[0]}-"
+                              +f"{run_length_date_list[-1]} for "
                               +f"{self.model_group} useful forecast days, where "
                               +f"{self.stat} is "
                               +f"{ufd_two_thresh[0]} and {ufd_two_thresh[1]}")
@@ -504,6 +513,7 @@ class LongTermUsefulForecastDays:
                     all_model_plot_settings_dict[model]
                 )
                 for ufd_thresh in ufd_two_thresh:
+                    self.logger.debug(f"Plotting {model} {ufd_thresh}")
                     ax.plot_date(
                         run_length_date_dt_list,
                         np.ma.masked_invalid(
@@ -546,20 +556,20 @@ class LongTermUsefulForecastDays:
             plt.close('all')
 
     def make_long_term_useful_forecast_days_histogram(self):
-        """! Create the long term useful forecast days histogram
+        """! Make the long term useful forecast days histogram
              graphics
 
              Args:
              Returns:
         """
-        self.logger.info(f"Creating long term useful forecast day time series...")
+        self.logger.info(f"Plot Type: Long-Term Useful Forecast Day Histogram")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Logo directory: {self.logo_dir}")
         self.logger.debug(f"Time Range: {self.time_range}")
         if self.time_range not in ['monthly', 'yearly']:
-            self.logger.error("CAN ONLY RUN USEFUL FORECAST DAYS FOR "
-                              +"TIME RANGE VALUES OF monthly OR yearly")
+            self.logger.error("Can only run useful forecast days for "
+                              +"time range values of monthly or yearly")
             sys.exit(1)
         if self.time_range == 'monthly':
             self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y%m}"
@@ -579,7 +589,7 @@ class LongTermUsefulForecastDays:
         output_image_dir = os.path.join(self.output_dir, 'images')
         gda_util.make_dir(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
-        # Create merged dataset of verification systems
+        # Make merged dataset of verification systems
         if self.var_name == 'APCP':
             model_group_merged_df = (
                 gdalt_util.merge_precip_long_term_stats_datasets(
@@ -604,7 +614,7 @@ class LongTermUsefulForecastDays:
                 model_group_merged_df_fcst_day_list.append(
                     col.replace('DAY', '')
                 )
-        # Create plots
+        # Make plots
         date_list = (model_group_merged_df.index.get_level_values(1)\
                      .unique().tolist())
         if self.var_name == 'HGT':
@@ -620,20 +630,24 @@ class LongTermUsefulForecastDays:
             model_hour = 'valid 12Z'
         else:
             model_hour = 'valid 00Z'
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
             left_logo_img_array = matplotlib.image.imread(plot_left_logo_path)
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
             right_logo_img_array = matplotlib.image.imread(plot_right_logo_path)
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         if self.stat == 'ACC':
              ufd_stat_threshold_list = ['0.6']
         else:
-            self.logger.error(f"THRESHOLDS TO USE FOR {self.stat} NOT KNOWN")
+            self.logger.error(f"Thresholds to use for {self.stat} not known")
             sys.exit(1)
         model_group_useful_fday_df = pd.DataFrame(
             index=model_group_merged_df.index,
@@ -720,9 +734,6 @@ class LongTermUsefulForecastDays:
                 self.logger.warning(f"{run_length} not recongized, skipping,"
                                     +"use allyears or past10year")
                 continue
-            self.logger.info(f"Working on plots for {run_length}: "
-                             +f"{run_length_date_list[0]}-"
-                             +f"{run_length_date_list[-1]}")
             # Make histogram for each model and threshold
             plot_specs_h = PlotSpecs(self.logger, 'histogram')
             plot_specs_h.set_up_plot()
@@ -744,7 +755,10 @@ class LongTermUsefulForecastDays:
             ):
                 model = model_thresh[0]
                 thresh = model_thresh[1]
-                self.logger.debug("Creating histogram plot for "
+                self.logger.debug("Making histogram plot for "
+                                  +f"{run_length}: "
+                                  +f"{run_length_date_list[0]}-"
+                                  +f"{run_length_date_list[-1]} for "
                                   +f"{model} useful forecast days, where "
                                   +f"{self.stat} is {thresh}")
                 if 'FSS' in self.stat:
@@ -858,7 +872,7 @@ def main():
     STAT = 'STAT'
     NBRHD = 'NBRHD'
     RUN_LENGTH_LIST = ['allyears']
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

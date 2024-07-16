@@ -34,7 +34,7 @@ DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_list = os.environ['fhr_list'].split(',')
+fhr_list = os.environ['fhr_list'].split(', ')
 fhr_inc = '12'
 #fhr_end = os.environ['fhr_end']
 #fhr_inc = os.environ['fhr_inc']
@@ -196,7 +196,7 @@ while valid_hr <= int(valid_hr_end):
                         gda_util.copy_file(output_DATA_file,
                                            output_COMOUT_file)
             else:
-                print("WARNING: Cannot create daily average file "
+                print("NOTE: Cannot create daily average file "
                       +output_DATA_file+"; need "+str(expected_nfiles)+" "
                       +"input files")
                 make_daily_avg_output_file = False

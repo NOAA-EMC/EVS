@@ -32,6 +32,7 @@ mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
 
 valid_hours='0 6 12 18'
+
 ##########################
 # get the model fcst files
 ##########################
@@ -47,113 +48,77 @@ else
 fi
 
 ############################################
-# create ASCII2NC NBDC files and PB2NC GDAS files
+# Get prepped ASCII2NC NBDC file
 ############################################
-poe_script=${DATA}/jobs/run_all_2NC_poe.sh
-echo 'Creating NDBC ascii2nc files'
-input_ascii2nc_ndbc_path=$COMIN/prep/${COMPONENT}/wave.${VDATE}/ndbc
+echo 'Getting NDBC ascii2nc file'
+input_ascii2nc_ndbc_file=$COMIN/prep/${COMPONENT}/wave.${VDATE}/ndbc/ndbc.${VDATE}.nc
 tmp_ascii2nc_ndbc_file=${DATA}/ncfiles/ndbc.${VDATE}.nc
-output_ascii2nc_ndbc_file=$COMOUTndbc/ndbc.${VDATE}.nc
-if [[ $input_ascii2nc_ndbc_path == *"/com/"* ]] || [[ $input_ascii2nc_ndbc_path == *"/dcom/"* ]]; then
+if [[ $input_ascii2nc_ndbc_file == *"/com/"* ]] || [[ $input_ascii2nc_ndbc_file == *"/dcom/"* ]]; then
     alert_word="WARNING"
 else
-￼   alert_word="NOTE"
+    alert_word="NOTE"
 fi
-if [[ -s $output_ascii2nc_ndbc_file ]]; then
-    cp -v $output_ascii2nc_ndbc_file $tmp_ascii2nc_ndbc_file
+if [[ -s $input_ascii2nc_ndbc_file ]]; then
+    echo "Copying $input_ascii2nc_ndbc_file to $tmp_ascii2nc_ndbc_file"
+    cp -v $input_ascii2nc_ndbc_file $tmp_ascii2nc_ndbc_file
 else
-    nbdc_txt_ncount=$(ls -l ${input_ascii2nc_ndbc_path}/*.txt |wc -l)
-    if [[ $nbdc_txt_ncount -ne 0 ]]; then
-        echo "#!/bin/bash" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
-        echo "" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
-        echo "export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
-        echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
-        echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
-        if [ $SENDCOM = YES ]; then
-            echo "if [ -f $tmp_ascii2nc_ndbc_file ]; then cp -v $tmp_ascii2nc_ndbc_file $output_ascii2nc_ndbc_file; fi" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
-        fi
-        chmod +x ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
-        echo "${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh" >> $poe_script
-    else
-￼       echo "${alert_word}: No files in $input_ascii2nc_ndbc_path"
+    echo "${alert_word}: ${input_ascii2nc_ndbc_file} does not exist"
+    if [ $SENDMAIL = YES ]; then
+        export subject="NDBC Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
+        echo "Missing file is ${input_ascii2nc_ndbc_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $MAILTO
     fi
 fi
+
+############################################
+# Get prepped PB2NC GDAS files
+############################################
 echo ' '
-echo 'Creating GDAS pb2nc files'
+echo 'Getting GDAS pb2nc files'
 for valid_hour in ${valid_hours} ; do
     valid_hour2=$(printf "%02d" "${valid_hour}")
-    input_pb2nc_prepbufrgdas_file=$COMINobsproc/gdas.${VDATE}/${valid_hour2}/atmos/gdas.t${valid_hour2}z.prepbufr
-    tmp_pb2nc_prepbufrgdas_file=${DATA}/ncfiles/gdas.${VDATE}${valid_hour2}.nc
-    output_pb2nc_prepbufrgdas_file=$COMOUTprepbufr/gdas.${VDATE}${valid_hour2}.nc
-    if [[ -s $output_pb2nc_prepbufrgdas_file ]]; then
-        cp -v $output_pb2nc_prepbufrgdas_file $tmp_pb2nc_prepbufrgdas_file
-        chmod 640 $tmp_pb2nc_prepbufrgdas_file
-        chgrp rstprod $tmp_pb2nc_prepbufrgdas_file
+    input_pb2nc_gdas_file=$COMIN/prep/${COMPONENT}/wave.${VDATE}/prepbufr_gdas/gdas.SFCSHP.${VDATE}${valid_hour2}.nc
+    tmp_pb2nc_gdas_file=${DATA}/ncfiles/gdas.SFCSHP.${VDATE}${valid_hour2}.nc
+    if [[ -s $input_pb2nc_gdas_file ]]; then
+        echo "Copying $input_pb2nc_gdas_file to $tmp_pb2nc_gdas_file"
+        cp -v $input_pb2nc_gdas_file $tmp_pb2nc_gdas_file
+        chmod 640 $tmp_pb2nc_gdas_file
+        chgrp rstprod $tmp_pb2nc_gdas_file
     else
-        if [ ! -s $input_pb2nc_prepbufrgdas_file ] ; then
-            if [[ $input_pb2nc_prepbufrgdas_file == *"/com/"* ]] || [[ $input_pb2nc_prepbufrgdas_file == *"/dcom/"* ]]; then
-                alert_word="WARNING"
-            else
-                alert_word="NOTE"
-            fi
-            echo "${alert_word}: $input_pb2nc_prepbufrgdas_file does not exist"
-            if [ $SENDMAIL = YES ] ; then
-                export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
-                echo "Warning: No GDAS Prepbufr was available for valid date ${VDATE}${valid_hour}" > mailmsg
-                echo "Missing file is $input_pb2nc_prepbufrgdas_file" >> mailmsg
-                echo "Job ID: $jobid" >> mailmsg
-                cat mailmsg | mail -s "$subject" $MAILTO
-            fi
+        if [[ $input_pb2nc_gdas_file == *"/com/"* ]] || [[ $input_pb2nc_gdas_file == *"/dcom/"* ]]; then
+            alert_word="WARNING"
         else
-            echo "#!/bin/bash" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-            echo "" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-            echo "export valid_hour2=$valid_hour2" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-            echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_obsPrepbufrGDAS.conf" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-            echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-            echo "chmod 640 $tmp_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-            echo "chgrp rstprod $tmp_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-            if [ $SENDCOM = YES ]; then
-                echo "if [ -f $tmp_pb2nc_prepbufrgdas_file ]; then cp -v $tmp_pb2nc_prepbufrgdas_file $output_pb2nc_prepbufrgdas_file; fi" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-                echo "chmod 640 $output_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-                echo "chgrp rstprod $output_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-            fi
-            chmod +x ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
-            echo "${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh" >> $poe_script
+            alert_word="NOTE"
+        fi
+        echo "${alert_word}: $input_pb2nc_gdas_file does not exist"
+        if [ $SENDMAIL = YES ] ; then
+            export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
+            echo "Warning: No GDAS Prepbufr was available for valid date ${VDATE}${valid_hour2}" > mailmsg
+            echo "Missing file is $input_pb2nc_gdas_file" >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $MAILTO
         fi
     fi
 done
-ncount_job=$(ls -l ${DATA}/jobs/run*2NC_*.sh |wc -l)
-if [[ $ncount_job -gt 0 ]]; then
-    if [ $USE_CFP = YES ]; then
-        chmod 775 $poe_script
-        export MP_PGMMODEL=mpmd
-        export MP_CMDFILE=${poe_script}
-        nselect=$(cat $PBS_NODEFILE | wc -l)
-        nnp=$(($nselect * $nproc))
-        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,core cfp"
-        $launcher $MP_CMDFILE
-        export err=$?; err_chk
-    else
-        ${poe_script}
-        export err=$?; err_chk
-    fi
-fi
+
 ####################
 # quick error check
 ####################
-nc=`ls ${DATA}/ncfiles/gdas.${VDATE}*.nc | wc -l | awk '{print $1}'`
-echo " Found ${DATA}/ncfiles/gdas.${VDATE}*.nc for ${VDATE}"
+nc=$(ls ${DATA}/ncfiles/gdas.SFCSHP.${VDATE}*.nc | wc -l | awk '{print $1}')
+echo " Found ${DATA}/ncfiles/gdas.SFCSHP.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} GDAS pb2nc files for valid date ${VDATE}"
 else
     echo "NOTE: No GDAS netcdf files for valid date ${VDATE} in ${DATA}/ncfiles"
 fi
-nc=`ls ${DATA}/ncfiles/ndbc.${VDATE}*.nc | wc -l | awk '{print $1}'`
+nc=$(ls ${DATA}/ncfiles/ndbc.${VDATE}*.nc | wc -l | awk '{print $1}')
 echo " Found ${DATA}/ncfiles/ndbc.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} NDBC ascii2nc files for valid date ${VDATE}"
 else
-    echo "NOTE: No NDBC netcdf files for valid date ${VDATE} in ${DATA}/ncfiles"
+    echo "NOTE: No NDBC netcdf file for valid date ${VDATE} in ${DATA}/ncfiles"
 fi
 
 ############################################
@@ -188,6 +153,7 @@ for valid_hour in ${valid_hours} ; do
         match_fhr=$(printf "%02d" "${match_hr}")
         flead=$(printf "%03d" "${fhr}")
         flead2=$(printf "%02d" "${fhr}")
+        MODELNAME_upper=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
         if [ $MODELNAME == "gfs" ]; then
             input_model_file=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
         fi
@@ -203,11 +169,18 @@ for valid_hour in ${valid_hours} ; do
                 alert_word="NOTE"
             fi
             echo "${alert_word}: $input_model_file does not exist"
+            if [ $SENDMAIL = YES ]; then
+                export subject="F${flead} ${MODELNAME_upper} Forecast Data Missing for EVS ${COMPONENT}"
+                echo "Warning: No ${MODELNAME_upper} forecast was available for ${matchtime}f${flead}" > mailmsg
+                echo "Missing file is ${input_model_file}" >> mailmsg
+                echo "Job ID: $jobid" >> mailmsg
+                cat mailmsg | mail -s "$subject" $MAILTO
+            fi
         fi
         if [[ -s $tmp_model_file ]]; then
             for OBSNAME in GDAS NDBC; do
                 if [ $OBSNAME = GDAS ]; then
-                    tmp_OBSNAME_file=${DATA}/ncfiles/gdas.${VDATE}${valid_hour2}.nc
+                    tmp_OBSNAME_file=${DATA}/ncfiles/gdas.SFCSHP.${VDATE}${valid_hour2}.nc
                 elif [ $OBSNAME = NDBC ]; then
                     tmp_OBSNAME_file=${DATA}/ncfiles/ndbc.${VDATE}.nc
                 fi
@@ -280,17 +253,6 @@ if [ "${nc}" != '0' ]; then
     fi
 else
     echo "WARNING: No large stat file found at ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
-fi
-
-# Cat the METplus log files
-log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-        echo "Start: $log_file"
-        cat $log_file
-        echo "End: $log_file"
-    done
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
