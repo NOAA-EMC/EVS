@@ -105,9 +105,10 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 	   	fi
    	fi
 else
+	echo "WARNING: No NDBC data was available for valid date ${INITDATE}."
 	if [ $SENDMAIL = YES ] ; then
  		export subject="NDBC Data Missing for EVS ${COMPONENT}"
-		echo "Warning: No NDBC data was available for valid date ${INITDATE}." > mailmsg
+		echo "WARNING: No NDBC data was available for valid date ${INITDATE}." > mailmsg
 		echo "Missing files are located at $DCOMINndbc/${INITDATE}/validation_data/marine/buoy/." >> mailmsg
 		echo "Job ID: $jobid" >> mailmsg
 		cat mailmsg | mail -s "$subject" $MAILTO
@@ -122,19 +123,7 @@ fi
 
 $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_regions.sh
 
-##########################################
-## Cat the prep log files
-###########################################
-log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-	for log_file in $log_dir/*; do
-		echo "Start: $log_file"
-		cat $log_file
-		echo "End: $log_file"
-	done
-fi
-#######################################
+###################################################################################
 
 echo ' '
 echo "Ending at : `date`"
