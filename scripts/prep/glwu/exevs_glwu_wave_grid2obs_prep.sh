@@ -120,7 +120,7 @@ fi
 # NOTE: script below is calling MET's gen_vx_mask directly instead of using METplus
 # keeping it in a ush script; future use should use METplus to do this
 ###################################################################################
-
+mkdir -p $DATA/masks
 $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_regions.sh
 
 ###################################################################################
