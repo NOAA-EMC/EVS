@@ -111,38 +111,3 @@ if [ $gather = yes ] && [ -s $COMOUTsmall/*/*.stat ] ; then
   export err=$?; err_chk
 fi
 
-# Cat the METplus log files
-log_dirs1="$DATA/*/logs"
-log_dirs2="$DATA/precip/*/logs"
-for log_dir in $log_dirs1; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-for log_dir in $log_dirs2; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-
-export err=$?; err_chk
