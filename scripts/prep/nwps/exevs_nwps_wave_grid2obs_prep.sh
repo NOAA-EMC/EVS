@@ -39,6 +39,7 @@ regions='ar er pr sr wr'
 for region in ${regions} ; do
 	COMINregion="${COMINnwps}/${region}.${INITDATE}"
 	if [ ! -s $COMINregion ]; then
+		echo ""WARNING: No NWPS forecast was available for ${region}"
 		if [ $SENDMAIL = YES ]; then
 			export subject="Forecast Data Missing for ${region} EVS ${COMPONENT}"
 			echo "WARNING: No NWPS forecast was available for ${region}" > mailmsg
@@ -102,9 +103,10 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 	   cp -v $DATA/ncfiles/ndbc.${INITDATE}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
    fi
 else
+	echo "WARNING: No NDBC data was available for valid date $VDATE."
 	if [ $SENDMAIL = YES ] ; then
  	export subject="NDBC Data Missing for EVS ${COMPONENT}"
-	echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
+	echo "WARNING: No NDBC data was available for valid date $VDATE." > mailmsg
 	echo "Missing files are located at $COMINobs/$VDATE/validation_data/marine/buoy/." >> mailmsg
 	echo "Job ID: $jobid" >> mailmsg
 	cat mailmsg | mail -s "$subject" $MAILTO
