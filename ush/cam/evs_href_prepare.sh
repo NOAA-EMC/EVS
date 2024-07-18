@@ -367,16 +367,6 @@ if [ "$data" = "prepbufr" ] ; then
             export vend=${vhr}
             export verif_grid=$grid
 
-	    >$WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr
-	     split_by_subset $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00
-	     if [ "$lvl" = "profile" ] ; then
-	       cat $WORK/ADPUPA >> $WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr
-	     else
-	       cat $WORK/ADPSFC $WORK/SFCSHP $WORK/MSONET $WORK/ADPUPA >> $WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr
-	     fi
-
-	     export bufrpath=$WORK
-
             if [ "$lvl" = "sfc" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href.conf
                export err=$?; err_chk
