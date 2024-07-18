@@ -28,7 +28,8 @@ def run_shell_command(command):
 
     """
     print("Running  "+' '.join(command))
-    if any(mark in ' '.join(command) for mark in ['"', "'", '|', '*', '>']):
+    if any(mark in ' '.join(command) for mark in ['"', "'", '|', '*', '>',
+                                                  '-']):
         run_command = subprocess.run(
             ' '.join(command), shell=True
         )
@@ -171,7 +172,7 @@ def log_missing_file_truth(log_missing_file, missing_file, obs, valid_dt):
             lmf.write("#!/bin/bash\n")
             lmf.write("set -x\n")
             lmf.write(f'export subject="{obs} Data Missing for EVS '
-                      +'global_ens chem"\n')
+                      +'global_ens_chem"\n')
             lmf.write(f'echo "Warning: No {obs} data was available for '
                       +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
             lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
@@ -1092,21 +1093,41 @@ def prep_prod_metfra_file(source_file, dest_file, init_dt, forecast_hour,
             copy_file(prepped_file, dest_file)
 
 def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
-                           date_dt, log_missing_file):
+                           daily_dest_grid_file, date_dt, log_missing_file):
     """! Do prep work for OSI-SAF production files
 
          Args:
-             daily_source_file - daily source file (string)
-             daily_dest_file   - daily destination file (string)
-             date_dt           - date (datetime object)
-             log_missing_file  - text file path to write that
-                                 production file is missing (string)
+             daily_source_file    - daily source file (string)
+             daily_dest_file      - daily destination file (string)
+             daily_dest_grid_file - daily destination regrid_data_plane
+                                    file (string)
+             date_dt              - date (datetime object)
+             log_missing_file     - text file path to write that
+                                    production file is missing (string)
          Returns:
     """
+    if '_nh_' in daily_source_file:
+        hem = 'nh'
+    elif '_sh_' in daily_source_file:
+        hem = 'sh'
     # Environment variables and executables
+    RUN_METPLUS = os.path.join(
+        os.environ['METPLUS_PATH'], 'ush','run_metplus.py'
+    )
+    # Set configuration file paths
+    machine_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', 'machine.conf'
+    )
+    regrid_data_plane_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', os.environ['STEP'],
+        os.environ['COMPONENT'], f"{os.environ['RUN']}_grid2grid",
+        f"RegridDataPlane_obsOSI-SAF.conf"
+    )
     # Temporary file names
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +daily_dest_file.rpartition('/')[2])
+    prepped_grid_file = os.path.join(os.getcwd(), 'atmos.'
+                                     +daily_dest_grid_file.rpartition('/')[2])
     if check_file_exists_size(daily_source_file):
         if not check_netcdf_file_corrupt(daily_source_file):
             copy_file(daily_source_file, prepped_file)
@@ -1117,11 +1138,13 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
             )
             prepped_data.close()
             copy_file(prepped_file, daily_dest_file)
+            run_shell_command(
+                [RUN_METPLUS, '-c', machine_conf,
+                 '-c', regrid_data_plane_conf,
+                 '-c', f"config.PROCESS_LIST='RegridDataPlane({hem})'"]
+            )
+            copy_file(prepped_grid_file, daily_dest_grid_file)
     else:
-        if '_nh_' in daily_source_file:
-            hem = 'nh'
-        elif '_sh_' in daily_source_file:
-            hem = 'sh'
         log_missing_file_truth(log_missing_file, daily_source_file,
                                f"OSI-SAF {hem.upper()}", date_dt)
 
@@ -1157,6 +1180,129 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
         prepped_data['time'][:] = prepped_data['time'][:][0] + 43200
         prepped_data.close()
     copy_file(prepped_file, dest_file)
+
+def prep_prod_ccpa_accum24hr_file(source_file_format, dest_file, date_dt,
+                                  log_missing_file):
+    """! Do prep work for 24 hour accumulation CCPA production files
+
+         Args:
+             source_file_format - source file format (string)
+             dest_file          - destination file (string)
+             date_dt            - date (datetime object)
+             log_missing_file   - text file path to write that
+                                  production file is missing (string)
+         Returns:
+    """
+    # Environment variables and executables
+    RUN_METPLUS = os.path.join(
+        os.environ['METPLUS_PATH'], 'ush','run_metplus.py'
+    )
+    # Set configuration file paths
+    machine_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', 'machine.conf'
+    )
+    pcp_combine_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', os.environ['STEP'],
+        os.environ['COMPONENT'], f"{os.environ['RUN']}_grid2grid",
+        'PCPCombine_obs24hrCCPA.conf'
+    )
+    # Temporary file names
+    prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                +dest_file.rpartition('/')[2])
+    # Get needed files for accumulation (4 6 hour accumulation files)
+    have_all_files = True
+    nfile = 1
+    make_dir(os.path.join(os.getcwd(), 'ccpa'))
+    while nfile <= 4:
+        nfile_date_dt = date_dt - datetime.timedelta(hours=(nfile-1)*6)
+        nfile_source = format_filler(source_file_format, nfile_date_dt,
+                                     nfile_date_dt, 'anl', {})
+        nfile_working = os.path.join(os.getcwd(), 'ccpa', 'ccpa.6H.'
+                                     +f"{nfile_date_dt:%Y%m%d%H}")
+        log_missing_nfile = log_missing_file.replace(
+            f"{date_dt:%Y%m%d%H}", f"{nfile_date_dt:%Y%m%d%H}"
+        )
+        if check_file_exists_size(nfile_source):
+            copy_file(nfile_source, nfile_working)
+        else:
+            have_all_files = False
+            log_missing_file_truth(log_missing_nfile, nfile_source,
+                                   "CCPA 6 hour accum ", nfile_date_dt)
+        nfile+=1
+    # Prep file
+    if have_all_files:
+        run_shell_command(
+            [RUN_METPLUS, '-c', machine_conf, '-c', pcp_combine_conf]
+        )
+        copy_file(prepped_file, dest_file)
+
+def prep_prod_prepbufr_file(source_file, dest_file, date_dt, prepbufr_type,
+                            filter_type, log_missing_file):
+    """! Do prep work for obsproc prepbufr production files
+
+         Args:
+             source_file      - source file (string)
+             dest_file        - destination file (string)
+             date_dt          - date (datetime object)
+             prepbufr_type    - prepbufr type (string)
+             filter_type      - observation type to filter for (string)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+         Returns:
+    """
+    # Environment variables and executables
+    SPLIT_BY_SUBSET = os.path.join(
+        os.environ['bufr_ROOT'], 'bin', 'split_by_subset'
+    )
+    RUN_METPLUS = os.path.join(
+        os.environ['METPLUS_PATH'], 'ush','run_metplus.py'
+    )
+    # Set configuration file paths
+    machine_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', 'machine.conf'
+    )
+    pb2nc_conf = os.path.join(
+        os.environ['PARMevs'], 'metplus_config', os.environ['STEP'],
+        os.environ['COMPONENT'], f"{os.environ['RUN']}_grid2obs",
+        f"PB2NC_obsPrepbufr.conf"
+    )
+    # Temporary file names
+    working_file = os.path.join(os.getcwd(), 'atmos.prepbufr.'
+                                +f"{prepbufr_type}.{date_dt:%Y%m%d%H}")
+    prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                +dest_file.rpartition('/')[2])
+    if prepbufr_type == 'gdas':
+        split_file = os.path.join(os.getcwd(), 'ADPUPA')
+    elif prepbufr_type == 'nam':
+        split_file = os.path.join(os.getcwd(), 'ADPSFC')
+    # Prep file
+    if check_file_exists_size(source_file):
+        copy_file(source_file, working_file)
+        if os.path.exists(working_file):
+            run_shell_command(['chmod', '750', working_file])
+            run_shell_command(['chgrp', 'rstprod', working_file])
+            run_shell_command([SPLIT_BY_SUBSET, working_file])
+    else:
+        if not os.path.exists(log_missing_file):
+            log_missing_file_truth(log_missing_file, source_file,
+                                   f"Prepbufr {prepbufr_type.upper()}",
+                                   date_dt)
+    if check_file_exists_size(split_file):
+        run_shell_command(
+            [RUN_METPLUS, '-c', machine_conf,
+             '-c', pb2nc_conf,
+             '-c', f"config.VALID_BEG={date_dt:%Y%m%d%H}",
+             '-c', f"config.VALID_END={date_dt:%Y%m%d%H}",
+             '-c', "config.PROCESS_LIST='PB2NC"
+             +f"({prepbufr_type}_{filter_type})'"]
+        )
+        if os.path.exists(prepped_file):
+            run_shell_command(['chmod', '750', prepped_file])
+            run_shell_command(['chgrp', 'rstprod', prepped_file])
+        copy_file(prepped_file, dest_file)
+        if os.path.exists(dest_file):
+            run_shell_command(['chmod', '750', dest_file])
+            run_shell_command(['chgrp', 'rstprod', dest_file])
 
 def prep_prod_get_d_file(source_file, dest_file, date_dt,
                          log_missing_files):
@@ -1986,8 +2132,6 @@ def check_truth_files(job_dict):
          Returns:
              all_truth_file_exist - if all needed truth files
                                     exist or not (boolean)
-             truth_copy_output_DATA2COMOUT_list - list of files to copy
-                                                  from DATA to COMOUT
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -2007,100 +2151,14 @@ def check_truth_files(job_dict):
                     +'.truth'
                 )
                 truth_input_file_list.append(model_truth_file)
-            elif job_dict['VERIF_TYPE'] == 'sea_ice':
-                osi_saf_file = os.path.join(
-                    verif_case_dir, 'data', 'osi_saf',
-                    'osi_saf.multi.'+job_dict['hemisphere']+'.'
-                    +(valid_date_dt-datetime.timedelta(hours=24))\
-                    .strftime('%Y%m%d%H')
-                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-                )
-                truth_input_file_list.append(osi_saf_file)
-                osi_saf_DATA_output = os.path.join(
-                    verif_case_dir, 'METplus_output',
-                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                    'osi_saf', job_dict['VERIF_CASE'], 'regrid_data_plane_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']+'_valid'
-                    +(valid_date_dt-datetime.timedelta(hours=24))\
-                    .strftime('%Y%m%d%H')
-                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-                )
-                osi_saf_COMOUT_output = os.path.join(
-                    job_dict['COMOUT'],
-                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                    'osi_saf', job_dict['VERIF_CASE'], 'regrid_data_plane_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']+'_valid'
-                    +(valid_date_dt-datetime.timedelta(hours=24))\
-                    .strftime('%Y%m%d%H')
-                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-                )
-                truth_output_file_list.append((osi_saf_DATA_output,
-                                               osi_saf_COMOUT_output))
-        elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
-                    and 'Prepbufr' in job_dict['job_name']:
-                prepbufr_name = (job_dict['job_name'].replace('Prepbufr', '')\
-                                 .lower())
-                prepbufr_file = os.path.join(
-                    verif_case_dir, 'data', 'prepbufr_'+prepbufr_name,
-                    'prepbufr.'+prepbufr_name+'.'
-                    +valid_date_dt.strftime('%Y%m%d%H')
-                )
-                truth_input_file_list.append(prepbufr_file)
-                pb2nc_DATA_output = os.path.join(
-                    verif_case_dir, 'METplus_output',
-                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
-                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-                )
-                pb2nc_COMOUT_output = os.path.join(
-                    job_dict['COMOUT'],
-                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
-                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-                )
-                truth_output_file_list.append((pb2nc_DATA_output,
-                                               pb2nc_COMOUT_output))
     elif job_dict['JOB_GROUP'] == 'assemble_data':
-        if job_dict['VERIF_CASE'] == 'grid2grid':
-            if job_dict['VERIF_TYPE'] == 'precip_accum24hr' \
-                    and job_dict['job_name'] == '24hrCCPA':
-                nccpa_files = 4
-                n = 1
-                while n <= 4:
-                    nccpa_file = os.path.join(
-                        verif_case_dir, 'data', 'ccpa', 'ccpa.6H.'
-                        +(valid_date_dt-datetime.timedelta(hours=(n-1)*6))\
-                        .strftime('%Y%m%d%H')
-                    )
-                    truth_input_file_list.append(nccpa_file)
-                    n+=1
-                ccpa_DATA_output = os.path.join(
-                    verif_case_dir, 'METplus_output',
-                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                    'ccpa', job_dict['VERIF_CASE'],
-                    'pcp_combine_precip_accum24hr_24hrCCPA_valid'
-                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-                )
-                ccpa_COMOUT_output = os.path.join(
-                    job_dict['COMOUT'],
-                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                    'ccpa', job_dict['VERIF_CASE'],
-                    'pcp_combine_precip_accum24hr_24hrCCPA_valid'
-                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-                )
-                truth_output_file_list.append((ccpa_DATA_output,
-                                               ccpa_COMOUT_output))
-        elif job_dict['VERIF_CASE'] == 'grid2obs':
+        if job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
-                    verif_case_dir, 'METplus_output',
-                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
-                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                    verif_case_dir, 'data', f"prepbufr_{job_dict['prepbufr']}",
+                    f"prepbufr.{job_dict['prepbufr']}."
+                    +job_dict['VERIF_TYPE']+'.'
+                    +valid_date_dt.strftime('%Y%m%d%H')
                 )
                 truth_input_file_list.append(pb2nc_file)
     elif job_dict['JOB_GROUP'] == 'generate_stats':
@@ -2114,11 +2172,8 @@ def check_truth_files(job_dict):
                 truth_input_file_list.append(model_truth_file)
             elif job_dict['VERIF_TYPE'] == 'precip_accum24hr':
                 ccpa_file = os.path.join(
-                    verif_case_dir, 'METplus_output',
-                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                    'ccpa', job_dict['VERIF_CASE'], 'pcp_combine_'
-                    +job_dict['VERIF_TYPE']+'_24hrCCPA_valid'
-                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                    verif_case_dir, 'data', 'ccpa', 'ccpa.24H.'
+                    +valid_date_dt.strftime('%Y%m%d%H')
                 )
                 truth_input_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'precip_accum3hr':
@@ -2138,12 +2193,8 @@ def check_truth_files(job_dict):
                     )
                 elif 'DailyAvg_Extent' in job_dict['job_name']:
                     osi_saf_file = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                        'osi_saf', job_dict['VERIF_CASE'],
-                        'regrid_data_plane_sea_ice_'
-                        +'DailyAvg_Concentration'
-                        +job_dict['hemisphere'].upper()+'_valid'
+                        verif_case_dir, 'data', 'osi_saf',
+                        'osi_saf.multi.'+job_dict['grid']+'.'
                         +(valid_date_dt-datetime.timedelta(hours=24))\
                         .strftime('%Y%m%d%H')
                         +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
@@ -2167,47 +2218,24 @@ def check_truth_files(job_dict):
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
-                    verif_case_dir, 'METplus_output',
-                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
-                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                    verif_case_dir, 'data', f"prepbufr_{job_dict['prepbufr']}",
+                    f"prepbufr.{job_dict['prepbufr']}."
+                    +job_dict['VERIF_TYPE']+'.'
+                    +valid_date_dt.strftime('%Y%m%d%H')
                 )
                 truth_input_file_list.append(pb2nc_file)
-    truth_output_files_exist_list = []
-    truth_copy_output_DATA2COMOUT_list = truth_output_file_list
-    for truth_file_tuple in truth_output_file_list:
-        if os.path.exists(truth_file_tuple[1]):
-            truth_output_files_exist_list.append(True)
-            copy_file(truth_file_tuple[1], truth_file_tuple[0])
-            if job_dict['JOB_GROUP'] == 'reformat_data' \
-                    and job_dict['VERIF_CASE'] == 'grid2obs' \
-                    and job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
-                    and 'Prepbufr' in job_dict['job_name']:
-                if os.path.exists(truth_file_tuple[0]):
-                    run_shell_command(['chmod', '640',
-                                       truth_file_tuple[0]])
-                    run_shell_command(['chgrp', 'rstprod',
-                                       truth_file_tuple[0]])
-            truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
+    truth_input_files_exist_list = []
+    for truth_file in truth_input_file_list:
+        if os.path.exists(truth_file):
+            truth_input_files_exist_list.append(True)
         else:
-            truth_output_files_exist_list.append(False)
-    if all(x == True for x in truth_output_files_exist_list) \
-            and len(truth_output_files_exist_list) > 0:
-        all_truth_file_exist = False
+            truth_input_files_exist_list.append(False)
+    if all(x == True for x in truth_input_files_exist_list) \
+            and len(truth_input_files_exist_list) > 0:
+        all_truth_file_exist = True
     else:
-        truth_input_files_exist_list = []
-        for truth_file in truth_input_file_list:
-            if os.path.exists(truth_file):
-                truth_input_files_exist_list.append(True)
-            else:
-                truth_input_files_exist_list.append(False)
-        if all(x == True for x in truth_input_files_exist_list) \
-                and len(truth_input_files_exist_list) > 0:
-            all_truth_file_exist = True
-        else:
-            all_truth_file_exist = False
-    return all_truth_file_exist, truth_copy_output_DATA2COMOUT_list
+        all_truth_file_exist = False
+    return all_truth_file_exist
 
 def check_stat_files(job_dict):
     """! Check for MET .stat files
@@ -2653,6 +2681,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
         'Asia': 'asia',
         'ASIA': 'asia',
         'ATL_MDR': 'al_mdr',
+        'Conus': 'conus',
         'conus': 'conus',
         'CONUS': 'buk_conus',
         'CONUS_East': 'buk_conus_e',
