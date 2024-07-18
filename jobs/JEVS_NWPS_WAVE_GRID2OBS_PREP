@@ -21,6 +21,7 @@ export cycle=${cycle:-t00z}
 setpdy.sh 20
 . ./PDY
 export INITDATE=${INITDATE:-${PDYm1}}
+export VDATE=${VDATE:-${PDYm1}}
 export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ####################################
@@ -31,6 +32,7 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config}
 
 ####################################
 # Set data directives
@@ -48,7 +50,7 @@ export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-nwps}
 export MODELNAME=${MODELNAME:-nwps}
 export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
-export OBTYPE=${OBTYPE:-GDAS}
+export OBTYPE=${OBTYPE:-NDBC}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 

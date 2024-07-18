@@ -48,7 +48,7 @@ for region in ${regions} ; do
 			cat mailmsg | mail -s "$subject" $MAILTO
 		fi
 	else
-	find ${COMINregion} -name \*.grib2 -exec cp {} ${DATA}/gribs \;
+		find ${COMINregion} -name \*.grib2 -exec cp {} ${DATA}/gribs \;
 	fi
 done
 
@@ -90,41 +90,38 @@ done
 # convert NDBC *.txt files into a netcdf file using ASCII2NC
 ############################################################
 
-export RUN=ndbc
-#mkdir -p $COMOUTprep/nwps.$VDATE/$RUN
+mkdir -p ${DATA}/ndbc
 mkdir -p ${DATA}/ncfiles
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
-ndbc_txt_ncount=$(ls -l $DCOMINndbc/$VDATE/validation_data/marine/buoy/*.txt |wc -l)
+ndbc_txt_ncount=$(ls -l $DCOMINndbc/$INITDATE/validation_data/marine/buoy/*.txt |wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
-   run_metplus.py -c $CONFIGevs/metplus_nwps.conf \
-     -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsNDBC.conf
-   export err=$?; err_chk
-   if [ $SENDCOM = YES ]; then
-	   cp -v $DATA/ncfiles/ndbc.${INITDATE}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
-   fi
+	python $USHevs/${COMPONENT}/nwps_wave_prep_read_ndbc.py
+	export err=$?; err_chk
+   
+	
+	run_metplus.py -c $CONFIGevs/machine.conf \
+     	-c $CONFIGevs/$STEP/$COMPONENT/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf
+   	export err=$?; err_chk
+
+	tmp_ndbc_file=$DATA/ncfiles/ndbc.${INITDATE}.nc
+	output_ndbc_file=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/ndbc.${INITDATE}.nc
+	if [ $SENDCOM = YES ]; then
+		if [ -s $tmp_ndbc_file ]; then
+			cp -v $tmp_ndbc_file $output_ndbc_file
+		fi
+	fi
 else
 	echo "WARNING: No NDBC data was available for valid date $VDATE."
-	if [ $SENDMAIL = YES ] ; then
- 	export subject="NDBC Data Missing for EVS ${COMPONENT}"
-	echo "WARNING: No NDBC data was available for valid date $VDATE." > mailmsg
-	echo "Missing files are located at $COMINobs/$VDATE/validation_data/marine/buoy/." >> mailmsg
-	echo "Job ID: $jobid" >> mailmsg
-	cat mailmsg | mail -s "$subject" $MAILTO
+	if [ $SENDMAIL = YES ]; then
+		export subject="NDBC Data Missing for EVS ${COMPONENT}"
+		echo "WARNING: No NDBC data was available for valid date $VDATE." > mailmsg
+		echo "Missing files are located at $COMINobs/$VDATE/validation_data/marine/buoy/." >> mailmsg
+		echo "Job ID: $jobid" >> mailmsg
+		cat mailmsg | mail -s "$subject" $MAILTO
+	fi
 fi
 
 
-##########################################
-## Cat the prep log files
-###########################################
-log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-	for log_file in $log_dir/*; do
-		echo "Start: $log_file"
-		cat $log_file
-		echo "End: $log_file"
-	done
-fi
 ########################################
 
 echo ' '
