@@ -51,31 +51,7 @@ gda_util.make_dir(JOB_GROUP_jobs_dir)
 ################################################
 #### reformat_data jobs
 ################################################
-reformat_data_obs_jobs_dict = {
-    'flux': {},
-    'means': {},
-    'ozone': {},
-    'precip_accum24hr': {},
-    'precip_accum3hr': {},
-    'pres_levs': {},
-    'sea_ice': {
-        'DailyAvg_ConcentrationNH': {'env': {'hemisphere': 'nh',
-                                             'grid': 'G219'},
-                                     'commands': [gda_util.metplus_command(
-                                                      'RegridDataPlane_'
-                                                      +'obsOSI-SAF.conf'
-                                                  )]},
-        'DailyAvg_ConcentrationSH': {'env': {'hemisphere': 'sh',
-                                             'grid': 'G220'},
-                                     'commands': [gda_util.metplus_command(
-                                                      'RegridDataPlane_'
-                                                      +'obsOSI-SAF.conf'
-                                                  )]},
-    },
-    'snow': {},
-    'sst': {},
-}
-reformat_data_model_jobs_dict = {
+reformat_data_jobs_dict = {
     'flux': {},
     'means': {},
     'ozone': {},
@@ -171,23 +147,7 @@ reformat_data_model_jobs_dict = {
 ################################################
 #### assemble_data jobs
 ################################################
-assemble_data_obs_jobs_dict = {
-    'flux': {},
-    'means': {},
-    'ozone': {},
-    'precip_accum24hr': {
-        '24hrCCPA': {'env': {},
-                     'commands': [gda_util.metplus_command(
-                                      'PCPCombine_obs24hrCCPA.conf'
-                                  )]}
-    },
-    'precip_accum3hr': {},
-    'pres_levs': {},
-    'sea_ice': {},
-    'snow': {},
-    'sst': {},
-}
-assemble_data_model_jobs_dict = {
+assemble_data_jobs_dict = {
     'flux': {},
     'means': {},
     'ozone': {},
@@ -965,9 +925,9 @@ gather_stats_jobs_dict = {'env': {},
 # Create job scripts
 if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
     if JOB_GROUP == 'reformat_data':
-        JOB_GROUP_jobs_dict = reformat_data_model_jobs_dict
+        JOB_GROUP_jobs_dict = reformat_data_jobs_dict
     elif JOB_GROUP == 'assemble_data':
-        JOB_GROUP_jobs_dict = assemble_data_model_jobs_dict
+        JOB_GROUP_jobs_dict = assemble_data_jobs_dict
     elif JOB_GROUP == 'generate_stats':
         JOB_GROUP_jobs_dict = generate_stats_jobs_dict
     for verif_type in VERIF_CASE_STEP_type_list:
@@ -1133,8 +1093,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         else:
                             check_truth_files = True
                     if check_truth_files:
-                        (all_truth_file_exist,
-                         truth_copy_output_DATA2COMOUT_list)= (
+                        all_truth_file_exist = (
                              gda_util.check_truth_files(job_env_dict)
                         )
                         if model_files_exist and all_truth_file_exist:
@@ -1344,85 +1303,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-        # Do reformat_data and assemble_data observation jobs
-        if JOB_GROUP in ['reformat_data', 'assemble_data']:
-            if JOB_GROUP == 'reformat_data':
-                JOB_GROUP_obs_jobs_dict = reformat_data_obs_jobs_dict
-            elif JOB_GROUP == 'assemble_data':
-                JOB_GROUP_obs_jobs_dict = assemble_data_obs_jobs_dict
-            for verif_type_job in list(JOB_GROUP_obs_jobs_dict[verif_type]\
-                                       .keys()):
-                # Initialize job environment dictionary
-                job_env_dict = gda_util.initalize_job_env_dict(
-                    verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
-                    verif_type_job
-                )
-                # Add job specific environment variables
-                for verif_type_job_env_var in \
-                        list(JOB_GROUP_obs_jobs_dict[verif_type]\
-                             [verif_type_job]['env'].keys()):
-                    job_env_dict[verif_type_job_env_var] = (
-                        JOB_GROUP_obs_jobs_dict[verif_type]\
-                        [verif_type_job]['env'][verif_type_job_env_var]
-                    )
-                verif_type_job_commands_list = (
-                    JOB_GROUP_obs_jobs_dict[verif_type]\
-                    [verif_type_job]['commands']
-                )
-                # Loop through and write job script for dates and models
-                valid_start_date_dt = datetime.datetime.strptime(
-                    start_date+job_env_dict['valid_hr_start'],
-                    '%Y%m%d%H'
-                )
-                valid_end_date_dt = datetime.datetime.strptime(
-                    end_date+job_env_dict['valid_hr_end'],
-                    '%Y%m%d%H'
-                )
-                valid_date_inc = int(job_env_dict['valid_hr_inc'])
-                date_dt = valid_start_date_dt
-                while date_dt <= valid_end_date_dt:
-                    job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
-                    job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
-                    job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
-                    njobs+=1
-                    # Create job file
-                    job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-                    print(f"Creating job script: {job_file}")
-                    job = open(job_file, 'w')
-                    job.write('#!/bin/bash\n')
-                    job.write('set -x\n')
-                    job.write('\n')
-                    # Set any environment variables for special cases
-                    # Do file checks
-                    (all_truth_file_exist,
-                     truth_copy_output_DATA2COMOUT_list) = (
-                         gda_util.check_truth_files(job_env_dict)
-                    )
-                    if all_truth_file_exist:
-                        write_job_cmds = True
-                    else:
-                        write_job_cmds = False
-                    # Write environment variables
-                    for name, value in job_env_dict.items():
-                        if '"' in value:
-                            job.write(f"export {name}='{value}'\n")
-                        else:
-                            job.write(f'export {name}="{value}"\n')
-                    job.write('\n')
-                    # Write job commands
-                    if write_job_cmds:
-                        for cmd in verif_type_job_commands_list:
-                            job.write(cmd+'\n')
-                            job.write('export err=$?; err_chk'+'\n')
-                        if job_env_dict['SENDCOM'] == 'YES':
-                            for truth_output_file_tuple \
-                                    in truth_copy_output_DATA2COMOUT_list:
-                                job.write(f'if [ -f "{truth_output_file_tuple[0]}" ]; then '
-                                          +f"cp -v {truth_output_file_tuple[0]} "
-                                          +f"{truth_output_file_tuple[1]}"
-                                          +f"; fi\n")
-                    job.close()
-                    date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':
     print(f"----> Making job scripts for {VERIF_CASE_STEP} "
           +"for job group {JOB_GROUP}")
