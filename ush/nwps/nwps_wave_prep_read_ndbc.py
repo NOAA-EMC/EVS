@@ -50,7 +50,7 @@ if not os.path.exists(output_nwps_ndbc):
     os.mkdir(output_nwps_ndbc)
 
 #########################################################################################
-# Identify and filter available buoys in Great lakes region:
+# Identify buoys with lat/lon for NWPS:
 ########################################################################################
 
 buoy_id = []

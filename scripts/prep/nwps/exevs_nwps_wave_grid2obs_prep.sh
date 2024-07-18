@@ -39,7 +39,7 @@ regions='ar er pr sr wr'
 for region in ${regions} ; do
 	COMINregion="${COMINnwps}/${region}.${INITDATE}"
 	if [ ! -s $COMINregion ]; then
-		echo ""WARNING: No NWPS forecast was available for ${region}"
+		echo "WARNING: No NWPS forecast was available for ${region}"
 		if [ $SENDMAIL = YES ]; then
 			export subject="Forecast Data Missing for ${region} EVS ${COMPONENT}"
 			echo "WARNING: No NWPS forecast was available for ${region}" > mailmsg
@@ -79,7 +79,7 @@ for wfo in $wfos; do
 							cp -v $DATAfilename_fhr ${ARCmodel}/.
 						fi
 					fi
-					fcst=$(( $fcst+ 1 ))
+					fcst=$(( $fcst+ 24 ))
 				done
 			fi
 		done
