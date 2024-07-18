@@ -23,6 +23,9 @@ print("Working in: "+cwd)
 DATA = os.environ['DATA']
 COMINcfs = os.environ['COMINcfs']
 COMINcmc = os.environ['COMINcmc']
+COMINgfs = os.environ['COMINgfs']
+COMINccpa = os.environ['COMINccpa']
+COMINobsproc = os.environ['COMINobsproc']
 DCOMINcmc_precip = os.environ['DCOMINcmc_precip']
 DCOMINcmc_regional_precip = os.environ['DCOMINcmc_regional_precip']
 DCOMINdwd_precip = os.environ['DCOMINdwd_precip']
@@ -51,8 +54,228 @@ OBSNAME = os.environ['OBSNAME'].split(' ')
 output_INITDATE = COMOUT+'.'+INITDATE
 gda_util.make_dir(output_INITDATE)
 
+###### OBS
+# Get operational observation data
+# Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
+# Group for High Resolution Sea Surface Temperature (GHRSST) Level 4 SST analysis for Office of Satellite and Product Operations (OSPO)- ghrsst_ospo
+# NCEP's Climatology-Calibrated Precipitation Analysis to 24 hour accumulation- ccpa_accum24hr
+global_det_obs_dict = {
+    'osi_saf': {'input_file_format': os.path.join(DCOMINosi_saf,
+                                                  '{init_shift?fmt=%Y%m%d'
+                                                  +'?shift=-12}',
+                                                  'seaice', 'osisaf',
+                                                  'ice_conc_{hem?fmt=str}_'
+                                                  +'polstere-100_multi_'
+                                                  +'{init_shift?fmt=%Y%m%d%H'
+                                                  +'?shift=-12}00.nc'),
+                'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                'osi_saf', 'osi_saf.multi.'
+                                                +'{hem?fmt=str}.'
+                                                +'{init_shift?fmt=%Y%m%d%H'
+                                                +'?shift=-24}to'
+                                                +'{init?fmt=%Y%m%d%H}.nc'),
+                'tmp_regrid_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                       'osi_saf', 'regrid_data_plane'
+                                                       +'_sea_ice_DailyAvg_'
+                                                       +'Concentration_'
+                                                       +'{grid?fmt=str}'
+                                                       +'_valid{init_shift?'
+                                                       +'fmt=%Y%m%d%H'
+                                                       +'?shift=-24}to'
+                                                       +'{init?fmt=%Y%m%d%H}.nc'),
+                'inithours': ['00']},
+    'ghrsst_ospo': {'input_file_format': os.path.join(DCOMINghrsst_ospo,
+                                                      '{init_shift?fmt=%Y%m%d'
+                                                      +'?shift=-24}',
+                                                      'validation_data', 'marine',
+                                                      'ghrsst',
+                                                      '{init_shift?fmt=%Y%m%d'
+                                                      +'?shift=-24}_OSPO_L4_'
+                                                      +'GHRSST.nc'),
+                    'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                    'ghrsst_ospo',
+                                                    'ghrsst_ospo.'
+                                                    +'{init_shift?fmt=%Y%m%d%H'
+                                                    +'?shift=-24}to'
+                                                    +'{init?fmt=%Y%m%d%H}.nc'),
+                    'inithours': ['00']},
+    'ccpa_accum24hr': {'input_file_format': os.path.join(COMINccpa,'ccpa.'
+                                                         +'{init?fmt=%Y%m%d}',
+                                                         '{init?fmt=%H}',
+                                                         'ccpa.t{init?fmt=%H}z'
+                                                         +'.06h.hrap.conus.'
+                                                         +'gb2'),
+                       'tmp_file_format': os.path.join(DATA, f"{RUN}.{INITDATE}",
+                                                       'ccpa_accum24hr',
+                                                       'pcp_combine_'
+                                                       +'precip_accum24hr_'
+                                                       +'24hrCCPA_valid'
+                                                       +'{init?fmt=%Y%m%d%H}'
+                                                       +'.nc'),
+                       'inithours': ['12']},
+    'prepbufr_gdas': {'input_file_format': os.path.join(COMINobsproc, 'gdas.'
+                                                        +'{init?fmt=%Y%m%d}',
+                                                        '{init?fmt=%H}',
+                                                        'atmos', 'gdas.t'
+                                                        +'{init?fmt=%H}'
+                                                        +'z.prepbufr'),
+                      'tmp_file_format': os.path.join(DATA, f"{RUN}.{INITDATE}",
+                                                      'prepbufr_gdas', 'pb2nc_'
+                                                      +'gdas_{vtype?fmt=str}_'
+                                                      +'valid'
+                                                      +'{init?fmt=%Y%m%d%H}'
+                                                      +'.nc'),
+                      'inithours': ['00', '06', '12', '18']},
+    'prepbufr_nam': {'input_file_format': os.path.join(COMINobsproc, 'nam.'
+                                                       +'{init?fmt=%Y%m%d}',
+                                                       'nam.t'
+                                                       +'{init?fmt=%H}'
+                                                       +'z.prepbufr.tm'
+                                                       +'{offset_hr?fmt=str}'),
+                     'tmp_file_format': os.path.join(DATA, f"{RUN}.{INITDATE}",
+                                                     'prepbufr_nam', 'pb2nc_'
+                                                     +'nam_{vtype?fmt=str}_'
+                                                     +'valid'
+                                                     +'{init?fmt=%Y%m%d%H}'
+                                                     +'.nc'),
+                      'inithours': ['00', '03', '06', '09', '12',
+                                    '15', '18', '21']},
+}
+
+for OBS in OBSNAME:
+    if OBS not in list(global_det_obs_dict.keys()):
+        print("FATAL ERROR: "+OBS+" not recongized")
+        sys.exit(1)
+    print("---- Prepping data for "+OBS+" for init "+INITDATE)
+    obs_dict = global_det_obs_dict[OBS]
+    for inithour in obs_dict['inithours']:
+        CDATE = INITDATE+inithour
+        CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
+        input_file = gda_util.format_filler(
+            obs_dict['input_file_format'], CDATE_dt, CDATE_dt,
+            'anl', {}
+        )
+        tmp_file = gda_util.format_filler(
+           obs_dict['tmp_file_format'], CDATE_dt, CDATE_dt,
+           'anl', {}
+        )
+        output_file = os.path.join(
+            output_INITDATE, OBS, tmp_file.rpartition('/')[2]
+        )
+        tmp_file_dir = tmp_file.rpartition('/')[0]
+        if OBS == 'osi_saf':
+            tmp_regrid_file = gda_util.format_filler(
+                obs_dict['tmp_regrid_file_format'], CDATE_dt, CDATE_dt,
+                'anl', {}
+            )
+            output_regrid_file = os.path.join(
+                output_INITDATE, OBS, tmp_regrid_file.rpartition('/')[2]
+            )
+            for hem in ['nh', 'sh']:
+                log_missing_file = os.path.join(
+                    DATA, 'mail_missing_'+OBS+'_'+hem+'_valid'
+                    +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+                )
+                if hem == 'nh':
+                    grid = 'G219'
+                elif hem == 'sh':
+                    grid = 'G220'
+                input_hem_file = input_file.replace('{hem?fmt=str}', hem)
+                tmp_hem_file = tmp_file.replace('{hem?fmt=str}', hem)
+                tmp_grid_file = tmp_regrid_file.replace('{grid?fmt=str}', grid)
+                output_hem_file = output_file.replace('{hem?fmt=str}', hem)
+                output_grid_file = output_regrid_file.replace(
+                    '{grid?fmt=str}', grid
+                )
+                if not os.path.exists(output_hem_file) \
+                    or not os.path.exists(output_grid_file):
+                    print("----> Trying to create "+tmp_hem_file+" and "
+                          +tmp_grid_file)
+                    gda_util.make_dir(tmp_file_dir)
+                    gda_util.prep_prod_osi_saf_file(
+                        input_hem_file, tmp_hem_file, tmp_grid_file, CDATE_dt,
+                        log_missing_file
+                    )
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(tmp_hem_file, output_hem_file)
+                        gda_util.copy_file(tmp_grid_file, output_grid_file)
+                else:
+                    if os.path.exists(output_hem_file):
+                        print(f"{output_hem_file} exists")
+                    if os.path.exists(output_grid_file):
+                        print(f"{output_grid_file} exists")
+        elif OBS == 'ghrsst_ospo':
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
+            if not os.path.exists(output_file):
+                print("----> Trying to create "+tmp_file)
+                gda_util.make_dir(tmp_file_dir)
+                gda_util.prep_prod_ghrsst_ospo_file(
+                    input_file, tmp_file, CDATE_dt,
+                    log_missing_file
+                )
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(tmp_file, output_file)
+            else:
+                print(f"{output_file} exists")
+        elif OBS == 'ccpa_accum24hr':
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
+            if not os.path.exists(output_file):
+                gda_util.make_dir(tmp_file_dir)
+                print("----> Trying to create "+tmp_file)
+                gda_util.prep_prod_ccpa_accum24hr_file(
+                    obs_dict['input_file_format'], tmp_file, CDATE_dt,
+                    log_missing_file
+                )
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(tmp_file, output_file)
+            else:
+                print(f"{output_file} exists")
+        elif OBS in ['prepbufr_gdas', 'prepbufr_nam']:
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
+            if OBS == 'prepbufr_gdas':
+                vtype_list = ['pres_levs', 'sfc']
+            elif OBS == 'prepbufr_nam':
+                vtype_list = ['sfc', 'ptype']
+                offset_hr = int(f"{CDATE_dt:%H}")%6
+                offset_date_dt = CDATE_dt + datetime.timedelta(hours=offset_hr)
+                input_file = gda_util.format_filler(
+                    obs_dict['input_file_format'], offset_date_dt,
+                    offset_date_dt, 'anl',
+                    {'offset_hr': str(offset_hr).zfill(2)}
+                )
+            for vtype in vtype_list:
+                tmp_vtype_file = tmp_file.replace('{vtype?fmt=str}', vtype)
+                output_vtype_file = output_file.replace('{vtype?fmt=str}',
+                                                        vtype)
+                if not os.path.exists(output_vtype_file):
+                    print("----> Trying to create "+tmp_vtype_file)
+                    gda_util.make_dir(tmp_file_dir)
+                    gda_util.prep_prod_prepbufr_file(
+                        input_file, tmp_vtype_file, CDATE_dt,
+                        OBS.split('_')[1], vtype, log_missing_file
+                    )
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(tmp_vtype_file, output_vtype_file)
+                        if os.path.exists(output_vtype_file):
+                            gda_util.run_shell_command(['chmod', '750',
+                                                        output_vtype_file])
+                            gda_util.run_shell_command(['chgrp', 'rstprod',
+                                                        output_vtype_file])
+                else:
+                    print(f"{output_vtype_file} exists")
+
 ###### MODELS
 # Get operational global deterministic model data
+# Global Forecast System - gfs
 # Climate Forecast System - cfs
 # Japan Meteorological Agency - jma
 # European Centre for Medium-Range Weather Forecasts - ecmwf
@@ -126,6 +349,13 @@ global_det_model_dict = {
                                                     +'NOAA-halfdeg.gr2'),
               'inithours': ['00', '12'],
               'fcst_hrs': range(0, 180+6, 6)},
+    'gfs': {'input_wmo_file_format': os.path.join(COMINgfs, '{init?fmt=%2H}',
+                                                  'atmos', 'gfs.'
+                                                  +'t{init?fmt=%2H}z.master.'
+                                                  +'grb2f{lead?fmt=%3H}'),
+            'inithours': ['00', '12'],
+            'fcst_hrs': list(range(0, 72+3, 3))
+                        + list(range(78, 240+6, 6))},
     'imd': {'input_fcst_file_format': os.path.join(DCOMINimd,
                                                    'gdas1.t{init?fmt=%2H}z.'
                                                    +'grbf{lead?fmt=%2H}'),
@@ -174,6 +404,11 @@ tmp_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                       '{model?fmt=%str}.precip.'
                                       +'t{init?fmt=%2H}z.'
                                       +'f{lead?fmt=%3H}')
+tmp_wmo_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
+                                   '{model?fmt=%str}',
+                                   '{model?fmt=%str}.wmo.'
+                                   +'t{init?fmt=%2H}z.'
+                                   +'f{lead?fmt=%3H}')
 
 for MODEL in MODELNAME:
     if MODEL not in list(global_det_model_dict.keys()):
@@ -195,6 +430,7 @@ for MODEL in MODELNAME:
             fcst_hrs = model_dict['fcst_hrs']
         for fcst_hr in fcst_hrs:
             VDATE_dt = CDATE_dt + datetime.timedelta(hours=int(fcst_hr))
+            # Forecast files
             if 'input_fcst_file_format' in list(model_dict.keys()):
                 input_fcst_file = gda_util.format_filler(
                     model_dict['input_fcst_file_format'], VDATE_dt, CDATE_dt,
@@ -258,6 +494,13 @@ for MODEL in MODELNAME:
                                                     str(fcst_hr),
                                                     'full',
                                                     log_missing_file)
+                    elif MODEL == 'cmc':
+                        gda_util.prep_prod_cmc_file(input_fcst_file,
+                                                    tmp_fcst_file,
+                                                    CDATE_dt,
+                                                    str(fcst_hr),
+                                                    'full',
+                                                    log_missing_file)
                     else:
                         gda_util.copy_file(input_fcst_file, tmp_fcst_file)
                         if not os.path.exists(input_fcst_file):
@@ -277,6 +520,7 @@ for MODEL in MODELNAME:
                             )
                 else:
                     print(f"{output_fcst_file} exists")
+            # Forecast files: Precip
             if 'input_precip_file_format' in list(model_dict.keys()):
                 input_precip_file = gda_util.format_filler(
                     model_dict['input_precip_file_format'], VDATE_dt,
@@ -353,6 +597,18 @@ for MODEL in MODELNAME:
                                                            str(fcst_hr),
                                                            'precip',
                                                            log_missing_file)
+                        elif MODEL == 'cmc':
+                            gda_util.prep_prod_cmc_file(input_precip_file,
+                                                        tmp_precip_file,
+                                                        CDATE_dt,
+                                                        str(fcst_hr),
+                                                        'precip',
+                                                        log_missing_file)
+                        elif MODEL == 'cmc_regional':
+                            gda_util.prep_prod_cmc_regional_file(
+                                input_precip_file, tmp_precip_file, CDATE_dt,
+                                str(fcst_hr), 'precip', log_missing_file
+                            )
                         else:
                             gda_util.copy_file(input_precip_file,
                                                tmp_precip_file)
@@ -374,6 +630,43 @@ for MODEL in MODELNAME:
                                 )
                 else:
                     print(f"{output_precip_file} exists")
+            # Forecast files: WMO
+            if 'input_wmo_file_format' in list(model_dict.keys()):
+                input_wmo_file = gda_util.format_filler(
+                    model_dict['input_wmo_file_format'], VDATE_dt, CDATE_dt,
+                    str(fcst_hr), {}
+                )
+                tmp_wmo_file = gda_util.format_filler(
+                    tmp_wmo_file_format, VDATE_dt,
+                    CDATE_dt, str(fcst_hr), {'model': MODEL}
+                )
+                output_wmo_file = os.path.join(
+                    output_INITDATE, MODEL, tmp_wmo_file.rpartition('/')[2]
+                )
+                if not os.path.exists(output_wmo_file):
+                    print("----> Trying to create "+tmp_wmo_file)
+                    log_missing_file = os.path.join(
+                        DATA, 'mail_missing_'+MODEL+'_fhr'
+                        +str(fcst_hr).zfill(3)+'_init'
+                        +CDATE_dt.strftime('%Y%m%d%H')+'_wmo.sh'
+                    )
+                    tmp_wmo_file_dir = (
+                        tmp_wmo_file.rpartition('/')[0]
+                    )
+                    gda_util.make_dir(tmp_wmo_file_dir)
+                    if MODEL == 'gfs':
+                        gda_util.prep_prod_gfs_file(input_wmo_file,
+                                                    tmp_wmo_file,
+                                                    CDATE_dt, str(fcst_hr),
+                                                    'wmo', log_missing_file)
+                    else:
+                        print("ERROR: WMO file generation only for gfs")
+                        sys.exit(1)
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(tmp_wmo_file,
+                                           output_wmo_file)
+                else:
+                    print(f"{output_wmo_file} exists")
         # Analysis file
         if 'input_anl_file_format' in list(model_dict.keys()):
             input_anl_file = gda_util.format_filler(
@@ -435,6 +728,13 @@ for MODEL in MODELNAME:
                                                 'anl',
                                                 'full',
                                                 log_missing_file)
+                elif MODEL == 'cmc':
+                    gda_util.prep_prod_cmc_file(input_anl_file,
+                                                tmp_anl_file,
+                                                CDATE_dt,
+                                                'anl',
+                                                'full',
+                                                log_missing_file)
                 else:
                     gda_util.copy_file(input_anl_file, tmp_anl_file)
                     if not os.path.exists(input_anl_file):
@@ -453,104 +753,5 @@ for MODEL in MODELNAME:
                         )
             else:
                 print(f"{output_anl_file} exists")
-
-###### OBS
-# Get operational observation data
-# Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
-# Group for High Resolution Sea Surface Temperature (GHRSST) Level 4 SST analysis for Office of Satellite and Product Operations (OSPO)- ghrsst_ospo
-
-global_det_obs_dict = {
-    'osi_saf': {'input_file_format': os.path.join(DCOMINosi_saf,
-                                                  '{init_shift?fmt=%Y%m%d'
-                                                  +'?shift=-12}',
-                                                  'seaice', 'osisaf',
-                                                  'ice_conc_{hem?fmt=str}_'
-                                                  +'polstere-100_multi_'
-                                                  +'{init_shift?fmt=%Y%m%d%H'
-                                                  +'?shift=-12}00.nc'),
-                'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                'osi_saf', 'osi_saf.multi.'
-                                                +'{hem?fmt=str}.'
-                                                +'{init_shift?fmt=%Y%m%d%H'
-                                                +'?shift=-24}to'
-                                                +'{init?fmt=%Y%m%d%H}.nc'),
-                'inithours': ['00']},
-    'ghrsst_ospo': {'input_file_format': os.path.join(DCOMINghrsst_ospo,
-                                                      '{init_shift?fmt=%Y%m%d'
-                                                      +'?shift=-24}',
-                                                      'validation_data', 'marine',
-                                                      'ghrsst',
-                                                      '{init_shift?fmt=%Y%m%d'
-                                                      +'?shift=-24}_OSPO_L4_'
-                                                      +'GHRSST.nc'),
-                    'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                    'ghrsst_ospo',
-                                                    'ghrsst_ospo.'
-                                                    +'{init_shift?fmt=%Y%m%d%H'
-                                                    +'?shift=-24}to'
-                                                    +'{init?fmt=%Y%m%d%H}.nc'),
-                    'inithours': ['00']},
-}
-
-for OBS in OBSNAME:
-    if OBS not in list(global_det_obs_dict.keys()):
-        print("FATAL ERROR: "+OBS+" not recongized")
-        sys.exit(1)
-    print("---- Prepping data for "+OBS+" for init "+INITDATE)
-    obs_dict = global_det_obs_dict[OBS]
-    for inithour in obs_dict['inithours']:
-        CDATE = INITDATE+inithour
-        CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
-        input_file = gda_util.format_filler(
-            obs_dict['input_file_format'], CDATE_dt, CDATE_dt,
-            'anl', {}
-        )
-        tmp_file = gda_util.format_filler(
-           obs_dict['tmp_file_format'], CDATE_dt, CDATE_dt,
-           'anl', {}
-        )
-        output_file = os.path.join(
-            output_INITDATE, OBS, tmp_file.rpartition('/')[2]
-        )
-        tmp_file_dir = tmp_file.rpartition('/')[0]
-        gda_util.make_dir(tmp_file_dir)
-        log_missing_file = os.path.join(
-            DATA, 'mail_missing_'+OBS+'_valid'
-            +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
-        )
-        if OBS == 'osi_saf':
-            for hem in ['nh', 'sh']:
-                log_missing_file = os.path.join(
-                    DATA, 'mail_missing_'+OBS+'_'+hem+'_valid'
-                    +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
-                )
-                input_hem_file = input_file.replace('{hem?fmt=str}', hem)
-                tmp_hem_file = tmp_file.replace('{hem?fmt=str}', hem)
-                output_hem_file = output_file.replace('{hem?fmt=str}', hem)
-                if not os.path.exists(output_hem_file):
-                    print("----> Trying to create "+tmp_hem_file)
-                    gda_util.prep_prod_osi_saf_file(
-                        input_hem_file, tmp_hem_file, CDATE_dt,
-                        log_missing_file
-                    )
-                    if SENDCOM == 'YES':
-                        gda_util.copy_file(tmp_hem_file, output_hem_file)
-                else:
-                    print(f"{output_hem_file} exists")
-        elif OBS == 'ghrsst_ospo':
-            log_missing_file = os.path.join(
-                DATA, 'mail_missing_'+OBS+'_valid'
-                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
-            )
-            if not os.path.exists(output_file):
-                print("----> Trying to create "+tmp_file)
-                gda_util.prep_prod_ghrsst_ospo_file(
-                    input_file, tmp_file, CDATE_dt,
-                    log_missing_file
-                )
-                if SENDCOM == 'YES':
-                    gda_util.copy_file(tmp_file, output_file)
-            else:
-                print(f"{output_file} exists")
 
 print("END: "+os.path.basename(__file__))

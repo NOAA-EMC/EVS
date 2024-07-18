@@ -29,7 +29,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class LongTermTimeSeriesDiff:
     """
-    Create long term time series plots with differences
+    Make long term time series plots with differences
     """
 
     def __init__(self, logger, input_dir, output_dir, logo_dir,
@@ -78,18 +78,18 @@ class LongTermTimeSeriesDiff:
         self.run_length_list = run_length_list
 
     def make_long_term_time_series_diff(self):
-        """! Create the long term time series difference graphic
+        """! Make the long term time series difference graphic
              Args:
              Returns:
         """
-        self.logger.info(f"Creating long term time series difference...")
+        self.logger.info(f"Plot Type: Long-Term Time Series Difference")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Logo directory: {self.logo_dir}")
         self.logger.debug(f"Time Range: {self.time_range}")
         if self.time_range not in ['monthly', 'yearly']:
-            self.logger.error("CAN ONLY RUN TIME SERIES DIFFERENCE FOR "
-                              +"TIME RANGE VALUES OF monthly OR yearly")
+            self.logger.error("Can only run time series difference for "
+                              +"time range values of monthly or yearly")
             sys.exit(1)
         if self.time_range == 'monthly':
             self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y%m}"
@@ -113,7 +113,7 @@ class LongTermTimeSeriesDiff:
         output_image_dir = os.path.join(self.output_dir, 'images')
         gda_util.make_dir(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
-        # Create merged dataset of verification systems
+        # Make merged dataset of verification systems
         if self.var_name == 'APCP':
             model_group_merged_df = (
                 gdalt_util.merge_precip_long_term_stats_datasets(
@@ -132,7 +132,7 @@ class LongTermTimeSeriesDiff:
                     self.vx_grid, self.vx_mask, self.stat, self.nbrhd
                 )
             )
-        # Create plots
+        # Make plots
         date_list = (model_group_merged_df.index.get_level_values(1)\
                      .unique().tolist())
         if self.var_name == 'HGT':
@@ -148,16 +148,20 @@ class LongTermTimeSeriesDiff:
             model_hour = 'valid 12Z'
         else:
             model_hour = 'valid 00Z'
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
             left_logo_img_array = matplotlib.image.imread(plot_left_logo_path)
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
             right_logo_img_array = matplotlib.image.imread(plot_right_logo_path)
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         for run_length in self.run_length_list:
             if run_length == 'allyears':
                 run_length_running_mean = 3
@@ -194,9 +198,6 @@ class LongTermTimeSeriesDiff:
                 self.logger.warning(f"{run_length} not recongized, skipping,"
                                     +"use allyears or past10year")
                 continue
-            self.logger.info(f"Working on plots for {run_length}: "
-                             +f"{run_length_date_list[0]}-"
-                             +f"{run_length_date_list[-1]}")
             run_length_model_group_running_mean_df = pd.DataFrame(
                 index=run_length_model_group_merged_df.index,
                 columns=[f"DAY{str(x)}" for x in self.forecast_day_list]
@@ -237,9 +238,12 @@ class LongTermTimeSeriesDiff:
             )
             for forecast_day in self.forecast_day_list:
                 forecast_hour = str(int(forecast_day)*24)
-                self.logger.debug("Creating time series plot for "
-                                  +f"forecast day {forecast_day}, "
-                                  +f"forecast hour {forecast_hour}")
+                self.logger.info("Making time series difference plot for "
+                                 +f"{run_length}:"
+                                 +f"{run_length_date_list[0]}-"
+                                 +f"{run_length_date_list[-1]} "
+                                 +f"forecast day {forecast_day} ("
+                                 +f"forecast hour {forecast_hour})")
                 if 'FSS' in self.stat:
                     nbrhd_width_pts = int(
                         np.sqrt(int(self.nbrhd.split('/')[1]))
@@ -373,6 +377,7 @@ class LongTermTimeSeriesDiff:
                            [self.model_list[0]]['color']),
                 )
                 for model in self.model_list:
+                    self.logger.debug(f"Plotting {model}")
                     model_plot_settings_dict = (
                         all_model_plot_settings_dict[model]
                     )
@@ -388,11 +393,14 @@ class LongTermTimeSeriesDiff:
                             np.ma.count_masked(
                                 model_forecast_day_running_mean
                             ):
-                        if np.ma.count_masked(model_forecast_day[-1]) == 1:
+                        legend_mean = np.ma.mean(
+                            model_forecast_day_running_mean
+                        )
+                        if np.ma.is_masked(legend_mean):
                             model_label = f"{model} --"
                         else:
                             model_label = (f"{model} "
-                                           +f"{model_forecast_day[-1]:.3f}")
+                                           +f"{legend_mean:.3f}")
                         ax1.plot_date(
                             run_length_date_dt_list,
                             model_forecast_day_running_mean,
@@ -402,6 +410,10 @@ class LongTermTimeSeriesDiff:
                                     -self.model_list.index(model))+4),
                             label=model_label
                         )
+                    else:
+                        self.logger.debug(f"{model} is fully masked")
+                    self.logger.debug(f"Plotting {model} difference from "
+                                      +f"{self.model_list[0]}")
                     model_model0_forecast_day_running_mean_diff = (
                         model_forecast_day_running_mean
                         - model0_forecast_day_running_mean
@@ -418,6 +430,10 @@ class LongTermTimeSeriesDiff:
                             zorder=((len(self.model_list)
                                     -self.model_list.index(model))+4)
                         )
+                    else:
+                        self.logger.debug(f"{model} difference from "
+                                          +f"{self.model_list[0]} is fully "
+                                          +"masked")
                 subplot_num = 1
                 for ax in fig.get_axes():
                     stat_min = (stat_min_max_dict\
@@ -475,11 +491,6 @@ class LongTermTimeSeriesDiff:
                     mean_date_strf = '%b %Y'
                 elif self.time_range == 'yearly':
                     mean_date_strf = '%Y'
-                ax1.text(0.5, 0.09,
-                         run_length_date_dt_list[-1].strftime(mean_date_strf)
-                         +' Mean',
-                         fontsize=16, ha='center', va='center',
-                         transform=ax1.transAxes)
                 if len(ax1.lines) != 0:
                     y_axis_min = ax1.get_yticks()[0]
                     y_axis_max = ax1.get_yticks()[-1]
@@ -549,7 +560,7 @@ def main():
     NBRHD = 'NBRHD'
     FORECAST_DAY_LIST = ['1', '2']
     RUN_LENGTH_LIST = ['allyears', 'past10years']
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')

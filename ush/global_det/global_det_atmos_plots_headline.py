@@ -11,7 +11,6 @@ import sys
 import logging
 import datetime
 import glob
-import subprocess
 import itertools
 import shutil
 import dateutil
@@ -310,7 +309,7 @@ else:
     headline3_valid_hr = '00'
     headline3_model_group_dict = {'all_models': ['gfs', 'ecmwf', 'cmc',
                                                  'fnmoc', 'ukmet', 'cfs'],
-                                  'gfs_ecmwf': ['ecmwf', 'gfs']}
+                                  'gfs_ecmwf': ['gfs', 'ecmwf']}
     headline3_start_YYYY = '1984'
     headline3_end_YYYY = str(int(VDATE_END_dt.strftime('%Y'))-1)
     headline3_all_dt_list = list(
@@ -438,7 +437,7 @@ else:
     headline5_avg_time_range = 'yearly'
     headline5_valid_hr = '12'
     headline5_stat_thresh_dict = {'FSS': ['ge10mm', 'ge25mm'],
-                                  'ETS': ['ge1in', 'ge2in', 'ge3in']}
+                                  'ETS': ['ge0.25in', 'ge1in', 'ge2in', 'ge3in']}
     headline5_start_YYYY = '2002'
     headline5_end_YYYY = str(int(VDATE_END_dt.strftime('%Y'))-1)
     headline5_all_dt_list = list(

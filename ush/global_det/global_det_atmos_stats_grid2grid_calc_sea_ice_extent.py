@@ -53,7 +53,7 @@ MODEL = os.environ['MODEL'].replace('"', '')
 DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
-fhr_list = os.environ['fhr_list'].split(',')
+fhr_list = os.environ['fhr_list'].split(', ')
 hemisphere = os.environ['hemisphere']
 grid = os.environ['grid']
 DATA = os.environ['DATA']
@@ -116,10 +116,8 @@ CLIMO_STDEV = 'NA'
 CLIMO_CDF = 'NA'
 
 # Calculate observation sea-ice extent
-obs_file = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
-                        RUN+'.'+DATE_end_dt.strftime('%Y%m%d'), 'osi_saf',
-                        VERIF_CASE, 'regrid_data_plane_sea_ice_'
-                        +'DailyAvg_Concentration'+hemisphere.upper()+'_valid'
+obs_file = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'data', 'osi_saf',
+                        'osi_saf.multi.'+grid+'.'
                         +DATEm1_end_dt.strftime('%Y%m%d%H')
                         +'to'+DATE_end_dt.strftime('%Y%m%d%H')+'.nc')
 if gda_util.check_file_exists_size(obs_file):

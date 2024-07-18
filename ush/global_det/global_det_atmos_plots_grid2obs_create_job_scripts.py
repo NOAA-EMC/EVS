@@ -951,12 +951,13 @@ if USE_CFP == 'YES':
     # final processor then write echo's to
     # poe script for remaining processors
     poe_filename = os.path.join(JOB_GROUP_jobs_dir,
-                                'poe_jobs'+str(node))
+                                f"poe_jobs{str(node)}")
     poe_file = open(poe_filename, 'a')
     if machine == 'WCOSS2':
-        nselect = subprocess.check_output(
-            'cat '+PBS_NODEFILE+'| wc -l', shell=True, encoding='UTF-8'
-        ).replace('\n', '')
+        nselect = subprocess.run(
+            f"cat {PBS_NODEFILE} | wc -l",
+            shell=True, capture_output=True, encoding="utf8"
+        ).stdout.replace('\n', '')
         nnp = int(nselect) * int(nproc)
     else:
         nnp = nproc
@@ -964,11 +965,11 @@ if USE_CFP == 'YES':
     while iproc <= int(nnp):
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             poe_file.write(
-                str(iproc-1)+' /bin/echo '+str(iproc)+'\n'
+                f"{str(iproc-1)} /bin/echo {str(iproc)}\n"
             )
         else:
             poe_file.write(
-                '/bin/echo '+str(iproc)+'\n'
+                f"/bin/echo {str(iproc)}\n"
             )
         iproc+=1
     poe_file.close()
