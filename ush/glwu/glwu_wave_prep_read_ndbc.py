@@ -35,11 +35,11 @@ VDATE_Y =  '{:04d}'.format(VDATE_YMD.year)
 VDATE_M =  '{:02d}'.format(VDATE_YMD.month)
 VDATE_D =  '{:02d}'.format(VDATE_YMD.day)
 
-PDATE= VDATE_YMD-datetime.timedelta(days=1)
+PDATE= VDATE_YMD + datetime.timedelta(days=1)
 PDATE_YMD =  datetime.datetime.strftime(PDATE, '%Y%m%d')
 
 all_ndbc = os.path.join(DCOMROOT,
-                        f'{VDATE_YMD:%Y%m%d}','validation_data','marine','buoy')
+                        f'{PDATE_YMD}','validation_data','marine','buoy')
 fixed_buoys = os.path.join (FIXevs,'ndbc_stations','ndbc_stations.xml')
 
 ndbc_for_glwu = os.path.join (DATA,'ndbc')
