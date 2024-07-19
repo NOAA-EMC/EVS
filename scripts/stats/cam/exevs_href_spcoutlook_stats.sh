@@ -89,7 +89,7 @@ chmod 775 run_href_all_grid2obs_poe
 # ***************************************
 if [ -s run_href_all_grid2obs_poe ] ; then
  if [ $run_mpi = yes ] ; then
-    mpiexec -np 4 -ppn 4 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
+    mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
  else
     ${DATA}/run_href_all_grid2obs_poe
