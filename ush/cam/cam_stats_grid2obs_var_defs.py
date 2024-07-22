@@ -1986,7 +1986,7 @@ generate_stats_jobs_dict = {
                 'var1_fcst_name': 'HGT',
                 'var1_fcst_levels': 'L0',
                 'var1_fcst_thresholds': 'lt152,lt305,lt914,lt1524,lt3048,ge914',
-                'var1_fcst_options': 'GRIB_lvl_typ = 215; censor_thresh = lt0; censor_val = -9999; set_attr_level = \\"CEILING\\";',
+                'var1_fcst_options': 'censor_thresh = lt0; censor_val = -9999; set_attr_level = \\"CEILING\\"; GRIB2_ipdtmpl_index = [ 9 ]; GRIB2_ipdtmpl_val = [ 215 ];',
                 'var1_obs_name': 'CEILING',
                 'var1_obs_levels': 'L0',
                 'var1_obs_thresholds': 'lt152,lt305,lt914,lt1524,lt3048,ge914',
