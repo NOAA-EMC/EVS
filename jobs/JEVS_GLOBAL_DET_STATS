@@ -70,26 +70,6 @@ export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
 export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
 mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
-if [ $RUN = atmos ]; then
-    if [ $VERIF_CASE == grid2grid ]; then
-        export COMOUTccpa=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
-        mkdir -p $COMOUTccpa
-        export COMOUTosisaf=$COMOUT/$RUN.$VDATE/osi_saf/$VERIF_CASE
-        mkdir -p $COMOUTosisaf
-    fi
-    if [ $VERIF_CASE == grid2obs ]; then
-        export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
-        mkdir -p $COMOUTprepbufr
-    fi
-fi
-if [ $RUN = wave ]; then
-    if [ $VERIF_CASE == grid2obs ]; then
-        export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
-        mkdir -p $COMOUTprepbufr
-        export COMOUTndbc=$COMOUT/$RUN.$VDATE/ndbc/$VERIF_CASE
-        mkdir -p $COMOUTndbc
-    fi
-fi
 
 #######################################################################
 # Execute the script
