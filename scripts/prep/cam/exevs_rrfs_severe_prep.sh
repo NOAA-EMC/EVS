@@ -107,7 +107,7 @@ chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=${DATA}/poescript
 
-if [ $USE_CFP = YES ]; then
+if [ "$USE_CFP" = "YES" ]; then
 
    echo "running cfp"
    mpiexec -np $nproc --cpu-bind verbose,core cfp ${MP_CMDFILE}
