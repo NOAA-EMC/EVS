@@ -108,7 +108,7 @@ elif [ ${MODELNAME} = namnest ] || [ ${MODELNAME} = rrfs ] || [ ${MODELNAME} = r
 fi
 
 if [ ${MODELNAME} = rrfs ]; then
-   mod="rrfs.ctl"
+   mod="rrfs.m000ctl"
 else
    mod="${MODELNAME}"
 fi
