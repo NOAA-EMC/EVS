@@ -89,7 +89,7 @@ def python_command(python_script_name, script_arg_list):
              python_cmd - full call to python (string)
 
     """
-    python_script = os.path.join(os.environ['USHevs'], os.environ['COMPONENT']+"_"+os.environ['RUN'],
+    python_script = os.path.join(os.environ['USHevs'], os.environ['COMPONENT'],
                                  python_script_name)
     if not os.path.exists(python_script):
         print("FATAL ERROR: "+python_script+" DOES NOT EXIST")
