@@ -1,9 +1,9 @@
 #PBS -N jevs_global_ens_gefs_chem_g2o_airnow_stats
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
+#PBS -l walltime=00:15:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB:prepost=true
 #PBS -l debug=true
 #PBS -V
@@ -18,7 +18,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
 
 source $HOMEevs/versions/run.ver
 
-evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+evs_ver_2d=$(echo ${evs_ver} | cut -d'.' -f1-2)
 
 ############################################################
 # Load modules
@@ -34,7 +34,7 @@ source $HOMEevs/dev/modulefiles/global_ens/global_ens_stats.sh
 # set some variables
 ############################################################
 export KEEPDATA=NO
-export SENDMAIL=NO
+export SENDMAIL=YES
 export SENDDBN=NO
 
 export NET=${NET:-evs}

@@ -72,6 +72,6 @@ else
     $HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
 fi
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics using aeronet aod
+## Purpose: This job will generate the grid2obs statistics using AERONET AOD
 ##          for the GEFS-Aerosol model.
 #######################################################################
