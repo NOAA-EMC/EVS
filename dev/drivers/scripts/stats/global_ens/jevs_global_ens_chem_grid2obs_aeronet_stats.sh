@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:00:00
+#PBS -l walltime=00:15:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB:prepost=true
 #PBS -l debug=true
 #PBS -V
@@ -14,8 +14,7 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVSGefsChem
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -44,14 +43,14 @@ export RUN=${RUN:-chem}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
+export mod_ver=${mod_ver:-${gefs_ver}}
 
 export VDATE=$(date --date="3 days ago" +%Y%m%d)
 echo "VDATE=${VDATE}"
 
 export DATA_TYPE=aeronet 
 
-## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
-export COMIN=/lfs/h2/emc/physics/noscrub/$USER/$NET/${evs_ver_2d}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 mkdir -p ${COMIN}
 export COMOUT=${COMIN}
 
@@ -66,46 +65,12 @@ mkdir -p ${DATA}
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
-
-   echo "MAILTO variable is not defined. Exiting without continuing."
-
+    echo "MAILTO variable is not defined. Exiting without continuing."
 else
-
-   for vhr in 00 03 06 09 12 15 18 21; do
-      export vhr
-      echo "vhr = ${vhr}"
-      $HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
-   done
-
+    export vhr
+    echo "vhr = ${vhr}"
+    $HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
 fi
-#
-############################################################
-## For EMC PARA TESTING
-## Keep only 35 days from today
-############################################################
- 
-TODAY=`date +%Y%m%d`
-
-export NUM_DAY_BACK=60
-let hour_back=${NUM_DAY_BACK}*24
-export CLEAN_START=$(${NDATE} -${hour_back} ${TODAY}"00" | cut -c1-8)
-
-export NUM_DAY_BACK=35
-let hour_back=${NUM_DAY_BACK}*24
-export CLEAN_END=$(${NDATE} -${hour_back} ${TODAY}"00" | cut -c1-8)
-
-cd ${COMOUT}/${STEP}/${COMPONENT}
-NOW=${CLEAN_START}
-while [ ${NOW} -lt ${CLEAN_END} ]; do
-    if [ -d ${RUN}.${NOW} ]; then
-        /bin/rm -rf ${RUN}.${NOW}
-    fi
-    if [ -d ${MODELNAME}.${NOW} ]; then
-        /bin/rm -rf ${MODELNAME}.${NOW}
-    fi
-    cdate=${NOW}"00"
-    NOW=$(${NDATE} +24 ${cdate}| cut -c1-8)
-done
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics using aeronet aod
 ##          for the GEFS-Aerosol model.
