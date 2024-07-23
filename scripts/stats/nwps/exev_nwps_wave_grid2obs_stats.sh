@@ -83,7 +83,7 @@ for vhr in ${vhours} ; do
        flead=$(printf "%03d" "${fhr}")
        flead2=$(printf "%02d" "${fhr}")
 
-       EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${WFO}_${MODELNAME}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2                  
+       EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${wfo}_${MODELNAME}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2                  
        DATAmodelfilename=$DATA/grib2/${WFO}_${MODNAM}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2
        if [[ -s $EVSINmodelfilename ]]; then
 	       if [[ ! -s $DATAmodelfilenmae ]]; then
@@ -149,7 +149,7 @@ if [ $gather = yes ] ; then
            echo " Found ${nc} ${DATA}/all_stats/*stat files for ${VDATE}"
 	   mkdir -p ${DATA}/stats
            # Use StatAnalysis to gather the small stat files into one file
-           run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNWPS.conf
+           run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNWPS_obs$OBSNAME.conf
 	   if [ $SENDCOM = YES ]; then
 		   if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
 			   cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
