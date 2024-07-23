@@ -227,6 +227,9 @@ for valid_hour in ${valid_hours} ; do
                     if [[ -s $tmp_OBSNAME_file ]]; then
                         echo "#!/bin/bash" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                        echo "export DATA=${DATA}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                        echo "export VDATE=${VDATE}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                        echo "export FIXevs=${FIXevs}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export valid_hour2=$valid_hour2" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
