@@ -1840,7 +1840,7 @@ generate_stats_jobs_dict = {
                 'var1_fcst_name': 'TCDC',
                 'var1_fcst_levels': 'L0',
                 'var1_fcst_thresholds': 'lt10,gt10,gt50,gt90',
-                'var1_fcst_options': 'set_attr_level = \\"TOTAL\\"; GRIB2_ipdtmpl_index = [ 8 ]; GRIB2_ipdtmpl_val = [ 0 ];',
+                'var1_fcst_options': 'set_attr_level = \\"TOTAL\\"; GRIB2_ipdtmpl_index = [ 8, 9 ]; GRIB2_ipdtmpl_val = [ {lead?fmt=%H}, 200 ];',
                 'var1_obs_name': 'TCDC',
                 'var1_obs_levels': 'L0',
                 'var1_obs_thresholds': 'lt10,gt10,gt50,gt90',
