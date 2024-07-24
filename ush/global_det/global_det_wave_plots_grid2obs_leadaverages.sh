@@ -43,7 +43,7 @@ for period in ${periods} ; do
           regions="GLOBAL SEUS_CARB GOM NEUS_CAN WCOAST_AK HAWAII"
           wave_vars='WIND HTSGW PERPW'
       elif [ $obsname = "JASON3" ]; then
-          OBTYPE="NC031124"
+          OBTYPE="JASON3"
           regions="GLOBAL"
           wave_vars='WIND HTSGW'
       fi
