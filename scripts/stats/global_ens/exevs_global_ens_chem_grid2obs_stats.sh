@@ -34,7 +34,7 @@ export METPLUS_PATH
 ## grid2obs_list="aeronet airnow"
 grid2obs_list="${DATA_TYPE}"
 
-export vld_cyc="00 06 12 18"
+export init_cyc="00 06 12 18"
 
 flag_send_message=NO
 if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
@@ -102,14 +102,14 @@ for ObsType in ${grid2obs_list}; do
         echo "index of hourly AirNOW obs found = ${num_obs_found}"
     fi
 
-    for mdl_cyc in ${vld_cyc}; do
+    for mdl_cyc in ${init_cyc}; do
       export mdl_cyc    ## variable used in *.conf
 
-      let ihr=3
+      let ihr=0
       num_fcst_in_metplus=0
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       while [ ${ihr} -le ${fcstmax} ]; do
-        filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7
+        filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit
         fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
         export fhr
     

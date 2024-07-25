@@ -140,7 +140,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
     if [ -d ${com_gefs} ]; then
         prep_gefs=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
         mkdir -p ${prep_gefs}
-        let hour_now=3
+        let hour_now=0
         let max_hour=120
         while [ ${hour_now} -le ${max_hour} ]; do
             fhr=`printf %3.3d ${hour_now}`
