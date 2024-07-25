@@ -167,6 +167,7 @@ for HH in 00 06 12 18 ; do
 
   export inithour=t${HH}z
   if [ ! -s ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr ]; then
+	  echo "WARNING: No GDAS Prepbufr was available for init date ${INITDATE}${HH}"
 	  if [ $SENDMAIL = YES ];then
 		  export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
 		  echo "WARNING: No GDAS Prepbufr was available for init date ${INITDATE}${HH}" > mailmsg
@@ -185,21 +186,25 @@ done
 ############################################
 echo 'Run pb2nc'
 
-mkdir $DATA/ncfiles
+mkdir $DATA/SFCSHP
 
 for HH in 00 12; do
     export HH=$HH
     export inithour=t${HH}z
     if [ -s ${DATA}/gdas.${INITDATE}${HH}.prepbufr ]; then
-        if [ ! -s ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${HH}.nc ]; then
+        if [ ! -s ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${HH}.nc ]; then
+
+    	    split_by_subset ${DATA}/gdas.${INITDATE}${HH}.prepbufr
+    	    export err=$?; err_chk
+
             run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_wave.conf
             export err=$?; err_chk
             if [ $SENDCOM = YES ]; then
-                cp -v $DATA/ncfiles/gdas.${INITDATE}${HH}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
+                cp -v $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${HH}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
             fi
         fi
-	chmod 640 $DATA/ncfiles/gdas.${INITDATE}${HH}.nc
-	chgrp rstprod $DATA/ncfiles/gdas.${INITDATE}${HH}.nc	
+	chmod 640 $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${HH}.nc
+	chgrp rstprod $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${HH}.nc	
     fi
 done
 
