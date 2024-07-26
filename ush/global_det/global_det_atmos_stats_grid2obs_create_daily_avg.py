@@ -34,7 +34,7 @@ DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_end = os.environ['fhr_list'].split(',')[-1]
+fhr_end = os.environ['fhr_list'].split(', ')[-1]
 
 # Process run time agruments
 if len(sys.argv) != 4:
@@ -149,7 +149,7 @@ while valid_hr <= int(valid_hr_end):
                         gda_util.copy_file(output_DATA_file,
                                            output_COMOUT_file)
             else:
-                print("WARNING: Need 2 files to create daily average")
+                print("NOTE: Need 2 files to create daily average")
                 make_daily_avg_output_file = False
         if make_daily_avg_output_file:
             print(f"DATA Output File: {output_DATA_file}")

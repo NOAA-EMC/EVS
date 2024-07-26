@@ -15,7 +15,6 @@ import sys
 import logging
 import datetime
 import glob
-import subprocess
 import itertools
 import shutil
 import global_det_atmos_util as gda_util
@@ -24,7 +23,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 print("BEGIN: "+os.path.basename(__file__))
 
 if os.environ['JOB_GROUP'] != "make_plots":
-    print(os.path.basename(__file__)+" for JOB_GROUP "
+    print(os.path.basename(__file__)+" for JOB_GROUP = "
           +"make_plots only")
     sys.exit(1)
 
@@ -161,8 +160,8 @@ if len(fcst_var_prod) == len(obs_var_prod):
     for v in range(len(fcst_var_prod)):
         var_info.append((fcst_var_prod[v], obs_var_prod[v]))
 else:
-   logger.error("FORECAST AND OBSERVATION VARIABLE INFORMATION NOT THE "
-                +"SAME LENGTH")
+   logger.error("Forecast and observation variable information not the "
+                +"same length")
    sys.exit(1)
 
 # Set up MET information dictionary
@@ -173,7 +172,7 @@ original_met_info_dict = {
 
 if JOB_GROUP == 'make_plots':
     if len(model_list) > 10:
-        logger.error("TOO MANY MODELS LISTED ("+str(len(model_list))
+        logger.error("Too many models requested ("+str(len(model_list))
                      +", ["+', '.join(model_list)+"]), maximum is 10")
         sys.exit(1)
     plot_specs = PlotSpecs(logger, plot)
@@ -621,6 +620,7 @@ if JOB_GROUP == 'make_plots':
                         gda_util.copy_file(DATAjob_image_name,
                                            COMOUTjob_image_name)
     else:
-        logger.warning(plot+" not recongized")
+        logger.error(plot+" not recongized")
+        sys.exit(1)
 
 print("END: "+os.path.basename(__file__))

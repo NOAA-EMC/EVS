@@ -12,7 +12,6 @@ import os
 import logging
 import datetime
 import glob
-import subprocess
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
 #pd.plotting.register_matplotlib_converters()
@@ -27,7 +26,7 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 class ThresholdAverage:
     """
-    Create a threshold average graphic
+    Make a threshold average graphic
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
@@ -56,13 +55,13 @@ class ThresholdAverage:
         self.logo_dir = logo_dir
 
     def make_threshold_average(self):
-        """! Create the threshold average graphic
+        """! Make the threshold average graphic
 
              Args:
 
              Returns:
         """
-        self.logger.info(f"Creating threshold average...")
+        self.logger.info(f"Plot Type: Threshold Average")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -77,7 +76,7 @@ class ThresholdAverage:
                               +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
         # Get dates to plot
-        self.logger.info("Creating valid and init date arrays")
+        self.logger.debug("Making valid and init date arrays")
         valid_dates, init_dates = gda_util.get_plot_dates(
             self.logger,
             self.date_info_dict['date_type'],
@@ -112,10 +111,10 @@ class ThresholdAverage:
                               +"with valid dates "
                               +', '.join(format_valid_dates))
             plot_dates = init_dates
-        # Create dataframe for all thresholds
+        # Make dataframe for all thresholds
+        self.logger.info(f"Reading in model stat files from {self.input_dir}")
         self.logger.info("Building dataframe for all thresholds")
-        # Create dataframe for all thresholds
-        self.logger.info("Building dataframe for all thresholds")
+        # Make dataframe for all thresholds
         fcst_units = []
         for fcst_var_thresh in self.plot_info_dict['fcst_var_threshs']:
             self.logger.debug("Building data for forecast threshold "
@@ -125,7 +124,7 @@ class ThresholdAverage:
             obs_var_thresh = (self.plot_info_dict['obs_var_threshs']\
                               [fcst_var_thresh_idx])
             all_model_df = gda_util.build_df(
-                self.logger, self.input_dir, self.output_dir,
+                'make_plots', self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],
                 self.plot_info_dict['fcst_var_level'],
@@ -157,7 +156,7 @@ class ThresholdAverage:
                 stat_df.index.get_level_values(0).unique().tolist()
             )
             if self.plot_info_dict['event_equalization'] == 'YES':
-                self.logger.debug("Doing event equalization")
+                self.logger.info("Doing event equalization")
                 masked_stat_array = np.ma.masked_invalid(stat_array)
                 stat_array = np.ma.mask_cols(masked_stat_array)
                 stat_array = stat_array.filled(fill_value=np.nan)
@@ -235,7 +234,7 @@ class ThresholdAverage:
                     #    scale=stats.sem(np.ma.compressed(model_idx_model1_diff))
                     #)
         # Set up plot
-        self.logger.info(f"Doing plot set up")
+        self.logger.info(f"Setting up plot")
         plot_specs_ta = PlotSpecs(self.logger, 'threshold_average')
         plot_specs_ta.set_up_plot()
         n_xticks = 7
@@ -271,7 +270,6 @@ class ThresholdAverage:
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
-        plot_left_logo = False
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True
@@ -284,7 +282,9 @@ class ThresholdAverage:
                     plot_specs_ta.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        plot_right_logo = False
+        else:
+            plot_left_logo = False
+            self.logger.debug(f"{plot_left_logo_path} does not exist")
         plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
         if os.path.exists(plot_right_logo_path):
             plot_right_logo = True
@@ -297,11 +297,14 @@ class ThresholdAverage:
                     plot_specs_ta.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
+        else:
+            plot_right_logo = False
+            self.logger.debug(f"{plot_right_logo_path} does not exist")
         image_name = plot_specs_ta.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
-        # Create plot
-        self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
+        # Make plot
+        self.logger.info(f"Making plot")
         fig, (ax1, ax2) = plt.subplots(2,1,
                                        figsize=(plot_specs_ta.fig_size[0],
                                                 plot_specs_ta.fig_size[1]),
@@ -382,8 +385,6 @@ class ThresholdAverage:
                 model_num_plot_settings_dict = (
                     model_plot_settings_dict[model_num]
                 )
-            self.logger.debug(f"Plotting {model_num} - {model_num_name} "
-                              +f"- {model_num_plot_name}")
             masked_model_num_data = np.ma.masked_invalid(model_num_data)
             if model_num == 'model1':
                  model1_masked_model_num_data = masked_model_num_data
@@ -406,8 +407,8 @@ class ThresholdAverage:
                 thresh_values
             )
             if model_num_npts != 0:
-                self.logger.debug(f"Plotting {model_num} - {model_num_name} "
-                                  +f"- {model_num_plot_name}")
+                self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}]")
                 ax1.plot(
                     np.ma.compressed(masked_thresh_values),
                     np.ma.compressed(masked_model_num_data),
@@ -432,6 +433,9 @@ class ThresholdAverage:
                     stat_min_max_dict['ax1_stat_max'] = (
                         masked_model_num_data.max()
                     )
+            else:
+                self.logger.debug(f"{model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}] has no points")
             masked_model_num_model1_diff_data = np.ma.masked_invalid(
                 model_num_data - model1_masked_model_num_data
             )
@@ -444,9 +448,12 @@ class ThresholdAverage:
                 thresh_values
             )
             if model_num_diff_npts != 0:
-                self.logger.debug(f"Plotting {model_num} - {model_num_name} "
-                                  +f"- {model_num_plot_name} difference from "
-                                  +self.model_info_dict['model1']['plot_name'])
+                self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}] difference from "
+                                  +f"model1 ["
+                                  +f"{self.model_info_dict['model1']['name']},"
+                                  +self.model_info_dict['model1']['plot_name']
+                                  +"]")
                 ax2.plot(
                     np.ma.compressed(masked_diff_thresh_values),
                     np.ma.compressed(masked_model_num_model1_diff_data),
@@ -470,6 +477,13 @@ class ThresholdAverage:
                     stat_min_max_dict['ax2_stat_max'] = (
                         masked_model_num_model1_diff_data.max()
                     )
+            else:
+                self.logger.debug(f"{model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}] difference from "
+                                  +f"model1 ["
+                                  +f"{self.model_info_dict['model1']['name']},"
+                                  +self.model_info_dict['model1']['plot_name']
+                                  +"] has no points")
             if model_num == 'model1':
                 ax2.plot(
                     thresh_values,
@@ -494,13 +508,14 @@ class ThresholdAverage:
                     np.ma.getmask(masked_model_num_model1_diff_ci_data),
                     thresh_values
                 )
+                self.logger.debug(f"Plotting {model_num} ["
+                                  +f"{model_num_name},"
+                                  +f"{model_num_plot_name}] difference "
+                                  +"from model1 ["
+                                  +f"{self.model_info_dict['model1']['name']},"
+                                  +self.model_info_dict['model1']['plot_name']
+                                  +"] confidence intervals")
                 if model_num_ci_npts != 0:
-                    self.logger.debug(f"Plotting {model_num} - "
-                                      +f"{model_num_name}"
-                                      +f"- {model_num_plot_name} "
-                                      +"difference from "
-                                      +self.model_info_dict['model1']['plot_name']
-                                      +" confidence intervals")
                     ci_min = masked_model_num_model1_diff_ci_data.min()
                     ci_max = masked_model_num_model1_diff_ci_data.max()
                     if ci_min < stat_min_max_dict['ax2_stat_min'] \
@@ -542,6 +557,14 @@ class ThresholdAverage:
                                 color = 'None',
                                 edgecolor=model_num_plot_settings_dict['color'],
                                 linewidth=1)
+                else:
+                    self.logger.debug(f"{model_num} ["
+                                      +f"{model_num_name},"
+                                      +f"{model_num_plot_name}] difference "
+                                      +"from model1 ["
+                                      +f"{self.model_info_dict['model1']['name']},"
+                                      +self.model_info_dict['model1']['plot_name']
+                                      +"] confidence intervals has no points")
         subplot_num = 1
         for ax in fig.get_axes():
             stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
@@ -679,9 +702,9 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '11.0.2'
+        'version': '12.0'
     }
-    # Create OUTPUT_DIR
+    # Make OUTPUT_DIR
     gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
