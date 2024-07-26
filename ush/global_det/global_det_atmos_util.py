@@ -2953,19 +2953,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                         ]
                     ).tolist()
                     if len(model_stat_file_df_valid_date_idx_list) == 0:
-                        logger.debug("No data matching valid date "
-                                     +f"{valid_date} in"
-                                     +f"{parsed_model_stat_file}")
                         continue
-                    elif len(model_stat_file_df_valid_date_idx_list) > 1:
-                        logger.debug(f"Multiple lines matching valid date "
-                                     +f"{valid_date} in "
-                                     +f"{parsed_model_stat_file} "
-                                     +f"using first one")
-                    else:
-                        logger.debug(f"One line matching valid date "
-                                     +f"{valid_date} in "
-                                     +f"{parsed_model_stat_file}")
                     model_num_df.loc[(model_num_name, valid_date)] = (
                         model_stat_file_df.loc\
                         [model_stat_file_df_valid_date_idx_list[0]]\
