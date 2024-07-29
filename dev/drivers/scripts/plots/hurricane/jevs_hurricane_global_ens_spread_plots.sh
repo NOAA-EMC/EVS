@@ -59,9 +59,6 @@ $HOMEevs/jobs/JEVS_HURRICANE_PLOTS
 
 %include <tail.h>
 %manual
-######################################################################
-# Purpose: This job will generate the grid2obs statistics for the HRRR
-#          model and generate stat files.
-######################################################################
+
 %end
 
