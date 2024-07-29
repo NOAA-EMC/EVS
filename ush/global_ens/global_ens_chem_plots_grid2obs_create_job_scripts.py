@@ -198,7 +198,7 @@ for aeronet_job in list(make_plots_jobs_dict['aeronet'].keys()):
     )
 
     if aeronet_job in ['AOD']:
-        aeronet_job_plots = ['time_series', 'lead_average']
+        aeronet_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
     elif aeronet_job in ['AOD_Thresh']:
         aeronet_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
@@ -242,7 +242,7 @@ for airnow_job in list(make_plots_jobs_dict['airnow'].keys()):
     )
 
     if airnow_job in ['PM25']:
-        airnow_job_plots = ['time_series', 'lead_average']
+        airnow_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
     elif airnow_job in ['PM25_Thresh']:
         airnow_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
