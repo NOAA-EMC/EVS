@@ -103,6 +103,32 @@ for valid_hour in ${valid_hours} ; do
     fi
 done
 
+############################################
+# Get prepped PB2NC JASON-3 file
+############################################
+echo 'Getting JASON-3 pb2nc file'
+input_pb2nc_jason3_file=$COMIN/prep/${COMPONENT}/wave.${VDATE}/jason3/jason3.${VDATE}.nc
+tmp_pb2nc_jason3_file=${DATA}/ncfiles/jason3.${VDATE}.nc
+if [[ $input_pb2nc_jason3_file == *"/com/"* ]] || [[ $input_pb2nc_jason3_file == *"/dcom/"* ]]; then
+    alert_word="WARNING"
+else
+    alert_word="NOTE"
+fi
+if [[ -s $input_pb2nc_jason3_file ]]; then
+    echo "Copying $input_pb2nc_jason3_file to $tmp_pb2nc_jason3_file"
+    cp -v $input_pb2nc_jason3_file $tmp_pb2nc_jason3_file
+else
+    echo "${alert_word}: ${input_pb2nc_jason3_file} does not exist"
+    if [ $SENDMAIL = YES ]; then
+        export subject="JASON-3 Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No JASON-3 data was available for valid date ${VDATE}" > mailmsg
+        echo "Missing file is ${input_pb2nc_jason3_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $MAILTO
+    fi
+fi
+
+
 ####################
 # quick error check
 ####################
@@ -119,6 +145,13 @@ if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} NDBC ascii2nc files for valid date ${VDATE}"
 else
     echo "NOTE: No NDBC netcdf file for valid date ${VDATE} in ${DATA}/ncfiles"
+fi
+nc=$(ls ${DATA}/ncfiles/jason3.${VDATE}*.nc | wc -l | awk '{print $1}')
+echo " Found ${DATA}/ncfiles/jason3.${VDATE}*.nc for ${VDATE}"
+if [ "${nc}" != '0' ]; then
+    echo "Successfully found ${nc} JASON-3 pb2nc files for valid date ${VDATE}"
+else
+    echo "NOTE: No JASON-3 netcdf file for valid date ${VDATE} in ${DATA}/ncfiles"
 fi
 
 ############################################
@@ -178,11 +211,13 @@ for valid_hour in ${valid_hours} ; do
             fi
         fi
         if [[ -s $tmp_model_file ]]; then
-            for OBSNAME in GDAS NDBC; do
+            for OBSNAME in GDAS NDBC JASON3; do
                 if [ $OBSNAME = GDAS ]; then
                     tmp_OBSNAME_file=${DATA}/ncfiles/gdas.SFCSHP.${VDATE}${valid_hour2}.nc
                 elif [ $OBSNAME = NDBC ]; then
                     tmp_OBSNAME_file=${DATA}/ncfiles/ndbc.${VDATE}.nc
+                elif [ $OBSNAME = JASON3 ]; then
+                    tmp_OBSNAME_file=${DATA}/ncfiles/jason3.${VDATE}.nc
                 fi
                 tmp_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
                 output_stat_file=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
@@ -192,6 +227,9 @@ for valid_hour in ${valid_hours} ; do
                     if [[ -s $tmp_OBSNAME_file ]]; then
                         echo "#!/bin/bash" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                        echo "export DATA=${DATA}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                        echo "export VDATE=${VDATE}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                        echo "export FIXevs=${FIXevs}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export valid_hour2=$valid_hour2" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
