@@ -57,6 +57,7 @@ done
 
 for varb in TMP DPT RH
 do
+	mkdir -p $COMOUTplots/$varb
 	export var=${varb}2m
 	export lev=Z2
 	export lev_obs=Z2
@@ -65,46 +66,101 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
+	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
+	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
-    export err=$?; err_chk
+        export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
+	fi
 
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+	cp ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
+	then
+        echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+	fi
 
 	export plottyp=valid_hour
 	export datetyp=INIT
+        if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
+	then	
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
-    export err=$?; err_chk
+        export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
+	fi
 
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+	cp ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+	fi
 
 	if [ $varb = DPT ]
 	then 
+		mkdir -p $COMOUTplots/$varb
 		export plottyp=threshold_average
 		export datetyp=INIT
 		export linetype=CTC
 		export stat=fbias
                 export thresh=">=277.594, >=283.15, >=288.706, >=294.261"
+		if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png ]
+		then
 		$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config_thresh
-        export err=$?; err_chk
+                export err=$?; err_chk
+          	else
+		echo "RESTART - plot exists; copying over to plot directory"
+		cp $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png $PLOTDIR
+		fi
 
+		if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+		then
 		mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png
+		cp ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png $COMOUTplots/$varb
+	        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png ]
+		then
+		echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+		fi
+
 	elif [ $varb = RH ]
 	then
+		mkdir -p $COMOUTplots/$varb
 		export plottyp=threshold_average
 		export datetyp=INIT
 		export linetype=CTC
 		export stat=fbias
 		export thresh="<=15, <=20, <=25, <=30"
+		if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png ]
+		then
 		$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config_thresh
-        export err=$?; err_chk
+                export err=$?; err_chk
+	        else
+		echo "RESTART - plot exists; copying over to plot directory"
+		cp $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png $PLOTDIR
+		fi
 
+		if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+		then
 		mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png
+		cp ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png $COMOUTplots/$varb
+	        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png ]
+		then
+		echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+		fi
 	fi
 done
 
-
 for varb in UGRD VGRD UGRD_VGRD WIND
 do
+	mkdir -p $COMOUTplots/$varb
 	export var=${varb}10m
 	export lev=Z10
 	export lev_obs=Z10
@@ -118,22 +174,49 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
+	if [ ! -e $COMOUTplots/$varb//evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
+	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
-    export err=$?; err_chk
+        export err=$?; err_chk
+        else
+        echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
+	fi
 
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+	cp ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+	fi
 
 	export plottyp=valid_hour
 	export datetyp=INIT
+	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
+	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
-    export err=$?; err_chk
+        export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
+	fi
 
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+        then
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+	cp ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+        fi
 
 done
 
 for varb in GUST
 do
+	mkdir -p $COMOUTplots/$varb
 	export var=${varb}sfc
 	export lev=Z0
 	export lev_obs=Z0
@@ -142,21 +225,48 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
+	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
+	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
-    export err=$?; err_chk
+        export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
+	fi
 
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+	cp ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+	fi
 
 	export plottyp=valid_hour
 	export datetyp=INIT
+	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
+	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
-    export err=$?; err_chk
+        export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
+	fi
 
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+	then
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+	cp ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+        fi
 done
 
 for varb in PBL
 do
+	mkdir -p $COMOUTplots/$varb
 	export var=${varb}
 	export lev=L0
 	export lev_obs=L0
@@ -165,17 +275,43 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
+	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
+	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config_pbl
-    export err=$?; err_chk
+        export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
+	fi
 
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+	then
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+	cp ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+	fi
 
 	export plottyp=valid_hour
 	export datetyp=INIT
+	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
+	then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config_pbl
-    export err=$?; err_chk
+        export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
+	fi
 
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+        then
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+	cp ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$varb,$plottyp,$datetyp
+        fi
 
 done
 
