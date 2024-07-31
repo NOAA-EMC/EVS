@@ -1,9 +1,9 @@
-#PBS -N jevs_global_ens_chem_grid2obs_aeronet_plots_31days
+#PBS -N evs_global_ens_chem_gefs_grid2obs_aeronet_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=01:00:00
+#PBS -l walltime=00:50:00
 #PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=275GB
 #PBS -l debug=true
 
@@ -58,7 +58,7 @@ export NET=evs
 export RUN=chem
 export VERIF_CASE=grid2obs
 export DATA_TYPE=aeronet
-export NDAYS=31
+export NDAYS=90
 
 ######################################################################
 # Execute j-job
