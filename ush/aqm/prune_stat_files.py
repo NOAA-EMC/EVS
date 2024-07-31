@@ -100,7 +100,7 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
          )
       # Prune the MET .stat files and write to new file
       for met_stat_file in met_stat_files:
-         ps = subprocess.run(f"grep -R {model} {met_stat_file}{filter_cmd}",
+         ps = subprocess.run('grep -R "'+model+'" '+met_stat_file+filter_cmd,
                                shell=True, capture_output=True, encoding="utf8")
          grep_output = ps.communicate()[0]
          all_grep_output = all_grep_output+grep_output
