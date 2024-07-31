@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_chem_g2o_prep
+#PBS -N jevs_global_ens_chem_grid2obs_prep
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -12,9 +12,7 @@ set -x
 cd $PBS_O_WORKDIR
 
 export model=evs
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSGefsChem
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -51,10 +49,6 @@ export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
 export mod_ver=${mod_ver:-${gefs_ver}}
 
-export cyc=00
-echo $cyc
-export cycle=t${cyc}z
-
 export VDATE=$(date --date="3 days ago" +%Y%m%d)
 echo "VDATE=${VDATE}"
 
@@ -69,7 +63,17 @@ export jobid=$job.${PBS_JOBID:-$$}
 ############################################################
 ## CALL executable job script here
 #############################################################
-$HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PREP
+export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
+
+if [ -z "$MAILTO" ]; then
+
+    echo "MAILTO variable is not defined. Exiting without continuing."
+
+else
+
+    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PREP
+
+fi
 
 #######################################################################
 # Purpose: This does the prep work for the global_ens GEFS-Chem model

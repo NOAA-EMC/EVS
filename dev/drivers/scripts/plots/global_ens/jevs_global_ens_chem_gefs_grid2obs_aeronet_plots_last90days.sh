@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_chem_grid2obs_aeronet_plots_90days_00
+#PBS -N jevs_global_ens_chem_gefs_grid2obs_aeronet_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -12,9 +12,7 @@ set -x
 cd ${PBS_O_WORKDIR}
 
 export model=evs
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSGefsChem
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
 
 ############################################################
 ## Load modules

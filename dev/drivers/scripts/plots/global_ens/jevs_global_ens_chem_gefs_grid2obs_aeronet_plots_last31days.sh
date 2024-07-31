@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_chem_grid2obs_airnow_plots_31days_00
+#PBS -N jevs_global_ens_chem_gefs_grid2obs_aeronet_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -12,9 +12,7 @@ set -x
 cd ${PBS_O_WORKDIR}
 
 export model=evs
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSGefsChem
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
 
 ############################################################
 ## Load modules
@@ -25,7 +23,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSGefsChem
 export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=NO
-export job=${PBS_JOBNAME:-jevs_global_ens_chem_grid2obs_airnow_plots_31days}
+export job=${PBS_JOBNAME:-jevs_global_ens_chem_grid2obs_aeronet_plots_31days}
 export jobid=${job}.${PBS_JOBID:-$$}
 export vhr=00
 
@@ -46,7 +44,7 @@ export STEP=plots
 export COMPONENT=global_ens
 export RUN=chem
 export VERIF_CASE=grid2obs
-export DATA_TYPE=airnow
+export DATA_TYPE=aeronet
 export NDAYS=31
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
@@ -61,5 +59,5 @@ ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-observations airnow for last 31 days
+#          atmospheric grid-to-observations aeronet for last 31 days
 ######################################################################

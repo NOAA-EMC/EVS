@@ -1,9 +1,9 @@
-#PBS -N jevs_global_ens_gefs_chem_g2o_airnow_stats
+#PBS -N jevs_global_ens_gefs_chem_grid2obs_aeronet_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
+#PBS -l walltime=00:15:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB:prepost=true
 #PBS -l debug=true
 
@@ -29,7 +29,6 @@ evs_ver_2d=$(echo ${evs_ver} | cut -d'.' -f1-2)
 ############################################################
 # Load modules
 ############################################################
-
 module reset
 
 module load prod_envir/${prod_envir_ver}
@@ -55,7 +54,7 @@ export mod_ver=${mod_ver:-${gefs_ver}}
 export VDATE=$(date --date="3 days ago" +%Y%m%d)
 echo "VDATE=${VDATE}"
 
-export DATA_TYPE=airnow
+export DATA_TYPE=aeronet 
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 mkdir -p ${COMIN}
@@ -71,16 +70,16 @@ export jobid=$job.${PBS_JOBID:-$$}
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
-   echo "MAILTO variable is not defined. Exiting without continuing."
+    echo "MAILTO variable is not defined. Exiting without continuing."
 else
-  ## adjust walltime for 00:30:00 ## only for PR testing remove for EMC/parallel and operational
-  for vhr in 00 03 06 09 12 15 18 21; do  ## only for PR testing remove for EMC/parallel and operational
+  ## adjust walltime for 01:45:00 ## only for PR testing remove for EMC/parallel and operational
+  ## for vhr in 00 03 06 09 12 15 18 21; do  ## only for PR testing remove for EMC/parallel and operational
     export vhr
     echo "vhr = ${vhr}"
-    $HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
-  done  ## only for PR testing remove for EMC/parallel and operational
+    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
+  ## done  ## only for PR testing remove for EMC/parallel and operational
 fi
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics using AirNOW PM2.5
+## Purpose: This job will generate the grid2obs statistics using AERONET AOD
 ##          for the GEFS-Aerosol model.
 #######################################################################
