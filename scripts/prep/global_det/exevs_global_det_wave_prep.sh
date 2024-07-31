@@ -134,7 +134,7 @@ for OBS in $OBSNAME; do
                     -c ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_grid2obs/ASCII2NC_obsNDBC.conf
                     export err=$?; err_chk
                     if [ ${SENDCOM} = YES ]; then
-                        if [ ${tmp_ndbc_file} ]; then
+                        if [ -s ${tmp_ndbc_file} ]; then
                             cp -v ${tmp_ndbc_file} ${output_ndbc_file}
                         fi
                     fi
@@ -142,6 +142,35 @@ for OBS in $OBSNAME; do
             fi
         else
             echo "$output_ndbc_file already exists"
+        fi
+    # Run PB2NC on JASON-3 bufr files
+    elif [ $OBS == "jason3" ]; then
+        input_jason3_file=${DCOMINjason3}/${INITDATE}/b031/xx124
+        tmp_jason3_file=${DATA}/${OBS}/${OBS}.${INITDATE}.nc
+        output_jason3_file=${COMOUT}.${INITDATE}/${OBS}/${OBS}.${INITDATE}.nc
+        if [ ! -s $output_jason3_file ]; then
+            if [ ! -s $input_jason3_file ]; then
+                echo "WARNING: ${input_jason3_file} does not exist"
+                if [ $SENDMAIL = YES ]; then
+                    export subject="JASON-3 Bufr Data Missing for EVS ${COMPONENT}"
+                    echo "Warning: No JASON-3 Bufr was available for valid date ${INITDATE}" > mailmsg
+                    echo "Missing file is $input_jason3_file" >> mailmsg
+                    echo "Job ID: $jobid" >> mailmsg
+                    cat mailmsg | mail -s "$subject" $MAILTO
+                fi
+            else
+                run_metplus.py \
+                -c ${PARMevs}/metplus_config/machine.conf \
+                -c ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_grid2obs/PB2NC_obsBufrJASON3.conf
+                export err=$?; err_chk
+                if [ $SENDCOM = YES ]; then
+                    if [ -s $tmp_jason3_file ]; then
+                        cp -v $tmp_jason3_file $output_jason3_file
+                    fi
+                fi
+            fi
+        else
+            echo "$output_jason3_file already exists"
         fi
     fi
 done
