@@ -6,21 +6,27 @@
 #PBS -l walltime=01:00:00
 #PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=275GB
 #PBS -l debug=true
-#PBS -V
 
 set -x
 
 cd ${PBS_O_WORKDIR}
 
 export model=evs
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
+## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSGefsChem
 
+############################################################
+## Load modules
+############################################################
+############################################################
+## Specify environment variables
+############################################################
 export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=NO
 export job=${PBS_JOBNAME:-jevs_global_ens_chem_grid2obs_airnow_plots_90days}
 export jobid=${job}.${PBS_JOBID:-$$}
-export SITE=$(cat /etc/cluster_name)
 export vhr=00
 
 source ${HOMEevs}/versions/run.ver
@@ -47,12 +53,8 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
 export TMPDIR=${DATAROOT}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 today=$(cut -c7-14 ${COMROOT}/date/t${vhr}z)
-export VDATE_END=$(finddate.sh ${today} d-1)
+export VDATE_END=$(finddate.sh ${today} d-4)
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END}
-
-# Set config file
-export config=${HOMEevs}/parm/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}
-echo ${config}
 
 # CALL executable job script here
 ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PLOTS

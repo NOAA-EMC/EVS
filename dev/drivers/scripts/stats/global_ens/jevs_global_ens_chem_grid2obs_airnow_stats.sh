@@ -3,23 +3,29 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=00:10:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB:prepost=true
 #PBS -l debug=true
-#PBS -V
 
 set -x
 
 cd $PBS_O_WORKDIR
 
 export model=evs
-
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
+## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
+## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSGefsChem
 
 source $HOMEevs/versions/run.ver
 
 evs_ver_2d=$(echo ${evs_ver} | cut -d'.' -f1-2)
 
+############################################################
+## Load modules
+############################################################
+############################################################
+## Specify environment variables
+############################################################
 ############################################################
 # Load modules
 ############################################################
@@ -33,7 +39,7 @@ source $HOMEevs/dev/modulefiles/global_ens/global_ens_stats.sh
 ############################################################
 # set some variables
 ############################################################
-export KEEPDATA=NO
+export KEEPDATA=YES
 export SENDMAIL=YES
 export SENDDBN=NO
 
@@ -55,10 +61,9 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 mkdir -p ${COMIN}
 export COMOUT=${COMIN}
 
-export DATAROOT=/lfs/h2/emc/ptmp/${USER}/$}NET}/${evs_ver_2d}/${STEP}
+export DATAROOT=/lfs/h2/emc/ptmp/${USER}/${NET}/${evs_ver_2d}/${STEP}
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${DATA_TYPE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-mkdir -p ${DATA}
 
 ############################################################
 # CALL executable job script here
@@ -68,9 +73,12 @@ export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 if [ -z "$MAILTO" ]; then
    echo "MAILTO variable is not defined. Exiting without continuing."
 else
+  ## adjust walltime for 00:30:00 ## only for PR testing remove for EMC/parallel and operational
+  for vhr in 00 03 06 09 12 15 18 21; do  ## only for PR testing remove for EMC/parallel and operational
     export vhr
     echo "vhr = ${vhr}"
     $HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
+  done  ## only for PR testing remove for EMC/parallel and operational
 fi
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics using AirNOW PM2.5
