@@ -1012,6 +1012,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         title2 = title2+f'\nObservations: Surface Marine (Ship, Buoy, C-MAN Platform)'
     elif obtype == 'NDBC_STANDARD':
         title2 = title2+f'\nObservations: NDBC Buoys'
+    elif obtype == 'JASON3':
+        title2 = title2+f'\nObservations: JASON-3'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
