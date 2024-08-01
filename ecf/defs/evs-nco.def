@@ -520,6 +520,30 @@ suite evs_nco
               time 00:30
             task jevs_cam_rrfs_firewxnest_grid2obs_plots
               time 00:30
+            task jevs_cam_radar_nbrcnt_plots_last31days
+              edit VHR '05'
+              time 05:00
+            task jevs_cam_radar_nbrcnt_plots_last90days
+              edit VHR '05'
+              time 05:00
+            task jevs_cam_radar_nbrctc_plots_last31days
+              edit VHR '05'
+              time 05:00
+            task jevs_cam_radar_nbrctc_plots_last90days
+              edit VHR '05'
+              time 05:00
+            task jevs_cam_severe_nbrcnt_plots_last31days
+              edit VHR '05'
+              time 05:00
+            task jevs_cam_severe_nbrcnt_plots_last90days
+              edit VHR '05'
+              time 05:00
+            task jevs_cam_severe_nbrctc_plots_last31days
+              edit VHR '05'
+              time 05:00
+            task jevs_cam_severe_nbrctc_plots_last90days
+              edit VHR '05'
+              time 05:00
           endfamily
           family aqm
             task jevs_aqm_plots
