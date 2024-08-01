@@ -80,7 +80,7 @@ grep "03, AP" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} > a${stormBasi
 grep "03, EN" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
 grep "03, EP" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
 grep "03, CP" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
-grep -a "03, UE" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} > a${stormBasin}${stormNumber}${stormYear}.dat
+grep -a "03, UE" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, AEMN/03, MD01/' a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, EEMN/03, MD02/' a${stormBasin}${stormNumber}${stormYear}.dat
 #sed -i 's/03, CEMN/03, MD03/' a${stormBasin}${stormNumber}${stormYear}.dat
