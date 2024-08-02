@@ -111,7 +111,7 @@ export enddate="$YY02$MM02$DD02$HH02"
 echo "$startdate, $enddate"
 
 #--- run for TC_pairs
-cp ${PARMevs}/metplus_config/stats/hurricane/TCPairs_spread_template.conf .
+cp ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/TCPairs_spread_template.conf .
 export SEARCH0="METBASE_template"
 export SEARCH1="INPUT_BASE_template"
 export SEARCH2="OUTPUT_BASE_template"
