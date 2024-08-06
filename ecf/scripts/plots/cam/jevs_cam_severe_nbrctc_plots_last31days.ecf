@@ -55,7 +55,7 @@ export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="severe"
 export MODELNAME=${COMPONENT}
-export EVAL_PERIOD="last31days"
+export EVAL_PERIOD="LAST31DAYS"
 export LINE_TYPE="nbrctc"
 
 ############################################################

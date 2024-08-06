@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=1:50:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=64
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128
 #PBS -l debug=true
 
 export model=evs 
@@ -55,7 +55,7 @@ export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="radar"
 export MODELNAME=${COMPONENT}
-export EVAL_PERIOD="last90days"
+export EVAL_PERIOD="LAST90DAYS"
 export LINE_TYPE="nbrcnt"
 
 ############################################################
