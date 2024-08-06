@@ -20,10 +20,9 @@ periods="LAST${NDAYS}DAYS"
 
 valid_hours='00 12'
 fhrs='000,024,048,072,096,120,144,168,192,216,240,264,288,312,336,360,384'
-wave_vars='WIND HTSGW PERPW'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 ptype='lead_average'
-obsnames='GDAS NDBC'
+obsnames='GDAS NDBC JASON3'
 
 cd ${DATA}
 touch ${DATA}/jobs/run_all_${RUN}_g2o_plots_poe.sh
@@ -34,18 +33,24 @@ MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 # write the commands
 for period in ${periods} ; do
   for valid_hour in ${valid_hours} ; do
-    for wvar in ${wave_vars} ; do
-      image_var=$(echo ${wvar} | tr '[A-Z]' '[a-z]')
+    for obsname in $obsnames; do
+      if [ $obsname = "GDAS" ]; then
+          OBTYPE="SFCSHP"
+          regions="GLOBAL"
+          wave_vars='WIND HTSGW PERPW'
+      elif [ $obsname = "NDBC" ]; then
+          OBTYPE="NDBC_STANDARD"
+          regions="GLOBAL SEUS_CARB GOM NEUS_CAN WCOAST_AK HAWAII"
+          wave_vars='WIND HTSGW PERPW'
+      elif [ $obsname = "JASON3" ]; then
+          OBTYPE="JASON3"
+          regions="GLOBAL"
+          wave_vars='WIND HTSGW'
+      fi
+      obtypel=`echo $OBTYPE | tr '[A-Z]' '[a-z]'`
       for stats in ${stats_list}; do
-        for obsname in $obsnames; do
-            if [ $obsname = "GDAS" ]; then
-                OBTYPE="SFCSHP"
-                regions="GLOBAL"
-            elif [ $obsname = "NDBC" ]; then
-                OBTYPE="NDBC_STANDARD"
-                regions="GLOBAL SEUS_CARB GOM NEUS_CAN WCOAST_AK HAWAII"
-            fi
-            obtypel=`echo $OBTYPE | tr '[A-Z]' '[a-z]'`
+         for wvar in ${wave_vars} ; do
+            image_var=$(echo ${wvar} | tr '[A-Z]' '[a-z]')
             for region in $regions; do
                 if [ $region = "GLOBAL" ]; then
                     regionl="glb"
@@ -128,9 +133,9 @@ for period in ${periods} ; do
 
                 echo "${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_${stats}_${ptype}_${period}_${region}.sh" >> ${DATA}/jobs/run_all_${RUN}_g2o_plots_poe.sh
             done # end of regions
-        done # end of obsname
+        done # end of wave vars
       done  # end of stats
-    done  # end of wave vars
+    done  # end of obsname
   done  # end of valid hours
 done  # end of periods
 
