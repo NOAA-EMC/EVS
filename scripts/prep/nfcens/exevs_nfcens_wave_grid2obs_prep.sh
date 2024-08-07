@@ -162,7 +162,7 @@ done
 # get the GDAS prepbufr files for yesterday 
 ############################################
 echo 'Copying GDAS prepbufr files'
-
+mkdir -p $DATA/prepbufr
 for HH in 00 06 12 18 ; do
 
   export inithour=t${HH}z
@@ -176,7 +176,7 @@ for HH in 00 06 12 18 ; do
 		  cat mailmsg | mail -s "$subject" $MAILTO
 	  fi
   else
-      cp -v ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${HH}.prepbufr
+      cp -v ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr ${DATA}/prepbufr/gdas.${INITDATE}${HH}.prepbufr
   fi
 
 done
@@ -186,22 +186,26 @@ done
 ############################################
 echo 'Run pb2nc'
 
-mkdir $DATA/SFCSHP
+mkdir -p $DATA/SFCSHP
 
 for HH in 00 12; do
     export HH=$HH
     export inithour=t${HH}z
-    if [ -s ${DATA}/gdas.${INITDATE}${HH}.prepbufr ]; then
+    if [ -s ${DATA}/prepbufr/gdas.${INITDATE}${HH}.prepbufr ]; then
         if [ ! -s ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${HH}.nc ]; then
-
-    	    split_by_subset ${DATA}/gdas.${INITDATE}${HH}.prepbufr
+	    cd $DATA/gribs
+    	    split_by_subset ${DATA}/prepbufr/gdas.${INITDATE}${HH}.prepbufr
     	    export err=$?; err_chk
-
-            run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_wave.conf
-            export err=$?; err_chk
-            if [ $SENDCOM = YES ]; then
-                cp -v $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${HH}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
-            fi
+	    if [ -s ${DATA}/gribs/SFCSHP ]; then	
+            	run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_wave.conf
+            	export err=$?; err_chk
+	    
+	    	if [ $SENDCOM = YES ]; then
+		    if [ -s $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${HH}.nc ]; then
+                	cp -v $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${HH}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
+		    fi
+            	fi
+	    fi
         fi
 	chmod 640 $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${HH}.nc
 	chgrp rstprod $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${HH}.nc	
