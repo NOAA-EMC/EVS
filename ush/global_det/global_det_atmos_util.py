@@ -3005,20 +3005,6 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                 obs_var_thresh_symbol = obs_var_thresh
                 obs_vat_thresh_letter = obs_var_thresh
             if os.path.exists(condensed_model_file):
-                #logger.info(f"Filtering file {condensed_model_file} for "
-                #            +f"MODEL: {model_dict['name']}, DESC: {grid} "
-                #            +f"FCST_LEAD: {fhr.zfill(2)}0000, "
-                #            +f"FCST_VAR: {fcst_var_name}, "
-                #            +f"FCST_LEV: {fcst_var_level}, "
-                #            +f"OBS_VAR: {obs_var_name}, "
-                #            +f"OBS_LEV: {obs_var_level}, "
-                #            +f"OBTYPE: {model_dict['obs_name']}, "
-                #            +f"VX_MASK: {vx_mask}, "
-                #            +f"INTERP_MTHD: {interp_method}, "
-                #            +f"INTERP_PNTS: {interp_points}, "
-                #            +f"FCST_THRESH: {fcst_var_thresh_symbol}, "
-                #            +f"OBS_THRESH: {obs_var_thresh_symbol}, "
-                #            +f"LINE_TYPE: {line_type}")
                 condensed_model_df = pd.read_csv(
                     condensed_model_file, sep=" ", skiprows=1,
                     skipinitialspace=True, names=met_version_line_type_col_list,
