@@ -34,7 +34,6 @@ VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 USER = os.environ['USER']
 evs_run_mode = os.environ['evs_run_mode']
-DCOMINnohrsc = os.environ['DCOMINnohrsc']
 
 if evs_run_mode != 'production':
     QUEUESERV = os.environ['QUEUESERV']
