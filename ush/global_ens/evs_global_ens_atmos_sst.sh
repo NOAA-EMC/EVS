@@ -72,7 +72,7 @@ export vhour='00'
 >run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo  "export output_base=${WORK}/${verify}/run_${modnam}_valid_at_t${vhour}z_${verify}" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo  "export modelpath=$COM_IN" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
-echo  "export OBTYPE=GHRSST" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+echo  "export OBTYPE=ghrsst_ospo" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo  "export maskpath=$maskpath" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo  "export obsvhead=$anl" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo  "export obsvpath=$COM_IN" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
