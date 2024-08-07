@@ -61,6 +61,7 @@ if job_type == 'reformat':
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
     if NEST == 'firewx':
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
+        NEST_INPUT_TEMPLATE = os.environ['NEST_INPUT_TEMPLATE']
 elif job_type == 'generate':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
@@ -190,6 +191,7 @@ if job_type == 'reformat':
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
     if NEST == 'firewx':
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
+        job_env_vars_dict['NEST_INPUT_TEMPLATE'] = NEST_INPUT_TEMPLATE
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
         'bash_value': (

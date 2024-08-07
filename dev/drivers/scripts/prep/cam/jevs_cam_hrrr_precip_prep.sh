@@ -53,3 +53,8 @@ export vhr=${vhr:-${vhr}}
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_PREP
+
+######################################################################
+# Purpose: This job preprocesses HRRR data for use in
+#          CAM precip verification jobs
+######################################################################

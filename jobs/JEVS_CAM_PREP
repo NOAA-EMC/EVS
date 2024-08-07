@@ -111,6 +111,7 @@ export COMINccpa=${COMINccpa:-$(compath.py ${envir}/com/ccpa/$ccpa_ver)}
 export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
 export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
+export COMINrrfs=${COMINrrfs:-$(compath.py ${envir}/com/rrfs/${rrfs_ver})}
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
 export DCOMINspc=${DCOMINspc:-$DCOMROOT}

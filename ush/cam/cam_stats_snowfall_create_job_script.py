@@ -114,6 +114,7 @@ if job_type in ['generate', 'reformat']:
                         '{FCST_VAR_NAME}', FCST_VAR_NAME
                     )
                     if 'WEASD' in FCST_VAR_NAME:
+                        USE_ZERO_ACCUM = os.environ['USE_ZERO_ACCUM_WEASD']
                         if MODELNAME == "hireswarw":
                            MODEL_PCP_COMBINE_grib2_pdt = " GRIB2_pdt = 0;"
                            MODEL_PCP_COMBINE_grib2_pdt_idx1 = " GRIB2_ipdtmpl_index = [ 8 ];"
@@ -154,7 +155,17 @@ if job_type in ['generate', 'reformat']:
                            MODEL_PCP_COMBINE_grib2_pdt_val2 = ""
                            MODEL_PCP_COMBINE_grib2_pdt_idx3 = ""
                            MODEL_PCP_COMBINE_grib2_pdt_val3 = ""
+                    elif 'ASNOW' in FCST_VAR_NAME:
+                        USE_ZERO_ACCUM = os.environ['USE_ZERO_ACCUM_ASNOW']
+                        MODEL_PCP_COMBINE_grib2_pdt = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_idx1 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_val1 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_idx2 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_val2 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_idx3 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_val3 = ""
                     else:
+                        USE_ZERO_ACCUM = os.environ['USE_ZERO_ACCUM_SNOD']
                         MODEL_PCP_COMBINE_grib2_pdt = ""
                         MODEL_PCP_COMBINE_grib2_pdt_idx1 = ""
                         MODEL_PCP_COMBINE_grib2_pdt_val1 = ""
@@ -255,6 +266,7 @@ if VERIF_CASE == 'snowfall':
         job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_idx3'] = MODEL_PCP_COMBINE_grib2_pdt_idx3
         job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_val3'] = MODEL_PCP_COMBINE_grib2_pdt_val3
         job_env_vars_dict['MODEL_PCP_COMBINE_COMMAND'] = MODEL_PCP_COMBINE_COMMAND
+        job_env_vars_dict['USE_ZERO_ACCUM'] = USE_ZERO_ACCUM
         job_dependent_vars['FHR_START'] = {
             'exec_value': '',
             'bash_value': (

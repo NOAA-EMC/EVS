@@ -25,7 +25,7 @@ set -x
 ############################################################
 
 export machine=${machine:-"WCOSS2"}
-export MODELS="hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3, href_pmmn"
+export MODELS="hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3, href_pmmn, rrfs"
 export VERIF_TYPE="mrms"
 export DATE_TYPE="INIT"
 export eval_period=`echo ${EVAL_PERIOD} | tr '[:upper:]' '[:lower:]'`
@@ -81,7 +81,7 @@ mkdir -p ${LOG_DIR}
 mkdir -p ${OUTPUT_DIR}
 
 
-model_list="hrrr namnest hireswarw hireswarwmem2 hireswfv3 href_pmmn"
+model_list="hrrr namnest hireswarw hireswarwmem2 hireswfv3 href_pmmn rrfs"
 
 for model in ${model_list}; do
    n=0

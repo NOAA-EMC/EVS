@@ -537,6 +537,10 @@ class ModelSpecs():
                 'settings_key':'NAM_NEST', 
                 'plot_name':'NAM Nest'
             },
+            'nam_firewxnest': {
+                'settings_key':'NAM_FIREWXNEST', 
+                'plot_name':'NAM FireWx Nest'
+            },
             'HRRRAK': {
                 'settings_key':'HRRR', 
                 'plot_name':'HRRR'
@@ -557,29 +561,13 @@ class ModelSpecs():
                 'settings_key':'RAP', 
                 'plot_name':'RAP'
             },
-            'RRFS_A': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A'
+            'rrfs': {
+                'settings_key':'RRFS', 
+                'plot_name':'RRFS'
             },
-            'RRFS_A_AK': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Alaska'
-            },
-            'RRFS_A_PR': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Puerto Rico'
-            },
-            'RRFS_A_HI': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Hawaii'
-            },
-            'RRFS_A_CONUS': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A CONUS'
-            },
-            'RRFS_A_NACONUS': {
-                'settings_key':'RRFS_A_NA', 
-                'plot_name':'RRFS-A N. America'
+            'rrfs_firewxnest': {
+                'settings_key':'RRFS_FIREWXNEST', 
+                'plot_name':'RRFS FireWx Nest'
             },
             'mrms': {
                 'settings_key':'MRMS', 
@@ -691,12 +679,15 @@ class ModelSpecs():
             'NAM_NEST': {'color': '#1e3cff',
                      'marker': 'o', 'markersize': 10,
                      'linestyle': 'solid', 'linewidth': 1.8},
-            'RRFS_A': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 10,
-                      'linestyle': 'solid', 'linewidth': 1.8},
-            'RRFS_A_NA': {'color': '#00dc00',
-                      'marker': 'P', 'markersize': 11,
-                      'linestyle': 'dashed', 'linewidth': 1.8},
+            'NAM_FIREWXNEST': {'color': '#1e3cff',
+                     'marker': '^', 'markersize': 11,
+                     'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFS': {'color': '#696969',
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFS_FIREWXNEST': {'color': '#696969',
+                     'marker': '^', 'markersize': 11,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'GFS': {'color': '#000000',
                     'marker': 'o', 'markersize': 10,
                     'linestyle': 'solid', 'linewidth': 2.},

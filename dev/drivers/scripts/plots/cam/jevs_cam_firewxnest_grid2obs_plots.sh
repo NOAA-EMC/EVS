@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_nam_firewxnest_grid2obs_plots
+#PBS -N jevs_cam_firewxnest_grid2obs_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=00:50:00
-#PBS -l place=shared,select=1:ncpus=1:mem=100GB
+#PBS -l place=shared,select=1:ncpus=2:mem=100GB
 #PBS -l debug=true
 
 export model=evs
@@ -37,9 +37,7 @@ export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export MODELNAME=nam_firewxnest
-export modsys=nam
-export mod_ver=${nam_ver}
+export MODELNAME=firewxnest
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
@@ -54,9 +52,9 @@ export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 $HOMEevs/jobs/JEVS_CAM_PLOTS
 
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
-##          model and generate stat files.
+## Purpose: This job will generate the grid2obs plots for the NAM_FIREWXNEST
+##          and RRFS_FIREWXNEST models and generate plots tar files.
 #######################################################################
-#
+
 exit
 

@@ -24,6 +24,8 @@ echo "Linking CAM prep ..."
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_cam_radar_prep_vhr" "$cyc"
 cyc=$(seq 0 6 23)
+link_master_to_cyc "jevs_cam_rrfs_precip_prep_vhr" "$cyc"
+cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_cam_namnest_precip_prep_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_cam_hrrr_precip_prep_vhr" "$cyc"
@@ -37,6 +39,8 @@ cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_cam_hrrr_severe_prep_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_cam_namnest_severe_prep_vhr" "$cyc"
+cyc=$(seq 0 6 23)
+link_master_to_cyc "jevs_cam_rrfs_severe_prep_vhr" "$cyc"
 cyc=$(seq 0 12 23)
 link_master_to_cyc "jevs_cam_hireswarw_severe_prep_vhr" "$cyc"
 cyc=$(seq 0 12 23)
@@ -61,6 +65,8 @@ cyc=$(seq 0 23)
 link_master_to_cyc "jevs_cam_hrrr_radar_stats_vhr" "$cyc"
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_cam_namnest_radar_stats_vhr" "$cyc"
+cyc=$(seq 0 23)
+link_master_to_cyc "jevs_cam_rrfs_radar_stats_vhr" "$cyc"
 cyc=$(seq 19 22)
 link_master_to_cyc "jevs_cam_hireswarwmem2_precip_stats_vhr" "$cyc"
 cyc=$(seq 19 22)
@@ -71,6 +77,8 @@ cyc=$(seq 19 22)
 link_master_to_cyc "jevs_cam_hrrr_precip_stats_vhr" "$cyc"
 cyc=$(seq 19 22)
 link_master_to_cyc "jevs_cam_namnest_precip_stats_vhr" "$cyc"
+cyc=$(seq 19 22)
+link_master_to_cyc "jevs_cam_rrfs_precip_stats_vhr" "$cyc"
 cyc=$(seq 2 3)
 link_master_to_cyc "jevs_cam_hireswarw_grid2obs_stats_vhr" "$cyc"
 cyc=$(seq 6 3 23)
@@ -91,6 +99,12 @@ cyc=$(seq 2 3)
 link_master_to_cyc "jevs_cam_namnest_grid2obs_stats_vhr" "$cyc"
 cyc=$(seq 6 3 23)
 link_master_to_cyc "jevs_cam_namnest_grid2obs_stats_vhr" "$cyc"
+cyc=$(seq 2 3)
+link_master_to_cyc "jevs_cam_rrfs_grid2obs_stats_vhr" "$cyc"
+cyc=$(seq 6 3 23)
+link_master_to_cyc "jevs_cam_rrfs_grid2obs_stats_vhr" "$cyc"
+cyc=$(seq 0 6 23)
+link_master_to_cyc "jevs_cam_rrfs_snowfall_stats_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_cam_namnest_snowfall_stats_vhr" "$cyc"
 cyc=$(seq 0 6 23)

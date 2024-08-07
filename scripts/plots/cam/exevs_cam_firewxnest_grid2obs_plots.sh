@@ -2,7 +2,7 @@
 
 set -x
 
-export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
+export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_firewxnest.prod
 source $config
 
 export machine=${machine:-"WCOSS2"}
@@ -16,8 +16,10 @@ mkdir -p $OUTDIR
 export PRUNEDIR=$DATA/prune
 mkdir -p $PRUNEDIR
 
-model1=`echo $MODELNAME | tr a-z A-Z`
+model1=`echo nam_$MODELNAME | tr a-z A-Z`
+model2=`echo rrfs_$MODELNAME | tr a-z A-Z`
 export model1
+export model2
 
 STARTDATE=${VDATE}00
 ENDDATE=${PDYm31}00
@@ -31,17 +33,29 @@ while [ $DATE -ge $ENDDATE ]; do
 	MONTH=`cut -c 1-6 curdate`
 	HOUR=`cut -c 9-10 curdate`
 
-	if [ -e ${EVSINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
+	if [ -e ${EVSINnam}.$DAY/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
 	then
-	 cpreq ${EVSINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	 cpreq ${EVSINnam}.$DAY/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 
-	 sed "s/$model1/$MODELNAME/g" $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
+	 sed "s/$model1/nam_$MODELNAME/g" $STATDIR/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
 	 sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
 	 sed "s/TDO/DPT/g" $STATDIR/temp2.stat > $STATDIR/temp3.stat
 	 sed "s/MXGS/GUST/g" $STATDIR/temp3.stat > $STATDIR/temp4.stat
-	 mv $STATDIR/temp4.stat $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
+	 mv $STATDIR/temp4.stat $STATDIR/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
 	 rm -f $STATDIR/temp*stat
 	fi
+
+    if [ -e ${EVSINrrfs}.$DAY/evs.stats.rrfs_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
+    then
+     cpreq ${EVSINrrfs}.$DAY/evs.stats.rrfs_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+     
+     sed "s/$model2/rrfs_${MODELNAME}/g" $STATDIR/evs.stats.rrfs_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat 
+     sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
+     sed "s/TDO/DPT/g" $STATDIR/temp2.stat > $STATDIR/temp3.stat
+     sed "s/MXGS/GUST/g" $STATDIR/temp3.stat > $STATDIR/temp4.stat
+     mv $STATDIR/temp4.stat $STATDIR/evs.stats.rrfs_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
+     rm -f $STATDIR/temp*stat
+    fi
 
 	if [ -e $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
 	 cpreq $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
@@ -49,6 +63,10 @@ while [ $DATE -ge $ENDDATE ]; do
 
 	if [ -e $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
 	 cpreq $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	fi
+
+	if [ -e $COMIN/stats/$COMPONENT/rrfs.$DAY/evs.stats.rrfs.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
+	 cpreq $COMIN/stats/$COMPONENT/rrfs.$DAY/evs.stats.rrfs.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 	fi
 
 	DATE=`$NDATE -24 $DATE`
@@ -68,11 +86,11 @@ do
 	export datetyp=VALID
 	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
 	then
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
+	    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config
         export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
+    else
+	    echo "RESTART - plot exists; copying over to plot directory"
+	    cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
 	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
@@ -86,13 +104,13 @@ do
 
 	export plottyp=valid_hour
 	export datetyp=INIT
-        if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
+    if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
 	then	
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
+	    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config
         export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
+    else
+	    echo "RESTART - plot exists; copying over to plot directory"
+	    cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
 	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
@@ -114,11 +132,11 @@ do
                 export thresh=">=277.594, >=283.15, >=288.706, >=294.261"
 		if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png ]
 		then
-		$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config_thresh
-                export err=$?; err_chk
-          	else
-		echo "RESTART - plot exists; copying over to plot directory"
-		cp $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png $PLOTDIR
+		    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config_thresh
+            export err=$?; err_chk
+        else
+		    echo "RESTART - plot exists; copying over to plot directory"
+		    cp $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png $PLOTDIR
 		fi
 
 		if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
@@ -140,11 +158,11 @@ do
 		export thresh="<=15, <=20, <=25, <=30"
 		if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png ]
 		then
-		$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config_thresh
-                export err=$?; err_chk
-	        else
-		echo "RESTART - plot exists; copying over to plot directory"
-		cp $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png $PLOTDIR
+		    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config_thresh
+            export err=$?; err_chk
+	    else
+		    echo "RESTART - plot exists; copying over to plot directory"
+		    cp $COMOUTplots/$varb/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png $PLOTDIR
 		fi
 
 		if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
@@ -176,11 +194,11 @@ do
 	export datetyp=VALID
 	if [ ! -e $COMOUTplots/$varb//evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
 	then
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
+	    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config
         export err=$?; err_chk
-        else
+    else
         echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
+	    cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
 	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
@@ -196,11 +214,11 @@ do
 	export datetyp=INIT
 	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
 	then
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
+	    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config
         export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
+    else
+	    echo "RESTART - plot exists; copying over to plot directory"
+	    cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
 	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
@@ -227,11 +245,11 @@ do
 	export datetyp=VALID
 	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
 	then
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
+	    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config
         export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
+    else
+	    echo "RESTART - plot exists; copying over to plot directory"
+	    cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
 	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
@@ -247,11 +265,11 @@ do
 	export datetyp=INIT
 	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
 	then
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config
+	    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config
         export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
+    else
+	    echo "RESTART - plot exists; copying over to plot directory"
+	    cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
 	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
@@ -277,11 +295,11 @@ do
 	export datetyp=VALID
 	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png ]
 	then
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config_pbl
+	    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config_pbl
         export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
+    else
+	    echo "RESTART - plot exists; copying over to plot directory"
+	    cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png $PLOTDIR
 	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
@@ -297,11 +315,11 @@ do
 	export datetyp=INIT
 	if [ ! -e $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png ]
 	then
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_nam_firewxnest_plots_py_plotting.config_pbl
+	    $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/cam_firewxnest_plots_py_plotting.config_pbl
         export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
+    else
+	    echo "RESTART - plot exists; copying over to plot directory"
+	    cp $COMOUTplots/$varb/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png $PLOTDIR
 	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
