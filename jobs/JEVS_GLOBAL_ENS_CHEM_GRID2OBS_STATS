@@ -33,7 +33,7 @@ cd ${DATA}
 ####################################
 ## Determine Job Output Name on System
 #####################################
-export vhr=${vhr:-03}
+export vhr=${vhr:-00}
 export cycle=${cycle:-t${vhr}z}
 
 setpdy.sh 8
