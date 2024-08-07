@@ -12,7 +12,7 @@ set -x
 cd $PBS_O_WORKDIR
 
 export model=evs
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -56,7 +56,7 @@ export DATA_TYPE=aeronet
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 mkdir -p ${COMIN}
-export COMOUT=${COMIN}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 
 export DATAROOT=/lfs/h2/emc/ptmp/${USER}/${NET}/${evs_ver_2d}/${STEP}
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${DATA_TYPE}_${STEP}}
