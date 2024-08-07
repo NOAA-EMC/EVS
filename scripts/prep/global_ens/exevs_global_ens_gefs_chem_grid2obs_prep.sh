@@ -113,7 +113,7 @@ for OBTTYPE in ${obstype}; do
             ((ic++))
         done
     else
-        echo "DEBUG :: OBTTYPE=${OBTTYPE} is not defined for ${COMPONENT}_${RUN} ${STEP} operationa"
+        echo "DEBUG :: OBTTYPE=${OBTTYPE} is not defined for ${COMPONENT}_${RUN} ${STEP} step"
     fi
 
 done
