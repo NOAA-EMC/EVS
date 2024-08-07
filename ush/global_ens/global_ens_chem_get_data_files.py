@@ -69,19 +69,12 @@ if STEP == 'plots' :
         while date_dt <= end_date_dt:
             if date_type == 'VALID':
                 if evs_run_mode == 'production':
-                    ## model_evs_data_dir = /lfs/h1/ops/prod/com/evs/v1.0/stats/global_ens_chem/gfs
-                    ## evs.stats.gfs.atmos.grid2obs.v20240610.stat
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
                         'evs.stats.'+MODELNAME+'.'+RUN+'.'+VERIF_CASE+'_'
                         +obstype+"_"+obsvar+"."+'v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
                 else:
-                    ## model_evs_data_dir = ${COMIN}/stats/${COMPONENT}/gefs
-                    ## source_model_date_stat_file = os.path.join(
-                    ##     model_evs_data_dir, 'evs_data',
-                    ##     COMPONENT, RUN, VERIF_CASE, model,
-                    ##     model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
                         'evs.stats.'+MODELNAME+'.'+RUN+'.'+VERIF_CASE+'_'
