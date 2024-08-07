@@ -56,3 +56,8 @@ export MAILTO="alicia.bentley@noaa.gov,marcel.caron@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_STATS
+
+######################################################################
+# Purpose: This job generates grid2obs verification statistics
+#          for the HiResW ARW2
+######################################################################

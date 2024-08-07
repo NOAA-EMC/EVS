@@ -55,3 +55,8 @@ export vhr=${vhr:-${vhr}}
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_PLOTS
+
+######################################################################
+# Purpose: This job generates headline verification graphics
+#          for the CAM component (deterministic CAMs)
+######################################################################

@@ -54,3 +54,8 @@ export MAILTO="marcel.caron@noaa.gov,alicia.bentley@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_STATS
+
+######################################################################
+# Purpose: This job generates precip verification statistics
+#          for the RRFS
+######################################################################

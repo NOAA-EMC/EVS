@@ -55,3 +55,8 @@ export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_PLOTS
+
+######################################################################
+# Purpose: This job generates precip verification graphics
+#          for the CAM component (deterministic CAMs)
+######################################################################

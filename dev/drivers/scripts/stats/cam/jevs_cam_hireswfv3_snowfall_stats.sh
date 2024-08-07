@@ -55,3 +55,8 @@ export MAILTO="alicia.bentley@noaa.gov,marcel.caron@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_STATS
+
+######################################################################
+# Purpose: This job generates snowfall verification statistics
+#          for the HiResW FV3
+######################################################################
