@@ -12,9 +12,7 @@ set -x
 cd $PBS_O_WORKDIR
 
 export model=evs
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSGefsChem
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS
 
 source $HOMEevs/versions/run.ver
 
