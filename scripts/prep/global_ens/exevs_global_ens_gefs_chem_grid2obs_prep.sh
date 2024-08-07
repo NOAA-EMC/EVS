@@ -36,13 +36,8 @@ for OBTTYPE in ${obstype}; do
     export obstype=`echo ${OBTTYPE} | tr a-z A-Z`
     prep_config_file=${CONFIGevs}/ASCII2NC_obs${obstype}.conf
 
-    if [ "${DCOMIN}" == "${DCOMROOT}" ]; then
-        export RUNTIME_DCOM=${DCOMIN}
-    else 
-        export RUNTIME_DCOM=${DCOMIN}/${OBTTYPE}
-    fi
     if [ "${OBTTYPE}" == "aeronet" ]; then
-        checkfile=${RUNTIME_DCOM}/${VDATE}/validation_data/aq/${OBTTYPE}/${VDATE}.lev15
+        checkfile=${DCOMINaeronet}/${VDATE}/validation_data/aq/${OBTTYPE}/${VDATE}.lev15
         if [ -s ${checkfile} ]; then
             if [ -s ${prep_config_file} ]; then
                 run_metplus.py ${prep_config_file} ${config_common}
@@ -86,7 +81,7 @@ for OBTTYPE in ${obstype}; do
         let endvhr=23
         while [ ${ic} -le ${endvhr} ]; do
             vldhr=$(printf %2.2d ${ic})
-            checkfile=${RUNTIME_DCOM}/${VDATE}/${OBTTYPE}/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
+            checkfile=${DCOMINairnow}/${VDATE}/${OBTTYPE}/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
             if [ -s ${checkfile} ]; then
                 export VHOUR=${vldhr}
                 if [ -s ${prep_config_file} ]; then
