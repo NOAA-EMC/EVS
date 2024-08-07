@@ -71,12 +71,9 @@ export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 if [ -z "$MAILTO" ]; then
    echo "MAILTO variable is not defined. Exiting without continuing."
 else
-  ## adjust walltime for 00:30:00 ## only for PR testing remove for EMC/parallel and operational
-  ## for vhr in 00 03 06 09 12 15 18 21; do  ## only for PR testing remove for EMC/parallel and operational
     export vhr
     echo "vhr = ${vhr}"
     ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
-  ## done  ## only for PR testing remove for EMC/parallel and operational
 fi
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics using AirNOW PM2.5
