@@ -37,13 +37,13 @@ for OBTTYPE in ${obstype}; do
     prep_config_file=${CONFIGevs}/ASCII2NC_obs${obstype}.conf
 
     if [ "${OBTTYPE}" == "aeronet" ]; then
-        checkfile=${DCOMINaeronet}/${VDATE}/validation_data/aq/${OBTTYPE}/${VDATE}.lev15
+        checkfile=${DCOMINaeronet}/${INITDATE}/validation_data/aq/${OBTTYPE}/${INITDATE}.lev15
         if [ -s ${checkfile} ]; then
             if [ -s ${prep_config_file} ]; then
                 run_metplus.py ${prep_config_file} ${config_common}
                 export err=$?; err_chk
                 if [ ${SENDCOM} = "YES" ]; then
-                    cpfile=${finalprep}/${OBTTYPE}_All_${VDATE}_lev15.nc
+                    cpfile=${finalprep}/${OBTTYPE}_All_${INITDATE}_lev15.nc
                     if [ -e ${cpfile} ]; then
                         cp -v ${cpfile} ${COMOUTprep}
                     fi
@@ -53,12 +53,12 @@ for OBTTYPE in ${obstype}; do
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
-                echo "WARNING: No AEORNET Level 1.5 data was available for valid date ${VDATE}" >> mailmsg
+                echo "WARNING: No AEORNET Level 1.5 data was available for valid date ${INITDATE}" >> mailmsg
                 echo "Missing file is ${checkfile}" >> mailmsg
                 echo "==============" >> mailmsg
                 flag_send_message=YES
             fi
-            echo "WARNING: No AEORNET Level 1.5 data was available for valid date ${VDATE}"
+            echo "WARNING: No AEORNET Level 1.5 data was available for valid date ${INITDATE}"
             echo "WARNING: Missing file is ${checkfile}"
         fi
     elif [ "${OBTTYPE}" == "airnow" ]; then
@@ -81,14 +81,14 @@ for OBTTYPE in ${obstype}; do
         let endvhr=23
         while [ ${ic} -le ${endvhr} ]; do
             vldhr=$(printf %2.2d ${ic})
-            checkfile=${DCOMINairnow}/${VDATE}/${OBTTYPE}/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
+            checkfile=${DCOMINairnow}/${INITDATE}/${OBTTYPE}/${HOURLY_INPUT_TYPE}_${INITDATE}${vldhr}.dat
             if [ -s ${checkfile} ]; then
                 export VHOUR=${vldhr}
                 if [ -s ${prep_config_file} ]; then
                     run_metplus.py ${prep_config_file} ${config_common}
                     export err=$?; err_chk
                     if [ ${SENDCOM} = "YES" ]; then
-                        cpfile=${finalprep}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc 
+                        cpfile=${finalprep}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
                         if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
                     fi
                 else
@@ -96,13 +96,13 @@ for OBTTYPE in ${obstype}; do
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" >> mailmsg
+                    echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}" >> mailmsg
                     echo "Missing file is ${checkfile}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
         
-                echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
+                echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
                 echo "WARNING: Missing file is ${checkfile}"
             fi
             ((ic++))
@@ -120,7 +120,6 @@ done
 ##  Backup GEFS-aerosol reduced output for global_ens_chem_grid2obs
 ##    stats step due to insuccficent retention time (at least 6 days)
 ########################################################################
-NOW=${VDATE}
 match_aod_1=":AOTK:"
 match_aod_2="aerosol=Total Aerosol"
 match_aod_3="aerosol_size <2e-05"
@@ -131,7 +130,7 @@ match_pm25_3="aerosol_size <2.5e-06"
 declare -a cyc_opt=( 00 06 12 18 )
 let inc=3
 for mdl_cyc in "${cyc_opt[@]}"; do
-    com_gefs=${COMINgefs}/${MODELNAME}.${NOW}/${mdl_cyc}/${RUN}/pgrb2ap25
+    com_gefs=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/${RUN}/pgrb2ap25
     if [ -d ${com_gefs} ]; then
         prep_gefs=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
         mkdir -p ${prep_gefs}
