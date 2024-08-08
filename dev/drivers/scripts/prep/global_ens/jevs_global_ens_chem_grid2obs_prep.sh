@@ -40,6 +40,7 @@ export KEEPDATA=YES
 export SENDMAIL=YES
 export SENDDBN=NO
 
+export envir=prod
 export NET=${NET:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-global_ens}
