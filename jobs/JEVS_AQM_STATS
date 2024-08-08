@@ -61,7 +61,6 @@ echo $COMPATH
 export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export DCOMIN=${DCOMIN:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export EVSINaqm=${EVSINaqm:-$COMIN/prep/${COMPONENT}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
