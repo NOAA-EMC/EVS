@@ -50,6 +50,14 @@ if MODELNAME != 'gfs':
     print(f"ERROR: {VERIF_CASE} stats are only run for gfs, exit")
     sys.exit(1)
 
+# Set environment variables to not write to individual job scripts
+# as per request from NCO; these get set higher up in the job
+dont_write_env_var_list = [
+    'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
+    'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
+    'COMOUT', 'evs_run_mode', 'MET_ROOT', 'met_ver', 'METPLUS_PATH'
+]
+
 # Set file formats
 daily_stat_file_format = os.path.join(
     DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
@@ -293,7 +301,8 @@ if JOB_GROUP == 'summarize_stats':
                         job.write('set -x\n')
                         job.write('\n')
                         for name, value in job_env_dict.items():
-                            job.write(f'export {name}="{value}"\n')
+                            if name not in dont_write_env_var_list:
+                                job.write(f'export {name}="{value}"\n')
                         if stat_analysis_job == 'summary':
                             job.write('export summary_columns="'
                                       +f'{line_type_columns}"\n')
@@ -400,7 +409,8 @@ elif JOB_GROUP == 'write_reports':
         job.write('set -x\n')
         job.write('\n')
         for name, value in job_env_dict.items():
-            job.write(f'export {name}="{value}"\n')
+            if name not in dont_write_env_var_list:
+                job.write(f'export {name}="{value}"\n')
         job.write('\n')
         if have_report:
             job.write('if [ -f $output_report_file ]; then '
@@ -468,7 +478,8 @@ elif JOB_GROUP == 'write_reports':
                 job.write('set -x\n')
                 job.write('\n')
                 for name, value in job_env_dict.items():
-                    job.write(f'export {name}="{value}"\n')
+                    if name not in dont_write_env_var_list:
+                        job.write(f'export {name}="{value}"\n')
                 job.write('\n')
                 if have_report:
                     job.write('if [ -f $output_report_file ]; then '
@@ -517,7 +528,8 @@ elif JOB_GROUP == 'concatenate_reports':
         job.write('set -x\n')
         job.write('\n')
         for name, value in job_env_dict.items():
-            job.write(f'export {name}="{value}"\n')
+            if name not in dont_write_env_var_list:
+                job.write(f'export {name}="{value}"\n')
         job.write('\n')
         if have_report:
             job.write('if [ -f $output_report_file ]; then '
