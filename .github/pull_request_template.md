@@ -1,6 +1,8 @@
+<b>Note to developers: You must you this PR template!</b>
+
 ## Description of Changes
 
-Please include a summary of the changes and the related GitHub issue. Please also include relevant motivation and context.
+Please include a summary of the changes and the related GitHub issue(s). Please also include relevant motivation and context.
 
 ## Devleoper Questions and Checklist
 
@@ -9,14 +11,12 @@ Please include a summary of the changes and the related GitHub issue. Please als
 * Have you removed all references to your feature branch for `HOMEevs`?
 * If you have made changes in the `dev/drivers/scripts` or `dev/modulefiles`, have you made changes in the cooresponding `ecf/scripts` and `ecf/defs/evs-nco.def`? Are there any changes needed for the emc.vpppg parallel crontab?
 * Do all instances of J-Job environment variables, COMIN and COMOUT directories, and output follow what has been [defined](https://docs.google.com/document/d/1JWg_4q80aYmmAoD21GFjp9R9y5-3w7WGM3-0HJk0Pjs/edit#heading=h.7ysbr191vzu4) for EVS?
-* Does you job(s) have restart if the are over 15 minutes in run time?
-* Does the job contain the approriate file checking and not run METplus for any missing data?
+* Are jobs over 15 minutes in runtime have restart capability?
+* Do the jobs contain the approriate file checking and not run METplus for any missing data?
 * Are you using METplus wrappers structure and not calling MET executables directly?
-* Is this a high priorty PR? If so, why and is there a date it need to be merged by?
+* Is this a high priorty PR? If so, why and is there a date it needs to be merged by?
 * Do you have any planned upcoming annual leave/PTO?
 
 ## Testing Instructions
 
 Please include testing instructions for the PR assignee. Include all relevant input datasets needed to run the tests.
-
-<b>Note to developers: You must you this PR template!
