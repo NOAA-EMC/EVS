@@ -1,0 +1,88 @@
+#!/bin/bash
+
+set -x
+
+########################################
+# Preliminary data setup step
+########################################
+
+##################################################
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls 
+### SENDECF  - Flag Events on ecFLOW
+### SENDMAIL - Send email if file is missing
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
+
+###################################
+# SET SHELL PROCESSING VARIABLES
+###################################
+date
+export PS4='$SECONDS + '
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p ${DATA}
+cd ${DATA}
+
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
+
+setpdy.sh 8
+. ./PDY
+
+export envir=${envir:-prod}
+
+# Define COMIN/COMOUT variables:
+
+echo ${COMPATH}
+
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-global_ens}
+export RUN=${RUN:-chem}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-gefs}
+export modsys=${modsys:-gefs}
+export mod_ver=${mod_ver:-${gefs_ver}}
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export USHevs=${USHevs:-${HOMEevs}/ush/${COMPONENT}}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
+
+export INITDATE=${INITDATE:-${PDYm3}}
+ 
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
+export DCOMINaeronet=${DCOMINaeronet:-${DCOMROOT}}
+export COMINgefs=${COMINgefs:-$(compath.py -o ${modsys}/${mod_ver})}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
+export COMOUTprep=${COMOUTprep:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}}
+
+mkdir -p ${COMOUT} ${COMOUTprep}
+
+# alternative choice is an option different from aqobs
+export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+
+#######################################################################
+# Execute the script.
+#######################################################################
+
+${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}.sh
+
+msg="JOB ${job} HAS COMPLETED NORMALLY."
+postmsg "${msg}"
+
+if [ "${KEEPDATA}" != "YES" ]; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
+fi
+
