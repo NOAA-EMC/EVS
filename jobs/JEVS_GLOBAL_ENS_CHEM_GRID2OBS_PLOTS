@@ -1,0 +1,87 @@
+#!/bin/bash
+
+########################################
+# Preliminary data setup step
+########################################
+set -x
+
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p ${DATA}
+cd ${DATA}
+
+export envir=${envir:-prod}
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-global_ens}
+export RUN=${RUN:-chem}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export DATA_TYPE=${DATA_TYPE:-aeronet}
+export MODELNAME=${MODELNAME:-gefs}
+export machine=${machine:-WCOSS2}
+export evs_run_mode=${evs_run_mode:-production}
+export mod_ver=${mod_ver:-${gefs_ver}}
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export USHevs=${USHevs:-${HOMEevs}/ush}
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
+setpdy.sh
+. ./PDY
+export VDATE_END=${VDATE_END:-$PDYm4}
+export NDAYS=${NDAYS:-31}
+export VDATE_START=${VDATE_START:-$(finddate.sh ${VDATE_END} d-$((${NDAYS}-1)))}
+
+####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
+
+####################################
+# Define COMIN/COMOUT variables
+####################################
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END})}
+#######################################################################
+# Execute the script
+#######################################################################
+export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
+
+env
+
+${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+
+export err=$?; err_chk
+
+if [ "${KEEPDATA}" != "YES" ] ; then
+  cd ${DATAROOT}
+  rm -rf ${DATA}
+fi
+
+date
