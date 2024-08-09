@@ -10,9 +10,6 @@
 
 set -x
 
-#%include <head.h>
-#%include <envir-p1.h>
-
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source ${HOMEevs}/versions/run.ver
 
@@ -51,8 +48,5 @@ export KEEPDATA=YES
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_HURRICANE_STATS
 
-%include <tail.h>
-%manual
 
-%end
 
