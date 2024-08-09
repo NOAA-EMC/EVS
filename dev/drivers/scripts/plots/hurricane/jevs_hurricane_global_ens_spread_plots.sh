@@ -4,7 +4,6 @@
 #PBS -A ENSTRACK-DEV
 #PBS -q dev
 #PBS -l select=1:ncpus=2:mem=4GB
-##PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l walltime=01:00:00
 #PBS -l debug=true
 #PBS -V
@@ -41,9 +40,6 @@ export PDY=20231231
 
 #Define the directory for TC-stats file 
 export COMINstats=/lfs/h2/emc/vpppg/noscrub/$USER/evs/${evs_ver_2d}/stats/${COMPONENT}/${RUN}/${VERIF_CASE}
-
-#Define the directories of your NOAA/NWS logos
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 #Define TC-vital file, and the directory for Bdeck files
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/syndat_tcvitals.2023
