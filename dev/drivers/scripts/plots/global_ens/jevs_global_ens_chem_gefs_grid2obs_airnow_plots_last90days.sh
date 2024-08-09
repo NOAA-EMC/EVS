@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_chem_gefs_grid2obs_aeronet_plots_last90days
+#PBS -N jevs_global_ens_chem_gefs_grid2obs_airnow_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
