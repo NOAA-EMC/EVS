@@ -59,12 +59,6 @@ for period in ${periods} ; do
                   else
                       regionl=`echo $region | tr '[A-Z]' '[a-z]'`
                   fi
-                  echo "export VERIF_CASE=${VERIF_CASE} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
-                  echo "export RUN=${RUN} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
-                  echo "export COMPONENT=${COMPONENT}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
-                  echo "export USHevs=${USHevs} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
-                  echo "export FIXevs=${FIXevs}  " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
-                  echo "export DATA=${DATA} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export MODNAM=${modnam_list} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export PERIOD=${period} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export VERIF_CASE=${VERIF_CASE} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
