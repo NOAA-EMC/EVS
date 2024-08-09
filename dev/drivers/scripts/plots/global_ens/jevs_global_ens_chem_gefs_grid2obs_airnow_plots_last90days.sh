@@ -58,6 +58,6 @@ export COMOUT=/lfs/h2/emc/ptmp/${USER}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}
 ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PLOTS
 
 ######################################################################
-# Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-observations airnow for last 90 days
+# Purpose: This does the plotting work for the global ensemble chem
+#          grid-to-observations airnow for last 90 days
 ######################################################################
