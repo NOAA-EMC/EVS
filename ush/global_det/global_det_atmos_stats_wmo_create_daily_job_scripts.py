@@ -48,6 +48,14 @@ if MODELNAME != 'gfs':
     print(f"ERROR: {VERIF_CASE} stats are only run for gfs, exit")
     sys.exit(1)
 
+# Set environment variables to not write to individual job scripts
+# as per request from NCO; these get set higher up in the job
+dont_write_env_var_list = [
+    'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
+    'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
+    'COMOUT', 'evs_run_mode', 'MET_ROOT', 'met_ver', 'METPLUS_PATH'
+]
+
 # Set file formats
 anl_file_format = os.path.join(
     COMINgfs, MODELNAME+'.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'atmos',
@@ -214,7 +222,8 @@ if JOB_GROUP == 'reformat_data':
              job.write('set -x\n')
              job.write('\n')
              for name, value in job_env_dict.items():
-                 job.write(f'export {name}="{value}"\n')
+                 if name not in dont_write_env_var_list:
+                     job.write(f'export {name}="{value}"\n')
              job.write('\n')
              # If obs2nc file in COMOUT then copy it
              # if not create it
@@ -353,7 +362,8 @@ if JOB_GROUP == 'reformat_data':
                      job.write('set -x\n')
                      job.write('\n')
                      for name, value in job_env_dict.items():
-                         job.write(f'export {name}="{value}"\n')
+                         if name not in dont_write_env_var_list:
+                             job.write(f'export {name}="{value}"\n')
                      job.write('\n')
                      if have_fhr_regriddataplane:
                          job.write(
@@ -474,7 +484,8 @@ elif JOB_GROUP == 'assemble_data':
                  job.write('set -x\n')
                  job.write('\n')
                  for name, value in job_env_dict.items():
-                     job.write(f'export {name}="{value}"\n')
+                     if name not in dont_write_env_var_list:
+                         job.write(f'export {name}="{value}"\n')
                  job.write('\n')
                  if have_fhr_stat and have_fhr_elv_correction_stat:
                      job.write(
@@ -609,7 +620,8 @@ elif JOB_GROUP == 'assemble_data':
                      job.write('set -x\n')
                      job.write('\n')
                      for name, value in job_env_dict.items():
-                         job.write(f'export {name}="{value}"\n')
+                         if name not in dont_write_env_var_list:
+                             job.write(f'export {name}="{value}"\n')
                      job.write('\n')
                      # If pcpcombine file exists in COMOUT then copy it
                      # if not then run METplus
@@ -862,7 +874,8 @@ elif JOB_GROUP == 'generate_stats':
                      job.write('set -x\n')
                      job.write('\n')
                      for name, value in job_env_dict.items():
-                         job.write(f'export {name}="{value}"\n')
+                         if name not in dont_write_env_var_list:
+                             job.write(f'export {name}="{value}"\n')
                      job.write('\n')
                      # If small stat file exists in COMOUT then copy it
                      # if not then run METplus
@@ -948,7 +961,8 @@ elif JOB_GROUP == 'gather_stats':
         job.write('set -x\n')
         job.write('\n')
         for name, value in job_env_dict.items():
-            job.write(f'export {name}="{value}"\n')
+            if name not in dont_write_env_var_list:
+                job.write(f'export {name}="{value}"\n')
         job.write('\n')
         # If final stat file exists in COMOUT then copy it
         # if not then run METplus
