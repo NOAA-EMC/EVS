@@ -32,11 +32,11 @@ cd $DATA
 
 ####################################
 ### Define NET/RUN variables
-######################################
-#export NET=${NET:-evs}
-#export STEP=${STEP:-stats}
-#export COMPONENT=${COMPONENT:-analyses}
-#export RUN=${RUN:-atmos}
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-analyses}
+export RUN=${RUN:-atmos}
 
 ####################################
 ## Set EVS directories
