@@ -61,7 +61,7 @@ for obsvtype in ccpa mrms ; do
 	       
              #########################################################################################
              # Restart check: 
-	     #       check if this  sub-task has been completed in the precious run
+	     #       check if this  sub-task has been completed in the previous run
              #       if not, do this sub-task, and mark it is completed after it is done
              #       if yes, skip this task
              #########################################################################################

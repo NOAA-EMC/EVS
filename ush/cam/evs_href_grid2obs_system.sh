@@ -29,7 +29,7 @@ for dom in CONUS Alaska ; do
          >run_href_${domain}.${valid_at}_system.sh
 
         #########################################################################################
-	# Restart: check if this CONUS task has been completed in the precious run 
+	# Restart: check if this CONUS task has been completed in the previous run 
 	#          if not, do this task, and mark it is completed after it is done
 	#          otherwise, skip this task 
 	#########################################################################################
@@ -157,7 +157,7 @@ for dom in CONUS Alaska ; do
          >run_href_${domain}.${valid_at}_system.sh
 
        #########################################################################################
-       #Restart: check if this Alaska task has been completed in the precious tun
+       #Restart: check if this Alaska task has been completed in the previous tun
        if [ ! -e  $COMOUTrestart/system/run_href_${domain}.${valid_at}_system.completed ] ; then
        ##########################################################################################
          echo "export regrid=NONE" >> run_href_${domain}.${valid_at}_system.sh

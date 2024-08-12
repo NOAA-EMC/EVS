@@ -38,7 +38,7 @@ for dom in $domains ; do
         >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
       #########################################################################################
-      # Restart: check if this CONUS task has been completed in the precious run
+      # Restart: check if this CONUS task has been completed in the previous run
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task 
       #########################################################################################
@@ -155,7 +155,7 @@ for dom in $domains ; do
          >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
       #########################################################################################
-      # Restart: check if this Alaska task has been completed in the precious run
+      # Restart: check if this Alaska task has been completed in the previous run
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task
       #########################################################################################
@@ -252,7 +252,7 @@ for dom in $domains ; do
          >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
       #########################################################################################
-      # Restart: check if this Hawaii task has been completed in the precious run
+      # Restart: check if this Hawaii task has been completed in the previous run
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task
       #########################################################################################
@@ -344,7 +344,7 @@ for dom in $domains ; do
          >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
       #########################################################################################
-      # Restart: check if this Puerto Rico task has been completed in the precious run
+      # Restart: check if this Puerto Rico task has been completed in the previous run
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task
       #########################################################################################

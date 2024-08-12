@@ -110,7 +110,7 @@ for prod in mean ; do
 
      #######################################################################
      #Restart check:
-     # check if this task has been completed in the precious run
+     # check if this task has been completed in the previous run
      # if not, run this task, and then mark its completion,
      # otherwise, skip this task
      ########################################################################

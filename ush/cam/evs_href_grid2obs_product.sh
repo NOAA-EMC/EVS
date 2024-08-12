@@ -130,7 +130,7 @@ for prod in mean prob ; do
      >run_href_${model}.${dom}.${valid_run}_product.sh
      #######################################################################
      #Restart check: 
-     # check if this Alaska task has been completed in the precious run
+     # check if this Alaska task has been completed in the previous run
      # if not, run this task, and then mark its completion,
      # otherwise, skip this task
      ########################################################################
