@@ -93,4 +93,3 @@ fi
 #        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_tp24.svs
 #    fi
 #fi
-fi
