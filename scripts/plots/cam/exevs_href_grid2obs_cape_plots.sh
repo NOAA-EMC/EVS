@@ -1,7 +1,9 @@
 #!/bin/ksh
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href cape plotting python script
-# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+# Last updated: 
+#               07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP
+#               05/30/2023, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
 set -x 
 
@@ -17,7 +19,10 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
-
+restart=$COMOUT/restart/$past_days/href_cape_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi  
 export eval_period='TEST'
 
 export interp_pnts=''
@@ -55,6 +60,10 @@ done
 export fcst_init_hour="0,6,12,18"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+#For restart:
+if [ ! -d $plot_dir ] ; then
+  mkdir -p $plot_dir
+fi
 
 export fcst_init_hour="0,6,12,18"
 init_time='init00z_06z_12z_18z'
@@ -103,8 +112,10 @@ for valid_time in 00 12 ; do
 	    
        if [ $VAR = CAPEsfc ]  ; then
           FCST_LEVEL_values="L0"
+          variable="cape"
        elif [ $VAR = MLCAPE ] ; then
 	  FCST_LEVEL_values="ML"
+	  variable="mlcape"
        fi 	  
 
        if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then 
@@ -116,20 +127,28 @@ for valid_time in 00 12 ; do
          if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then
 	     if [ $dom = dom1 ] ; then
 	         VX_MASK_LIST="CONUS, CONUS_East, CONUS_West"
+	         subregions="conus conus_east conus_west"
 	     elif [ $dom = dom2 ] ; then
 	         VX_MASK_LIST="CONUS_South, CONUS_Central, Alaska"
+		 subregions="conus_south conus_central alaska"
 	     elif [ $dom = dom3 ] ; then
 	         VX_MASK_LIST="Appalachia, CPlains, DeepSouth"
+		 subregions="appalachia cplains deepsouth"
 	     elif [ $dom = dom4 ] ; then
 	         VX_MASK_LIST="GreatBasin, GreatLakes, Mezquital"
+		 subregions="greatbasin greatlakes mezquital"
 	     elif [ $dom = dom5 ] ; then
 	         VX_MASK_LIST="MidAtlantic, NorthAtlantic, NPlains"
+		 subregions="midatlantic northatlantic nplains"
 	     elif [ $dom = dom6 ] ; then
 	         VX_MASK_LIST="NRockies, PacificNW, PacificSW"
+		 subregions="nrockies pacificnw pacificsw"
 	     elif [ $dom = dom7 ] ; then
 	         VX_MASK_LIST="SRockies, Prairie, Southeast"
+		 subregions="srockies prairie southeast"
 	     elif [ $dom = dom8 ] ; then
 	         VX_MASK_LIST="Southwest, SPlains"
+		 subregions="southwest splains"
              fi
         fi
 
@@ -144,6 +163,12 @@ for valid_time in 00 12 ; do
 	 #*********************
          > run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh  
 
+      #***********************************************************************************************************************************
+      #  Check if this sub-job has been completed in the previous run for restart
+      if [ ! -e $restart/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed ] ; then
+      #***********************************************************************************************************************************
+
+        echo "#!/bin/ksh" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
         verif_type=conus_sfc
 
 	if [ $score_type = lead_average ] ; then
@@ -196,9 +221,23 @@ for valid_time in 00 12 ; do
 
          echo "${DATA}/run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
+	#Save for restart
+	 echo "for domain in $subregions ; do " >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_*.png ] ; then " >>run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+     	 echo "     cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_*.png $restart" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "     >$restart/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo " fi" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+         echo "done" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+
          chmod +x  run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh 
          echo "${DATA}/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_all_poe.sh
 
+       else
+         #Restart from png files of previous runs
+	 for domain in $subregions ; do
+           cp $restart/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_*.png ${plot_dir}/.
+	 done
+       fi
 
      done #end of FCST_LEVEL_value
 
@@ -293,7 +332,9 @@ for score_type in lead_average threshold_average; do
  done   #valid 
 done    #score_type
 
-tar -cvf evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+ tar -cvf evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar *.png
+fi
 
 # Cat the plotting log files
 log_dir="$DATA/logs"

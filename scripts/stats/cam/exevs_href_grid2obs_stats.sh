@@ -2,7 +2,9 @@
 #####################################################################
 # Purpose:   Setup some paths and run href grid2obs stat ush scripts
 # 
-# Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+# Last updated 
+#              06/25/2024: add restart: by  Binbin Zhou, Lynker@EMC/NCEP
+#              10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 #####################################################################
 set -x
 
@@ -45,6 +47,15 @@ export vday=$VDATE
 #  domain = conus or alaska or all
 export domain="all"
 #export domain="HI"
+
+export COMOUTrestart=$COMOUTsmall/restart
+[[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
+[[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
+[[ ! -d $COMOUTrestart/prepare/prepbufr.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/prepbufr.${vday}
+[[ ! -d $COMOUTrestart/system ]]  &&  mkdir -p $COMOUTrestart/system
+[[ ! -d $COMOUTrestart/profile ]] &&  mkdir -p $COMOUTrestart/profile
+[[ ! -d $COMOUTrestart/product ]] &&  mkdir -p $COMOUTrestart/product
+
 
 #***************************************
 # Prepare the prepbufr data
@@ -107,70 +118,21 @@ chmod 775 run_href_all_grid2obs_poe
 #*************************************************
 # Run the POE script to generate small stat files
 #*************************************************
-if [ $run_mpi = yes ] ; then
+if [ -s run_href_all_grid2obs_poe ] ; then
+ if [ $run_mpi = yes ] ; then
     mpiexec -np 72 -ppn 72 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
-else
+ else
     ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
+ fi
 fi
-
 
 #******************************************************************
 # Run gather job to combine the small stats to form a big stat file
 #******************************************************************
-if [ $gather = yes ] && [ -s run_href_all_grid2obs_poe ] ; then
+if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then
   $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
   export err=$?; err_chk
 fi
 
-# Cat the METplus log files
-for log_sub_dir in gather pb2nc; do
-    log_dir1=$DATA/$log_sub_dir/logs
-    if [[ -d $log_dir1 ]]; then
-        log_file_count=$(find $log_dir1 -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            for log_file1 in $log_dir/*; do
-                echo "Start: $log_file"
-                cat $log_file
-                echo "End: $log_file"
-            done
-        fi
-    fi
-done
-
-# Cat the METplus log files
-log_dirs1="$DATA/*/logs"
-log_dirs2="$DATA/grid2obs/*/logs"
-for log_dir in $log_dirs1; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-for log_dir in $log_dirs2; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-
-export err=$?; err_chk

@@ -29,6 +29,14 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
+####################################
+#### Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-analyses}
+export RUN=${RUN:-atmos}
+
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
@@ -43,14 +51,6 @@ export USHevs=${USHevs:-$HOMEevs/ush}
  . ./PDY
 
 export VDATE=${VDATE:-$PDYm2}
-
-####################################
-### Define NET/RUN variables
-######################################
-export NET=${NET:-evs}
-export STEP=${STEP:-plots}
-export COMPONENT=${COMPONENT:-analyses}
-export RUN=${RUN:-atmos}
 
 # Define COMIN/COMOUT variables:
 

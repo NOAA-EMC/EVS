@@ -62,8 +62,8 @@ export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 $HOMEevs/jobs/JEVS_ANALYSES_PLOTS
 
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
-##          model and generate stat files.
+## Purpose: This job will generate the grid2obs plots for the 
+##          analyses.
 #######################################################################
 #
 exit
