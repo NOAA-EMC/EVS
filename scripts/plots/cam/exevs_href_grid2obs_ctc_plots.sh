@@ -1,7 +1,9 @@
 #!/bin/ksh
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href ctc plotting python script
-# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+# Last updated: 
+#               07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP
+#               05/30/2024, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
 set -x 
 
@@ -17,6 +19,10 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
+restart=$COMOUT/restart/$past_days/href_ctc_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi
 
 export eval_period='TEST'
 
@@ -56,10 +62,12 @@ done
 export fcst_init_hour="0,6,12,18"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+#For restart:
+if [ ! -d $plot_dir ] ; then
+  mkdir -p $plot_dir
+fi
 
 export fcst_init_hour="0,6,12,18"
-#export fcst_valid_hour="0,3,6,9,12,15,18,21"
-#valid_time='valid00z_03z_06z_09z_12z_15z_18z_21z'
 init_time='init00z_06z_12z_18z'
 
 verif_case=grid2obs
@@ -81,13 +89,11 @@ for stats in $stats_list ; do
  if [ "$fcst_valid_hour" -eq "03" ] || [ "$fcst_valid_hour" -eq "09" ] || [ "$fcst_valid_hour" -eq "15" ] || [ "$fcst_valid_hour" -eq "21" ] ; then
     if [ $stats = csi_fbias ] ; then
        stat_list='csi, fbias'
-       #VARs='VISsfc HGTcldceil'
        VARs='VISsfc HGTcldceil'
        score_types='lead_average threshold_average'
     elif [ $stats = ratio_pod_csi ] ; then
        stat_list='sratio, pod, csi'
        VARs='VISsfc HGTcldceil'
-       #VARs='VISsfc HGTcldceil'
        score_types='performance_diagram'   
     else
      err_exit "$stats is not a valid stat for vhr $fcst_valid_hour"
@@ -95,7 +101,6 @@ for stats in $stats_list ; do
  elif [ "$fcst_valid_hour" -eq "06" ] || [ "$fcst_valid_hour" -eq "18" ] ; then
     if [ $stats = csi_fbias ] ; then
        stat_list='csi, fbias'
-       #VARs='VISsfc HGTcldceil'
        VARs='VISsfc HGTcldceil'
        score_types='lead_average threshold_average'
     elif [ $stats = ets_fbias ] ; then
@@ -105,7 +110,6 @@ for stats in $stats_list ; do
     elif [ $stats = ratio_pod_csi ] ; then
        stat_list='sratio, pod, csi'
        VARs='VISsfc HGTcldceil TCDC'
-       #VARs='VISsfc HGTcldceil TCDC'
        score_types='performance_diagram'   
     else
      err_exit "$stats is not a valid stat for vhr $fcst_valid_hour"
@@ -113,7 +117,6 @@ for stats in $stats_list ; do
  else
     if [ $stats = csi_fbias ] ; then
        stat_list='csi, fbias'
-       #VARs='VISsfc HGTcldceil CAPEsfc MLCAPE'
        VARs='VISsfc HGTcldceil'
        score_types='lead_average threshold_average'
     elif [ $stats = ets_fbias ] ; then
@@ -123,7 +126,6 @@ for stats in $stats_list ; do
     elif [ $stats = ratio_pod_csi ] ; then
        stat_list='sratio, pod, csi'
        VARs='VISsfc HGTcldceil CAPEsfc TCDC MLCAPE'
-       #VARs='VISsfc HGTcldceil TCDC'
        score_types='performance_diagram'   
     else
      err_exit "$stats is not a valid stat for vhr $fcst_valid_hour"
@@ -141,7 +143,19 @@ for stats in $stats_list ; do
     for VAR in $VARs ; do 
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
-	    
+	
+       if [ $VAR = CAPEsfc ] ; then 
+	  new_var=cape
+       elif [ $VAR = MLCAPE ] ; then
+	  new_var=mlcape
+       elif [ $VAR = VISsfc ] ; then
+	  new_var=vis
+       elif [ $VAR = HGTcldceil ] ; then
+          new_var=hgtcldceil
+       elif [ $VAR = TCDC ] ; then
+          new_var=tcdc
+       fi
+
        if [ $VAR = CAPEsfc ] || [ $VAR = VISsfc ] || [ $VAR = HGTcldceil ] || [ $VAR = TCDC ] ; then
           FCST_LEVEL_values="L0"
        elif [ $VAR = MLCAPE ] ; then
@@ -154,20 +168,28 @@ for stats in $stats_list ; do
 
 	 if [ $dom = dom1 ] ; then
             VX_MASK_LIST="CONUS, CONUS_East, CONUS_West"
+	    subregions="conus conus_east conus_west"
          elif [ $dom = dom2 ] ; then
 	    VX_MASK_LIST="CONUS_South, CONUS_Central, Alaska"
+	    subregions="conus_south conus_central alaska"
          elif [ $dom = dom3 ] ; then
 	    VX_MASK_LIST="Appalachia, CPlains, DeepSouth"
+	    subregions="appalachia cplains deepsouth"
          elif [ $dom = dom4 ] ; then
 	    VX_MASK_LIST="GreatBasin, GreatLakes, Mezquital"
+	    subregions="greatbasin greatlakes mezquital"
 	 elif [ $dom = dom5 ] ; then
 	    VX_MASK_LIST="MidAtlantic, NorthAtlantic, NPlains"
+	    subregions="midatlantic northatlantic nplains"
 	 elif [ $dom = dom6 ] ; then
             VX_MASK_LIST="NRockies, PacificNW, PacificSW" 
+	    subregions="nrockies pacificnw pacificsw"
 	 elif [ $dom = dom7 ] ; then
             VX_MASK_LIST="SRockies, Prairie, Southeast"
+	    subregions="srockies prairie southeast"
 	 elif [ $dom = dom8 ] ; then
             VX_MASK_LIST="Southwest, SPlains"
+	    subregions="southwest splains"
 	 fi
 
       for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
@@ -181,7 +203,14 @@ for stats in $stats_list ; do
 	 # *********************
          > run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh  
 
+       #***********************************************************************************************************************************
+       #  Check if this sub-job has been completed in the previous run for restart
+       if [ ! -e $restart/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed ] ; then
+       #***********************************************************************************************************************************
+
         verif_type=conus_sfc
+
+	echo "#!/bin/ksh" >>  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
 	if [ $score_type = lead_average ] ; then
            echo "export PLOT_TYPE=lead_average_valid" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
@@ -234,8 +263,23 @@ for stats in $stats_list ; do
 
          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
+	 #Save for restart
+         echo "for domain in $subregions ; do " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "    cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "    >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "  fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "done" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_all_poe.sh
+
+      else
+	 #Restart from png files of previous runs
+	 for domain in $subregions ; do
+	   cp $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ${plot_dir}/.
+	 done
+      fi
 
      done #end of FCST_LEVEL_value
 

@@ -2,7 +2,9 @@
 ###################################################################
 # Purpose:   Setup some paths and run href precip stat ush scripts
 #
-# Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+# Last updated 
+#             06/25/2024: Add restart, Binbin Zhou, Lynker@EMC/NCEP
+#             10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 ###################################################################
 
 set -x
@@ -21,6 +23,7 @@ export run_mpi=${run_mpi:-'yes'}
 export verif_precip=${verif_precip:-'yes'}
 export verif_snowfall=${verif_snowfall:-'yes'}
 if [ "$verif_precip" = "no" ] && [ "$verif_snowfall" = "no" ] ; then
+    export gather='no'
     export prepare='no'
 fi
 export prepare=${prepare:-'yes'}
@@ -39,6 +42,19 @@ export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 export vday=$VDATE
 
+#Generate directories For restart files
+export COMOUTrestart=$COMOUTsmall/restart
+[[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
+[[ ! -d $COMOUTrestart/prepare/ccpa.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
+[[ ! -d $COMOUTrestart/prepare/mrms.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/mrms.${vday}
+[[ ! -d $COMOUTrestart/system ]]  &&  mkdir -p $COMOUTrestart/system
+[[ ! -d $COMOUTrestart/prob ]] &&  mkdir -p $COMOUTrestart/prob
+[[ ! -d $COMOUTrestart/eas ]] &&  mkdir -p $COMOUTrestart/eas
+[[ ! -d $COMOUTrestart/mean ]] &&  mkdir -p $COMOUTrestart/mean
+[[ ! -d $COMOUTrestart/pmmn ]] &&  mkdir -p $COMOUTrestart/pmmn
+[[ ! -d $COMOUTrestart/lpmm ]] &&  mkdir -p $COMOUTrestart/lpmm
+[[ ! -d $COMOUTrestart/avrg ]] &&  mkdir -p $COMOUTrestart/avrg
+[[ ! -d $COMOUTrestart/snow ]] &&  mkdir -p $COMOUTrestart/snow
 
 #**********************************
 # Prepare CCPA data for validation
@@ -49,6 +65,7 @@ if [ $prepare = yes ] ; then
   export err=$?; err_chk
  done
 fi
+
 
 #***************************************
 # Build a POE script to collect sub-jobs
@@ -64,7 +81,7 @@ fi
 
 # Build sub-jobs for snowfall
 if [ $verif_snowfall = yes ] ; then
- source $USHevs/cam/evs_href_snowfall.sh
+ $USHevs/cam/evs_href_snowfall.sh
  export err=$?; err_chk
  cat ${DATA}/run_all_href_snowfall_poe.sh >> run_all_precip_poe.sh
 fi
@@ -89,46 +106,8 @@ fi
 #******************************************************************
 # Run gather job to combine the small stats to form a big stat file
 #******************************************************************
-if [ "$verif_precip" = "no" ] && [ "$verif_snowfall" = "no" ] ; then
-    export gather='no'
-fi
-if [ $gather = yes ] ; then
+if [ $gather = yes ] && [ -s $COMOUTsmall/*/*.stat ] ; then
   $USHevs/cam/evs_href_gather.sh precip
   export err=$?; err_chk
 fi
 
-# Cat the METplus log files
-log_dirs1="$DATA/*/logs"
-log_dirs2="$DATA/precip/*/logs"
-for log_dir in $log_dirs1; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-for log_dir in $log_dirs2; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-
-export err=$?; err_chk
