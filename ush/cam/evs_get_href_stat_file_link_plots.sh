@@ -60,6 +60,14 @@ for MODEL in $MODEL_LIST ; do
 	mv risk ${MODEL}_${day}.stat 
       fi   	  
     fi
+
+  elif [ $VERIF_CASE = profile ] ; then
+    #Delete thos very few records in some levels
+    if [ -s $stat_file ] ; then
+      sed -e "s!P975!X000!g"  -e "s!P950!X000!g" -e "s!P900!X000!g" -e "s!P875!X000!g" -e "s!P825!X000!g" -e "s!P800!X000!g" -e "s!P750!X000!g" -e "s!P650!X000!g" -e "s!P600!X000!g" -e "s!P550!X000!g" -e "s!==0.10000   <273.15!==273.15  <273.15!g"  $stat_file > prof
+       mv prof ${MODEL}_${day}.stat 
+    fi
+
   else
     if [ -s $stat_file ] ; then
       ln -sf $stat_file ${MODEL}_${day}.stat
