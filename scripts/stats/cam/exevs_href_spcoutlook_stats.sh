@@ -2,7 +2,9 @@
 ##############################################################
 # Purpose:   Setup some paths and run href spcoutlook job
 # 
-# Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+# Last updated 
+#       05/04/2024: add restart, Binbin Zhou, Lynker@EMC/NCEP
+#       10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 ##############################################################
 set -x
 
@@ -52,6 +54,14 @@ export SPCoutlookMask=$EVSINspcotlk/$MODELNAME/spc.$VDATE
 export domain="all"
 #export domain="HI"
 
+export COMOUTrestart=$COMOUTsmall/restart
+[[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
+[[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
+[[ ! -d $COMOUTrestart/prepare/prepbufr.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/prepbufr.${vday}
+[[ ! -d $COMOUTrestart/spcoutlook ]] &&  mkdir -p $COMOUTrestart/spcoutlook
+
+
+
 #*********************************
 # Prepare prepbufr data files
 # ********************************
@@ -77,55 +87,21 @@ chmod 775 run_href_all_grid2obs_poe
 #****************************************
 # Run POE script to get small stat files
 # ***************************************
-if [ $run_mpi = yes ] ; then
-    mpiexec -np 4 -ppn 4 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
+if [ -s run_href_all_grid2obs_poe ] ; then
+ if [ $run_mpi = yes ] ; then
+    mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
-else
+ else
     ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
-
+ fi
 fi
 
 #*******************************************************************
 # Run gather job to combine small stat files to form a big stat file
 # ******************************************************************
-if [ $gather = yes ] && [ -s ${DATA}/run_href_all_grid2obs_poe ] ; then
+if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then
   $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
   export err=$?; err_chk
 fi
 
-# Cat the METplus log files
-log_dirs1="$DATA/*/logs"
-log_dirs2="$DATA/grid2obs/*/logs"
-for log_dir in $log_dirs1; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-for log_dir in $log_dirs2; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-
-export err=$?; err_chk

@@ -3,7 +3,9 @@
 #  Purpose: Generate href precip poe and sub-jobs files
 #           including 4 mean (mean, pmmn, lpmm and average), probability (prob, eas)
 #           and system (ecnt line type)
-#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update: 
+#      04/29/2024, add restart, Binbin Zhou Lynker@EMC/NCEP
+#      10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
 #***********************************************************************************
 set -x 
 
@@ -56,6 +58,16 @@ for obsvtype in ccpa mrms ; do
             for vhr in $vhrs; do
                >run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                
+	       
+             #########################################################################################
+             # Restart check: 
+	     #       check if this  sub-task has been completed in the previous run
+             #       if not, do this sub-task, and mark it is completed after it is done
+             #       if yes, skip this task
+             #########################################################################################
+             if [ ! -e  $COMOUTrestart/${prod}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed ] ; then
+
+
                ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
                if [ "$ihr" -eq "00" ] || [ "$ihr" -eq "12" ] ; then
                   if [ "$fhr" -ge "45" ] ; then 
@@ -361,22 +373,22 @@ for obsvtype in ccpa mrms ; do
                echo  "export verif_grid='' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                if [ $prod = prob ] || [ $prod = eas ] ; then
  
- 	              if [ $obsvtype = ccpa ] ; then
+ 	          if [ $obsvtype = ccpa ] ; then
                      echo  "export verif_poly='${maskpath}/Bukovsky_G227_CONUS.nc, ${maskpath}/Bukovsky_G227_CONUS_East.nc, ${maskpath}/Bukovsky_G227_CONUS_West.nc, ${maskpath}/Bukovsky_G227_CONUS_South.nc, ${maskpath}/Bukovsky_G227_CONUS_Central.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFprob_obsCCPA_G227.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
  	                 echo  "export verif_poly='${maskpath}/Alaska_HREF.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFprob_obsMRMS_G255.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	              fi
+ 	          fi
  
                elif [ $prod = system ] ; then
- 	              if [ $obsvtype = ccpa ] ; then
+ 	          if [ $obsvtype = ccpa ] ; then
                      echo  "export verif_poly='${maskpath}/Bukovsky_G227_CONUS.nc, ${maskpath}/Bukovsky_G227_CONUS_East.nc, ${maskpath}/Bukovsky_G227_CONUS_West.nc, ${maskpath}/Bukovsky_G227_CONUS_South.nc, ${maskpath}/Bukovsky_G227_CONUS_Central.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/EnsembleStat_fcstHREF_obsCCPA_G227.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
  	                 echo  "export verif_poly='${maskpath}/Alaska_HREF.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/EnsembleStat_fcstHREF_obsMRMS_G255.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	              fi
+ 	          fi
  
                else
                   if [ $obsvtype = ccpa ] ; then
@@ -387,8 +399,8 @@ for obsvtype in ccpa mrms ; do
                   else
                      echo  "export verif_poly='${maskpath}/Alaska_G216.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsMRMS_G216.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	                 echo  "export verif_poly='${maskpath}/Alaska_G091.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	                 echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsMRMS_G91.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+ 	             echo  "export verif_poly='${maskpath}/Alaska_G091.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+ 	             echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsMRMS_G91.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   fi
 
                fi
@@ -397,8 +409,14 @@ for obsvtype in ccpa mrms ; do
                else    
                   echo "for FILEn in \$output_base/stat/${MODEL}/grid_stat_${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/${MODEL}; fi; done" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                fi
+
+	       #Mark the completion of this sub-task for restart:
+               echo "[[ \$? = 0 ]] && >$COMOUTrestart/${prod}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
+
                chmod +x run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                echo "${DATA}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh" >> run_all_href_precip_poe.sh
+              	      
+	     fi #end if check restart
 
             done #end of vhr
             
