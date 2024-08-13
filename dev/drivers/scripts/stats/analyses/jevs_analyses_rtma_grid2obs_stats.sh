@@ -7,7 +7,6 @@
 #PBS -l walltime=00:30:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
-#PBS -V
  
 set -x
 
@@ -64,8 +63,8 @@ export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 $HOMEevs/jobs/JEVS_ANALYSES_STATS
 
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
-##          model and generate stat files.
+## Purpose: This job will generate the grid2obs statistics for the RTMA
+##          analyses and generate stat files.
 #######################################################################
 #
 exit
