@@ -3,80 +3,140 @@
 #   By Binbin Zhou, IMSG@EMC/NCEP
 #   Feb 2, 2022
 #
+#   August 14 2024     Ho-Chun Huang    Merged with JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
+#
 set -x
+##################################################
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls 
+### SENDECF  - Flag Events on ecFLOW
+### SENDMAIL - Send email if file is missing
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
+
 #######################################################
+# SET SHELL PROCESSING VARIABLES
 #######################################################
+date
+export PS4='$SECONDS + '
 
 export vhr=${vhr:-00}
 export cycle=${cycle:-t${vhr}z}
 
+##########################################################
+# obtain unique LSF id (jobid) and make temp directories
+##########################################################
 export pid=$$
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
+export envir=${envir:-prod}
+
+# Define COMIN/COMOUT variables:
+
+echo ${COMPATH}
+
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-global_ens}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-gefs}
+export modsys=${modsys:-gefs}
+export mod_ver=${mod_ver:-${gefs_ver}}
 
 # Run setpdy and initialize PDY variables
-setpdy.sh
-. $DATA/PDY
-
-if [ $RUN = atmos ] || [ $RUN = wmo ] || [ $RUN = headline ] ; then
-  export VDATE=${VDATE:-$PDYm2}
+if [ "${RUN}" == "chem" ]; then
+    setpdy.sh 8
+    . ./PDY
+else
+    setpdy.sh 
+    . $DATA/PDY 
 fi
-
-
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
-export SENDMAIL=${SENDMAIL:-NO}
-
-export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export EVSIN=${EVSIN:-$COMIN/prep/$COMPONENT/$RUN}
-export EVSINwmo=${EVSINwmo:-$COMIN/prep/$COMPONENT/atmos}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver)}/$STEP/$COMPONENT
-mkdir -p $COMOUT
-
-export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
-export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
-
-mkdir -p $COMOUTsmall $COMOUTfinal
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=$HOMEevs/exec
-export PARMevs=$HOMEevs/parm
-export USHevs=$HOMEevs/ush
-export SCRIPTerf=$HOMEevs/scripts
-export FIXevs=${FIXevs:-$HOMEevs/fix}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
-
-####################################
-# Determine Job Output Name on System
-####################################
-export outid="LL$job"
-export jobid="${outid}.o${pid}"
-
-
-if [ $RUN = headline ] ; then
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
-elif [ $RUN = wmo ] ; then
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
-elif [ $RUN = atmos ] ; then
-   if [ $VERIF_CASE = grid2grid ] ; then
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
-   elif [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = cnv ] ; then
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_grid2obs_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
-   else
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_grid2grid_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
-   fi 
+if [ "${RUN}" == "chem" ]; then
+    export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+    export USHevs=${USHevs:-${HOMEevs}/ush/${COMPONENT}}
 else
-      echo "Wrong RUN: $RUN"
-      exit
+    export USHevs=$HOMEevs/ush
+    export SCRIPTerf=$HOMEevs/scripts
 fi
 
-if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATAROOT
-  rm -rf $DATA
+if [ $RUN = atmos ] || [ $RUN = wmo ] || [ $RUN = headline ] ; then
+    export VDATE=${VDATE:-$PDYm2}
+elif [ "${RUN}" == "chem" ]; then
+    export VDATE=${VDATE:-${PDYm3}}
+else
+    export VDATE=${VDATE:-$PDYm2}
+fi
+
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+if [ "${RUN}" == "chem" ]; then
+    export DCOMIN=${DCOMIN:-${DCOMROOT}}
+    export EVSINgefs=${EVSINgefs:-${COMIN}/prep/${COMPONENT}}
+    export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
+    export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
+    export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}}
+    
+    mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
+    
+    export DATA_TYPE=${DATA_TYPE:-aeronet}
+     
+    # alternative choice is an option different from aqobs
+    export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+else
+    export EVSIN=${EVSIN:-$COMIN/prep/$COMPONENT/$RUN}
+    export EVSINwmo=${EVSINwmo:-$COMIN/prep/$COMPONENT/atmos}
+    export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver)}/$STEP/$COMPONENT
+    mkdir -p $COMOUT
+    
+    export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
+    export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
+    
+    mkdir -p $COMOUTsmall $COMOUTfinal
+    
+    ####################################
+    # Determine Job Output Name on System
+    ####################################
+    export outid="LL$job"
+    export jobid="${outid}.o${pid}"
+fi
+
+if [ $RUN = headline ] ; then
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
+elif [ $RUN = wmo ] ; then
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
+elif [ $RUN = atmos ] ; then
+    if [ $VERIF_CASE = grid2grid ] ; then
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
+    elif [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = cnv ] ; then
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_grid2obs_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
+    else
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_grid2grid_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
+    fi 
+elif [ "${RUN}" == "chem" ]; then
+    ${SCRIPTSevs}/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+    
+    msg="JOB ${job} HAS COMPLETED NORMALLY."
+    postmsg "${msg}"
+else
+    echo "Wrong RUN: $RUN"
+    exit
+fi
+
+if [ "${KEEPDATA}" != "YES" ]; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
 fi
 
 date
