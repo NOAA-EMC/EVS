@@ -37,7 +37,13 @@ for dom in $domains ; do
 	#****************************
         >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-       
+      #########################################################################################
+      # Restart: check if this CONUS task has been completed in the previous run
+      #          if not, do this task, and mark it is completed after it is done
+      #          otherwise, skip this task 
+      #########################################################################################
+      if [ ! -e  $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed ] ; then      
+ 
        echo "export regrid=NONE" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
        echo "export obsv=prepbufr" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
        echo "export domain=CONUS" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
@@ -97,16 +103,42 @@ for dom in $domains ; do
                                    ${maskpath}/Bukovsky_G227_SPlains.nc,
                                    ${maskpath}/Bukovsky_G227_SRockies.nc'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh 
-
-	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh 
-
-	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        ################################################################################################################
+        # Adding following "if blocks"  for restart capability for CONUS:
+        #  1. check if *.completed files for 3  METplus processes GenEnsProd, EnsembleStat, PointStat
+        #  2. if any of the 3 not exist, then run its METplus, then mark it completed for restart checking next time
+        #  3. if any one of the 3 exits, skip it. But for GenEnsProd, all of the nc files generated from previous run
+        #            are copied back to the output_base/stat directory
+        #################################################################################################################
 	
-	echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh 
+        echo "  cp \$output_base/stat/\${MODEL}/GenEnsProd*CONUS*.nc $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "  cp $COMOUTrestart/profile/GenEnsProd*CONUS*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh 
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+	echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+	#Mark that all of the 3 METplus processes for this task have been  completed for next restart run:
+	echo "[[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
        chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
        echo "${DATA}/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
+
+      fi
 
       done
 
@@ -121,6 +153,13 @@ for dom in $domains ; do
        for fhr in fhr1 ; do 
 
          >run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+      #########################################################################################
+      # Restart: check if this Alaska task has been completed in the previous run
+      #          if not, do this task, and mark it is completed after it is done
+      #          otherwise, skip this task
+      #########################################################################################
+      if [ ! -e  $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed ] ; then
 
 
         echo "export regrid=NONE" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
@@ -159,19 +198,47 @@ for dom in $domains ; do
         echo  "export verif_grid=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export verif_poly='${maskpath}/Alaska_HREF.nc'"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        ################################################################################################################
+        # Adding following "if blocks"  for restart capability for Alaska:
+        #  1. check if *.completed files for 3  METplus processes GenEnsProd, EnsembleStat, PointStat
+        #  2. if any of the 3 not exist, then run its METplus, then mark it completed for restart checking next time
+        #  3. if any one of the 3 exits, skip it. But for GenEnsProd, all of the nc files generated from previous run
+        #            are copied back to the output_base/stat directory
+        #################################################################################################################
 
-	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  cp \$output_base/stat/\${MODEL}/GenEnsProd*Alaska*.nc $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  cp $COMOUTrestart/profile/GenEnsProd*Alaska*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        #Mark that all of the 3 METplus processes for this task have been  completed for next restart run:
+        echo "[[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
 
 	chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "${DATA}/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
 
-       done
+       fi
+
       done
+     done
 
 
     elif [ $dom = HI ] ; then
@@ -183,6 +250,13 @@ for dom in $domains ; do
        for fhr in fhr1 ; do
 
          >run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+      #########################################################################################
+      # Restart: check if this Hawaii task has been completed in the previous run
+      #          if not, do this task, and mark it is completed after it is done
+      #          otherwise, skip this task
+      #########################################################################################
+      if [ ! -e  $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed ] ; then
 
 
         echo "export regrid=NONE" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
@@ -218,19 +292,45 @@ for dom in $domains ; do
         echo  "export verif_grid=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export verif_poly='${maskpath}/Hawaii_HREF.nc'"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        ################################################################################################################
+        # Adding following "if blocks"  for restart capability for Hawaii:
+        #  1. check if *.completed files for 3  METplus processes GenEnsProd, EnsembleStat, PointStat
+        #  2. if any of the 3 not exist, then run its METplus, then mark it completed for restart checking next time
+        #  3. if any one of the 3 exits, skip it. But for GenEnsProd, all of the nc files generated from previous run
+        #            are copied back to the output_base/stat directory
+        #################################################################################################################
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  cp \$output_base/stat/\${MODEL}/GenEnsProd*_HI_*.nc $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  cp $COMOUTrestart/profile/GenEnsProd*_HI_*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        #Mark that all of the 3 METplus processes for this task have been  completed for next restart run:
+        echo "[[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "${DATA}/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
 
-       done
+       fi
+
       done
+     done
 
 
     elif [ $dom = PR ] ; then
@@ -242,6 +342,13 @@ for dom in $domains ; do
        for fhr in fhr1 ; do
 
          >run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+      #########################################################################################
+      # Restart: check if this Puerto Rico task has been completed in the previous run
+      #          if not, do this task, and mark it is completed after it is done
+      #          otherwise, skip this task
+      #########################################################################################
+      if [ ! -e  $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed ] ; then
 
 
         echo "export regrid=NONE" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
@@ -277,19 +384,45 @@ for dom in $domains ; do
         echo  "export verif_grid=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export verif_poly='${maskpath}/PRico_HREF.nc'"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        ################################################################################################################
+        # Adding following "if blocks"  for restart capability for Puerto Rico:
+        #  1. check if *.completed files for 3  METplus processes GenEnsProd, EnsembleStat, PointStat
+        #  2. if any of the 3 not exist, then run its METplus, then mark it completed for restart checking next time
+        #  3. if any one of the 3 exits, skip it. But for GenEnsProd, all of the nc files generated from previous run
+        #            are copied back to the output_base/stat directory
+        #################################################################################################################
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  cp \$output_base/stat/\${MODEL}/GenEnsProd*_PR_*.nc $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  cp $COMOUTrestart/profile/GenEnsProd*_PR_*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        #Mark that all of the 3 METplus processes for this task have been  completed for next restart run:
+        echo "[[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "${DATA}/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
 
-       done
+       fi
+
       done
+     done
 
     fi 
 

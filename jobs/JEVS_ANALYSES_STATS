@@ -31,6 +31,14 @@ mkdir -p $DATA
 cd $DATA
 
 ####################################
+### Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-analyses}
+export RUN=${RUN:-atmos}
+
+####################################
 ## Set EVS directories
 #####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
@@ -52,15 +60,6 @@ if [ $VERIF_CASE = grid2obs ]; then
 else
   export VDATE=${VDATE:-$PDYm3}
 fi
-
-
-####################################
-## Define NET/RUN variables
-#####################################
-export NET=${NET:-evs}
-export STEP=${STEP:-stats}
-export COMPONENT=${COMPONENT:-analyses}
-export RUN=${RUN:-atmos}
 
 # Define COMIN/COMOUT variables:
 
