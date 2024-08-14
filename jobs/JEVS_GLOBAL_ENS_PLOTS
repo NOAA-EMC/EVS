@@ -1,10 +1,12 @@
-#!/bin/ksh
+#!/bin/bash
 #  JOB card created for running METPlus-based Global enesmble verifications
 #   By Binbin Zhou, IMSG@EMC/NCEP
 #   Feb 2, 2022
 #
 #   August 14 2024     Ho-Chun Huang    Merged with JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PLOTS
+#                                       in #!/bin/bash
 #
+#######################################################
 set -x
 ##################################################
 ### SENDCOM  - Copy Files From TMPDIR to $COMOUT
@@ -51,8 +53,8 @@ export modsys=${modsys:-gefs}
 export mod_ver=${mod_ver:-${gefs_ver}}
 
 # Run setpdy and initialize PDY variables
-if [ "${RUN}" == "chem" ]; then
-    setpdy.sh 8
+if [ "${RUN}" == "chem" ]; then   ## can be combined later, template for wave if different
+    setpdy.sh
     . ./PDY
 else
     setpdy.sh 
@@ -66,18 +68,16 @@ export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-${HOMEevs}/exec}
 export PARMevs=${PARMevs:-${HOMEevs}/parm}
 export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=$HOMEevs/ush
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
 if [ "${RUN}" == "chem" ]; then
-    export USHevs=${USHevs:-${HOMEevs}/ush/${COMPONENT}}
     export machine=${machine:-WCOSS2}
     export evs_run_mode=${evs_run_mode:-production}
     export DATA_TYPE=${DATA_TYPE:-aeronet}
-else
-    export USHevs=$HOMEevs/ush
 fi
 
-if [ $RUN = atmos ] || [ $RUN = wmo ] || [ $RUN = headline ] ; then
+if [ "${RUN}" == "atmos" ] || [ "${RUN}" == "wmo" ] || [ "${RUN}" == "headline" ] ; then
     export VDATE=${VDATE:-$PDYm2}
 elif [ "${RUN}" == "chem" ]; then
     export VDATE_END=${VDATE_END:-$PDYm4}
@@ -106,16 +106,14 @@ else
     export ush_dir=$USHevs/global_ens/ush_gens_plot_py
 fi
 
-
 ########################################
 # Execute the script
 ########################################
 if [ "${RUN}" == "chem" ]; then
     export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
     ${SCRIPTSevs}/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-    
 else
-    if [ $valid_time = separate ] ; then
+    if [ "${valid_time}" == "separate" ] ; then
         $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_separate_${STEP}.sh
     else
         $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh

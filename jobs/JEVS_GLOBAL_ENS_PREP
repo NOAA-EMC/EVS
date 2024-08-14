@@ -4,7 +4,9 @@
 #   Feb 2, 2022
 #
 #   August 14 2024     Ho-Chun Huang    Merged with JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PREP
+#                                       in #!/bin/bash
 #
+#######################################################
 set -x
 ##################################################
 ### SENDCOM  - Copy Files From TMPDIR to $COMOUT
@@ -60,18 +62,19 @@ else
 fi
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
 export EXECevs=${EXECevs:-${HOMEevs}/exec}
 export PARMevs=${PARMevs:-${HOMEevs}/parm}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
 if [ "${RUN}" == "chem" ]; then
+    export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
     export USHevs=${USHevs:-${HOMEevs}/ush/${COMPONENT}}
 else
+    export SCRIPTerf=$HOMEevs/scripts
     export USHevs=$HOMEevs/ush
 fi
 
-if [ $RUN = atmos ] || [ $RUN = headline ]; then
+if [ "${RUN}" == "atmos" ] || [ "${RUN}" == "headline" ]; then
     export INITDATE=${INITDATE:-$PDYm2}
 elif [ "${RUN}" == "chem" ]; then
     export INITDATE=${INITDATE:-${PDYm3}}
@@ -79,8 +82,6 @@ else
     export INITDATE=${INITDATE:-$PDYm2}
 fi
 
-#
-# Defalut is RUN = atmos
 #
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 export COMINgefs=${COMINgefs:-$(compath.py $envir/com/gefs/${gefs_ver})}
@@ -125,11 +126,11 @@ else
     export COMOUTgefs_bc=${COMOUTgefs_bc:-${COMOUT}/${RUN}.${INITDATE}/gefs_bc}
     export COMOUTcmce_bc=${COMOUTcmce_bc:-${COMOUT}/${RUN}.${INITDATE}/cmce_bc}
 
-    if [ $RUN = headline ]; then
+    if [ "${RUN}" == "headline" ]; then
         mkdir -p $COMOUTgefs $COMOUTcmce
-    elif [ $RUN = atmos ]; then
+    elif [ "${RUN}" == "atmos" ]; then
         mkdir -p $COMOUTgefs $COMOUTcmce $COMOUTecme $COMOUTosi_saf
-        if [ $MODELNAME = naefs ]; then
+        if [ "${MODELNAME}" == "naefs" ]; then
             mkdir -p $COMOUTgefs_bc $COMOUTcmce_bc
         fi
     fi
