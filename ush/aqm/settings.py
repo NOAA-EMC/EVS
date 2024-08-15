@@ -51,7 +51,7 @@ class Templates():
         FCST_VAR_NAME                       VIS
         VAR_NAME                            VISsfc
         MODEL                               HRRR
-        EVAL_PERIOD                         PAST30DAYS
+        EVAL_PERIOD                         LAST30DAYS
         valid?fmt=%Y%m or VALID?fmt=%Y%m    202206
 
         Additionally, variable names may have the _LOWER or _UPPER suffix to 
