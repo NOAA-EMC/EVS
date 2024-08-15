@@ -1,7 +1,9 @@
 #!/bin/ksh
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href profile plotting python script
-# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+# Last updated:
+#              07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP 
+#              05/30/2024, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
 set -x 
 
@@ -16,6 +18,11 @@ mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
+
+restart=$COMOUT/restart/$past_days/href_profile_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi
 
 
 export eval_period='TEST'
@@ -52,14 +59,16 @@ while [ $n -le $past_days ] ; do
   n=$((n+1))
 done 
 
-
-
 export fcst_init_hour="0,6,12,18"
 valid_time='valid00_12z'
 init_time='init00z_06z_12z_18Z'
 
-
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+#For restart:
+if [ ! -d $plot_dir ] ; then
+  mkdir -p $plot_dir
+fi
+
 
 verif_case=grid2obs
 verif_type=upper_air
@@ -76,11 +85,13 @@ if [ $stats = rmse_spread  ] ; then
   line_tp='ecnt'
   score_types='stat_by_level'
   VARS='HGT TMP UGRD VGRD RH'
+  stats_rst=rmse_spread
 elif [ $stats = bss ] ; then
   stat_list='bss_smpl'
   line_tp='pstd'  
   score_types='lead_average'
   VARS='TMP_lt0C WIND_ge30kt WIND_ge40kt'
+  stats_rst=bss_smpl
 else
   err_exit "$stats is not a valid stat"
 fi   
@@ -110,14 +121,20 @@ fi
     for VAR in $VARS ; do 
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
-	    
+
        if [ $score_type = stat_by_level ] ; then
          FCST_LEVEL_values="P1000,P975,P950,P925,P900,P875,P850,P825,P800,P750,P700,P650,P600,P550,P500,P400,P300,P200"
+	 var_rst=${var}
        elif [ $score_type = lead_average ] ; then 
 	  if [ $VAR = TMP_lt0C ] ; then
 	     FCST_LEVEL_values="P850"
-	  else
+	     var_rst=tmp_ens_freq_lt273.15
+          elif [ $VAR = WIND_ge30kt ] ; then
              FCST_LEVEL_values="P850 P700"
+	     var_rst=wind_ens_freq_ge15.4
+	  elif [ $VAR = WIND_ge40kt ] ; then
+             FCST_LEVEL_values="P850 P700"
+             var_rst=wind_ens_freq_ge20.58
 	  fi
        fi	  
      
@@ -133,7 +150,12 @@ fi
 	 # Build sub-jobs
 	 # ********************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh  
+      #***********************************************************************************************************************************
+      #  Check if this sub-job has been completed in the previous run for restart
+      if [ ! -e $restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed ] ; then
+      #***********************************************************************************************************************************
 
+	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	if [ $score_type = lead_average ] ; then
 	    echo "export PLOT_TYPE=lead_average_valid" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
         else	    
@@ -170,7 +192,8 @@ fi
 	   thresh_obs=' '
 	 elif [ $line_tp = pstd ] ; then
 	    if [ $VAR = TMP_lt0C ] ; then
-	       thresh_fcst='==0.10000'
+	       #thresh_fcst='==0.10000'
+	       thresh_fcst='==273.15'
 	       thresh_obs='<273.15'
              elif [ $VAR =  WIND_ge30kt ] ; then
 	       thresh_fcst='==0.10000'
@@ -187,9 +210,19 @@ fi
 
          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
+         #Save for restart
+         echo "if [ -s ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "  cp -v ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "  >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_all_poe.sh
+
+       else
+          #Restart from existing png files of previous run
+          cp $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ${plot_dir}/.
+       fi
 
       done #end of line_type
 
@@ -269,6 +302,7 @@ for valid in 00z 12z ; do
           var_new='windspeed.ge.40kt.p850'	
         elif [ $var = 850mb_tmp_ens_freq_lt273.15 ] ; then
 	  var_new='tmp.lt.0C.p850'
+          end=bss_smpl.png
 	fi
       else
         level=''
@@ -282,10 +316,17 @@ for valid in 00z 12z ; do
           new_lead=$lead
         fi
 
-       if [ ${score_type} = lead_average ] ; then	
+       if [ ${score_type} = lead_average ] ; then
+
+	 if [ $var = 850mb_tmp_ens_freq_lt273.15 ] ; then 
+	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${end} ] ; then
+	       mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${end}  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+	  fi
+         else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end} ] ; then
              mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end}  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
           fi 
+	 fi
        else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png ] ; then
    	     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}_${new_lead}.${new_domain}.png
