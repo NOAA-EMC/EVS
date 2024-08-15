@@ -3,6 +3,8 @@
 # Name of Script: exevs_rtofs_argo_grid2obs_plots
 # Purpose of Script: Create RTOFS ARGO plots for last 60 days
 # Author: Mallory Row (mallory.row@noaa.gov)
+# Edited by:  Samira Ardani (samira.ardani@noaa.gov) 
+# 	    - Added restart capability (08/2024).
 ###############################################################################
 
 set -x
