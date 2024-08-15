@@ -75,12 +75,11 @@ else
     export SCRIPTerf=$HOMEevs/scripts
 fi
 
+## May need a default setting to avoid non-defined VDATE
 if [ "${RUN}" == "atmos" ] || [ "${RUN}" == "wmo" ] || [ "${RUN}" == "headline" ] ; then
     export VDATE=${VDATE:-$PDYm2}
 elif [ "${RUN}" == "chem" ]; then
     export VDATE=${VDATE:-${PDYm3}}
-else
-    export VDATE=${VDATE:-$PDYm2}
 fi
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
@@ -127,7 +126,7 @@ elif [ "${RUN}" == "atmos" ] ; then
         $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_grid2grid_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
     fi 
 elif [ "${RUN}" == "chem" ]; then
-    ${SCRIPTSevs}/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
     
     msg="JOB ${job} HAS COMPLETED NORMALLY."
     postmsg "${msg}"
