@@ -9,8 +9,11 @@ set -x
 
 export OBTYPE=ARGO
 
-mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN
 mkdir -p $DATA/tmp/rtofs
+mkdir -p $COMOUTplots/$STEP/$RUN
+mkdir -p $DATA/logs/rtofs
+
 # set major & minor MET version
 export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 
@@ -22,6 +25,7 @@ export MASKS="GLB"
 
 # plot time series
 export PTYPE=time_series
+mkdir -p $COMOUTplots/$STEP/$RUN/$PTYPE
 
 for lead in 000 024 048 072 096 120 144 168 192; do
   export FLEAD=$lead
@@ -84,9 +88,28 @@ for lead in 000 024 048 072 096 120 144 168 192; do
 
       for vari in TEMP PSAL; do
         export VAR=$vari
-        # make plots
-        $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
-        export err=$?; err_chk
+	if [ $VAR = TEMP ]; then
+		var_name=temperature
+	else
+		var_name=salinity
+	fi
+	png_name1=evs.${COMPONENT}.${stats}.${var_name}_z${levl}_${RUN}.last60days.timeseries_valid00z_f${lead}.glb.png
+	if [ ! -s $COMOUTplots/$STEP/$RUN/$PTYPE/$png_name1 ]; then
+	
+          # make plots
+          $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+          export err=$?; err_chk
+	   
+	  if [ -s $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name1 ]; then
+	    cp -v $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name1 $COMOUTplots/$STEP/$RUN/$PTYPE/$png_name1
+    	  else
+	    echo "WARNING: Plot $png_name1 was not generated"
+          fi
+  	else
+	  echo "RESTART: Copying the files"
+	  cp -v $COMOUTplots/$STEP/$RUN/$PTYPE/$png_name1 $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name1
+	fi
+	
       done
     done
   done
@@ -95,6 +118,7 @@ done
 # plot mean vs. lead time
 export PTYPE=lead_average
 export FLEAD="000,024,048,072,096,120,144,168,192"
+mkdir -p $COMOUTplots/$STEP/$RUN/$PTYPE
 
 for levl in 0 50 125 200 400 700 1000 1400; do
   if [ $levl = 0 ] ; then
@@ -154,9 +178,25 @@ for levl in 0 50 125 200 400 700 1000 1400; do
 
     for vari in TEMP PSAL; do
       export VAR=$vari
+      if [ $VAR = TEMP ]; then
+         var_name=temperature
+      else
+	 var_name=salinity
+      fi
+      png_name2=evs.${COMPONENT}.${stats}.${var_name}_z${levl}_${RUN}.last60days.fhrmean_valid00z.glb.png
+      if [ ! -s $COMOUTplots/$STEP/$RUN/$PTYPE/$png_name2 ]; then
       # make plots
-      $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
-      export err=$?; err_chk
+
+        $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+        export err=$?; err_chk
+        if [ -s $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name2 ]; then
+	   cp -v $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name2 $COMOUTplots/$STEP/$RUN/$PTYPE/$png_name2
+	fi
+      else
+	echo "RESTART: Copying the files"
+	cp -v $COMOUTplots/$STEP/$RUN/$PTYPE/$png_name2 $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name2
+      fi
+
     done
   done
 done
@@ -173,6 +213,7 @@ if [[ $log_file_count -ne 0 ]]; then
 fi
 
 # tar all plots together
+
 cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
