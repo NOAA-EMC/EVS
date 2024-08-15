@@ -18,6 +18,7 @@
 ##   01/05/2024   Ho-Chun Huang  modify for AQMv6 verification
 ##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
 ##   02/21/2024   Ho-Chun Huang  modify for AQMv7 verification
+##   06/25/2024   Ho-Chun Huang  Remove concatenating log file sections
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
@@ -392,21 +393,6 @@ if [ ${vhr} = 04 ]; then
     fi
   done  ## biastyp loop
 fi  ## vhr if logic
-
-log_dir="$DATA/logs/${model1}"
-if [ -d $log_dir ]; then
-   log_file_count=$(find $log_dir -type f | wc -l)
-   if [[ $log_file_count -ne 0 ]]; then
-       log_files=("$log_dir"/*)
-       for log_file in "${log_files[@]}"; do
-          if [ -f "$log_file" ]; then
-             echo "Start: $log_file"
-             cat "$log_file"
-             echo "End: $log_file"
-          fi
-      done
-  fi
-fi
 
 exit
 

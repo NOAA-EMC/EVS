@@ -12,6 +12,7 @@
 ##   11/14/2023   Ho-Chun Huang  replace cp with cpreq
 ##   11/15/2023   Ho-Chun Huang  combine similar code for multiple variable
 ##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
+##   06/25/2024   Ho-Chun Huang  Remove concatenating log file sections
 ##
 ## Plotting Information
 ##    OZMAX8 forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
@@ -206,28 +207,13 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                     cp -v ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
-                    echo "WARNING: This is possible where there is no exceedance of any threshold in the past 31 days"
+                    echo "WARNING: This is possible where there is no exceedance of any threshold in the last 31 days"
                 fi
 
             done
         done
     done
 done
-
-log_dir="$LOGDIR"
-if [ -d $log_dir ]; then
-   log_file_count=$(find $log_dir -type f | wc -l)
-   if [[ $log_file_count -ne 0 ]]; then
-       log_files=("$log_dir"/*)
-       for log_file in "${log_files[@]}"; do
-          if [ -f "$log_file" ]; then
-           echo "Start: $log_file"
-           cat "$log_file"
-           echo "End: $log_file"
-         fi
-       done
-   fi   
-fi 
 
 # Tar up plot directory and copy to the plot output directory
 
@@ -325,27 +311,11 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
                 cp -v ${cpfile} ${COMOUTplots}/headline
             elif [ ! -e ${cpfile} ]; then
                 echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} ${region}"
-                echo "WARNING: This is possible where there is no exceedance of the critical threshold in the past 31 days"
+                echo "WARNING: This is possible where there is no exceedance of the critical threshold in the last 31 days"
             fi
         done
     done
 done
-
-log_dir="${LOGDIR_headline}"
-if [ -d $log_dir ]; then
-   log_file_count=$(find $log_dir -type f | wc -l)
-   if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-          if [ -f "$log_file" ]; then
-            echo "Start: $log_file"
-            cat "$log_file"
-            echo "End: $log_file"
-          fi
-        done
-   fi
-fi
-
 
 
 # Tar up headline plot tarball and copy to the headline plot directory

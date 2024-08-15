@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=shared,select=1:ncpus=1:mem=2GB
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -14,9 +14,6 @@ cd $PBS_O_WORKDIR
 export model=evs
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-
-###%include <head.h>
-###%include <envir-p1.h>
 
 ############################################################
 # Load modules
@@ -67,11 +64,7 @@ else
 
 fi
 
-######################################################################
-## Purpose: This job will generate the grid2obs statistics for the AQM
-##          model and generate stat files.
-#######################################################################
-#
+exit
 
 
 
