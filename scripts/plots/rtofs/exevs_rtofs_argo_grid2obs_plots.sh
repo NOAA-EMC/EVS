@@ -103,7 +103,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
 	  if [ -s $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name1 ]; then
 	    cp -v $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name1 $COMOUTplots/$STEP/$RUN/$PTYPE/$png_name1
     	  else
-	    echo "WARNING: Plot $png_name1 was not generated"
+	    echo "WARNING: Plot $png_name1 was not generated."
           fi
   	else
 	  echo "RESTART: Copying the files"
@@ -191,6 +191,8 @@ for levl in 0 50 125 200 400 700 1000 1400; do
         export err=$?; err_chk
         if [ -s $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name2 ]; then
 	   cp -v $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN/$png_name2 $COMOUTplots/$STEP/$RUN/$PTYPE/$png_name2
+	else
+           echo "WARNING: Plot $png_name2 was not generated."
 	fi
       else
 	echo "RESTART: Copying the files"
