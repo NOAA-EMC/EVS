@@ -33,7 +33,9 @@ export cycle=${cycle:-t${vhr}z}
 ##########################################################
 export pid=$$
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-rm -rf $DATA
+if [ "${RUN}" != "chem" ]; then
+    rm -rf $DATA
+fi
 mkdir -p $DATA
 cd $DATA
 

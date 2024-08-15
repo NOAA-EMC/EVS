@@ -698,6 +698,8 @@ class PlotSpecs:
             units = 'F'
         elif plot_info_dict['fcst_var_name'] == 'AOTK':
             units = 'unitless'
+        elif plot_info_dict['fcst_var_name'] == 'PMTF':
+            units = '$\u03bcg/m^3$'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
             plot_title = plot_title+', '+var_thresh_for_title+' '+units
