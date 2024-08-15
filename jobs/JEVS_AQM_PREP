@@ -40,6 +40,15 @@ setpdy.sh
 
 export envir=${envir:-prod}
 
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-aqm}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-aqm}
+export modsys=${modsys:-aqm}
+export mod_ver=${mod_ver:-${aqm_ver}}
+
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
@@ -52,28 +61,18 @@ export MASKS=${MASKS:-$FIXevs/masks}
 
 echo $COMPATH
 
-export NET=${NET:-evs}
-export STEP=${STEP:-prep}
-export COMPONENT=${COMPONENT:-aqm}
-export RUN=${RUN:-atmos}
-export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export MODELNAME=${MODELNAME:-aqm}
-export modsys=${modsys:-aqm}
-export mod_ver=${mod_ver:-${aqm_ver}}
-
-
 #
 #  The AirNOW obs in DCOM will continue to be updated after first
 #  created upto 48 hours.
 #  Process the observation input only when it stop updating.
 #
-export VDATE=${VDATE:-${PDYm3}}
+export INITDATE=${INITDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export DCOMIN=${DCOMIN:-${DCOMROOT}}
+export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
-export COMOUTproc=${COMOUTproc:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}}
+export COMOUTproc=${COMOUTproc:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}}
 mkdir -p ${COMOUT} ${COMOUTproc}
 
 # alternative choice is dan option different from aqons
