@@ -107,6 +107,15 @@ for prod in mean ; do
      # Build sub-jobs
      # *****************************
      >run_href_${model}.${dom}.${valid}_spcoutlook.sh
+
+     #######################################################################
+     #Restart check:
+     # check if this task has been completed in the previous run
+     # if not, run this task, and then mark its completion,
+     # otherwise, skip this task
+     ########################################################################
+     if [ ! -e  $COMOUTrestart/spcoutlook/run_href_${model}.${dom}.${valid}_spcoutlook.completed ] ; then
+
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid}_spcoutlook.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid}_spcoutlook.sh     
        echo  "export regrid=G227" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
@@ -138,10 +147,15 @@ for prod in mean ; do
 
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SPCoutlook.conf " >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
 
-       echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+
+       #Mark this Alaska task is completed
+       echo "[[ \$? = 0 ]] && >$COMOUTrestart/spcoutlook/run_href_${model}.${dom}.${valid}_spcoutlook.completed" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
 
        chmod +x run_href_${model}.${dom}.${valid}_spcoutlook.sh
        echo "${DATA}/run_href_${model}.${dom}.${valid}_spcoutlook.sh" >> run_all_href_spcoutlook_poe.sh
+
+      fi #end if check restart
 
     done # end of valid
 
