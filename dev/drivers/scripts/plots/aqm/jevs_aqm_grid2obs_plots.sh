@@ -15,9 +15,6 @@ export model=evs
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-###%include <head.h>
-###%include <envir-p1.h>
-
 ############################################################
 # Load modules
 ############################################################
@@ -70,9 +67,5 @@ else
 
 fi
 
-######################################################################
-## Purpose: This job will generate the plots for the aqm
-#######################################################################
-#
 exit
 
