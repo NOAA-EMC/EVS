@@ -59,7 +59,7 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh 31
 . ./PDY
 
-if [ $MODELNAME = href ] ; then
+if [ $MODELNAME = href ] || [ $MODELNAME = refs ] ; then
    export VDATE=${VDATE:-$PDYm2}
    export INITDATE=${INITDATE:-$PDYm2}
 else
@@ -78,12 +78,16 @@ fi
 ####################################
 export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
-if  [ $MODELNAME = href ] ; then
+if  [ $MODELNAME = href ] || [ $MODELNAME = refs ] || [ $MODELNAME = refs_prob ] ; then
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
   export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
   export EVSINapcp24mean=${EVSINapcp24mean:-$(dirname $COMIN)}
   export DATA_IN=${DATA_IN:-$DATAROOT}
-  export ush_dir=$USHevs/cam/ush_href_plot_py
+  if  [ $MODELNAME = href ] ; then
+    export ush_dir=$USHevs/cam/ush_href_plot_py
+  else
+    export ush_dir=$USHevs/cam/ush_refs_plot_py
+  fi
 else
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
@@ -92,12 +96,12 @@ else
   else
     export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
   fi
-  export EVSINnam=${EVSINnam:-$COMIN/stats/$COMPONENT/nam_$MODELNAME}
-  export EVSINrrfs=${EVSINrrfs:-$COMIN/stats/$COMPONENT/rrfs_$MODELNAME}
+  export EVSINnam=${EVSINnam:-$COMIN/stats/$COMPONENT/$MODELNAME}
   echo $COMPATH
+  [[ ! -d $COMOUTplots ]] && mkdir -p $COMOUTplots
 fi
 
-mkdir -p $COMOUT $COMOUTplots
+[[ ! -d $COMOUT ]] && mkdir -p $COMOUT
 
 echo $COMPATH
 
@@ -106,7 +110,7 @@ echo $COMPATH
 # Execute the script.
 #######################################################################
 
-if [ $MODELNAME = firewxnest ]; then
+if [ $MODELNAME = nam_firewxnest ]; then
  $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 else
  $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
