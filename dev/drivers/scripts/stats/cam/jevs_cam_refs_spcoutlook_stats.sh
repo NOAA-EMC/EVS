@@ -1,4 +1,4 @@
-#PBS -N jevs_cam_href_spcoutlook_stats
+#PBS -N jevs_cam_refs_spcoutlook_stats
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
@@ -19,7 +19,7 @@ export STEP=stats
 export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=spcoutlook
-export MODELNAME=href
+export MODELNAME=refs
 export KEEPDATA=YES
 export SENDMAIL=YES
 
