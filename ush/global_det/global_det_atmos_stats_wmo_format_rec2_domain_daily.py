@@ -184,22 +184,6 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
                         if len(stat_line) == 1:
                             have_stat_line = True
                         else:
-                            if len(stat_line) == 0:
-                                note_msg = 'No matching stat line'
-                            elif len(stat_line) > 1:
-                                note_msg = 'Multiple matching stat lines'
-                            print(f"NOTE: {note_msg} in {stat_file} "
-                                  +f"matching MODEL={MODELNAME}, "
-                                  +f"FCST_VALID_BEG={month_date_dt:%Y%m%d}_"
-                                  +f"{wmo_t.zfill(2)}0000, "
-                                  +f"FCST_LEAD={wmo_s.zfill(2)}0000, "
-                                  +f"FCST_VAR={met_var_level.split('/')[0]}, "
-                                  +f"FCST_LEV={met_var_level.split('/')[1]}, "
-                                  +f"OBS_VAR={met_var_level.split('/')[0]}, "
-                                  +f"OBS_LEV={met_var_level.split('/')[1]}, "
-                                  +f"OBTYPE={met_obtype}, "
-                                  +f"VX_MASK={met_vx_mask}, "
-                                  +f"LINE_TYPE={met_line_type}")
                             have_stat_line = False
                         for met_stat in stat_file_dict\
                                 [met_line_type]['stat_list']:
