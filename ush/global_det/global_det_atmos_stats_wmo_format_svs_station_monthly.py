@@ -19,6 +19,7 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 COMIN = os.environ['COMIN']
+COMOUT = os.environ['COMOUT']
 SENDCOM = os.environ['SENDCOM']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
@@ -65,7 +66,7 @@ wmo_d = f"{VDATE_dt:%Y%m}"
 
 # Set input file paths
 tmp_station_info_file = os.path.join(
-    DATA, f"{VDATE_dt:%Y%m}_station_info",
+    COMOUT, f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
     f"evs.stats.gfs.atmos.wmo.station_info.v{VDATE_dt:%Y%m}.stat"
 )
 
