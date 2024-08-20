@@ -7,7 +7,7 @@
 ## Developer Questions and Checklist
 * Is this a high priorty PR? If so, why and is there a date it needs to be merged by?
 * Do you have any planned upcoming annual leave/PTO?
-* Are there any changes needed for the when jobs are suppose to run?
+* Are there any changes needed for when the jobs are supposed to run?
   
 - [ ] The code changes follow [NCO's EE2 Standards](https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf).
 - [ ] Developer's name is removed throughout the code and have used `${USER}` where necessary throughout the code.
