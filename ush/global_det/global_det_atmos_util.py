@@ -3091,6 +3091,132 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                         [model_stat_file_df_valid_date_idx_list[0]]\
                         [:]
                     )
+                # Do conversions if needed
+                convert = False
+                #### K to F
+                if fcst_var_name in ['TMP', 'DPT', 'SST_DAILYAVG', 'TSOIL'] \
+                        and fcst_var_level in ['Z0', 'Z2', 'Z0.1-0']:
+                    coef = np.divide(9., 5.)
+                    const = ((-273.15)*9./5.)+32.
+                    convert = True
+                    units_old = 'K'
+                    units_new = 'F'
+                #### m/s to knots
+                elif fcst_var_name in ['UGRD', 'VGRD', 'UGRD_VGRD',
+                                       'WNDSHR', 'GUST']:
+                    coef = 1.94384449412
+                    const = 0
+                    convert = True
+                    units_old = 'm/s'
+                    units_new = 'kt'
+                if convert and line_type == 'SL1L2':
+                    fbar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FBAR'
+                    ]
+                    obar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'OBAR'
+                    ]
+                    fobar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FOBAR'
+                    ]
+                    ffbar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FFBAR'
+                    ]
+                    oobar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'OOBAR'
+                    ]
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FBAR'
+                    ] = (fbar_units_old * coef) + const
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'OBAR'
+                    ] = (obar_units_old * coef) + const
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FOBAR'
+                    ] = (
+                        (coef**2 * fobar_units_old)
+                        + (coef * const * fbar_units_old)
+                        + (coef * const * obar_units_old)
+                        + (const**2)
+                    )
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FFBAR'
+                    ] = (
+                        (coef**2 * ffbar_units_old)
+                        + 2 * (coef * const * fbar_units_old)
+                        + (const**2)
+                    )
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'OOBAR'
+                    ] = (
+                        (coef**2 * oobar_units_old)
+                        + 2 * (coef * const * obar_units_old)
+                        + (const**2)
+                    )
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FCST_UNITS'
+                    ] = units_new
+                if convert and line_type == 'VL1L2':
+                    ufbar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UFBAR'
+                    ]
+                    vfbar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'VFBAR'
+                    ]
+                    uobar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UOBAR'
+                    ]
+                    vobar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'VOBAR'
+                    ]
+                    uvfobar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UVFOBAR'
+                    ]
+                    uvffbar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UVFFBAR'
+                    ]
+                    uvoobar_units_old = model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UVOOBAR'
+                    ]
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UFBAR'
+                    ] = (coef * ufbar_units_old) + const
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'VFBAR'
+                    ] = (coef * vfbar_units_old) + const
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UOBAR'
+                    ] = (coef * uobar_units_old) + const
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'VOBAR'
+                    ] = (coef * vobar_units_old) + const
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UVFOBAR'
+                    ] = (
+                        (coef**2 * uvfobar_units_old)
+                        + (coef * const * (ufbar_units_old + uobar_units_old
+                                           + vfbar_units_old + vobar_units_old))
+                        + (const**2)
+                    )
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UVFFBAR'
+                    ] = (
+                        (coef**2 * uvffbar_units_old)
+                        + 2 * (coef * const * (ufbar_units_old
+                                               + vfbar_units_old))
+                        + (const**2)
+                    )
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'UVOOBAR'
+                    ] = (
+                        (coef**2 * uvoobar_units_old)
+                        + 2 * (coef * const * (uobar_units_old
+                                               + vobar_units_old))
+                        + (const**2)
+                    )
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FCST_UNITS'
+                    ] = units_new
             else:
                 logger.debug(f"{filtered_model_stat_file} does not exist")
         if model_num == 'model1':
