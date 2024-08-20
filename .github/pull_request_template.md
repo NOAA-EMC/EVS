@@ -17,7 +17,7 @@
 - [ ] If applicable, changes in the `dev/drivers/scripts` or `dev/modulefiles` have been made in the corresponding `ecf/scripts` and `ecf/defs/evs-nco.def`? 
 - [ ] Jobs contain the approriate file checking and don't run METplus for any missing data.
 - [ ] Code is using METplus wrappers structure and not calling MET executables directly.
-- [ ] Log is free of any ERORRs or WARNINGs.
+- [ ] Log is free of any ERRORs or WARNINGs.
 
 ## Testing Instructions
 
