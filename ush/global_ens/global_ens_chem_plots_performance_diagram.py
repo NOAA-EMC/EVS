@@ -354,9 +354,14 @@ class PerformanceDiagram:
                 f'{t}'
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
+        elif fcst_units[0] == "10^-6g/m^3":
+            thresh_legend_labels = [
+                f'{t} $\u03bcg/m^3$'
+                for t in self.plot_info_dict['fcst_var_threshs']
+            ]
         else:
             thresh_legend_labels = [
-                f'{t} fcst_units[0]'
+                f'{t} {fcst_units[0]}'
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
         thresh_legend = ax.legend(
