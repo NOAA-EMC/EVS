@@ -349,10 +349,16 @@ class PerformanceDiagram:
                   'black')
             )
             thresh_mark_dict[fcst_var_thresh] = fcst_var_thresh_marker_dict
-        thresh_legend_labels = [
-            f'{t} {fcst_units[0]}'
-            for t in self.plot_info_dict['fcst_var_threshs']
-        ]
+        if fcst_units[0] == "Numeric":
+            thresh_legend_labels = [
+                f'{t}'
+                for t in self.plot_info_dict['fcst_var_threshs']
+            ]
+        else:
+            thresh_legend_labels = [
+                f'{t} fcst_units[0]'
+                for t in self.plot_info_dict['fcst_var_threshs']
+            ]
         thresh_legend = ax.legend(
             thresh_legend_handles, thresh_legend_labels,
             bbox_to_anchor=(0.5, -0.075),

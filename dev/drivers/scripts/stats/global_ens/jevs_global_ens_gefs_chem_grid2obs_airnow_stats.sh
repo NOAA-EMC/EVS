@@ -74,7 +74,7 @@ if [ -z "$MAILTO" ]; then
 else
     export vhr
     echo "vhr = ${vhr}"
-    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
+    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
 fi
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics using AirNOW PM2.5

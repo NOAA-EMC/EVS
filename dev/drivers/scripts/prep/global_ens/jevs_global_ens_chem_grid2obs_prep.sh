@@ -72,7 +72,7 @@ if [ -z "$MAILTO" ]; then
 
 else
 
-    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PREP
+    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
 
 fi
 
