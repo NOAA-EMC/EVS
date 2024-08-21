@@ -1,28 +1,24 @@
-## Pull Request Testing ##
+<b>Note to developers: You must use this PR template!</b>
 
-- [ ] Describe testing already performed for this Pull Request:</br>
+## Description of Changes
 
-- [ ] Recommend testing for the reviewer(s) to perform, including the location of input datasets, and any additional instructions:</br>
+> Please include a summary of the changes and the related GitHub issue(s). Please also include relevant motivation and context.
 
-- [ ] Has the code been checked to ensure that no errors occur during the execution? **[Yes or No]**
+## Developer Questions and Checklist
+* Is this a high priorty PR? If so, why and is there a date it needs to be merged by?
+* Do you have any planned upcoming annual leave/PTO?
+* Are there any changes needed for when the jobs are supposed to run?
+  
+- [ ] The code changes follow [NCO's EE2 Standards](https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf).
+- [ ] Developer's name is removed throughout the code and have used `${USER}` where necessary throughout the code.
+- [ ] References the feature branch for `HOMEevs` are removed from the code.
+- [ ] J-Job environment variables, COMIN and COMOUT directories, and output follow what has been [defined](https://docs.google.com/document/d/1JWg_4q80aYmmAoD21GFjp9R9y5-3w7WGM3-0HJk0Pjs/edit#heading=h.7ysbr191vzu4) for EVS.
+- [ ] Jobs over 15 minutes in runtime have restart capability.
+- [ ] If applicable, changes in the `dev/drivers/scripts` or `dev/modulefiles` have been made in the corresponding `ecf/scripts` and `ecf/defs/evs-nco.def`? 
+- [ ] Jobs contain the approriate file checking and don't run METplus for any missing data.
+- [ ] Code is using METplus wrappers structure and not calling MET executables directly.
+- [ ] Log is free of any ERRORs or WARNINGs.
 
-- [ ] Do these updates/additions include sufficient testing updates? **[Yes or No]**
+## Testing Instructions
 
-- [ ] Please complete this pull request review by **[Fill in date]**.</br>
-
-## Pull Request Checklist ##
-
-- [ ] Review the source issue metadata (required labels, projects, and milestone).
-- [ ] Complete the PR description above.
-- [ ] Ensure the PR title matches the feature branch name.
-- [ ] Check the following:
-- [ ]  Instructions provided on how to run
-- [ ]  Developer's name is replaced by ${user} where necessary throughout the code
-- [ ]  Check that the ecf file has all the proper definitions of variables
-- [ ]  Check that the jobs file has all the proper settings of COMIN and COMOUT and other input variables
-- [ ]  Check to see that the output directory structure is followed
-- [ ]  Be sure that you are not using MET utilities outside the METplus wrapper structure
-
-- [ ] After submitting the PR, select **Development** issue with the original issue number.
-- [ ] After the PR is approved, merge your changes. If permissions do not allow this, request that the reviewer do the merge.
-- [ ] Close the linked issue.
+> Please include testing instructions for the PR assignee. Include all relevant input datasets needed to run the tests.
