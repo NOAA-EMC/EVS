@@ -16,5 +16,6 @@ nohup.out
 # Ignore folders
 #-------------------
 exec/
+fix/
 .idea/
 .vscode/
