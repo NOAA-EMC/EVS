@@ -50,11 +50,23 @@ if MODELNAME != 'gfs':
     print(f"ERROR: {VERIF_CASE} stats are only run for gfs, exit")
     sys.exit(1)
 
+# Set environment variables to not write to individual job scripts
+# as per request from NCO; these get set higher up in the job
+dont_write_env_var_list = [
+    'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
+    'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
+    'COMOUT', 'evs_run_mode', 'MET_ROOT', 'met_ver', 'METPLUS_PATH'
+]
+
 # Set file formats
 daily_stat_file_format = os.path.join(
     DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
     f"{NET}.{STEP}.{MODELNAME}.{RUN}.{VERIF_CASE}."
     +'v{valid?fmt=%Y%m%d}.stat'
+)
+filtered_station_file_format = os.path.join(
+    DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    f"evs.stats.gfs.atmos.wmo.station_info.v{VDATE_dt:%Y%m}.stat"
 )
 stat_analysis_job_file_format = os.path.join(
     DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
@@ -132,53 +144,68 @@ if JOB_GROUP == 'summarize_stats':
     ndaily_stat_files = len(os.listdir(VYYYYmm_daily_stats_dir))
     job_env_dict['daily_stats_dir'] = VYYYYmm_daily_stats_dir
     # Filter surface station information
-    print('Gathering station information from '
+    print('Gathering and filtering station information from '
            +os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*'))
     tmp_station_info_file_list = glob.glob(
         os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*')
     )
-    most_recent_station_info_file = os.path.join(
-        DATA, f"{VDATE_dt:%Y%m}_station_info",
-        f"evs.stats.gfs.atmos.wmo.station_info.v{VDATE_dt:%Y%m}.stat"
+    tmp_filtered_station_info_file = gda_util.format_filler(
+        filtered_station_file_format, VDATE_dt, VDATE_dt, 'anl', {}
     )
-    station_info = []
-    column_name_list = gda_util.get_met_line_type_cols('hold', MET_ROOT,
-                                                        met_ver, 'MPR')
-    for station_info_file in tmp_station_info_file_list:
-        station_info_file_df = pd.read_csv(
-            station_info_file, sep=" ", skiprows=1, skipinitialspace=True,
-            keep_default_na=False, dtype='str', header=None,
-            names=column_name_list
-        )
-        station_info.append(station_info_file_df)
-    station_info_df = pd.concat(station_info, axis=0, ignore_index=True)
-    if len(station_info_df) == 0:
-        have_station_info = False
-        print("NOTE: Could not read in station information from file "
-              +os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*'))
+    output_filtered_station_info_file = os.path.join(
+        COMOUT , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
+        tmp_filtered_station_info_file.rpartition('/')[2]
+    )
+    have_filtered_station_info = os.path.exists(
+        output_filtered_station_info_file
+    )
+    if have_filtered_station_info:
+        gda_util.copy_file(output_filtered_station_info_file,
+                           tmp_filtered_station_info_file)
     else:
-        have_station_info = True
-    del station_info_file_df
-    most_recent_station_info_list = []
-    for obs_sid_lead, obs_sid_lead_df \
-            in station_info_df.groupby(by=['OBS_SID', 'FCST_LEAD']):
-        sid_lead_valid_hr_list = []
-        for fcst_valid_beg in obs_sid_lead_df['FCST_VALID_BEG'].unique():
-            if fcst_valid_beg.split('_')[1] not in sid_lead_valid_hr_list:
-                sid_lead_valid_hr_list.append(fcst_valid_beg.split('_')[1])
-        for vhr in sid_lead_valid_hr_list:
-            x = obs_sid_lead_df[
-                obs_sid_lead_df['FCST_VALID_BEG'].str.contains(vhr)
-            ]
-            most_recent_station_info_list.append(
-                x[x['FCST_VALID_BEG'] == x['FCST_VALID_BEG'].max()]
-           )
-    most_recent_station_info_df = pd.concat(
-        most_recent_station_info_list, axis=0, ignore_index=True
-    )
-    most_recent_station_info_df.to_csv(
-        most_recent_station_info_file, index=None, sep=' ', mode='w'
-    )
+        station_info = []
+        column_name_list = gda_util.get_met_line_type_cols('hold', MET_ROOT,
+                                                            met_ver, 'MPR')
+        for station_info_file in tmp_station_info_file_list:
+            station_info_file_df = pd.read_csv(
+                station_info_file, sep=" ", skiprows=1, skipinitialspace=True,
+                keep_default_na=False, dtype='str', header=None,
+                names=column_name_list
+            )
+            station_info.append(station_info_file_df)
+        station_info_df = pd.concat(station_info, axis=0, ignore_index=True)
+        if len(station_info_df) == 0:
+            have_station_info = False
+            print("NOTE: Could not read in station information from file "
+                  +os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*'))
+        else:
+            have_station_info = True
+        del station_info_file_df
+        filtered_station_info_list = []
+        for obs_sid_lead, obs_sid_lead_df \
+                in station_info_df.groupby(by=['OBS_SID', 'FCST_LEAD']):
+            sid_lead_valid_hr_list = []
+            for fcst_valid_beg in obs_sid_lead_df['FCST_VALID_BEG'].unique():
+                if fcst_valid_beg.split('_')[1] not in sid_lead_valid_hr_list:
+                    sid_lead_valid_hr_list.append(fcst_valid_beg.split('_')[1])
+            for vhr in sid_lead_valid_hr_list:
+                x = obs_sid_lead_df[
+                    obs_sid_lead_df['FCST_VALID_BEG'].str.contains(vhr)
+                ]
+                filtered_station_info_list.append(
+                    x[x['FCST_VALID_BEG'] == x['FCST_VALID_BEG'].max()]
+               )
+        filtered_station_info_df = pd.concat(
+            filtered_station_info_list, axis=0, ignore_index=True
+        )
+        filtered_station_info_df.to_csv(
+            tmp_filtered_station_info_file, index=None, sep=' ', mode='w'
+        )
+        if SENDCOM == 'YES':
+            gda_util.copy_file(
+                tmp_filtered_station_info_file,
+                output_filtered_station_info_file
+            )
     # Make job scripts
     VYYYYmm_monthly_stats_dir = os.path.join(DATA, f"{VYYYYmm}_monthly_stats")
     job_env_dict['monthly_stats_dir'] = VYYYYmm_monthly_stats_dir
@@ -293,7 +320,8 @@ if JOB_GROUP == 'summarize_stats':
                         job.write('set -x\n')
                         job.write('\n')
                         for name, value in job_env_dict.items():
-                            job.write(f'export {name}="{value}"\n')
+                            if name not in dont_write_env_var_list:
+                                job.write(f'export {name}="{value}"\n')
                         if stat_analysis_job == 'summary':
                             job.write('export summary_columns="'
                                       +f'{line_type_columns}"\n')
@@ -400,7 +428,8 @@ elif JOB_GROUP == 'write_reports':
         job.write('set -x\n')
         job.write('\n')
         for name, value in job_env_dict.items():
-            job.write(f'export {name}="{value}"\n')
+            if name not in dont_write_env_var_list:
+                job.write(f'export {name}="{value}"\n')
         job.write('\n')
         if have_report:
             job.write('if [ -f $output_report_file ]; then '
@@ -468,7 +497,8 @@ elif JOB_GROUP == 'write_reports':
                 job.write('set -x\n')
                 job.write('\n')
                 for name, value in job_env_dict.items():
-                    job.write(f'export {name}="{value}"\n')
+                    if name not in dont_write_env_var_list:
+                        job.write(f'export {name}="{value}"\n')
                 job.write('\n')
                 if have_report:
                     job.write('if [ -f $output_report_file ]; then '
@@ -517,7 +547,8 @@ elif JOB_GROUP == 'concatenate_reports':
         job.write('set -x\n')
         job.write('\n')
         for name, value in job_env_dict.items():
-            job.write(f'export {name}="{value}"\n')
+            if name not in dont_write_env_var_list:
+                job.write(f'export {name}="{value}"\n')
         job.write('\n')
         if have_report:
             job.write('if [ -f $output_report_file ]; then '
