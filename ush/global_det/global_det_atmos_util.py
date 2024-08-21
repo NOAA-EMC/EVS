@@ -3092,12 +3092,17 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                         [:]
                     )
                 # Do conversions if needed
-                convert = False
                 #### K to F
-                if fcst_var_name in ['TMP', 'DPT', 'SST_DAILYAVG', 'TSOIL'] \
+                if fcst_var_name in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG',
+                                     'SST_DAILYAVG', 'TSOIL'] \
                         and fcst_var_level in ['Z0', 'Z2', 'Z0.1-0']:
                     coef = np.divide(9., 5.)
-                    const = ((-273.15)*9./5.)+32.
+                    if fcst_var_name == 'TMP_ANOM_DAILYAVG':
+                        const = 0
+                    elif line_type == 'SAL1L2':
+                        const = 0
+                    else:
+                        const = ((-273.15)*9./5.)+32.
                     convert = True
                     units_old = 'K'
                     units_new = 'F'
@@ -3109,111 +3114,87 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                     convert = True
                     units_old = 'm/s'
                     units_new = 'kt'
-                if convert and line_type == 'SL1L2':
-                    fbar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'FBAR'
-                    ]
-                    obar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'OBAR'
-                    ]
-                    fobar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'FOBAR'
-                    ]
-                    ffbar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'FFBAR'
-                    ]
-                    oobar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'OOBAR'
-                    ]
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'FBAR'
-                    ] = (fbar_units_old * coef) + const
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'OBAR'
-                    ] = (obar_units_old * coef) + const
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'FOBAR'
-                    ] = (
-                        (coef**2 * fobar_units_old)
-                        + (coef * const * fbar_units_old)
-                        + (coef * const * obar_units_old)
-                        + (const**2)
-                    )
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'FFBAR'
-                    ] = (
-                        (coef**2 * ffbar_units_old)
-                        + 2 * (coef * const * fbar_units_old)
-                        + (const**2)
-                    )
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'OOBAR'
-                    ] = (
-                        (coef**2 * oobar_units_old)
-                        + 2 * (coef * const * obar_units_old)
-                        + (const**2)
-                    )
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'FCST_UNITS'
-                    ] = units_new
-                if convert and line_type == 'VL1L2':
-                    ufbar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UFBAR'
-                    ]
-                    vfbar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'VFBAR'
-                    ]
-                    uobar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UOBAR'
-                    ]
-                    vobar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'VOBAR'
-                    ]
-                    uvfobar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UVFOBAR'
-                    ]
-                    uvffbar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UVFFBAR'
-                    ]
-                    uvoobar_units_old = model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UVOOBAR'
-                    ]
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UFBAR'
-                    ] = (coef * ufbar_units_old) + const
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'VFBAR'
-                    ] = (coef * vfbar_units_old) + const
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UOBAR'
-                    ] = (coef * uobar_units_old) + const
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'VOBAR'
-                    ] = (coef * vobar_units_old) + const
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UVFOBAR'
-                    ] = (
-                        (coef**2 * uvfobar_units_old)
-                        + (coef * const * (ufbar_units_old + uobar_units_old
-                                           + vfbar_units_old + vobar_units_old))
-                        + (const**2)
-                    )
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UVFFBAR'
-                    ] = (
-                        (coef**2 * uvffbar_units_old)
-                        + 2 * (coef * const * (ufbar_units_old
-                                               + vfbar_units_old))
-                        + (const**2)
-                    )
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'UVOOBAR'
-                    ] = (
-                        (coef**2 * uvoobar_units_old)
-                        + 2 * (coef * const * (uobar_units_old
-                                               + vobar_units_old))
-                        + (const**2)
-                    )
+                else:
+                    convert = False
+                if convert:
+                    if line_type == 'SL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FBAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OBAR'
+                        ]
+                        col1_list = ['FBAR', 'OBAR']
+                        col2_list = ['FOBAR', 'FFBAR', 'OOBAR']
+                    elif line_type == 'SAL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FABAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OABAR'
+                        ]
+                        col1_list = ['FABAR', 'OABAR']
+                        col2_list = ['FOABAR', 'FFABAR', 'OOABAR']
+                    elif line_type == 'VL1L2':
+                        uf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UFBAR'
+                        ]
+                        vf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VFBAR'
+                        ]
+                        uo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UOBAR'
+                        ]
+                        vo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VOBAR'
+                        ]
+                        col1_list = ['UFBAR', 'VFBAR', 'UOBAR', 'VOBAR']
+                        col2_list = ['UVFOBAR', 'UVFFBAR', 'UVOOBAR']
+                    elif line_type == 'VAL1L2':
+                        uf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UFABAR'
+                        ]
+                        vf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VFABAR'
+                        ]
+                        uo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UOABAR'
+                        ]
+                        vo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VOABAR'
+                        ]
+                        col1_list = ['UFABAR', 'VFABAR', 'UOABAR', 'VOABAR']
+                        col2_list = ['UVFOABAR', 'UVFFABAR', 'UVOOABAR']
+                    for col in col1_list:
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef
+                             * model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col])
+                            + const)
+                    for col in col2_list:
+                        if col in ['FOBAR', 'FOABAR']:
+                            const2 =  ((coef * const * fcst_avg_old)
+                                       + (coef * const * obs_avg_old))
+                        elif col in ['FFBAR', 'FFABAR]':
+                            const2 = 2 * (coef * const * fcst_avg_old)
+                        elif col in ['OOBAR', 'OOABAR']:
+                            const2 = 2 * (coef * const * obar_units_old)
+                        elif col in ['UVFOBAR', 'UVFOABAR']:
+                            const2 = (coef * const
+                                      * (uf_avg_old+vf_avg_old
+                                         +uo_avg_old+vo_avg_old))
+                        elif col in ['UVFFBAR', 'UVFFABAR']:
+                            const2 = 2 *(coef * const * (uf_avg_old+vf_avg_old))
+                         elif col in ['UVOOBAR', 'UVOOABAR']:
+                            const2 = 2 *(coef * const * (uo_avg_old+vo_avg_old))
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef**2
+                             *model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col])
+                             + const2
+                             + (const**2))
                     model_num_df.loc[
                         model_num_df['FCST_UNITS'] == units_old, 'FCST_UNITS'
                     ] = units_new
