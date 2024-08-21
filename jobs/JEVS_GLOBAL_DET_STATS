@@ -75,8 +75,26 @@ mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
-export err=$?; err_chk
+if [ $VERIF_CASE = wmo ] ; then
+    if [ $temporal = monthly ]; then
+        VDATEp1=$(finddate.sh $VDATE d+1)
+        VDATEp1_mm=$(echo $VDATEp1 | cut -c7-8)
+        if [ $VDATEp1_mm = 01 ]; then
+            VDATE_YYYYmm=$(echo $VDATE | cut -c1-6)
+            echo "Generating monthly report for $VDATE_YYYYmm"
+            $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+            export err=$?; err_chk
+        else
+            echo "Not generating monthly report"
+        fi
+    else
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+        export err=$?; err_chk
+    fi
+else
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+    export err=$?; err_chk
+fi
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
