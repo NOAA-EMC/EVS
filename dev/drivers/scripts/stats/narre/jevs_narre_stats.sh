@@ -8,7 +8,6 @@
 #PBS -l walltime=00:45:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=16:mem=500GB
 #PBS -l debug=true
-#PBS -V
 
 set -x
 
