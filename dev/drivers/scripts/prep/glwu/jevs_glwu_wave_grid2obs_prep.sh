@@ -6,7 +6,6 @@
 #PBS -l walltime=00:15:00
 #PBS -l select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
-#PBS -V
 
 
 set -x
