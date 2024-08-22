@@ -62,7 +62,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/JEVS_NWPS_WAVE_GRID2OBS_PLOTS
+${HOMEevs}/jobs/JEVS_NWPS_PLOTS
 
 #########################################################################
 # Purpose: This job creates the plots for the NWPS wave model

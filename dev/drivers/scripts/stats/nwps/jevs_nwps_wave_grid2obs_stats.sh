@@ -63,7 +63,7 @@ export SITE=$(cat /etc/cluster_name)
 ## CALL executable job script here
 #############################################################
 
-$HOMEevs/jobs/JEVS_NWPS_WAVE_GRID2OBS_STAT
+$HOMEevs/jobs/JEVS_NWPS_STAT
 
 ######################################################################
 # Purpose: The job and task scripts work together to create stat
