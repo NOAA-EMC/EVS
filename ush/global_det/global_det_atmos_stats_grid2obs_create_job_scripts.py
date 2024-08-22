@@ -48,6 +48,14 @@ JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'METplus_job_scripts', JOB_GROUP)
 gda_util.make_dir(JOB_GROUP_jobs_dir)
 
+# Set environment variables to not write to individual job scripts
+# as per request from NCO; these get set higher up in the job
+dont_write_env_var_list = [
+    'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
+    'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
+    'COMOUT', 'evs_run_mode', 'MET_ROOT', 'METPLUS_PATH'
+]
+
 ################################################
 #### reformat_data jobs
 ################################################
@@ -565,12 +573,12 @@ generate_stats_jobs_dict = {
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'DPT',
                                'var1_fcst_levels': 'Z2',
-                               'var1_fcst_options': '',
+                               'var1_fcst_options': 'cnt_thresh = [ NA, NA, NA, NA, NA, NA ]; cnt_logic = INTERSECTION;',
                                'var1_fcst_threshs': ('ge277.594, ge283.15, '
                                                      +'ge288.706, ge294.261'),
                                'var1_obs_name': 'DPT',
                                'var1_obs_levels': 'Z2',
-                               'var1_obs_options': '',
+                               'var1_obs_options': 'cnt_thresh = [ NA, >=272.039, >=277.594, >=283.15, >=288.706, >=294.261 ]; cnt_logic = INTERSECTION;',
                                'var1_obs_threshs': ('ge277.594, ge283.15, '
                                                     +'ge288.706, ge294.261'),
                                'met_config_overrides': ''},
@@ -1110,10 +1118,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                         )
                     # Write environment variables
                     for name, value in job_env_dict.items():
-                        if '"' in value:
-                            job.write(f"export {name}='{value}'\n")
-                        else:
-                            job.write(f'export {name}="{value}"\n')
+                        if name not in dont_write_env_var_list:
+                            if '"' in value:
+                                job.write(f"export {name}='{value}'\n")
+                            else:
+                                job.write(f'export {name}="{value}"\n')
                     # Write job commands
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
@@ -1184,10 +1193,11 @@ elif JOB_GROUP == 'gather_stats':
             # Set any environment variables for special cases
             # Write environment variables
             for name, value in job_env_dict.items():
-                if '"' in value:
-                    job.write(f"export {name}='{value}'\n")
-                else:
-                    job.write(f'export {name}="{value}"\n')
+                if name not in dont_write_env_var_list:
+                    if '"' in value:
+                        job.write(f"export {name}='{value}'\n")
+                    else:
+                        job.write(f'export {name}="{value}"\n')
             job.write('\n')
             # Do file checks
             stat_files_exist = gda_util.check_stat_files(job_env_dict)

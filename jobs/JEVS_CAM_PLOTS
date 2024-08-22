@@ -94,9 +94,10 @@ else
   fi
   export EVSINnam=${EVSINnam:-$COMIN/stats/$COMPONENT/$MODELNAME}
   echo $COMPATH
+  [[ ! -d $COMOUTplots ]] && mkdir -p $COMOUTplots
 fi
 
-mkdir -p $COMOUT $COMOUTplots
+[[ ! -d $COMOUT ]] && mkdir -p $COMOUT
 
 echo $COMPATH
 

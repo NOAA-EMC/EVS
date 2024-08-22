@@ -77,6 +77,7 @@ export DCOMINukmet_precip=${DCOMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
 export DCOMINghrsst_ospo=${DCOMINghrsst_ospo:-$DCOMROOT}
 export DCOMINndbc=${DCOMINndbc:-$DCOMROOT}
+export DCOMINjason3=${DCOMINjason3:-$DCOMROOT}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 mkdir -p $COMOUT.${INITDATE}
 for mname in $MODELNAME; do

@@ -2,7 +2,9 @@
 #***************************************************************************************
 #  Purpose: Generate href grid2obs product joe and sub-jobs files by directly using href 
 #           operational ensemble mean and probability product files   
-#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update: 
+#              04/25/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP
+#              10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
 #***************************************************************************************
 set -x 
 
@@ -27,16 +29,19 @@ for prod in mean prob ; do
 
 
     for valid_run in run1 run2 run3 run4 ; do
-
-     
-     #***********************
      # Build sub-jobs
      # **********************
      >run_href_${model}.${dom}.${valid_run}_product.sh
+     ######################################################################################################
+     #Restart: check if this CONUS task has been completed in the previous run
+     # if not, run this task, and then mark its completion, 
+     # otherwise, skip this task
+     # ###################################################################################################  
+     if [ ! -e  $COMOUTrestart/product/run_href_${model}.${dom}.${valid_run}_product.completed ] ; then
+	    
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}_product.sh     
        echo  "export regrid=G227" >> run_href_${model}.${dom}.${valid_run}_product.sh
-
        echo  "export output_base=${WORK}/grid2obs/run_href_${model}.${dom}.${valid_run}_product" >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export OBTYPE='PREPBUFR'" >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export domain=CONUS" >> run_href_${model}.${dom}.${valid_run}_product.sh
@@ -104,13 +109,17 @@ for prod in mean prob ; do
                                  ${maskpath}/Bukovsky_G227_SPlains.nc,
                                  ${maskpath}/Bukovsky_G227_SRockies.nc'" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
+       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
 
-         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
+       echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
-	 echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}_product.sh
+       #Mark this CONUS task is completed
+       echo "[[ \$? = 0 ]] && >$COMOUTrestart/product/run_href_${model}.${dom}.${valid_run}_product.completed" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
        chmod +x run_href_${model}.${dom}.${valid_run}_product.sh
        echo "${DATA}/run_href_${model}.${dom}.${valid_run}_product.sh" >> run_all_href_product_poe.sh
+
+      fi 
 
     done # end of valid_run
 
@@ -119,6 +128,13 @@ for prod in mean prob ; do
      for valid_run in run1 run2 run3 run4 ; do
 
      >run_href_${model}.${dom}.${valid_run}_product.sh
+     #######################################################################
+     #Restart check: 
+     # check if this Alaska task has been completed in the previous run
+     # if not, run this task, and then mark its completion,
+     # otherwise, skip this task
+     ########################################################################
+     if [ ! -e  $COMOUTrestart/product/run_href_${model}.${dom}.${valid_run}_product.completed ] ; then
 
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}_product.sh
@@ -174,11 +190,15 @@ for prod in mean prob ; do
 
  
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
+       echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
-       echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}_product.sh
+       #Mark this Alaska task is completed
+       echo "[[ \$? = 0 ]] && >$COMOUTrestart/product/run_href_${model}.${dom}.${valid_run}_product.completed" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
        chmod +x run_href_${model}.${dom}.${valid_run}_product.sh
        echo "${DATA}/run_href_${model}.${dom}.${valid_run}_product.sh" >> run_all_href_product_poe.sh
+
+      fi #end if check restart
 
     done # end of valid_run 
 
