@@ -6,7 +6,6 @@
 #PBS -l walltime=00:15:00
 #PBS -l select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
-#PBS -V
 
 
 set -x
@@ -63,7 +62,7 @@ export SITE=$(cat /etc/cluster_name)
 ## CALL executable job script here
 #############################################################
 
-$HOMEevs/jobs/JEVS_NWPS_STAT
+$HOMEevs/jobs/JEVS_NWPS_STATS
 
 ######################################################################
 # Purpose: The job and task scripts work together to create stat
