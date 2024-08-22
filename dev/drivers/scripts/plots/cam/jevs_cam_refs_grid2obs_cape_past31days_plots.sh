@@ -3,7 +3,7 @@
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
+#PBS -l walltime=00:15:00
 #PBS -l place=vscatter,select=10:ncpus=84:mem=100GB
 #PBS -l debug=true
 
