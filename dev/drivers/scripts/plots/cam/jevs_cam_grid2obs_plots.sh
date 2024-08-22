@@ -7,7 +7,6 @@
 #PBS -l walltime=12:00:00
 #PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=300GB
 #PBS -l debug=true
-#PBS -V
 
 set -x
 export model=evs

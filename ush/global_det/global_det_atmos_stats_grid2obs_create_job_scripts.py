@@ -573,12 +573,12 @@ generate_stats_jobs_dict = {
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'DPT',
                                'var1_fcst_levels': 'Z2',
-                               'var1_fcst_options': '',
+                               'var1_fcst_options': 'cnt_thresh = [ NA, NA, NA, NA, NA, NA ]; cnt_logic = INTERSECTION;',
                                'var1_fcst_threshs': ('ge277.594, ge283.15, '
                                                      +'ge288.706, ge294.261'),
                                'var1_obs_name': 'DPT',
                                'var1_obs_levels': 'Z2',
-                               'var1_obs_options': '',
+                               'var1_obs_options': 'cnt_thresh = [ NA, >=272.039, >=277.594, >=283.15, >=288.706, >=294.261 ]; cnt_logic = INTERSECTION;',
                                'var1_obs_threshs': ('ge277.594, ge283.15, '
                                                     +'ge288.706, ge294.261'),
                                'met_config_overrides': ''},

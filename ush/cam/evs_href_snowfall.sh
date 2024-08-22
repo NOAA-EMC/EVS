@@ -1,7 +1,9 @@
 #!/bin/ksh
 #************************************************************************************
 #  Purpose: Generate href snowfall poe and sub-jobs files
-#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update: 
+#     05/07/2024, add restart, Binbin Zhou Lynker@EMC/NCEP
+#     10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
 #***********************************************************************************
 set -x 
 
@@ -46,6 +48,15 @@ for obsv in 6h 24h  ; do
 
         for vhr in $vhrs; do
             >run_href_snow${obsv}.${fhr}.${vhr}.sh
+
+          ####################################################################################
+          # Restart check:
+          #       check if this sub-task has been completed in the previous run
+          #       if not, do this sub-task, and mark it is completed after it is done
+          #       if yes, skip this task
+          #####################################################################################
+          if [ ! -e  $COMOUTrestart/snow/run_href_snow${obsv}.${fhr}.${vhr}.completed ] ; then
+
             ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
             if [ "$ihr" -eq "00" ] || [ "$ihr" -eq "12" ] ; then
                 if [ "$fhr" -ge "45" ] ; then
@@ -126,8 +137,14 @@ for obsv in 6h 24h  ; do
             echo "for FILEn in \$output_base/stat/\${MODEL}/ensemble_stat_\${MODEL}_*_${obsv}_FHR0${fhr}_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo "for FILEn in \$output_base/stat/\${MODEL}/grid_stat_\${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo "for FILEn in \$output_base/stat/\${MODEL}/grid_stat_\${MODEL}${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-            chmod +x run_href_snow${obsv}.${fhr}.${vhr}.sh
+
+            #Mark this task is completed for restart 
+	    echo "[[ \$? = 0 ]] && >$COMOUTrestart/snow/run_href_snow${obsv}.${fhr}.${vhr}.completed" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+
+	    chmod +x run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo "${DATA}/run_href_snow${obsv}.${fhr}.${vhr}.sh" >> run_all_href_snowfall_poe.sh
+         
+	  fi #end if check restart
 
         done #end of vhr
     done #end of fhr

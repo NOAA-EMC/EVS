@@ -191,13 +191,6 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
                         note_msg = 'No matching stat line'
                     elif len(stat_line) > 1:
                         note_msg = 'Multiple matching stat lines'
-                    print(f"NOTE: {note_msg} in {stat_file} "
-                          +f"matching LINE_TYPE={met_line_type}, "
-                          +f"COLUMN={met_stat}, "
-                          +f"FCST_VAR={met_var_level.split('/')[0]}, "
-                          +f"FCST_LEV={met_var_level.split('/')[1]}, "
-                          +f"FCST_LEAD={wmo_s.zfill(2)}0000, "
-                          +f"VX_MASK={met_vx_mask}")
                     have_stat_line = False
                 if wmo_sc == 'sd' and str(wmo_s) == '12':
                     ostdev_stat_line = stat_file_df[
@@ -214,17 +207,6 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
                     if len(ostdev_stat_line) == 1:
                         have_ostdev_stat_line = True
                     else:
-                        if len(ostdev_stat_line) == 0:
-                            note_msg = 'No matching stat line'
-                        elif len(ostdev_stat_line) > 1:
-                            note_msg = 'Multiple matching stat lines'
-                        print(f"NOTE: {note_msg} in {stat_file} "
-                              +f"matching LINE_TYPE={met_line_type}, "
-                              +f"COLUMN=OSTDEV, "
-                              +f"FCST_VAR=met_var_level.split('/')[0], "
-                              +f"FCST_LEV=met_var_level.split('/')[1], "
-                              +f"FCST_LEAD={wmo_s.zfill(2)}0000, "
-                              +f"VX_MASK={met_vx_mask}")
                         have_ostdev_stat_line = False
             else:
                 have_stat_line = False
