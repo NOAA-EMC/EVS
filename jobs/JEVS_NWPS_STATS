@@ -39,7 +39,7 @@ export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-nwps}
 export MODELNAME=${MODELNAME:-nwps}
 export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
-export OBTYPE=${OBTYPE:-GDAS}
+export OBTYPE=${OBTYPE:-NDBC}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 
@@ -56,7 +56,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINnwps=${COMINnwps:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${nwps_ver})}
+export COMINnwps=${COMINnwps:-$(compath.py ${envir}/com/${MODELNAME}/${nwps_ver})}
 export EVSINndbc=${COMIN}/prep/${COMPONENT}
 export EVSINgdasnc=${COMIN}/prep/${COMPONENT}
 export ARCmodel=${COMIN}/prep/${COMPONENT}
