@@ -1,11 +1,9 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_hireswarwmem2_severe_prep.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script preprocesses HiResW ARW2 UH data for 
 #                    CAM severe verification.
-# History Log:
-# 3/2023: Initial script assembled by Logan Dawson 
 ###############################################################################
 
 

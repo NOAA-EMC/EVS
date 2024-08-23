@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-
 ###############################################################################
 # Name of Script: evs_prep_spc_otlk.py
-# Contact(s):     Marcel Caron (marcel.caron@noaa.gov)
-#                 Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: Copy and unzip SPC outlook shapefiles on a daily basis
 #                    and run METplus to generate VX_MASK regions
-#
 # History Log:
 #   1/2023: Initial script assembled
 #   4/2023: Script modified to generate masks on a daily basis

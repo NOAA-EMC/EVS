@@ -2,11 +2,9 @@
 
 ##################################################################################
 # Name of Script: exevs_cam_severe_plots.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script runs METplus to generate severe
 #                    verification graphics for deterministic and ensemble CAMs.
-# History Log:
-# 06/2023: Initial script assembled by Logan Dawson
 ##################################################################################
 
 

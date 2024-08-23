@@ -1,11 +1,9 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_cam_radar_prep.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script preprocesses MRMS radar observations for 
 #                    CAM verification.
-# History Log:
-# 12/22/2022: Initial script assembled by Logan Dawson 
 ###############################################################################
 
 

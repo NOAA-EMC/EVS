@@ -2,11 +2,9 @@
 
 ##################################################################################
 # Name of Script: exevs_cam_radar_stats.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script runs METplus to generate radar
 #                    verification statistics for deterministic and ensemble CAMs.
-# History Log:
-# 04/28/2023: Initial script assembled by Logan Dawson
 ##################################################################################
 
 
