@@ -61,7 +61,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/JEVS_NFCENS_WAVE_GRID2OBS_STATS
+$HOMEevs/jobs/JEVS_NFCENS_STATS
 
 #######################################################################
 # Purpose: This calculates the stats for the NFCENS wave model
