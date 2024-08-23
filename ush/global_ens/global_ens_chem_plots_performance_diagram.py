@@ -364,7 +364,7 @@ class PerformanceDiagram:
                 f'{t} {fcst_units[0]}'
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
-        if self.plot_info_dict['fcst_var_name'] == "ATOK":
+        if self.plot_info_dict['fcst_var_name'] == "AOTK":
             ncol_set = 8
         elif self.plot_info_dict['fcst_var_name'] == "PMTF":
             ncol_set = 7
