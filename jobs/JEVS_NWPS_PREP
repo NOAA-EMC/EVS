@@ -25,6 +25,19 @@ export VDATE=${VDATE:-${PDYm1}}
 export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ####################################
+# Define NET/RUN variables          
+####################################
+export NET=${NET:-evs}
+export MODEL=${MODEL:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-nwps}
+export MODELNAME=${MODELNAME:-nwps}
+export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
+export OBTYPE=${OBTYPE:-NDBC}
+export RUN=${RUN:-wave}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+
+####################################
 # Set EVS directories               
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
@@ -40,19 +53,6 @@ export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config}
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}
-
-####################################
-# Define NET/RUN variables          
-####################################
-export NET=${NET:-evs}
-export MODEL=${MODEL:-evs}
-export STEP=${STEP:-prep}
-export COMPONENT=${COMPONENT:-nwps}
-export MODELNAME=${MODELNAME:-nwps}
-export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
-export OBTYPE=${OBTYPE:-NDBC}
-export RUN=${RUN:-wave}
-export VERIF_CASE=${VERIF_CASE:-grid2obs}
 
 ####################################
 # Define COMIN/COMOUT variables     
