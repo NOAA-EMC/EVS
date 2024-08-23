@@ -46,7 +46,7 @@ export MODELNAME=nfcens
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_NFCENS_WAVE_GRID2OBS_PREP
+$HOMEevs/jobs/JEVS_NFCENS_PREP
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
