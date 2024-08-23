@@ -22,9 +22,16 @@ if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
    done
    echo "Missing prepbufr files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "WARNING: All of the preppbufr files are missing."
+      echo "WARNING: All of the RAP preppbufr files are missing for EVS ${COMPONENT}"
       export verif_all=no
       >$DATA/verif_all.no
+      if [ "$SENDMAIL" = "YES" ] ; then
+	 export subject="RAP Prepbufr Data Missing for EVS ${COMPONENT}"
+	 echo "WARNING:  No RAP Prepbufr data available for ${vday}" > mailmsg
+	 echo "All of  $COMINobsproc/rap.${vday}/rap.txxz.prepbufr.tm00" files are missing >> mailmsg
+	 echo "Job ID: $jobid" >> mailmsg
+	 cat mailmsg | mail -s "$subject" $MAILTO
+       fi
    fi
 
 fi
@@ -61,9 +68,17 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing ccpa01h files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "WARNING: All of the ccpa files are missing"
+      echo "WARNING: All of the ccpa01h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
       >$DATA/verif_precip.no
+      if [ "$SENDMAIL" = "YES" ] ; then
+	  export subject="CCPA_01h Data Missing for EVS ${COMPONENT}"
+	  echo "WARNING:  No CCPA_01h data available for ${vday}" > mailmsg
+	  echo "All of $COMINccpa/ccpa.${vday}/cycle/ccpa.txxz.01h.hrap.conus.gb2 are missing" >> mailmsg
+	  echo "Job ID: $jobid" >> mailmsg
+	  cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi                 
 
    missing=0
@@ -92,9 +107,17 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing ccpa03h files = " $missing
    if [ $missing -eq 8  ] ; then
-      echo "WARNING: All of the ccpa03h files are missing"
+      echo "WARNING: All of the ccpa03h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
       >$DATA/verif_precip.no
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="CCPA_03h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No CCPA_03h data available for ${VDATE}" > mailmsg
+          echo "All of $COMINccpa/ccpa.${vday}/cycle/ccpa.txxz.03h.hrap.conus.gb2 are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 
    missing=0
@@ -115,9 +138,18 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing ccpa06h files = " $missing
    if [ $missing -ge 1  ] ; then
-      echo "WARNING: At least one of the ccpa06h files are missing"
+      echo "WARNING: At least one of the ccpa06h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
       >$DATA/verif_precip.no
+
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="CCPA_06h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No CCPA_06h data available for ${vday}" > mailmsg
+          echo "All of $COMINccpa/ccpa.${vday}/cycle/ccpa.txxz.06h.hrap.conus.gb2 are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 
    accum=01
@@ -131,9 +163,18 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing mrms01h files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "WARNING: All of mrms01h files are missing"
+      echo "WARNING: All of mrms01h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
-      >$DATA/verif_snowfall.no
+      >$DATA/verif_precip.no
+
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="MRMS_01h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No MRMS_01h data available for ${vday}" > mailmsg
+          echo "All of $DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 
    accum=03
@@ -147,9 +188,18 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing mrms03h files = " $missing
    if [ $missing -eq 8  ] ; then
-      echo "WARNING: All of mrms03h files are missing"
+      echo "WARNING: All of mrms03h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
-      >$DATA/verif_snowfall.no
+      >$DATA/verif_precip.no
+
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="MRMS_03h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No MRMS_03h data available for ${vday}" > mailmsg
+          echo "All of $DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 
    accum=24
@@ -163,9 +213,18 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing mrms24h files = " $missing
    if [ $missing -eq 4  ] ; then
-      echo "WARNING: All of the mrms24h files are missing"   
+      echo "WARNING: All of the mrms24h files are missing for EVS ${COMPONENT}"   
       export verif_precip=no
-      >$DATA/verif_snowfall.no
+      >$DATA/verif_precip.no
+
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="MRMS_24h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No MRMS_24h data available for ${vday}" > mailmsg
+          echo "All of $DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 fi
 
