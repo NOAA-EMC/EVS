@@ -24,6 +24,7 @@ if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
    if [ $missing -eq 24  ] ; then
       echo "WARNING: All of the preppbufr files are missing."
       export verif_all=no
+      >$DATA/verif_all.no
    fi
 
 fi
@@ -62,6 +63,7 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 24  ] ; then
       echo "WARNING: All of the ccpa files are missing"
       export verif_precip=no
+      >$DATA/verif_precip.no
    fi                 
 
    missing=0
@@ -92,6 +94,7 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 8  ] ; then
       echo "WARNING: All of the ccpa03h files are missing"
       export verif_precip=no
+      >$DATA/verif_precip.no
    fi
 
    missing=0
@@ -114,6 +117,7 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -ge 1  ] ; then
       echo "WARNING: At least one of the ccpa06h files are missing"
       export verif_precip=no
+      >$DATA/verif_precip.no
    fi
 
    accum=01
@@ -129,6 +133,7 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 24  ] ; then
       echo "WARNING: All of mrms01h files are missing"
       export verif_precip=no
+      >$DATA/verif_snowfall.no
    fi
 
    accum=03
@@ -144,6 +149,7 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 8  ] ; then
       echo "WARNING: All of mrms03h files are missing"
       export verif_precip=no
+      >$DATA/verif_snowfall.no
    fi
 
    accum=24
@@ -159,6 +165,7 @@ if [ $VERIF_CASE = precip ] ; then
    if [ $missing -eq 4  ] ; then
       echo "WARNING: All of the mrms24h files are missing"   
       export verif_precip=no
+      >$DATA/verif_snowfall.no
    fi
 fi
 
@@ -209,9 +216,13 @@ for domain in conus ak ; do
 
          if [ $refs_mbrs -lt 14 ] ; then
             echo "WARNING: REFS members at all cycles and fcst hours = " $refs_mbrs " which < 14 "
-            REFS:export verif_precip=no
-            REFS:export verif_snowfall=no
-            REFS:export verif_all=no
+            export verif_precip=no
+            export verif_snowfall=no
+            export verif_all=no
+	    >$DATA/verif_precip.no
+	    >$DATA/verif_snowfall.no
+	    >$DATA/verif_all.no
+
          fi
       fi
    done
@@ -238,9 +249,12 @@ for domain in conus ak ; do
           done
           if [ $refs_prod -eq 0 ] ; then
             echo "WARNING: REFS Products at all cycsand fhrs = " $refs_prod = 0", no one product existing "
-            REFS:export verif_precip=no
-            REFS:export verif_snowfall=no
-            REFS:export verif_all=no
+            export verif_precip=no
+            export verif_snowfall=no
+            export verif_all=no
+	    >$DATA/verif_precip.no
+	    >$DATA/verif_snowfall.no
+	    >$DATA/verif_all.no
           fi
       fi
       fhr=$((fhr+1))  

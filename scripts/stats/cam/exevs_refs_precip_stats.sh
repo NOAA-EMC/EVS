@@ -10,25 +10,35 @@
 set -x
 export machine=${machine:-"WCOSS2"}
 
-#*************************************
-#check input data are available:
-#*************************************
-source $USHevs/cam/evs_check_refs_files.sh
-export err=$?; err_chk
-
 export WORK=$DATA
 cd $WORK
 
 export run_mpi=${run_mpi:-'yes'}
 export verif_precip=${verif_precip:-'yes'}
 export verif_snowfall=${verif_snowfall:-'yes'}
-if [ "$verif_precip" = "no" ] && [ "$verif_snowfall" = "no" ] ; then
-    export gather='no'
-    export prepare='no'
-fi
 export prepare=${prepare:-'yes'}
 export gather=${gather:-'yes'}
 export verify='precip'
+
+#*************************************
+#check input data are available:
+#*************************************
+source $USHevs/cam/evs_check_refs_files.sh
+export err=$?; err_chk
+
+if [ -e $DATA/verif_precip.no ] ; then
+   export verif_precip='no'
+   echo "Either CCPA or REFS forecast files do not exist, skip verifying precip"
+fi
+if [ -e $DATA/verif_snowfall.no ] ; then
+   export verif_snowfall='no'
+   echo "Either NOHRSC or REFS forecast files do not exist, skip verifying snowfall"
+fi
+
+if [ -e $DATA/verif_precip.no ] && [ -e $DATA/verif_snowfall.no ] ; then
+    export gather='no'
+    export prepare='no'
+fi
 
 export COMREFS=$COMINrefs
 export COMCCPA=$COMINccpa

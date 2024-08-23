@@ -3,20 +3,13 @@
 # Purpose:   Setup some paths and run refs grid2obs stat ush scripts
 # 
 # Last updated 
-#              05/30/2024: by  Binbin Zhou, Lynker@EMC/NCEP
+#              08/23/2024: by  Binbin Zhou, Lynker@EMC/NCEP
 #####################################################################
 set -x
-
 
 export machine=${machine:-"WCOSS2"}
 export WORK=$DATA
 cd $WORK
-
-#*************************************
-#check input data are available:
-#*************************************
-source $USHevs/$COMPONENT/evs_check_refs_files.sh 
-export err=$?; err_chk
 
 #lvl = profile or sfc or both
 export lvl='both'
@@ -33,6 +26,20 @@ export gather=${gather:-'yes'}
 export verify=$VERIF_CASE
 export run_mpi=${run_mpi:-'yes'}
 
+#*************************************
+#check input data are available:
+#*************************************
+source $USHevs/$COMPONENT/evs_check_refs_files.sh
+export err=$?; err_chk
+if [ -e $DATA/verif_all.no ] ; then
+ export prepare='no'
+ export verif_system='no'
+ export verif_profile='no'
+ export verif_product='no'
+ export gather='no'
+ echo "Either prepbufr or REFS forecast files do not exist, skip grid2obs verification!"
+fi 
+
 export COMREFS=$COMINrefs
 export PREPBUFR=$COMINobsproc
 
@@ -45,7 +52,6 @@ export vday=$VDATE
 
 #  domain = conus or alaska or all
 export domain="all"
-#export domain="HI"
 
 export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
@@ -58,8 +64,9 @@ export COMOUTrestart=$COMOUTsmall/restart
 #************************************************
 # Prepare REFS member files just for sfc fields
 #************************************************
-$USHevs/cam/evs_refs_prepare.sh sfc
-
+if [ $prepare = yes ] ; then
+  $USHevs/cam/evs_refs_prepare.sh sfc
+fi
 
 #***************************************
 # Prepare the prepbufr data

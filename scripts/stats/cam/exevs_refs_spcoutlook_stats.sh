@@ -12,12 +12,6 @@ export machine=${machine:-"WCOSS2"}
 export WORK=$DATA
 cd $WORK
 
-#*********************************
-#check input data are available:
-#*********************************
-source $USHevs/cam/evs_check_refs_files.sh 
-export err=$?; err_chk
-
 #lvl = profile or sfc or both
 export lvl='both'
 
@@ -33,6 +27,19 @@ export verif_spcoutlook='yes'
 export gather=${gather:-'yes'}
 export verify=$VERIF_CASE
 export run_mpi=${run_mpi:-'yes'}
+
+#*********************************
+#check input data are available:
+#*********************************
+source $USHevs/$COMPONENT/evs_check_refs_files.sh
+export err=$?; err_chk
+if [ -e $DATA/verif_all.no ] ; then
+ export prepare='no'
+ export verif_spcoutlook='no'
+ export gather='no'
+ echo "Either prepbufr or REFS forecast files do not exist, exit spcoutlook verification!"
+fi
+
 
 export COMREFS=$COMINrefs
 export PREPBUFR=$COMINobsproc
@@ -51,15 +58,12 @@ export SPCoutlookMask=$EVSINspcotlk/$MODELNAME/spc.$VDATE
 
 #  domain = conus or alaska or all
 export domain="all"
-#export domain="HI"
 
 export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
 [[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
 [[ ! -d $COMOUTrestart/prepare/prepbufr.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/prepbufr.${vday}
 [[ ! -d $COMOUTrestart/spcoutlook ]] &&  mkdir -p $COMOUTrestart/spcoutlook
-
-
 
 #*********************************
 # Prepare prepbufr data files
