@@ -351,12 +351,12 @@ class PerformanceDiagram:
             thresh_mark_dict[fcst_var_thresh] = fcst_var_thresh_marker_dict
         if fcst_units[0] == "Numeric":
             thresh_legend_labels = [
-                f'{t}'
+                t.replace("ge","$\u2265$")
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
         elif fcst_units[0] == "10^-6g/m^3":
             thresh_legend_labels = [
-                f'{t} $\u03bcg/m^3$'
+                t.replace("gt","$\u003E$")+" $\u03bcg/m^3$"
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
         else:
@@ -364,11 +364,17 @@ class PerformanceDiagram:
                 f'{t} {fcst_units[0]}'
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
+        if self.plot_info_dict['fcst_var_name'] == "ATOK":
+            ncol_set = 8
+        elif self.plot_info_dict['fcst_var_name'] == "PMTF":
+            ncol_set = 7
+        else:
+            ncol_set = plot_specs_pd.legend_ncol
         thresh_legend = ax.legend(
             thresh_legend_handles, thresh_legend_labels,
             bbox_to_anchor=(0.5, -0.075),
             loc = 'upper center',
-            ncol = plot_specs_pd.legend_ncol,
+            ncol = ncol_set,
             fontsize = plot_specs_pd.legend_font_size
         )
         plt.draw()
