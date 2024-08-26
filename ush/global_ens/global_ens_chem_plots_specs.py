@@ -702,7 +702,12 @@ class PlotSpecs:
             units = '$\u03bcg/m^3$'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
-            plot_title = plot_title+', '+var_thresh_for_title+' '+units
+            if plot_info_dict['fcst_var_name'] == 'AOTK':
+                plot_title = plot_title+', '+var_thresh_for_title.replace("ge","$\u2265$")
+            elif plot_info_dict['fcst_var_name'] == 'PMTF':
+                plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
+            else:
+                plot_title = plot_title+', '+var_thresh_for_title+' '+units
             thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
             if plot_info_dict['fcst_var_name'] == 'APCP':
                 thresh_in = round(thresh_value*0.0393701, 3)
