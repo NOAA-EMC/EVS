@@ -61,6 +61,7 @@ export EVSINglwu=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
 export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}
 
 # make the directory where the plots will be kept
+mkdir -p ${COMOUT}
 mkdir -p ${COMOUTplots}
 
 
