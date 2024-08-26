@@ -232,14 +232,14 @@ for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrg
   if ls lead_average_regional_${domain}_valid_all_times_${var}*.png 1> /dev/null 2>&1; then
      mv lead_average_regional_${domain}_valid_all_times_${var}*.png  evs.refs.csi_fbias.${var_new}_${level}.last${past_days}days.fhrmean_${valid}.${domain}.png
   fi
-  if ls threshold_average_regional_${domain}_${valid}_${var}_csi*.png 1> /dev/null 2>&1; then
-     mv threshold_average_regional_${domain}_${valid}_${var}_csi*.png  evs.refs.csi.${var_new}_${level}.last${past_days}days.threshmean_${valid}.${domain}.png
+  if ls threshold_average_regional_${domain}_valid_*_${var}_csi*.png 1> /dev/null 2>&1; then
+     mv threshold_average_regional_${domain}_valid_*_${var}_csi*.png  evs.refs.csi.${var_new}_${level}.last${past_days}days.threshmean_${valid}.${domain}.png
   fi
-  if ls threshold_average_regional_${domain}_${valid}_${var}_fbias*.png 1> /dev/null 2>&1; then
-     mv threshold_average_regional_${domain}_${valid}_${var}_fbias*.png  evs.refs.fbias.${var_new}_${level}.last${past_days}days.threshmean_${valid}.${domain}.png
+  if ls threshold_average_regional_${domain}_valid_*_${var}_fbias*.png 1> /dev/null 2>&1; then
+     mv threshold_average_regional_${domain}_valid_*_${var}_fbias*.png  evs.refs.fbias.${var_new}_${level}.last${past_days}days.threshmean_${valid}.${domain}.png
   fi
-  if ls performance_diagram_regional_${domain}_${valid}_${var}*.png 1> /dev/null 2>&1; then
-     mv performance_diagram_regional_${domain}_${valid}_${var}*.png evs.refs.ctc.${var_new}_${level}.last${past_days}days.perfdiag_${valid}.${domain}.png
+  if ls performance_diagram_regional_${domain}_valid_*_${var}*.png 1> /dev/null 2>&1; then
+     mv performance_diagram_regional_${domain}_valid_*_${var}*.png evs.refs.ctc.${var_new}_${level}.last${past_days}days.perfdiag_${valid}.${domain}.png
   fi
 
  done
