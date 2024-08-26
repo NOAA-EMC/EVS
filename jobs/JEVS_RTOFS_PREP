@@ -31,6 +31,13 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-rtofs}
+
 ###################################
 # Set EVS directories
 ####################################
@@ -43,21 +50,18 @@ export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
+#########################################
 # Run setpdy and initialize PDY variables
+#########################################
 export vhr=${vhr:-"00"}
 export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 export VDATE=${VDATE:-$PDYm2}
 
-####################################
-# Define NET/RUN variables
-####################################
-export NET=${NET:-evs}
-export STEP=${STEP:-prep}
-export COMPONENT=${COMPONENT:-rtofs}
-
+##################################
 # define COMIN/COMOUT variables
+##################################
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMINrtofs=${COMINrtofs:-$(compath.py $envir/com/rtofs/${rtofs_ver})}
 export EVSINprep=${EVSINprep:-$COMIN/$STEP/$COMPONENT}
