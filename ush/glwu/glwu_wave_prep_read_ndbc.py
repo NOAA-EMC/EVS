@@ -2,6 +2,7 @@
 '''
 Name: glwu_wave_prep_read_ndbc.py
 Contact(s): Samira Ardani(samira.ardani@noaa.gov)
+Cited: Mallory P. Row (mallory.row@noaa.gov)
 
 Abstract: This Python code filters the Buoy IDs from NDBC, those have locations from the $FIXevs for Great Lakes regions, 
 then it copies the associate .txt files in to tmp directory and COMOUT.
@@ -86,7 +87,6 @@ for ndbc_file in all_ndbc_files:
 
 #############################################################################
 # Modify the copied .txt files to include the data for that particular VDATE:
-# Altered from: Mallory Row's script for EVS-global_det component.
 ##############################################################################
 
 ndbc_header1 = ("#YY  MM DD hh mm WDIR WSPD GST  WVHT   DPD   APD MWD   "

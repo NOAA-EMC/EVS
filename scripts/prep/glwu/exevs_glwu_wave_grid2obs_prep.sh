@@ -30,16 +30,11 @@ echo ' '
 
 mkdir -p ${DATA}/nc
 mkdir -p ${DATA}/gribs
-#mkdir -p $COMOUTprep/glwu.${INITDATE}/$RUN
 
 echo 'Copying GLWU wave grib2 and nc files'
 
 HHs='01 07 13 19'
-#fcsts='0 24 48 72 96 120 144'
-
 fcsts="$(seq -s ' ' 0 144)"
-
-#mtypes='glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_sr grlr_500m grlr_500m_lc'
 
 for mtype in glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_sr grlr_500m grlr_500m_lc ; do
 	export mtype=${mtype}
@@ -114,14 +109,6 @@ else
 		cat mailmsg | mail -s "$subject" $MAILTO
 	fi
 fi
-
-###################################################################################
-# Create masks for Great Lakes regions
-# NOTE: script below is calling MET's gen_vx_mask directly instead of using METplus
-# keeping it in a ush script; future use should use METplus to do this
-###################################################################################
-mkdir -p $DATA/masks
-$USHevs/${COMPONENT}/${COMPONENT}_${STEP}_regions.sh
 
 ###################################################################################
 
