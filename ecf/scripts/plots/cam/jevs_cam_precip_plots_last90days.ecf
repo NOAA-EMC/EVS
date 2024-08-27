@@ -1,10 +1,10 @@
-#PBS -N evs_cam_precip_plots
+#PBS -N evs_cam_precip_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=05:40:00
-#PBS -l place=vscatter:exclhost,select=4:ncpus=128:mem=250GB
+#PBS -l walltime=04:35:00
+#PBS -l place=vscatter:exclhost,select=4:ncpus=128:mem=200GB
 #PBS -l debug=true
 
 export model=evs 
@@ -58,6 +58,7 @@ export RUN="atmos"
 export VERIF_CASE="precip"
 export MODELNAME=${COMPONENT}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
+export EVAL_PERIOD="last90days"
 
 ############################################################
 # Execute j-job
