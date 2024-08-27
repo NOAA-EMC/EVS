@@ -30,6 +30,15 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-rtofs}
+export RUNsmall=${RUNsmall:-ocean}
+
+
 ###################################
 # Set EVS directories
 ####################################
@@ -42,22 +51,18 @@ export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
+#########################################
 # Run setpdy and initialize PDY variables
+#########################################
 export vhr=${vhr:-"00"}
 export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 export VDATE=${VDATE:-$PDYm2}
 
-####################################
-# Define NET/RUN variables
-####################################
-export NET=${NET:-evs}
-export STEP=${STEP:-prep}
-export COMPONENT=${COMPONENT:-rtofs}
-export RUNsmall=${RUNsmall:-ocean}
-
+##################################
 # define COMIN/COMOUT variables
+##################################
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}
 export COMOUTsmall=${COMOUTsmall:-$COMOUT/$STEP/$COMPONENT/${RUNsmall}.$VDATE}/$RUN/${VERIF_CASE}

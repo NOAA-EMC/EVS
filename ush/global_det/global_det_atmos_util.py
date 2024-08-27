@@ -3091,6 +3091,117 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                         [model_stat_file_df_valid_date_idx_list[0]]\
                         [:]
                     )
+                # Do conversions if needed
+                #### K to F
+                if fcst_var_name in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG',
+                                     'SST_DAILYAVG', 'TSOIL'] \
+                        and fcst_var_level in ['Z0', 'Z2', 'Z0.1-0'] \
+                        and line_type in ['SL1L2', 'SAL1L2']:
+                    coef = np.divide(9., 5.)
+                    if fcst_var_name == 'TMP_ANOM_DAILYAVG':
+                        const = 0
+                    elif line_type == 'SAL1L2':
+                        const = 0
+                    else:
+                        const = ((-273.15)*9./5.)+32.
+                    convert = True
+                    units_old = 'K'
+                    units_new = 'F'
+                #### m/s to knots
+                elif fcst_var_name in ['UGRD', 'VGRD', 'UGRD_VGRD',
+                                       'WNDSHR', 'GUST'] \
+                        and line_type in ['SL1L2', 'SAL1L2',
+                                          'VL1L2', 'VAL1L2']:
+                    coef = 1.94384449412
+                    const = 0
+                    convert = True
+                    units_old = 'm/s'
+                    units_new = 'kt'
+                else:
+                    convert = False
+                if convert:
+                    if line_type == 'SL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FBAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OBAR'
+                        ]
+                        col1_list = ['FBAR', 'OBAR']
+                        col2_list = ['FOBAR', 'FFBAR', 'OOBAR']
+                    elif line_type == 'SAL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FABAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OABAR'
+                        ]
+                        col1_list = ['FABAR', 'OABAR']
+                        col2_list = ['FOABAR', 'FFABAR', 'OOABAR']
+                    elif line_type == 'VL1L2':
+                        uf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UFBAR'
+                        ]
+                        vf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VFBAR'
+                        ]
+                        uo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UOBAR'
+                        ]
+                        vo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VOBAR'
+                        ]
+                        col1_list = ['UFBAR', 'VFBAR', 'UOBAR', 'VOBAR']
+                        col2_list = ['UVFOBAR', 'UVFFBAR', 'UVOOBAR']
+                    elif line_type == 'VAL1L2':
+                        uf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UFABAR'
+                        ]
+                        vf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VFABAR'
+                        ]
+                        uo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UOABAR'
+                        ]
+                        vo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VOABAR'
+                        ]
+                        col1_list = ['UFABAR', 'VFABAR', 'UOABAR', 'VOABAR']
+                        col2_list = ['UVFOABAR', 'UVFFABAR', 'UVOOABAR']
+                    for col in col1_list:
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef
+                             * model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col]) \
+                            + const
+                    for col in col2_list:
+                        if col in ['FOBAR', 'FOABAR']:
+                            const2 =  ((coef * const * fcst_avg_old)
+                                       + (coef * const * obs_avg_old))
+                        elif col in ['FFBAR', 'FFABAR']:
+                            const2 = 2 * (coef * const * fcst_avg_old)
+                        elif col in ['OOBAR', 'OOABAR']:
+                            const2 = 2 * (coef * const * obs_avg_old)
+                        elif col in ['UVFOBAR', 'UVFOABAR']:
+                            const2 = (coef * const \
+                                      * (uf_avg_old+vf_avg_old
+                                         +uo_avg_old+vo_avg_old))
+                        elif col in ['UVFFBAR', 'UVFFABAR']:
+                            const2 = 2 * (coef * const * \
+                                          (uf_avg_old+vf_avg_old))
+                        elif col in ['UVOOBAR', 'UVOOABAR']:
+                            const2 = 2 * (coef * const * \
+                                          (uo_avg_old+vo_avg_old))
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef**2
+                             *model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col]) \
+                             + const2 + const**2
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FCST_UNITS'
+                    ] = units_new
             else:
                 logger.debug(f"{filtered_model_stat_file} does not exist")
         if model_num == 'model1':
