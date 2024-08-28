@@ -139,7 +139,7 @@ elif [ $RUN = ndbc ]; then
 						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
 						mkdir -p $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR
 						if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUNmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/.
+							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUNsmall}.$VDATE/$RUN/${VERIF_CASE}/$VAR/.
 						else
 							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf

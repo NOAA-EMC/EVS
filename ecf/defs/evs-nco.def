@@ -1784,6 +1784,8 @@ suite evs_nco
               trigger :TIME >= 1845 and ../../prep/global_det/jevs_global_det_atmos_prep == complete
             task jevs_global_det_cfs_atmos_grid2grid_stats
               trigger :TIME >= 1845 and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+            task jevs_global_det_gfs_atmos_wmo_monthly_stats
+              trigger :TIME >= 2015 and ./jevs_global_det_atmos_wmo_daily_stats == complete
           endfamily
           family global_ens
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_18

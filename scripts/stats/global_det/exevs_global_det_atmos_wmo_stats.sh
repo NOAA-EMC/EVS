@@ -74,3 +74,22 @@ if [ $SENDMAIL = YES ] ; then
         done
     fi
 fi
+
+#########################################################################
+# HOLD FOR DBN ALERTS FOR FILES TO DISSEMATE TO ECMWF
+# ECMWF is currently the Lead Centre for Deterministic NWP Verification
+#########################################################################
+# DBN Alerts for monthly jobs
+#if [ $temporal = monthly ]; then
+#    if [ $SENDDBN = YES ]; then
+#        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_daily.rec2
+#        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_monthly.rec2
+#        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_dd10m.svs
+#        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_ff10m.svs
+#        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_rh2m.svs
+#        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_t2m.svs
+#        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_tcc.svs
+#        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_tp06.svs
+#        $DBNROOT/bin/dbn_alert MODEL EVS_WMO $job $COMOUT/${MODELNAME}.${VDATE}/202408_kwbc_tp24.svs
+#    fi
+#fi

@@ -8,6 +8,7 @@
 # Modified for EVSv2:
 # By: Samira Ardani (samira.ardani@noaa.gov)
 # 05/2024: Modified the code so that the RTOFS prep job writes to one rtofs.YYYMMDD directory.
+# 08/2024: Added restart capability and the remaining fixes and additions for EVS v2.0.
 #############################################################################################
 
 set -x
@@ -46,6 +47,10 @@ for lead in ${leads}; do
                     cat mailmsg | mail -s "$subject" $MAILTO
                 fi
             fi
+   	else
+	    echo "RESTART: $output_rtofs_file exists; Copying to $tmp_rtofs_file"
+	    cp -v $output_rtofs_file $tmp_rtofs_file
+
         fi
     done
     # glo_3dz daily files
@@ -71,6 +76,9 @@ for lead in ${leads}; do
                     cat mailmsg | mail -s "$subject" $MAILTO
                 fi
             fi
+        else
+	   echo "RESTART: $output_rtofs_file exists; Copying to $tmp_rtofs_file"
+           cp -v $output_rtofs_file $tmp_rtofs_file
         fi
     done
 done
@@ -108,6 +116,10 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
                 		else
                     			echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
                 		fi
+			else
+				echo "RESTART: $output_rtofs_latlon_filename exists; Copying to $tmp_rtofs_latlon_filename"
+				cp -v $output_rtofs_latlon_filename $tmp_rtofs_latlon_filename
+
             		fi
         	done
         	if [ $RUN = 'argo' ] ; then
@@ -128,6 +140,10 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
                     			else
                         			echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
                     			fi
+				else
+					echo "RESTART: $output_rtofs_latlon_filename exists; Copying to $tmp_rtofs_latlon_filename"
+					cp -v $output_rtofs_latlon_filename $tmp_rtofs_latlon_filename
+
                 		fi
             		done
         	fi
@@ -179,6 +195,10 @@ for ftype in nh sh; do
                 		cat mailmsg | mail -s "$subject" $MAILTO
             		fi
         	fi
+	else
+		echo "RESTART: $output_osisaf_file exists; Copying to $tmp_osisaf_file"
+		cp -v $output_osisaf_file $tmp_osisaf_file
+
     	fi
 done
 # convert NDBC *.txt files into a netcdf file using ASCII2NC
@@ -207,6 +227,10 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 				cp -v $tmp_ndbc_file $output_ndbc_file
 			fi
          	fi
+	else
+		echo "RESTART: $output_ndbc_file exists; Copying to $tmp_ndbc_file"
+		cp -v $output_ndbc_file $tmp_ndbc_file
+
    	 fi
 else
 	echo "WARNING: No NDBC data was available for valid date $VDATE."	
@@ -239,6 +263,9 @@ if [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_pro
 					cp -v $tmp_argo_file $output_argo_file
 				fi
 			fi
+		else
+			echo "RESTART: $output_argo_file exists; Copying to $tmp_argo_file"
+			cp -v $output_argo_file $tmp_argo_file
 		fi
 	else
 		if [ $SENDMAIL = YES ] ; then

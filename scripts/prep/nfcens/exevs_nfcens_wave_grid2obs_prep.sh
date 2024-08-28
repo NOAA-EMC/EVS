@@ -91,9 +91,9 @@ done
 ## create today's FNMOC individual fcst grib files and add them to the archive
 ################################################################################
 echo 'copy the FNMOC model grib files'
+lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 84 96 108 120 132 144'
 for HH in ${HHs} ; do
-	fcst=0
-	while (( $fcst <=144 )); do
+	for fcst in ${lead_hours}; do
 		FCST=$(printf "%03d" "$fcst")
 		COMINfilenamefnmoc="${COMINfnmoc}/${MODEL2NAME}_${RUN}.${INITDATE}/wave_${INITDATE}${HH}f${FCST}"
 		DATAfilenamefnmoc="${DATA}/gribs/wave_${INITDATE}${HH}f${FCST}"
@@ -123,7 +123,6 @@ for HH in ${HHs} ; do
 				echo "WARNING: FNMOC Forecast Data file does not have required wave field."
 			fi
 		fi
-		fcst=$(( $fcst+ 6 ))
 	done
 done
 
