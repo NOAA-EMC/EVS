@@ -1,10 +1,7 @@
 #!/bin/bash
-#  JOB card cerated for running METPlus-based Global enesmble verifications
+#  JOB card created for running METPlus-based Global enesmble verifications
 #   By Binbin Zhou, IMSG@EMC/NCEP
 #   Feb 2, 2022
-#
-#   August 14 2024     Ho-Chun Huang    Merged with JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
-#                                       in #!/bin/bash
 #
 #######################################################
 set -x
@@ -57,23 +54,21 @@ export mod_ver=${mod_ver:-${gefs_ver}}
 # Run setpdy and initialize PDY variables
 if [ "${RUN}" == "chem" ]; then
     setpdy.sh 8
-    . ./PDY
 else
     setpdy.sh 
-    . $DATA/PDY 
 fi
+. ./PDY
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-${HOMEevs}/exec}
 export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=${USHevs:-${HOMEevs}/ush}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
 if [ "${RUN}" == "chem" ]; then
-    export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
-    export USHevs=${USHevs:-${HOMEevs}/ush/${COMPONENT}}
     export MASK_DIR=${MASK_DIR:-${FIXevs}/masks}
 else
-    export USHevs=$HOMEevs/ush
     export SCRIPTerf=$HOMEevs/scripts
 fi
 
@@ -91,8 +86,6 @@ if [ "${RUN}" == "chem" ]; then
     export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
     export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}}
     
-    mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
-    
     export DATA_TYPE=${DATA_TYPE:-aeronet}
      
     # alternative choice is an option different from aqobs
@@ -101,12 +94,9 @@ else
     export EVSIN=${EVSIN:-$COMIN/prep/$COMPONENT/$RUN}
     export EVSINwmo=${EVSINwmo:-$COMIN/prep/$COMPONENT/atmos}
     export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver)}/$STEP/$COMPONENT
-    mkdir -p $COMOUT
     
     export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
     export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
-    
-    mkdir -p $COMOUTsmall $COMOUTfinal
     
     ####################################
     # Determine Job Output Name on System
@@ -114,6 +104,8 @@ else
     export outid="LL$job"
     export jobid="${outid}.o${pid}"
 fi
+mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
+    
 
 if [ "${RUN}" == "headline" ] ; then
     $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper

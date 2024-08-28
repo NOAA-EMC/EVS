@@ -1,10 +1,7 @@
-#!/bin/ksh
+#!/bin/bash
 #  JOB card created for running METPlus-based Global enesmble verifications
 #   By Binbin Zhou, IMSG@EMC/NCEP
 #   Feb 2, 2022
-#
-#   August 14 2024     Ho-Chun Huang    Merged with JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PREP
-#                                       in #!/bin/bash
 #
 #######################################################
 set -x
@@ -57,24 +54,17 @@ export mod_ver=${mod_ver:-${gefs_ver}}
 # Run setpdy and initialize PDY variables
 if [ "${RUN}" == "chem" ]; then
     setpdy.sh 8
-    . ./PDY
 else
     setpdy.sh 
-    . $DATA/PDY 
 fi
+. ./PDY
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-${HOMEevs}/exec}
 export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=${USHevs:-${HOMEevs}/ush}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
-
-if [ "${RUN}" == "chem" ]; then
-    export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
-    export USHevs=${USHevs:-${HOMEevs}/ush/${COMPONENT}}
-else
-    export SCRIPTerf=$HOMEevs/scripts
-    export USHevs=$HOMEevs/ush
-fi
 
 ## May need a default setting to avoid non-defined INITDATE
 if [ "${RUN}" == "atmos" ] || [ "${RUN}" == "headline" ]; then
