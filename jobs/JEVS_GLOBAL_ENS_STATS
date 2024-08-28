@@ -68,8 +68,6 @@ export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
 if [ "${RUN}" == "chem" ]; then
     export MASK_DIR=${MASK_DIR:-${FIXevs}/masks}
-else
-    export SCRIPTerf=$HOMEevs/scripts
 fi
 
 ## May need a default setting to avoid non-defined VDATE
