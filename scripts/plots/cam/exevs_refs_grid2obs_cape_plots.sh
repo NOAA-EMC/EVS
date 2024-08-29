@@ -357,19 +357,3 @@ fi
 if [ $SENDDBN = YES ] ; then
  $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.grid2obs.cape.past${past_days}days.v${VDATE}.tar
 fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -272,18 +272,3 @@ fi
 if [ $SENDDBN = YES ] ; then
    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.spcoutlook.past${past_days}days.v${VDATE}.tar
 fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

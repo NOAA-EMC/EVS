@@ -1,6 +1,6 @@
 #!/bin/ksh
 #*******************************************************************************
-# Purpose: setup environment, paths, and run the refs cape plotting python script
+# Purpose: setup environment, paths, and run the refs precip plotting python script
 # Last updated: 05/30/2024, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
 set -x 
@@ -359,18 +359,3 @@ fi
 if [ $SENDDBN = YES ] ; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.precip.past${past_days}days.v${VDATE}.tar
 fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

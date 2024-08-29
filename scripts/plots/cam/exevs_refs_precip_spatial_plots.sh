@@ -105,7 +105,3 @@ fi
 if [ $SENDDBN = YES ] ; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.precip.spatial.map.v${VDATE}.tar
 fi
-
-
-
-

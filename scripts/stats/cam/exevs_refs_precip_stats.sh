@@ -120,4 +120,3 @@ if [ $gather = yes ] && [ -s $COMOUTsmall/*/*.stat ] ; then
   $USHevs/cam/evs_refs_gather.sh precip
   export err=$?; err_chk
 fi
-

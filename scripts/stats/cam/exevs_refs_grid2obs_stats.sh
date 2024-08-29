@@ -146,4 +146,3 @@ if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then
   $USHevs/cam/evs_refs_gather.sh $VERIF_CASE  
   export err=$?; err_chk
 fi
-
