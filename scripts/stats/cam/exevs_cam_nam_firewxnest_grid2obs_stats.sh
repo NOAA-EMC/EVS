@@ -117,6 +117,9 @@ then
  obfound=1
  mkdir -p $DATA/$OBSDIR/nam.${obday}
   cp -v $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
+  split_by_subset $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
+  cat ADPUPA ADPSFC MSONET SFCSHP >> prepbufr.tmp
+  mv prepbufr.tmp $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
 else
   echo "WARNING: File $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum} is missing."
   if [ $SENDMAIL = "YES" ]; then
