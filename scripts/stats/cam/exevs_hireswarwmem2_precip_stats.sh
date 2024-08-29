@@ -370,38 +370,3 @@ if [ "$vhr" -ge "$last_cyc" ]; then
         fi
     fi
 fi
-
-# Cat the METplus log files
-log_dirs="$DATA/$VERIF_CASE/METplus_output/*/out/logs"
-for log_dir in $log_dirs; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-log_dir="$DATA/$VERIF_CASE/METplus_output/out/logs"
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-            if [ -f "$log_file" ]; then
-                echo "Start: $log_file"
-                cat "$log_file"
-                echo "End: $log_file"
-            fi
-        done
-    fi
-fi
-
-
-
