@@ -1,10 +1,10 @@
-#PBS -N evs_cam_precip_plots
+#PBS -N evs_cam_grid2obs_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=05:40:00
-#PBS -l place=vscatter:exclhost,select=4:ncpus=128:mem=250GB
+#PBS -l walltime=2:30:00
+#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=220GB
 #PBS -l debug=true
 
 export model=evs 
@@ -51,13 +51,15 @@ else
   export vhr=00
 fi
 export USE_CFP=YES
-export nproc=512
+export nproc=1536
 export ncpu=128
 export NET="evs"
 export RUN="atmos"
-export VERIF_CASE="precip"
+export VERIF_CASE="grid2obs"
 export MODELNAME=${COMPONENT}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
+export EVSINnam=${COMevs}/stats/$COMPONENT/$MODELNAME
+export EVAL_PERIOD="last31days"
 
 ############################################################
 # Execute j-job

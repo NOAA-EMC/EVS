@@ -13,7 +13,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST90DAYS'],
+                        'EVAL_PERIODS':['last90days'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0'],
                         'VARIABLES':{
@@ -65,7 +65,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST90DAYS'],
+                        'EVAL_PERIODS':['last90days'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0'],
                         'VARIABLES':{
@@ -117,7 +117,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'Alaska',
-                        'EVAL_PERIODS':['LAST90DAYS'],
+                        'EVAL_PERIODS':['last90days'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['6'],
                         'VARIABLES':{
@@ -169,7 +169,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'Hawaii',
-                        'EVAL_PERIODS':['LAST90DAYS'],
+                        'EVAL_PERIODS':['last90days'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0'],
                         'VARIABLES':{

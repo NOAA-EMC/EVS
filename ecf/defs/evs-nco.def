@@ -2235,13 +2235,19 @@ suite evs_nco
               trigger :TIME >= 1945 and ../../stats/global_det/jevs_global_det_gfs_atmos_grid2grid_stats == complete
           endfamily
           family cam
-            task jevs_cam_precip_plots
+            task jevs_cam_precip_plots_last31days
+              edit VHR '21'
+              trigger ../../stats/cam/jevs_cam_hireswarw_precip_stats_vhr_22 == complete and  ../../stats/cam/jevs_cam_hireswarwmem2_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hireswfv3_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hrrr_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_namnest_precip_stats_vhr_22 == complete
+            task jevs_cam_precip_plots_last90days
               edit VHR '21'
               trigger ../../stats/cam/jevs_cam_hireswarw_precip_stats_vhr_22 == complete and  ../../stats/cam/jevs_cam_hireswarwmem2_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hireswfv3_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hrrr_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_namnest_precip_stats_vhr_22 == complete
             task jevs_cam_snowfall_plots
               edit VHR '21'
               trigger ../../stats/cam/jevs_cam_hireswarw_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hireswfv3_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hrrr_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_namnest_snowfall_stats_vhr_18 == complete
-            task jevs_cam_grid2obs_plots
+            task jevs_cam_grid2obs_plots_last31days
+              edit VHR '21'
+              trigger ../../stats/cam/jevs_cam_hireswarw_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswfv3_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hrrr_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_21 == complete
+            task jevs_cam_grid2obs_plots_last90days
               edit VHR '21'
               trigger ../../stats/cam/jevs_cam_hireswarw_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswfv3_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hrrr_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_21 == complete
             task jevs_cam_headline_plots

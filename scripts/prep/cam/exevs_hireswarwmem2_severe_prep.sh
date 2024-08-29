@@ -1,11 +1,9 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_hireswarwmem2_severe_prep.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script preprocesses HiResW ARW2 UH data for 
 #                    CAM severe verification.
-# History Log:
-# 3/2023: Initial script assembled by Logan Dawson 
 ###############################################################################
 
 
@@ -146,21 +144,4 @@ i=1
    k=$((k+1))
 
 done
-
-# Cat the METplus log files
-log_dir=$DATA/logs
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-            if [ -f "$log_file" ]; then
-                echo "Start: $log_file"
-                cat "$log_file"
-                echo "End: $log_file"
-            fi
-        done
-    fi
-fi
-
 exit
