@@ -50,7 +50,7 @@ export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
 export mod_ver=${mod_ver:-${gefs_ver}}
 
-export VDATE=$(date --date="3 days ago" +%Y%m%d)
+export VDATE=${VDATE:-$(date --date="3 days ago" +%Y%m%d))
 echo "VDATE=${VDATE}"
 
 export DATA_TYPE=aeronet 
