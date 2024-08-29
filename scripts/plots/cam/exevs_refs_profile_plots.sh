@@ -219,7 +219,9 @@ fi
 
        else
           #Restart from existing png files of previous run
+	 if [ -s $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ] ; then
           cp $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ${plot_dir}/.
+	 fi
        fi
 
       done #end of line_type
@@ -242,7 +244,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 60 -depth 1 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 60  --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi

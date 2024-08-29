@@ -189,7 +189,9 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
 	else
 	 #Restart from existing png files of previous run
-	 cp  $restart/${score_type}_regional_${domain}_valid_${valid_rst}_*${var}*.png ${plot_dir}/.
+	 if [ -s $restart/${score_type}_regional_${domain}_valid_${valid_rst}_*${var}*.png ] ; then
+	  cp  $restart/${score_type}_regional_${domain}_valid_${valid_rst}_*${var}*.png ${plot_dir}/.
+	 fi
         fi
 
       done #end of line_type

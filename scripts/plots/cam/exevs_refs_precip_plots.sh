@@ -207,7 +207,9 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
        else
 	 #Restart from existing png files of previous run
+	if [ -s $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png ] ; then
          cp  $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png ${plot_dir}/.
+	fi
        fi 
 
        done # end of fcst_valid_hour

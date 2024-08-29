@@ -233,7 +233,9 @@ for valid_time in 00 12 ; do
        else
          #Restart from png files of previous runs
 	 for domain in $subregions ; do
+	  if [ -s $restart/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_*.png ] ; then
            cp $restart/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_*.png ${plot_dir}/.
+	  fi
 	 done
        fi
 

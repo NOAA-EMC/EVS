@@ -199,7 +199,9 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
 
        else
          #Restart from existing png files of previous run
+	if [ -s $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png ] ; then
 	 cp $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png ${plot_dir}/.
+	fi
        fi 
 
      done #end of FCST_LEVEL_value

@@ -275,7 +275,9 @@ for stats in $stats_list ; do
       else
 	 #Restart from png files of previous runs
 	 for domain in $subregions ; do
+          if [ -s $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ] ; then
 	   cp $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ${plot_dir}/.
+	  fi
 	 done
       fi
 

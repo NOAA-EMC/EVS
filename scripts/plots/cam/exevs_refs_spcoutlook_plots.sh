@@ -185,7 +185,9 @@ for stats in csi_fbias ratio_pod_csi ; do
 
        else
 	 #Restart from png files of previous runs
+	if [ -s $restart/${score_type}_regional_*_${valid_rst}_${var_rst}*.png ] ; then
          cp $restart/${score_type}_regional_*_${valid_rst}_${var_rst}*.png ${plot_dir}/.
+	fi
        fi
 
       done #end of line_type
