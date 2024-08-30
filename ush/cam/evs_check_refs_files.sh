@@ -22,7 +22,7 @@ if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
    done
    echo "Missing prepbufr files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "WARNING: All of the RAP preppbufr files are missing for EVS ${COMPONENT}"
+      echo "WARNING: All of the RAP prepbufr files are missing for EVS ${COMPONENT}"
       export verif_all=no
       >$DATA/verif_all.no
       if [ "$SENDMAIL" = "YES" ] ; then
