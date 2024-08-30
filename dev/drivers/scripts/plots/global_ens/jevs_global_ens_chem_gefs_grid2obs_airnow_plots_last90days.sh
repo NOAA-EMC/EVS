@@ -55,7 +55,7 @@ export VDATE_END=$(finddate.sh ${today} d-4)
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END}
 
 # CALL executable job script here
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global ensemble chem

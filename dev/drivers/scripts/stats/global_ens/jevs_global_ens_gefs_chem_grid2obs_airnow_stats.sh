@@ -51,13 +51,12 @@ export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
 export mod_ver=${mod_ver:-${gefs_ver}}
 
-export VDATE=$(date --date="3 days ago" +%Y%m%d)
+export VDATE=${VDATE:-$(date --date="3 days ago" +%Y%m%d)}
 echo "VDATE=${VDATE}"
 
 export DATA_TYPE=airnow
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
-mkdir -p ${COMIN}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
@@ -74,7 +73,7 @@ if [ -z "$MAILTO" ]; then
 else
     export vhr
     echo "vhr = ${vhr}"
-    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_STATS
+    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
 fi
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics using AirNOW PM2.5

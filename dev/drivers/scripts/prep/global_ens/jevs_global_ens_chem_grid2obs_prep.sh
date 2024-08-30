@@ -50,11 +50,10 @@ export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
 export mod_ver=${mod_ver:-${gefs_ver}}
 
-export INITDATE=$(date --date="3 days ago" +%Y%m%d)
+export INITDATE=${INITDATE:-$(date --date="3 days ago" +%Y%m%d)}
 echo "INITDATE=${INITDATE}"
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
-mkdir -p ${COMIN}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
@@ -72,7 +71,7 @@ if [ -z "$MAILTO" ]; then
 
 else
 
-    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PREP
+    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
 
 fi
 
