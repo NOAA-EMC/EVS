@@ -20,7 +20,7 @@ import netCDF4 as nc
 # Define the variables
 
 # Read in environment variables to use
-VDATE = os.environ['VDATE']
+INITDATE = os.environ['INITDATE']
 DATA = os.environ['DATA']
 DCOMROOT = os.environ['DCOMROOT']
 SENDCOM = os.environ['SENDCOM']
@@ -31,12 +31,12 @@ COMPONENT = os. environ ['COMPONENT']
 VERIF_CASE = os.environ ['VERIF_CASE']
 
 # Set up date/time
-VDATE_YMD = datetime.datetime.strptime(VDATE, '%Y%m%d')
-VDATE_Y =  '{:04d}'.format(VDATE_YMD.year)
-VDATE_M =  '{:02d}'.format(VDATE_YMD.month)
-VDATE_D =  '{:02d}'.format(VDATE_YMD.day)
+INITDATE_YMD = datetime.datetime.strptime(INITDATE, '%Y%m%d')
+INITDATE_Y =  '{:04d}'.format(INITDATE_YMD.year)
+INITDATE_M =  '{:02d}'.format(INITDATE_YMD.month)
+INITDATE_D =  '{:02d}'.format(INITDATE_YMD.day)
 
-PDATE= VDATE_YMD + datetime.timedelta(days=1)
+PDATE= INITDATE_YMD + datetime.timedelta(days=1)
 PDATE_YMD =  datetime.datetime.strftime(PDATE, '%Y%m%d')
 
 all_ndbc = os.path.join(DCOMROOT,
@@ -47,7 +47,7 @@ ndbc_for_glwu = os.path.join (DATA,'ndbc')
 if not os.path.exists(ndbc_for_glwu):
     os.mkdir(ndbc_for_glwu)
 
-output_glwu_ndbc = os.path.join(f'{COMOUT}.{VDATE}','ndbc')
+output_glwu_ndbc = os.path.join(f'{COMOUT}.{INITDATE}','ndbc')
 if not os.path.exists(output_glwu_ndbc):
     os.mkdir(output_glwu_ndbc)
 
@@ -86,7 +86,7 @@ for ndbc_file in all_ndbc_files:
 
 
 #############################################################################
-# Modify the copied .txt files to include the data for that particular VDATE:
+# Modify the copied .txt files to include the data for that particular INITDATE:
 ##############################################################################
 
 ndbc_header1 = ("#YY  MM DD hh mm WDIR WSPD GST  WVHT   DPD   APD MWD   "
@@ -98,7 +98,7 @@ tmp_glwu_ndbc_files = glob.glob(os.path.join(ndbc_for_glwu,"*.txt"))
 for tmp_buoy_file in tmp_glwu_ndbc_files:
     tmp_id = tmp_buoy_file.rpartition('/')[2].partition('.')[0]
     dfff = pd.read_csv(tmp_buoy_file, sep=" ",skiprows=2, skipinitialspace=True,keep_default_na=False, dtype='str', header=None)
-    new_df = dfff.loc[(dfff[0] == VDATE_Y)& (dfff[1] == VDATE_M)& (dfff[2] == VDATE_D)& (dfff[4] == '00')]
+    new_df = dfff.loc[(dfff[0] == INITDATE_Y)& (dfff[1] == INITDATE_M)& (dfff[2] == INITDATE_D)& (dfff[4] == '00')]
     tmp_glwu_ndbc = os.path.join (ndbc_for_glwu,f'{tmp_id}_edited.txt')
     tmp_glwu_ndbc_final = open (tmp_glwu_ndbc, 'w')
     tmp_glwu_ndbc_final.write(ndbc_header1)
