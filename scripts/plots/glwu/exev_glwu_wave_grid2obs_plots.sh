@@ -163,12 +163,12 @@ if [ $gather = yes ] ; then
 		fi
 
 		if [ $SENDCOM = YES ]; then
-			if [ -s evs.${STEP}.${COMPONENT}.${RUN}.*.tar ]; then
-	   			cp -v evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
+			if [ -s evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ]; then
+	   			cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/.
 			fi
 		fi
 		if [ $SENDDBN = YES ]; then
-			$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
+			$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
 		fi
 	done
 
