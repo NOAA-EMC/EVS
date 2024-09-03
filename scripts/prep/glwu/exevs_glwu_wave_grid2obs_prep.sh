@@ -41,9 +41,9 @@ for mtype in glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_s
 	if [ "${mtype}" == "grlc_2p5km" ] || [ "${mtype}" == "grlc_2p5km_lc" ]; then
 		for HH in ${HHs} ; do
 			filename="${MODELNAME}.${mtype}.t${HH}z.grib2"
-			COMINfilename="${COMINglwu}/${MODELNAME}.${INITDATE}/${filename}"
+			fullname="${COMINglwu}/${MODELNAME}.${INITDATE}/${filename}"
 			DATAfilename="${DATA}/gribs/${MODELNAME}.${mtype}.${INITDATE}.t${HH}z.grib2"
-			if [ ! -s ${COMINfilename} ]; then
+			if [ ! -s ${fullname} ]; then
 				echo "WARNING: No GLWU forecast was available for ${INITDATE}${HH}"
 				if [ $SENDMAIL = YES ]; then
 					export subject="GLWU Forecast Data Missing for EVS ${COMPONENT}"
@@ -53,7 +53,7 @@ for mtype in glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_s
 					cat mailmsg | mail -s "$subject" $MAILTO
 				fi
 			else
-				cp -v $COMINfilename $DATAfilename
+				cp -v $fullname $DATAfilename
 			fi
 			if [ -s $DATAfilename ]; then
 				for fcst in ${fcsts} ; do
