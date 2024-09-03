@@ -1,93 +1,146 @@
-#!/bin/ksh
+#!/bin/bash
 #  JOB card created for running METPlus-based Global enesmble verifications
 #   By Binbin Zhou, IMSG@EMC/NCEP
 #   Feb 2, 2022
 #
+#######################################################
 set -x
-#######################################################
-#######################################################
-
-export vhr=${vhr:-00}
-export cycle=${cycle:-t${vhr}z}
-
-export pid=$$
-export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-rm -rf $DATA
-mkdir -p $DATA
-cd $DATA
-
-
-# Run setpdy and initialize PDY variables
-setpdy.sh 
-. $DATA/PDY 
-
-if [ $RUN = atmos ] || [ $RUN = headline ]; then
-  export INITDATE=${INITDATE:-$PDYm2}
-fi
-
-
+##################################################
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls 
+### SENDECF  - Flag Events on ecFLOW
+### SENDMAIL - Send email if file is missing
+##################################################
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
-export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export COMINgfs=${COMINgfs:-$(compath.py $envir/com/gfs/${gfs_ver})}
-export COMINgefs=${COMINgefs:-$(compath.py $envir/com/gefs/${gefs_ver})}
-export COMINnaefs=${COMINnaefs:-$(compath.py $envir/com/naefs/${naefs_ver})}
-export DCOMIN=${DCOMIN:-${DCOMROOT}}
-export COMINccpa=${COMINccpa:-$(compath.py $envir/com/ccpa/${ccpa_ver})}
-export COMINcmce=$COMINnaefs
-export COMINobsproc=${COMINobsproc:-$(compath.py $envir/com/obsproc/${obsproc_ver})}
-export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
-export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
-export DCOMINghrsst=${DCOMINghrsst:-$DCOMROOT} 
+#######################################################
+# SET SHELL PROCESSING VARIABLES
+#######################################################
+date
+export PS4='$SECONDS + '
 
-export COMINgefs_bc=${COMINgefs_bc:-$COMINnaefs}
-export DCOMINcmce_bc=${DCOMINcmce_bc:-$DCOMIN}
-export EVSINgefs=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs
-export EVSINgefs_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs_bc
-export EVSINcmce=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce
-export EVSINcmce_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce_bc
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/${COMPONENT}
-mkdir -p $COMOUT
-
-export COMOUTgefs=${COMOUTgefs:-${COMOUT}/${RUN}.${INITDATE}/gefs}
-export COMOUTcmce=${COMOUTcmce:-${COMOUT}/${RUN}.${INITDATE}/cmce}
-export COMOUTecme=${COMOUTecme:-${COMOUT}/${RUN}.${INITDATE}/ecme}
-export COMOUTnaefs=${COMOUT}
-export COMOUTosi_saf=${COMOUTosi_saf:-${COMOUT}/${RUN}.${INITDATE}/osi_saf}
-export COMOUTgefs_bc=${COMOUTgefs_bc:-${COMOUT}/${RUN}.${INITDATE}/gefs_bc}
-export COMOUTcmce_bc=${COMOUTcmce_bc:-${COMOUT}/${RUN}.${INITDATE}/cmce_bc}
-
-if [ $RUN = headline ]; then
-  mkdir -p $COMOUTgefs $COMOUTcmce
-elif [ $RUN = atmos ]; then
-  mkdir -p $COMOUTgefs $COMOUTcmce $COMOUTecme $COMOUTosi_saf
-  if [ $MODELNAME = naefs ]; then
-      mkdir -p $COMOUTgefs_bc $COMOUTcmce_bc
-  fi
+##########################################################
+# obtain unique LSF id (jobid) and make temp directories
+##########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+if [ "${RUN}" != "chem" ]; then
+    rm -rf $DATA
 fi
+mkdir -p $DATA
+cd $DATA
+
+export envir=${envir:-prod}
+
+# Define COMIN/COMOUT variables:
+
+echo ${COMPATH}
+
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-global_ens}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-gefs}
+export modsys=${modsys:-gefs}
+export mod_ver=${mod_ver:-${gefs_ver}}
+
+# Run setpdy and initialize PDY variables
+if [ "${RUN}" == "chem" ]; then
+    setpdy.sh 8
+else
+    setpdy.sh 
+fi
+. ./PDY
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=$HOMEevs/exec
-export PARMevs=$HOMEevs/parm
-export USHevs=$HOMEevs/ush
-export SCRIPTerf=$HOMEevs/scripts
-export FIXevs=${FIXevs:-$HOMEevs/fix}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=${USHevs:-${HOMEevs}/ush}
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
-####################################
-# Determine Job Output Name on System
-####################################
-export outid="LL$job"
-export jobid="${outid}.o${pid}"
+## May need a default setting to avoid non-defined INITDATE
+if [ "${RUN}" == "atmos" ] || [ "${RUN}" == "headline" ]; then
+    export INITDATE=${INITDATE:-$PDYm2}
+elif [ "${RUN}" == "chem" ]; then
+    export INITDATE=${INITDATE:-${PDYm3}}
+fi
 
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${STEP}.sh
+#
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
+export COMINgefs=${COMINgefs:-$(compath.py $envir/com/gefs/${gefs_ver})}
+if [ "${RUN}" == "chem" ]; then
 
-if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATAROOT
-  rm -rf $DATA
+    export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
+    export DCOMINaeronet=${DCOMINaeronet:-${DCOMROOT}}
+    export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
+    export COMOUTprep=${COMOUTprep:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}}
+   
+    mkdir -p ${COMOUT} ${COMOUTprep}
+   
+    # alternative choice is an option different from aqobs
+    export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+   
+else
+    export COMINgfs=${COMINgfs:-$(compath.py $envir/com/gfs/${gfs_ver})}
+    export COMINnaefs=${COMINnaefs:-$(compath.py $envir/com/naefs/${naefs_ver})}
+    export DCOMIN=${DCOMIN:-${DCOMROOT}}
+    export COMINccpa=${COMINccpa:-$(compath.py $envir/com/ccpa/${ccpa_ver})}
+    export COMINcmce=$COMINnaefs
+    export COMINobsproc=${COMINobsproc:-$(compath.py $envir/com/obsproc/${obsproc_ver})}
+    export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
+    export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
+    export DCOMINghrsst=${DCOMINghrsst:-$DCOMROOT} 
+    
+    export COMINgefs_bc=${COMINgefs_bc:-$COMINnaefs}
+    export DCOMINcmce_bc=${DCOMINcmce_bc:-$DCOMIN}
+    export EVSINgefs=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs
+    export EVSINgefs_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs_bc
+    export EVSINcmce=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce
+    export EVSINcmce_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce_bc
+    
+    export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/${COMPONENT}
+    mkdir -p $COMOUT
+    
+    export COMOUTgefs=${COMOUTgefs:-${COMOUT}/${RUN}.${INITDATE}/gefs}
+    export COMOUTcmce=${COMOUTcmce:-${COMOUT}/${RUN}.${INITDATE}/cmce}
+    export COMOUTecme=${COMOUTecme:-${COMOUT}/${RUN}.${INITDATE}/ecme}
+    export COMOUTnaefs=${COMOUT}
+    export COMOUTosi_saf=${COMOUTosi_saf:-${COMOUT}/${RUN}.${INITDATE}/osi_saf}
+    export COMOUTgefs_bc=${COMOUTgefs_bc:-${COMOUT}/${RUN}.${INITDATE}/gefs_bc}
+    export COMOUTcmce_bc=${COMOUTcmce_bc:-${COMOUT}/${RUN}.${INITDATE}/cmce_bc}
+
+    if [ "${RUN}" == "headline" ]; then
+        mkdir -p $COMOUTgefs $COMOUTcmce
+    elif [ "${RUN}" == "atmos" ]; then
+        mkdir -p $COMOUTgefs $COMOUTcmce $COMOUTecme $COMOUTosi_saf
+        if [ "${MODELNAME}" == "naefs" ]; then
+            mkdir -p $COMOUTgefs_bc $COMOUTcmce_bc
+        fi
+    fi
+    ####################################
+    # Determine Job Output Name on System
+    ####################################
+    export outid="LL$job"
+    export jobid="${outid}.o${pid}"
+fi
+
+if [ "${RUN}" == "chem" ]; then
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}.sh
+else
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${STEP}.sh
+fi
+
+if [ "${KEEPDATA}" != "YES" ]; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
 fi
 
 date

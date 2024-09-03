@@ -19,7 +19,7 @@ export MET_VERSION="${MET_VERSION%.}"
 # Logging
 export SAVE_DIR="${DATA}/${VERIF_CASE}/out"
 export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart"
-export COMPLETED_JOBS_FILE="completed_jobs.txt"
+export COMPLETED_JOBS_FILE="completed_jobs_${EVAL_PERIOD}.txt"
 export LOG_TEMPLATE="${SAVE_DIR}/logs/EVS_verif_plotting_job{njob}_$($NDATE)_$$.out"
 export LOG_LEVEL="DEBUG"
 

@@ -24,6 +24,7 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
+VERIF_CASE = os.environ['VERIF_CASE']
 
 # Copy files for restart
 if STEP == 'stats':
@@ -37,17 +38,28 @@ if STEP == 'stats':
             print(f"Copying restart directory {RESTART_DIR} "
                   +f"into working directory {working_dir}")
             cutil.run_shell_command(
-                ['cpreq', '-rpv', RESTART_DIR, working_dir]
+                ['cp', '-rpv', RESTART_DIR, working_dir]
             )
 elif STEP == 'plots':
     COMOUTplots = os.environ['COMOUTplots']
     RESTART_DIR = os.environ['RESTART_DIR']
     SAVE_DIR = os.environ['SAVE_DIR']
-    completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs.txt')
+    if VERIF_CASE == "grid2obs":
+        completed_jobs_file = os.path.join(
+            RESTART_DIR, 
+            f"completed_jobs_{os.environ['EVAL_PERIOD']}.txt"
+        )
+    elif VERIF_CASE == "precip":
+        completed_jobs_file = os.path.join(
+            RESTART_DIR, 
+            f"completed_jobs_{os.environ['EVAL_PERIOD']}.txt"
+        )
+    else:
+        completed_jobs_file = os.path.join(RESTART_DIR, f'completed_jobs.txt')
     if os.path.exists(completed_jobs_file):
         if os.stat(completed_jobs_file).st_size != 0:
             cutil.run_shell_command(
-                ['cpreq', '-rpv', os.path.join(RESTART_DIR,'*'), SAVE_DIR]
+                ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), SAVE_DIR]
             )
 
 
