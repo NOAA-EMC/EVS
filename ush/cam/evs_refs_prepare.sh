@@ -625,7 +625,7 @@ if [ "$data" = "sfc" ] ; then
       echo " done" >> run_prepare.${day}.${cyc}.${domain}.sh
    
       chmod +x run_prepare.${day}.${cyc}.${domain}.sh
-      echo "run_prepare.${day}.${cyc}.${domain}.sh" >> run_prepare_poe.sh
+      echo "${DATA}/run_prepare.${day}.${cyc}.${domain}.sh" >> run_prepare_poe.sh
 
     done
    done
