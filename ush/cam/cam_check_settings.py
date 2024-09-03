@@ -47,7 +47,7 @@ evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT',
         'NEST','URL_HEAD',
         ]
-evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR']
+evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR', 'bufr_ROOT']
 evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = [
         'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
         'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE',

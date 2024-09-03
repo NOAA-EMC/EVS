@@ -111,6 +111,9 @@ elif VERIF_CASE == 'grid2obs':
             data_base_dir, MODELNAME, 'merged_ptype'
         ))
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'tmp'))
+        data_dir_list.append(os.path.join(
+            data_base_dir, OBSNAME, 'prepbufr'
+        ))
 elif VERIF_CASE == 'snowfall':
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))

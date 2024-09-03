@@ -597,3 +597,81 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
                 )
 
+# Construct a file name given a template
+def fname_constructor(template_str, IDATE="YYYYmmdd", IHOUR="HH", 
+                      VDATE="YYYYmmdd", VHOUR="HH", VDATEHOUR="YYYYmmddHH",
+                      VDATEm1H="YYYYmmdd", VDATEHOURm1H="YYYYmmddHH", 
+                      FHR="HH", LVL="0", OFFSET="HH"):
+    template_str = template_str.replace('{IDATE}', IDATE)
+    template_str = template_str.replace('{IHOUR}', IHOUR)
+    template_str = template_str.replace('{VDATE}', VDATE)
+    template_str = template_str.replace('{VHOUR}', VHOUR)
+    template_str = template_str.replace('{VDATEHOUR}', VDATEHOUR)
+    template_str = template_str.replace('{VDATEm1H}', VDATEm1H)
+    template_str = template_str.replace('{VDATEHOURm1H}', VDATEHOURm1H)
+    template_str = template_str.replace('{FHR}', FHR)
+    template_str = template_str.replace('{LVL}', LVL)
+    template_str = template_str.replace('{OFFSET}', OFFSET)
+    return template_str
+
+# Create a list of prepbufr file paths
+def get_prepbufr_templates(indir, vdates, paths=[]):
+    '''
+        indir  - (str) Input directory for prepbufr file data
+        vdates - (datetime object) List of datetimes used to fill templates
+        paths  - (list of str) list of paths to append the prepbufr paths to 
+                 Default is empty.
+    '''
+    prepbufr_templates = []
+    prepbufr_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if vh in ['00', '03', '06', '09', '12', '15', '18', '21']:
+            if vh in ['03', '09', '15', '21']:
+                offsets = ['03']
+            elif vh in ['00', '06', '12', '18']:
+                offsets = ['00', '06']
+                prepbufr_templates.append(os.path.join(
+                    indir, 
+                    'gdas.{VDATE}',
+                    '{VHOUR}',
+                    'atmos',
+                    'gdas.t{VHOUR}z.prepbufr'
+                ))
+            for offset in offsets:
+                use_vdate = vdate + td(hours=int(offset))
+                use_vd = use_vdate.strftime('%Y%m%d')
+                use_vh = use_vdate.strftime('%H')
+                template = os.path.join(
+                    indir, 
+                    'nam.{VDATE}',
+                    'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                )
+                prepbufr_paths.append(fname_constructor(
+                    template, VDATE=use_vd, VHOUR=use_vh, OFFSET=offset
+                ))
+        for template in prepbufr_templates:
+            prepbufr_paths.append(fname_constructor(
+                template, VDATE=vd, VHOUR=vh
+            ))
+    return np.concatenate((paths, np.unique(prepbufr_paths)))
+
+def preprocess_prepbufr(indir, fname, workdir, outdir, subsets):
+    if os.path.exists(os.path.join(outdir, fname)):
+        print(f"{fname} exists in {outdir} so we can skip preprocessing.")
+    else:
+        wd = os.getcwd()
+        os.chdir(workdir)
+        run_shell_command(
+            [
+                os.path.join(os.environ['bufr_ROOT'], 'bin', 'split_by_subset'), 
+                os.path.join(indir, fname)
+            ]
+        )
+        run_shell_command(
+            np.concatenate((
+                ['cat'], subsets, ['>>', os.path.join(outdir, fname)]
+            ))
+        )
+        os.chdir(wd)

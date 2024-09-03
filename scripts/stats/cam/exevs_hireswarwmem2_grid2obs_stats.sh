@@ -50,6 +50,10 @@ for NEST in $NEST_LIST; do
             # Create Output Directories
             python $USHevs/cam/cam_create_output_dirs.py
             export err=$?; err_chk
+
+            # Preprocess Prepbufr Data
+            python $USHevs/cam/cam_stats_grid2obs_preprocess_prepbufr.py
+            export err=$?; err_chk
      
             # Create Reformat Job Script 
             python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
