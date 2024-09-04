@@ -48,7 +48,7 @@ export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-YES}
 export SENDMAIL=${SENDMAIL:-YES}
 
-export MAILTO='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
+export MAILTO='andrew.benjamin@noaa.gov,samira.ardani@noaa.gov'
 
 
 # developers directories
