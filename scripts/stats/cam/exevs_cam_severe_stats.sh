@@ -1,11 +1,9 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_cam_severe_stats.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script runs METplus to generate severe 
 #                    verification statistics for HREF and deterministic CAMs.
-# History Log:
-# 04/20/2023: Initial script assembled by Logan Dawson
 ###############################################################################
 
 
@@ -222,22 +220,6 @@ if [ -d $DATA/grid_stat ]; then
 else
    echo "Missing stat output for ${VDATE}12. METplus will not run."
 
-fi
-
-# Cat the METplus log files
-log_dir="$DATA/logs"
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-            if [ -f "$log_file" ]; then
-                echo "Start: $log_file"
-                cat "$log_file"
-                echo "End: $log_file"
-            fi
-        done
-    fi
 fi
 
 exit

@@ -49,7 +49,7 @@ export err=$?; err_chk
 #In clear sky, there is no value for  cnv,  so the models define them to be very large 
 #arbitrary values. In this case, if first averaging CTC over forecast times and then 
 #averaging over members to get metrics (as current METplus does) could be wrong  
-#(e.g. got unexpected low ETS).  After discussing with Logan, we  decided that first  
+#(e.g. got unexpected low ETS).  After discussing with team leads, we  decided that first  
 #averaging CTC among the members, then averaging over forecast times to get CTC
 #metrics. The results are much better. So for sref, first run cnv job. After it is
 #finished, run grid2obs job. In global_ens, both are combined together in grid2obs.

@@ -65,10 +65,13 @@ if [ $MODELNAME = href ] ; then
 else
    if [ $VERIF_CASE = severe ] ; then
       export VDATE=${VDATE:-$PDYm7}
+      export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
    elif [ $VERIF_CASE = radar ] ; then
       export VDATE=${VDATE:-$PDYm2}
+      export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
    else
       export VDATE=${VDATE:-$PDYm1}
+      export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
    fi
 fi
 

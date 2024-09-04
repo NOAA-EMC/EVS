@@ -1,11 +1,9 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_cam_radar_prep.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script preprocesses MRMS radar observations for 
 #                    CAM verification.
-# History Log:
-# 12/22/2022: Initial script assembled by Logan Dawson 
 ###############################################################################
 
 
@@ -106,22 +104,5 @@ for DOMAIN in ${DOMAINS}; do
    done
 
 done
-
-# Cat the METplus log files
-log_dir=$DATA/logs
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-            if [ -f "$log_file" ]; then
-                echo "Start: $log_file"
-                cat "$log_file"
-                echo "End: $log_file"
-            fi
-        done
-    fi
-fi
-
 exit
 

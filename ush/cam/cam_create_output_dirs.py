@@ -15,11 +15,17 @@
 import os
 import re
 from datetime import datetime, timedelta as td
-from cam_plots_grid2obs_graphx_defs import graphics as graphics_g2o
-from cam_plots_precip_graphx_defs import graphics as graphics_pcp
-from cam_plots_snowfall_graphx_defs import graphics as graphics_sno
-from cam_plots_headline_graphx_defs import graphics as graphics_hdl
 import cam_util as cutil
+if os.environ['STEP'] == 'plots':
+    if os.environ['VERIF_CASE'] == 'grid2obs':
+        from cam_plots_grid2obs_graphx_defs import graphics as graphics_g2o
+    if os.environ['VERIF_CASE'] == 'headline':
+        from cam_plots_headline_graphx_defs import graphics as graphics_hdl
+    if os.environ['VERIF_CASE'] == 'precip':
+        from cam_plots_precip_last31days_graphx_defs import graphics as graphics_pcp31
+        from cam_plots_precip_last90days_graphx_defs import graphics as graphics_pcp90
+    if os.environ['VERIF_CASE'] == 'snowfall':
+        from cam_plots_snowfall_graphx_defs import graphics as graphics_sno
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
@@ -52,7 +58,16 @@ if VERIF_CASE == "precip":
         VERIF_TYPE = os.environ['VERIF_TYPE']
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
-        all_eval_periods = cutil.get_all_eval_periods(graphics_pcp)
+        EVAL_PERIOD = os.environ['EVAL_PERIOD']
+        if EVAL_PERIOD == 'last31days':
+            all_eval_periods = cutil.get_all_eval_periods(graphics_pcp31)
+        elif EVAL_PERIOD == 'last90days':
+            all_eval_periods = cutil.get_all_eval_periods(graphics_pcp90)
+        else:
+            raise ValueError(
+                'Invalid value for environment variable \"EVAL_PERIOD\": '
+                + f'{EVAL_PERIOD}'
+            )
         COMOUTplots = os.environ['COMOUTplots']
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
