@@ -79,20 +79,7 @@ reformat_data_jobs_dict = {
                                        ),
                                        gda_util.python_command(
                                            'global_det_atmos_stats_grid2grid'
-                                           '_create_anomaly.py',
-                                           ['HGT_P500',
-                                            os.path.join(
-                                                '$DATA',
-                                                '${VERIF_CASE}_${STEP}',
-                                                'METplus_output',
-                                                '${RUN}.{valid?fmt=%Y%m%d}',
-                                                '$MODEL', '$VERIF_CASE',
-                                                'grid_stat_${VERIF_TYPE}_'
-                                                +'${job_name}_'
-                                                +'{lead?fmt=%2H}0000L_'
-                                                +'{valid?fmt=%Y%m%d}_'
-                                                +'{valid?fmt=%H}0000V_pairs.nc'
-                                             )]
+                                           '_create_anomaly.py', []
                                        )]},
         'WindShear': {'env': {'var1_name': 'UGRD',
                               'var1_levels': 'P850, P200',
@@ -106,18 +93,7 @@ reformat_data_jobs_dict = {
                                    ),
                                    gda_util.python_command(
                                        'global_det_atmos_stats_grid2grid_'
-                                       +'create_wind_shear.py',
-                                       [os.path.join(
-                                            '$DATA', '${VERIF_CASE}_${STEP}',
-                                            'METplus_output',
-                                            '${RUN}.{valid?fmt=%Y%m%d}',
-                                            '$MODEL', '$VERIF_CASE',
-                                            'grid_stat_${VERIF_TYPE}_'
-                                            +'${job_name}_'
-                                            +'{lead?fmt=%2H}0000L_'
-                                            +'{valid?fmt=%Y%m%d}_'
-                                            +'{valid?fmt=%H}0000V_pairs.nc'
-                                        )]
+                                       +'create_wind_shear.py', []
                                    )]}
     },
     'sea_ice': {
@@ -1020,6 +996,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
+                    # Create job working directory
+                    job_env_dict['job_num_work_dir'] = os.path.join(
+                        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                        'mpmd_work_dir', JOB_GROUP,
+                        f"job{job_env_dict['job_num']}"
+                    )
+                    job_env_dict['MET_TMP_DIR'] = os.path.join(
+                        job_env_dict['job_num_work_dir'], 'tmp'
+                    )
                     # Set any environment variables for special cases
                     if JOB_GROUP == 'reformat_data':
                         if verif_type == 'pres_levs':
@@ -1266,6 +1251,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job.write('\n')
                     # Write job commands
                     if write_job_cmds:
+                        gda_util.make_dir(job_env_dict['job_num_work_dir'])
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
                             job.write('export err=$?; err_chk'+'\n')

@@ -41,7 +41,7 @@ if [ $SENDMAIL = YES ] ; then
 fi
 
 # Create and run job scripts for reformat_data, assemble_data, generate_stats, and gather_stats
-for group in reformat_data assemble_data generate_stats gather_stats; do
+for group in reformat_data; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-grid stats: ${JOB_GROUP}"
     python $USHevs/global_det/global_det_atmos_stats_grid2grid_create_job_scripts.py
@@ -75,8 +75,11 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
             nc=$((nc+1))
         done
     fi
+    # Copy files to desired location
+    python $USHevs/global_det/global_det_atmos_copy_mpmd_output.py
+    export err=$?; err_chk
 done
-
+exit
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Copy model files
