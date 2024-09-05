@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+#!/usr/bin/env python3
+>>>>>>> develop
 """
 Program Name: time_util.py
 Contact(s): George McCabe

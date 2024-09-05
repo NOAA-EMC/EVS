@@ -1,7 +1,9 @@
 #!/bin/ksh
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href ecnt plotting python script
-# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+# Last updated: 
+#                 07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP
+#                 05/30/2024, Binbin Zhou Lynker@EMC/NCEP
 ##******************************************************************************
 set -x 
 
@@ -17,6 +19,10 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
+restart=$COMOUT/restart/$past_days/href_ecnt_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi
 
 export eval_period='TEST'
 
@@ -58,6 +64,10 @@ VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central, Alaska,
 export fcst_init_hour="0,6,12,18"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+#For restart:
+if [ ! -d $plot_dir ] ; then
+  mkdir -p $plot_dir
+fi
 
 
 verif_case=grid2obs
@@ -104,6 +114,26 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
           FCST_LEVEL_values="L0"
        fi
 
+       if [ $VAR = TMP2m ] ; then
+	  new_var=tmp
+       elif [ $VAR = DPT2m ] ; then
+	  new_var=dpt
+       elif [ $VAR = RH2m ] ; then
+	  new_var=rh
+       elif [ $VAR = UGRD10m  ] ; then
+          new_var=ugrd
+       elif [ $VAR = VGRD10m  ] ; then
+          new_var=vgrd
+       elif [ $VAR = WIND10m ] ; then
+          new_var=wind
+       elif [ $VAR = PRMSL ] ; then
+          new_var=mslet
+       elif [ $VAR = GUSTsfc ] ; then
+          new_var=gust
+       elif [ $VAR = HPBL ] ; then
+          new_var=hpbl
+       fi	  
+
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
 
 	OBS_LEVEL_value=$FCST_LEVEL_value
@@ -115,6 +145,12 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
 	 # **************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh  
 
+      #***********************************************************************************************************************************
+      #  Check if this sub-job has been completed in the previous run for restart
+      if [ ! -e $restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed ] ; then
+      #***********************************************************************************************************************************
+     
+	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
         verif_type=conus_sfc
 
         echo "export PLOT_TYPE=lead_average_valid" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
@@ -154,9 +190,19 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
 
          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
+         #Save for restart
+	 echo "if [ -s ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+         echo " cp -v ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo " >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
+	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_all_poe.sh
+
+       else
+         #Restart from existing png files of previous run
+	 cp $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png ${plot_dir}/.
+       fi 
 
      done #end of FCST_LEVEL_value
 
@@ -181,6 +227,7 @@ else
   ${DATA}/run_all_poe.sh
 fi
 export err=$?; err_chk
+
 
 #**************************************************
 # Change plot file names to meet the EVS standard

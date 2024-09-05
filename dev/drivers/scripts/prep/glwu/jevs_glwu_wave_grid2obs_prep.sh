@@ -6,7 +6,10 @@
 #PBS -l walltime=00:15:00
 #PBS -l select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
+<<<<<<< HEAD
 #PBS -V
+=======
+>>>>>>> develop
 
 
 set -x
@@ -47,8 +50,14 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-YES}
+<<<<<<< HEAD
 
 export MAILTO='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
+=======
+export SENDMAIL=${SENDMAIL:-YES}
+
+export MAILTO='andrew.benjamin@noaa.gov,samira.ardani@noaa.gov'
+>>>>>>> develop
 
 
 # developers directories
@@ -65,10 +74,17 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 #############################################################
+<<<<<<< HEAD
 $HOMEevs/jobs/JEVS_GLWU_WAVE_GRID2OBS_PREP
 
 #######################################################################
 # Purpose: This does the prep work for the NFCENS wave model
+=======
+$HOMEevs/jobs/JEVS_GLWU_PREP
+
+#######################################################################
+# Purpose: This does the prep work for the GLWU wave model
+>>>>>>> develop
 # Author: Samira Ardani (samira.ardani@NOAA.gov)
 #######################################################################
 

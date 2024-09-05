@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+#!/usr/bin/env python3
+>>>>>>> develop
 from datetime import datetime, timedelta as td
 import os
 import numpy as np

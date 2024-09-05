@@ -6,7 +6,6 @@
 #PBS -l walltime=00:30:00
 #PBS -l place=exclhost,select=1:ncpus=5:mem=500MB
 #PBS -l debug=true
-#PBS -V
 
 
 set -x
@@ -56,9 +55,9 @@ export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
-export KEEPDATA=${KEEPDATA:-NO}
+export KEEPDATA=${KEEPDATA:-YES}
 
-export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,alicia.bentley@noaa.gov'}
+export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,andrew.benjamin@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
 

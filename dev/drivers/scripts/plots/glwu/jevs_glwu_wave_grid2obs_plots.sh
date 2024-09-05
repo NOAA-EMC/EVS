@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #PBS -N jevs_nfcens_grid2obs_plots
+=======
+#PBS -N jevs_glwu_grid2obs_plots
+>>>>>>> develop
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -6,7 +10,10 @@
 #PBS -l walltime=00:15:00
 #PBS -l place=vscatter,select=1:ncpus=128:mem=500G
 #PBS -l debug=true
+<<<<<<< HEAD
 #PBS -V
+=======
+>>>>>>> develop
 
 set -x
 
@@ -62,7 +69,11 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
+<<<<<<< HEAD
 ${HOMEevs}/jobs/JEVS_GLWU_WAVE_GRID2OBS_PLOTS
+=======
+${HOMEevs}/jobs/JEVS_GLWU_PLOTS
+>>>>>>> develop
 
 #########################################################################
 # Purpose: This job creates the plots for the NFCENS wave model

@@ -7,7 +7,6 @@
 #PBS -l walltime=00:45:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=150GB
 #PBS -l debug=true
-#PBS -V
 
 set -x
 export model=evs
@@ -52,7 +51,7 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export vhr=${vhr:-${vhr}}
-export MAILTO="alicia.bentley@noaa.gov,marcel.caron@noaa.gov"
+export MAILTO="andrew.benjamin@noaa.gov,marcel.caron@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_STATS

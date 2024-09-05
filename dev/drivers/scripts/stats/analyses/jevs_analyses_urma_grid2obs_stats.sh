@@ -19,9 +19,6 @@ source $HOMEevs/versions/run.ver
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
-###%include <head.h>
-###%include <envir-p1.h>
-
 ############################################################
 # Load modules
 ############################################################
@@ -59,14 +56,14 @@ export MODELNAME=urma
 export modsys=urma
 export mod_ver=${urma_ver}
 
-export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
+export MAILTO="perry.shafran@noaa.gov,andrew.benjamin@noaa.gov"
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_ANALYSES_STATS
 
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
-##          model and generate stat files.
+## Purpose: This job will generate the grid2obs statistics for the URMA
+##          analyses and generate stat files.
 #######################################################################
 #
 exit

@@ -6,7 +6,6 @@
 #PBS -l walltime=00:15:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=150GB
 #PBS -l debug=true
-#PBS -V
 
 set -x
 
@@ -39,7 +38,7 @@ export USE_CFP=YES
 export nproc=128  
 export evs_run_mode="production"
 
-export MAILTO="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
+export MAILTO="perry.shafran@noaa.gov,andrew.benjamin@noaa.gov"
 # export MAILTO="firstname.lastname@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}

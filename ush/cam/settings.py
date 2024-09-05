@@ -144,6 +144,34 @@ class Presets():
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d')
             },
+            'last90days': {
+                'valid_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=90)
+                ).strftime('%Y%m%d'),
+                'valid_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                ).strftime('%Y%m%d'),
+                'init_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=90)
+                    ).strftime('%Y%m%d'),
+                'init_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                ).strftime('%Y%m%d')
+            },
+            'last31days': {
+                'valid_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=31)
+                ).strftime('%Y%m%d'),
+                'valid_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                ).strftime('%Y%m%d'),
+                'init_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=31)
+                    ).strftime('%Y%m%d'),
+                'init_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                ).strftime('%Y%m%d')
+            },
             'LAST30DAYS': {
                 'valid_beg': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)

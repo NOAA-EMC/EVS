@@ -6,7 +6,6 @@
 #PBS -l walltime=02:00:00
 #PBS -l place=shared,select=1:ncpus=1:mem=15GB
 #PBS -l debug=true
-#PBS -V
 
 set -x 
 
@@ -43,7 +42,7 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
 #export SENDMAIL=YES
-export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp

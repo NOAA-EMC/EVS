@@ -43,7 +43,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN
 
 export MODELNAME="gfs"
-export OBSNAME="prepbufr_gdas ndbc"
+export OBSNAME="prepbufr_gdas ndbc jason3"
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_GLOBAL_DET_PREP

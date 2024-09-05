@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=01:00:00
+#PBS -l walltime=00:50:00
 #PBS -l place=shared,select=1:ncpus=1:mem=100GB
 #PBS -l debug=true
 
@@ -54,8 +54,8 @@ export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 $HOMEevs/jobs/JEVS_CAM_PLOTS
 
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
-##          model and generate stat files.
+## Purpose: This job will generate the grid2obs plots for the NAM_FIREWXNEST
+##          model and generate plots tar files.
 #######################################################################
 #
 exit
