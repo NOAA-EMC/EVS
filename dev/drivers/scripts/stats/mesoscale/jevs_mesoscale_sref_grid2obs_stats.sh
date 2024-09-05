@@ -40,7 +40,7 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 
-export MAILTO='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
+export MAILTO='andrew.benjamin@noaa.gov,binbin.zhou@noaa.gov'
 
 if [ -z "$MAILTO" ]; then
 
