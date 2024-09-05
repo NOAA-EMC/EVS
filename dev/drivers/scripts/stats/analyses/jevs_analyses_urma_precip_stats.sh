@@ -57,7 +57,7 @@ export mod_ver=${urma_ver}
 export modsys=urma
 export MODELNAME=urma
 
-export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
+export MAILTO="perry.shafran@noaa.gov,andrew.benjamin@noaa.gov"
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_ANALYSES_STATS
