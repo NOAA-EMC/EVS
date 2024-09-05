@@ -54,7 +54,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver_2d}
 
-export MAILTO=${MAILTO:-'perry.shafran@noaa.gov,alicia.bentley@noaa.gov'}
+export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
 
