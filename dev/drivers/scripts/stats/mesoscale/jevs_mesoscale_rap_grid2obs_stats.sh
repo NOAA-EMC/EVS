@@ -59,7 +59,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
   export vhr=${vhr:-${vhr}}
-  export MAILTO="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
+  export MAILTO="perry.shafran@noaa.gov,andrew.benjamin@noaa.gov"
   # export MAILTO="firstname.lastname@noaa.gov"
 
 # Job Settings and Run
