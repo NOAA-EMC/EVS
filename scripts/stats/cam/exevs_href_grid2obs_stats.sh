@@ -71,7 +71,7 @@ if [ $prepare = yes ] ; then
 
   else
        export subject="GFS or RAP Prepbufr Data Missing for EVS ${COMPONENT}"
-       export MAILTO=${MAILTO:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+       export MAILTO=${MAILTO:-'andrew.benjamin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning:  No GFS or RAP Prepbufr data available for ${VDATE}" > mailmsg
        echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 or $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
