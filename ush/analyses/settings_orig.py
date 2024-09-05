@@ -574,30 +574,6 @@ class ModelSpecs():
             'wafs': {
                 'settings_key':'WAFS', 
                 'plot_name':'WAFS'
-            },
-            'rtma_anl': {
-                'settings_key':'RTMA_ANL',
-                'plot_name':'RTMA ANL'
-            }, 
-            'rtma_ges': {
-                'settings_key':'RTMA_GES',
-                'plot_name':'RTMA GES'
-            },
-            'urma_anl': {
-                'settings_key':'URMA_ANL',
-                'plot_name':'URMA ANL'
-            },  
-            'urma_ges': {
-                'settings_key':'URMA_GES',
-                'plot_name':'URMA GES'
-            },  
-            'rtma_ru_anl': {
-                'settings_key':'RTMA_RU_ANL',
-                'plot_name':'RTMA_RU ANL'
-            },
-            'rtma_ru_ges': {
-                'settings_key':'RTMA_RU_GES',
-                'plot_name':'RTMA-RU GES'
             }
         }
 
@@ -618,12 +594,6 @@ class ModelSpecs():
                        'linestyle': 'solid', 'linewidth': 3.},
             'model2': {'color': '#fb2020',
                        'marker': '^', 'markersize': 14,
-                       'linestyle': 'solid', 'linewidth': 3.},
-            'rtma_anl': {'color': '#000000',
-                       'marker': 'o', 'markersize': 0,
-                       'linestyle': 'solid', 'linewidth': 3.},
-            'rtma_ges': {'color': '#fb2020',
-                       'marker': '^', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 3.},
             'model3': {'color': '#1e3cff',
                        'marker': 'X', 'markersize': 14,

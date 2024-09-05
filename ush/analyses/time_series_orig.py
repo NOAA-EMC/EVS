@@ -935,6 +935,24 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         linewidth=.5, zorder=0
     )
     
+    if sample_equalization:
+        counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
+        for count, xval in zip(counts, x_vals1.tolist()):
+            if not isinstance(count, str):
+                count = str(int(count))
+            ax.annotate(
+                f'{count}', xy=(xval,1.), 
+                xycoords=('data','axes fraction'), xytext=(0,18), 
+                textcoords='offset points', va='top', fontsize=16, 
+                color='dimgrey', ha='center'
+            )
+        ax.annotate(
+            '#SAMPLES', xy=(0.,1.), xycoords='axes fraction', 
+            xytext=(-50, 21), textcoords='offset points', va='top', 
+            fontsize=11, color='dimgrey', ha='center'
+        )
+        fig.subplots_adjust(top=.9)
+
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]

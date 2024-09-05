@@ -165,6 +165,10 @@ do
 	then
 	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
+
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_timeseries
+        mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
+
  fi
 done
 
