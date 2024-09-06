@@ -168,13 +168,13 @@ while valid_hr <= int(valid_hr_end):
                     daily_avg_day_fhr_DATA_input_file_glob[0]
                 )
             else:
-                if os.path.exists(daily_avg_day_fhr_COMIN_input_file):
+                if os.path.exists(daily_avg_day_fhr_COMOUT_input_file):
                     daily_avg_day_fhr_input_file = (
-                        daily_avg_day_fhr_COMIN_input_file
+                        daily_avg_day_fhr_COMOUT_input_file
                     )
                 else:
                     daily_avg_day_fhr_input_file = (
-                        daily_avg_day_fhr_COMOUT_input_file
+                        daily_avg_day_fhr_COMIN_input_file
                     )
             if os.path.exists(daily_avg_day_fhr_input_file):
                 print("Input file for forecast hour "+str(daily_avg_day_fhr)
