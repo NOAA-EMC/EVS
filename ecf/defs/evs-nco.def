@@ -1060,7 +1060,7 @@ suite evs_nco
           endfamily
 	  family glwu
             task jevs_glwu_wave_grid2obs_prep
-              time 12:30
+              time 14:30
           endfamily
           family global_det
             task jevs_global_det_wave_prep
