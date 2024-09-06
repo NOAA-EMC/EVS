@@ -842,7 +842,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         x_val for x_val in daterange(x_vals1[0], x_vals1[-1], td(hours=incr))
     ] 
     xtick_labels = [xtick.strftime('%HZ %m/%d') for xtick in xticks]
-    number_of_ticks_dig = [15,30,45,60,75,90,105,120,135,150,165,180,195,210,225]
+    
+    incr_skip=2
+    max_ticks=94
+    number_of_ticks_dig = np.arange(incr_skip, max_ticks, incr_skip, dtype=int)
+
     show_xtick_every = np.ceil((
         np.digitize(len(xtick_labels), number_of_ticks_dig) + 2
     )/2.)*2
@@ -929,7 +933,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
-    fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
+    fig.subplots_adjust(top=.9, bottom=.2, wspace=0, hspace=0)
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
