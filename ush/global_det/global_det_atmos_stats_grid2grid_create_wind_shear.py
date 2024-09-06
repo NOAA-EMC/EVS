@@ -65,10 +65,6 @@ while valid_date_dt <= ENDDATE_dt:
     full_path_COMOUT = os.path.join(
         COMOUT, f"{RUN}.{valid_date_dt:%Y%m%d}", MODEL, VERIF_CASE
     )
-    full_path_DATA = os.path.join(
-        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
-        f"{RUN}.{valid_date_dt:%Y%m%d}", MODEL, VERIF_CASE
-    )
     for fhr_str in fhr_list:
         fhr = int(fhr_str)
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
@@ -96,16 +92,12 @@ while valid_date_dt <= ENDDATE_dt:
             final_output_file = os.path.join(
                 full_path_COMOUT, output_file.rpartition('/')[2]
             )
-        else:
-            final_output_file = os.path.join(
-                full_path_DATA, output_file.rpartition('/')[2]
-            )
         if found_input:
             input_file_data = netcdf.Dataset(input_file)
             input_file_data_var_list = list(input_file_data.variables.keys())
             if all(v in input_file_data_var_list \
                    for v in req_var_level_list):
-                if os.path.exists(final_output_file):
+                if SENDCOM == 'YES' and os.path.exists(final_output_file):
                     print(f"Final Output File exists: {final_output_file}")
                     make_wind_shear_output_file = False
                 else:
@@ -215,6 +207,9 @@ while valid_date_dt <= ENDDATE_dt:
                 write_data_name_var[:] = (data_name_wind200 - data_name_wind850)
             output_file_data.close()
             input_file_data.close()
+            if SENDCOM == 'YES' \
+                    and gda_util.check_file_exists_size(output_file):
+                gda_util.copy_file(output_file, final_output_file)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
 
 print("END: "+os.path.basename(__file__))

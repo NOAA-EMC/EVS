@@ -75,12 +75,8 @@ for group in reformat_data; do
             nc=$((nc+1))
         done
     fi
-    # Copy files to desired location
-    python $USHevs/global_det/global_det_atmos_copy_mpmd_output.py
-    export err=$?; err_chk
 done
 exit
-# Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Copy model files
     for MODEL in $model_list; do

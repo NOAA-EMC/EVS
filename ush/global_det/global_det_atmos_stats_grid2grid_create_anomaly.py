@@ -71,10 +71,6 @@ while valid_date_dt <= ENDDATE_dt:
     full_path_COMOUT = os.path.join(
         COMOUT, f"{RUN}.{valid_date_dt:%Y%m%d}", MODEL, VERIF_CASE
     )
-    full_path_DATA = os.path.join(
-        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
-        f"{RUN}.{valid_date_dt:%Y%m%d}", MODEL, VERIF_CASE
-    )
     for fhr_str in fhr_list:
         fhr = int(fhr_str)
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
@@ -102,10 +98,6 @@ while valid_date_dt <= ENDDATE_dt:
             final_output_file = os.path.join(
                 full_path_COMOUT, output_file.rpartition('/')[2]
             )
-        else:
-            final_output_file = os.path.join(
-                full_path_DATA, output_file.rpartition('/')[2]
-            )
         if found_input:
             input_file_data = netcdf.Dataset(input_file)
             input_file_data_var_list = list(input_file_data.variables.keys())
@@ -114,7 +106,7 @@ while valid_date_dt <= ENDDATE_dt:
                 if 'CLIMO_MEAN_'+var_level in input_var:
                     climo_var_level = input_var
             if climo_var_level in input_file_data_var_list:
-                if os.path.exists(final_output_file):
+                if SENDCOM == 'YES' and os.path.exists(final_output_file):
                     print(f"Final Output File exists: {final_output_file}")
                     make_anomaly_output_file = False
                 else:
@@ -209,6 +201,9 @@ while valid_date_dt <= ENDDATE_dt:
                           +f"contain {data_name}_{var_level}")
             output_file_data.close()
             input_file_data.close()
+            if SENDCOM == 'YES' \
+                    and gda_util.check_file_exists_size(output_file):
+                gda_util.copy_file(output_file, final_output_file)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
 
 print("END: "+os.path.basename(__file__))

@@ -103,16 +103,6 @@ if STEP == 'stats':
                 COMOUT_dir_list.append(
                     os.path.join(COMOUT, f"{model}.{date_dt:%Y%m%d}")
                 )
-            else:
-                working_dir_list.append(
-                    os.path.join(working_output_base_dir,
-                                 f"{RUN}.{date_dt:%Y%m%d}", model,
-                                 VERIF_CASE)
-                )
-                working_dir_list.append(
-                    os.path.join(working_output_base_dir,
-                                 f"{model}.{date_dt:%Y%m%d}")
-                )
         date_dt = date_dt + datetime.timedelta(days=1)
 elif STEP == 'plots':
     NDAYS = str(os.environ['NDAYS'])
