@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=01:00:00
 #PBS -l select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
@@ -48,7 +48,7 @@ export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-YES}
 export SENDMAIL=${SENDMAIL:-YES}
 
-export MAILTO='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
+export MAILTO='andrew.benjamin@noaa.gov,samira.ardani@noaa.gov'
 
 
 # developers directories
