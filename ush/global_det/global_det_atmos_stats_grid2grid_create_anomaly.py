@@ -94,10 +94,9 @@ while valid_date_dt <= ENDDATE_dt:
             full_path_job_num_work_dir, f"anomaly_{VERIF_TYPE}_{job_name}_"
             +f"init{init_date_dt:%Y%m%d%H}_fhr{str(fhr).zfill(3)}.nc"
         )
-        if SENDCOM == 'YES':
-            final_output_file = os.path.join(
-                full_path_COMOUT, output_file.rpartition('/')[2]
-            )
+        final_output_file = os.path.join(
+            full_path_COMOUT, output_file.rpartition('/')[2]
+        )
         if found_input:
             input_file_data = netcdf.Dataset(input_file)
             input_file_data_var_list = list(input_file_data.variables.keys())
@@ -106,7 +105,7 @@ while valid_date_dt <= ENDDATE_dt:
                 if 'CLIMO_MEAN_'+var_level in input_var:
                     climo_var_level = input_var
             if climo_var_level in input_file_data_var_list:
-                if SENDCOM == 'YES' and os.path.exists(final_output_file):
+                if os.path.exists(final_output_file):
                     print(f"Final Output File exists: {final_output_file}")
                     make_anomaly_output_file = False
                 else:

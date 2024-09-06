@@ -88,16 +88,15 @@ while valid_date_dt <= ENDDATE_dt:
             full_path_job_num_work_dir, f"wind_shear_{VERIF_TYPE}_{job_name}_"
             +f"init{init_date_dt:%Y%m%d%H}_fhr{str(fhr).zfill(3)}.nc"
         )
-        if SENDCOM == 'YES':
-            final_output_file = os.path.join(
-                full_path_COMOUT, output_file.rpartition('/')[2]
-            )
+        final_output_file = os.path.join(
+            full_path_COMOUT, output_file.rpartition('/')[2]
+        )
         if found_input:
             input_file_data = netcdf.Dataset(input_file)
             input_file_data_var_list = list(input_file_data.variables.keys())
             if all(v in input_file_data_var_list \
                    for v in req_var_level_list):
-                if SENDCOM == 'YES' and os.path.exists(final_output_file):
+                if os.path.exists(final_output_file):
                     print(f"Final Output File exists: {final_output_file}")
                     make_wind_shear_output_file = False
                 else:
