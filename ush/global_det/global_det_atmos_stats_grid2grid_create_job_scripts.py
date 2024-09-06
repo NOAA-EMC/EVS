@@ -148,41 +148,13 @@ assemble_data_jobs_dict = {
                                    )]}
     },
     'pres_levs': {
-        'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+        'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT_ANOM',
                                            'var1_levels': 'P500',},
                                    'commands': [gda_util.python_command(
                                                     'global_det_atmos_'
                                                     +'stats_grid2grid'
                                                     +'_create_daily_avg.py',
-                                                    ['HGT_ANOM_P500',
-                                                     os.path.join(
-                                                         '$DATA',
-                                                         '${VERIF_CASE}_'
-                                                         +'${STEP}',
-                                                         'METplus_output',
-                                                         '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
-                                                         '$MODEL',
-                                                         '$VERIF_CASE',
-                                                         'anomaly_'
-                                                         +'${VERIF_TYPE}_'
-                                                         +'GeoHeightAnom_init'
-                                                         +'{init?fmt=%Y%m%d%H}_'
-                                                         +'fhr{lead?fmt=%3H}.nc'
-                                                     ),
-                                                     os.path.join(
-                                                         '$COMIN', 'stats',
-                                                         '$COMPONENT',
-                                                         '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
-                                                         '$MODEL',
-                                                         '$VERIF_CASE',
-                                                         'anomaly_'
-                                                         +'${VERIF_TYPE}_'
-                                                         +'GeoHeightAnom_init'
-                                                         +'{init?fmt=%Y%m%d%H}_'
-                                                         +'fhr{lead?fmt=%3H}.nc'
-                                                     )]
+                                                    []
                                                 )]},
     },
     'sea_ice': {
@@ -194,46 +166,8 @@ assemble_data_jobs_dict = {
                                                       'global_det_atmos_'
                                                       +'stats_grid2grid_'
                                                       +'create_daily_avg.py',
-                                                      ['ICEC_Z0',
-                                                       os.path.join(
-                                                           '$DATA',
-                                                           '${VERIF_CASE}_'
-                                                           +'${STEP}',
-                                                           'METplus_output',
-                                                           '${RUN}.{valid?'
-                                                           +'fmt=%Y%m%d}',
-                                                           '$MODEL',
-                                                           '$VERIF_CASE',
-                                                           'grid_stat_'
-                                                           +'${VERIF_TYPE}_'
-                                                           +'ConcentrationNH_'
-                                                           +'{lead?fmt=%2H}'
-                                                           +'0000L_'
-                                                           +'{valid?fmt='
-                                                           +'%Y%m%d}_'
-                                                           +'{valid?fmt=%H}'
-                                                           +'0000V_'
-                                                           +'pairs.nc'
-                                                       ),
-                                                       os.path.join(
-                                                           '$COMIN', 'stats',
-                                                           '$COMPONENT',
-                                                           '${RUN}.'
-                                                           +'{valid?'
-                                                           +'fmt=%Y%m%d}',
-                                                           '$MODEL',
-                                                           '$VERIF_CASE',
-                                                           'grid_stat_'
-                                                           +'${VERIF_TYPE}_'
-                                                           +'ConcentrationNH_'
-                                                           +'{lead?fmt=%2H}'
-                                                           +'0000L_'
-                                                           +'{valid?fmt='
-                                                           +'%Y%m%d}_'
-                                                           +'{valid?fmt=%H}'
-                                                           +'0000V_'
-                                                           +'pairs.nc'
-                                                       )])]},
+                                                      []
+                                                  )]},
         'DailyAvg_ConcentrationSH': {'env': {'hemisphere': 'sh',
                                              'grid': 'G220',
                                              'var1_name': 'ICEC',
@@ -242,46 +176,8 @@ assemble_data_jobs_dict = {
                                                       'global_det_atmos_'
                                                       +'stats_grid2grid_'
                                                       +'create_daily_avg.py',
-                                                      ['ICEC_Z0',
-                                                       os.path.join(
-                                                           '$DATA',
-                                                           '${VERIF_CASE}_'
-                                                           +'${STEP}',
-                                                           'METplus_output',
-                                                           '${RUN}.{valid?'
-                                                           +'fmt=%Y%m%d}',
-                                                           '$MODEL',
-                                                           '$VERIF_CASE',
-                                                           'grid_stat_'
-                                                           +'${VERIF_TYPE}_'
-                                                           +'ConcentrationSH_'
-                                                           +'{lead?fmt=%2H}'
-                                                           +'0000L_'
-                                                           +'{valid?fmt='
-                                                           +'%Y%m%d}_'
-                                                           +'{valid?fmt=%H}'
-                                                           +'0000V_'
-                                                           +'pairs.nc'
-                                                       ),
-                                                       os.path.join(
-                                                           '$COMIN', 'stats',
-                                                           '$COMPONENT',
-                                                           '${RUN}.'
-                                                           +'{valid?'
-                                                           +'fmt=%Y%m%d}',
-                                                           '$MODEL',
-                                                           '$VERIF_CASE',
-                                                           'grid_stat_'
-                                                           +'${VERIF_TYPE}_'
-                                                           +'ConcentrationSH_'
-                                                           +'{lead?fmt=%2H}'
-                                                           +'0000L_'
-                                                           +'{valid?fmt='
-                                                           +'%Y%m%d}_'
-                                                           +'{valid?fmt=%H}'
-                                                           +'0000V_'
-                                                           +'pairs.nc'
-                                                       )])]},
+                                                      []
+                                                  )]},
     },
     'snow': {
         '24hrAccum_WaterEqv': {'env': {'MODEL_var': 'WEASD'},
@@ -302,28 +198,8 @@ assemble_data_jobs_dict = {
                                           'global_det_atmos_'
                                           +'stats_grid2grid'
                                           +'_create_daily_avg.py',
-                                          ['TMP_Z0',
-                                           os.path.join(
-                                              '$DATA',
-                                              '${VERIF_CASE}_${STEP}',
-                                              'METplus_output',
-                                              '${RUN}.{valid?fmt=%Y%m%d}',
-                                              '$MODEL', '$VERIF_CASE',
-                                              'grid_stat_${VERIF_TYPE}_SST_'
-                                              +'{lead?fmt=%2H}0000L_'
-                                              +'{valid?fmt=%Y%m%d}_'
-                                              +'{valid?fmt=%H}0000V_pairs.nc'
-                                          ),
-                                          os.path.join(
-                                               '$COMIN', 'stats',
-                                               '$COMPONENT',
-                                               '${RUN}.{valid?fmt=%Y%m%d}',
-                                               '$MODEL', '$VERIF_CASE',
-                                               'grid_stat_${VERIF_TYPE}_SST_'
-                                               +'{lead?fmt=%2H}0000L_'
-                                               +'{valid?fmt=%Y%m%d}_'
-                                               +'{valid?fmt=%H}0000V_pairs.nc'
-                                           )])]}
+                                          []
+                                      )]}
     },
 }
 
