@@ -1843,7 +1843,7 @@ def check_model_files(job_dict):
                 if job_dict['VERIF_TYPE'] == 'sea_ice' \
                         and 'DailyAvg_Extent' in job_dict['job_name']:
                     output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'],
                         'stat_analysis_fcst'+model+'_obsosi_saf_'
@@ -1860,7 +1860,7 @@ def check_model_files(job_dict):
                     )
                 else:
                     output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'],
                         'grid_stat_'+job_dict['VERIF_TYPE']+'_'
@@ -1883,7 +1883,7 @@ def check_model_files(job_dict):
                 if job_dict['VERIF_TYPE'] == 'pres_levs' \
                         and job_dict['job_name'] == 'DailyAvg_GeoHeightAnom':
                     input_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
+                        job_dict['COMOUT'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'daily_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -1894,7 +1894,7 @@ def check_model_files(job_dict):
                 elif job_dict['VERIF_TYPE'] == 'pres_levs' \
                         and job_dict['job_name'] == 'WindShear':
                     input_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
+                        job_dict['COMOUT'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'wind_shear_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -1905,7 +1905,7 @@ def check_model_files(job_dict):
                     precip_accum = (job_dict['VERIF_TYPE']\
                                     .replace('precip_accum',''))
                     input_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
+                        job_dict['COMOUT'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'pcp_combine_'
                         +job_dict['VERIF_TYPE']+'_'+precip_accum+'Accum_init'
@@ -1913,7 +1913,7 @@ def check_model_files(job_dict):
                     )
                 elif job_dict['VERIF_TYPE'] == 'sea_ice':
                     input_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
+                        job_dict['COMOUT'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'daily_avg_'
                         +job_dict['VERIF_TYPE']+'_DailyAvg_Concentration'
@@ -1924,7 +1924,7 @@ def check_model_files(job_dict):
                     )
                 elif job_dict['VERIF_TYPE'] == 'snow':
                     input_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
+                        job_dict['COMOUT'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'pcp_combine_'
                         +job_dict['VERIF_TYPE']+'_24hrAccum_'
@@ -1933,7 +1933,7 @@ def check_model_files(job_dict):
                     )
                 elif  job_dict['VERIF_TYPE'] == 'sst':
                     input_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
+                        job_dict['COMOUT'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'daily_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
