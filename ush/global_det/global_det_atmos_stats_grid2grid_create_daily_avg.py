@@ -144,7 +144,7 @@ while valid_hr <= int(valid_hr_end):
                 daily_avg_day_init
                 + datetime.timedelta(hours=daily_avg_day_fhr)
             )
-            daily_avg_day_fhr_COMOUT_file = gda_util.format_filler(
+            daily_avg_day_fhr_COMOUT_input_file = gda_util.format_filler(
                 input_file_format_COMOUT, daily_avg_day_fhr_valid,
                 daily_avg_day_init,
                 str(daily_avg_day_fhr), {}
@@ -158,7 +158,7 @@ while valid_hr <= int(valid_hr_end):
                 os.path.join(
                     DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
                     'mpmd_work_dir', 'reformat_data', 'job*',
-                    daily_avg_day_fhr_COMOUT_file.rpartition(
+                    daily_avg_day_fhr_COMOUT_input_file.rpartition(
                         f"{COMPONENT}/"
                     )[2]
                 )
