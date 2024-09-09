@@ -89,17 +89,22 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 	python $USHevs/${COMPONENT}/glwu_wave_prep_read_ndbc.py
 	export err=$?; err_chk
 
-	run_metplus.py -c $PARMevs/metplus_config/machine.conf \
-   	-c $CONFIGevs/$STEP/$COMPONENT/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf
-   	export err=$?; err_chk
+	ndbc_gl_ncount=$(ls -l ${COMOUT}.${INITDATE}/ndbc/*.txt |wc -l)
+	if [ $ndbc_gl_ncount -gt 0 ]; then
+		run_metplus.py -c $PARMevs/metplus_config/machine.conf \
+   		-c $CONFIGevs/$STEP/$COMPONENT/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf
+   		export err=$?; err_chk
 
-   	tmp_ndbc_file=$DATA/ncfiles/ndbc.${INITDATE}.nc
-   	output_ndbc_file=${COMOUT}.${INITDATE}/ndbc/${VERIF_CASE}/ndbc.${INITDATE}.nc
-   	if [ $SENDCOM = YES ]; then
-		if [ -s $tmp_ndbc_file ]; then
-	   		cp -v $tmp_ndbc_file $output_ndbc_file
-	   	fi
-   	fi
+   		tmp_ndbc_file=$DATA/ncfiles/ndbc.${INITDATE}.nc
+   		output_ndbc_file=${COMOUT}.${INITDATE}/ndbc/${VERIF_CASE}/ndbc.${INITDATE}.nc
+   		if [ $SENDCOM = YES ]; then
+			if [ -s $tmp_ndbc_file ]; then
+	   			cp -v $tmp_ndbc_file $output_ndbc_file
+	   		fi
+   		fi
+	else
+		echo "WARNING: No NDBC data at Great Lakes region was available for valid date ${INITDATE}."
+	fi
 else
 	echo "WARNING: No NDBC data was available for valid date ${INITDATE}."
 	if [ $SENDMAIL = YES ] ; then
