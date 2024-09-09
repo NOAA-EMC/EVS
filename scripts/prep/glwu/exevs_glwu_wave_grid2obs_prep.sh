@@ -82,6 +82,7 @@ done
 
 mkdir -p ${DATA}/ndbc
 mkdir -p ${DATA}/ncfiles
+mkdir -p ${COMOUT}.${INITDATE}/ndbc/${VERIF_CASE}
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
 ndbc_txt_ncount=$(ls -l $DCOMINndbc/$INITDATE/validation_data/marine/buoy/*.txt |wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
@@ -93,7 +94,7 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
    	export err=$?; err_chk
 
    	tmp_ndbc_file=$DATA/ncfiles/ndbc.${INITDATE}.nc
-   	output_ndbc_file=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/ndbc.${INITDATE}.nc
+   	output_ndbc_file=${COMOUT}.${INITDATE}/ndbc/${VERIF_CASE}/ndbc.${INITDATE}.nc
    	if [ $SENDCOM = YES ]; then
 		if [ -s $tmp_ndbc_file ]; then
 	   		cp -v $tmp_ndbc_file $output_ndbc_file
