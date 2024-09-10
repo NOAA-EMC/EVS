@@ -8,8 +8,8 @@ Run By: individual statistics job scripts generated through
         ush/global_det/global_det_atmos_stats_grid2grid_create_job_scripts.py
 '''
 
-import sys
 import os
+import sys
 import numpy as np
 import glob
 import netCDF4 as netcdf
