@@ -53,10 +53,15 @@ for obsv in 6h 24h  ; do
           #       if not, do this sub-task, and mark it is completed after it is done
           #       if yes, skip this task
           #####################################################################################
-          if [ ! -e  $COMOUTrestart/snow/run_refs_snow${obsv}.${fhr}.${vhr}.completed ] ; then
+         if [ ! -e  $COMOUTrestart/snow/run_refs_snow${obsv}.${fhr}.${vhr}.completed ] ; then
 
-           export nmem=14
-           export members=14
+	    ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
+	    iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
+
+	   if [ -s $COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr} ] ; then
+
+            export nmem=14
+            export members=14
 
             echo "export nmem=$nmem" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
             echo "export regrid=G212" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
@@ -117,6 +122,7 @@ for obsv in 6h 24h  ; do
 	    chmod +x run_refs_snow${obsv}.${fhr}.${vhr}.sh
             echo "${DATA}/run_refs_snow${obsv}.${fhr}.${vhr}.sh" >> run_all_refs_snowfall_poe.sh
          
+	   fi   
 	  fi #end if check restart
 
         done #end of vhr

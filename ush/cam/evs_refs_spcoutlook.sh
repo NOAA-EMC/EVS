@@ -99,14 +99,21 @@ for prod in mean ; do
 
  for dom in CONUS ; do
 
-   for valid in 0 12 ; do
+   for valid in 00 12 ; do
 
     export domain=$dom
+
+    for fhr in 06 12 18 24 30 36 42 48 ; do
+	
+     ihr=`$NDATE -$fhr $VDATE$valid|cut -c 9-10`
+     iday=`$NDATE -$fhr $VDATE$valid|cut -c 1-8`
+
+     if [ -s $COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.conus.${prod}.f${fhr}.grib2 ] ; then
 
      #******************************
      # Build sub-jobs
      # *****************************
-     >run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+     >run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
      #######################################################################
      #Restart check:
@@ -114,50 +121,54 @@ for prod in mean ; do
      # if not, run this task, and then mark its completion,
      # otherwise, skip this task
      ########################################################################
-     if [ ! -e  $COMOUTrestart/spcoutlook/run_refs_${model}.${dom}.${valid}_spcoutlook.completed ] ; then
+     if [ ! -e  $COMOUTrestart/spcoutlook/run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed ] ; then
 
-       echo  "export model=REFS${prod} " >>  run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export domain=$dom " >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh     
-       echo  "export regrid=G227" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export model=REFS${prod} " >>  run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export domain=$dom " >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh     
+       echo  "export regrid=G227" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export output_base=${WORK}/grid2obs/run_refs_${model}.${dom}.${valid}_spcoutlook" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export OBTYPE='PREPBUFR'" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export domain=CONUS" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export obsvgrid=G227" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export output_base=${WORK}/grid2obs/run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export OBTYPE='PREPBUFR'" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export domain=CONUS" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export obsvgrid=G227" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export modelgrid=conus.${prod}" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export modelgrid=conus.${prod}" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export obsvhead=$obsv" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export obsvpath=$WORK" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export obsvhead=$obsv" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export obsvpath=$WORK" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export vbeg=$valid" >>run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export vend=$valid" >>run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export valid_increment=3600" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export lead='6,12,18,24,30,36,42,48'" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export MODEL=REFS_${PROD}" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export regrid=G227" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export modelhead=$model" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export modelpath=$COMREFS" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export modeltail='.grib2'" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export extradir='ensprod/'" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export vbeg=$valid" >>run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export vend=$valid" >>run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export valid_increment=3600" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export lead=$fhr" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export MODEL=REFS_${PROD}" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export regrid=G227" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export modelhead=$model" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export modelpath=$COMREFS" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export modeltail='.grib2'" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export extradir='ensprod/'" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export verif_grid=''" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export verif_grid=''" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo "export verif_poly='$spc_otlk_masks'" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo "export verif_poly='$spc_otlk_masks'" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstREFS${prod}_obsPREPBUFR_SPCoutlook.conf " >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstREFS${prod}_obsPREPBUFR_SPCoutlook.conf " >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
        #Mark this Alaska task is completed
-       echo "[[ \$? = 0 ]] && >$COMOUTrestart/spcoutlook/run_refs_${model}.${dom}.${valid}_spcoutlook.completed" >> run_refs_${model}.${dom}.${valid}_spcoutlook.sh
+       echo "[[ \$? = 0 ]] && >$COMOUTrestart/spcoutlook/run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       chmod +x run_refs_${model}.${dom}.${valid}_spcoutlook.sh
-       echo "${DATA}/run_refs_${model}.${dom}.${valid}_spcoutlook.sh" >> run_all_refs_spcoutlook_poe.sh
+       chmod +x run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "${DATA}/run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh" >> run_all_refs_spcoutlook_poe.sh
 
-      fi #end if check restart
+      fi
 
-    done # end of valid
+     fi #end if check restart
+
+    done #end of fhr
+
+   done # end of valid
 
   done #end of dom loop
 

@@ -22,17 +22,19 @@ fi
 
 export obsv=prepbufr
 
+typeset -Z2 hh
 for dom in $domains ; do
 
    if [ $dom = CONUS ] ; then
 
        export domain=CONUS
 
+       
      for valid_at in 00 12 ; do
 
-
-      for fhr in fhr1 fhr2 ; do
-
+      for fhr in 06 12 18 24 30 36 42 48 ; do
+     
+     
 	#****************************
 	# Build sub-jobs
 	#****************************
@@ -43,8 +45,12 @@ for dom in $domains ; do
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task 
       #########################################################################################
-      if [ ! -e  $COMOUTrestart/profile/run_refs_${domain}.${valid_at}.${fhr}_profile.completed ] ; then      
- 
+    if [ ! -e  $COMOUTrestart/profile/run_refs_${domain}.${valid_at}.${fhr}_profile.completed ] ; then      
+
+      ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
+      iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
+      if [ -s $COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr} ] ; then      
+
        echo "export regrid=NONE" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo "export obsv=prepbufr" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo "export domain=CONUS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -62,11 +68,7 @@ for dom in $domains ; do
        echo  "export valid_increment=10800" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh       
 
 
-       if [ $fhr = fhr1 ] ; then
-          echo  "export lead=' 6,12,18,24'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-       elif [ $fhr = fhr2 ] ; then
-          echo  "export lead='30,36,42,48'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-       fi 
+       echo  "export lead=$fhr" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         
        echo  "export domain=CONUS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo  "export model=refs"  >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -138,6 +140,8 @@ for dom in $domains ; do
        chmod +x run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo "${DATA}/run_refs_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_refs_profile_poe.sh
 
+       fi
+
       fi
 
       done
@@ -150,7 +154,7 @@ for dom in $domains ; do
 
       for valid_at in 00 12 ; do 
 
-       for fhr in fhr1 fhr2 ; do 
+       for fhr in 06 12 18 24 30 36 42 48 ; do 
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
@@ -159,8 +163,11 @@ for dom in $domains ; do
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task
       #########################################################################################
-      if [ ! -e  $COMOUTrestart/profile/run_refs_${domain}.${valid_at}.${fhr}_profile.completed ] ; then
+     if [ ! -e  $COMOUTrestart/profile/run_refs_${domain}.${valid_at}.${fhr}_profile.completed ] ; then
 
+      ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
+      iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
+       if [ -s $COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr} ] ; then
 
         echo "export regrid=NONE" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "export obsv=prepbufr" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -181,11 +188,7 @@ for dom in $domains ; do
         echo  "export valid_increment=10800" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
 
-	if [ $fhr = fhr1 ] ; then
-	   echo  "export lead=' 6,12,18,24'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-	elif [ $fhr = fhr2 ] ; then
-	   echo  "export lead='30,36,42,48'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-	fi  
+        echo  "export lead=$fhr" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
 
         echo  "export model=refs"  >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -237,10 +240,11 @@ for dom in $domains ; do
 	chmod +x run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "${DATA}/run_refs_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_refs_profile_poe.sh
 
-       fi
+       fi 	
+      fi
 
-      done
      done
+    done
 
 
     elif [ $dom = HI ] ; then
@@ -249,7 +253,7 @@ for dom in $domains ; do
 
       for valid_at in 00 12 ; do
 
-       for fhr in fhr1 fhr2 ; do
+       for fhr in 06 12 18 24 30 36 42 48 ; do
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
@@ -258,8 +262,11 @@ for dom in $domains ; do
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task
       #########################################################################################
-      if [ ! -e  $COMOUTrestart/profile/run_refs_${domain}.${valid_at}.${fhr}_profile.completed ] ; then
+     if [ ! -e  $COMOUTrestart/profile/run_refs_${domain}.${valid_at}.${fhr}_profile.completed ] ; then
 
+      ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
+      iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
+      if [ -s $COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.hi.f${fhr} ] ; then
 
         echo "export regrid=NONE" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "export obsv=prepbufr_profile" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -278,11 +285,7 @@ for dom in $domains ; do
         echo  "export vend=${valid_at}" >>run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export valid_increment=10800" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
-       if [ $fhr = fhr1 ] ; then
-	  echo  "export lead=' 6,12,18,24'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-       elif [ $fhr = fhr2 ] ; then
-          echo  "export lead='30,36,42,48'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-       fi  
+        echo  "export lead=$fhr" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo  "export model=refs"  >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export MODEL=REFS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -331,7 +334,8 @@ for dom in $domains ; do
         chmod +x run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "${DATA}/run_refs_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_refs_profile_poe.sh
 
-       fi
+       fi	
+      fi
 
       done
      done
@@ -343,7 +347,7 @@ for dom in $domains ; do
 
       for valid_at in 00 12 ; do
 
-       for fhr in fhr1 fhr2 ; do
+       for fhr in 06 12 18 24 30 36 42 48 ; do
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
@@ -354,6 +358,9 @@ for dom in $domains ; do
       #########################################################################################
       if [ ! -e  $COMOUTrestart/profile/run_refs_${domain}.${valid_at}.${fhr}_profile.completed ] ; then
 
+       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
+       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
+       if [ -s $COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.pr.f${fhr} ] ; then
 
         echo "export regrid=NONE" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "export obsv=prepbufr_profile" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -372,11 +379,7 @@ for dom in $domains ; do
         echo  "export vend=${valid_at}" >>run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export valid_increment=10800" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
-       if [ $fhr = fhr1 ] ; then
-         echo  "export lead=' 6,12,18,24'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-       elif [ $fhr = fhr2 ] ; then
-         echo  "export lead='30,36,42,48'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-       fi  
+        echo  "export lead=$fhr" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
 
         echo  "export model=refs"  >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -425,8 +428,9 @@ for dom in $domains ; do
 
         chmod +x run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "${DATA}/run_refs_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_refs_profile_poe.sh
-
-       fi
+       
+       fi	
+      fi
 
       done
      done

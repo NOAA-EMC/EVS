@@ -51,6 +51,14 @@ for MODL in $MODELS ; do
 #***********************************************
 >run_gather_${verify}_${MODL}.sh
 
+  if [ $verify = precip ] ; then
+    stat_files="${COMOUTsmall}/${MODL}/*.stat"
+  else
+    stat_files="${COMOUTsmall}/*${MODL}*.stat"
+  fi 
+
+  if [ -s $stat_files ] ; then
+
     echo  "export output_base=${WORK}/gather" >> run_gather_${verify}_${MODL}.sh 
     echo  "export verify=$verify" >> run_gather_${verify}_${MODL}.sh 
 
@@ -76,6 +84,7 @@ for MODL in $MODELS ; do
  
     echo "${DATA}/run_gather_${verify}_${MODL}.sh" >> run_gather_all_poe.sh    
    
+  fi  
 done
 
 chmod 775 run_gather_all_poe.sh

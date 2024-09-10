@@ -16,13 +16,26 @@ set -x
 
 for obsvtype in ccpa mrms ; do
 
-   for acc in 01h  03h 24h  ; do
+  if [ $obsvtype = ccpa ] ; then
+    domain=conus
+    grid=G227
+  else
+    domain=ak
+    grid=G255
+  fi    
+
+  for prod in mean pmmn avrg lpmm prob eas system ; do
+
+      if [ $prod = system ] ; then
+        acum="03h 24h"
+      else
+	acum="01h 03h 24h"
+      fi
+
+    for acc in $acum  ; do
 
       obsv=$obsvtype$acc
 
-      for prod in mean pmmn avrg lpmm prob eas system ; do
-
-	  
          PROD=`echo $prod | tr '[a-z]' '[A-Z]'`
 
          #************************************
@@ -31,34 +44,83 @@ for obsvtype in ccpa mrms ; do
 
          if [ $acc = 24h ] ; then
  	    if [ $obsvtype = ccpa ] ; then
-               export fhrs="24 30 36 42 48"
                export vhrs="12"
  	    elif [ $obsvtype = mrms ] ; then
-               export fhrs="24 30 36 42 48"
-               export vhrs="00 06 12 18"
+               export vhrs="12"
             fi
          else 
  	    if [ $prod = system ] ; then 
-               export fhrs="03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48"
+	       #Note: system is verified every 3 hrs
                export vhrs="00 03 06 09 12 15 18 21"
             else
                if [ $acc = 01h ] ; then
-                  export fhrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
                   export vhrs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
                elif [ $acc = 03h ] ; then
-                  export fhrs="27 30 33 36 39 42 45 48"
                   export vhrs="00 03 06 09 12 15 18 21"
                fi
             fi
          fi
 
+         if [ $acc = 01h ] || [ $acc = 03h ] ; then
+            modelpath=$COMREFS
+	    if [ $prod = system ] ; then
+	       extra="verf_g2g"
+	    else
+	       extra="ensprod"
+	    fi
+         else	       
+            if [ $prod = prob ] || [ $prod = eas ] ; then
+	      modelpath=$COMREFS
+	      extra="ensprod"
+            elif [ $prod = system ] ; then
+	      modelpath=$COMREFS
+	      extra="verf_g2g"
+            else
+              modelpath=$WORK
+	      extra=""
+	    fi
+	 fi
+
 	 #Before fhr=48, all 14 members are available
 	 export nmem=14
 	 export members=14
 
-         for fhr in $fhrs; do
+	 for vhr in $vhrs; do
+           if [ $acc = 24h ] ; then
+	     export fhrs="24 30 36 42 48"
+	   else
+	     if [ $prod = system ] ; then 
+	           if [ $vhr = 00 ] || [ $vhr = 06 ] || [ $vhr = 12 ] || [ $vhr = 18 ] ; then
+		     export fhrs="06 12 18 24 30 36 42 48"
+	           elif [ $vhr = 03 ] || [ $vhr = 09 ] || [ $vhr = 15 ] || [ $vhr = 21 ] ; then
+		     export fhrs="03 09 15 21 27 33 39 45"
+	           fi 
+             else
+                 if [ $acc = 01h ] ; then
+		   if [ $vhr = 00 ] || [ $vhr = 06 ] || [ $vhr = 12 ] || [ $vhr = 18 ] ; then 
+		     export fhrs="06 12 18 24"
+	           elif [ $vhr = 01 ] || [ $vhr = 07 ] || [ $vhr = 13 ] || [ $vhr = 19 ] ; then 
+		     export fhrs="01 07 13 19"
+	           elif [ $vhr = 02 ] || [ $vhr = 08 ] || [ $vhr = 14 ] || [ $vhr = 20 ] ; then
+	             export fhrs="02 08 14 20"
+                   elif [ $vhr = 03 ] || [ $vhr = 09 ] || [ $vhr = 15 ] || [ $vhr = 21 ] ; then
+                     export fhrs="03 09 15 21"			   
+                   elif [ $vhr = 04 ] || [ $vhr = 10 ] || [ $vhr = 16 ] || [ $vhr = 22 ] ; then
+		     export fhrs="04 10 16 22"
+		   elif [ $vhr = 05 ] || [ $vhr = 11 ] || [ $vhr = 17 ] || [ $vhr = 23 ] ; then
+		     export fhrs="05 11 17 23"
+		   fi
+		 elif [ $acc = 03h ] ; then
+         	   if [ $vhr = 00 ] || [ $vhr = 06 ] || [ $vhr = 12 ] || [ $vhr = 18 ] ; then         
+	             export fhrs="06 12 18 24"
+	           elif [ $vhr = 03 ] || [ $vhr = 09 ] || [ $vhr = 15 ] || [ $vhr = 21 ] ; then
+	             export fhrs="03 09 15 21"
+	           fi
+                 fi
+             fi		      
+           fi
+          for fhr in $fhrs; do
 
-            for vhr in $vhrs; do
                >run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                
 	       
@@ -70,8 +132,20 @@ for obsvtype in ccpa mrms ; do
              #########################################################################################
              if [ ! -e  $COMOUTrestart/${prod}/run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed ] ; then
 
+               ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
+               iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
+            
+	      #Check if input fcst files are available 
+	      if [ $extra = "verf_g2g" ] ; then
+		 input=${modelpath}/refs.${iday}/verf_g2g/refs.m??.t${ihr}z.${domain}.f${fhr}
+	      elif [ $extra = "ensprod" ] ; then
+		 input=${modelpath}/refs.${iday}/ensprod/refs.t${ihr}z.${domain}.${prod}.f${fhr}.grib2
+              else
+		 input=${modelpath}/refs.${iday}/refs${prod}.t${ihr}z.${grid}.24h.f${fhr}.nc
+	      fi
 
-               #ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
+              if [ -s $input ] ; then 
+
  	       echo  "export nmem=$nmem" >>run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                
                if [ $acc = 24h ] ; then
@@ -115,7 +189,7 @@ for obsvtype in ccpa mrms ; do
                else
                   echo "export MODEL=REFS_${PROD}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   echo  "export model=REFS_${PROD}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	             export MODEL=REFS_${PROD}
+ 	          export MODEL=REFS_${PROD}
                fi
  
                mkdir -p  ${COMOUTsmall}/${MODEL}
@@ -379,7 +453,9 @@ for obsvtype in ccpa mrms ; do
 
                chmod +x run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                echo "${DATA}/run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh" >> run_all_refs_precip_poe.sh
-              	      
+         
+              fi #end if check member files
+
 	     fi #end if check restart
 
             done #end of vhr

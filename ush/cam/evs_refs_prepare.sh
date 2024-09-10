@@ -195,9 +195,13 @@ if [ "$data" = "ccpa24h" ] ; then
       if [ -s $ccpa24/ccpa1 ] && [ -s $ccpa24/ccpa2 ] && [ -s $ccpa24/ccpa3 ] && [ -s $ccpa24/ccpa4 ] ; then
          ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
          export err=$?; err_chk
-         mkdir -p ${COMOUTfinal}/precip_mean24
-         cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
-       
+	 if [ ! -d ${COMOUTfinal}/precip_mean24 ] ; then
+           mkdir -p ${COMOUTfinal}/precip_mean24
+	 fi
+	 if [ -s ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ] ; then
+          cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
+         fi
+
 	 #For restart:
 	 [[ ! -e $COMOUTrestart/prepare/ccpa.${vday} ]] && mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
 	 if [ -s $WORK/ccpa.${vday}/*24h*.nc ] ; then
@@ -264,19 +268,26 @@ if [ "$data" = "apcp24h_conus" ] ; then
       #    otherwise, copy it from the $COMOUTrestart directory
       ###################################################################################################################
       if [ ! -s  $COMOUTrestart/prepare/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+	if [ -s ${modelpath}/refs.t${fcyc}z.${domain}.${prod}.f${fhr}.grib2 ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstREFS_APCP24h.conf
          export err=$?; err_chk
          mv $output_base/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/.
+	 if [ ! -d ${COMOUT}/refs.${fyyyymmdd}/precip_mean24 ] ; then
+	   mkdir -p  ${COMOUT}/refs.${fyyyymmdd}/precip_mean24
+	 fi
          if [ -s $WORK/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
             cp $WORK/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/refs.${fyyyymmdd}/precip_mean24
          fi
 
 	 #Save restart files 
 	 [[ $? = 0 ]] && cp $WORK/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/refs.${fyyyymmdd}
-
+        fi
        else
          #Restart: copy restart files to the working directory
-         cp  $COMOUTrestart/prepare/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}
+         [[ ! -d $WORK/refs.${fyyyymmdd} ]] && mkdir -p $WORK/refs.${fyyyymmdd}
+	 if [ -s $COMOUTrestart/prepare/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+           cp  $COMOUTrestart/prepare/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}
+	 fi
        fi
 
       done
@@ -318,6 +329,7 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       #    otherwise, copy it from the $COMOUTrestart directory
       ##################################################################################################
       if [ ! -s  $COMOUTrestart/prepare/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
+	if [ -s ${modelpath}/refs.t${fcyc}z.${domain}.${prod}.f${fhr}.grib2 ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstREFS_APCP24h.conf
          export err=$?; err_chk
          if [ -s $output_base/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
@@ -326,11 +338,13 @@ if [ "$data" = "apcp24h_alaska" ] ; then
 
          #Save restart files
          [[ $? = 0 ]] && cp $WORK/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $COMOUTrestart/prepare/refs.${fyyyymmdd}
-
+        fi
        else
          #Restart: copy restart files to the working directory
 	 [[ ! -d $WORK/refs.${fyyyymmdd} ]] && mkdir -p $WORK/refs.${fyyyymmdd}
-         cp  $COMOUTrestart/prepare/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}
+	 if [ -s $COMOUTrestart/prepare/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
+           cp  $COMOUTrestart/prepare/refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}
+	 fi
        fi
       done
    done
@@ -358,7 +372,7 @@ if [ "$data" = "prepbufr" ] ; then
       grids="G227 G198"
    fi
    
-   if [ "$lvl" = "profile" ] || [ "$VERIF_CASE" = "severe" ] ; then
+   if [ "$lvl" = "profile" ] || [ "$VERIF_CASE" = "severe" ] || [ "$VERIF_CASE" = "spcoutlook" ] ; then
       cycs="00 12"
    else
       cycs="00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23"
