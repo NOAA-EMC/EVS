@@ -372,7 +372,7 @@ if JOB_GROUP == 'reformat_data':
                              +'$tmp_regriddataplane_file; fi\n'
                          )
                          job.write('export err=$?; err_chk')
-                     else:
+                     elif have_fhr:
                          job.write(
                              gda_util.metplus_command(
                                  'RegridDataPlane_fcstGFS.conf'
