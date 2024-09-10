@@ -56,7 +56,7 @@ export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}
 export vhr=00
 echo $vhr
 
-export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
+export MAILTO="perry.shafran@noaa.gov,andrew.benjamin@noaa.gov"
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_ANALYSES_PLOTS

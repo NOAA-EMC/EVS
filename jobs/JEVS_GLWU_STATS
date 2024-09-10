@@ -1,0 +1,83 @@
+#!/bin/bash
+
+#################################
+# SET SHELL PROCESSING VARIABLES 
+#################################
+set -x
+export PS4='+ $SECONDS + '
+date
+
+#########################################################
+# obtain unique LSF id (jobid) and make temp directories 
+#########################################################
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+##########################################
+# Run setpdy and initialize PDY variables 
+##########################################
+export cycle=${cycle:-t00z}
+setpdy.sh 17
+. ./PDY
+export VDATE=${VDATE:-${PDYm1}}
+export NEXTDATE=${NEXTDATE:-${PDY}}
+
+####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+
+####################################
+# Define NET/RUN variables          
+####################################
+export NET=${NET:-evs}
+export MODEL=${MODEL:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-glwu}
+export MODELNAME=${MODELNAME:-glwu}
+export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
+export OBTYPE=${OBTYPE:-NDBC}
+export RUN=${RUN:-wave}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+
+####################################
+# Set EVS directories               
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+####################################
+# Define COMIN/COMOUT variables     
+####################################
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export COMINglwu=${COMINglwu:-$(compath.py ${envir}/com/${MODELNAME}/${glwu_ver})}
+export EVSINndbcnc=${COMIN}/prep/${COMPONENT}
+export ARCmodel=${COMIN}/prep/${COMPONENT}
+
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}}
+
+export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+
+mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal} 
+
+
+####################################
+# Execute the script                
+####################################
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_chk
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  rm -rf $DATA
+fi
+
+date

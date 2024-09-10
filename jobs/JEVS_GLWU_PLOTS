@@ -1,0 +1,80 @@
+#!/bin/bash
+
+#################################
+# SET SHELL PROCESSING VARIABLES 
+#################################
+set -x
+export PS4='+ $SECONDS + '
+date
+
+#########################################################
+# obtain unique LSF id (jobid) and make temp directories 
+#########################################################
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+##########################################
+# Run setpdy and initialize PDY variables 
+##########################################
+export cycle=${cycle:-t00z}
+setpdy.sh 90
+. ./PDY
+export PDYm90=${PDYm90:-${PDYm90}}
+export VDATE=${VDATE:-${PDYm1}}
+
+####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+
+####################################
+# Define NET/RUN variables          
+####################################
+export NET=${NET:-evs}
+export MODEL=${MODEL:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-glwu}
+export MODELNAME=${MODELNAME:-glwu}
+export MODNAM=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
+export OBTYPE=${OBTYPE:-NDBC}
+export RUN=${RUN:-wave}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+
+####################################
+# Set EVS directories               
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+####################################
+# Define COMIN/COMOUT variables     
+####################################
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
+export EVSINglwu=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
+export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}
+
+# make the directory where the plots will be kept
+mkdir -p ${COMOUT}
+mkdir -p ${COMOUTplots}
+
+
+####################################
+# Execute the script                
+####################################
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_chk
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  rm -rf $DATA
+fi
+
+date
