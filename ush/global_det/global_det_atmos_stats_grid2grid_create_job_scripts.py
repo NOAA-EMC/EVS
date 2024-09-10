@@ -37,6 +37,7 @@ METPLUS_PATH = os.environ['METPLUS_PATH']
 MET_ROOT = os.environ['MET_ROOT']
 PARMevs = os.environ['PARMevs']
 model_list = os.environ['model_list'].split(' ')
+model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
@@ -1188,7 +1189,13 @@ elif JOB_GROUP == 'gather_stats':
         job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
         for model_idx in range(len(model_list)):
             job_env_dict['MODEL'] = model_list[model_idx]
+            job_env_dict['MODEL_EVS_DATA_DIR'] = (
+                model_evs_data_dir_list[model_idx]
+            )
+            job_env_dict['COMOUTfinal'] = os.environ['COMOUTfinal']
+            dont_write_env_var_list.append('COMOUTfinal')
             njobs+=1
+            job_env_dict['job_num'] = str(njobs)
             # Create job file
             job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
             print(f"Creating job script: {job_file}")
@@ -1196,6 +1203,29 @@ elif JOB_GROUP == 'gather_stats':
             job.write('#!/bin/bash\n')
             job.write('set -x\n')
             job.write('\n')
+            # Create job working directory
+            job_env_dict['job_num_work_dir'] = os.path.join(
+                DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                'mpmd_work_dir', JOB_GROUP,
+                f"job{job_env_dict['job_num']}"
+            )
+            job_env_dict['MET_TMP_DIR'] = os.path.join(
+                job_env_dict['job_num_work_dir'], 'tmp'
+            )
+            # Get directory to check
+            if job_env_dict['SENDCOM'] == 'YES':
+                job_env_dict['stat_analysis_lookin_dir'] = os.path.join(
+                    job_env_dict['COMOUT'],
+                    f"{job_env_dict['RUN']}.{job_env_dict['DATE']}",
+                    job_env_dict['MODEL'], job_env_dict['VERIF_CASE']
+                )
+            else:
+                job_env_dict['stat_analysis_lookin_dir'] = os.path.join(
+                    DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                    'mpmd_work_dir', '*', 'job*',
+                    f"{job_env_dict['RUN']}.{job_env_dict['DATE']}",
+                    job_env_dict['MODEL'], job_env_dict['VERIF_CASE']
+                )
             # Set any environment variables for special cases
             # Write environment variables
             for name, value in job_env_dict.items():
@@ -1206,16 +1236,24 @@ elif JOB_GROUP == 'gather_stats':
                         job.write(f'export {name}="{value}"\n')
             job.write('\n')
             # Do file checks
-            stat_files_exist = gda_util.check_stat_files(job_env_dict)
+            stat_files_exist, copy_output_list = gda_util.check_stat_files(
+                job_env_dict
+            )
             if stat_files_exist:
                 write_job_cmds = True
             else:
                 write_job_cmds = False
             # Write job commands
             if write_job_cmds:
+                gda_util.make_dir(job_env_dict['job_num_work_dir'])
                 for cmd in gather_stats_jobs_dict['commands']:
                     job.write(cmd+'\n')
                     job.write('export err=$?; err_chk'+'\n')
+                for output_file_tuple in copy_output_list:
+                    job.write(f'if [ -f "{output_file_tuple[0]}" ]; then '
+                              +f"cp -v {output_file_tuple[0]} "
+                              +f"{output_file_tuple[1]}"
+                              +f"; fi\n")
             job.close()
         date_dt = date_dt + datetime.timedelta(days=1)
 

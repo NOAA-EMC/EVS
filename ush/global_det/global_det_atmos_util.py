@@ -2231,24 +2231,47 @@ def check_stat_files(job_dict):
     """! Check for MET .stat files
 
          Args:
-             job_dict - dictionary containing settings
-                        job is running with (strings)
+             job_dict         - dictionary containing settings
+                                job is running with (strings)
+             copy_output_list - list of file to copy from
 
          Returns:
              stat_files_exist - if .stat files
                                 exist or not (boolean)
     """
-    model_stat_file_dir = os.path.join(
-        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP'],
-        'METplus_output', job_dict['RUN']+'.'+job_dict['DATE'],
-        job_dict['MODEL'], job_dict['VERIF_CASE']
+    stat_file_list = glob.glob(
+        os.path.join(job_dict['stat_analysis_lookin_dir'], '*.stat')
     )
-    stat_file_list = glob.glob(os.path.join(model_stat_file_dir, '*.stat'))
+    # Check inputs
     if len(stat_file_list) != 0:
         stat_files_exist = True
     else:
         stat_files_exist = False
-    return stat_files_exist
+    copy_output_list = []
+    # Check outputs
+    file_DATA = os.path.join(
+        job_dict['job_num_work_dir'],
+        f"{job_dict['MODEL']}.{job_dict['DATE']}",
+        f"evs.{job_dict['STEP']}.{job_dict['MODEL']}.{job_dict['RUN']}."
+        +f"{job_dict['VERIF_CASE']}.v{job_dict['DATE']}.stat"
+    )
+    file_COMOUT = os.path.join(
+        job_dict['COMOUTfinal'],
+        file_DATA.rpartition('/')[2]
+    )
+    file_evs_data = os.path.join(
+        job_dict['MODEL_EVS_DATA_DIR'],
+        file_DATA.rpartition('/')[2]
+    )
+    file_output_list = [file_evs_data]
+    if job_dict['SENDCOM'] == 'YES':
+        file_output_list.append(file_COMOUT)
+    for file_output in file_output_list:
+        if (file_DATA, file_output) not in copy_output_list:
+            copy_output_list.append(
+                (file_DATA, file_output)
+            )
+    return stat_files_exist, copy_output_list
 
 def get_obs_valid_hrs(obs):
     """! This returns the valid hour start, end, and increment
