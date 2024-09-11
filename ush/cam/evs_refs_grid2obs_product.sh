@@ -27,21 +27,12 @@ for prod in mean prob ; do
    if [ $domain = CONUS ] ; then
 
 
-    for valid_run in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 1 22 23 ; do
-
-     if [ $valid_run = 00 ] || [ $valid_run = 06 ] || [ $valid_run = 12 ] || [ $valid_run = 18 ] ; then
-       fhrs="06 12 18 24 30 36 42 48"
-     elif [ $valid_run = 01 ] || [ $valid_run = 07 ] || [ $valid_run = 13 ] || [ $valid_run = 19 ] ; then
-       fhrs="01 07 13 19" 
-     elif [ $valid_run = 02 ] || [ $valid_run = 08 ] || [ $valid_run = 14 ] || [ $valid_run = 20 ] ; then
-       fhrs="02 08 14 20"
-     elif [ $valid_run = 03 ] || [ $valid_run = 09 ] || [ $valid_run = 15 ] || [ $valid_run = 21 ] ; then
-       fhr="03 09 15 21 27 33 39 45" 
-     elif [ $valid_run = 04 ] || [ $valid_run = 10 ] || [ $valid_run = 16 ] || [ $valid_run = 22 ] ; then  
-       fhrs="04 10 16 22"
-     elif [ $valid_run = 05 ] || [ $valid_run = 11 ] || [ $valid_run = 17 ] || [ $valid_run = 23 ] ; then
-       fhrs="05 11 17 23"
-     fi
+    for valid_run in 00 03 06 09 12 15 18 21 ; do
+      if [ $valid_run = 00 ] || [ $valid_run = 06 ] || [ $valid_run = 12 ] || [ $valid_run = 18 ] ; then
+        fhrs="06 12 18 24 30 36 42 48"
+      elif [ $valid_run = 03 ] || [ $valid_run = 09 ] || [ $valid_run = 15 ] || [ $valid_run = 21 ] ; then
+        fhrs="03 09 15 21 27 33 39 45" 
+      fi
 
      for fhr in $fhrs ; do
 
@@ -131,20 +122,12 @@ for prod in mean prob ; do
 
    elif [ $domain = Alaska ] ; then
 
-    for valid_run in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 1 22 23 ; do
-     if [ $valid_run = 00 ] || [ $valid_run = 06 ] || [ $valid_run = 12 ] || [ $valid_run = 18 ] ; then
-       fhrs="06 12 18 24 30 36 42 48"
-     elif [ $valid_run = 01 ] || [ $valid_run = 07 ] || [ $valid_run = 13 ] || [ $valid_run = 19 ] ; then
-       fhrs="01 07 13 19"
-     elif [ $valid_run = 02 ] || [ $valid_run = 08 ] || [ $valid_run = 14 ] || [ $valid_run = 20 ] ; then
-       fhrs="02 08 14 20"
-     elif [ $valid_run = 03 ] || [ $valid_run = 09 ] || [ $valid_run = 15 ] || [ $valid_run = 21 ] ; then
-       fhr="03 09 15 21 27 33 39 45"
-    elif [ $valid_run = 04 ] || [ $valid_run = 10 ] || [ $valid_run = 16 ] || [ $valid_run = 22 ] ; then
-       fhrs="04 10 16 22"
-    elif [ $valid_run = 05 ] || [ $valid_run = 11 ] || [ $valid_run = 17 ] || [ $valid_run = 23 ] ; then
-       fhrs="05 11 17 23"
-    fi
+    for valid_run in 00 03 06 09 12 15 18 21 ; do
+      if [ $valid_run = 00 ] || [ $valid_run = 06 ] || [ $valid_run = 12 ] || [ $valid_run = 18 ] ; then
+        fhrs="06 12 18 24 30 36 42 48"
+      elif [ $valid_run = 03 ] || [ $valid_run = 09 ] || [ $valid_run = 15 ] || [ $valid_run = 21 ] ; then
+        fhrs="03 09 15 21 27 33 39 45"
+      fi
 
     for fhr in $fhrs ; do
 
