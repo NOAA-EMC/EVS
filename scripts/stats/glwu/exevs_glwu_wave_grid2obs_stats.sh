@@ -76,7 +76,7 @@ for vhr in ${vhours} ; do
        match_fhr=$(printf "%02d" "${match_hr}")
        flead=$(printf "%03d" "${lead}")
        flead2=$(printf "%02d" "${lead}")
-       EVSINndbcncfilename=${EVSINndbcnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/ndbc.${VDATE}.nc 
+       EVSINndbcncfilename=${EVSINndbcnc}/${RUN}.${VDATE}/ndbc/${VERIF_CASE}/ndbc.${VDATE}.nc 
        DATAndbcncfilename=${DATA}/ncfiles/ndbc.${VDATE}.nc
        EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.grlc_2p5km.${match_date}.t${match_fhr}z.f${flead}.grib2                  
        DATAmodelfilename=$DATA/gribs/${MODELNAME}.grlc_2p5km.${match_date}.t${match_fhr}z.f${flead}.grib2
