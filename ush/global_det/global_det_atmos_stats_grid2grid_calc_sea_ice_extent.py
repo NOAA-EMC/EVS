@@ -42,8 +42,8 @@ def iceArea(lon1,lat1,ice1):
 
 # Check for needed environment variables
 env_var_list = ['MODEL', 'DATE', 'valid_hr_start', 'valid_hr_end',
-                'fhr_list', 'hemisphere', 'grid', 'DATA', 'COMOUT',
-                'VERIF_CASE', 'STEP', 'RUN']
+                'fhr_list', 'hemisphere', 'grid', 'DATA', 'VERIF_CASE', 'STEP',
+                'RUN']
 for env_var in env_var_list:
     if not env_var in os.environ:
         print("FATAL ERROR: "+repr(sys.argv[0])
@@ -57,7 +57,6 @@ fhr_list = os.environ['fhr_list'].split(', ')
 hemisphere = os.environ['hemisphere']
 grid = os.environ['grid']
 DATA = os.environ['DATA']
-COMOUT = os.environ['COMOUT']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 RUN = os.environ['RUN']
@@ -161,7 +160,8 @@ else:
 for fcst_lead in fhr_list:
     FCST_LEAD = fcst_lead.zfill(2)+'0000'
     initDATE_dt = DATE_end_dt - datetime.timedelta(hours=int(fcst_lead))
-    fcst_file = os.path.join(COMOUT, RUN+'.'+DATE_end_dt.strftime('%Y%m%d'),
+    fcst_file = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
+                             RUN+'.'+DATE_end_dt.strftime('%Y%m%d'),
                              MODEL, VERIF_CASE, 'daily_avg_sea_ice_DailyAvg_'
                              +'Concentration'+hemisphere.upper()+'_init'
                              +initDATE_dt.strftime('%Y%m%d%H')+'_'

@@ -64,6 +64,10 @@ while valid_date_dt <= ENDDATE_dt:
     full_path_job_num_work_dir = os.path.join(
         job_num_work_dir, f"{RUN}.{valid_date_dt:%Y%m%d}", MODEL, VERIF_CASE
     )
+    full_path_DATA = os.path.join(
+        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+        f"{RUN}.{valid_date_dt:%Y%m%d}", MODEL, VERIF_CASE
+    )
     full_path_COMIN = os.path.join(
         COMIN, STEP, COMPONENT, f"{RUN}.{valid_date_dt:%Y%m%d}",
         MODEL, VERIF_CASE
@@ -81,6 +85,8 @@ while valid_date_dt <= ENDDATE_dt:
         # Check possible input files
         check_input_file_list = [
             os.path.join(full_path_job_num_work_dir, input_file_name),
+            os.path.join(full_path_DATA, input_file_name),
+            os.path.join(full_path_COMOUT, input_file_name),
             os.path.join(full_path_COMIN, input_file_name)
         ]
         found_input = False
@@ -94,10 +100,20 @@ while valid_date_dt <= ENDDATE_dt:
             full_path_job_num_work_dir, f"anomaly_{VERIF_TYPE}_{job_name}_"
             +f"init{init_date_dt:%Y%m%d%H}_fhr{str(fhr).zfill(3)}.nc"
         )
-        final_output_file = os.path.join(
+        output_file_DATA = os.path.join(
+            full_path_DATA, output_file.rpartition('/')[2]
+        )
+        output_file_COMOUT = os.path.join(
             full_path_COMOUT, output_file.rpartition('/')[2]
         )
-        if found_input:
+        # Check input and output files
+        if os.path.exists(output_file_COMOUT):
+            print(f"COMOUT Output File exists: {output_file_COMOUT}")
+            make_anomaly_output_file = False
+            gda_util.copy_file(output_file_COMOUT, output_file_DATA)
+        else:
+            make_anomaly_output_file = True
+        if found_input and make_anomaly_output_file:
             input_file_data = netcdf.Dataset(input_file)
             input_file_data_var_list = list(input_file_data.variables.keys())
             climo_var_level = 'climo_var_hold'
@@ -105,15 +121,7 @@ while valid_date_dt <= ENDDATE_dt:
                 if 'CLIMO_MEAN_'+var_level in input_var:
                     climo_var_level = input_var
             if climo_var_level in input_file_data_var_list:
-                if os.path.exists(final_output_file):
-                    print(f"Final Output File exists: {final_output_file}")
-                    make_anomaly_output_file = False
-                else:
-                    if os.path.exists(output_file):
-                        make_anomaly_output_file = False
-                        print(f"Initial Output File exists: {output_file}")
-                    else:
-                        make_anomaly_output_file = True
+                make_anomaly_output_file = True
             else:
                 print(f"NOTE: Cannot make anomaly file {output_file} - "
                       +f"{input_file} does not contain CLIMO_MEAN_{var_level}")
@@ -200,9 +208,9 @@ while valid_date_dt <= ENDDATE_dt:
                           +f"contain {data_name}_{var_level}")
             output_file_data.close()
             input_file_data.close()
-            if SENDCOM == 'YES' \
-                    and gda_util.check_file_exists_size(output_file):
-                gda_util.copy_file(output_file, final_output_file)
+            if gda_util.check_file_exists_size(output_file):
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(output_file, output_file_COMOUT)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
 
 print("END: "+os.path.basename(__file__))

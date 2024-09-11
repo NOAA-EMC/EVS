@@ -79,6 +79,10 @@ elif 'DailyAvg_Concentration' in job_name:
 else:
     print(f"ERROR: job_name={job_name} not known to get file format")
     sys.exit(1)
+input_file_format_DATA = os.path.join(
+    DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',  RUN+'.{valid?fmt=%Y%m%d}',
+    MODEL, VERIF_CASE, input_file_format_COMIN.rpartition('/')[2]
+)
 input_file_format_COMOUT = os.path.join(
     COMOUT, RUN+'.{valid?fmt=%Y%m%d}', MODEL, VERIF_CASE,
     input_file_format_COMIN.rpartition('/')[2]
@@ -108,6 +112,10 @@ while valid_hr <= int(valid_hr_end):
             job_num_work_dir, f"{RUN}.{DATE}",
             MODEL, VERIF_CASE
         )
+        full_path_DATA = os.path.join(
+            DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+            f"{RUN}.{DATE}", MODEL, VERIF_CASE
+        )
         full_path_COMIN = os.path.join(
             COMIN, STEP, COMPONENT, f"{RUN}.{DATE}",
             MODEL, VERIF_CASE
@@ -132,9 +140,19 @@ while valid_hr <= int(valid_hr_end):
             +f"{daily_avg_valid_start:%Y%m%d%H}to"
             +f"{daily_avg_valid_end:%Y%m%d%H}.nc"
         )
-        final_output_file = os.path.join(
+        output_file_DATA = os.path.join(
             full_path_COMOUT, output_file.rpartition('/')[2]
         )
+        output_file_COMOUT = os.path.join(
+            full_path_COMOUT, output_file.rpartition('/')[2]
+        )
+        # Check input and output files
+        if os.path.exists(output_file_COMOUT):
+            print(f"COMOUT Output File exists: {output_file_COMOUT}")
+            gda_util.copy_file(output_file_COMOUT, output_file_DATA)
+            make_daily_avg_output_file = False
+        else:
+             make_daily_avg_output_file = True
         daily_avg_fcst_sum = 0
         daily_avg_fcst_file_list = []
         daily_avg_obs_sum = 0
@@ -143,6 +161,12 @@ while valid_hr <= int(valid_hr_end):
             daily_avg_day_fhr_valid = (
                 daily_avg_day_init
                 + datetime.timedelta(hours=daily_avg_day_fhr)
+            )
+            # Check possible input files
+            daily_avg_day_fhr_DATA_input_file = gda_util.format_filler(
+                input_file_format_DATA, daily_avg_day_fhr_valid,
+                daily_avg_day_init,
+                str(daily_avg_day_fhr), {}
             )
             daily_avg_day_fhr_COMOUT_input_file = gda_util.format_filler(
                 input_file_format_COMOUT, daily_avg_day_fhr_valid,
@@ -154,7 +178,12 @@ while valid_hr <= int(valid_hr_end):
                     daily_avg_day_init,
                     str(daily_avg_day_fhr), {}
             )
-            daily_avg_day_fhr_DATA_input_file_glob = glob.glob(
+            check_input_file_list = [
+                daily_avg_day_fhr_DATA_input_file,
+                daily_avg_day_fhr_COMOUT_input_file,
+                daily_avg_day_fhr_COMIN_input_file
+            ]
+            daily_avg_day_fhr_job_input_file_glob = glob.glob(
                 os.path.join(
                     DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
                     'mpmd_work_dir', 'reformat_data', 'job*',
@@ -163,20 +192,18 @@ while valid_hr <= int(valid_hr_end):
                     )[2]
                 )
             )
-            if len(daily_avg_day_fhr_DATA_input_file_glob) == 1:
-                daily_avg_day_fhr_input_file = (
-                    daily_avg_day_fhr_DATA_input_file_glob[0]
+            if len(daily_avg_day_fhr_job_input_file_glob) == 1:
+                check_input_file_list.insert(
+                    0,daily_avg_day_fhr_job_input_file_glob[0]
                 )
-            else:
-                if os.path.exists(daily_avg_day_fhr_COMOUT_input_file):
-                    daily_avg_day_fhr_input_file = (
-                        daily_avg_day_fhr_COMOUT_input_file
-                    )
-                else:
-                    daily_avg_day_fhr_input_file = (
-                        daily_avg_day_fhr_COMIN_input_file
-                    )
-            if os.path.exists(daily_avg_day_fhr_input_file):
+            found_input = False
+            for check_input_file in check_input_file_list:
+                daily_avg_day_fhr_input_file = check_input_file
+                if os.path.exists(daily_avg_day_fhr_input_file):
+                    daily_avg_day_fhr_input_file = check_input_file
+                    found_input = True
+                    break
+            if found_input and make_daily_avg_output_file:
                 print("Input file for forecast hour "+str(daily_avg_day_fhr)
                       +', valid '+str(daily_avg_day_fhr_valid)
                       +', init '+str(daily_avg_day_init)+": "
@@ -205,9 +232,8 @@ while valid_hr <= int(valid_hr_end):
             else:
                 print("No input file for forecast hour "+str(daily_avg_day_fhr)
                       +', valid '+str(daily_avg_day_fhr_valid)
-                      +', init '+str(daily_avg_day_init)+" "
-                      +daily_avg_day_fhr_COMOUT_input_file+" or "
-                      +daily_avg_day_fhr_COMIN_input_file)
+                      +', init '+str(daily_avg_day_init)+": "
+                      +', '.join(check_input_file_list)+" do not exist")
             if job_name == 'DailyAvg_GeoHeightAnom':
                 daily_avg_day_fhr+=12
             else:
@@ -227,22 +253,14 @@ while valid_hr <= int(valid_hr_end):
                 expected_nfiles = 5
             elif fhr_inc == '12':
                 expected_nfiles = 3
-        if os.path.exists(final_output_file):
-            print(f"Final Output File exists: {final_output_file}")
-            make_daily_avg_output_file = False
+        if len(daily_avg_fcst_file_list) == expected_nfiles \
+                and len(daily_avg_obs_file_list) == expected_nfiles:
+            make_daily_avg_output_file = True
         else:
-            if len(daily_avg_fcst_file_list) == expected_nfiles \
-                    and len(daily_avg_obs_file_list) == expected_nfiles:
-                if os.path.exists(output_file):
-                    print(f"Inital Output File exists: {output_file}")
-                    make_daily_avg_output_file = False
-                else:
-                    make_daily_avg_output_file = True
-            else:
-                print("NOTE: Cannot create daily average file "
-                      +output_file+"; need "+str(expected_nfiles)+" "
-                      +"input files")
-                make_daily_avg_output_file = False
+            print("NOTE: Cannot create daily average file "
+                  +output_file+"; need "+str(expected_nfiles)+" "
+                  +"input files")
+            make_daily_avg_output_file = False
         if make_daily_avg_output_file:
             print(f"Output File: {output_file}")
             if not os.path.exists(full_path_job_num_work_dir):
@@ -351,9 +369,9 @@ while valid_hr <= int(valid_hr_end):
             else:
                 output_file_data.close()
             input_file_data.close()
-            if SENDCOM == 'YES' \
-                    and gda_util.check_file_exists_size(output_file):
-                gda_util.copy_file(output_file, final_output_file)
+            if gda_util.check_file_exists_size(output_file):
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(output_file, output_file_COMOUT)
         if job_name == 'DailyAvg_GeoHeightAnom':
             daily_avg_day+=1
         else:

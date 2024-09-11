@@ -75,4 +75,6 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
             nc=$((nc+1))
         done
     fi
+    python $USHevs/global_det/global_det_atmos_copy_job_dir_output.py
+    export err=$?; err_chk
 done

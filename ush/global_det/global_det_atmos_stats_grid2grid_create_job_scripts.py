@@ -876,7 +876,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     # Create job working directory
                     job_env_dict['job_num_work_dir'] = os.path.join(
                         DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
-                        'mpmd_work_dir', JOB_GROUP,
+                        'job_work_dir', JOB_GROUP,
                         f"job{job_env_dict['job_num']}"
                     )
                     job_env_dict['MET_TMP_DIR'] = os.path.join(
@@ -936,7 +936,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     check_model_files = True
                     if check_model_files:
                         (model_files_exist, valid_date_fhr_list,
-                         model_copy_output_DATA2COMOUT_list) = (
+                         copy_output_list) = (
                             gda_util.check_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
@@ -1158,13 +1158,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                             job.write(cmd+'\n')
                                             job.write('export err=$?; err_chk'
                                                       +'\n')
-                        if job_env_dict['SENDCOM'] == 'YES':
-                            for model_output_file_tuple \
-                                    in model_copy_output_DATA2COMOUT_list:
-                                job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
-                                          +f"cp -v {model_output_file_tuple[0]} "
-                                          +f"{model_output_file_tuple[1]}"
-                                          +f"; fi\n")
+                        for output_file_tuple in copy_output_list:
+                            job.write(f'if [ -f "{output_file_tuple[0]}" ]; then '
+                                      +f"cp -v {output_file_tuple[0]} "
+                                      +f"{output_file_tuple[1]}; fi\n")
                     else:
                         if JOB_GROUP == 'reformat_data':
                             if (verif_type_job == 'GeoHeightAnom' \
@@ -1192,8 +1189,6 @@ elif JOB_GROUP == 'gather_stats':
             job_env_dict['MODEL_EVS_DATA_DIR'] = (
                 model_evs_data_dir_list[model_idx]
             )
-            job_env_dict['COMOUTfinal'] = os.environ['COMOUTfinal']
-            dont_write_env_var_list.append('COMOUTfinal')
             njobs+=1
             job_env_dict['job_num'] = str(njobs)
             # Create job file
@@ -1206,26 +1201,12 @@ elif JOB_GROUP == 'gather_stats':
             # Create job working directory
             job_env_dict['job_num_work_dir'] = os.path.join(
                 DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
-                'mpmd_work_dir', JOB_GROUP,
+                'job_work_dir', JOB_GROUP,
                 f"job{job_env_dict['job_num']}"
             )
             job_env_dict['MET_TMP_DIR'] = os.path.join(
                 job_env_dict['job_num_work_dir'], 'tmp'
             )
-            # Get directory to check
-            if job_env_dict['SENDCOM'] == 'YES':
-                job_env_dict['stat_analysis_lookin_dir'] = os.path.join(
-                    job_env_dict['COMOUT'],
-                    f"{job_env_dict['RUN']}.{job_env_dict['DATE']}",
-                    job_env_dict['MODEL'], job_env_dict['VERIF_CASE']
-                )
-            else:
-                job_env_dict['stat_analysis_lookin_dir'] = os.path.join(
-                    DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
-                    'mpmd_work_dir', '*', 'job*',
-                    f"{job_env_dict['RUN']}.{job_env_dict['DATE']}",
-                    job_env_dict['MODEL'], job_env_dict['VERIF_CASE']
-                )
             # Set any environment variables for special cases
             # Write environment variables
             for name, value in job_env_dict.items():

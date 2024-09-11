@@ -91,11 +91,11 @@ if STEP == 'stats':
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'METplus_output')
     working_dir_list.append(working_output_base_dir)
-    working_dir_list.append(os.path.join(working_output_base_dir, 'mpmd_work_dir'))
-    if SENDCOM == 'YES':
-        date_dt = start_date_dt
-        while date_dt <= end_date_dt:
-            for model in model_list:
+    working_dir_list.append(os.path.join(working_output_base_dir, 'job_work_dir'))
+    date_dt = start_date_dt
+    while date_dt <= end_date_dt:
+        for model in model_list:
+            if SENDCOM == 'YES':
                 output_dir_list.append(
                     os.path.join(COMOUT,
                                  f"{RUN}.{date_dt:%Y%m%d}", model,
@@ -104,7 +104,16 @@ if STEP == 'stats':
                 output_dir_list.append(
                     os.path.join(COMOUT, f"{model}.{date_dt:%Y%m%d}")
                 )
-            date_dt = date_dt + datetime.timedelta(days=1)
+            output_dir_list.append(
+                os.path.join(working_output_base_dir,
+                             f"{RUN}.{date_dt:%Y%m%d}", model,
+                             VERIF_CASE)
+            )
+            output_dir_list.append(
+                os.path.join(working_output_base_dir,
+                             f"{model}.{date_dt:%Y%m%d}")
+            ) 
+        date_dt = date_dt + datetime.timedelta(days=1)
     for model_evs_data_dir in model_evs_data_dir_list:
         output_dir_list.append(model_evs_data_dir)
 elif STEP == 'plots':
