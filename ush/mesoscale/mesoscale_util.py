@@ -372,6 +372,284 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                                           filled_file_format_chunk)
     return filled_file_format
 
+def get_completed_jobs(completed_jobs_file):
+    completed_jobs = set()
+    if os.path.exists(completed_jobs_file):
+         with open(completed_jobs_file, 'r') as f:
+             completed_jobs = set(f.read().splitlines())
+    return completed_jobs
+
+def mark_job_completed(completed_jobs_file, job_name, job_type=""):
+    with open(completed_jobs_file, 'a') as f:
+          if job_type:
+              f.write(job_type + "_" + job_name + "\n")
+          else:
+              f.write(job_name + "\n")
+
+def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 
+                         run=None, step=None, model=None, vdate=None, vhr=None, 
+                         verif_case=None, verif_type=None, vx_mask=None, 
+                         job_type=None, var_name=None, vhour=None, 
+                         fhr_start=None, fhr_end=None, fhr_incr=None, 
+                         njob=None, acc=None, nbrhd=None):
+    sub_dirs = []
+    copy_files = []
+    if met_tool == "ascii2nc":
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type, 
+            vx_mask, 
+            met_tool, 
+        ))
+        copy_files.append(f'{verif_type}.{vdate}{vhour}.nc')
+    elif met_tool == 'genvxmask':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour, fhr_start, fhr_end, fhr_incr
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            met_tool,
+            f'{vx_mask}.{vdate}',
+        ))
+        for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
+            copy_files.append(f'{vx_mask}_t{vhour}z_f{str(fhr).zfill(2)}.nc')
+    elif met_tool == 'grid_stat':
+        if verif_case == "snowfall":
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, met_tool, 
+                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name, 
+                acc, nbrhd
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            sub_dirs.append(os.path.join(
+                'METplus_output',
+                verif_type,
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
+                copy_files.append(
+                    f'{met_tool}_{model}_{var_name}*{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
+                    + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
+                )
+        else:
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, met_tool, 
+                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc, nbrhd
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            sub_dirs.append(os.path.join(
+                'METplus_output',
+                verif_type,
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
+                copy_files.append(
+                    f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
+                    + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
+                )
+    elif met_tool == 'merged_ptype':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour, fhr_start, fhr_end, fhr_incr, model, njob
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs.append(os.path.join(
+            'data',
+            model,
+            met_tool,
+        ))
+        for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
+            vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
+            idt = vdt - td(hours=int(fhr))
+            idate = idt.strftime('%Y%m%d')
+            ihour = idt.strftime('%H')
+            copy_files.append(
+                f'{met_tool}_{verif_type}_{vx_mask}_job{njob}_'
+                + f'init{idate}{ihour}_fhr{str(fhr).zfill(2)}.nc'
+            )
+    elif met_tool == 'pb2nc':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            vx_mask,
+            met_tool,
+        ))
+        copy_files.append(f'prepbufr.*.{vdate}{vhour}.nc')
+    elif met_tool == 'pcp_combine':
+        if verif_case == "snowfall":
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name, acc
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
+                vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
+                idt = vdt - td(hours=int(fhr))
+                idate = idt.strftime('%Y%m%d')
+                ihour = idt.strftime('%H')
+                sub_dirs.append(os.path.join(
+                    'METplus_output',
+                    verif_type,
+                    met_tool,
+                ))
+                copy_files.append(
+                    f'{model}.{var_name}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                )
+        else:
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
+                vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
+                idt = vdt - td(hours=int(fhr))
+                idate = idt.strftime('%Y%m%d')
+                ihour = idt.strftime('%H')
+                sub_dirs.append(os.path.join(
+                    'METplus_output',
+                    verif_type,
+                    met_tool,
+                ))
+                copy_files.append(
+                    f'{model}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                )
+    elif met_tool == 'point_stat':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            met_tool,
+            f'{model}.{vdate}'
+        ))
+        for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
+            copy_files.append(
+                f'{met_tool}_{model}_{vx_mask}_{var_name}_OBS*_{str(fhr).zfill(2)}0000L_{vdate}_'
+                + f'{vhour}0000V.stat'
+            )
+    elif met_tool == 'regrid_data_plane':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour, fhr_start, fhr_end, fhr_incr, model, njob
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            met_tool,
+            f'{model}.{vdate}'
+        ))
+        for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
+            copy_files.append(
+                f'{met_tool}_{model}_t{vhour}z_{verif_type}_{vx_mask}_job{njob}_'
+                + f'fhr{str(fhr).zfill(2)}.nc'
+            )
+    elif met_tool == 'stat_analysis':
+        if job_type == 'gather':
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, met_tool, vdate, 
+                net, step, model, run 
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            sub_dirs.append(os.path.join(
+                'METplus_output',
+                'gather_small',
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            copy_files.append(
+                f'{net}.{step}.{model}.{run}.{verif_case}.{verif_type}'
+                + f'.v{vdate}.stat'
+            )
+        elif job_type == 'gather2':
+            check_if_none = [
+                data_dir, restart_dir, verif_case, met_tool, vdate, net, step, 
+                model, run, vhr
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            sub_dirs.append(os.path.join(
+                'METplus_output',
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            copy_files.append(
+                f'{net}.{step}.{model}.{run}.{verif_case}.v{vdate}.c{vhr}z.stat'
+            )
+    for sub_dir in sub_dirs:
+        for copy_file in copy_files:
+            origin_path = os.path.join(
+                data_dir, verif_case, sub_dir, copy_file
+            )
+            dest_path = os.path.join(restart_dir, sub_dir)
+            if not glob.glob(origin_path):
+                continue
+            if not os.path.exists(dest_path):
+                print(f"FATAL ERROR: Could not copy METplus output to COMOUT directory"
+                      + f" {dest_path} because the path does not already exist.")
+                continue
+            if len(glob.glob(origin_path)) == len(glob.glob(os.path.join(dest_path, copy_file))):
+                print(f"Not copying restart files to restart_directory"
+                      + f" {dest_path} because they already exist.")
+            else:
+                run_shell_command(
+                    ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
+                )
+
 def initalize_job_env_dict():
     """! This initializes a dictionary of environment variables and their
          values to be set for the job pulling from environment variables
@@ -828,13 +1106,3 @@ def snowfall_check_model_input_output_files(job_dict):
             all_COMOUT_file_exist, COMOUT_files_list,
             DATA_files_list)
 
-def get_completed_jobs(completed_jobs_file):
-    completed_jobs = set()
-    if os.path.exists(completed_jobs_file):
-        with open(completed_jobs_file, 'r') as f:
-            completed_jobs = set(f.read().splitlines())
-    return completed_jobs
-
-def mark_job_completed(completed_jobs_file, job_name):
-    with open(completed_jobs_file, 'a') as f:
-        f.write(job_name + "\n")

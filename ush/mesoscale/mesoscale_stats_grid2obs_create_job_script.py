@@ -370,7 +370,7 @@ elif STEP == 'stats':
             )
             job_cmd_list_iterative.append(
               f'#python -c '
-              + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+              + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
               + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
               + 'verif_case=\\\"${VERIF_CASE}\\\", '
               + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -388,7 +388,7 @@ elif STEP == 'stats':
         )
         job_cmd_list_iterative.append(
             f'python -c '
-            + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
             + 'verif_case=\\\"${VERIF_CASE}\\\", '
             + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -400,7 +400,7 @@ elif STEP == 'stats':
         )
         job_cmd_list.append(
            "python -c "
-           + f"'import cam_util; cam_util.mark_job_completed("
+           + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
            + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
            + f"\"job{njob}\", job_type=\"{job_type}\")'"
         )
@@ -418,7 +418,7 @@ elif STEP == 'stats':
                                                                                                                              )
              job_cmd_list.append(
                   f'#python -c '
-                  + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                  + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                   + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                   + 'verif_case=\\\"${VERIF_CASE}\\\", '
                   + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -441,7 +441,7 @@ elif STEP == 'stats':
             )
             job_cmd_list.append(
                f'python -c '
-               + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+               + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                + 'verif_case=\\\"${VERIF_CASE}\\\", '
                + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -458,7 +458,7 @@ elif STEP == 'stats':
            )
            job_cmd_list.append(
                "python -c "
-               + f"'import cam_util; cam_util.mark_job_completed("
+               + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
                + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
                + f"\"job{njob}\", job_type=\"{job_type}\")'"
            )
@@ -476,7 +476,7 @@ elif STEP == 'stats':
                     )
                     job_cmd_list.append(
                         f'#python -c '
-                        + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -498,7 +498,7 @@ elif STEP == 'stats':
                     )
                     job_cmd_list_iterative.append(
                         f'#python -c '
-                        + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -521,7 +521,7 @@ elif STEP == 'stats':
                     )
                     job_cmd_list.append(
                         f'#python -c '
-                        + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -544,7 +544,7 @@ elif STEP == 'stats':
                    )
                    job_cmd_list.append(
                        f'python -c '
-                       + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                       + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
                        + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -566,7 +566,7 @@ elif STEP == 'stats':
                   )
                   job_cmd_list_iterative.append(
                        f'python -c '
-                       + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                       + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
                        + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -590,7 +590,7 @@ elif STEP == 'stats':
                  )
                  job_cmd_list.append(
                        f'python -c '
-                       + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                       + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
                        + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -607,7 +607,7 @@ elif STEP == 'stats':
                )
                job_cmd_list.append(
                        "python -c "
-                       + f"'import cam_util; cam_util.mark_job_completed("
+                       + f"'import mesosclae_util; mesoscale_util.mark_job_completed("
                        + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
                )
@@ -628,7 +628,7 @@ elif STEP == 'stats':
                     )
                     job_cmd_list.append(
                         f'#python -c '
-                        + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -652,7 +652,7 @@ elif STEP == 'stats':
                                                                                                                                    )
                    job_cmd_list.append(
                        f'python -c '
-                       + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                       + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
                        + 'verif_type=\\\"${VERIF_TYPE}\\\", '
@@ -669,23 +669,117 @@ elif STEP == 'stats':
                    )
                    job_cmd_list.append(
                        "python -c "
-                       + f"'import cam_util; cam_util.mark_job_completed("
+                       + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
                        + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
                    )
     elif job_type == 'gather':
+      if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+        job_cmd_list.append(
+            f'#jobs were restarted, and the following has already run successfully'
+        )
         job_cmd_list.append(
             f'{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
             + f'_GatherByDay.conf'
         )
+        job_cmd_list.append(
+            f'#python -c '
+            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+            + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+            + 'verif_case=\\\"${VERIF_CASE}\\\", '
+            + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+            + 'met_tool=\\\"stat_analysis\\\", '
+            + 'vdate=\\\"${VDATE}\\\", '
+            + 'net=\\\"${NET}\\\", '
+            + 'step=\\\"${STEP}\\\", '
+            + 'model=\\\"${MODELNAME}\\\", '
+            + 'run=\\\"${RUN}\\\", '
+            + f'job_type=\\\"{job_type}\\\"'
+            + ')\"'
+        )
+      else:
+        job_cmd_list.append(
+            f'{metplus_launcher} -c {machine_conf} '
+            + f'-c {MET_PLUS_CONF}/'
+            + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
+            + f'_GatherByDay.conf'
+        )
+        job_cmd_list.append(
+            f'python -c '
+            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+            + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+            + 'verif_case=\\\"${VERIF_CASE}\\\", '
+            + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+            + 'met_tool=\\\"stat_analysis\\\", '
+            + 'vdate=\\\"${VDATE}\\\", '
+            + 'net=\\\"${NET}\\\", '
+            + 'step=\\\"${STEP}\\\", '
+            + 'model=\\\"${MODELNAME}\\\", '
+            + 'run=\\\"${RUN}\\\", '
+            + f'job_type=\\\"{job_type}\\\"'
+            + ')\"'
+        )
+        job_cmd_list.append(
+            "python -c "
+            + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
+            + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+            + f"\"job{njob}\", job_type=\"{job_type}\")'"
+        )
     elif job_type == 'gather2':
+      if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+        job_cmd_list.append(
+            f'#jobs were restarted, and the following has already run successfully'
+      )
         job_cmd_list.append(
             f'{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}'
             + f'_GatherByCycle.conf'
+        )
+        job_cmd_list.append(
+            f'#python -c '
+            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+            + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+            + 'verif_case=\\\"${VERIF_CASE}\\\", '
+            + 'met_tool=\\\"stat_analysis\\\", '
+            + 'vdate=\\\"${VDATE}\\\", '
+            + 'net=\\\"${NET}\\\", '
+            + 'step=\\\"${STEP}\\\", '
+            + 'model=\\\"${MODELNAME}\\\", '
+            + 'run=\\\"${RUN}\\\", '
+            + 'vhr=\\\"${vhr}\\\", '
+            + f'job_type=\\\"{job_type}\\\"'
+            + ')\"'
+        )
+      else:
+        job_cmd_list.append(
+            f'{metplus_launcher} -c {machine_conf} '
+            + f'-c {MET_PLUS_CONF}/'
+            + f'StatAnalysis_fcst{COMPONENT.upper()}'
+            + f'_GatherByCycle.conf'
+        )
+        job_cmd_list.append(
+            f'python -c '
+            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+            + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+            + 'verif_case=\\\"${VERIF_CASE}\\\", '
+            + 'met_tool=\\\"stat_analysis\\\", '
+            + 'vdate=\\\"${VDATE}\\\", '
+            + 'net=\\\"${NET}\\\", '
+            + 'step=\\\"${STEP}\\\", '
+            + 'model=\\\"${MODELNAME}\\\", '
+            + 'run=\\\"${RUN}\\\", '
+            + 'vhr=\\\"${vhr}\\\", '
+            + f'job_type=\\\"{job_type}\\\"'
+            + ')\"'
+        )
+        job_cmd_list.append(
+            "python -c "
+            + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
+            + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+            + f"\"job{njob}\", job_type=\"{job_type}\")'"
         )
     elif job_type == 'gather3':
         job_cmd_list.append(
