@@ -42,6 +42,7 @@ echo "*****************************"
 # Reformat MET Data
   export job_type="reformat"
   export njob=1
+  export run_restart=true
   for NEST in $NEST_LIST; do
      export NEST=$NEST
      for VERIF_TYPE in $VERIF_TYPES; do
@@ -55,8 +56,13 @@ echo "*****************************"
       # Check for restart files reformat
         echo " Check for restart files reformat begin"
         if [ $evs_run_mode = production ]; then
-           ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.sh
-	   export err=$?; err_chk
+         # Check For Restart Files
+         if [ "$run_restart" = true ]; then
+               python ${USHevs}/mesoscale/mesoscale_production_restart.py
+               export err=$?; err_chk
+               export run_restart=false
+         fi
+
         fi
         echo " Check for restart files reformat done"
         
