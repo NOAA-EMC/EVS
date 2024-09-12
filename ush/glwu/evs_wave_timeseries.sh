@@ -11,7 +11,7 @@
 
 # set up plot variables
 
-periods='PAST31DAYS PAST90DAYS'
+periods='LAST31DAYS LAST90DAYS'
 
 inithours='01 07 13 19'
 fhrs='000 024 048 072 096 120 144'
@@ -22,14 +22,14 @@ ptype='time_series'
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
-mkdir ${DATA}/sfcshp
+mkdir ${DATA}/ndbc
 touch plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 # write the commands
 for period in ${periods} ; do
-  if [ ${period} = 'PAST31DAYS' ] ; then
+  if [ ${period} = 'LAST31DAYS' ] ; then
     plot_start_date=${PDYm31}
-  elif [ ${period} = 'PAST90DAYS' ] ; then
+  elif [ ${period} = 'LAST90DAYS' ] ; then
     plot_start_date=${PDYm90}
   fi
   for vhr in ${inithours} ; do
