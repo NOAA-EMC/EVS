@@ -15,6 +15,10 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
 export MET_CONFIG_OVERRIDES=""
 
+# Restart Settings
+export RESTART_DIR="${COMOUTsmall}/restart/c${vhr}"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
+
 # Logging
 export METPLUS_VERBOSITY="DEBUG"
 export MET_VERBOSITY="5"
