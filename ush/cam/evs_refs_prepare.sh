@@ -617,6 +617,7 @@ if [ "$data" = "sfc" ] ; then
       >run_prepare.${day}.${cyc}.${domain}.sh
 
       echo "#!/bin/ksh" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "set -x" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "work=$work" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "cd \$work">> run_prepare.${day}.${cyc}.${domain}.sh
       echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 ; do" >> run_prepare.${day}.${cyc}.${domain}.sh
@@ -626,14 +627,14 @@ if [ "$data" = "sfc" ] ; then
       echo "        refs=$COMREFS/refs.${day}/verf_g2g/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "        if [ -s \$refs ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          $WGRIB2 \$refs|grep --file=$DATA/pat|$WGRIB2 -i \$refs -grib  \$work/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "          if [ \$mbr = 01 ] || [ \$mbr = 02 ] || [ \$mbr = 03 ] || [ \$mbr = 04 ] || [ \$mbr = 05 ] || [ \$mbr = 05 ] || [ \$mbr = 13 ] ; then " >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          if [ \$mbr = 01 ] || [ \$mbr = 02 ] || [ \$mbr = 03 ] || [ \$mbr = 04 ] || [ \$mbr = 05 ] || [ \$mbr = 06 ] || [ \$mbr = 13 ] ; then " >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "             tm=\$fhr" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          else" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "             tm=\$((fhr+6))" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          fi" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          string=\"TCDC:entire atmosphere (considered as a single layer):\${tm} hour fcst\" " >> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "	      $WGRIB2 \$refs|grep \"\$string\"|$WGRIB2 -i \$refs -grib  \$work/tcdc" >> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "	      cat \$work/tcdc >> \$work/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "	      $WGRIB2 \$refs|grep \"\$string\"|$WGRIB2 -i \$refs -grib  \$work/tcdc.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "	      cat \$work/tcdc.m\${mbr}.t${cyc}z.${domain}.f\${hh} >> \$work/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "        fi" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    done" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo " done" >> run_prepare.${day}.${cyc}.${domain}.sh
