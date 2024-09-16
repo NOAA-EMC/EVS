@@ -49,7 +49,11 @@ for dom in $domains ; do
 
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
-      if [ -s $COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr} ] ; then      
+
+      input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}"
+      input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G227.nc"
+
+      if [ -s $input_fcst ] && [ -s $input_obsv ] ; then      
 
        echo "export regrid=NONE" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo "export obsv=prepbufr" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -167,7 +171,11 @@ for dom in $domains ; do
 
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
-       if [ -s $COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr} ] ; then
+
+      input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr}"
+      input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G198.nc"
+
+      if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
         echo "export regrid=NONE" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "export obsv=prepbufr" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -266,7 +274,11 @@ for dom in $domains ; do
 
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
-      if [ -s $COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.hi.f${fhr} ] ; then
+
+      input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.hi.f${fhr}"
+      input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G139.nc"
+
+      if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
         echo "export regrid=NONE" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "export obsv=prepbufr_profile" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -360,7 +372,11 @@ for dom in $domains ; do
 
        ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
        iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
-       if [ -s $COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.pr.f${fhr} ] ; then
+
+       input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.pr.f${fhr}"
+       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G200.nc"
+
+       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
         echo "export regrid=NONE" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "export obsv=prepbufr_profile" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh

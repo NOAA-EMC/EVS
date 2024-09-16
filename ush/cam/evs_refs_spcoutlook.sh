@@ -108,7 +108,10 @@ for prod in mean ; do
      ihr=`$NDATE -$fhr $VDATE$valid|cut -c 9-10`
      iday=`$NDATE -$fhr $VDATE$valid|cut -c 1-8`
 
-     if [ -s $COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.conus.${prod}.f${fhr}.grib2 ] ; then
+     input_fcst="$COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.conus.${prod}.f${fhr}.grib2"
+     input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid}z.G227.nc"
+
+     if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
      #******************************
      # Build sub-jobs
@@ -156,7 +159,7 @@ for prod in mean ; do
 
        echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       #Mark this Alaska task is completed
+       #Mark this task is completed
        echo "[[ \$? = 0 ]] && >$COMOUTrestart/spcoutlook/run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
        chmod +x run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh

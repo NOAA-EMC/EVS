@@ -49,7 +49,10 @@ for prod in mean prob ; do
       ihr=`$NDATE -$fhr $VDATE$valid_run|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_run|cut -c 1-8`
   
-      if [ -s $COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.conus.${prod}.f${fhr}.grib2 ] ; then
+      input_fcst="$COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.conus.${prod}.f${fhr}.grib2"
+      input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid_run}z.G227.nc"
+
+      if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
        echo  "export model=REFS${prod} " >>  run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export domain=$dom " >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh     
@@ -143,7 +146,10 @@ for prod in mean prob ; do
       ihr=`$NDATE -$fhr $VDATE$valid_run|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_run|cut -c 1-8`
 
-      if [ -s $COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.ak.${prod}.f${fhr}.grib2 ] ; then
+      input_fcst="$COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.ak.${prod}.f${fhr}.grib2"
+      input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid_run}z.G198.nc"
+
+      if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
        echo  "export model=REFS${prod} " >>  run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export domain=$dom " >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh

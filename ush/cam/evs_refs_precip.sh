@@ -135,16 +135,18 @@ for obsvtype in ccpa mrms ; do
                ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
                iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
             
-	      #Check if input fcst files are available 
+	      #Check if input fcst and input_obsv files are available 
 	      if [ $extra = "verf_g2g" ] ; then
-		 input=${modelpath}/refs.${iday}/verf_g2g/refs.m??.t${ihr}z.${domain}.f${fhr}
+		 input_fcst=${modelpath}/refs.${iday}/verf_g2g/refs.m??.t${ihr}z.${domain}.f${fhr}
 	      elif [ $extra = "ensprod" ] ; then
-		 input=${modelpath}/refs.${iday}/ensprod/refs.t${ihr}z.${domain}.${prod}.f${fhr}.grib2
+		 input_fcst=${modelpath}/refs.${iday}/ensprod/refs.t${ihr}z.${domain}.${prod}.f${fhr}.grib2
               else
-		 input=${modelpath}/refs.${iday}/refs${prod}.t${ihr}z.${grid}.24h.f${fhr}.nc
+		 input_fcst=${modelpath}/refs.${iday}/refs${prod}.t${ihr}z.${grid}.24h.f${fhr}.nc
 	      fi
 
-              if [ -s $input ] ; then 
+	      input_obsv="$WORK/${obsvtype}.${VDATE}/${obsv}.t${vhr}z.*"
+
+              if [ -s $input_fcst ] && [ -s $input_obsv ] ; then 
 
  	       echo  "export nmem=$nmem" >>run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                
@@ -454,7 +456,7 @@ for obsvtype in ccpa mrms ; do
                chmod +x run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                echo "${DATA}/run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh" >> run_all_refs_precip_poe.sh
          
-              fi #end if check member files
+              fi #end if check input files
 
 	     fi #end if check restart
 
