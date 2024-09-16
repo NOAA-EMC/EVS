@@ -18,7 +18,8 @@ fhrs='000 024 048 072 096 120 144'
 wave_vars='HTSGW'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 ptype='time_series'
-
+region='GreatLakes'
+export region=${region}
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}

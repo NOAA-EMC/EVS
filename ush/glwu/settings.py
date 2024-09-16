@@ -817,6 +817,7 @@ class Reference():
                                   'SWC': 'Southwest Coast',
                                   'NMT': 'Northern Mountain Region',
                                   'GRB': 'Great Basin',
+                                  'GRL': 'GreatLakes',
                                   'SMT': 'Southern Mountain Region',
                                   'SWD': 'Southwest Desert',
                                   'NPL': 'Northern Plains',
@@ -2304,7 +2305,7 @@ class Reference():
                 'SL1L2': {
                     'plot_stats_list': ('me, esd, rmse, bcrmse, pcor, si, fbar, obar'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['GreatLakes'],
                     'var_dict': {
                         'HTSGW': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
@@ -2375,7 +2376,7 @@ class Reference():
                     'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['GreatLakes'],
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
@@ -2472,7 +2473,7 @@ class Reference():
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['GreatLakes'],
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
