@@ -1,7 +1,8 @@
 #!/bin/bash
 ###########################################################
-# Name of Script: evs_wave_timeseries.sh                   
-# Deanna Spindler / Deanna.Spindler@noaa.gov               
+# Name of Script: evs_wave_timeseries.sh
+# Modified for EVS-GLWU: Samira Ardani (samira.ardani@noaa.gov)                   
+# Cited to: Deanna Spindler (Deanna.Spindler@noaa.gov)               
 # Purpose of Script: Make the time series command files    
 #                                                          
 
@@ -23,7 +24,7 @@ export region=${region}
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
-mkdir ${DATA}/ndbc
+mkdir -p ${DATA}/ndbc_standard
 touch plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 # write the commands

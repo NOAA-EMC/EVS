@@ -1,7 +1,8 @@
 #!/bin/bash
 ##############################################################
 # Name of Script: evs_wave_leadaverages.sh                    
-# Deanna Spindler / Deanna.Spindler@noaa.gov                  
+# Modifed for EVS-GLWU: Samira Ardani (samira.ardani@noaa.gov)
+# Cited to: Deanna Spindler (Deanna.Spindler@noaa.gov)                  
 # Purpose of Script: Make the lead_averages.py command files  
 #                                                             
 
@@ -25,7 +26,7 @@ export region=${region}
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
-mkdir ${DATA}/ndbc
+mkdir -p ${DATA}/ndbc_standard
 touch plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 # write the commands
