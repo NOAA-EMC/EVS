@@ -12,7 +12,7 @@ set -x
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=glwu
-export OBTYPE=NDBC
+export OBTYPE=NDBC_STANDARD
 export NET=evs
 export COMPONENT=glwu
 export STEP=plots
