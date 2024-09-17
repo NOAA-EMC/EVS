@@ -92,7 +92,7 @@ chmod 775 run_refs_all_grid2obs_poe
 # ***************************************
 if [ -s ${DATA}/run_refs_all_grid2obs_poe ] ; then
  if [ $run_mpi = yes ] ; then
-    mpiexec -np 7 -ppn 7 --cpu-bind verbose,core cfp  ${DATA}/run_refs_all_grid2obs_poe
+    mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/run_refs_all_grid2obs_poe
     export err=$?; err_chk
  else
     ${DATA}/run_refs_all_grid2obs_poe
