@@ -41,7 +41,7 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMINrefs=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0
 
-export MAILTO='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
+export MAILTO='andrew.benjamin@noaa.gov,binbin.zhou@noaa.gov'
 if [ -z "$MAILTO" ]; then
 
    echo "MAILTO variable is not defined. Exiting without continuing."
