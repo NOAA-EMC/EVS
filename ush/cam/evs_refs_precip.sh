@@ -77,7 +77,7 @@ for obsvtype in ccpa mrms ; do
 	      extra="verf_g2g"
             else
               modelpath=$WORK
-	      extra=""
+	      extra="empty"
 	    fi
 	 fi
 
