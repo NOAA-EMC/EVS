@@ -59,5 +59,6 @@ $HOMEevs/jobs/JEVS_SUBSEASONAL_STATS
 
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
-#          subseasonal verification grid-to-grid statistics for the GEFS model#          and create the stat files in the databases.
+#          subseasonal verification grid-to-grid statistics for the GEFS model
+#          and create the stat files in the databases.
 ######################################################################
