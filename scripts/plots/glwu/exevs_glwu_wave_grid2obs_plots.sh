@@ -52,6 +52,7 @@ echo '-----------------------------'
 [[ "$LOUD" = YES ]] && set -x
 
 mkdir -p ${DATA}/stats
+mkdir -p ${DATA}/wave
 
 plot_start_date=${PDYm90}
 plot_end_date=${VDATE}
@@ -98,10 +99,10 @@ fi
 #################################
 
 ${USHevs}/${COMPONENT}/evs_wave_timeseries.sh
-
+export err=$?; err_chk
 # lead_averages
 ${USHevs}/${COMPONENT}/evs_wave_leadaverages.sh
-
+export err=$?; err_chk
 chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 ###########################################
@@ -120,7 +121,6 @@ fi
 #######################
 
 periods='LAST31DAYS LAST90DAYS'
-mkdir -p ${DATA}/wave
 if [ $gather = yes ] ; then
 	echo "copying all images into one directory"
 	cp ${DATA}/wave/*png ${DATA}/ndbc_standard/  ## lead_average plots 
