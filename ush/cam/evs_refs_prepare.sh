@@ -149,8 +149,12 @@ if [ "$data" = "ccpa01h03h" ] ; then
   #copy from existing restart files: 
   else
    [[ ! -d $WORK/ccpa.${vday} ]] && mkdir -p $WORK/ccpa.${vday}
-    cp  $COMOUTrestart/prepare/ccpa.${vday}/ccpa01h.*.grib2 $WORK/ccpa.${vday}
-    cp  $COMOUTrestart/prepare/ccpa.${vday}/ccpa03h.*.grib2 $WORK/ccpa.${vday}
+    if [ -s $COMOUTrestart/prepare/ccpa.${vday}/ccpa01h.*.grib2 ] ; then
+     cp  $COMOUTrestart/prepare/ccpa.${vday}/ccpa01h.*.grib2 $WORK/ccpa.${vday}
+    fi
+    if [ -s $COMOUTrestart/prepare/ccpa.${vday}/ccpa03h.*.grib2 ] ; then
+     cp  $COMOUTrestart/prepare/ccpa.${vday}/ccpa03h.*.grib2 $WORK/ccpa.${vday}
+    fi
   fi
   
 
@@ -225,7 +229,9 @@ if [ "$data" = "ccpa24h" ] ; then
   else
     #Copy from the existing restart files 	  
     [[ ! -d $WORK/ccpa.${vday} ]] && mkdir -p $WORK/ccpa.${vday}
-    cp  $COMOUTrestart/prepare/ccpa.${vday}/ccpa24h*.nc $WORK/ccpa.${vday}
+    if [ -s $COMOUTrestart/prepare/ccpa.${vday}/ccpa24h*.nc ] ; then 
+      cp  $COMOUTrestart/prepare/ccpa.${vday}/ccpa24h*.nc $WORK/ccpa.${vday}
+    fi
   fi
 
 
@@ -425,8 +431,12 @@ if [ "$data" = "prepbufr" ] ; then
  else
     #restart: copy restart files to the working directory
     [[ ! -d $WORK/prepbufr.${vday} ]] && mkdir -p $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G227*.nc $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G198*.nc $WORK/prepbufr.${vday}
+    if [ -s $COMOUTrestart/prepare/prepbufr.${VDATE}/*G227*.nc ] ; then
+      cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G227*.nc $WORK/prepbufr.${vday}
+    fi
+    if [ -s $COMOUTrestart/prepare/prepbufr.${VDATE}/*G198*.nc ] ; then
+      cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G198*.nc $WORK/prepbufr.${vday}
+    fi
  fi
 
 fi
@@ -492,8 +502,12 @@ if [ "$data" = "gdas_prepbufr" ] ; then
   else
     #Restart: copy files from restart files
     [[ ! -d $WORK/prepbufr.${vday} ]] && mkdir -p $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G200*.nc $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G139*.nc $WORK/prepbufr.${vday}
+    if [ -s $COMOUTrestart/prepare/prepbufr.${VDATE}/*G200*.nc ] ; then
+     cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G200*.nc $WORK/prepbufr.${vday}
+    fi 
+    if [ -s $COMOUTrestart/prepare/prepbufr.${VDATE}/*G139*.nc ] ; then
+     cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G139*.nc $WORK/prepbufr.${vday}
+    fi
   fi
 
 fi
@@ -578,8 +592,9 @@ if [ "$data" = "mrms" ] ; then
   else
     #Restart: copy from the restart files
     [[ ! -d $WORK/mrms.$vday ]] && mkdir -p $WORK/mrms.$vday
-    cp $COMOUTrestart/prepare/mrms.$vday/*.nc $WORK/mrms.$vday  
-
+    if [ -s $COMOUTrestart/prepare/mrms.$vday/*.nc ] ; then
+     cp $COMOUTrestart/prepare/mrms.$vday/*.nc $WORK/mrms.$vday  
+    fi
   fi
 
 fi 
