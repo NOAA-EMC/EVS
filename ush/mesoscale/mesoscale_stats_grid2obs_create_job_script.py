@@ -35,6 +35,7 @@ MET_PLUS_PATH = os.environ['MET_PLUS_PATH']
 MET_PATH = os.environ['MET_PATH']
 MET_CONFIG = os.environ['MET_CONFIG']
 DATA = os.environ['DATA']
+RESTART_DIR = os.environ['RESTART_DIR']
 
 VDATE = os.environ['VDATE']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
@@ -46,6 +47,8 @@ metplus_launcher = 'run_metplus.py'
 machine_conf = os.path.join(
     os.environ['PARMevs'], 'metplus_config', 'machine.conf'
 )
+COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
+
 if job_type == 'reformat':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
@@ -367,8 +370,8 @@ elif STEP == 'stats':
             f'#{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
             + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
-            )
-            job_cmd_list_iterative.append(
+           )
+           job_cmd_list_iterative.append(
               f'#python -c '
               + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
               + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -455,8 +458,8 @@ elif STEP == 'stats':
                + 'model=\\\"${MODELNAME}\\\", '
                + 'var_name=\\\"${VAR_NAME}\\\"'
                + ')\"'
-           )
-           job_cmd_list.append(
+            )
+            job_cmd_list.append(
                "python -c "
                + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
                + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
@@ -580,15 +583,14 @@ elif STEP == 'stats':
                        + 'model=\\\"${MODELNAME}\\\", '
                        + f'njob=\\\"{njob}\\\"'
                        + ')\"'
-                 )
-                 job_cmd_list_iterative.append(
+                  )
+                  job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
                        + f'PointStat_fcst{COMPONENT.upper()}_'
-                       + f'obs{VERIF_TYPE.upper()}_'
-                       + f'{str(NEST).upper()}_{VAR_NAME}.conf'
-                 )
-                 job_cmd_list.append(
+                       + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
+                  )
+                  job_cmd_list.append(
                        f'python -c '
                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -604,13 +606,13 @@ elif STEP == 'stats':
                        + 'model=\\\"${MODELNAME}\\\", '
                        + 'var_name=\\\"${VAR_NAME}\\\"'
                        + ')\"'
-               )
-               job_cmd_list.append(
+                  )
+                  job_cmd_list.append(
                        "python -c "
-                       + f"'import mesosclae_util; mesoscale_util.mark_job_completed("
+                       + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
                        + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
-               )
+                  )
 
             else:
                 pstat_file_exist = cutil.check_pstat_files(job_env_vars_dict)
@@ -648,7 +650,7 @@ elif STEP == 'stats':
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
                        + f'PointStat_fcst{COMPONENT.upper()}_'
-                       + f'obs{VERIF_TYPE.upper()}_{str(NEST).upper()}.conf'
+                       + f'obs{VERIF_TYPE.upper()}.conf'
                                                                                                                                    )
                    job_cmd_list.append(
                        f'python -c '
