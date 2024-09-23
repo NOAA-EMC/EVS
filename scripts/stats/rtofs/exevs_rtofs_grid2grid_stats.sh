@@ -60,17 +60,17 @@ if [ $OBTYPE = osisaf ]; then
 					for vari in ${VARS}; do
 						export VAR=$vari
 						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
-						mkdir -p $STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
+						mkdir -p $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
 						if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/.
+							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/.
 						else
 							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 						       -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsOSISAF_${hem}.conf
 							export err=$?; err_chk           
 							if [ $SENDCOM = "YES" ]; then
 								mkdir -p $COMOUTsmall/$VAR
-								if [ -s $STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-						                	cp -v $STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+								if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+						                	cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
 								fi
 							fi
 						fi
@@ -132,17 +132,17 @@ else
           					for vari in ${VARS}; do
             						export VAR=$vari
             						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
-            						mkdir -p $STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
+            						mkdir -p $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
             						if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/.
+              							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/.
             						else
               							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obs${OBTYPEupper}_climo$CLIMO.conf
               							export err=$?; err_chk
               							if [ $SENDCOM = "YES" ]; then
                   							mkdir -p $COMOUTsmall/$VAR
-									if [ -s $STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-                  								cp -v $STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+									if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+                  								cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
 									fi
               							fi
             						fi
@@ -181,7 +181,7 @@ fi
 for vari in ${VARS}; do
   export VAR=$vari
   export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
-  export STATSOUT=$STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
+  export STATSOUT=$STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
   mkdir -p $STATSOUT
   VAR_file_count=$(find $STATSOUT -type f -name "*.stat" |wc -l)
   if [[ $VAR_file_count -ne 0 ]]; then
@@ -195,7 +195,7 @@ for vari in ${VARS}; do
 	    fi
     fi
   else
-     echo "WARNING: Missing RTOFS_${OBTYPEupper}_$VARupper stat files for $VDATE in $STATSDIR/${OBTYPE}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat" 
+     echo "WARNING: Missing RTOFS_${OBTYPEupper}_$VARupper stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat" 
   fi
 done
 
