@@ -1,4 +1,4 @@
-#PBS -N jevs_cam_refs_grid2obs_cape_past90days_plots
+#PBS -N jevs_cam_refs_grid2obs_cape_last31days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
@@ -37,7 +37,7 @@ export SENDMAIL=YES
 export SENDDBN=NO
 
 export vhr=00
-export past_days=90
+export last_days=31
 
 export run_mpi=yes
 

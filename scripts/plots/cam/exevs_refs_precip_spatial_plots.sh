@@ -50,15 +50,15 @@ export job_name=SL1L2/FBAR/24hrAccumMaps/CONUS/precip_spatial_map
 mkdir -p $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs
 
 #*************************************************************
-# Virtual link the refs's stat data files of past 31/90 days
+# Virtual link the refs's stat data files of last 31/90 days
 #*************************************************************
 for model in $model_list ; do
  MODEL=`echo $model | tr '[a-z]' '[A-Z]'`	
  target=$DATA/grid2grid_plots/data/$model
  mkdir -p $target
  for fhr in 24 48 ; do
-  past=`$NDATE -$fhr ${VDATE}12`	
-  INITDATE=${past:0:8}
+  last=`$NDATE -$fhr ${VDATE}12`	
+  INITDATE=${last:0:8}
   source=$EVSINapcp24mean/refs.$INITDATE/precip_mean24
   ln -sf $source/${model}.t12z.G227.24h.f${fhr}.nc  $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr0${fhr}.nc	
  done

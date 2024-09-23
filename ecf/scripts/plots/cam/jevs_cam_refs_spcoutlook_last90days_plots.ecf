@@ -1,10 +1,10 @@
-#PBS -N evs_cam_refs_grid2obs_cape_past31days_plots
+#PBS -N evs_cam_refs_spcoutlook_last90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=10:ncpus=84:mem=100GB
+#PBS -l walltime=00:20:00
+#PBS -l place=vscatter:shared,select=1:ncpus=6:mem=100GB
 #PBS -l debug=true
 
 export model=evs
@@ -53,10 +53,11 @@ fi
 export OMP_NUM_THREADS=1
 export NET="evs"
 export RUN="atmos"
-export VERIF_CASE="grid2obs_cape"
+export VERIF_CASE="spcoutlook"
 export MODELNAME=refs
-export past_days=31
-export run_mpi=yes
+export last_days=90
+export run_mpi=no
+export valid_time=both
 
 ############################################################
 # Execute j-job

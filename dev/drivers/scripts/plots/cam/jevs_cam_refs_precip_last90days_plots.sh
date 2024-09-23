@@ -1,4 +1,4 @@
-#PBS -N jevs_cam_refs_precip_past31days_plots
+#PBS -N jevs_cam_refs_precip_last90days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
@@ -37,7 +37,7 @@ export SENDMAIL=YES
 export SENDDBN=NO
 
 export vhr=00
-export past_days=31
+export last_days=90
 
 export run_mpi=yes
 

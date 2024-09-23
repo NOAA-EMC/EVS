@@ -18,7 +18,7 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
-restart=$COMOUT/restart/$past_days/refs_spcoutlook_plots
+restart=$COMOUT/restart/$last_days/refs_spcoutlook_plots
 if [ ! -d  $restart ] ; then
   mkdir -p $restart
 fi
@@ -34,7 +34,7 @@ model_list='REFS_MEAN'
 models='REFS_MEAN'
 
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
     hrs=$((n*24))
     first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
     n=$((n+1))
@@ -44,10 +44,10 @@ export init_beg=$first_day
 export valid_beg=$first_day
 
 #*************************************************************
-# Virtual link the refs's stat data files of past 31/90 days
+# Virtual link the refs's stat data files of last 31/90 days
 #*************************************************************
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
   #hrs=`expr $n \* 24`
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
@@ -232,23 +232,23 @@ for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrg
     valid=valid_00z_12z
   fi
   if ls lead_average_regional_${domain}_valid_all_times_${var}*.png 1> /dev/null 2>&1; then
-     mv lead_average_regional_${domain}_valid_all_times_${var}*.png  evs.refs.csi_fbias.${var_new}_${level}.last${past_days}days.fhrmean_${valid}.${domain}.png
+     mv lead_average_regional_${domain}_valid_all_times_${var}*.png  evs.refs.csi_fbias.${var_new}_${level}.last${last_days}days.fhrmean_${valid}.${domain}.png
   fi
   if ls threshold_average_regional_${domain}_valid_*_${var}_csi*.png 1> /dev/null 2>&1; then
-     mv threshold_average_regional_${domain}_valid_*_${var}_csi*.png  evs.refs.csi.${var_new}_${level}.last${past_days}days.threshmean_${valid}.${domain}.png
+     mv threshold_average_regional_${domain}_valid_*_${var}_csi*.png  evs.refs.csi.${var_new}_${level}.last${last_days}days.threshmean_${valid}.${domain}.png
   fi
   if ls threshold_average_regional_${domain}_valid_*_${var}_fbias*.png 1> /dev/null 2>&1; then
-     mv threshold_average_regional_${domain}_valid_*_${var}_fbias*.png  evs.refs.fbias.${var_new}_${level}.last${past_days}days.threshmean_${valid}.${domain}.png
+     mv threshold_average_regional_${domain}_valid_*_${var}_fbias*.png  evs.refs.fbias.${var_new}_${level}.last${last_days}days.threshmean_${valid}.${domain}.png
   fi
   if ls performance_diagram_regional_${domain}_valid_*_${var}*.png 1> /dev/null 2>&1; then
-     mv performance_diagram_regional_${domain}_valid_*_${var}*.png evs.refs.ctc.${var_new}_${level}.last${past_days}days.perfdiag_${valid}.${domain}.png
+     mv performance_diagram_regional_${domain}_valid_*_${var}*.png evs.refs.ctc.${var_new}_${level}.last${last_days}days.perfdiag_${valid}.${domain}.png
   fi
 
  done
 done
  	
 
-tar -cvf evs.plots.refs.spcoutlook.past${past_days}days.v${VDATE}.tar *.png
+tar -cvf evs.plots.refs.spcoutlook.last${last_days}days.v${VDATE}.tar *.png
 
 # Cat the plotting log files
 log_dir="$DATA/logs"
@@ -267,10 +267,10 @@ if [ -d $log_dir ]; then
 fi
 
 
-if [ $SENDCOM = YES ] && [ -s evs.plots.refs.spcoutlook.past${past_days}days.v${VDATE}.tar ] ; then
- cp -v evs.plots.refs.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.refs.spcoutlook.last${last_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.refs.spcoutlook.last${last_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
-   $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.spcoutlook.past${past_days}days.v${VDATE}.tar
+   $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.spcoutlook.last${last_days}days.v${VDATE}.tar
 fi

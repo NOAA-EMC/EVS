@@ -17,7 +17,7 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
-restart=$COMOUT/restart/$past_days/refs_cape_plots
+restart=$COMOUT/restart/$last_days/refs_cape_plots
 if [ ! -d  $restart ] ; then
   mkdir -p $restart
 fi  
@@ -32,7 +32,7 @@ model_list='REFS_MEAN'
 models='REFS_MEAN'
 
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
     hrs=$((n*24))
     first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
     n=$((n+1))
@@ -42,10 +42,10 @@ export init_beg=$first_day
 export valid_beg=$first_day
 
 #*************************************************************
-# Virtual link the refs's stat data files of past 31/90 days
+# Virtual link the refs's stat data files of last 31/90 days
 #*************************************************************
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
   #hrs=`expr $n \* 24`
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
@@ -315,12 +315,12 @@ for score_type in lead_average threshold_average; do
    
           for thresh in ge250 ge500 ge1000 ge2000 ; do
 	   if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png ] ; then
-             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png evs.refs.${stat}.${var}_${level}.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png evs.refs.${stat}.${var}_${level}.${thresh}.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
            fi
           done
       else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png ] ; then   
-           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png  evs.refs.${stat}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_lead}.${new_domain}.png
+           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png  evs.refs.${stat}.${var}_${level}.last${last_days}days.${scoretype}_valid_${valid}.${new_lead}.${new_domain}.png
 
      	  fi
        fi
@@ -333,7 +333,7 @@ for score_type in lead_average threshold_average; do
 done    #score_type
 
 if [ -s *.png ] ; then
- tar -cvf evs.plots.refs.grid2obs.cape.past${past_days}days.v${VDATE}.tar *.png
+ tar -cvf evs.plots.refs.grid2obs.cape.last${last_days}days.v${VDATE}.tar *.png
 fi
 
 # Cat the plotting log files
@@ -352,10 +352,10 @@ if [ -d $log_dir ]; then
     fi
 fi
 
-if [ $SENDCOM = YES ] && [ -s evs.plots.refs.grid2obs.cape.past${past_days}days.v${VDATE}.tar ] ; then
- cp -v evs.plots.refs.grid2obs.cape.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.refs.grid2obs.cape.last${last_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.refs.grid2obs.cape.last${last_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
- $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.grid2obs.cape.past${past_days}days.v${VDATE}.tar
+ $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.grid2obs.cape.last${last_days}days.v${VDATE}.tar
 fi

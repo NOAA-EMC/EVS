@@ -1,13 +1,13 @@
-#PBS -N evs_cam_refs_profile_past31days_plots
+#PBS -N evs_cam_refs_snowfall_last31days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:10:00
-#PBS -l place=vscatter:shared,select=1:ncpus=60:mem=100GB
+#PBS -l place=vscatter:shared,select=1:ncpus=30:mem=100GB
 #PBS -l debug=true
 
-export model=evs
+export model=evs 
 %include <head.h>
 %include <envir-p1.h>
 
@@ -51,13 +51,12 @@ else
   export vhr=00
 fi
 export OMP_NUM_THREADS=1
-export past_days=31
+export last_days=31
 export NET="evs"
 export RUN="atmos"
-export VERIF_CASE="profile"
+export VERIF_CASE="snowfall"
 export MODELNAME=refs
 export run_mpi=yes
-export valid_time=both
 
 ############################################################
 # Execute j-job
