@@ -36,7 +36,8 @@ cd $DATA
 export NET=${NET:-evs}
 export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-rtofs}
-export RUN=${RUN:-argo}
+export RUN=${RUN:-ocean}
+export OBTYPE=${OBTYPE:-argo}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 
 ##################################
