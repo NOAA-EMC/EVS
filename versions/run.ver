@@ -1,4 +1,4 @@
-#export evs_ver=v1.0.12
+#export evs_ver=v1.0.13
 
 export bacio_ver=2.4.1
 export bufr_ver=12.0.0
@@ -54,7 +54,7 @@ export nam_ver=v4.2
 export narre_ver=v1.2
 export nfcens_ver=v1.3
 export nwps_ver=v1.4
-export obsproc_ver=v1.2
+export obsproc_ver=v1.3
 export rap_ver=v5.1
 export rtma_ver=v2.10
 export rtofs_ver=v2.4
