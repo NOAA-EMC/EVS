@@ -99,10 +99,17 @@ for valid_time in 00 12 ; do
 	  if [  $score_type = lead_average ] ; then
 	      thresh=$threshold
 	      lead=all_leads
+	      tail=ge$threshold
 	  elif [  $score_type = threshold_average ] ; then
 	      thresh=all_thresholds
 	      lead=$fcst_lead
+	      tail=f${fcst_lead}
+	      if [ $tail = f06 ] ; then
+		tail=f6
+	      fi
 	 fi
+
+	
 
      for VAR in $VARs ; do 
 
@@ -221,8 +228,8 @@ for valid_time in 00 12 ; do
 
 	#Save for restart
 	 echo "for domain in $subregions ; do " >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-	 echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_*.png ] ; then " >>run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-     	 echo "     cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_*.png $restart" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png ] && [ ! -s $restart/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png ] ; then " >>run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "     cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png $restart" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 	 echo "     >$restart/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 	 echo " fi" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
          echo "done" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
@@ -233,8 +240,8 @@ for valid_time in 00 12 ; do
        else
          #Restart from png files of previous runs
 	 for domain in $subregions ; do
-	  if [ -s $restart/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_*.png ] ; then
-           cp $restart/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_*.png ${plot_dir}/.
+	  if [ -s $restart/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png ] ; then
+           cp $restart/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png ${plot_dir}/.
 	  fi
 	 done
        fi
