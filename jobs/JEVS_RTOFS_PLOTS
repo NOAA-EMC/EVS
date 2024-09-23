@@ -81,7 +81,7 @@ fi
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${OBTYPE}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 if [ "$KEEPDATA" != "YES" ] ; then
