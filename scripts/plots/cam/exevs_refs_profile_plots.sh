@@ -110,10 +110,13 @@ fi
 
     if [[ "$fcst_lead" == "06" ]] || [[ "$fcst_lead" == "18" ]] || [[ "$fcst_lead" == "30" ]] || [[ "$fcst_lead" == "42" ]] ; then
        VX_MASK_LIST="CONUS, Alaska, PRico"
+       domains="conus alaska prico"
     elif [[ "$fcst_lead" == "12" ]] || [[ "$fcst_lead" == "24" ]] || [[ "$fcst_lead" == "36" ]] || [[ "$fcst_lead" == "48" ]] ; then
        VX_MASK_LIST="CONUS, Hawaii"
+       domains="conus hawaii"
     else
        VX_MASK_LIST="CONUS, Alaska"
+       domains="conus alaska"
     fi
 
     for VAR in $VARS ; do 
@@ -123,20 +126,37 @@ fi
        if [ $score_type = stat_by_level ] ; then
          FCST_LEVEL_values="P1000,P975,P950,P925,P900,P875,P850,P825,P800,P750,P700,P650,P600,P550,P500,P400,P300,P200"
 	 var_rst=${var}
+	 tail=f${fcst_lead}
+         if [ $tail = f06 ] ; then
+              tail=f6
+         fi
        elif [ $score_type = lead_average ] ; then 
 	  if [ $VAR = TMP_lt0C ] ; then
 	     FCST_LEVEL_values="P850"
 	     var_rst=tmp_ens_freq_lt273.15
+	     tail=eq273.15
           elif [ $VAR = WIND_ge30kt ] ; then
              FCST_LEVEL_values="P850 P700"
 	     var_rst=wind_ens_freq_ge15.4
+	     tail=eq0.10000
 	  elif [ $VAR = WIND_ge40kt ] ; then
              FCST_LEVEL_values="P850 P700"
              var_rst=wind_ens_freq_ge20.58
+	     tail=eq0.10000
 	  fi
        fi	  
      
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do  
+
+       if [ $score_type = lead_average ] ; then
+          if [ $FCST_LEVEL_value = P850 ] ; then
+              level_mb="850mb_"
+          elif [ $FCST_LEVEL_value = P700 ] ; then
+              level_mb="700mb_"
+          fi
+       else
+          level_mb=""
+       fi
 
        OBS_LEVEL_value=$FCST_LEVEL_value
 
@@ -209,18 +229,19 @@ fi
          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
          #Save for restart
-         echo "if [ -s ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-         echo "  cp -v ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "  >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-
+	 echo "for domain in $domains ; do " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png ] && [ ! -s $restart/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "    cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "    >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "  fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "done" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_all_poe.sh
 
        else
           #Restart from existing png files of previous run
-	 if [ -s $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ] ; then
-          cp $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ${plot_dir}/.
+	 if [ -s $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png ] ; then
+          cp $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png ${plot_dir}/.
 	 fi
        fi
 
