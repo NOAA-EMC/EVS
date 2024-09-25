@@ -681,7 +681,7 @@ elif STEP == 'stats':
             f'#jobs were restarted, and the following has already run successfully'
         )
         job_cmd_list.append(
-            f'{metplus_launcher} -c {machine_conf} '
+            f'#{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
             + f'_GatherByDay.conf'
@@ -733,9 +733,9 @@ elif STEP == 'stats':
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
         job_cmd_list.append(
             f'#jobs were restarted, and the following has already run successfully'
-      )
+        )
         job_cmd_list.append(
-            f'{metplus_launcher} -c {machine_conf} '
+            f'#{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}'
             + f'_GatherByCycle.conf'
