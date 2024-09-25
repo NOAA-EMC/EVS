@@ -17,7 +17,7 @@ import shutil
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables to use
-VDATE = os.environ['VDATE']
+INITDATE = os.environ['INITDATE']
 DATA = os.environ['DATA']
 DCOMROOT = os.environ['DCOMROOT']
 SENDCOM = os.environ['SENDCOM']
@@ -26,7 +26,7 @@ RUN = os.environ['RUN']
 MET_NDBC_STATIONS = os.environ['MET_NDBC_STATIONS']
 
 # Set up dates
-VDATE_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
+INITDATE_dt = datetime.datetime.strptime(INITDATE, '%Y%m%d')
 
 # Assign header columns in NDBC individual buoy files
 ndbc_header1 = ("#YY  MM DD hh mm WDIR WSPD GST  WVHT   DPD   APD MWD   "
@@ -44,27 +44,27 @@ for line in open(MET_NDBC_STATIONS, 'r'):
 # Trim down files for single date
 # and only include those with location data
 for ndbc_input_file in glob.glob(os.path.join(DCOMROOT,
-                                             f"{VDATE_dt:%Y%m%d}",
+                                             f"{INITDATE_dt:%Y%m%d}",
                                              'validation_data', 'marine',
                                              'buoy', '*.txt')):
     buoy_id = ndbc_input_file.rpartition('/')[2].partition('.')[0]
     if buoy_id not in buoy_with_loc_list:
         continue
-    ndbc_tmp_file = os.path.join(DATA, f"rtofs.{VDATE_dt:%Y%m%d}",
+    ndbc_tmp_file = os.path.join(DATA, f"rtofs.{INITDATE_dt:%Y%m%d}",
                                  RUN, 'buoy', f"{buoy_id}.txt")
-    ndbc_output_file = os.path.join(COMOUTprep, f"rtofs.{VDATE_dt:%Y%m%d}",
+    ndbc_output_file = os.path.join(COMOUTprep, f"rtofs.{INITDATE_dt:%Y%m%d}",
                                     RUN, 'buoy', f"{buoy_id}.txt")
     if not os.path.exists(ndbc_output_file):
-        #print(f"Trimming {ndbc_input_file} for {VDATE_dt:%Y%m%d}")
+        #print(f"Trimming {ndbc_input_file} for {INITDATE_dt:%Y%m%d}")
         #ndbc_input_file_df = pd.read_csv(
         #    ndbc_input_file, sep=" ", skiprows=2, skipinitialspace=True,
         #    keep_default_na=False, dtype='str', header=None,
         #    names=ndbc_header1[1:].split()
         #)
         #trimmed_ndbc_input_file_df = ndbc_input_file_df[
-        #    (ndbc_input_file_df['YY'] == f"{VDATE_dt:%Y}") \
-        #     & (ndbc_input_file_df['MM'] == f"{VDATE_dt:%m}") \
-        #     & (ndbc_input_file_df['DD'] == f"{VDATE_dt:%d}")
+        #    (ndbc_input_file_df['YY'] == f"{INITDATE_dt:%Y}") \
+        #     & (ndbc_input_file_df['MM'] == f"{INITDATE_dt:%m}") \
+        #     & (ndbc_input_file_df['DD'] == f"{INITDATE_dt:%d}")
         #]
         #ndbc_tmp_file_data = open(ndbc_tmp_file, 'w')
         #ndbc_tmp_file_data.write(ndbc_header1)
