@@ -87,11 +87,13 @@ if [[ $log_file_count -ne 0 ]]; then
 fi
 
 if [ $OBTYPE = 'NDBC_STANDARD' ]; then
+	export obtype_lower=ndbc_standard
 	export obtype=ndbc
+
 fi
 
 # tar all plots together
-cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype
+cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype_lower
 tar -cvf evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
