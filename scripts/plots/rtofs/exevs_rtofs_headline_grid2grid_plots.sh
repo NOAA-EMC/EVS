@@ -6,9 +6,13 @@
 ###############################################################################
 
 set -x
+export RUN=headline
 
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN
 mkdir -p $DATA/tmp/rtofs
+
+
 # set major & minor MET version
 export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 
@@ -134,8 +138,6 @@ for thre in ">=15" ">=40" ">=80"; do
   export err=$?; err_chk
 done
 
-export obtype=`echo $OBTYPE |tr '[A-Z]' '[a-z]'`
-
 # Cat the plotting log files
 log_dir=$DATA/logs/rtofs
 log_file_count=$(find $log_dir -type f |wc -l)
@@ -148,15 +150,18 @@ if [[ $log_file_count -ne 0 ]]; then
 fi
 
 # tar all plots together
-cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype
-tar -cvf evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
+
+find $DATA/plots/$COMPONENT/rtofs.$VDATE -name \*.png -exec cp {} $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN \;
+cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
+
+tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
-	if [ -s evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then	 
-       		cp -v evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
+	if [ -s evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then	 
+       		cp -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
 	fi
 fi
 
 if [ $SENDDBN = YES ] ; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplotsheadline/evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplotsheadline/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar
 fi
