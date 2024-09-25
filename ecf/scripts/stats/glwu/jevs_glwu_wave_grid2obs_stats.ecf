@@ -15,6 +15,7 @@ export model=evs
 # Load modules
 ############################################################
 set -x
+export OMP_NUM_THREADS=1
 export COMPONENT=glwu
 export STEP=stats
 
