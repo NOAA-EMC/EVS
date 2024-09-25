@@ -35,7 +35,7 @@ if proceed:
     # Load environment variables
     send_mail = 0
     missing_data_flag=0
-    max_num_files = 10
+    max_num_files = 100
     COMPONENT = os.environ['COMPONENT']
     SENDMAIL = os.environ['SENDMAIL']
     VHR = os.environ['vhr']
@@ -477,38 +477,30 @@ if proceed:
                     DATAsubj = "Unrecognized"
                 else:
                     DATAsubj = ', '.join(unk_names)
-                subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
-                DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
+                cutil.run_shell_command([
+                    'echo', f'\"{DATAsubj}\"', '>>mailmsgsubj_unk'
+                ])
+                DATAmsg_head = (f"WARNING: Some unrecognized data were unavailable"
                                 + f" for valid date {VDATE} and cycle {VHR}Z.")
                 if len(unk_fnames) > max_num_files:
-                    DATAmsg_body1 = (f"\nMissing files are: (showing"
-                                + f" {max_num_files} of"
-                                + f" {len(unk_pnames)} total files)\n")
+                    DATAmsg_body1 = (f"\nMissing files are:\n")
                     for pname in unk_pnames[:max_num_files]:
                         DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
                     for pname in unk_pnames:
                         DATAmsg_body1+=f"{pname}\n"
-                DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
+                    'echo', f'\"{DATAmsg_head}\"', '>>mailmsghead_unk'
                 ])
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body2}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{MAILTO}\"'
+                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsgbody_unk'
                 ])
             if fcst_names:
                 if len(fcst_names) == 1:
-                    DATAsubj = fcst_names[0]
+                    DATAsubj_i = fcst_names[0]
                 else:
-                    DATAsubj = ', '.join(fcst_names)
+                    DATAsubj_i = ', '.join(fcst_names)
                 lead_hour_matches = [
                     re.search('f(\d+)', fcst_fname) for fcst_fname in fcst_fnames
                 ]
@@ -519,42 +511,34 @@ if proceed:
                 lead_hours = np.unique(lead_hours)
                 if lead_hours.size > 0:
                     if len(lead_hours) == 1:
-                        subject = (f"F{lead_hours[0]} {DATAsubj} Data Missing for"
-                                   + f" EVS {COMPONENT}")
-                        DATAmsg_head = (f"Warning: No {DATAsubj} data were"
+                        DATAsubj = f"F{lead_hours[0]} " + DATAsubj_i
+                        DATAmsg_head = (f"WARNING: No {DATAsubj_i} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {VHR}Z, and f{lead_hours[0]}.")
+                                        + f" cycle {VHR}Z, and \nf{lead_hours[0]}.")
                     else:
-                        lead_string = ', '.join(
+                        lead_string = '\n'.join(
                             [f'f{lead}' for lead in lead_hours]
                         )
-                        subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
-                        DATAmsg_head = (f"Warning: No {DATAsubj} data were"
+                        DATAsubj = DATAsubj_i
+                        DATAmsg_head = (f"WARNING: No {DATAsubj_i} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {VHR}Z, and {lead_string}.")
+                                        + f" cycle {VHR}Z, and \n{lead_string}.")
+                    cutil.run_shell_command([
+                        'echo', f'\"{DATAsubj}\"', '>>mailmsgsubj_fcst'
+                    ])
                 if len(fcst_pnames) > max_num_files:
-                    DATAmsg_body1 = (f"\nMissing files are: (showing"
-                                + f" {max_num_files} of"
-                                + f" {len(fcst_pnames)} total files)\n")
+                    DATAmsg_body1 = (f"\nMissing files are:\n")
                     for pname in fcst_pnames[:max_num_files]:
                         DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
                     for pname in fcst_pnames:
                         DATAmsg_body1+=f"{pname}\n"
-                DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
+                    'echo', f'\"{DATAmsg_head}\"', '>>mailmsghead_fcst'
                 ])
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body2}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{MAILTO}\"'
+                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsgbody_fcst'
                 ])
 
 
@@ -618,64 +602,48 @@ if proceed:
                     DATAsubj = "Unrecognized"
                 else:
                     DATAsubj = ', '.join(unk_names)
-                subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
-                DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
+                cutil.run_shell_command([
+                    'echo', f'\"{DATAsubj}\"', '>>mailmsgsubj_unk'
+                ])
+                DATAmsg_head = (f"WARNING: Some unrecognized data were unavailable"
                                 + f" for valid date {VDATE} at {VHOUR}Z.")
                 if len(unk_pnames) > max_num_files:
-                    DATAmsg_body1 = (f"\nMissing files are: (showing"
-                                + f" {max_num_files} of"
-                                + f" {len(unk_pnames)} total files)\n")
+                    DATAmsg_body1 = (f"\nMissing files are:\n")
                     for pname in unk_pnames[:max_num_files]:
                         DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
                     for pname in unk_pnames:
                         DATAmsg_body1+=f"{pname}\n"
-                DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
+                    'echo', f'\"{DATAmsg_head}\"', '>>mailmsghead_unk'
                 ])
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body2}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{MAILTO}\"'
+                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsgbody_unk'
                 ])
             if anl_names.size > 0:
                 if len(anl_names) == 1:
                     DATAsubj = anl_names[0]
                 else:
                     DATAsubj = ', '.join(anl_names)
-                subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
-                DATAmsg_head = (f"Warning: No {DATAsubj} data were available"
+                cutil.run_shell_command([
+                    'echo', f'\"{DATAsubj}\"', '>>mailmsgsubj_anl'
+                ])
+                DATAmsg_head = (f"WARNING: No {DATAsubj} data were available"
                                 + f" for valid date {VDATE} at {VHOUR}Z.")
                 if len(anl_pnames) > max_num_files:
-                    DATAmsg_body1 = (f"\nMissing files are: (showing"
-                                + f" {max_num_files} of"
-                                + f" {len(anl_pnames)} total files)\n")
+                    DATAmsg_body1 = (f"\nMissing files are:\n")
                     for pname in anl_pnames[:max_num_files]:
                         DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
                     for pname in anl_pnames:
                         DATAmsg_body1+=f"{pname}\n"
-                DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
+                    'echo', f'\"{DATAmsg_head}\"', '>>mailmsghead_anl'
                 ])
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body2}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{MAILTO}\"'
+                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsgbody_anl'
                 ])
 
 
@@ -818,64 +786,48 @@ if proceed:
                     DATAsubj = "Unrecognized"
                 else:
                     DATAsubj = ', '.join(unk_names)
-                subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
-                DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
+                cutil.run_shell_command([
+                    'echo', f'\"{DATAsubj}\"', '>>mailmsgsubj_unk'
+                ])
+                DATAmsg_head = (f"WARNING: Some unrecognized data were unavailable"
                                 + f" for valid date {VDATE} at {VHOUR}Z.")
                 if len(unk_pnames) > max_num_files:
-                    DATAmsg_body1 = (f"\nMissing files are: (showing"
-                                + f" {max_num_files} of"
-                                + f" {len(unk_pnames)} total files)\n")
+                    DATAmsg_body1 = (f"\nMissing files are:\n")
                     for pname in unk_pnames[:max_num_files]:
                         DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
                     for pname in unk_pnames:
                         DATAmsg_body1+=f"{pname}\n"
-                DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
+                    'echo', f'\"{DATAmsg_head}\"', '>>mailmsghead_unk'
                 ])
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body2}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{MAILTO}\"'
+                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsgbody_unk'
                 ])
             if gen_names.size > 0:
                 if len(gen_names) == 1:
                     DATAsubj = gen_names[0]
                 else:
                     DATAsubj = ', '.join(gen_names)
-                subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
-                DATAmsg_head = (f"Warning: No {DATAsubj} data were available"
+                cutil.run_shell_command([
+                    'echo', f'\"{DATAsubj}\"', '>>mailmsgsubj_gen'
+                ])
+                DATAmsg_head = (f"WARNING: No {DATAsubj} data were available"
                                 + f" for valid date {VDATE} at {VHOUR}Z.")
                 if len(gen_pnames) > max_num_files:
-                    DATAmsg_body1 = (f"\nMissing files are: (showing"
-                                + f" {max_num_files} of"
-                                + f" {len(gen_pnames)} total files)\n")
+                    DATAmsg_body1 = (f"\nMissing files are:\n")
                     for pname in gen_pnames[:max_num_files]:
                         DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
                     for pname in gen_pnames:
                         DATAmsg_body1+=f"{pname}\n"
-                DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
+                    'echo', f'\"{DATAmsg_head}\"', '>>mailmsghead_gen'
                 ])
                 cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'echo', f'\"{DATAmsg_body2}\"', '>>mailmsg'
-                ])
-                cutil.run_shell_command([
-                    'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{MAILTO}\"'
+                    'echo', f'\"{DATAmsg_body1}\"', '>>mailmsgbody_gen'
                 ])
 
 

@@ -63,6 +63,14 @@ for NEST in $NEST_LIST; do
     done
 done
 
+# Submit All Mail Messages
+if [ "$SENDMAIL" == "YES" ]; then
+    if [ ! -z "${MAILTO}" ]; then
+        $USHevs/cam/cam_submit_mail_messages.sh
+        export err=$?; err_chk
+    fi
+fi
+
 # Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/cam/cam_stats_grid2obs_create_poe_job_scripts.py
