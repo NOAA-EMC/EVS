@@ -829,15 +829,17 @@ def weekly_osi_saf_file(weekly_source_file_list, weekly_dest_file,
     weekly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                        +weekly_dest_file.rpartition('/')[2])
     # Prep weekly file
+    ncea_weekly_source_file_list = []
     for weekly_source_file in weekly_source_file_list:
-        if not os.path.exists(weekly_source_file):
+        if os.path.exists(weekly_source_file):
+            ncea_weekly_source_file_list.append(weekly_source_file)
+        else:
             print(f"WARNING: {weekly_source_file} does not exist, "
                   +"not using in weekly average file")
-            weekly_source_file_list.remove(weekly_source_file)
     # 80% file check from expected 7
-    if len(weekly_source_file_list) >= 6:
+    if len(ncea_weekly_source_file_list) >= 6:
         ncea_cmd_list = ['ncea']
-        for weekly_source_file in weekly_source_file_list:
+        for weekly_source_file in ncea_weekly_source_file_list:
             ncea_cmd_list.append(weekly_source_file)
         ncea_cmd_list.append('-o')
         ncea_cmd_list.append(weekly_prepped_file)
@@ -858,9 +860,10 @@ def weekly_osi_saf_file(weekly_source_file_list, weekly_dest_file,
             weekly_data.close()
     else:
         print("WARNING: Not enough files to make "+weekly_prepped_file
-              +": "+' '.join(weekly_source_file_list))
-    print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
-    os.symlink(weekly_prepped_file, weekly_dest_file)
+              +": "+' '.join(ncea_weekly_source_file_list))
+    if os.path.exists(weekly_prepped_file):
+        print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
+        os.symlink(weekly_prepped_file, weekly_dest_file)
 
 def monthly_osi_saf_file(monthly_source_file_list,
                          monthly_dest_file,
@@ -878,15 +881,17 @@ def monthly_osi_saf_file(monthly_source_file_list,
     monthly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                         +monthly_dest_file.rpartition('/')[2])
     # Prep monthly file
+    ncea_monthly_source_file_list = []
     for monthly_source_file in monthly_source_file_list:
-        if not os.path.exists(monthly_source_file):
+        if os.path.exists(monthly_source_file):
+            ncea_monthly_source_file_list.append(monthly_source_file)
+        else:
             print(f"WARNING: {monthly_source_file} does not exist, "
                   +"not using in monthly average file")
-            monthly_source_file_list.remove(monthly_source_file)
     # 80% file check from expected 30
-    if len(monthly_source_file_list) >= 24:
+    if len(ncea_monthly_source_file_list) >= 24:
         ncea_cmd_list = ['ncea']
-        for monthly_source_file in monthly_source_file_list:
+        for monthly_source_file in ncea_monthly_source_file_list:
             ncea_cmd_list.append(monthly_source_file)
         ncea_cmd_list.append('-o')
         ncea_cmd_list.append(monthly_prepped_file)
@@ -907,9 +912,10 @@ def monthly_osi_saf_file(monthly_source_file_list,
             monthly_data.close()
     else:
         print("WARNING: Not enough files to make "+monthly_prepped_file
-              +": "+' '.join(monthly_source_file_list))
-    print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
-    os.symlink(monthly_prepped_file, monthly_dest_file)
+              +": "+' '.join(ncea_monthly_source_file_list))
+    if os.path.exists(monthly_prepped_file):
+        print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
+        os.symlink(monthly_prepped_file, monthly_dest_file)
 
 def weekly_ghrsst_ospo_file(weekly_source_file_list, weekly_dest_file,
                             weekly_dates):
@@ -927,15 +933,17 @@ def weekly_ghrsst_ospo_file(weekly_source_file_list, weekly_dest_file,
     weekly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                        +weekly_dest_file.rpartition('/')[2])
     # Prep weekly file
+    ncea_weekly_source_file_list = []
     for weekly_source_file in weekly_source_file_list:
-        if not os.path.exists(weekly_source_file):
+        if os.path.exists(weekly_source_file):
+            ncea_weekly_source_file_list.append(weekly_source_file)
+        else:
             print(f"WARNING: {weekly_source_file} does not exist, "
                   +"not using in weekly average file")
-            weekly_source_file_list.remove(weekly_source_file)
     # 80% file check from expected 7
-    if len(weekly_source_file_list) >= 6:
+    if len(ncea_weekly_source_file_list) >= 6:
         ncea_cmd_list = ['ncea']
-        for weekly_source_file in weekly_source_file_list:
+        for weekly_source_file in ncea_weekly_source_file_list:
             ncea_cmd_list.append(weekly_source_file)
         ncea_cmd_list.append('-o')
         ncea_cmd_list.append(weekly_prepped_file)
@@ -961,9 +969,10 @@ def weekly_ghrsst_ospo_file(weekly_source_file_list, weekly_dest_file,
             weekly_data.close()
     else:
         print("WARNING: Not enough files to make "+weekly_prepped_file
-              +": "+' '.join(weekly_source_file_list))
-    print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
-    os.symlink(weekly_prepped_file, weekly_dest_file)
+              +": "+' '.join(ncea_weekly_source_file_list))
+    if os.path.exists(weekly_prepped_file):
+        print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
+        os.symlink(weekly_prepped_file, weekly_dest_file)
 
 def monthly_ghrsst_ospo_file(monthly_source_file_list,
                              monthly_dest_file,
@@ -981,15 +990,17 @@ def monthly_ghrsst_ospo_file(monthly_source_file_list,
     monthly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                         +monthly_dest_file.rpartition('/')[2])
     # Prep monthly file
+    ncea_monthly_source_file_list = []
     for monthly_source_file in monthly_source_file_list:
-        if not os.path.exists(monthly_source_file):
+        if os.path.exists(monthly_source_file):
+            ncea_monthly_source_file_list.append(monthly_source_file)
+        else:
             print(f"WARNING: {monthly_source_file} does not exist, "
                   +"not using in monthly average file")
-            monthly_source_file_list.remove(monthly_source_file)
     # 80% file check from expected 30
-    if len(monthly_source_file_list) >= 24:
+    if len(ncea_monthly_source_file_list) >= 24:
         ncea_cmd_list = ['ncea']
-        for monthly_source_file in monthly_source_file_list:
+        for monthly_source_file in ncea_monthly_source_file_list:
             ncea_cmd_list.append(monthly_source_file)
         ncea_cmd_list.append('-o')
         ncea_cmd_list.append(monthly_prepped_file)
@@ -1015,9 +1026,10 @@ def monthly_ghrsst_ospo_file(monthly_source_file_list,
             monthly_data.close()
     else:
         print("WARNING: Not enough files to make "+monthly_prepped_file
-              +": "+' '.join(monthly_source_file_list))
-    print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
-    os.symlink(monthly_prepped_file, monthly_dest_file)
+              +": "+' '.join(ncea_monthly_source_file_list))
+    if os.path.exists(monthly_prepped_file):
+        print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
+        os.symlink(monthly_prepped_file, monthly_dest_file)
 
 
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,

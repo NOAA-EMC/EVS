@@ -1,79 +1,121 @@
-#!/bin/ksh
-
-########################################
-# Preliminary data setup step
-########################################
+#!/bin/bash
+#  JOB card created for running METPlus-based Global enesmble verifications
+#   By Binbin Zhou, IMSG@EMC/NCEP
+#   Feb 2, 2022
+#
+#######################################################
 set -x
+##################################################
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls 
+### SENDECF  - Flag Events on ecFLOW
+### SENDMAIL - Send email if file is missing
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
+#######################################################
+# SET SHELL PROCESSING VARIABLES
+#######################################################
+date
+export PS4='$SECONDS + '
+
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 
 ##########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ##########################################################
 export pid=$$
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-rm -rf $DATA
+if [ "${RUN}" != "chem" ]; then
+    rm -rf $DATA
+fi
 mkdir -p $DATA
 cd $DATA
 
-############################################
-# Run setpdy and initialize PDY variables
-############################################
-export vhr=${vhr:-00}
-export cycle=${cycle:-t${vhr}z}
+export envir=${envir:-prod}
+
+# Define COMIN/COMOUT variables:
+
+echo ${COMPATH}
+
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-global_ens}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-gefs}
+export modsys=${modsys:-gefs}
+export mod_ver=${mod_ver:-${gefs_ver}}
+
 setpdy.sh
-. $DATA/PDY
-
-if [ $RUN = atmos ] || [ $RUN = wmo ] || [ $RUN = headline ] ; then
-	  export VDATE=${VDATE:-$PDYm2}
-fi
-
-########################################
-# Set data directives
-########################################
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
-export SENDMAIL=${SENDMAIL:-NO}
-
-########################################
-# Define COMIN/COMOUT variables
-########################################
-export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export EVSIN=${EVSIN:-$COMIN/stats/$COMPONENT/$MODELNAME.$VDATE}
-export EVSINapcp24mean=${EVSINapcp24mean:-$COMIN/stats/$COMPONENT/$RUN.$VDATE/apcp24_mean}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
-export DATA_IN=${DATA_IN:-$DATAROOT}
-mkdir -p $COMOUT
+. ./PDY
 
 ########################################
 # Set EVS directories
 ########################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=$HOMEevs/exec
-export PARMevs=$HOMEevs/parm
-export USHevs=$HOMEevs/ush
-export SCRIPTevs=$HOMEevs/scripts
-export FIXevs=${FIXevs:-$HOMEevs/fix}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=${USHevs:-${HOMEevs}/ush}
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
-export run_mpi=${run_mpi:-yes}
-export valid_time=${valid_time:-both}
+if [ "${RUN}" == "chem" ]; then
+    export machine=${machine:-WCOSS2}
+    export evs_run_mode=${evs_run_mode:-production}
+    export DATA_TYPE=${DATA_TYPE:-aeronet}
+fi
 
-export ush_dir=$USHevs/global_ens/ush_gens_plot_py
+## May need a default setting to avoid non-defined VDATE
+if [ "${RUN}" == "atmos" ] || [ "${RUN}" == "wmo" ] || [ "${RUN}" == "headline" ] ; then
+    export VDATE=${VDATE:-$PDYm2}
+elif [ "${RUN}" == "chem" ]; then
+    export VDATE_END=${VDATE_END:-$PDYm4}
+    export NDAYS=${NDAYS:-31}
+    export VDATE_START=${VDATE_START:-$(finddate.sh ${VDATE_END} d-$((${NDAYS}-1)))}
+fi
 
+########################################
+# Define COMIN/COMOUT variables
+########################################
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+if [ "${RUN}" == "chem" ]; then
+    export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END})}
+else
+    export EVSIN=${EVSIN:-$COMIN/stats/$COMPONENT/$MODELNAME.$VDATE}
+    export EVSINapcp24mean=${EVSINapcp24mean:-$COMIN/stats/$COMPONENT/$RUN.$VDATE/apcp24_mean}
+    export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
+    export DATA_IN=${DATA_IN:-$DATAROOT}
+
+    export run_mpi=${run_mpi:-yes}
+    export valid_time=${valid_time:-both}
+
+    export ush_dir=$USHevs/global_ens/ush_gens_plot_py
+fi
+mkdir -p ${COMOUT}
 
 ########################################
 # Execute the script
 ########################################
-if [ $valid_time = separate ] ; then
-  $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_separate_${STEP}.sh
+if [ "${RUN}" == "chem" ]; then
+    export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 else
-  $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+    if [ "${valid_time}" == "separate" ] ; then
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_separate_${STEP}.sh
+    else
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+    fi
 fi
 export err=$?; err_chk
 
-if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATAROOT
-  rm -rf $DATA
+if [ "${KEEPDATA}" != "YES" ]; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
 fi
 
 date

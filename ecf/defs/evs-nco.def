@@ -100,16 +100,16 @@ suite evs_nco
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/stats'
           family global_ens
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_00
-              time 01:10
+              trigger :TIME >= 0110 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '00'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_00
-              time 02:10
+              trigger :TIME >= 0210 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '00'
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_03
-              time 04:10
+              trigger :TIME >= 0410 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '03'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_03
-              time 05:10
+              trigger :TIME >= 0510 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '03'
           endfamily
           family mesoscale
@@ -703,16 +703,16 @@ suite evs_nco
             task jevs_global_ens_wave_grid2obs_stats
               trigger :TIME >= 1000 and ../../../../06/evs/prep/global_ens/jevs_global_ens_wave_grid2obs_prep == complete
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_06
-              time 07:10
+              trigger :TIME >= 0710 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '06'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_06
-              time 08:10
+              trigger :TIME >= 0810 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '06'
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_09
-              time 10:10
+              trigger :TIME >= 1010 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '09'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_09
-              time 11:10
+              trigger :TIME >= 1110 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '09'
           endfamily
           family wafs
@@ -1189,6 +1189,10 @@ suite evs_nco
             task jevs_nfcens_wave_grid2obs_prep
               time 12:15
           endfamily
+	  family glwu
+            task jevs_glwu_wave_grid2obs_prep
+              time 14:30
+          endfamily
           family global_det
             task jevs_global_det_wave_prep
               time 13:15
@@ -1259,6 +1263,10 @@ suite evs_nco
             task jevs_nfcens_wave_grid2obs_stats
               trigger ../../prep/nfcens == complete
           endfamily
+	  family glwu
+	    task jevs_glwu_wave_grid2obs_stats
+	      trigger :TIME >= 1500 and ../../prep/glwu == complete
+	  endfamily
           family subseasonal
             task jevs_cfs_subseasonal_grid2obs_stats
               trigger :TIME >= 1530 and ../../prep/subseasonal/jevs_subseasonal_cfs_prep == complete and ../../prep/subseasonal/jevs_subseasonal_obs_prep == complete
@@ -1319,16 +1327,16 @@ suite evs_nco
           endfamily
           family global_ens
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_12
-              time 13:10
+              trigger :TIME >= 1310 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '12'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_12
-              time 14:10
+              trigger :TIME >= 1410 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '12'
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_15
-              time 16:10
+              trigger :TIME >= 1610 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '15'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_15
-              time 17:10
+              trigger :TIME >= 1710 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '15'
           endfamily
           family cam
@@ -1977,16 +1985,16 @@ suite evs_nco
           endfamily
           family global_ens
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_18
-              time 19:10
+              trigger :TIME >= 1910 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '18'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_18
-              time 20:10
+              trigger :TIME >= 2010 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '18'
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_21
-              time 22:10
+              trigger :TIME >= 2210 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '21'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_21
-              time 23:10
+              trigger :TIME >= 2310 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
               edit VHR '21'
           endfamily
           family cam
@@ -2480,13 +2488,19 @@ suite evs_nco
               trigger :TIME >= 1945 and ../../stats/global_det/jevs_global_det_gfs_atmos_grid2grid_stats == complete
           endfamily
           family cam
-            task jevs_cam_precip_plots
+            task jevs_cam_precip_plots_last31days
+              edit VHR '21'
+              trigger ../../stats/cam/jevs_cam_hireswarw_precip_stats_vhr_22 == complete and  ../../stats/cam/jevs_cam_hireswarwmem2_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hireswfv3_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hrrr_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_namnest_precip_stats_vhr_22 == complete
+            task jevs_cam_precip_plots_last90days
               edit VHR '21'
               trigger ../../stats/cam/jevs_cam_hireswarw_precip_stats_vhr_22 == complete and  ../../stats/cam/jevs_cam_hireswarwmem2_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hireswfv3_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_hrrr_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_namnest_precip_stats_vhr_22 == complete and ../../stats/cam/jevs_cam_rrfs_precip_stats_vhr_22 == complete
             task jevs_cam_snowfall_plots
               edit VHR '21'
               trigger ../../stats/cam/jevs_cam_hireswarw_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hireswfv3_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_hrrr_snowfall_stats_vhr_18 == complete and ../../stats/cam/jevs_cam_namnest_snowfall_stats_vhr_18 == complete ../../stats/cam/jevs_cam_rrfs_snowfall_stats_vhr_18 == complete
-            task jevs_cam_grid2obs_plots
+            task jevs_cam_grid2obs_plots_last31days
+              edit VHR '21'
+              trigger ../../stats/cam/jevs_cam_hireswarw_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswfv3_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hrrr_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_rrfs_grid2obs_stats_vhr_21 == complete
+            task jevs_cam_grid2obs_plots_last90days
               edit VHR '21'
               trigger ../../stats/cam/jevs_cam_hireswarw_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswarwmem2_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hireswfv3_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_hrrr_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_namnest_grid2obs_stats_vhr_21 == complete and ../../stats/cam/jevs_cam_rrfs_grid2obs_stats_vhr_21 == complete
             task jevs_cam_headline_plots

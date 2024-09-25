@@ -21,7 +21,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -88,7 +88,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -129,7 +129,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -170,7 +170,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -198,7 +198,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'SNOD_06':{
@@ -265,7 +265,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'SNOD_06':{
@@ -306,7 +306,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'SNOD_24':{
@@ -347,7 +347,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'SNOD_24':{
@@ -375,7 +375,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -442,7 +442,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -483,7 +483,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -550,7 +550,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':['last31days','last90days'],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{

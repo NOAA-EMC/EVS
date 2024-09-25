@@ -42,7 +42,7 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
 #export SENDMAIL=YES
-export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp

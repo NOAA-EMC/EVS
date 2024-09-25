@@ -41,7 +41,7 @@ export vhr=${vhr:-${vhr}}
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
 export VERIF_CASE=radar
 export MODELNAME=href
 export modsys=href
@@ -56,9 +56,9 @@ export nproc=9
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
-export KEEPDATA=${KEEPDATA:-NO}
+export KEEPDATA=${KEEPDATA:-YES}
 
-export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,alicia.bentley@noaa.gov'}
+export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,andrew.benjamin@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
 

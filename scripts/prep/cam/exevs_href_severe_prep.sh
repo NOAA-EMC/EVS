@@ -1,11 +1,9 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_href_severe_prep.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Binbin Zhou (binbin.zhou@noaa.gov)
 # Purpose of Script: This script preprocesses HREF SSPFs for 
 #                    CAM severe verification.
-# History Log:
-# 3/2023: Initial script assembled by Logan Dawson 
 ###############################################################################
 
 

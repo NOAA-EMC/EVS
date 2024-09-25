@@ -35,7 +35,7 @@ while [ $DATE -ge $ENDDATE ]; do
 
 	if [ -e ${EVSINnam}.$DAY/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
 	then
-	 cpreq ${EVSINnam}.$DAY/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	 cp -v ${EVSINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 
 	 sed "s/$model1/nam_$MODELNAME/g" $STATDIR/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
 	 sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
@@ -58,11 +58,11 @@ while [ $DATE -ge $ENDDATE ]; do
     fi
 
 	if [ -e $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
-	 cpreq $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	 cp -v $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 	fi
 
 	if [ -e $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
-	 cpreq $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	 cp -v $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 	fi
 
 	if [ -e $COMIN/stats/$COMPONENT/rrfs.$DAY/evs.stats.rrfs.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then

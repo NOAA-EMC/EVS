@@ -2,12 +2,9 @@
 
 ###############################################################################
 # Name of Script: evs_stats_check_otlk.py
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: Check for existence of SPC outlook masks based
 #                    on valid date/time. Output is text file written to $DATA
-#
-# History Log:
-#   4/2023: Initial script assembled  
 ###############################################################################
 
 import datetime
