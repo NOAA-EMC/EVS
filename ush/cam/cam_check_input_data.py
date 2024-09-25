@@ -514,7 +514,7 @@ if proceed:
                         DATAsubj = f"F{lead_hours[0]} " + DATAsubj_i
                         DATAmsg_head = (f"WARNING: No {DATAsubj_i} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {VHR}Z, and \nf{lead_hours[0]}.")
+                                        + f" cycle {VHR}Z, and \nf{lead_hours[0]}")
                     else:
                         lead_string = '\n'.join(
                             [f'f{lead}' for lead in lead_hours]
@@ -522,7 +522,7 @@ if proceed:
                         DATAsubj = DATAsubj_i
                         DATAmsg_head = (f"WARNING: No {DATAsubj_i} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {VHR}Z, and \n{lead_string}.")
+                                        + f" cycle {VHR}Z, and \n{lead_string}")
                     cutil.run_shell_command([
                         'echo', f'\"{DATAsubj}\"', '>>mailmsgsubj_fcst'
                     ])
