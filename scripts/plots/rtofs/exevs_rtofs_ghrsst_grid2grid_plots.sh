@@ -84,16 +84,18 @@ if [[ $log_file_count -ne 0 ]]; then
 	done
 fi
 
+export obtype=`echo $OBTYPE |tr '[A-Z]' '[a-z]'`
+
 # tar all plots together
-cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$OBTYPE
-tar -cvf evs.plots.$COMPONENT.$OBTYPE.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
+cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype
+tar -cvf evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- if [ -s evs.plots.$COMPONENT.$OBTYPE.${VERIF_CASE}.$PERIOD.v$VDATE.tar ] ; then
-	cp -v evs.plots.$COMPONENT.$OBTYPE.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
+ if [ -s evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar ] ; then
+	cp -v evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
  fi
 fi
 
 if [ $SENDDBN = YES ] ; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.$COMPONENT.$OBTYPE.${VERIF_CASE}.$PERIOD.v$VDATE.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar
 fi

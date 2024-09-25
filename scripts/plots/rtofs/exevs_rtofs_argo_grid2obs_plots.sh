@@ -10,10 +10,11 @@
 set -x
 
 export OBTYPE=ARGO
+export obtype=`echo $OBTYPE |tr '[A-Z]' '[a-z]'`
 
-mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$OBTYPE
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$obtype
 mkdir -p $DATA/tmp/rtofs
-mkdir -p $COMOUTplots/$STEP/$OBTYPE
+mkdir -p $COMOUTplots/$STEP/$obtype
 mkdir -p $DATA/logs/rtofs
 
 # set major & minor MET version
@@ -27,7 +28,7 @@ export MASKS="GLB"
 
 # plot time series
 export PTYPE=time_series
-mkdir -p $COMOUTplots/$STEP/$OBTYPE/$PTYPE
+mkdir -p $COMOUTplots/$STEP/$obtype/$PTYPE
 
 for lead in 000 024 048 072 096 120 144 168 192; do
   export FLEAD=$lead
@@ -95,21 +96,21 @@ for lead in 000 024 048 072 096 120 144 168 192; do
 	else
 		var_name=salinity
 	fi
-	png_name1=evs.${COMPONENT}.${stats}.${var_name}_z${levl}_${OBTYPE}.last60days.timeseries_valid00z_f${lead}.glb.png
-	if [ ! -s $COMOUTplots/$STEP/$OBTYPE/$PTYPE/$png_name1 ]; then
+	png_name1=evs.${COMPONENT}.${stats}.${var_name}_z${levl}_${obtype}.last60days.timeseries_valid00z_f${lead}.glb.png
+	if [ ! -s $COMOUTplots/$STEP/$obtype/$PTYPE/$png_name1 ]; then
 	
           # make plots
           $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
           export err=$?; err_chk
 	   
-	  if [ -s $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$OBTYPE/$png_name1 ]; then
-	    cp -v $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$OBTYPE/$png_name1 $COMOUTplots/$STEP/$OBTYPE/$PTYPE/$png_name1
+	  if [ -s $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$obtype/$png_name1 ]; then
+	    cp -v $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$obtype/$png_name1 $COMOUTplots/$STEP/$obtype/$PTYPE/$png_name1
     	  else
 	    echo "WARNING: Plot $png_name1 was not generated."
           fi
   	else
 	  echo "RESTART: Copying the files"
-	  cp -v $COMOUTplots/$STEP/$OBTYPE/$PTYPE/$png_name1 $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$OBTYPE/$png_name1
+	  cp -v $COMOUTplots/$STEP/$obtype/$PTYPE/$png_name1 $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$obtype/$png_name1
 	fi
 	
       done
@@ -120,7 +121,7 @@ done
 # plot mean vs. lead time
 export PTYPE=lead_average
 export FLEAD="000,024,048,072,096,120,144,168,192"
-mkdir -p $COMOUTplots/$STEP/$OBTYPE/$PTYPE
+mkdir -p $COMOUTplots/$STEP/$obtype/$PTYPE
 
 for levl in 0 50 125 200 400 700 1000 1400; do
   if [ $levl = 0 ] ; then
@@ -185,20 +186,20 @@ for levl in 0 50 125 200 400 700 1000 1400; do
       else
 	 var_name=salinity
       fi
-      png_name2=evs.${COMPONENT}.${stats}.${var_name}_z${levl}_${OBTYPE}.last60days.fhrmean_valid00z.glb.png
-      if [ ! -s $COMOUTplots/$STEP/$OBTYPE/$PTYPE/$png_name2 ]; then
+      png_name2=evs.${COMPONENT}.${stats}.${var_name}_z${levl}_${obtype}.last60days.fhrmean_valid00z.glb.png
+      if [ ! -s $COMOUTplots/$STEP/$obtype/$PTYPE/$png_name2 ]; then
       # make plots
 
         $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
         export err=$?; err_chk
-        if [ -s $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$OBTYPE/$png_name2 ]; then
-	   cp -v $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$OBTYPE/$png_name2 $COMOUTplots/$STEP/$OBTYPE/$PTYPE/$png_name2
+        if [ -s $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$obtype/$png_name2 ]; then
+	   cp -v $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$obtype/$png_name2 $COMOUTplots/$STEP/$obtype/$PTYPE/$png_name2
 	else
            echo "WARNING: Plot $png_name2 was not generated."
 	fi
       else
 	echo "RESTART: Copying the files"
-	cp -v $COMOUTplots/$STEP/$OBTYPE/$PTYPE/$png_name2 $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$OBTYPE/$png_name2
+	cp -v $COMOUTplots/$STEP/$obtype/$PTYPE/$png_name2 $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$obtype/$png_name2
       fi
 
     done
@@ -218,15 +219,15 @@ fi
 
 # tar all plots together
 
-cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$OBTYPE
-tar -cvf evs.plots.$COMPONENT.$OBTYPE.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
+cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype
+tar -cvf evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- if [ -s evs.plots.$COMPONENT.$OBTYPE.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then
-	cp -v evs.plots.$COMPONENT.$OBTYPE.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
+ if [ -s evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then
+	cp -v evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
  fi
 fi
 
 if [ $SENDDBN = YES ] ; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.$COMPONENT.$OBTYPE.${VERIF_CASE}.$PERIOD.v$VDATE.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar
 fi
