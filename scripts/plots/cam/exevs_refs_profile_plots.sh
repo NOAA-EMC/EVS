@@ -1,0 +1,383 @@
+#!/bin/ksh
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the refs profile plotting python script
+# Last updated: 05/30/2024, Binbin Zhou Lynker@EMC/NCEP
+#******************************************************************************
+set -x 
+
+cd $DATA
+
+export machine=${machine:-"WCOSS2"}
+export prune_dir=$DATA/data
+export save_dir=$DATA/out
+export output_base_dir=$DATA/stat_archive
+export log_metplus=$DATA/logs/GENS_verif_plotting_job
+mkdir -p $prune_dir
+mkdir -p $save_dir
+mkdir -p $output_base_dir
+mkdir -p $DATA/logs
+
+restart=$COMOUT/restart/$last_days/refs_profile_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+fi
+
+
+export eval_period='TEST'
+
+export interp_pnts='' 
+
+export init_end=$VDATE
+export valid_end=$VDATE
+
+model_list='REFS'
+models='REFS'
+
+n=0
+while [ $n -le $last_days ] ; do
+    hrs=$((n*24))
+    first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
+    n=$((n+1))
+done
+
+export init_beg=$first_day
+export valid_beg=$first_day
+
+#*************************************************************
+# Virtual link the refs's stat data files of last 31/90 days
+#*************************************************************
+n=0
+while [ $n -le $last_days ] ; do
+  #hrs=`expr $n \* 24`
+  hrs=$((n*24))
+  day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
+  echo $day
+  $USHevs/cam/evs_get_refs_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
+  n=$((n+1))
+done 
+
+export fcst_init_hour="0,6,12,18"
+valid_time='valid00_12z'
+init_time='init00z_06z_12z_18Z'
+
+export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+#For restart:
+if [ ! -d $plot_dir ] ; then
+  mkdir -p $plot_dir
+fi
+
+
+verif_case=grid2obs
+verif_type=upper_air
+
+#*****************************************
+# Build a POE file to collect sub-jobs
+#****************************************
+> run_all_poe.sh
+
+for stats in rmse_spread bss ; do 
+
+if [ $stats = rmse_spread  ] ; then
+  stat_list='rmse, spread'
+  line_tp='ecnt'
+  score_types='stat_by_level'
+  VARS='HGT TMP UGRD VGRD RH'
+  stats_rst=rmse_spread
+elif [ $stats = bss ] ; then
+  stat_list='bss_smpl'
+  line_tp='pstd'  
+  score_types='lead_average'
+  VARS='TMP_lt0C WIND_ge30kt WIND_ge40kt'
+  stats_rst=bss_smpl
+else
+  err_exit "$stats is not a valid stat"
+fi   
+
+ for fcst_valid_hour in 00 12 ; do
+
+  for score_type in $score_types ; do
+
+   if [ $score_type = lead_average ] ; then
+     export fcst_leads="6,12,18,24,30,36,42,48"
+   else 
+     export fcst_leads="06 12 18 24 30 36 42 48"
+   fi
+
+   for lead in $fcst_leads ; do 
+
+    export fcst_lead=$lead
+
+    if [[ "$fcst_lead" == "06" ]] || [[ "$fcst_lead" == "18" ]] || [[ "$fcst_lead" == "30" ]] || [[ "$fcst_lead" == "42" ]] ; then
+       VX_MASK_LIST="CONUS, Alaska, PRico"
+       domains="conus alaska prico"
+    elif [[ "$fcst_lead" == "12" ]] || [[ "$fcst_lead" == "24" ]] || [[ "$fcst_lead" == "36" ]] || [[ "$fcst_lead" == "48" ]] ; then
+       VX_MASK_LIST="CONUS, Hawaii"
+       domains="conus hawaii"
+    else
+       VX_MASK_LIST="CONUS, Alaska"
+       domains="conus alaska"
+    fi
+
+    for VAR in $VARS ; do 
+
+       var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
+
+       if [ $score_type = stat_by_level ] ; then
+         FCST_LEVEL_values="P1000,P975,P950,P925,P900,P875,P850,P825,P800,P750,P700,P650,P600,P550,P500,P400,P300,P200"
+	 var_rst=${var}
+	 tail=f${fcst_lead}
+         if [ $tail = f06 ] ; then
+              tail=f6
+         fi
+       elif [ $score_type = lead_average ] ; then 
+	  if [ $VAR = TMP_lt0C ] ; then
+	     FCST_LEVEL_values="P850"
+	     var_rst=tmp_ens_freq_lt273.15
+	     tail=eq273.15
+          elif [ $VAR = WIND_ge30kt ] ; then
+             FCST_LEVEL_values="P850 P700"
+	     var_rst=wind_ens_freq_ge15.4
+	     tail=eq0.10000
+	  elif [ $VAR = WIND_ge40kt ] ; then
+             FCST_LEVEL_values="P850 P700"
+             var_rst=wind_ens_freq_ge20.58
+	     tail=eq0.10000
+	  fi
+       fi	  
+     
+     for FCST_LEVEL_value in $FCST_LEVEL_values ; do  
+
+       if [ $score_type = lead_average ] ; then
+          if [ $FCST_LEVEL_value = P850 ] ; then
+              level_mb="850mb_"
+          elif [ $FCST_LEVEL_value = P700 ] ; then
+              level_mb="700mb_"
+          fi
+       else
+          level_mb=""
+       fi
+
+       OBS_LEVEL_value=$FCST_LEVEL_value
+
+       level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
+
+      for line_type in $line_tp ; do 
+
+	 #*********************
+	 # Build sub-jobs
+	 # ********************
+         > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh  
+      #***********************************************************************************************************************************
+      #  Check if this sub-job has been completed in the previous run for restart
+      if [ ! -e $restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed ] ; then
+      #***********************************************************************************************************************************
+
+	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	if [ $score_type = lead_average ] ; then
+	    echo "export PLOT_TYPE=lead_average_valid" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+        else	    
+            echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+        fi
+
+        echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
+        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+        echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+        echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
+        echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
+        echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
+
+        if [ $score_type = valid_hour_average ] ; then
+          echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+        else
+          echo "export date_type=VALID" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+        fi
+
+         echo "export var_name=$VAR" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
+         echo "export line_type=$line_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "export interp=BILIN" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
+         if [ $line_tp = ecnt ] ; then
+	   thresh_fcst=' '
+	   thresh_obs=' '
+	 elif [ $line_tp = pstd ] ; then
+	    if [ $VAR = TMP_lt0C ] ; then
+	       #thresh_fcst='==0.10000'
+	       thresh_fcst='==273.15'
+	       thresh_obs='<273.15'
+             elif [ $VAR =  WIND_ge30kt ] ; then
+	       thresh_fcst='==0.10000'
+	       thresh_obs='>=15.4'
+	     elif [ $VAR =  WIND_ge40kt ] ; then
+	       thresh_fcst='==0.10000'
+               thresh_obs='>=20.58'
+             fi	       
+	 fi
+
+         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g" -e "s!thresh_obs!$thresh_obs!g"  -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$fcst_lead!g" -e "s!interp_pnts!$interp_pnts!g"  $USHevs/cam/evs_refs_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
+         chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+
+         #Save for restart
+	 echo "for domain in $domains ; do " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png ] && [ ! -s $restart/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "    cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "    >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "  fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "done" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh 
+         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_all_poe.sh
+
+       else
+          #Restart from existing png files of previous run
+	 if [ -s $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png ] ; then
+          cp $restart/${score_type}_regional_*_valid_${fcst_valid_hour}z_${level_mb}${var_rst}_${stats_rst}_${tail}.png ${plot_dir}/.
+	 fi
+       fi
+
+      done #end of line_type
+
+     done # end of level
+
+    done #end of VAR
+
+   done #end of fcst_lead
+
+  done # end of fcst_valid_hour 
+
+ done #end of score_type
+
+done #end of stats 
+
+chmod +x run_all_poe.sh
+
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
+if [ $run_mpi = yes ] ; then
+   mpiexec -np 60  --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+else
+  ${DATA}/run_all_poe.sh
+fi
+export err=$?; err_chk
+
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
+cd $plot_dir
+
+for valid in 00z 12z ; do
+
+ for stats in rmse_spread bss_smpl ; do
+  if [ $stats = rmse_spread ] ; then
+   score_types='stat_by_level'
+   vars='hgt rh tmp ugrd vgrd'
+   leads='f6 f12 f18 f24 f30 f36 f42 f48'
+  else
+   score_types='lead_average'
+   vars='700mb_wind_ens_freq_ge15.4 700mb_wind_ens_freq_ge20.58 850mb_tmp_ens_freq_lt273.15 850mb_wind_ens_freq_ge15.4 850mb_wind_ens_freq_ge20.58'
+   leads="all"
+  fi
+
+
+ for score_type in $score_types  ; do
+  
+  if [ $score_type = stat_by_level ] ; then
+     scoretype='profile'
+  elif [ $score_type = lead_average ] ; then
+     scoretype='fhrmean'
+  fi
+    
+   for domain in conus alaska hawaii prico; do
+
+       if [ $domain = conus ] ; then
+	    new_domain='buk_conus'
+       else
+            new_domain=$domain
+       fi
+
+
+    for var in $vars ; do
+
+      if [ $score_type = lead_average  ] ; then
+	level=p${var:0:3}
+        end=eq0.10000.png
+
+	if [ $var = 700mb_wind_ens_freq_ge15.4 ] ; then
+	  var_new='windspeed.ge.30kt.p700'
+	elif [ $var = 700mb_wind_ens_freq_ge20.58 ] ; then
+	  var_new='windspeed.ge.40kt.p700'
+	elif [ $var = 850mb_wind_ens_freq_ge15.4 ] ; then
+	  var_new='windspeed.ge.30kt.p850'
+        elif [ $var = 850mb_wind_ens_freq_ge20.58 ] ; then
+          var_new='windspeed.ge.40kt.p850'	
+        elif [ $var = 850mb_tmp_ens_freq_lt273.15 ] ; then
+	  var_new='tmp.lt.0C.p850'
+          end=eq273.15.png
+	fi
+      else
+        level=''
+	var_new=$var
+      fi	
+
+      for lead in $leads ; do
+        if [ $lead = f6 ] ; then
+           new_lead=f06
+        else
+          new_lead=$lead
+        fi
+
+       if [ ${score_type} = lead_average ] ; then	
+	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end} ] ; then
+             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end}  evs.refs.${stats}.${var_new}.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+          fi 
+       else
+	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png ] ; then
+   	     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png  evs.refs.${stats}.${var_new}.last${last_days}days.${scoretype}_valid_${valid}_${new_lead}.${new_domain}.png
+          fi 
+       fi
+      done #lead
+
+    done #var
+   done  #domain
+ done    #score_type
+done     #stats
+done     #vlaid
+
+
+tar -cvf evs.plots.refs.profile.last${last_days}days.v${VDATE}.tar *.png
+
+# Cat the plotting log files
+log_dir="$DATA/logs"
+if [ -d $log_dir ]; then
+    log_file_count=$(find $log_dir -type f | wc -l)
+    if [[ $log_file_count -ne 0 ]]; then
+        log_files=("$log_dir"/*)
+        for log_file in "${log_files[@]}"; do
+            if [ -f "$log_file" ]; then
+                echo "Start: $log_file"
+                cat "$log_file"
+                echo "End: $log_file"
+            fi
+        done
+    fi
+fi
+
+
+if [ $SENDCOM = YES ] && [ -s evs.plots.refs.profile.last${last_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.refs.profile.last${last_days}days.v${VDATE}.tar  $COMOUT/.  
+fi
+
+if [ $SENDDBN = YES ] ; then
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.profile.last${last_days}days.v${VDATE}.tar
+fi

@@ -112,6 +112,7 @@ export COMINhref=${COMINhref:-$(compath.py $envir/com/href/$href_ver)}
 export COMINhrrr=${COMINhrrr:-$(compath.py $envir/com/hrrr/$hrrr_ver)}
 export COMINnam=${COMINnam:-$(compath.py $envir/com/nam/$nam_ver)}
 export COMINrrfs=${COMINrrfs:-$(compath.py $envir/com/rrfs/$rrfs_ver)}
+export COMINrefs=${COMINrefs:-$(compath.py $envir/com/refs/$refs_ver)}
 export COMINobsproc=${COMINobsproc:-$(compath.py $envir/com/obsproc/$obsproc_ver)}
 export COMINccpa=${COMINccpa:-$(compath.py $envir/com/ccpa/$ccpa_ver)}
 export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE}
