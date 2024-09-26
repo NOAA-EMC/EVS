@@ -678,7 +678,7 @@ def preprocess_prepbufr(indir, fname, workdir, outdir, subsets):
         else:
             raise FileNotFoundError(
                 f"The following prepbufr subsets do not exist in {workdir}: " 
-                + ', '.join([subset in subsets if not os.path.isfile(subset)])
+                + ', '.join([subset for subset in subsets if not os.path.isfile(subset)])
                 + ". Cannot concatenate subsets."
             )
         os.chdir(wd)
