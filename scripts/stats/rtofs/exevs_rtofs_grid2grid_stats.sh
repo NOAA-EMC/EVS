@@ -6,7 +6,13 @@
 # Modified for EVSv2:
 # By: Samira Ardani (samira.ardani@noaa.gov)
 # 05/2024: Combined the stats scripts into two scripts "grid2obs" and "grid2grid"
-# 	   and modified the paths to small/large stats files
+# 	   and modified the paths to small/large stats files.
+# 09/2024: Variable names changed:
+# 1- $RUN=ocean for each step of EVSv2-RTOFS was defined to be consistent with other EVS components. 
+# 2- $RUN was defined in all j-jobs. 
+# 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
+# 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
+
 ###############################################################################
 
 set -x

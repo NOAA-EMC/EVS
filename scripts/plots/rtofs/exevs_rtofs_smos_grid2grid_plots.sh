@@ -1,9 +1,15 @@
 #!/bin/bash
-###############################################################################
+#########################################################################################################
 # Name of Script: exevs_rtofs_smos_grid2grid_plots
 # Purpose of Script: Create RTOFS SMOS plots for last 60 days
 # Author: Mallory Row (mallory.row@noaa.gov)
-###############################################################################
+# Edited by:  Samira Ardani (samira.ardani@noaa.gov) 
+# 09/2024: Variable names changed:
+# 1- $RUN=ocean for each step of EVSv2-RTOFS was defined to be consistent with other EVS components. 
+# 2- $RUN was defined in all j-jobs. 
+# 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
+# 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
+#########################################################################################################
 
 set -x
 

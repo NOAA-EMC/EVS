@@ -9,6 +9,12 @@
 # By: Samira Ardani (samira.ardani@noaa.gov)
 # 05/2024: Modified the code so that the RTOFS prep job writes to one rtofs.YYYMMDD directory.
 # 08/2024: Added restart capability and the remaining fixes and additions for EVS v2.0.
+# 09/2024: $VDATE was replaced with $INITDATE in related prep step scripts.
+# 09/2024: Variable names changed:
+# 1- $RUN=ocean for each step of EVSv2-RTOFS was defined to be consistent with other EVS components. 
+# 2- $RUN was defined in all j-jobs. 
+# 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
+# 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
 #############################################################################################
 
 set -x
