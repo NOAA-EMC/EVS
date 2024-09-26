@@ -669,11 +669,18 @@ def preprocess_prepbufr(indir, fname, workdir, outdir, subsets):
                 os.path.join(indir, fname)
             ]
         )
-        run_shell_command(
-            np.concatenate((
-                ['cat'], subsets, ['>>', os.path.join(outdir, fname)]
-            ))
-        )
+        if all([os.path.isfile(subset) for subset in subsets]):
+            run_shell_command(
+                np.concatenate((
+                    ['cat'], subsets, ['>>', os.path.join(outdir, fname)]
+                ))
+            )
+        else:
+            raise FileNotFoundError(
+                f"The following prepbufr subsets do not exist in {workdir}: " 
+                + ', '.join([subset in subsets if not os.path.isfile(subset)])
+                + ". Cannot concatenate subsets."
+            )
         os.chdir(wd)
 
 # Create a list of ccpa file paths
