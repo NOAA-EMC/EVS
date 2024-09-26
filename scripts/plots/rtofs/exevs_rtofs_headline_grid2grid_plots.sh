@@ -150,8 +150,10 @@ if [[ $log_file_count -ne 0 ]]; then
 fi
 
 # tar all plots together
-
-find $DATA/plots/$COMPONENT/rtofs.$VDATE -name \*.png -exec cp {} $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN \;
+count=$(find $DATA/plots/$COMPONENT/rtofs.$VDATE -name "*.png" |wc -l)
+if [ $count != 0 ]; then
+	find $DATA/plots/$COMPONENT/rtofs.$VDATE -name \*.png -exec cp {} $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN \;
+fi
 cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
