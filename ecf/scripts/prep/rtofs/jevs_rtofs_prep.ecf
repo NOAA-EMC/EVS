@@ -17,7 +17,7 @@ export model=evs
 set -x
 export COMPONENT=rtofs
 export STEP=prep
-export RUN=ocean
+
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
@@ -37,6 +37,7 @@ else
   export vhr=00
 fi
 export NET=evs
+export RUN=ocean
 
 ############################################################
 # Execute j-job
