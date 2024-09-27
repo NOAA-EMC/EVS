@@ -73,7 +73,7 @@ for line in Lines:
 buoy_dict = {'buoy_id': buoy_id, 'buoy_lat': buoy_lat, 'buoy_lon': buoy_lon} 
 df = pd.DataFrame(buoy_dict)
 df[['buoy_lat','buoy_lon']] = df[['buoy_lat','buoy_lon']].apply(pd.to_numeric)
-dff = df.loc[(df['buoy_lat']>40.8) & (df['buoy_lat']<49.0)& (df['buoy_lon']> -93.0) & (df['buoy_lon']< -75.0) ]
+dff = df.loc[(df['buoy_lat']>40.8) & (df['buoy_lat']<49.0)& (df['buoy_lon']> -93.0) & (df['buoy_lon']< -73.0) ]
 glwu_buoy_id = list(dff['buoy_id'])
 
 all_ndbc_files = glob.glob (os.path.join(all_ndbc,"*.txt"))
