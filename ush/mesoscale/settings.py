@@ -116,7 +116,7 @@ class Presets():
                 ).strftime('%Y%m%d'),
                 'init_beg': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
-                    ).strftime('%Y%m%d'),
+                ).strftime('%Y%m%d'),
                 'init_end': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
                 ).strftime('%Y%m%d')
@@ -130,7 +130,7 @@ class Presets():
                 ).strftime('%Y%m%d'),
                 'init_beg': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
-                    ).strftime('%Y%m%d'),
+                ).strftime('%Y%m%d'),
                 'init_end': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
                 ).strftime('%Y%m%d')
