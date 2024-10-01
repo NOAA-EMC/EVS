@@ -36,6 +36,7 @@ mkdir -p ${DATA}/jobs
 mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
+mkdir -p ${DATA}/SFCSHP
 
 vhours='00 06 12 18'
 
@@ -76,31 +77,49 @@ for vhr in ${vhours} ; do
     fi
 
     for fhr in ${lead_hours} ; do
-       matchtime=$(date --date="${VDATE} ${vhr2} ${fhr} hours ago" +"%Y%m%d %H")
-       match_date=$(echo ${matchtime} | awk '{print $1}')
-       match_hr=$(echo ${matchtime} | awk '{print $2}')
-       match_fhr=$(printf "%02d" "${match_hr}")
-       flead=$(printf "%03d" "${fhr}")
-       flead2=$(printf "%02d" "${fhr}")
+         matchtime=$(date --date="${VDATE} ${vhr2} ${fhr} hours ago" +"%Y%m%d %H")
+         match_date=$(echo ${matchtime} | awk '{print $1}')
+         match_hr=$(echo ${matchtime} | awk '{print $2}')
+         match_fhr=$(printf "%02d" "${match_hr}")
+         flead=$(printf "%03d" "${fhr}")
+         flead2=$(printf "%02d" "${fhr}")
 
-       EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${wfo}_${MODELNAME}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2                  
-       DATAmodelfilename=$DATA/grib2/${WFO}_${MODNAM}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2
-       if [[ -s $EVSINmodelfilename ]]; then
-	       if [[ ! -s $DATAmodelfilenmae ]]; then
-		       cp -v $EVSINmodelfilename $DATAmodelfilename
-	       fi
+         EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${wfo}_${MODELNAME}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2                  
+         DATAmodelfilename=$DATA/grib2/${WFO}_${MODNAM}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2
+         DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+         COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+	for OBSNAME in GDAS NDBC; do
+		if [ $OBSNAME = GDAS ]; then
+			EVSINobsfilename=${DATA}/SFCSHP/gdas.SFCSHP.${VDATE}${vhr2}.nc
+		elif [ $OBSNAME = NDBC ]; then
+			EVSINobsfilename=${DATA}/ncfiles/ndbc.${VDATE}${vhr2}.nc
+		fi
+	done
+
+
+       if [[ -s $COMOUTstatfilename ]]; then
+	       echo "RESTART"
+	       cp -v $COMOUTstatfilename $DATAstatfilename
        else
-	       echo "WARNING: $DATAmodelfilename does not exist."
-	
-       fi	       
-       if [[ -s $DATAmodelfilename ]]; then
-	       for OBSNAME in GDAS NDBC; do
-		       if [ $OBSNAME = GDAS ]; then
-			       EVSIN_OBSNAME_file=${DATA}/ncfiles/gdas.${VDATE}${valid_hour2}.nc
-		       elif [ $OBSNAME = NDBC ]; then
-			       EVSIN_OBSNAME_file=${DATA}/ncfiles/ndbc.${VDATE}${vhr2}.nc
+	       if [[ ! -s $DATAndbcfilename ]]; then
+		       if [[ -s $EVSINndbcfilename ]]; then
+			       cp -v $EVSINndbcfilename $DATAndbcfilename
+		       else
+			       echo "DOES NOT EXIST $EVSINndbcncfilename"
 		       fi
-		       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+	       fi
+   	       
+	       if [[ -s $DATAndbcfilename ]]; then
+		       if [[ ! -s $DATAmodelfilename ]]; then
+			       if [[ -s EVSINmodelfilename ]]; then
+				       cp -v  $EVSINmodelfilename $DATAmodelfilename 
+			       else
+				       echo "DOES NOT EXIST $EVSINndbcncfilename"
+			       fi
+		       fi
+		       if [[ -s $DATAmodelfilename ]]' then
+		       
+			       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
 		       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
 		       if [[ -s $COMOUTstatfilename ]]; then
 			       cp -v $COMOUTstatfilename $DATAstatfilename
