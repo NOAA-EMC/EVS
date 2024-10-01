@@ -108,7 +108,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 
     # filter by forecast lead times
     if isinstance(flead, list):
-        if len(flead) <= 8:
+        if len(flead) <= 6:
             if len(flead) > 1:
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:

@@ -103,7 +103,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         return None
     # filter by forecast lead times
     if isinstance(flead, list):
-        if len(flead) <= 8:
+        if len(flead) <= 6:
             if len(flead) > 1:
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:

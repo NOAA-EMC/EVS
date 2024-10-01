@@ -104,7 +104,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         frange_save_string = 'ALL_LEADS'
         pass
     elif isinstance(flead, list):
-        if len(flead) <= 8:
+        if len(flead) <= 6:
             if len(flead) > 1:
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
