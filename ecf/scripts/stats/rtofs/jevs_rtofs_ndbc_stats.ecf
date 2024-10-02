@@ -36,8 +36,9 @@ else
   export vhr=00
 fi
 export NET=evs
-export RUN=ndbc
-export RUNupper=NDBC_STANDARD
+export RUN=ocean
+export OBTYPE=ndbc
+export OBTYPEupper=NDBC_STANDARD
 export VERIF_CASE=grid2obs
 export VAR=sst
 export VDATE=$($NDATE -48 ${PDY}00| cut -c 1-8)

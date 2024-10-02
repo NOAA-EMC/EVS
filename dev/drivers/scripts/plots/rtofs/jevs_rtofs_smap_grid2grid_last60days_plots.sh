@@ -26,7 +26,8 @@ export envir=prod
 export NET=evs
 export STEP=plots
 export COMPONENT=rtofs
-export RUN=smap
+export RUN=ocean
+export OBTYPE=smap
 export VERIF_CASE=grid2grid
 
 source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
