@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=4:59:00
+#PBS -l walltime=04:59:00
 #PBS -l place=vscatter:exclhost,select=3:ncpus=128:ompthreads=1:mem=150GB
 #PBS -l debug=true
 
@@ -36,7 +36,8 @@ set -x
   export evs_run_mode="production"
 
 # EVS Settings
-  export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+#  export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS_mesoscale_v2/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 
 # EVS configuration
@@ -55,7 +56,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 
 # Developer Settings
-  export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
+  export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver_2d
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
   export vhr=${vhr:-${vhr}}
