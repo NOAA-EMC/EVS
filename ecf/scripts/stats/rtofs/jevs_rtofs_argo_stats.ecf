@@ -36,8 +36,9 @@ else
   export vhr=00
 fi
 export NET=evs
-export RUN=argo
-export RUNupper=ARGO
+export RUN=ocean
+export OBTYPE=argo
+export OBTYPEupper=ARGO
 export VERIF_CASE=grid2obs
 export VARS="temp psal"
 
