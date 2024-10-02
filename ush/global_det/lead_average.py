@@ -1009,7 +1009,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             title2 = f'{level_string}{var_long_name} (unitless)'
     if obtype == 'SFCSHP':
-        title2 = title2+f'\nObservations: Surface Marine (Ship, Buoy, C-MAN Platform)'
+        title2 = title2+f'\nObservations: Surface Marine (Ship, Buoy, C-MAN Platform, Saildrone)'
     elif obtype == 'NDBC_STANDARD':
         title2 = title2+f'\nObservations: NDBC Buoys'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
