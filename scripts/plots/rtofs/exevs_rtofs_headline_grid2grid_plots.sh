@@ -1,14 +1,24 @@
 #!/bin/bash
-###############################################################################
+######################################################################################################
 # Name of Script: exevs_rtofs_headline_grid2grid_plots
 # Purpose of Script: Create RTOFS headline plots
 # Author: Mallory Row (mallory.row@noaa.gov)
-###############################################################################
+# Edited by:  Samira Ardani (samira.ardani@noaa.gov) 
+# 09/2024: Variable names changed:
+# 1- $RUN=ocean for each step of EVSv2-RTOFS was defined to be consistent with other EVS components. 
+# 2- $RUN was defined in all j-jobs. 
+# 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
+# 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
+######################################################################################################
 
 set -x
+export RUN=headline
 
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE/$RUN
 mkdir -p $DATA/tmp/rtofs
+
+
 # set major & minor MET version
 export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 
@@ -146,7 +156,12 @@ if [[ $log_file_count -ne 0 ]]; then
 fi
 
 # tar all plots together
+count=$(find $DATA/plots/$COMPONENT/rtofs.$VDATE -name "*.png" |wc -l)
+if [ $count != 0 ]; then
+	find $DATA/plots/$COMPONENT/rtofs.$VDATE -name \*.png -exec cp {} $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN \;
+fi
 cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
+
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
