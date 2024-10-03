@@ -25,7 +25,8 @@ export SENDMAIL=YES
 export envir=prod
 export NET=evs
 export STEP=stats
-export RUN=ndbc
+export RUN=ocean
+export OBTYPE=ndbc
 export VERIF_CASE=grid2obs
 export COMPONENT=rtofs
 
