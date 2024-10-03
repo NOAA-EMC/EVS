@@ -104,7 +104,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         frange_save_string = 'ALL_LEADS'
         pass
     elif isinstance(flead, list):
-        if len(flead) <= 6:
+        if len(flead) <= 3:
             if len(flead) > 1:
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
@@ -926,8 +926,10 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     var_savename = df['FCST_VAR'].tolist()[0]
     if 'APCP' in var_savename.upper():
         var_savename = 'APCP'
-    elif any(field in var_savename.upper() for field in ['ASNOW','SNOD']):
+    elif any(field in var_savename.upper() for field in ['ASNOW']):
         var_savename = 'ASNOW'
+    elif any(field in var_savename.upper() for field in ['SNOD']):
+        var_savename = 'SNOD'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
