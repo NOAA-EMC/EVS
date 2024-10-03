@@ -329,7 +329,7 @@ for time_score_iter in time_score_iter_list:
                           +f"{wmo_sc}")
                 if have_stat_line:
                     if wmo_param == 'dd10m':
-                        wmo_n = stat_line_gt0['TOTAL_DIR'].values[0]
+                        wmo_n = stat_line_gt0['TOTAL'].values[0]
                     else:
                         wmo_n = stat_line['TOTAL'].values[0]
                     if wmo_sc == 'ct':
