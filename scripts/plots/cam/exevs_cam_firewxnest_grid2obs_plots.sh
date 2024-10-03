@@ -47,7 +47,7 @@ while [ $DATE -ge $ENDDATE ]; do
 
     if [ -e ${EVSINrrfs}.$DAY/evs.stats.rrfs_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
     then
-     cpreq ${EVSINrrfs}.$DAY/evs.stats.rrfs_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+     cp -v ${EVSINrrfs}.$DAY/evs.stats.rrfs_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
      
      sed "s/$model2/rrfs_${MODELNAME}/g" $STATDIR/evs.stats.rrfs_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat 
      sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
@@ -66,7 +66,7 @@ while [ $DATE -ge $ENDDATE ]; do
 	fi
 
 	if [ -e $COMIN/stats/$COMPONENT/rrfs.$DAY/evs.stats.rrfs.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
-	 cpreq $COMIN/stats/$COMPONENT/rrfs.$DAY/evs.stats.rrfs.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	 cp -v $COMIN/stats/$COMPONENT/rrfs.$DAY/evs.stats.rrfs.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 	fi
 
 	DATE=`$NDATE -24 $DATE`
