@@ -37,6 +37,7 @@ cd $DATA
 export NET=${NET:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-rtofs}
+export RUN=${RUN:-ocean}
 
 ###################################
 # Set EVS directories
