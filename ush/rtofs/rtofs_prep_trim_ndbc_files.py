@@ -22,7 +22,7 @@ DATA = os.environ['DATA']
 DCOMROOT = os.environ['DCOMROOT']
 SENDCOM = os.environ['SENDCOM']
 COMOUTprep = os.environ['COMOUTprep']
-RUN = os.environ['RUN']
+OBTYPE = os.environ['OBTYPE']
 MET_NDBC_STATIONS = os.environ['MET_NDBC_STATIONS']
 
 # Set up dates
@@ -51,9 +51,9 @@ for ndbc_input_file in glob.glob(os.path.join(DCOMROOT,
     if buoy_id not in buoy_with_loc_list:
         continue
     ndbc_tmp_file = os.path.join(DATA, f"rtofs.{INITDATE_dt:%Y%m%d}",
-                                 RUN, 'buoy', f"{buoy_id}.txt")
+                                 OBTYPE, 'buoy', f"{buoy_id}.txt")
     ndbc_output_file = os.path.join(COMOUTprep, f"rtofs.{INITDATE_dt:%Y%m%d}",
-                                    RUN, 'buoy', f"{buoy_id}.txt")
+                                    OBTYPE, 'buoy', f"{buoy_id}.txt")
     if not os.path.exists(ndbc_output_file):
         #print(f"Trimming {ndbc_input_file} for {INITDATE_dt:%Y%m%d}")
         #ndbc_input_file_df = pd.read_csv(
