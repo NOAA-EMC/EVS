@@ -36,8 +36,9 @@ else
   export vhr=00
 fi
 export NET=evs
-export RUN=smap
-export RUNupper=SMAP
+export RUN=ocean
+export OBTYPE=smap
+export OBTYPEupper=SMAP
 export VERIF_CASE=grid2grid
 export VAR=sss
 

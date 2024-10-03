@@ -36,8 +36,9 @@ else
   export vhr=00
 fi
 export NET=evs
-export RUN=smos
-export RUNupper=SMOS
+export RUN=ocean
+export OBTYPE=smos
+export OBTYPEupper=SMOS
 export VAR=sss
 export VERIF_CASE=grid2grid
 

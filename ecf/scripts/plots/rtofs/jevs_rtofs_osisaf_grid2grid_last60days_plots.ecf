@@ -36,7 +36,8 @@ else
   export vhr=00
 fi
 export NET=evs
-export RUN=osisaf
+export RUN=ocean
+export OBTYPE=osisaf
 export VERIF_CASE=grid2grid
 
 ############################################################
