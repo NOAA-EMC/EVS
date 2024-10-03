@@ -1,11 +1,11 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_rrfs_radar_stats.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script runs METplus to generate radar
 #                    verification statistics for RRFS.
 # History Log:
-# 04/28/2023: Initial script assembled by Logan Dawson
+# 04/28/2023: Initial script assembled
 ###############################################################################
 
 
