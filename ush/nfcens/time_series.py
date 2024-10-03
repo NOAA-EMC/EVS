@@ -1003,7 +1003,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             )
 
     # Saving
-    #models_savename = '_'.join([str(model) for model in model_list])
     models_savename = str(model_list[0])
     if len(date_hours) <= 8: 
         date_hours_savename = '_'.join([
