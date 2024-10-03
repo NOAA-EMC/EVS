@@ -36,7 +36,8 @@ cd $DATA
 export NET=${NET:-evs}
 export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-rtofs}
-export RUN=${RUN:-argo}
+export RUN=${RUN:-ocean}
+export OBTYPE=${OBTYPE:-argo}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 
 ##################################
@@ -80,8 +81,14 @@ fi
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
-export err=$?; err_chk
+if [ $RUN = ocean ]; then
+	$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${OBTYPE}_${VERIF_CASE}_${STEP}.sh
+	export err=$?; err_chk
+elif [ $RUN = headline ]; then
+        $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+        export err=$?; err_chk
+fi	
+
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
