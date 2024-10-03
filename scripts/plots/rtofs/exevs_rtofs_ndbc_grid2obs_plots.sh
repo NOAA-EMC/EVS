@@ -1,9 +1,15 @@
 #!/bin/bash
-###############################################################################
+######################################################################################################
 # Name of Script: exevs_rtofs_ndnc_grid2obs_plots
 # Purpose of Script: Create RTOFS NDBC plots for last 60 days
 # Author: Mallory Row (mallory.row@noaa.gov)
-###############################################################################
+# Edited by:  Samira Ardani (samira.ardani@noaa.gov) 
+# 09/2024: Variable names changed:
+# 1- $RUN=ocean for each step of EVSv2-RTOFS was defined to be consistent with other EVS components. 
+# 2- $RUN was defined in all j-jobs. 
+# 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
+# 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
+#####################################################################################################
 
 set -x
 
@@ -86,16 +92,22 @@ if [[ $log_file_count -ne 0 ]]; then
 	done
 fi
 
+if [ $OBTYPE = 'NDBC_STANDARD' ]; then
+	export obtype_lower=ndbc_standard
+	export obtype=ndbc
+
+fi
+
 # tar all plots together
-cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
-tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
+cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype_lower
+tar -cvf evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
-	if [ -s evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then
-		cp -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
+	if [ -s evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then
+		cp -v evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
 	fi
 fi
 
 if [ $SENDDBN = YES ] ; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar
 fi
