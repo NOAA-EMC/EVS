@@ -37,6 +37,7 @@ cd $DATA
 export NET=${NET:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-rtofs}
+export RUN=${RUN:-ocean}
 
 ###################################
 # Set EVS directories
@@ -57,7 +58,7 @@ export vhr=${vhr:-"00"}
 export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
-export VDATE=${VDATE:-$PDYm2}
+export INITDATE=${INITDATE:-$PDYm2}
 
 ##################################
 # define COMIN/COMOUT variables

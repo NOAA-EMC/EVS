@@ -829,15 +829,17 @@ def weekly_osi_saf_file(weekly_source_file_list, weekly_dest_file,
     weekly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                        +weekly_dest_file.rpartition('/')[2])
     # Prep weekly file
+    ncea_weekly_source_file_list = []
     for weekly_source_file in weekly_source_file_list:
-        if not os.path.exists(weekly_source_file):
+        if os.path.exists(weekly_source_file):
+            ncea_weekly_source_file_list.append(weekly_source_file)
+        else:
             print(f"WARNING: {weekly_source_file} does not exist, "
                   +"not using in weekly average file")
-            weekly_source_file_list.remove(weekly_source_file)
     # 80% file check from expected 7
-    if len(weekly_source_file_list) >= 6:
+    if len(ncea_weekly_source_file_list) >= 6:
         ncea_cmd_list = ['ncea']
-        for weekly_source_file in weekly_source_file_list:
+        for weekly_source_file in ncea_weekly_source_file_list:
             ncea_cmd_list.append(weekly_source_file)
         ncea_cmd_list.append('-o')
         ncea_cmd_list.append(weekly_prepped_file)
@@ -858,9 +860,10 @@ def weekly_osi_saf_file(weekly_source_file_list, weekly_dest_file,
             weekly_data.close()
     else:
         print("WARNING: Not enough files to make "+weekly_prepped_file
-              +": "+' '.join(weekly_source_file_list))
-    print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
-    os.symlink(weekly_prepped_file, weekly_dest_file)
+              +": "+' '.join(ncea_weekly_source_file_list))
+    if os.path.exists(weekly_prepped_file):
+        print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
+        os.symlink(weekly_prepped_file, weekly_dest_file)
 
 def monthly_osi_saf_file(monthly_source_file_list,
                          monthly_dest_file,
@@ -878,15 +881,17 @@ def monthly_osi_saf_file(monthly_source_file_list,
     monthly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                         +monthly_dest_file.rpartition('/')[2])
     # Prep monthly file
+    ncea_monthly_source_file_list = []
     for monthly_source_file in monthly_source_file_list:
-        if not os.path.exists(monthly_source_file):
+        if os.path.exists(monthly_source_file):
+            ncea_monthly_source_file_list.append(monthly_source_file)
+        else:
             print(f"WARNING: {monthly_source_file} does not exist, "
                   +"not using in monthly average file")
-            monthly_source_file_list.remove(monthly_source_file)
     # 80% file check from expected 30
-    if len(monthly_source_file_list) >= 24:
+    if len(ncea_monthly_source_file_list) >= 24:
         ncea_cmd_list = ['ncea']
-        for monthly_source_file in monthly_source_file_list:
+        for monthly_source_file in ncea_monthly_source_file_list:
             ncea_cmd_list.append(monthly_source_file)
         ncea_cmd_list.append('-o')
         ncea_cmd_list.append(monthly_prepped_file)
@@ -907,9 +912,10 @@ def monthly_osi_saf_file(monthly_source_file_list,
             monthly_data.close()
     else:
         print("WARNING: Not enough files to make "+monthly_prepped_file
-              +": "+' '.join(monthly_source_file_list))
-    print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
-    os.symlink(monthly_prepped_file, monthly_dest_file)
+              +": "+' '.join(ncea_monthly_source_file_list))
+    if os.path.exists(monthly_prepped_file):
+        print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
+        os.symlink(monthly_prepped_file, monthly_dest_file)
 
 def weekly_ghrsst_ospo_file(weekly_source_file_list, weekly_dest_file,
                             weekly_dates):
@@ -927,15 +933,17 @@ def weekly_ghrsst_ospo_file(weekly_source_file_list, weekly_dest_file,
     weekly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                        +weekly_dest_file.rpartition('/')[2])
     # Prep weekly file
+    ncea_weekly_source_file_list = []
     for weekly_source_file in weekly_source_file_list:
-        if not os.path.exists(weekly_source_file):
+        if os.path.exists(weekly_source_file):
+            ncea_weekly_source_file_list.append(weekly_source_file)
+        else:
             print(f"WARNING: {weekly_source_file} does not exist, "
                   +"not using in weekly average file")
-            weekly_source_file_list.remove(weekly_source_file)
     # 80% file check from expected 7
-    if len(weekly_source_file_list) >= 6:
+    if len(ncea_weekly_source_file_list) >= 6:
         ncea_cmd_list = ['ncea']
-        for weekly_source_file in weekly_source_file_list:
+        for weekly_source_file in ncea_weekly_source_file_list:
             ncea_cmd_list.append(weekly_source_file)
         ncea_cmd_list.append('-o')
         ncea_cmd_list.append(weekly_prepped_file)
@@ -961,9 +969,10 @@ def weekly_ghrsst_ospo_file(weekly_source_file_list, weekly_dest_file,
             weekly_data.close()
     else:
         print("WARNING: Not enough files to make "+weekly_prepped_file
-              +": "+' '.join(weekly_source_file_list))
-    print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
-    os.symlink(weekly_prepped_file, weekly_dest_file)
+              +": "+' '.join(ncea_weekly_source_file_list))
+    if os.path.exists(weekly_prepped_file):
+        print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
+        os.symlink(weekly_prepped_file, weekly_dest_file)
 
 def monthly_ghrsst_ospo_file(monthly_source_file_list,
                              monthly_dest_file,
@@ -981,15 +990,17 @@ def monthly_ghrsst_ospo_file(monthly_source_file_list,
     monthly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                         +monthly_dest_file.rpartition('/')[2])
     # Prep monthly file
+    ncea_monthly_source_file_list = []
     for monthly_source_file in monthly_source_file_list:
-        if not os.path.exists(monthly_source_file):
+        if os.path.exists(monthly_source_file):
+            ncea_monthly_source_file_list.append(monthly_source_file)
+        else:
             print(f"WARNING: {monthly_source_file} does not exist, "
                   +"not using in monthly average file")
-            monthly_source_file_list.remove(monthly_source_file)
     # 80% file check from expected 30
-    if len(monthly_source_file_list) >= 24:
+    if len(ncea_monthly_source_file_list) >= 24:
         ncea_cmd_list = ['ncea']
-        for monthly_source_file in monthly_source_file_list:
+        for monthly_source_file in ncea_monthly_source_file_list:
             ncea_cmd_list.append(monthly_source_file)
         ncea_cmd_list.append('-o')
         ncea_cmd_list.append(monthly_prepped_file)
@@ -1015,9 +1026,10 @@ def monthly_ghrsst_ospo_file(monthly_source_file_list,
             monthly_data.close()
     else:
         print("WARNING: Not enough files to make "+monthly_prepped_file
-              +": "+' '.join(monthly_source_file_list))
-    print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
-    os.symlink(monthly_prepped_file, monthly_dest_file)
+              +": "+' '.join(ncea_monthly_source_file_list))
+    if os.path.exists(monthly_prepped_file):
+        print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
+        os.symlink(monthly_prepped_file, monthly_dest_file)
 
 
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
@@ -4508,6 +4520,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
              fhr                    - forecast hour (string)
 
          Returns:
+             all_model_df           - dataframe of all the information
     """
     met_version_line_type_col_list = get_met_line_type_cols(
         logger, met_info_dict['root'], met_info_dict['version'], line_type
@@ -4702,6 +4715,72 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                         [model_stat_file_df_valid_date_idx_list[0]]\
                         [:]
                     )
+                # Do conversions if needed
+                #### K to F
+                if fcst_var_name in ['TMP_WEEKLYAVG', 'TMP_DAYS6_10AVG',
+                                     'TMP_WEEKS3_4AVG', 'TMP_ANOM_WEEKLYAVG',
+                                     'TMP_ANOM_DAYS6_10AVG',
+                                     'TMP_ANOM_WEEKS3_4AVG', 'SST_DAILYAVG',
+                                     'SST_WEEKLYAVG', 'SST_MONTHLYAVG'] \
+                        and fcst_var_level in ['Z0', 'Z2'] \
+                        and line_type in ['SL1L2', 'SAL1L2']:
+                    coef = np.divide(9., 5.)
+                    if fcst_var_name in ['TMP_ANOM_WEEKLYAVG',
+                                         'TMP_ANOM_DAYS6_10AVG',
+                                         'TMP_ANOM_WEEKS3_4AVG']:
+                        const = 0
+                    elif line_type == 'SAL1L2':
+                        const = 0
+                    else:
+                        const = ((-273.15)*9./5.)+32.
+                    convert = True
+                    units_old = 'K'
+                    units_new = 'F'
+                else:
+                    convert = False
+                if convert:
+                    if line_type == 'SL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FBAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OBAR'
+                        ]
+                        col1_list = ['FBAR', 'OBAR']
+                        col2_list = ['FOBAR', 'FFBAR', 'OOBAR']
+                    elif line_type == 'SAL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FABAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OABAR'
+                        ]
+                        col1_list = ['FABAR', 'OABAR']
+                        col2_list = ['FOABAR', 'FFABAR', 'OOABAR']
+                    for col in col1_list:
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef
+                             * model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col]) \
+                            + const
+                    for col in col2_list:
+                        if col in ['FOBAR', 'FOABAR']:
+                            const2 =  ((coef * const * fcst_avg_old)
+                                       + (coef * const * obs_avg_old))
+                        elif col in ['FFBAR', 'FFABAR']:
+                            const2 = 2 * (coef * const * fcst_avg_old)
+                        elif col in ['OOBAR', 'OOABAR']:
+                            const2 = 2 * (coef * const * obs_avg_old)
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef**2
+                             *model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col]) \
+                             + const2 + const**2
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FCST_UNITS'
+                    ] = units_new
             else:
                 logger.warning(f"{parsed_model_stat_file} does not exist")
         if model_num == 'model1':

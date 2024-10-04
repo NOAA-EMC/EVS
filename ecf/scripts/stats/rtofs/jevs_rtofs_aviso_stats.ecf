@@ -36,8 +36,9 @@ else
   export vhr=00
 fi
 export NET=evs
-export RUN=aviso
-export RUNupper=AVISO
+export RUN=ocean
+export OBTYPE=aviso
+export OBTYPEupper=AVISO
 export VERIF_CASE=grid2grid
 export VAR=ssh
 
