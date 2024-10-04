@@ -28,7 +28,6 @@ if [ ! -d  $COMOUT/restart/$past_days ] ; then
 fi
 
 export eval_period='TEST'
-#export past_days=0
 
 export init_end=$VDATE
 export valid_end=$VDATE
@@ -70,7 +69,6 @@ mkdir -p ${plot_dir}
 > run_all_poe.sh 
 for grid in $VX_MASK_LIST ; do
 
- #for score_type in performance_diagram  threshold_average time_series valid_hour_average lead_average ; do
  for score_type in performance_diagram ; do
 
   for var in VISsfc HGTcldceil ; do 
@@ -192,13 +190,13 @@ for grid in $VX_MASK_LIST ; do
 
     fi      
 
-    done #end of line_type
+    done 
 
-  done #end of var
+  done 
 
- done #end of score_type
+ done 
 
-done #end of grid 
+done  
 
 chmod +x run_all_poe.sh
 

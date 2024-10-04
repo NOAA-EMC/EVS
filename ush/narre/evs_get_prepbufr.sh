@@ -20,7 +20,7 @@ if [ $modnam = prepbufr ] ; then
  for vhr in 00  03  06  09  12  15  18   21  ; do
   if [ -s $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00 ] ; then 
    split_by_subset $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00
-   cat $WORK/ADPSFC $WORK/SFCSHP >> $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00
+   cat $WORK/ADPSFC $WORK/SFCSHP $WORK/MSONET>> $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00
    export bufrpath=$WORK/prepbufr.$VDATE
    for grid in G130 G242 ; do
      export vbeg=${vhr}
