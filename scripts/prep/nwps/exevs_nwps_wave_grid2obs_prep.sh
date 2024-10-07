@@ -53,7 +53,9 @@ for region in ${regions} ; do
 done
 
 wfos='aer afg ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfi mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
-CGs='CG1 CG2 CG3 CG4 CG5 CG6'
+#CG1 is the main domain. CG2-CG6 are the nested domains.
+#CGs='CG1 CG2 CG3 CG4 CG5 CG6'
+CGs='CG1'
 for wfo in $wfos; do
 	for CG in $CGs; do
 		for HH in ${HHs}; do
@@ -64,15 +66,15 @@ for wfo in $wfos; do
 				fcst=0
 				while (( $fcst <= 144 )); do
 					FCST=$(printf "%03d" "$fcst")
-	    				DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}_${INITDATE}_${HH}00_f${FCST}.grib2
-					ARCmodelfilename_fhr=${ARCmodel}/${wfo}_nwps_${CG}_${INITDATE}_${HH}00_f${FCST}.grib2
+	    				DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}.${INITDATE}.t${HH}z.f${FCST}.grib2
+					ARCmodelfilename_fhr=${ARCmodel}/${wfo}_nwps_${CG}.${INITDATE}.t${HH}z.f${FCST}.grib2
 					if [ ! -s $ARCmodelfilename_fhr ]; then
 						if [ $fcst = 0 ]; then
 							grib2_match_fhr=":surface:anl:"
 						else
 	    						grib2_match_fhr=":${fcst} hour fcst:"
 						fi
-						DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}_${INITDATE}_${HH}00_f${FCST}.grib2
+						DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}.${INITDATE}.t${HH}z.f${FCST}.grib2
 						wgrib2 $DATAfilename -match "$grib2_match_fhr" -grib $DATAfilename_fhr > /dev/null
 						export err=$?; err_chk
 						if [ $SENDCOM = YES ]; then
@@ -92,6 +94,7 @@ done
 
 mkdir -p ${DATA}/ndbc
 mkdir -p ${DATA}/ncfiles
+mkdir -p ${COMOUT}.${INITDATE}/ndbc/${VERIF_CASE}
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
 ndbc_txt_ncount=$(ls -l $DCOMINndbc/$INITDATE/validation_data/marine/buoy/*.txt |wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
@@ -104,7 +107,7 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
    	export err=$?; err_chk
 
 	tmp_ndbc_file=$DATA/ncfiles/ndbc.${INITDATE}.nc
-	output_ndbc_file=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/ndbc.${INITDATE}.nc
+	output_ndbc_file=${COMOUT}.${INITDATE}/ndbc/${VERIF_CASE}/ndbc.${INITDATE}.nc
 	if [ $SENDCOM = YES ]; then
 		if [ -s $tmp_ndbc_file ]; then
 			cp -v $tmp_ndbc_file $output_ndbc_file
