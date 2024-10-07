@@ -57,7 +57,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMINnwps=${COMINnwps:-$(compath.py ${envir}/com/${MODELNAME}/${nwps_ver})}
-export EVSINndbc=${COMIN}/prep/${COMPONENT}
+export EVSINndbcnc=${COMIN}/prep/${COMPONENT}
 export EVSINgdasnc=${COMIN}/prep/${COMPONENT}
 export ARCmodel=${COMIN}/prep/${COMPONENT}
 

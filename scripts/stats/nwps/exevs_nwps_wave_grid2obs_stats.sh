@@ -92,10 +92,10 @@ for wfo in ${WFO}; do
 	    			for OBSNAME in GDAS NDBC; do
 		    			export OBSNAME=${OBSNAME}
 		    			if [ "$OBSNAME" == "GDAS" ]; then
-			    			EVSINobsfilename=${COMIN}/${RUN}.${VDATE}/sfcshp/${VERIF_CASE}/gdas.SFCSHP.${VDATE}.nc
+			    			EVSINobsfilename=${EVSINgdasnc}/${RUN}.${VDATE}/sfcshp/${VERIF_CASE}/gdas.SFCSHP.${VDATE}.nc
 			    			DATAobsfilename=${DATA}/SFCSHP/gdas.SFCSHP.${VDATE}.nc
 		    			elif [ $OBSNAME == "NDBC" ]; then
-			    			EVSINobsfilename=${COMIN}/${RUN}.${VDATE}/ndbc/${VERIF_CASE}/ndbc.${VDATE}.nc
+			    			EVSINobsfilename=${EVSINndbcnc}/${RUN}.${VDATE}/ndbc/${VERIF_CASE}/ndbc.${VDATE}.nc
 			    			DATAobsfilename=${DATA}/ncfiles/ndbc.${VDATE}.nc
 					fi
 	    			done
