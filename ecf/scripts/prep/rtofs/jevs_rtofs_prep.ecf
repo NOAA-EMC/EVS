@@ -37,6 +37,7 @@ else
   export vhr=00
 fi
 export NET=evs
+export RUN=ocean
 
 ############################################################
 # Execute j-job

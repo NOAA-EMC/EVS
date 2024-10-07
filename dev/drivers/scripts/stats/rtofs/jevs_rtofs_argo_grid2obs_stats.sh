@@ -25,7 +25,8 @@ export SENDMAIL=YES
 export envir=prod
 export NET=evs
 export STEP=stats
-export RUN=argo
+export RUN=ocean
+export OBTYPE=argo
 export VERIF_CASE=grid2obs
 export COMPONENT=rtofs
 
