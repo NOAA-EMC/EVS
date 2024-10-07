@@ -38,8 +38,6 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 ############################################################
 export envir=prod
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/$evs_ver_2d
-export COMPATH=/lfs/h2/emc/ptmp/$USER/wafsx001/prod/com/$COMPONENT
-export DCOMROOT=/lfs/h1/ops/dev/dcom/test
 
 ############################################################
 # set up for email alerts of missing data
