@@ -39,7 +39,8 @@ mkdir -p ${DATA}/tmp
 mkdir -p ${DATA}/SFCSHP
 
 vhours='00 06 12 18'
-
+WFO='hgx'
+CG='CG1'
 lead_hours='0 24 48 72 96 120 144'
 
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
@@ -51,103 +52,102 @@ cd ${DATA}
 ############################################
 echo ' '
 echo 'Creating point_stat files'
-for vhr in ${vhours} ; do
-    vhr2=$(printf "%02d" "${vhr}")
-    if [ ${vhr} = '00' ] ; then
-       wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
-       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
-       perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
-       wdir_level_str="'{ name=\"WDIR\"; level=\"(0,*,*)\"; }'"
-    elif [ ${vhr} = '06' ] ; then
-       wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
-       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
-       perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
-       wdir_level_str="'{ name=\"WDIR\"; level=\"(2,*,*)\"; }'"
-    elif [ ${vhr} = '12' ] ; then
-       wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
-       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
-       perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
-       wdir_level_str="'{ name=\"WDIR\"; level=\"(4,*,*)\"; }'"
 
-    elif [ ${vhr} = '18' ] ; then
-       wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
-       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
-       perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
-       wdir_level_str="'{ name=\"WDIR\"; level=\"(6,*,*)\"; }'"
-    fi
+for wfo in ${WFO}; do
+	for cg in ${CG}; do 
+		for vhr in ${vhours} ; do
+    			vhr2=$(printf "%02d" "${vhr}")
+    			if [ ${vhr2} = '00' ] ; then
+       				wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
+       				htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
+       				perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
+       				wdir_level_str="'{ name=\"WDIR\"; level=\"(0,*,*)\"; }'"
+    			elif [ ${vhr2} = '06' ] ; then
+       				wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
+       				htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
+       				perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
+       				wdir_level_str="'{ name=\"WDIR\"; level=\"(2,*,*)\"; }'"
+    			elif [ ${vhr2} = '12' ] ; then
+				wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
+				htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
+				perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
+				wdir_level_str="'{ name=\"WDIR\"; level=\"(4,*,*)\"; }'"
+			elif [ ${vhr2} = '18' ] ; then
+       				wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
+       				htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
+       				perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
+       				wdir_level_str="'{ name=\"WDIR\"; level=\"(6,*,*)\"; }'"
+    			fi
 
-    for fhr in ${lead_hours} ; do
-         matchtime=$(date --date="${VDATE} ${vhr2} ${fhr} hours ago" +"%Y%m%d %H")
-         match_date=$(echo ${matchtime} | awk '{print $1}')
-         match_hr=$(echo ${matchtime} | awk '{print $2}')
-         match_fhr=$(printf "%02d" "${match_hr}")
-         flead=$(printf "%03d" "${fhr}")
-         flead2=$(printf "%02d" "${fhr}")
-
-         EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${wfo}_${MODELNAME}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2                  
-         DATAmodelfilename=$DATA/grib2/${WFO}_${MODNAM}_${CG}_${match_date}_${match_fhr}00_f${flead}.grib2
-         DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
-         COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
-	for OBSNAME in GDAS NDBC; do
-		if [ $OBSNAME = GDAS ]; then
-			EVSINobsfilename=${DATA}/SFCSHP/gdas.SFCSHP.${VDATE}${vhr2}.nc
-		elif [ $OBSNAME = NDBC ]; then
-			EVSINobsfilename=${DATA}/ncfiles/ndbc.${VDATE}${vhr2}.nc
-		fi
+    			for fhr in ${lead_hours} ; do
+	    			matchtime=$(date --date="${VDATE} ${vhr2} ${fhr} hours ago" +"%Y%m%d %H")
+	    			match_date=$(echo ${matchtime} | awk '{print $1}')
+	    			match_hr=$(echo ${matchtime} | awk '{print $2}')
+	    			match_fhr=$(printf "%02d" "${match_hr}")
+	    			flead=$(printf "%03d" "${fhr}")
+	    			flead2=$(printf "%02d" "${fhr}")
+	    
+	    			EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
+	    			DATAmodelfilename=$DATA/grib2/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
+	    			for OBSNAME in GDAS NDBC; do
+		    			export OBSNAME=${OBSNAME}
+		    			if [ "$OBSNAME" == "GDAS" ]; then
+			    			EVSINobsfilename=${COMIN}/${RUN}.${VDATE}/sfcshp/${VERIF_CASE}/gdas.SFCSHP.${VDATE}.nc
+			    			DATAobsfilename=${DATA}/SFCSHP/gdas.SFCSHP.${VDATE}.nc
+		    			elif [ $OBSNAME == "NDBC" ]; then
+			    			EVSINobsfilename=${COMIN}/${RUN}.${VDATE}/ndbc/${VERIF_CASE}/ndbc.${VDATE}.nc
+			    			DATAobsfilename=${DATA}/ncfiles/ndbc.${VDATE}.nc
+					fi
+	    			done
+				
+				DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+				COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+	    			
+				if [[ -s $COMOUTstatfilename ]]; then
+			    		echo "RESTART: Copy the files"
+					cp -v $COMOUTstatfilename $DATAstatfilename
+				else
+					if [[ ! -s $DATAobsfilename ]]; then
+						if [[ -s $EVSINobsfilename ]]; then
+							cp -v $EVSINobsfilename $DATAobsfilename
+						else
+							echo "DOES NOT EXIST $EVSINobsfilename"
+						fi
+					fi
+					if [[ -s $DATAobsfilename ]]; then
+			    			if [[ ! -s $DATAmodelfilename ]]; then
+				    			if [[ -s EVSINmodelfilename ]]; then
+				    				cp -v  $EVSINmodelfilename $DATAmodelfilename
+			    				else
+				    				echo "DOES NOT EXIST $EVSINobsfilename"
+			    				fi
+		    				fi
+			    			if [[ -s $DATAmodelfilename ]]; then
+				    			DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+				    			COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
+						    	echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+				       		    	echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+						    	echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+						    	echo "export wdir_level_str=${wdir_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+						    	echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+						    	echo "export lead=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+						    	echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstNWPS_obs${OBSNAME}_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+						    	echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
+						    	if [ $SENDCOM = YES ]; then
+							    	echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+							fi
+						    	chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+						    	echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+				    		fi
+			    		fi
+				fi
+			done
+		done
 	done
-
-
-       if [[ -s $COMOUTstatfilename ]]; then
-	       echo "RESTART"
-	       cp -v $COMOUTstatfilename $DATAstatfilename
-       else
-	       if [[ ! -s $DATAndbcfilename ]]; then
-		       if [[ -s $EVSINndbcfilename ]]; then
-			       cp -v $EVSINndbcfilename $DATAndbcfilename
-		       else
-			       echo "DOES NOT EXIST $EVSINndbcncfilename"
-		       fi
-	       fi
-   	       
-	       if [[ -s $DATAndbcfilename ]]; then
-		       if [[ ! -s $DATAmodelfilename ]]; then
-			       if [[ -s EVSINmodelfilename ]]; then
-				       cp -v  $EVSINmodelfilename $DATAmodelfilename 
-			       else
-				       echo "DOES NOT EXIST $EVSINndbcncfilename"
-			       fi
-		       fi
-		       if [[ -s $DATAmodelfilename ]]' then
-		       
-			       DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
-		       COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr}0000V.stat
-		       if [[ -s $COMOUTstatfilename ]]; then
-			       cp -v $COMOUTstatfilename $DATAstatfilename
-		       else
-			       if [[ -s $EVSIN_OBSNAME_file ]]; then
-				       echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
-				       echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
-				       echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
-				       echo "export wdir_level_str=${wdir_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
-				       echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
-				       echo "export lead=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
-				       echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstNWPS_obs${OBSNAME}_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
-				       echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr}_f${flead}_g2o.sh
-				       if [ $SENDCOM = YES ]; then
-					       echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
-				       fi
-				       chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
-				       echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
-			       fi
-		       fi
-	       done
-       fi
-   done
 done
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-#####################																					
+                                                                                                                                                                                             #########################																					
 # Run the command file
-#####################                                                                                                                                                                        
+#########################                                                                                                                                                                        
 if [[ -s ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh ]]; then
     if [ ${run_mpi} = 'yes' ] ; then
        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
