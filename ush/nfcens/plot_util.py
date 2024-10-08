@@ -1572,12 +1572,12 @@ def calculate_stat(logger, model_data, stat):
          stat_values_array = np.ma.array([stat_values_array_fbar,
                                           stat_values_array_obar])
       except ValueError as e:
-         logger.warning(e)
-         logger.warning("This is usually OK, and will happen if "
+         logger.info(e)
+         logger.info("This is usually OK, and will happen if "
                         + "event_equalization=False.") 
-         logger.warning("Setting stat_values_array to Nonetype.")
+         logger.info("Setting stat_values_array to Nonetype.")
          stat_values_array = None
-         logger.warning("Continuing ...")
+         logger.info("Continuing ...")
    else:
       try:
          if nindex == 1:
@@ -1605,12 +1605,12 @@ def calculate_stat(logger, model_data, stat):
                )
             )
       except ValueError as e:
-         logger.warning(e)
-         logger.warning("This is usually OK, and will happen if "
+         logger.info(e)
+         logger.info("This is usually OK, and will happen if "
                         + "event_equalization=False.") 
-         logger.warning("Setting stat_values_array to Nonetype.")
+         logger.info("Setting stat_values_array to Nonetype.")
          stat_values_array = None
-         logger.warning("Continuing ...")
+         logger.info("Continuing ...")
    return stat_values, stat_values_array, stat_plot_name
 
 def get_lead_avg_file(stat, input_filename, fcst_lead, output_base_dir):
