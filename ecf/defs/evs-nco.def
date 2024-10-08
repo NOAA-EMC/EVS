@@ -1061,6 +1061,7 @@ suite evs_nco
 	  family glwu
             task jevs_glwu_wave_grid2obs_prep
               time 14:30
+	  endfamily
 	  family nwps
             task jevs_nwps_wave_grid2obs_prep
               time 14:45
