@@ -79,13 +79,13 @@ for wfo in ${WFO}; do
        				wdir_level_str="'{ name=\"WDIR\"; level=\"(6,*,*)\"; }'"
     			fi
 
-    			for fhr in ${lead_hours} ; do
-	    			matchtime=$(date --date="${VDATE} ${vhr2} ${fhr} hours ago" +"%Y%m%d %H")
+    			for lead in ${lead_hours} ; do
+	    			matchtime=$(date --date="${VDATE} ${vhr2} ${lead} hours ago" +"%Y%m%d %H")
 	    			match_date=$(echo ${matchtime} | awk '{print $1}')
 	    			match_hr=$(echo ${matchtime} | awk '{print $2}')
 	    			match_fhr=$(printf "%02d" "${match_hr}")
-	    			flead=$(printf "%03d" "${fhr}")
-	    			flead2=$(printf "%02d" "${fhr}")
+	    			flead=$(printf "%03d" "${lead}")
+	    			flead2=$(printf "%02d" "${lead}")
 	    
 	    			EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
 	    			DATAmodelfilename=$DATA/grib2/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
