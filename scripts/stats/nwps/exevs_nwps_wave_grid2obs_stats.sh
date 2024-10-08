@@ -29,7 +29,7 @@ echo "Starting at : `date`"
 echo '-------------'
 echo ' '
 
-mkdir -p ${DATA}/grib2
+mkdir -p ${DATA}/gribs
 mkdir -p ${DATA}/ncfiles
 mkdir -p ${DATA}/all_stats
 mkdir -p ${DATA}/jobs
@@ -88,7 +88,7 @@ for wfo in ${WFO}; do
 	    			flead2=$(printf "%02d" "${lead}")
 	    
 	    			EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
-	    			DATAmodelfilename=$DATA/grib2/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
+	    			DATAmodelfilename=$DATA/gribs/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
 	    			for OBSNAME in GDAS NDBC; do
 		    			export OBSNAME=${OBSNAME}
 		    			if [ "$OBSNAME" == "GDAS" ]; then
