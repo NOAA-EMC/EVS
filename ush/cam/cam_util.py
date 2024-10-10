@@ -833,8 +833,8 @@ def get_nohrsc_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[])
             use_vh = use_vdate.strftime('%H')
             template = os.path.join(
                 indir, 
-                'nohrsc.{VDATE}',
-                'nohrsc.t{VHOUR}z.' + f'{obs_acc}h.hrap.{nest}.gb2'
+                '{VDATE}', 'wgrbbul', 'nohrsc_snowfall',
+                f'sfav2_CONUS_{int(obs_acc)}h_' + '{VDATE}{VHOUR}_grid184.grb2'
             )
             nohrsc_paths.append(fname_constructor(
                 template, VDATE=use_vd, VHOUR=use_vh
