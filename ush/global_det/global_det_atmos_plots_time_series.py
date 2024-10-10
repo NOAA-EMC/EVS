@@ -387,27 +387,6 @@ class TimeSeries:
                         obar_model_num_avg_label = format(
                             round(obar_model_num_avg, 3), '.3f'
                         )
-                ############################################################
-                # For FBAR stats, do the following unit conversions:
-                #     TMP/Z2: K to F
-                #     TSOIL/Z0.1-0: K to F
-                #     UGRD/Z10: m/s to kt
-                #     VGRD/Z10: m/s to kt
-                if self.plot_info_dict['stat'] == 'FBAR':
-                    if self.plot_info_dict['fcst_var_name'] \
-                            in ['TMP', 'TSOIL'] \
-                            and self.plot_info_dict['fcst_var_level'] \
-                            in ['Z2', 'Z0.1-0']:
-                        masked_model_num_data = (
-                            (((masked_model_num_data-273.15)*9)/5)+32
-                        )
-                    elif self.plot_info_dict['fcst_var_name'] \
-                            in ['UGRD', 'VGRD'] \
-                            and self.plot_info_dict['fcst_var_level'] == 'Z10':
-                        masked_model_num_data = (
-                            masked_model_num_data * 1.94384449412
-                        )
-                ############################################################
                 ax.plot_date(
                     np.ma.compressed(masked_plot_dates),
                     np.ma.compressed(masked_model_num_data),

@@ -306,6 +306,10 @@ class ThresholdAverage:
                                        figsize=(plot_specs_ta.fig_size[0],
                                                 plot_specs_ta.fig_size[1]),
                                        sharex=True)
+        if self.plot_info_dict['fcst_var_name'] == 'DPT' \
+                and self.plot_info_dict['fcst_var_level'] == 'Z2':
+            plot_title = plot_title.replace('2 meter Dewpoint (K)',
+                                            '2 meter Dewpoint (F)')
         fig.suptitle(plot_title)
         ax1.grid(True)
         ax1.set_ylabel(stat_plot_name)
