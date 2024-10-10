@@ -165,7 +165,7 @@ if [ $gather = yes ] ; then
 			fi
 		fi
 		if [ $SENDDBN = YES ]; then
-			$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
+			$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
 		fi
 
 	done
