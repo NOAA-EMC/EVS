@@ -18,7 +18,7 @@ import netCDF4 as nc
 
 
 # Read in environment variables to use
-VDATE = os.environ['VDATE']
+INITDATE = os.environ['INITDATE']
 DATA = os.environ['DATA']
 DCOMROOT = os.environ['DCOMROOT']
 SENDCOM = os.environ['SENDCOM']
@@ -29,23 +29,23 @@ COMPONENT = os. environ ['COMPONENT']
 VERIF_CASE = os.environ ['VERIF_CASE']
 
 # Set up date/time
-VDATE_YMD = datetime.datetime.strptime(VDATE, '%Y%m%d')
-VDATE_Y =  '{:04d}'.format(VDATE_YMD.year)
-VDATE_M =  '{:02d}'.format(VDATE_YMD.month)
-VDATE_D =  '{:02d}'.format(VDATE_YMD.day)
+INITDATE_YMD = datetime.datetime.strptime(INITDATE, '%Y%m%d')
+INITDATE_Y =  '{:04d}'.format(INITDATE_YMD.year)
+INITDATE_M =  '{:02d}'.format(INITDATE_YMD.month)
+INITDATE_D =  '{:02d}'.format(INITDATE_YMD.day)
 
-PDATE= VDATE_YMD-datetime.timedelta(days=1)
+PDATE= INITDATE_YMD-datetime.timedelta(days=1)
 PDATE_YMD =  datetime.datetime.strftime(PDATE, '%Y%m%d')
 
 all_ndbc = os.path.join(DCOMROOT,
-                        f'{VDATE_YMD:%Y%m%d}','validation_data','marine','buoy')
+                        f'{INITDATE_YMD:%Y%m%d}','validation_data','marine','buoy')
 fixed_buoys = os.path.join (FIXevs,'ndbc_stations','ndbc_stations.xml')
 
 ndbc_for_nwps = os.path.join (DATA,'ndbc')
 if not os.path.exists(ndbc_for_nwps):
     os.mkdir(ndbc_for_nwps)
 
-output_nwps_ndbc = os.path.join(f'{COMOUT}.{VDATE}','ndbc')
+output_nwps_ndbc = os.path.join(f'{COMOUT}.{INITDATE}','ndbc')
 if not os.path.exists(output_nwps_ndbc):
     os.mkdir(output_nwps_ndbc)
 
@@ -83,7 +83,7 @@ for ndbc_file in all_ndbc_files:
 
 
 #############################################################################
-# Modify the copied .txt files to include the data for that particular VDATE:
+# Modify the copied .txt files to include the data for that particular INITDATE:
 # Altered from: Mallory Row's script for EVS-global_det component.
 ##############################################################################
 
@@ -96,7 +96,7 @@ tmp_nwps_ndbc_files = glob.glob(os.path.join(ndbc_for_nwps,"*.txt"))
 for tmp_buoy_file in tmp_nwps_ndbc_files:
     tmp_id = tmp_buoy_file.rpartition('/')[2].partition('.')[0]
     dfff = pd.read_csv(tmp_buoy_file, sep=" ",skiprows=2, skipinitialspace=True,keep_default_na=False, dtype='str', header=None)
-    new_df = dfff.loc[(dfff[0] == VDATE_Y)& (dfff[1] == VDATE_M)& (dfff[2] == VDATE_D)& (dfff[4] == '00')]
+    new_df = dfff.loc[(dfff[0] == INITDATE_Y)& (dfff[1] == INITDATE_M)& (dfff[2] == INITDATE_D)& (dfff[4] == '00')]
     tmp_nwps_ndbc = os.path.join (ndbc_for_nwps,f'{tmp_id}_edited.txt')
     tmp_nwps_ndbc_final = open (tmp_nwps_ndbc, 'w')
     tmp_nwps_ndbc_final.write(ndbc_header1)
