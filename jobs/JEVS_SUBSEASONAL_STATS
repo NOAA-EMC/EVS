@@ -8,16 +8,24 @@ set -x
 export PS4='$SECONDS + ' 
 date
 
-export machine="WCOSS2"
-
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
-cd $DATA 
+cd $DATA
+
+####################################
+### Define NET/RUN variables
+######################################
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-subseasonal}
+export RUN=${RUN:-atmos}
+export machine=${machine:-WCOSS2}
 
 ################################################################
+# Set data directives
 # SENDCOM=YES--Copy files from TMPDIR to $COMOUT
 # SENDECF=YES--Flag events on ecflow
 # SENDDBN=YES--Issue DBNet Client Calls
@@ -26,8 +34,9 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}       # need to set to NO for testing
 export SENDECF=${SENDECF:-YES}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
+
 ################################################################
-# Specify Execution Areas
+# Set EVS directories
 ################################################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
@@ -42,15 +51,15 @@ if [ $MODELNAME = cfs ] ; then
     export members="4"
 fi
 
-
+################################################################
 # Run setpdy and initialize PDY variables
+################################################################
 export vhr=${vhr:-00}
 export cycle=${cycle:-t${vhr}z}
 setpdy.sh 40
 . ./PDY
 
 export VDATE=${VDATE:-$PDYm2}
-
 
 #################################################
 # Set up the INPUT and OUTPUT directories
@@ -63,11 +72,8 @@ export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
 
 mkdir -p $COMOUT $COMOUTfinal
 
-echo Actual output starts here
-
-
 #######################################################################
-# Execute the script.
+# Execute the script
 #######################################################################
 $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk

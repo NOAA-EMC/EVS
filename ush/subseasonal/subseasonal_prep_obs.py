@@ -26,7 +26,7 @@ DCOMINecmwf = os.environ['DCOMINecmwf']
 DCOMINosi = os.environ['DCOMINosi']
 DCOMINghrsst = os.environ['DCOMINghrsst']
 DCOMINumd = os.environ['DCOMINumd']
-COMINnam = os.environ['COMINnam']
+COMINobsproc = os.environ['COMINobsproc']
 COMINccpa = os.environ['COMINccpa']
 COMOUT = os.environ['COMOUT']
 SENDCOM = os.environ['SENDCOM']
@@ -162,7 +162,7 @@ for OBS in OBSNAME:
             offset_CDATE_dt = (
                 CDATE_dt + datetime.timedelta(hours=int(offset_hr))
             )
-            prod_file_format = os.path.join(COMINnam, 'nam.'
+            prod_file_format = os.path.join(COMINobsproc, 'nam.'
                                             +'{init?fmt=%Y%m%d}',
                                             'nam.t{init?fmt=%2H}z.'
                                             +'prepbufr.tm'+offset_hr)
