@@ -242,6 +242,49 @@ def convert_grib2_grib2(grib2_fileA, grib2_fileB):
     os.system(cnvgrib+' -g22 '+grib2_fileA+' '
               +grib2_fileB+' > /dev/null 2>&1')
 
+def check_grib1_file_corrupt(grib1_file):
+    """! Checks if GRIB1 file is corrupt
+
+         Args:
+             grib1_file - string of the path to
+                          the GRIB1 file to
+                          check
+         Returns:
+             file_is_corrupt - True means file is corrupt
+                               False means file is not corrupt
+    """
+    WGRIB = os.environ['WGRIB']
+    chk_corrupt = subprocess.run(
+        f"{WGRIB} {grib1_file}  1> /dev/null 2>&1", shell=True
+    )
+    if chk_corrupt.returncode != 0:
+        print(f"WARNING: {grib1_file} is corrupt")
+        file_is_corrupt = True
+    else:
+        file_is_corrupt = False
+    return file_is_corrupt
+
+def check_netcdf_file_corrupt(netcdf_file):
+    """! Checks if netCDF file is corrupt
+
+         Args:
+             netcdf_file - string of the path to
+                           the netCDF file to
+                           check
+         Returns:
+             file_is_corrupt - True means file is corrupt
+                               False means file is not corrupt
+    """
+    chk_corrupt = subprocess.run(
+        f"ncks -H {netcdf_file}  1> /dev/null 2>&1", shell=True
+    )
+    if chk_corrupt.returncode != 0:
+        print(f"WARNING: {netcdf_file} is corrupt")
+        file_is_corrupt = True
+    else:
+        file_is_corrupt = False
+    return file_is_corrupt
+
 def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
                   fhr_list):
     """! Creates a list of dictionaries containing information
@@ -711,12 +754,13 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
         hem_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                         +hem_dest_file.rpartition('/')[2])
         if check_file_exists_size(hem_source_file):
-            run_shell_command(
-                [os.path.join(CDO_ROOT, 'bin', 'cdo'),
-                'remapbil,'
-                +os.path.join(FIXevs, 'cdo_grids', 'G003.grid'),
-                hem_source_file, hem_prepped_file]
-            )
+            if not check_netcdf_file_corrupt(hem_source_file):
+                run_shell_command(
+                    [os.path.join(CDO_ROOT, 'bin', 'cdo'),
+                    'remapbil,'
+                    +os.path.join(FIXevs, 'cdo_grids', 'G003.grid'),
+                    hem_source_file, hem_prepped_file]
+                )
         else:
             log_missing_file_obs(log_missing_file, hem_source_file,
                                  f"OSI-SAF {hem.upper()}", date_dt)
@@ -799,7 +843,8 @@ def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
                                       +daily_source_file.rpartition('/')[2])
     # Prep daily file
     if check_file_exists_size(daily_source_file):
-        copy_file(daily_source_file, daily_prepped_file)
+        if not check_netcdf_file_corrupt(daily_source_file):
+            copy_file(daily_source_file, daily_prepped_file)
     else:
         log_missing_file_obs(log_missing_file, daily_source_file,
                                'GHRSST OSPO', date_dt)
