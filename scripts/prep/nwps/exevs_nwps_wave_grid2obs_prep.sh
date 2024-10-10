@@ -114,11 +114,11 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 		fi
 	fi
 else
-	echo "WARNING: No NDBC data was available for valid date $VDATE."
+	echo "WARNING: No NDBC data was available for valid date ${INITDATE}."
 	if [ $SENDMAIL = YES ]; then
 		export subject="NDBC Data Missing for EVS ${COMPONENT}"
-		echo "WARNING: No NDBC data was available for valid date $VDATE." > mailmsg
-		echo "Missing files are located at $COMINobs/$VDATE/validation_data/marine/buoy/." >> mailmsg
+		echo "WARNING: No NDBC data was available for valid date ${INITDATE}." > mailmsg
+		echo "Missing files are located at $COMINobs/${INITDATE}/validation_data/marine/buoy/." >> mailmsg
 		echo "Job ID: $jobid" >> mailmsg
 		cat mailmsg | mail -s "$subject" $MAILTO
 	fi

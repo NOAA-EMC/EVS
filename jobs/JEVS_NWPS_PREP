@@ -21,7 +21,6 @@ export cycle=${cycle:-t00z}
 setpdy.sh 20
 . ./PDY
 export INITDATE=${INITDATE:-${PDYm1}}
-export VDATE=${VDATE:-${PDYm1}}
 export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ####################################
