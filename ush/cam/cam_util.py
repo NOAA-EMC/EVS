@@ -797,6 +797,50 @@ def get_mrms_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
             ))
     return np.concatenate((paths, np.unique(mrms_paths)))
 
+# Create a list of nohrsc file paths
+def get_nohrsc_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
+    '''
+        indir..... - (str) Input directory for nohrsc file data
+        vdates.... - (datetime object) List of datetimes used to fill templates
+        obs_acc... - (str) snow accumulation interval of nohrsc files in hours
+        target_acc - (str) target snow accumulation interval of combined
+                     nohrsc files in hours
+        nest...... - (str) domain used to find nohrsc files
+        paths..... - (list of str) list of paths to append the nohrsc paths to 
+                     Default is empty.
+    '''
+    nohrsc_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if int(target_acc) == 6:
+            if int(obs_acc) == 6:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 24:
+            if int(obs_acc) == 6:
+                offsets = [0, 6, 12, 18]
+            elif int(obs_acc) == 24:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        else:
+            raise ValueError(f"target_acc is not valid: \"{target_acc}\"")
+        for offset in offsets:
+            use_vdate = vdate - td(hours=int(offset))
+            use_vd = use_vdate.strftime('%Y%m%d')
+            use_vh = use_vdate.strftime('%H')
+            template = os.path.join(
+                indir, 
+                'nohrsc.{VDATE}',
+                'nohrsc.t{VHOUR}z.' + f'{obs_acc}h.hrap.{nest}.gb2'
+            )
+            nohrsc_paths.append(fname_constructor(
+                template, VDATE=use_vd, VHOUR=use_vh
+            ))
+    return np.concatenate((paths, np.unique(nohrsc_paths)))
+
 # Return a list of missing ccpa files needed to create "target_acc"
 def check_ccpa_files(indir, vdate, obs_acc, target_acc, nest):
     '''
@@ -821,6 +865,19 @@ def check_mrms_files(indir, vdate, obs_acc, target_acc, nest):
         nest...... - (str) domain used to find mrms files
     '''
     paths = get_mrms_qpe_templates(indir, [vdate], obs_acc, target_acc, nest)
+    return [path for path in paths if not os.path.exists(path)]
+
+# Return a list of missing nohrsc files needed to create "target_acc"
+def check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        obs_acc... - (str) precip accumulation interval of nohrsc files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     nohrsc files in hours
+        nest...... - (str) domain used to find nohrsc files
+    '''
+    paths = get_nohrsc_qpe_templates(indir, [vdate], obs_acc, target_acc, nest)
     return [path for path in paths if not os.path.exists(path)]
 
 # Return the obs accumulation interval needed to create target_acc, based on
@@ -936,6 +993,41 @@ def get_mrms_accums(indir, vdate, target_acc, nest):
         raise ValueError(f"Invalid target_acc: \"{target_acc}\"")
 
 # Return the obs accumulation interval needed to create target_acc, based on
+# available nohrsc files
+def get_nohrsc_accums(indir, vdate, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        target_acc - (str) target precip accumulation interval of combined
+                     nohrsc files in hours
+        nest...... - (str) domain used to find nohrsc files
+    '''
+    if int(target_acc) == 6:
+        # check 6-h obs
+        obs_acc = "06"
+        missing_nohrsc = check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_nohrsc:
+            return None
+        else:
+            return obs_acc
+    elif int(target_acc) == 24:
+        # check 24-h obs
+        obs_acc = "24"
+        missing_nohrsc = check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_nohrsc:
+            # check 6-h obs
+            obs_acc = "06"
+            missing_nohrsc = check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_nohrsc:
+                return None
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    else:
+        raise ValueError(f"Invalid target_acc: \"{target_acc}\"")
+
+# Return the obs accumulation interval needed to create target_acc, based on
 # available input files
 def get_obs_accums(indir, vdate, target_acc, nest, obsname):
     '''
@@ -950,5 +1042,7 @@ def get_obs_accums(indir, vdate, target_acc, nest, obsname):
         return get_mrms_accums(indir, vdate, target_acc, nest)
     elif obsname == "ccpa":
         return get_ccpa_accums(indir, vdate, target_acc, nest)
+    elif obsname == "nohrsc":
+        return get_nohrsc_accums(indir, vdate, target_acc, nest)
     else:
         raise ValueError(f"Invalid obsname: \"{obsname}\"")
