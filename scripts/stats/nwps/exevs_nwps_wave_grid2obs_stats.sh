@@ -150,6 +150,8 @@ if [[ -s ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh ]]; then
     if [ ${run_mpi} = 'yes' ] ; then
        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
        mpiexec -np 36 -ppn 36 --cpu-bind verbose,core cfp ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+       export err=$?; err_chk
+
     else
 	echo "not running mpiexec"
 	sh ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
@@ -167,6 +169,8 @@ if [ $gather = yes ] ; then
 	   mkdir -p ${DATA}/stats
            # Use StatAnalysis to gather the small stat files into one file
            run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNWPS_obs$OBSNAME.conf
+	   export err=$?; err_chk
+
 	   if [ $SENDCOM = YES ]; then
 		   if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
 			   cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
