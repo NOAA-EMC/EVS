@@ -159,17 +159,23 @@ if [ $gather = yes ] ; then
 			cd ${DATA}/sfcshp
 			tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*.png
 		fi
+		if [ $SENDCOM = YES ]; then
+			if [ -s evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ]; then
+				cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/.
+			fi
+		fi
+		if [ $SENDDBN = YES ]; then
+			$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
+		fi
+
 	done
-	cpreq evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
+	
 else  
 	echo "not copying the plots"
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 
-if [ $SENDDBN = YES ]; then
-		$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
-fi
 
 #########################################
 # copy log files into logs and cat them

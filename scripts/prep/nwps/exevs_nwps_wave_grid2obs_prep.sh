@@ -77,8 +77,13 @@ for wfo in $wfos; do
 						DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}.${INITDATE}.t${HH}z.f${FCST}.grib2
 						wgrib2 $DATAfilename -match "$grib2_match_fhr" -grib $DATAfilename_fhr > /dev/null
 						export err=$?; err_chk
-						if [ $SENDCOM = YES ]; then
-							cp -v $DATAfilename_fhr ${ARCmodel}/.
+						
+						if [ -s $DATAfilename_fhr ]; then
+							if [ $SENDCOM = YES ]; then
+								cp -v $DATAfilename_fhr ${ARCmodel}/.
+							fi
+						else
+							echo "WARNING: No NWPS Forecast Data was available for ${INITDATE}${HH}"
 						fi
 					fi
 					fcst=$(( $fcst+ 24 ))
