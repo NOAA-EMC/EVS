@@ -663,23 +663,30 @@ def preprocess_prepbufr(indir, fname, workdir, outdir, subsets):
     else:
         wd = os.getcwd()
         os.chdir(workdir)
-        run_shell_command(
-            [
-                os.path.join(os.environ['bufr_ROOT'], 'bin', 'split_by_subset'), 
-                os.path.join(indir, fname)
-            ]
-        )
-        if all([os.path.isfile(subset) for subset in subsets]):
+        if os.path.isfile(os.path.join(indir, fname)):
             run_shell_command(
-                np.concatenate((
-                    ['cat'], subsets, ['>>', os.path.join(outdir, fname)]
-                ))
+                [
+                    os.path.join(os.environ['bufr_ROOT'], 'bin', 'split_by_subset'), 
+                    os.path.join(indir, fname)
+                ]
             )
+            if all([os.path.isfile(subset) for subset in subsets]):
+                run_shell_command(
+                    np.concatenate((
+                        ['cat'], subsets, ['>>', os.path.join(outdir, fname)]
+                    ))
+                )
+            else:
+                raise FileNotFoundError(
+                    f"The following prepbufr subsets do not exist in {workdir}: " 
+                    + ', '.join([subset for subset in subsets if not os.path.isfile(subset)])
+                    + ". Cannot concatenate subsets."
+                )
         else:
-            raise FileNotFoundError(
-                f"The following prepbufr subsets do not exist in {workdir}: " 
-                + ', '.join([subset for subset in subsets if not os.path.isfile(subset)])
-                + ". Cannot concatenate subsets."
+            print(
+                "WARNING: The following file does not exist: "
+                + f"{os.path.join(indir, fname)}."
+                + " Skipping split by subset."
             )
         os.chdir(wd)
 
