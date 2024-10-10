@@ -640,13 +640,13 @@ if VERIF_CASE == 'snowfall':
                         + f'The following StatAnalysis process will not run:'
                     )
                     job_cmd_list.append(
-                        f'{metplus_launcher} -c {machine_conf} '
+                        f'#{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
                         + f'StatAnalysis_fcst{COMPONENT.upper()}'
                         + f'_GatherByCycle.conf'
                     )
                     job_cmd_list.append(
-                        f'python -c '
+                        f'#python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
@@ -661,7 +661,7 @@ if VERIF_CASE == 'snowfall':
                         + ')\"'
                     )
                     job_cmd_list.append(
-                        "python -c "
+                        "#python -c "
                         + f"'import cam_util; cam_util.mark_job_completed("
                         + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
                         + f"\"job{njob}\", job_type=\"{job_type}\")'"
