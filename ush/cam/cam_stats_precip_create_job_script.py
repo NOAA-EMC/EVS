@@ -493,7 +493,7 @@ if VERIF_CASE == 'precip':
                         + f"\"job{njob}\", job_type=\"{job_type}\")'"
                     )
                 else:
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                             f'#No input stat files were produced for gather.  '
                             + f'The following StatAnalysis process will not run:'
                     )
@@ -580,7 +580,7 @@ if VERIF_CASE == 'precip':
                         + f"\"job{njob}\", job_type=\"{job_type}\")'"
                     )
                 else:
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                             f'#No input stat files were produced for gather2.  '
                             + f'The following StatAnalysis process will not run:'
                     )
@@ -620,7 +620,7 @@ if VERIF_CASE == 'precip':
                     + f'_GatherByDay.conf'
                 )
             else:
-                job_cmd_list_iterative.append(
+                job_cmd_list.append(
                         f'#No input stat files were produced for gather3.  '
                         + f'The following StatAnalysis process will not run:'
                 )
