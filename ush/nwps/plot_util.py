@@ -1215,7 +1215,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
                ffbar_est_samp + oobar_est_samp - 2*fobar_est_samp
             )
             stat_values = 100 * stat_values_rmse / obar_est_mean
-            stat_values = stat_values[stat_values<=500]  #get rid of infinite values
+            stat_values = stat_values[stat_values<=200]  #get rid of infinite values
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
@@ -1517,7 +1517,7 @@ def calculate_stat(logger, model_data, stat):
    elif stat == 'si':
        if line_type == 'SL1L2':
            stat_values = 100*(np.sqrt(ffbar + oobar - 2*fobar))/obar
-           stat_values = stat_values[stat_values<=500]  #get rid of infinite values
+           stat_values = stat_values[stat_values<=200]  #get rid of infinite values
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
@@ -1572,12 +1572,12 @@ def calculate_stat(logger, model_data, stat):
          stat_values_array = np.ma.array([stat_values_array_fbar,
                                           stat_values_array_obar])
       except ValueError as e:
-         logger.info(e)
-         logger.info("This is usually OK, and will happen if "
+         logger.warning(e)
+         logger.warning("This is usually OK, and will happen if "
                         + "event_equalization=False.") 
-         logger.info("Setting stat_values_array to Nonetype.")
+         logger.warning("Setting stat_values_array to Nonetype.")
          stat_values_array = None
-         logger.info("Continuing ...")
+         logger.warning("Continuing ...")
    else:
       try:
          if nindex == 1:
@@ -1605,12 +1605,12 @@ def calculate_stat(logger, model_data, stat):
                )
             )
       except ValueError as e:
-         logger.info(e)
-         logger.info("This is usually OK, and will happen if "
+         logger.warning(e)
+         logger.warning("This is usually OK, and will happen if "
                         + "event_equalization=False.") 
-         logger.info("Setting stat_values_array to Nonetype.")
+         logger.warning("Setting stat_values_array to Nonetype.")
          stat_values_array = None
-         logger.info("Continuing ...")
+         logger.warning("Continuing ...")
    return stat_values, stat_values_array, stat_plot_name
 
 def get_lead_avg_file(stat, input_filename, fcst_lead, output_base_dir):

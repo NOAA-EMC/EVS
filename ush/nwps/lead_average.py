@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 ###############################################################################
 #
-# Name:          time_series.py
-# Developed:     Oct. 14, 2021 by Marcel Caron 
-# Modified:      Nov. 02, 2022 by Marcel Caron
-#                Nov. 14, 2022 by L. Gwen Chen (lichuan.chen@noaa.gov)
+# Name:          lead_average.py
+# Developed:     Nov. 18, 2021 by Marcel Caron 
+# Modified:      Nov. 02, 2022 by Marcel Caron             
+#                Nov. 16, 2022 by L. Gwen Chen (lichuan.chen@noaa.gov)
 # Title:         Line plot of verification metric as a function of 
-#                valid or init time
+#                lead time
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
-#                varying by valid or init time, which represents the x-axis. 
+#                varying by lead time, which represents the x-axis. 
 #                Line colors and styles are unique for each model, and several
 #                models can be plotted at once.
 #
@@ -17,6 +17,7 @@
 import os
 import sys
 import numpy as np
+import math
 import pandas as pd
 import logging
 from functools import reduce
@@ -27,7 +28,6 @@ import matplotlib.colors as colors
 import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
-
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
@@ -52,35 +52,29 @@ reference = Reference()
 # =================== FUNCTIONS =========================
 
 
-def daterange(start: datetime, end: datetime, td: td) -> datetime:
-    curr = start
-    while curr <= end:
-        yield curr
-        curr+=td
-
-def plot_time_series(df: pd.DataFrame, logger: logging.Logger, 
-                     date_range: tuple, model_list: list, num: int = 0, 
-                     level: str = '500', flead='all', thresh: list = ['<20'], 
-                     metric1_name: str = 'BCRMSE', metric2_name: str = 'RMSE',
-                     y_min_limit: float = -10., y_max_limit: float = 10., 
-                     y_lim_lock: bool = False,
-                     xlabel: str = 'Valid Date', date_type: str = 'VALID', 
-                     date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
-                     save_dir: str = '.', fix_dir: str = '.',
-                     requested_var: str = 'HGT', 
-                     line_type: str = 'SL1L2', dpi: int = 150, 
-                     confidence_intervals: bool = False,
-                     bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS',
-                     ci_lev: float = .95, bs_min_samp: int = 30,
-                     eval_period: str = 'TEST', save_header='', 
-                     display_averages: bool = True, 
-                     keep_shared_events_only: bool = False,
-                     plot_group: str = 'sfc_upper', obtype: str = '',
-                     sample_equalization: bool = True,
-                     plot_logo_left: bool = False,
-                     plot_logo_right: bool = False, path_logo_left: str = '.',
-                     path_logo_right: str = '.', zoom_logo_left: float = 1.,
-                     zoom_logo_right: float = 1.):
+def plot_lead_average(df: pd.DataFrame, logger: logging.Logger, 
+                      date_range: tuple, model_list: list, num: int = 0, 
+                      level: str = '500', flead='all', thresh: list = ['<20'], 
+                      metric1_name: str = 'BCRMSE', metric2_name: str = 'ME', 
+                      y_min_limit: float = -10., y_max_limit: float = 10., 
+                      y_lim_lock: bool = False, x_min_limit: float = -9999.,
+                      x_max_limit: float = 9999., x_lim_lock: bool = False,
+                      xlabel: str = 'Forecast Lead Hour', 
+                      date_type: str = 'VALID', date_hours: list = [0,6,12,18], 
+                      verif_type: str = 'pres', save_dir: str = '.',
+                      fix_dir: str = '.',
+                      requested_var: str = 'HGT', line_type: str = 'SL1L2',
+                      dpi: int = 100, confidence_intervals: bool = False,
+                      bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS', 
+                      ci_lev: float = .95, bs_min_samp: int = 30, 
+                      eval_period: str = 'TEST', save_header: str = '', 
+                      display_averages: bool = True, 
+                      plot_group: str = 'sfc_upper', obtype: str = '',
+                      sample_equalization: bool = True, run: str = '',
+                      plot_logo_left: bool = False, 
+                      plot_logo_right: bool = False, path_logo_left: str = '.',
+                      path_logo_right: str = '.', zoom_logo_left: float = 1.,
+                      zoom_logo_right: float = 1.):
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
@@ -103,7 +97,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-
     # filter by forecast lead times
     if isinstance(flead, list):
         if len(flead) <= 8:
@@ -111,31 +104,21 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
-            frange_save_phrase = '-'.join([str(f) for f in flead])
         else:
-            frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
-            frange_save_phrase = f'{flead[0]}_TO_F{flead[-1]}'
-        frange_string = f'Forecast Hour{frange_phrase}'
-        frange_save_string = f'F{int(frange_save_phrase):03d}'
+            frange_phrase = f's {flead[0]}'+u'u\u2013'+f'{flead[-1]}'
         df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
-        frange_string = (f'Forecast Hours {flead[0]:03d}'
-                         + u'\u2013' + f'{flead[1]:03d}')
-        frange_save_string = f'F{flead[0]:03d}-F{flead[1]:03d}'
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
         ]
     elif isinstance(flead, int):
-        frange_string = f'Forecast Hour {flead:03d}'
-        frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
     else:
-        error_string = (
-            f"Invalid forecast lead: \'{flead}\'\nPlease check settings for"
-            + f" forecast leads."
-        )
-        logger.error(error_string)
-        raise ValueError(error_string)
+        e1 = f"Invalid forecast lead: \'{flead}\'"
+        e2 = f"Please check settings for forecast leads."
+        logger.error(e1)
+        logger.error(e2)
+        raise ValueError(e1+"\n"+e2)
 
     # Remove from date_hours the valid/init hours that don't exist in the 
     # dataframe
@@ -143,7 +126,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         str(x) in df[str(date_type).upper()].dt.hour.astype(str).tolist() 
         for x in date_hours
     ]]
- 
     if thresh and '' not in thresh:
         requested_thresh_symbol, requested_thresh_letter = list(
             zip(*[plot_util.format_thresh(t) for t in thresh])
@@ -199,17 +181,17 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 
     # Remove from model_list the models that don't exist in the dataframe
     cols_to_keep = [
-        str(model) 
+        str(model)
         in df['MODEL'].tolist() 
         for model in model_list
     ]
     models_removed = [
-        str(m) 
+        str(m)
         for (m, keep) in zip(model_list, cols_to_keep) if not keep
     ]
     models_removed_string = ', '.join(models_removed)
     model_list = [
-        str(m) 
+        str(m)
         for (m, keep) in zip(model_list, cols_to_keep) if keep
     ]
     if not all(cols_to_keep):
@@ -222,7 +204,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-    group_by = ['MODEL',str(date_type).upper()]
+    group_by = ['MODEL', 'LEAD_HOURS']
     if sample_equalization:
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:
@@ -235,29 +217,44 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated = df_groups.mean()
     if sample_equalization:
         df_aggregated['COUNTS']=df_groups.size()
-    if keep_shared_events_only:
-        # Remove data if they exist for some but not all models at some value of 
-        # the indep. variable. Otherwise plot_util.calculate_stat will throw an 
-        # error
-        df_split = [
-            df_aggregated.xs(str(model)) for model in model_list
+    df_aggregated = df_aggregated.reindex(
+        pd.MultiIndex.from_product(
+            [
+                np.unique(df_aggregated.index.get_level_values('MODEL')), 
+                np.unique(df_aggregated.index.get_level_values('LEAD_HOURS'))
+            ], 
+            names=['MODEL','LEAD_HOURS']
+        ), 
+        fill_value=np.nan
+    )
+    df_agg_no_nan_rows = ~df_aggregated.isna().any(axis=1)
+    max_leads = [
+        df_aggregated[df_agg_no_nan_rows].iloc[
+            df_aggregated[df_agg_no_nan_rows]
+            .index.get_level_values('MODEL') == model
+        ].index.get_level_values('LEAD_HOURS').max() for model in model_list
+    ]
+    remove_rows_by_lead = []
+    for m, model in enumerate(model_list):
+        df_model_group = df_aggregated.iloc[
+            df_aggregated.index.get_level_values('MODEL') == model
         ]
-        df_reduced = reduce(
-            lambda x,y: pd.merge(
-                x, y, on=str(date_type).upper(), how='inner'
-            ), 
-            df_split
+        rows_with_nans = df_model_group.index.get_level_values('LEAD_HOURS')[
+            df_model_group.isna().any(axis=1)
+        ]
+        remove_rows_by_lead_m = [
+            int(lead) for lead in rows_with_nans if lead < max_leads[m]
+        ]
+        remove_rows_by_lead = np.concatenate(
+            (remove_rows_by_lead, remove_rows_by_lead_m)
         )
-    
-        df_aggregated = df_aggregated[
-            df_aggregated.index.get_level_values(str(date_type).upper())
-            .isin(df_reduced.index)
-        ]
+    df_aggregated = df_aggregated.drop(index=np.unique(remove_rows_by_lead), level=1)
     if df_aggregated.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         plt.close(num)
         logger.info("========================================")
         return None
+
     # Calculate desired metric
     metric_long_names = []
     for stat in [metric1_name, metric2_name]:
@@ -267,18 +264,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             )
             df_aggregated[str(stat).upper()] = stat_output[0]
             metric_long_names.append(stat_output[2])
-            '''if confidence_intervals:
-                logger.warning(
-                    f"Confidence intervals are turned on but are not currently"
-                    + f" allowed on time series plots. None will be plotted"
-                    + f" for {str(stat).upper()}."
-                )
-                confidence_intervals = False
-            # Remove the above section to re-enable CIs for time series''' 
             if confidence_intervals:
                 ci_output = df_groups.apply(
                     lambda x: plot_util.calculate_bootstrap_ci(
-                        logger, bs_method, x, str(stat).lower(), bs_nrep,
+                        logger, bs_method, x, str(stat).lower(), bs_nrep, 
                         ci_lev, bs_min_samp
                     )
                 )
@@ -296,7 +285,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = (
                     ci_output
                     .reindex(df_aggregated.index)
-                    .reindex(ci_output.index)
+                    #.reindex(ci_output.index)
                 )
                 df_aggregated[str(stat).upper()+'_BLERR'] = ci_output[
                     'CI_LOWER'
@@ -304,6 +293,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 df_aggregated[str(stat).upper()+'_BUERR'] = ci_output[
                     'CI_UPPER'
                 ].values
+    
     df_aggregated[str(metric1_name).upper()] = (
         df_aggregated[str(metric1_name).upper()]
     ).astype(float).tolist()
@@ -316,70 +306,47 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     ]
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
-        index=str(date_type).upper()
+        index='LEAD_HOURS'
     )
     if sample_equalization:
         pivot_counts = pd.pivot_table(
             df_aggregated, values='COUNTS', columns='MODEL',
-            index=str(date_type).upper()
+            index='LEAD_HOURS'
         )
-    if keep_shared_events_only:
-        pivot_metric1 = pivot_metric1.dropna() 
+    #pivot_metric1 = pivot_metric1.dropna() 
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
-            index=str(date_type).upper()
+            index='LEAD_HOURS'
         )
-        if keep_shared_events_only:
-            pivot_metric2 = pivot_metric2.dropna()
+        #pivot_metric2 = pivot_metric2.dropna() 
     if confidence_intervals:
         pivot_ci_lower1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BLERR',
-            columns='MODEL', index=str(date_type).upper()
+            columns='MODEL', index='LEAD_HOURS'
         )
         pivot_ci_upper1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BUERR',
-            columns='MODEL', index=str(date_type).upper()
+            columns='MODEL', index='LEAD_HOURS'
         )
         if metric2_name is not None:
             pivot_ci_lower2 = pd.pivot_table(
                 df_aggregated, values=str(metric2_name).upper()+'_BLERR',
-                columns='MODEL', index=str(date_type).upper()
+                columns='MODEL', index='LEAD_HOURS'
             )
             pivot_ci_upper2 = pd.pivot_table(
                 df_aggregated, values=str(metric2_name).upper()+'_BUERR',
-                columns='MODEL', index=str(date_type).upper()
+                columns='MODEL', index='LEAD_HOURS'
             )
-    # Reindex pivot table with full list of dates, introducing NaNs 
-    date_hours_incr = np.diff(date_hours)
-    if date_hours_incr.size == 0:
-        min_incr = 24
-    else:
-        min_incr = np.min(date_hours_incr)
+    # Reindex pivot table with full list of lead hours, introducing NaNs 
+    x_vals_pre = pivot_metric1.index.tolist()
+    lead_time_incr = np.diff(x_vals_pre)
+    min_incr = np.min(lead_time_incr)
     incrs = [1,6,12,24]
     incr_idx = np.digitize(min_incr, incrs)
     if incr_idx < 1:
         incr_idx = 1
     incr = incrs[incr_idx-1]
-    idx = [
-        item 
-        for item in daterange(
-            date_range[0].replace(hour=np.min(date_hours)), 
-            date_range[1].replace(hour=np.max(date_hours)), 
-            td(hours=incr)
-        )
-    ]
-    pivot_metric1 = pivot_metric1.reindex(idx, fill_value=np.nan)
-    if sample_equalization:
-        pivot_counts = pivot_counts.reindex(idx, fill_value=np.nan)
-    if confidence_intervals:
-        pivot_ci_lower1 = pivot_ci_lower1.reindex(idx, fill_value=np.nan)
-        pivot_ci_upper1 = pivot_ci_upper1.reindex(idx, fill_value=np.nan)
-    if metric2_name is not None:
-        pivot_metric2 = pivot_metric2.reindex(idx, fill_value=np.nan)
-        if confidence_intervals:
-            pivot_ci_lower2 = pivot_ci_lower2.reindex(idx, fill_value=np.nan)
-            pivot_ci_upper2 = pivot_ci_upper2.reindex(idx, fill_value=np.nan)
     if (metric2_name and (pivot_metric1.empty or pivot_metric2.empty)):
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
@@ -432,8 +399,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 ]
                 if np.flatnonzero(np.core.defchararray.find(
                         models_sharing_colors, 'model')!=-1):
-                    need_to_rename = models_sharing_colors[np.flatnonzero(
-                        np.core.defchararray.find(
+                    need_to_rename = models_sharing_colors[
+                        np.flatnonzero(np.core.defchararray.find(
                             models_sharing_colors, 'model'
                         )!=-1)[0]
                     ]
@@ -453,7 +420,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     mod_setting_dicts = [
         model_colors.get_color_dict(name) for name in models_renamed
     ]
-
     # Plot data
     logger.info("Begin plotting ...")
     if confidence_intervals:
@@ -490,9 +456,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if thresh and '' not in thresh:
         thresh_labels = np.unique(df['FCST_THRESH_VALUE'])
         thresh_argsort = np.argsort(thresh_labels.astype(float))
-        requested_thresh_argsort = np.argsort([
-            float(item) for item in requested_thresh_value
-        ])
+        requested_thresh_argsort = np.argsort(
+            [float(item) for item in requested_thresh_value]
+        )
         thresh_labels = [thresh_labels[i] for i in thresh_argsort]
         requested_thresh_labels = [
             requested_thresh_value[i] for i in requested_thresh_argsort
@@ -558,9 +524,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     handles += [
                         f('', 'black', line_settings[p], 5., 0, 'white')
                     ]
-#                labels += [
-#                    str(metric_names[p]).upper()
-# this only works for 1 model!
                 labels += [
                     str(metric_names[p]).upper()
                 ]
@@ -575,9 +538,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             ]
     else:
         handles = []
-        labels = [model_list[0].upper()]
-    handles = []
-    labels = []
+        labels = []
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -606,22 +567,32 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 ].values
         if not y_lim_lock:
             if metric2_name is not None:
-                y_vals_metric_min = np.nanmin([
-                    y_vals_metric1, y_vals_metric2
-                ])
-                y_vals_metric_max = np.nanmax([
-                    y_vals_metric1, y_vals_metric2
-                ])
+                y_vals_both_metrics = np.concatenate((y_vals_metric1, y_vals_metric2))
+                if np.any(y_vals_both_metrics != np.inf):
+                    y_vals_metric_min = np.nanmin(y_vals_both_metrics[y_vals_both_metrics != np.inf])
+                    y_vals_metric_max = np.nanmax(y_vals_both_metrics[y_vals_both_metrics != np.inf])
+                else:
+                    y_vals_metric_min = np.nanmin(y_vals_both_metrics)
+                    y_vals_metric_max = np.nanmax(y_vals_both_metrics)
             else:
-                y_vals_metric_min = np.nanmin(y_vals_metric1)
-                y_vals_metric_max = np.nanmax(y_vals_metric1)
+                if np.any(y_vals_metric1 != np.inf):
+                    y_vals_metric_min = np.nanmin(y_vals_metric1[y_vals_metric1 != np.inf])
+                    y_vals_metric_max = np.nanmax(y_vals_metric1[y_vals_metric1 != np.inf])
+                else:
+                    y_vals_metric_min = np.nanmin(y_vals_metric1)
+                    y_vals_metric_max = np.nanmax(y_vals_metric1)
             if m == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
-                counts = pivot_counts[str(model_list[m])].values
             else:
-                y_mod_min = np.nanmin([y_mod_min, y_vals_metric_min])
-                y_mod_max = np.nanmax([y_mod_max, y_vals_metric_max])
+                if math.isinf(y_mod_min):
+                    y_mod_min = y_vals_metric_min
+                else:
+                    y_mod_min = np.nanmin([y_mod_min, y_vals_metric_min])
+                if math.isinf(y_mod_max):
+                    y_mod_max = y_vals_metric_max
+                else:
+                    y_mod_max = np.nanmax([y_mod_max, y_vals_metric_max])
             if (y_vals_metric_min > y_min_limit 
                     and y_vals_metric_min <= y_mod_min):
                 y_min = y_vals_metric_min
@@ -629,17 +600,17 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     and y_vals_metric_max >= y_mod_max):
                 y_max = y_vals_metric_max
         if np.abs(y_vals_metric1_mean) < 1E4:
-            metric1_mean_fmt_string = f'{y_vals_metric1_mean:.2f}'
+            metric1_mean_fmt_string = f' {y_vals_metric1_mean:.2f}'
         else:
-            metric1_mean_fmt_string = f'{y_vals_metric1_mean:.2E}'
+            metric1_mean_fmt_string = f' {y_vals_metric1_mean:.2E}'
         if plot_reference[0]:
             if not plotted_reference[0]:
                 ref_color_dict = model_colors.get_color_dict('obs')
                 plt.plot(
-                    x_vals1.tolist(), reference1,
-                    marker=ref_color_dict['marker'],
-                    c=ref_color_dict['color'], mew=2., mec='white',
-                    figure=fig, ms=ref_color_dict['markersize'], ls='solid',
+                    x_vals1.tolist(), reference1, 
+                    marker=ref_color_dict['marker'], 
+                    c=ref_color_dict['color'], mew=2., mec='white', 
+                    figure=fig, ms=ref_color_dict['markersize'], ls='solid', 
                     lw=ref_color_dict['linewidth']
                 )
                 plotted_reference[0] = True
@@ -653,17 +624,17 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             )
         if metric2_name is not None:
             if np.abs(y_vals_metric2_mean) < 1E4:
-                metric2_mean_fmt_string = f'{y_vals_metric2_mean:.2f}'
+                metric2_mean_fmt_string = f' {y_vals_metric2_mean:.2f}'
             else:
-                metric2_mean_fmt_string = f'{y_vals_metric2_mean:.2E}'
+                metric2_mean_fmt_string = f' {y_vals_metric2_mean:.2E}'
             if plot_reference[1]:
                 if not plotted_reference[1]:
                     ref_color_dict = model_colors.get_color_dict('obs')
                     plt.plot(
-                        x_vals2.tolist(), reference2,
-                        marker=ref_color_dict['marker'],
-                        c=ref_color_dict['color'], mew=2., mec='white',
-                        figure=fig, ms=ref_color_dict['markersize'], ls='dashed',
+                        x_vals2.tolist(), reference2, 
+                        marker=ref_color_dict['marker'], 
+                        c=ref_color_dict['color'], mew=2., mec='white', 
+                        figure=fig, ms=ref_color_dict['markersize'], ls='dashed', 
                         lw=ref_color_dict['linewidth']
                     )
                     plotted_reference[1] = True
@@ -672,17 +643,17 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     x_vals2.tolist(), y_vals_metric2, 
                     marker=mod_setting_dicts[m]['marker'], 
                     c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
-                    figure=fig, ms=mod_setting_dicts[m]['markersize'], 
-                    ls='dashed', lw=mod_setting_dicts[m]['linewidth']
+                    figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='dashed',
+                    lw=mod_setting_dicts[m]['linewidth']
                 )
         if confidence_intervals:
             if plot_reference[0]:
                 if not plotted_reference_CIs[0]:
                     ref_color_dict = model_colors.get_color_dict('obs')
                     plt.errorbar(
-                        x_vals1.tolist(), reference1,
-                        yerr=[np.abs(reference_ci_lower1), reference_ci_upper1],
-                        fmt='none', ecolor=ref_color_dict['color'],
+                        x_vals1.tolist(), reference1, 
+                        yerr=[np.abs(reference_ci_lower1), reference_ci_upper1], 
+                        fmt='none', ecolor=ref_color_dict['color'], 
                         elinewidth=ref_color_dict['linewidth'],
                         capsize=10., capthick=ref_color_dict['linewidth'],
                         alpha=.70, zorder=0
@@ -690,9 +661,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     plotted_reference_CIs[0] = True
             else:
                 plt.errorbar(
-                    x_vals1.tolist(), y_vals_metric1,
-                    yerr=[np.abs(y_vals_ci_lower1), y_vals_ci_upper1],
-                    fmt='none', ecolor=mod_setting_dicts[m]['color'],
+                    x_vals1.tolist(), y_vals_metric1, 
+                    yerr=[np.abs(y_vals_ci_lower1), y_vals_ci_upper1], 
+                    fmt='none', ecolor=mod_setting_dicts[m]['color'], 
                     elinewidth=mod_setting_dicts[m]['linewidth'],
                     capsize=10., capthick=mod_setting_dicts[m]['linewidth'],
                     alpha=.70, zorder=0
@@ -702,9 +673,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     if not plotted_reference_CIs[1]:
                         ref_color_dict = model_colors.get_color_dict('obs')
                         plt.errorbar(
-                            x_vals2.tolist(), reference2,
-                            yerr=[np.abs(reference_ci_lower2), reference_ci_upper2],
-                            fmt='none', ecolor=ref_color_dict['color'],
+                            x_vals2.tolist(), reference2, 
+                            yerr=[np.abs(reference_ci_lower2), reference_ci_upper2], 
+                            fmt='none', ecolor=ref_color_dict['color'], 
                             elinewidth=ref_color_dict['linewidth'],
                             capsize=10., capthick=ref_color_dict['linewidth'],
                             alpha=.70, zorder=0
@@ -712,9 +683,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                         plotted_reference_CIs[1] = True
                 else:
                     plt.errorbar(
-                        x_vals2.tolist(), y_vals_metric2,
-                        yerr=[np.abs(y_vals_ci_lower2), y_vals_ci_upper2],
-                        fmt='none', ecolor=mod_setting_dicts[m]['color'],
+                        x_vals2.tolist(), y_vals_metric2, 
+                        yerr=[np.abs(y_vals_ci_lower2), y_vals_ci_upper2], 
+                        fmt='none', ecolor=mod_setting_dicts[m]['color'], 
                         elinewidth=mod_setting_dicts[m]['linewidth'],
                         capsize=10., capthick=mod_setting_dicts[m]['linewidth'],
                         alpha=.70, zorder=0
@@ -738,23 +709,42 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 ]
         else:
             labels+=[f'{model_plot_name}']
-# Removes the model legend after all the metrics
 
     # Zero line
     plt.axhline(y=0, color='black', linestyle='--', linewidth=1, zorder=0) 
+    metrics_with_axline_at_1 = [
+        'FBIAS','RSD'
+    ]
+    if (str(metric1_name).upper() in metrics_with_axline_at_1 
+            or str(metric2_name).upper() in metrics_with_axline_at_1):
+        plt.axhline(y=1, color='black', linestyle='--', linewidth=1, zorder=0)
 
     # Configure axis ticks
+    if not x_lim_lock:
+        if metric2_name is not None:
+            xticks_min = np.min([x_vals1.tolist()[0], x_vals2.tolist()[0]])
+            xticks_max = np.max([x_vals1.tolist()[-1], x_vals2.tolist()[-1]])
+        else:
+            xticks_min = x_vals1.tolist()[0]
+            xticks_max = x_vals1.tolist()[-1]
+    else:
+        xticks_min = x_min_limit
+        xticks_max = x_max_limit
     xticks = [
-        x_val for x_val in daterange(x_vals1[0], x_vals1[-1], td(hours=incr))
+        x_val for x_val in np.arange(xticks_min, xticks_max+incr, incr)
     ] 
-    xtick_labels = [xtick.strftime('%HZ %m/%d') for xtick in xticks]
-    number_of_ticks_dig = [15,30,45,60,75,90,105,120,135,150,165,180,195,210,225]
-    show_xtick_every = np.ceil((
-        np.digitize(len(xtick_labels), number_of_ticks_dig) + 2
-    )/2.)*2
+    xtick_labels = [str(xtick) for xtick in xticks]
+    if len(xticks) < 48:
+        show_xtick_every = 1
+    else:
+        show_xtick_every = 2
     xtick_labels_with_blanks = ['' for item in xtick_labels]
     for i, item in enumerate(xtick_labels[::int(show_xtick_every)]):
          xtick_labels_with_blanks[int(show_xtick_every)*i] = item
+    x_buffer_size = .015
+    ax.set_xlim(
+        xticks_min-incr*x_buffer_size, xticks_max+incr*x_buffer_size
+    )
     y_range_categories = np.array([
         [np.power(10.,y), 2.*np.power(10.,y)] 
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
@@ -809,10 +799,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 ylabel = f'{var_long_name} (unitless)'
         else:
             ylabel = f'{metric1_string}'
-    ax.set_xlim(xticks[0], xticks[-1])
     ax.set_ylim(ylim_min, ylim_max)
     ax.set_ylabel(ylabel)
-    ax.set_xlabel(xlabel)
+    ax.set_xlabel(xlabel) 
     ax.set_xticklabels(xtick_labels_with_blanks)
     ax.set_yticks(yticks)
     ax.set_xticks(xticks)
@@ -832,13 +821,12 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
-#    fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
     fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
-    
+
     if sample_equalization:
         counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
         for count, xval in zip(counts, x_vals1.tolist()):
@@ -846,17 +834,16 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 count = str(int(count))
         #    ax.annotate(
         #        f'{count}', xy=(xval,1.), 
-        #        xycoords=('data','axes fraction'), xytext=(0,18), 
-        #        textcoords='offset points', va='top', fontsize=14, 
+        #        xycoords=('data', 'axes fraction'), xytext=(0,18),
+        #        textcoords='offset points', va='top', fontsize=14,
         #        color='dimgrey', ha='center'
         #    )
         #ax.annotate(
-        #    '#SAMPLES', xy=(0.,1.), xycoords='axes fraction', 
+        #    '#SAMPLES', xy=(0.,1.), xycoords='axes fraction',
         #    xytext=(-50, 21), textcoords='offset points', va='top', 
         #    fontsize=11, color='dimgrey', ha='center'
         #)
-#        fig.subplots_adjust(top=.9)
-        fig.subplots_adjust(top=.85)
+        fig.subplots_adjust(top=.9)
 
     # Title
     domain = df['VX_MASK'].tolist()[0]
@@ -865,24 +852,22 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         domain_string = domain_translator[domain]
     else:
         domain_string = domain
+    date_hours_string = plot_util.get_name_for_listed_items(
+        [f'{date_hour:02d}' for date_hour in date_hours],
+        ', ', '', 'Z', 'and ', ''
+    )
     '''
     date_hours_string = ' '.join([
         f'{date_hour:02d}Z,' for date_hour in date_hours
     ])
     '''
-    date_hours_string = plot_util.get_name_for_listed_items(
-        [f'{date_hour:02d}' for date_hour in date_hours],
-        ', ', '', 'Z', 'and ', ''
-    )
-#    date_start_string = date_range[0].strftime('%d %b %Y')
-#    date_end_string = date_range[1].strftime('%d %b %Y')
-    date_start_string = date_range[0].strftime('%d %b %Y') + ' ' + date_hours_string
-    date_end_string = date_range[1].strftime('%d %b %Y') + ' ' + date_hours_string
+    date_start_string = date_range[0].strftime('%d %b %Y')
+    date_end_string = date_range[1].strftime('%d %b %Y')
     if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
         level_num = level.replace('P', '')
         level_string = f'{level_num} hPa '
         level_savename = f'{level_num}MB'
-    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc']:
+    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 level_string = 'Surface '
@@ -906,7 +891,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         print_varname = df['FCST_VAR'].tolist()[0]
         if print_varname == 'WIND':
             level_savename = 'Z10'
-        else:    
+        else:
             level_savename = 'L0'
     elif str(verif_type).lower() in ['rtofs_sfc']:
         if 'Z' in str(level):
@@ -917,6 +902,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             level_num = level.replace('Z', '')
             level_string = f'{level_num}-m '
             level_savename = f'{level_num}M'
+    elif str(verif_type).lower() in ['wave']:
+        if 'Z' in str(level):
+            level_num = level.replace('Z', '')
+            level_string = f'{level_num}-m '
+            level_savename = f'{level_num}M'
+        else:
+            level_string = ''
+            level_savename = 'L0'
     elif str(verif_type).lower() in ['ccpa']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
@@ -947,24 +940,21 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             for thresh_label in requested_thresh_labels
         ])
         if units:
-            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
-                      + f' {units})')
+            title2 = (f'{level_string}{var_long_name} ({thresholds_phrase} '
+                      + f'{units})')
         else:
-            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
-                      + f' unitless)')
+            title2 = (f'{level_string}{var_long_name} ({thresholds_phrase} '
+                      + f'unitless)')
     else:
         if units:
-            title2 = f'{level_string} {var_long_name} ({units})'
+            title2 = f'{level_string}{var_long_name} ({units})'
         else:
-            title2 = f'{level_string} {var_long_name} (unitless)'
-#    title3 = f'{str(date_type).capitalize()} {date_hours_string} '
-#              + f'{date_start_string} to {date_end_string}, {frange_string}'
-    fcst_day=int(flead[0]/24)
-    title3 = (f'{str(date_type).lower()} {date_start_string} - {date_end_string}, '
-              + f'init: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
+            title2 = f'{level_string}{var_long_name} (unitless)'
+    title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
+              + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        title_pad=40
+        title_pad=20
     else:
         title_pad=None
     ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
@@ -976,7 +966,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             left_logo_arr = mpimg.imread(path_logo_left)
             left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left)
             ab_left = AnnotationBbox(
-                left_image_box, xy=(0.,1.), xycoords='axes fraction',
+                left_image_box, xy=(0.,1.), xycoords='axes fraction', 
                 xybox=(0, 20), boxcoords='offset points', frameon = False,
                 box_alignment=(0,0)
             )
@@ -991,7 +981,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             right_logo_arr = mpimg.imread(path_logo_right)
             right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right)
             ab_right = AnnotationBbox(
-                right_image_box, xy=(1.,1.), xycoords='axes fraction',
+                right_image_box, xy=(1.,1.), xycoords='axes fraction', 
                 xybox=(0, 20), boxcoords='offset points', frameon = False,
                 box_alignment=(1,0)
             )
@@ -1003,7 +993,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             )
 
     # Saving
-    models_savename = str(model_list[0])
+    models_savename = '_'.join([str(model) for model in model_list])
     if len(date_hours) <= 8: 
         date_hours_savename = '_'.join([
             f'{date_hour:02d}Z' for date_hour in date_hours
@@ -1035,31 +1025,28 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(metric1_name).lower()}.'
                  + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                  + f'{str(time_period_savename).lower()}.'
-                 + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
-                 + f'{str(frange_save_string).lower()}.'
+                 + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
                  + f'{str(domain_string).lower()}')
     if metric2_name is not None:
         save_name = (f'evs.'
-                 + f'{str(models_savename).lower()}.'
-                 + f'{str(metric1_name).lower()}_{str(metric2_name).lower()}.'
-                 + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
-                 + f'{str(time_period_savename).lower()}.'
-                 + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
-                 + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                     + f'{str(models_savename).lower()}.'
+                     + f'{str(metric1_name).lower()}_{str(metric2_name).lower()}.'
+                     + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
+                     + f'{str(time_period_savename).lower()}.'
+                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
+                     + f'{str(domain_string).lower()}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
-                 + f'{str(models_savename).lower()}.'
-                 + f'{str(metric1_name).lower()}_{str(thresholds_save_phrase).lower()}.'
-                 + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
-                 + f'{str(time_period_savename).lower()}.'
-                 + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
-                 + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                     + f'{str(models_savename).lower()}.'
+                     + f'{str(metric1_name).lower()}_{str(thresholds_save_phrase).lower()}.'
+                     + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
+                     + f'{str(time_period_savename).lower()}.'
+                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
+                     + f'{str(domain).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
     save_subdir = os.path.join(
-        save_dir, f'{str(obtype).lower()}'
+        save_dir, f'{str(run).lower()}' 
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
@@ -1117,7 +1104,7 @@ def main():
              + f" VALID or INIT")
         logger.error(e)
         raise ValueError(e)
-
+    
     logger.debug('========================================')
     logger.debug("Config file settings")
     logger.debug(f"LOG_LEVEL: {LOG_LEVEL}")
@@ -1162,9 +1149,9 @@ def main():
     logger.debug(f"Y_MIN_LIMIT: {Y_MIN_LIMIT}")
     logger.debug(f"Y_MAX_LIMIT: {Y_MAX_LIMIT}")
     logger.debug(f"Y_LIM_LOCK: {Y_LIM_LOCK}")
-    logger.debug(f"X_MIN_LIMIT: Ignored for time series plots")
-    logger.debug(f"X_MAX_LIMIT: Ignored for time series plots")
-    logger.debug(f"X_LIM_LOCK: Ignored for time series plots")
+    logger.debug(f"X_MIN_LIMIT: {X_MIN_LIMIT}")
+    logger.debug(f"X_MAX_LIMIT: {X_MAX_LIMIT}")
+    logger.debug(f"X_LIM_LOCK: {X_LIM_LOCK}")
     logger.debug(f"Display averages? {'yes' if display_averages else 'no'}")
     logger.debug(
         f"Clear prune directories? {'yes' if clear_prune_dir else 'no'}"
@@ -1239,15 +1226,15 @@ def main():
         raise ValueError(e+"\nQuitting ...")
     for metric in metrics:
         if metric is not None:
-            if (str(metric).lower() 
+            if (str(metric).lower()
                     not in case_specs['plot_stats_list']
                     .replace(' ','').split(',')):
                 e = (f"The requested metric is not valid for the"
                      + f" requested case type ({VERIF_CASETYPE}) and"
                      + f" line_type ({LINE_TYPE}): {metric}")
-                logger.warning(e)
-                logger.warning("Continuing ...")
-                continue
+                logger.error(e)
+                logger.error("Quitting ...")
+                raise ValueError(e+"\nQuitting ...")
     for requested_var in VARIABLES:
         if requested_var in list(case_specs['var_dict'].keys()):
             var_specs = case_specs['var_dict'][requested_var]
@@ -1298,46 +1285,46 @@ def main():
             if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
                     or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid: "
-                     + f"{requested_var}/{level}")
+                        + f"{requested_var}/{fcst_level}")
                 logger.warning(e)
                 continue
             for domain in DOMAINS:
                 if str(domain) not in case_specs['vx_mask_list']:
-                    e = (f"The requested domain is not valid for the"
-                         + f" requested case type ({VERIF_CASETYPE}) and"
-                         + f" line_type ({LINE_TYPE}): {domain}")
+                    e = (f"The requested domain is not valid for the requested"
+                         + f" case type ({VERIF_CASETYPE}) and line_type"
+                         + f" ({LINE_TYPE}): {domain}")
                     logger.warning(e)
                     logger.warning("Continuing ...")
                     continue
                 df = df_preprocessing.get_preprocessed_data(
                     logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
                     VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
-                    date_hours, FLEADS, requested_var, fcst_var_names, 
-                    obs_var_names, MODELS, OBTYPE, domain, INTERP, MET_VERSION, 
-                    clear_prune_dir
+                    date_hours, FLEADS, requested_var, fcst_var_names, obs_var_names, 
+                    MODELS, OBTYPE, domain, INTERP, MET_VERSION, clear_prune_dir
                 )
                 if df is None:
                     continue
-                plot_time_series(
-                    df, logger, date_range, MODELS, num=num, flead=FLEADS, 
-                    level=fcst_level, thresh=fcst_thresh, 
+                df_metric = df
+                plot_lead_average(
+                    df_metric, logger, date_range, MODELS, num=num, 
+                    flead=FLEADS, level=fcst_level, thresh=fcst_thresh, 
                     metric1_name=metrics[0], metric2_name=metrics[1], 
                     date_type=DATE_TYPE, y_min_limit=Y_MIN_LIMIT, 
                     y_max_limit=Y_MAX_LIMIT, y_lim_lock=Y_LIM_LOCK, 
-                    xlabel=f'{str(date_type_string).capitalize()} Date', 
-                    verif_type=VERIF_TYPE, date_hours=date_hours, 
-                    line_type=LINE_TYPE, save_dir=SAVE_DIR, fix_dir=FIX_DIR, 
-                    eval_period=EVAL_PERIOD, obtype=OBTYPE, 
+                    x_min_limit=X_MIN_LIMIT, x_max_limit=X_MAX_LIMIT, 
+                    x_lim_lock=X_LIM_LOCK, xlabel=f'Forecast Lead Hour', 
+                    verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
+                    date_hours=date_hours, save_dir=SAVE_DIR, fix_dir=FIX_DIR, 
+                    eval_period=EVAL_PERIOD, obtype=OBTYPE, run=RUN,
                     display_averages=display_averages, 
-                    keep_shared_events_only=keep_shared_events_only,
-                    save_header=URL_HEADER, plot_group=plot_group,
-                    confidence_intervals=CONFIDENCE_INTERVALS,
-                    bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev,
-                    bs_min_samp=bs_min_samp,
+                    save_header=URL_HEADER, plot_group=plot_group, 
+                    confidence_intervals=CONFIDENCE_INTERVALS, bs_nrep=bs_nrep, 
+                    bs_method=bs_method, ci_lev=ci_lev, 
+                    bs_min_samp=bs_min_samp, 
                     sample_equalization=sample_equalization,
-                    plot_logo_left=plot_logo_left,
-                    plot_logo_right=plot_logo_right,
-                    path_logo_left=path_logo_left,
+                    plot_logo_left=plot_logo_left, 
+                    plot_logo_right=plot_logo_right, 
+                    path_logo_left=path_logo_left, 
                     path_logo_right=path_logo_right,
                     zoom_logo_left=zoom_logo_left,
                     zoom_logo_right=zoom_logo_right
@@ -1363,6 +1350,7 @@ if __name__ == "__main__":
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
+    RUN = check_RUN(os.environ['RUN'])
     OBTYPE = check_OBTYPE(os.environ['OBTYPE'])
     MODELS = check_MODEL(os.environ['MODEL']).replace(' ','').split(',')
     DOMAINS = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')
@@ -1407,25 +1395,25 @@ if __name__ == "__main__":
     Y_MIN_LIMIT = toggle.plot_settings['y_min_limit']
     Y_MAX_LIMIT = toggle.plot_settings['y_max_limit']
     Y_LIM_LOCK = toggle.plot_settings['y_lim_lock']
+    X_MIN_LIMIT = toggle.plot_settings['x_min_limit']
+    X_MAX_LIMIT = toggle.plot_settings['x_max_limit']
+    X_LIM_LOCK = toggle.plot_settings['x_lim_lock']
 
 
     # configure CIs
     CONFIDENCE_INTERVALS = check_CONFIDENCE_INTERVALS(os.environ['CONFIDENCE_INTERVALS']).replace(' ','')
     bs_nrep = toggle.plot_settings['bs_nrep']
-    bs_method = toggle.plot_settings['bs_method']
     ci_lev = toggle.plot_settings['ci_lev']
+    bs_method = toggle.plot_settings['bs_method']
     bs_min_samp = toggle.plot_settings['bs_min_samp']
-
-    # At each value of the independent variable, whether or not to remove
-    # samples used to aggregate each statistic if the samples are not shared
-    # by all models.  Required to display sample sizes
-    sample_equalization = toggle.plot_settings['sample_equalization']
 
     # Whether or not to display average values beside legend labels
     display_averages = toggle.plot_settings['display_averages']
 
-    # Whether or not to display events shared among some but not all models
-    keep_shared_events_only = toggle.plot_settings['keep_shared_events_only']
+    # At each value of the independent variable, whether or not to remove 
+    # samples used to aggregate each statistic if the samples are not shared 
+    # by all models.  Required to display sample sizes 
+    sample_equalization = toggle.plot_settings['sample_equalization']
 
     # Whether or not to clear the intermediate directory that stores pruned data
     clear_prune_dir = toggle.plot_settings['clear_prune_directory']
