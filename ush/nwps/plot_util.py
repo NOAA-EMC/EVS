@@ -1,11 +1,4 @@
 #!/usr/bin/env python3
-###########################################
-#
-# Used for global_det wave plots
-#
-###########################################
-
-
 import pickle
 import os
 import datetime as datetime
@@ -301,80 +294,24 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
             'TOTAL', 'FABAR', 'OABAR', 'FOABAR', 'FFABAR', 'OOABAR', 'MAE'
          ]
    elif line_type == 'VL1L2':
-      if met_version >= 12.0:
+      if met_version <= 6.1:
          stat_file_line_type_columns = [
             'TOTAL', 'UFBAR', 'VFBAR', 'UOBAR', 'VOBAR', 'UVFOBAR',
-            'UVFFBAR', 'UVOOBAR', 'F_SPEED_BAR', 'O_SPEED_BAR', 'TOTAL_DIR',
-            'DIR_ME', 'DIR_MAE', 'DIR_MSE'
+            'UVFFBAR', 'UVOOBAR'
          ]
       elif met_version >= 7.0:
          stat_file_line_type_columns = [
             'TOTAL', 'UFBAR', 'VFBAR', 'UOBAR', 'VOBAR', 'UVFOBAR',
             'UVFFBAR', 'UVOOBAR', 'F_SPEED_BAR', 'O_SPEED_BAR'
          ]
-      elif met_version <= 6.1:
-         stat_file_line_type_columns = [
-            'TOTAL', 'UFBAR', 'VFBAR', 'UOBAR', 'VOBAR', 'UVFOBAR',
-            'UVFFBAR', 'UVOOBAR'
-         ]
    elif line_type == 'VAL1L2':
-      if met_version >= 12.0:
-         stat_file_line_type_columns = [
-            'TOTAL', 'UFABAR', 'VFABAR', 'UOABAR', 'VOABAR', 'UVFOABAR',
-            'UVFFABAR', 'UVOOABAR', 'FA_SPEED_BAR', 'OA_SPEED_BAR',
-            'TOTAL_DIR', 'DIRA_ME', 'DIRA_MAE', 'DIRA_MSE'
-         ]
-      elif met_version >= 11.0:
-         stat_file_line_type_columns = [
-            'TOTAL', 'UFABAR', 'VFABAR', 'UOABAR', 'VOABAR', 'UVFOABAR',
-            'UVFFABAR', 'UVOOABAR', 'FA_SPEED_BAR', 'OA_SPEED_BAR'
-         ]
-      elif met_version >= 6.0:
+      if met_version >= 6.0:
          stat_file_line_type_columns = [
             'TOTAL', 'UFABAR', 'VFABAR', 'UOABAR', 'VOABAR', 'UVFOABAR', 
             'UVFFABAR', 'UVOOABAR'
          ]
    elif line_type == 'VCNT':
-      if met_version >= 12.0:
-         stat_file_line_type_columns = [
-            'TOTAL', 'FBAR', 'FBAR_BCL', 'FBAR_BCU', 'OBAR', 'OBAR_BCL',
-            'OBAR_BCU', 'FS_RMS', 'FS_RMS_BCL', 'FS_RMS_BCU', 'OS_RMS',
-            'OS_RMS_BCL', 'OS_RMS_BCU', 'MSVE', 'MSVE_BCL', 'MSVE_BCU',
-            'RMSVE', 'RMSVE_BCL', 'RMSVE_BCU', 'FSTDEV', 'FSTDEV_BCL',
-            'FSTDEV_BCU', 'OSTDEV', 'OSTDEV_BCL', 'OSTDEV_BCU', 'FDIR',
-            'FDIR_BCL', 'FDIR_BCU', 'ODIR', 'ODIR_BCL', 'ODIR_BCU',
-            'FBAR_SPEED', 'FBAR_SPEED_BCL', 'FBAR_SPEED_BCU', 'OBAR_SPEED',
-            'OBAR_SPEED_BCL', 'OBAR_SPEED_BCU', 'VDIFF_SPEED',
-            'VDIFF_SPEED_BCL', 'VDIFF_SPEED_BCU', 'VDIFF_DIR',
-            'VDIFF_DIR_BCL', 'VDIFF_DIR_BCU', 'SPEED_ERR', 'SPEED_ERR_BCL',
-            'SPEED_ERR_BCU', 'SPEED_ABSERR', 'SPEED_ABSERR_BCL',
-            'SPEED_ABSERR_BCU', 'DIR_ERR', 'DIR_ERR_BCL', 'DIR_ERR_BCU',
-            'DIR_ABSERR', 'DIR_ABSERR_BCL', 'DIR_ABSERR_BCU', 'ANOM_CORR',
-            'ANOM_CORR_NCL', 'ANOM_CORR_NCU', 'ANOM_CORR_BCL', 'ANOM_CORR_BCU',
-            'ANOM_CORR_UNCNR', 'ANOM_CORR_UNCNTR_BCL', 'ANOM_CORR_UNCNTR_BCU',
-            'TOTAL_DIR', 'DIR_ME', 'DIR_ME_BCL', 'DIR_ME_BCU', 'DIR_MAE',
-            'DIR_MAE_BCL', 'DIR_MAE_BCU', 'DIR_MSE', 'DIR_MSE_BCL',
-            'DIR_MSE_BCU', 'DIR_RMSE', 'DIR_RMSE_BCL', 'DIR_RMSE_BCU'
-         ]
-      elif met_version >= 11.0:
-         stat_file_line_type_columns = [
-            'TOTAL', 'FBAR', 'FBAR_BCL', 'FBAR_BCU', 'OBAR', 'OBAR_BCL',
-            'OBAR_BCU', 'FS_RMS', 'FS_RMS_BCL', 'FS_RMS_BCU', 'OS_RMS',
-            'OS_RMS_BCL', 'OS_RMS_BCU', 'MSVE', 'MSVE_BCL', 'MSVE_BCU',
-            'RMSVE', 'RMSVE_BCL', 'RMSVE_BCU', 'FSTDEV', 'FSTDEV_BCL',
-            'FSTDEV_BCU', 'OSTDEV', 'OSTDEV_BCL', 'OSTDEV_BCU', 'FDIR',
-            'FDIR_BCL', 'FDIR_BCU', 'ODIR', 'ODIR_BCL', 'ODIR_BCU',
-            'FBAR_SPEED', 'FBAR_SPEED_BCL', 'FBAR_SPEED_BCU', 'OBAR_SPEED',
-            'OBAR_SPEED_BCL', 'OBAR_SPEED_BCU', 'VDIFF_SPEED',
-            'VDIFF_SPEED_BCL', 'VDIFF_SPEED_BCU', 'VDIFF_DIR',
-            'VDIFF_DIR_BCL', 'VDIFF_DIR_BCU', 'SPEED_ERR', 'SPEED_ERR_BCL',
-            'SPEED_ERR_BCU', 'SPEED_ABSERR', 'SPEED_ABSERR_BCL',
-            'SPEED_ABSERR_BCU', 'DIR_ERR', 'DIR_ERR_BCL', 'DIR_ERR_BCU',
-            'DIR_ABSERR', 'DIR_ABSERR_BCL', 'DIR_ABSERR_BCU', 'ANOM_CORR',
-            'ANOM_CORR_NCL', 'ANOM_CORR_NCU', 'ANOM_CORR_BCL', 'ANOM_CORR_BCU',
-            'ANOM_CORR_UNCNT', 'ANOM_CORR_UNCNTR_BCL', 'ANOM_CORR_UNCNTR_BCU'
-         ]
-      elif met_version >= 7.0:
+      if met_version >= 7.0:
          stat_file_line_type_columns = [
             'TOTAL', 'FBAR', 'FBAR_NCL', 'FBAR_NCU', 'OBAR', 'OBAR_NCL', 
             'OBAR_NCU', 'FS_RMS', 'FS_RMS_NCL', 'FS_RMS_NCU', 'OS_RMS',
@@ -613,8 +550,6 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Root Mean Square Error from Pattern Variation'
    elif stat == 'pcor':
       stat_plot_name = 'Pattern Correlation'
-   elif stat == 'corr':
-      stat_plot_name = 'Correlation Coefficient'
    elif stat == 'acc':
       stat_plot_name = 'Anomaly Correlation Coefficient'
    elif stat == 'fbar':
@@ -1095,7 +1030,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             covar = fobar_est_samp - fbar_est_samp*obar_est_samp
             R = covar/np.sqrt(var_f*var_o)
             stat_values = np.sqrt(var_f + var_o - 2*np.sqrt(var_f*var_o)*R)
-   elif stat == 'pcor' or stat == 'corr':
+   elif stat == 'pcor':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
          if line_type == 'SL1L2':
             #var_f_mean = ffbar_est_mean - fbar_est_mean*obar_est_mean
@@ -1280,7 +1215,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
                ffbar_est_samp + oobar_est_samp - 2*fobar_est_samp
             )
             stat_values = 100 * stat_values_rmse / obar_est_mean
-            stat_values = stat_values[stat_values<=500]  #get rid of infinite values
+            stat_values = stat_values[stat_values<=200]  #get rid of infinite values
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
@@ -1453,7 +1388,7 @@ def calculate_stat(logger, model_data, stat):
          covar = uvfobar - ufbar*uobar - vfbar*vobar
          R = covar/np.sqrt(var_f*var_o)
          stat_values = np.sqrt(var_f + var_o - 2*np.sqrt(var_f*var_o)*R)
-   elif stat == 'pcor' or stat == 'corr':
+   elif stat == 'pcor':
       if line_type == 'SL1L2':
          #var_f = ffbar - fbar*obar
          var_f = ffbar - fbar*fbar
@@ -1582,7 +1517,7 @@ def calculate_stat(logger, model_data, stat):
    elif stat == 'si':
        if line_type == 'SL1L2':
            stat_values = 100*(np.sqrt(ffbar + oobar - 2*fobar))/obar
-           stat_values = stat_values[stat_values<=500]  #get rid of infinite values
+           stat_values = stat_values[stat_values<=200]  #get rid of infinite values
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
