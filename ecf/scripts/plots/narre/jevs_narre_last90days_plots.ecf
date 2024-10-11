@@ -1,4 +1,4 @@
-#PBS -N evs_narre_past90days_plot
+#PBS -N evs_narre_last90days_plot
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -47,7 +47,7 @@ export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=narre
-export past_days=90
+export last_days=90
 export run_mpi=yes
 
 ############################################################
