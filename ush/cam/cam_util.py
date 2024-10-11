@@ -1078,9 +1078,6 @@ def get_obs_avail(indir, vdate, nest, obsname):
     '''
     if obsname in ["raob", "metar"]:
         paths = get_prepbufr_templates(indir, [vdate], obsname=obsname, already_preprocessed=True)
-        print("LOOK HERE! (indir, vdate, obsname)\npaths:")
-        print(indir, vdate, obsname)
-        print(paths)
         if paths.size > 0:
             return all([os.path.exists(fname) for fname in paths])
         else:
