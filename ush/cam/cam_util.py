@@ -615,7 +615,7 @@ def fname_constructor(template_str, IDATE="YYYYmmdd", IHOUR="HH",
     return template_str
 
 # Create a list of prepbufr file paths
-def get_prepbufr_templates(indir, vdates, paths=[]):
+def get_prepbufr_templates(indir, vdates, paths=[], obsname='both', already_preprocessed=False):
     '''
         indir  - (str) Input directory for prepbufr file data
         vdates - (datetime object) List of datetimes used to fill templates
@@ -632,25 +632,39 @@ def get_prepbufr_templates(indir, vdates, paths=[]):
                 offsets = ['03']
             elif vh in ['00', '06', '12', '18']:
                 offsets = ['00', '06']
-                prepbufr_templates.append(os.path.join(
-                    indir, 
-                    'gdas.{VDATE}',
-                    '{VHOUR}',
-                    'atmos',
-                    'gdas.t{VHOUR}z.prepbufr'
-                ))
+                if obsname in ['both', 'raob']:
+                    if not already_preprocessed:
+                        prepbufr_templates.append(os.path.join(
+                            indir, 
+                            'gdas.{VDATE}',
+                            '{VHOUR}',
+                            'atmos',
+                            'gdas.t{VHOUR}z.prepbufr'
+                        ))
+                    else:
+                        prepbufr_templates.append(os.path.join(
+                            indir, 
+                            'gdas.t{VHOUR}z.prepbufr'
+                        ))
             for offset in offsets:
                 use_vdate = vdate + td(hours=int(offset))
                 use_vd = use_vdate.strftime('%Y%m%d')
                 use_vh = use_vdate.strftime('%H')
-                template = os.path.join(
-                    indir, 
-                    'nam.{VDATE}',
-                    'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
-                )
-                prepbufr_paths.append(fname_constructor(
-                    template, VDATE=use_vd, VHOUR=use_vh, OFFSET=offset
-                ))
+                if obsname in ['both', 'metar']:
+                    if not already_preprocessed:
+                        template = os.path.join(
+                            indir, 
+                            'nam.{VDATE}',
+                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                        )
+                    else:
+                        template = os.path.join(
+                            indir, 
+                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                        )
+                    prepbufr_paths.append(fname_constructor(
+                        template, VDATE=use_vd, VHOUR=use_vh, OFFSET=offset
+                    ))
         for template in prepbufr_templates:
             prepbufr_paths.append(fname_constructor(
                 template, VDATE=vd, VHOUR=vh
@@ -1036,13 +1050,13 @@ def get_nohrsc_accums(indir, vdate, target_acc, nest):
 
 # Return the obs accumulation interval needed to create target_acc, based on
 # available input files
-def get_obs_accums(indir, vdate, target_acc, nest, obsname):
+def get_obs_accums(indir, vdate, target_acc, nest, obsname, job_type='reformat'):
     '''
-        indir..... - (str) Input directory for prepbufr file data
+        indir..... - (str) Input directory for obs file data
         vdate..... - (datetime object) datetime used to fill templates
         target_acc - (str) target precip accumulation interval of combined
-                     mrms files in hours
-        nest...... - (str) domain used to find mrms files
+                     obs files in hours
+        nest...... - (str) domain used to find obs files
         obsname... - (str) name of input file dataset
     '''
     if obsname == "mrms":
@@ -1051,5 +1065,25 @@ def get_obs_accums(indir, vdate, target_acc, nest, obsname):
         return get_ccpa_accums(indir, vdate, target_acc, nest)
     elif obsname == "nohrsc":
         return get_nohrsc_accums(indir, vdate, target_acc, nest)
+    else:
+        raise ValueError(f"Invalid obsname: \"{obsname}\"")
+
+# Return availability of obs needed for job
+def get_obs_avail(indir, vdate, nest, obsname):
+    '''
+        indir..... - (str) Input directory for obs file data
+        vdate..... - (datetime object) datetime used to fill templates
+        nest...... - (str) domain used to find obs files
+        obsname... - (str) name of input file dataset
+    '''
+    if obsname in ["raob", "metar"]:
+        paths = get_prepbufr_templates(indir, [vdate], obsname=obsname, already_preprocessed=True)
+        print("LOOK HERE! (indir, vdate, obsname)\npaths:")
+        print(indir, vdate, obsname)
+        print(paths)
+        if paths.size > 0:
+            return all([os.path.exists(fname) for fname in paths])
+        else:
+            return False
     else:
         raise ValueError(f"Invalid obsname: \"{obsname}\"")
