@@ -89,15 +89,10 @@ for wfo in ${WFO}; do
 	    
 	    			EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
 	    			DATAmodelfilename=$DATA/gribs/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
-	    			for OBSNAME in GDAS NDBC; do
+	    			for OBSNAME in NDBC; do
 		    			export OBSNAME=${OBSNAME}
-		    			if [ "$OBSNAME" == "GDAS" ]; then
-			    			EVSINobsfilename=${EVSINgdasnc}/${RUN}.${VDATE}/sfcshp/${VERIF_CASE}/gdas.SFCSHP.${VDATE}.nc
-			    			DATAobsfilename=${DATA}/SFCSHP/gdas.SFCSHP.${VDATE}.nc
-		    			elif [ $OBSNAME == "NDBC" ]; then
-			    			EVSINobsfilename=${EVSINndbcnc}/${RUN}.${VDATE}/ndbc/${VERIF_CASE}/ndbc.${VDATE}.nc
-			    			DATAobsfilename=${DATA}/ncfiles/ndbc.${VDATE}.nc
-					fi
+			    		EVSINobsfilename=${EVSINndbcnc}/${RUN}.${VDATE}/ndbc/${VERIF_CASE}/ndbc.${VDATE}.nc
+			    		DATAobsfilename=${DATA}/ncfiles/ndbc.${VDATE}.nc
 	    			done
 				
 				DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
