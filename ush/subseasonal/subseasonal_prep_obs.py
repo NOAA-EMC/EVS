@@ -337,7 +337,10 @@ for OBS in OBSNAME:
                 elif OBS == 'umd':
                     if SENDCOM == 'YES':
                         if sub_util.check_file_exists_size(prod_file):
-                            if not sub_util.check_netcdf_file_corrupt(prod_file):
+                            if not \
+                                    sub_util.check_netcdf_file_corrupt(
+                                        prod_file
+                                    ):
                                 sub_util.copy_file(prod_file, arch_file)
                         else:
                             sub_util.log_missing_file_obs(
