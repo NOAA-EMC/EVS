@@ -178,7 +178,7 @@ for grid in $VX_MASK_LIST ; do
  
      #For restart
      echo "cp ${plot_dir}/${score_type}_regional_${grd}_valid_*${vname}_*.png  $COMOUT/restart/$last_days/." >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo ">$COMOUT/restart/$last_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "[[ \$? = 0 ]] && >$COMOUT/restart/$last_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      
      chmod +x run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      echo "${DATA}/run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
