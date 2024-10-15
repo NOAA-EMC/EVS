@@ -29,7 +29,6 @@ export FHR_INCR_SHORT="12"
 
 # Model/Obs Settings
 export COMINfcst=${COMINhiresw}
-export OBS_ACC="01"
 
 # Additional Verification Settings
 if [ "$ACC" = "01" ]; then
@@ -99,6 +98,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="ccpa"
         export COMINobs=${EVSINccpa}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="ccpa"
         export MIN_IHOUR="00"
         export GRID="G240"
@@ -107,6 +107,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export MIN_IHOUR="06"
         export GRID="G091"
@@ -115,6 +116,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     elif [ "$NEST" = "hi" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export MIN_IHOUR="00"
         export GRID="G196"
@@ -123,6 +125,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     elif [ "$NEST" = "pr" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export MIN_IHOUR="06"
         export GRID="G194"
@@ -138,6 +141,7 @@ else
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="ccpa"
         export COMINobs=${EVSINccpa}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="ccpa"
         export MIN_IHOUR="00"
         export GRID="G212"
@@ -146,6 +150,7 @@ else
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export MIN_IHOUR="06"
         export GRID="G216"
@@ -154,6 +159,7 @@ else
     elif [ "$NEST" = "hi" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export MIN_IHOUR="00"
         export GRID="G196"
@@ -162,6 +168,7 @@ else
     elif [ "$NEST" = "pr" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export MIN_IHOUR="06"
         export GRID="G194"
