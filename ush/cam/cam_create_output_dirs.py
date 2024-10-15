@@ -126,6 +126,9 @@ elif VERIF_CASE == 'grid2obs':
             data_base_dir, MODELNAME, 'merged_ptype'
         ))
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'tmp'))
+        data_dir_list.append(os.path.join(
+            data_base_dir, OBSNAME, 'prepbufr'
+        ))
 elif VERIF_CASE == 'snowfall':
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
@@ -267,13 +270,11 @@ elif STEP == 'stats':
                 COMOUT_restart_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=0):
-            COMOUT_dir_list.append(os.path.join(
-                COMOUT, 
-                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
-            ))
-            date_dt+=td(days=1)
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+            MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+
     elif VERIF_CASE == "grid2obs":
         if job_type == 'reformat':
             working_output_base_dir = os.path.join(
@@ -406,13 +407,10 @@ elif STEP == 'stats':
                 COMOUT_restart_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=1):
-            COMOUT_dir_list.append(os.path.join(
-                COMOUT, 
-                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
-            ))
-            date_dt+=td(days=1)
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+            MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
     elif VERIF_CASE == 'snowfall':
         if job_type == 'reformat':
             working_output_base_dir = os.path.join(
@@ -500,13 +498,10 @@ elif STEP == 'stats':
                 COMOUT_restart_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=0):
-            COMOUT_dir_list.append(os.path.join(
-                COMOUT, 
-                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
-            ))
-            date_dt+=td(days=1)
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+            MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
 elif STEP == 'plots':
     if VERIF_CASE == 'grid2obs':
 
