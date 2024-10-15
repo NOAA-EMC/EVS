@@ -186,19 +186,18 @@ for OBS in OBSNAME:
                     os.makedirs(arch_file_dir)
                 print("----> Trying to create "+arch_file)
                 if SENDCOM == 'YES':
-                    sub_util.copy_file(prod_file, arch_file)
-                    if os.path.exists(arch_file):
-                        sub_util.run_shell_command(
-                            ['chmod', '640', arch_file]
-                        )
-                        sub_util.run_shell_command(
-                            ['chgrp', 'rstprod', arch_file]
-                        )
-                if not os.path.exists(prod_file):
-                    sub_util.log_missing_file_obs(
-                        log_missing_file, prod_file, OBS,
-                        CDATE_dt
+                    sub_util.prep_prod_prepbufr_file(
+                        prod_file, arch_file, CDATE_dt,
+                        log_missing_file
                     )
+                    #sub_util.copy_file(prod_file, arch_file)
+                    #if os.path.exists(arch_file):
+                        #sub_util.run_shell_command(
+                            #['chmod', '640', arch_file]
+                        #)
+                        #sub_util.run_shell_command(
+                            #['chgrp', 'rstprod', arch_file]
+                        #)
         elif OBS == 'osi':
             daily_prod_file = sub_util.format_filler(
                 obs_dict['daily_prod_file_format'], CDATE_dt, CDATE_dt,

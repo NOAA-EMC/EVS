@@ -858,6 +858,43 @@ def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
         dly_prepped_data.close()
     copy_file(daily_prepped_file, daily_dest_file)
 
+def prep_prod_prepbufr_file(source_file, dest_file, date_dt,
+                            log_missing_file):
+    """! Do prep work for obsproc prepbufr nam files
+
+         Args:
+             source_file      - source file (string)
+             dest_file        - destination file (string)
+             date_dt          - date (datetime object)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+         Returns:
+    """
+    # Environment variables and executables
+    SPLIT_BY_SUBSET = os.path.join(
+        os.environ['bufr_ROOT'], 'bin', 'split_by_subset'
+    )
+    # Temporary file names
+    prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                +dest_file.rpartition('/')[2])
+    split_file = os.path.join(os.getcwd(), 'ADPSFC')
+    # Prep file
+    if check_file_exists_size(source_file):
+        copy_file(source_file, prepped_file)
+        if os.path.exists(prepped_file):
+            run_shell_command(['chmod', '750', prepped_file])
+            run_shell_command(['chgrp', 'rstprod', prepped_file])
+            run_shell_command([SPLIT_BY_SUBSET, prepped_file])
+    else:
+        log_missing_file_obs(log_missing_file, source_file,
+                             f"Prepbufr NAM",
+                             date_dt)
+    if check_file_exists_size(split_file):
+        copy_file(split_file, dest_file)
+        if os.path.exists(dest_file):
+            run_shell_command(['chmod', '750', dest_file])
+            run_shell_command(['chgrp', 'rstprod', dest_file])
+
 def weekly_osi_saf_file(weekly_source_file_list, weekly_dest_file,
                         weekly_dates):
     """! Gather weekly OSI-SAF production files
