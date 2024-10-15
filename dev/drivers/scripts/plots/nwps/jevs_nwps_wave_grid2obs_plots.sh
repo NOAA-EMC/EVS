@@ -12,7 +12,7 @@ set -x
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=nwps
-export OBTYPE=NDBC
+export OBTYPE=NDBC_STANDARD
 export NET=evs_beta5
 export COMPONENT=nwps
 export STEP=plots
