@@ -47,7 +47,7 @@ evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT',
         'NEST','URL_HEAD',
         ]
-evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR']
+evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR', 'bufr_ROOT']
 evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = [
         'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
         'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE',
@@ -255,31 +255,33 @@ if STEP == 'prep':
                           + f" of day. Please set VHOUR to a two-digit integer between"
                           + f"00 and 23 in {config}.")
                     sys.exit(1)
-        if len(OBS_ACC) != 2:
-            print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC}, which has"
-                  + f" {len(OBS_ACC)} digits, but two digits are required."
-                  + f" Please check the configuration file: {config}")
-            sys.exit(1)
-        if int(OBS_ACC) <= 0:
-            print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC}, but must be a"
-                  + f" positive integer. Please check the configuration file:"
-                  + f" {config}")
-            sys.exit(1)
+        if OBS_ACC != "VARIABLE":
+            if len(OBS_ACC) != 2:
+                print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC}, which has"
+                      + f" {len(OBS_ACC)} digits, but two digits are required."
+                      + f" Please check the configuration file: {config}")
+                sys.exit(1)
+            elif int(OBS_ACC) <= 0:
+                print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC}, but must be a"
+                      + f" positive integer. Please check the configuration file:"
+                      + f" {config}")
+                sys.exit(1)
         if len(ACC) != 2:
             print(f"FATAL ERROR: ACC is set to {ACC}, which has"
                   + f" {len(ACC)} digits, but two digits are required."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
-        if int(ACC) <= 0:
+        elif int(ACC) <= 0:
             print(f"FATAL ERROR: ACC is set to {ACC}, but must be a"
                   + f" positive integer. Please check the configuration file:"
                   + f" {config}")
             sys.exit(1)
-        elif int(ACC) < int(OBS_ACC):
-            print(f"FATAL ERROR: ACC is set to {ACC}, and is smaller than the"
-                  + f" OBS_ACC ({OBS_ACC}), which is not allowed."
-                  + f" Please check the configuration file: {config}")
-            sys.exit(1)
+        elif OBS_ACC != "VARIABLE":
+            if int(ACC) < int(OBS_ACC):
+                print(f"FATAL ERROR: ACC is set to {ACC}, and is smaller than the"
+                      + f" OBS_ACC ({OBS_ACC}), which is not allowed."
+                      + f" Please check the configuration file: {config}")
+                sys.exit(1)
 if STEP == 'stats':
     if int(VHOUR) < 0 or int(VHOUR) > 23:
         if int(VHOUR) == 24:
@@ -331,16 +333,17 @@ if STEP == 'stats':
                               + f" positive integer. Please check the configuration file:"
                               + f" {config}")
                         sys.exit(1)
-                    if len(OBS_ACC_i) != 2:
-                        print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC_i}, which has"
-                              + f" {len(OBS_ACC_i)} digits, but two digits are required."
-                              + f" Please check the configuration file: {config}")
-                        sys.exit(1)
-                    if int(OBS_ACC_i) <= 0:
-                        print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC_i}, but must be a"
-                              + f" positive integer. Please check the configuration file:"
-                              + f" {config}")
-                        sys.exit(1)
+                    if OBS_ACC_i != "VARIABLE":
+                        if len(OBS_ACC_i) != 2:
+                            print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC_i}, which has"
+                                  + f" {len(OBS_ACC_i)} digits, but two digits are required."
+                                  + f" Please check the configuration file: {config}")
+                            sys.exit(1)
+                        elif int(OBS_ACC_i) <= 0:
+                            print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC_i}, but must be a"
+                                  + f" positive integer. Please check the configuration file:"
+                                  + f" {config}")
+                            sys.exit(1)
                     if len(ACC_i) != 2:
                         print(f"FATAL ERROR: ACC is set to {ACC_i}, which has"
                               + f" {len(ACC_i)} digits, but two digits are required."
@@ -356,11 +359,12 @@ if STEP == 'stats':
                               + f" MODEL_ACC ({MODEL_ACC_i}), which will cause an error"
                               + f" if no other options are listed. Please check the"
                               + f" configuration file: {config}")
-                    elif int(ACC_i) < int(OBS_ACC_i):
-                        print(f"WARNING: ACC is set to {ACC_i}, and is smaller than the"
-                              + f" OBS_ACC ({OBS_ACC_i}), which will cause an error"
-                              + f" if no other options are listed. Please check the"
-                              + f" configuration file: {config}")
+                    elif OBS_ACC_i != "VARIABLE":
+                        if int(ACC_i) < int(OBS_ACC_i):
+                            print(f"WARNING: ACC is set to {ACC_i}, and is smaller than the"
+                                  + f" OBS_ACC ({OBS_ACC_i}), which will cause an error"
+                                  + f" if no other options are listed. Please check the"
+                                  + f" configuration file: {config}")
     elif VERIF_CASE == 'grid2obs':
         if int(MIN_IHOUR) < 0 or int(MIN_IHOUR) > 23:
             if int(MIN_IHOUR) == 24:
