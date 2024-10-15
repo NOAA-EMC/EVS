@@ -18,22 +18,30 @@ export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 export njob=1
 for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
+    if [ "${NEST}" == "conus" ]; then
+        OBS_ACCs="01"
+    else
+        OBS_ACCs="01 03 24"
+    fi
     for ACC in "24"; do
         export ACC=$ACC
-        source $config
- 
-        # Check User's Configuration Settings
-        python $USHevs/cam/cam_check_settings.py
-        export err=$?; err_chk
- 
-        # Create Output Directories
-        python $USHevs/cam/cam_create_output_dirs.py
-        export err=$?; err_chk
- 
-        # Create Job Script 
-        python $USHevs/cam/cam_prep_precip_create_job_script.py
-        export err=$?; err_chk
-        export njob=$((njob+1))
+        for OBS_ACC in $OBS_ACCs; do
+            export OBS_ACC=$OBS_ACC
+            source $config
+     
+            # Check User's Configuration Settings
+            python $USHevs/cam/cam_check_settings.py
+            export err=$?; err_chk
+     
+            # Create Output Directories
+            python $USHevs/cam/cam_create_output_dirs.py
+            export err=$?; err_chk
+     
+            # Create Job Script 
+            python $USHevs/cam/cam_prep_precip_create_job_script.py
+            export err=$?; err_chk
+            export njob=$((njob+1))
+        done
     done
 done
 
