@@ -16,7 +16,6 @@ export FHR_END_FULL="48"
 export FHR_END_SHORT="18"
 
 # Model/Obs Settings
-export OBS_ACC="01"
 
 # Additional Verification Settings
 if [ "$ACC" = "01" ]; then
