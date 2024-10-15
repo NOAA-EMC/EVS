@@ -39,7 +39,7 @@ def get_data_type(fname):
             'and':[''],
             'or':['firewx'],
             'not':[],
-            'type': 'anl'
+            'type': 'fcst'
         },
         'SPC Outlook Area': {
             'and':[''],

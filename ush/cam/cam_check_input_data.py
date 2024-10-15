@@ -496,7 +496,7 @@ if proceed:
                 cutil.run_shell_command([
                     'echo', f'\"{DATAmsg_body1}\"', '>>mailmsgbody_unk'
                 ])
-            if fcst_names:
+            if fcst_names.size > 0:
                 if len(fcst_names) == 1:
                     DATAsubj_i = fcst_names[0]
                 else:
