@@ -238,7 +238,9 @@ for grid in g130 g242 ; do
   done
 done
 
-tar -cvf evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+ tar -cvf evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar *.png
+fi
 
 if [ $SENDCOM = YES ] && [ -s evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar ] ; then
    cp -v evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar  $COMOUT/.

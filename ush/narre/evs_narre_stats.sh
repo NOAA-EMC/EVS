@@ -125,6 +125,7 @@ for prod in mean  ; do
        echo  "export extradir='ensprod/'" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
 
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstNARRE_obsPREPBUFR_SFC_mean.conf " >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
+       echo "export err=$?; err_chk" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
 
        echo "if [ -s \$output_base/stat/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat ] ; then " >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
        echo " cp \$output_base/stat/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh

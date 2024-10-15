@@ -1024,9 +1024,9 @@ suite evs_nco
         family plots
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/plots'
           family narre
-            task jevs_narre_past90days_plots
+            task jevs_narre_last90days_plots
               trigger ../../../../06/evs/stats/narre == complete
-            task jevs_narre_past31days_plots
+            task jevs_narre_last31days_plots
               trigger ../../../../06/evs/stats/narre == complete
           endfamily
           family global_ens
@@ -1517,63 +1517,63 @@ suite evs_nco
         family plots
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/plots'
           family global_ens
-            task jevs_global_ens_atmos_naefs_precip_past90days_plots
+            task jevs_global_ens_atmos_naefs_precip_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_precip_stats == complete
-            task jevs_global_ens_atmos_naefs_precip_past31days_plots
+            task jevs_global_ens_atmos_naefs_precip_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_precip_stats == complete
-            task jevs_global_ens_atmos_naefs_grid2obs_past90days_plots
+            task jevs_global_ens_atmos_naefs_grid2obs_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_naefs_grid2obs_past31days_plots
+            task jevs_global_ens_atmos_naefs_grid2obs_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_naefs_grid2grid_past90days_plots
+            task jevs_global_ens_atmos_naefs_grid2grid_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2grid_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2grid_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_grid2grid_stats == complete
-            task jevs_global_ens_atmos_naefs_grid2grid_past31days_plots
+            task jevs_global_ens_atmos_naefs_grid2grid_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2grid_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2grid_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_grid2grid_stats == complete
-            task jevs_global_ens_atmos_gefs_sst_past90days_plots
+            task jevs_global_ens_atmos_gefs_sst_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_sst_stats == complete
-            task jevs_global_ens_atmos_gefs_sst_past31days_plots
+            task jevs_global_ens_atmos_gefs_sst_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_sst_stats == complete
-            task jevs_global_ens_atmos_gefs_snowfall_past90days_plots
+            task jevs_global_ens_atmos_gefs_snowfall_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_snowfall_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_snowfall_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_snowfall_stats == complete
-            task jevs_global_ens_atmos_gefs_snowfall_past31days_plots
+            task jevs_global_ens_atmos_gefs_snowfall_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_snowfall_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_snowfall_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_snowfall_stats == complete
-            task jevs_global_ens_atmos_gefs_sea_ice_past90days_plots
+            task jevs_global_ens_atmos_gefs_sea_ice_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_sea_ice_stats == complete
-            task jevs_global_ens_atmos_gefs_sea_ice_past31days_plots
+            task jevs_global_ens_atmos_gefs_sea_ice_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_sea_ice_stats == complete
-            task jevs_global_ens_atmos_gefs_profile4_past90days_plots
+            task jevs_global_ens_atmos_gefs_profile4_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile4_past31days_plots
+            task jevs_global_ens_atmos_gefs_profile4_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile3_past90days_plots
+            task jevs_global_ens_atmos_gefs_profile3_last90days_plots
               trigger :TIME >= 1500 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile3_past31days_plots
+            task jevs_global_ens_atmos_gefs_profile3_last31days_plots
               trigger :TIME >= 1500 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile2_past90days_plots
+            task jevs_global_ens_atmos_gefs_profile2_last90days_plots
               trigger :TIME >= 1600 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile2_past31days_plots
+            task jevs_global_ens_atmos_gefs_profile2_last31days_plots
               trigger :TIME >= 1600 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile1_past90days_plots
+            task jevs_global_ens_atmos_gefs_profile1_last90days_plots
               trigger :TIME >= 1700 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile1_past31days_plots
+            task jevs_global_ens_atmos_gefs_profile1_last31days_plots
               trigger :TIME >= 1700 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
             task jevs_global_ens_atmos_gefs_precip_spatial_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_precip_stats == complete
-            task jevs_global_ens_atmos_gefs_precip_past90days_plots
+            task jevs_global_ens_atmos_gefs_precip_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete
-            task jevs_global_ens_atmos_gefs_precip_past31days_plots
+            task jevs_global_ens_atmos_gefs_precip_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete
-            task jevs_global_ens_atmos_gefs_grid2obs_past90days_plots
+            task jevs_global_ens_atmos_gefs_grid2obs_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_grid2obs_past90days_separate_plots
+            task jevs_global_ens_atmos_gefs_grid2obs_last90days_separate_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_grid2obs_past31days_plots
+            task jevs_global_ens_atmos_gefs_grid2obs_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_grid2obs_past31days_separate_plots
+            task jevs_global_ens_atmos_gefs_grid2obs_last31days_separate_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_grid2grid_past90days_plots
+            task jevs_global_ens_atmos_gefs_grid2grid_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2grid_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2grid_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2grid_stats == complete
-            task jevs_global_ens_atmos_gefs_grid2grid_past31days_plots
+            task jevs_global_ens_atmos_gefs_grid2grid_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2grid_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2grid_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2grid_stats == complete
           endfamily
           family nfcens
@@ -1581,17 +1581,17 @@ suite evs_nco
               trigger ../../../../12/evs/stats/nfcens == complete
           endfamily
           family mesoscale
-            task jevs_mesoscale_sref_grid2obs_past90days_plots
+            task jevs_mesoscale_sref_grid2obs_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_mesoscale_sref_precip_past90days_plots
+            task jevs_mesoscale_sref_precip_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete
-            task jevs_mesoscale_sref_cnv_past90days_plots
+            task jevs_mesoscale_sref_cnv_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_cnv_stats == complete
-            task jevs_mesoscale_sref_cape_past90days_plots
+            task jevs_mesoscale_sref_cape_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_mesoscale_sref_cloud_past90days_plots
+            task jevs_mesoscale_sref_cloud_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_mesoscale_sref_td2m_past90days_plots
+            task jevs_mesoscale_sref_td2m_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
             task jevs_mesoscale_sref_precip_spatial_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete
@@ -1606,35 +1606,35 @@ suite evs_nco
               trigger :TIME >= 1355 and ../../stats/global_det/jevs_global_det_gfs_wave_grid2obs_stats == complete
           endfamily
           family cam
-            task jevs_cam_href_grid2obs_ecnt_past90days_plots
+            task jevs_cam_href_grid2obs_ecnt_last90days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
-            task jevs_cam_href_grid2obs_ecnt_past31days_plots
+            task jevs_cam_href_grid2obs_ecnt_last31days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
-            task jevs_cam_href_grid2obs_ctc_past90days_plots
+            task jevs_cam_href_grid2obs_ctc_last90days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
-            task jevs_cam_href_grid2obs_ctc_past31days_plots
+            task jevs_cam_href_grid2obs_ctc_last31days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
-            task jevs_cam_href_snowfall_past90days_plots
+            task jevs_cam_href_snowfall_last90days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_precip_stats == complete
-            task jevs_cam_href_snowfall_past31days_plots
+            task jevs_cam_href_snowfall_last31days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_precip_stats == complete
-            task jevs_cam_href_profile_past90days_plots
+            task jevs_cam_href_profile_last90days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
-            task jevs_cam_href_profile_past31days_plots
+            task jevs_cam_href_profile_last31days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
-            task jevs_cam_href_precip_past90days_plots
+            task jevs_cam_href_precip_last90days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_precip_stats == complete
-            task jevs_cam_href_precip_past31days_plots
+            task jevs_cam_href_precip_last31days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_precip_stats == complete
             task jevs_cam_href_precip_spatial_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_precip_stats == complete
-            task jevs_cam_href_spcoutlook_past90days_plots
+            task jevs_cam_href_spcoutlook_last90days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_spcoutlook_stats == complete
-            task jevs_cam_href_spcoutlook_past31days_plots
+            task jevs_cam_href_spcoutlook_last31days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_spcoutlook_stats == complete
-            task jevs_cam_href_grid2obs_cape_past90days_plots
+            task jevs_cam_href_grid2obs_cape_last90days_plots
               trigger :TIME >= 1430 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
-            task jevs_cam_href_grid2obs_cape_past31days_plots
+            task jevs_cam_href_grid2obs_cape_last31days_plots
               trigger :TIME >= 1430 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
           endfamily 
         endfamily   # 12 plots
