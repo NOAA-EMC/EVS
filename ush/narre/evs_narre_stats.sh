@@ -154,7 +154,7 @@ done #end of prod loop
 # ***************************************************************************
 chmod 775 run_all_narre_poe.sh
 if [ $run_mpi = yes ] ; then
-  mpiexec  -n 8 -ppn 8 --cpu-bind core --depth=2 cfp  ${DATA}/run_all_narre_poe.sh
+  mpiexec  -n 8 -ppn 8 --cpu-bind verbose,core cfp  ${DATA}/run_all_narre_poe.sh
   export err=$?; err_chk
 else
    ${DATA}/run_all_narre_poe.sh
