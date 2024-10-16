@@ -39,7 +39,7 @@ def get_data_type(fname):
             'and':[''],
             'or':['firewx'],
             'not':[],
-            'type': 'anl'
+            'type': 'fcst'
         },
         'SPC Outlook Area': {
             'and':[''],
@@ -597,3 +597,490 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
                 )
 
+# Construct a file name given a template
+def fname_constructor(template_str, IDATE="YYYYmmdd", IHOUR="HH", 
+                      VDATE="YYYYmmdd", VHOUR="HH", VDATEHOUR="YYYYmmddHH",
+                      VDATEm1H="YYYYmmdd", VDATEHOURm1H="YYYYmmddHH", 
+                      FHR="HH", LVL="0", OFFSET="HH"):
+    template_str = template_str.replace('{IDATE}', IDATE)
+    template_str = template_str.replace('{IHOUR}', IHOUR)
+    template_str = template_str.replace('{VDATE}', VDATE)
+    template_str = template_str.replace('{VHOUR}', VHOUR)
+    template_str = template_str.replace('{VDATEHOUR}', VDATEHOUR)
+    template_str = template_str.replace('{VDATEm1H}', VDATEm1H)
+    template_str = template_str.replace('{VDATEHOURm1H}', VDATEHOURm1H)
+    template_str = template_str.replace('{FHR}', FHR)
+    template_str = template_str.replace('{LVL}', LVL)
+    template_str = template_str.replace('{OFFSET}', OFFSET)
+    return template_str
+
+# Create a list of prepbufr file paths
+def get_prepbufr_templates(indir, vdates, paths=[], obsname='both', already_preprocessed=False):
+    '''
+        indir  - (str) Input directory for prepbufr file data
+        vdates - (datetime object) List of datetimes used to fill templates
+        paths  - (list of str) list of paths to append the prepbufr paths to 
+                 Default is empty.
+    '''
+    prepbufr_templates = []
+    prepbufr_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if vh in ['00', '03', '06', '09', '12', '15', '18', '21']:
+            if vh in ['03', '09', '15', '21']:
+                offsets = ['03']
+            elif vh in ['00', '06', '12', '18']:
+                offsets = ['00', '06']
+                if obsname in ['both', 'raob']:
+                    if not already_preprocessed:
+                        prepbufr_templates.append(os.path.join(
+                            indir, 
+                            'gdas.{VDATE}',
+                            '{VHOUR}',
+                            'atmos',
+                            'gdas.t{VHOUR}z.prepbufr'
+                        ))
+                    else:
+                        prepbufr_templates.append(os.path.join(
+                            indir, 
+                            'gdas.t{VHOUR}z.prepbufr'
+                        ))
+            for offset in offsets:
+                use_vdate = vdate + td(hours=int(offset))
+                use_vd = use_vdate.strftime('%Y%m%d')
+                use_vh = use_vdate.strftime('%H')
+                if obsname in ['both', 'metar']:
+                    if not already_preprocessed:
+                        template = os.path.join(
+                            indir, 
+                            'nam.{VDATE}',
+                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                        )
+                    else:
+                        template = os.path.join(
+                            indir, 
+                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                        )
+                    prepbufr_paths.append(fname_constructor(
+                        template, VDATE=use_vd, VHOUR=use_vh, OFFSET=offset
+                    ))
+        for template in prepbufr_templates:
+            prepbufr_paths.append(fname_constructor(
+                template, VDATE=vd, VHOUR=vh
+            ))
+    return np.concatenate((paths, np.unique(prepbufr_paths)))
+
+def preprocess_prepbufr(indir, fname, workdir, outdir, subsets):
+    if os.path.exists(os.path.join(outdir, fname)):
+        print(f"{fname} exists in {outdir} so we can skip preprocessing.")
+    else:
+        wd = os.getcwd()
+        os.chdir(workdir)
+        if os.path.isfile(os.path.join(indir, fname)):
+            run_shell_command(
+                [
+                    os.path.join(os.environ['bufr_ROOT'], 'bin', 'split_by_subset'), 
+                    os.path.join(indir, fname)
+                ]
+            )
+            if all([os.path.isfile(subset) for subset in subsets]):
+                run_shell_command(
+                    np.concatenate((
+                        ['cat'], subsets, ['>>', os.path.join(outdir, fname)]
+                    ))
+                )
+            else:
+                raise FileNotFoundError(
+                    f"The following prepbufr subsets do not exist in {workdir}: " 
+                    + ', '.join([subset for subset in subsets if not os.path.isfile(subset)])
+                    + ". Cannot concatenate subsets."
+                )
+        else:
+            print(
+                "WARNING: The following file does not exist: "
+                + f"{os.path.join(indir, fname)}."
+                + " Skipping split by subset."
+            )
+        os.chdir(wd)
+
+# Create a list of ccpa file paths
+def get_ccpa_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdates.... - (datetime object) List of datetimes used to fill templates
+        obs_acc... - (str) precip accumulation interval of ccpa files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     ccpa files in hours
+        nest...... - (str) domain used to find ccpa files
+        paths..... - (list of str) list of paths to append the prepbufr paths to 
+                     Default is empty.
+    '''
+    ccpa_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if int(target_acc) == 1:
+            if int(obs_acc) == 1:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 3:
+            if int(obs_acc) == 1:
+                offsets = [0, 1, 2]
+            elif int(obs_acc) == 3:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 24:
+            if int(obs_acc) == 1:
+                offsets = [
+                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+                    11, 12, 13, 14, 15, 16, 17, 18 , 19, 20, 
+                    21, 22, 23
+                ]
+            elif int(obs_acc) == 3:
+                offsets = [0, 3, 6, 9, 12, 15, 18, 21]
+            elif int(obs_acc) == 24:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        else:
+            raise ValueError(f"target_acc is not valid: \"{target_acc}\"")
+        for offset in offsets:
+            use_vdate = vdate - td(hours=int(offset))
+            use_vd = use_vdate.strftime('%Y%m%d')
+            use_vh = use_vdate.strftime('%H')
+            template = os.path.join(
+                indir, 
+                'ccpa.{VDATE}',
+                'ccpa.t{VHOUR}z.' + f'{obs_acc}h.hrap.{nest}.gb2'
+            )
+            ccpa_paths.append(fname_constructor(
+                template, VDATE=use_vd, VHOUR=use_vh
+            ))
+    return np.concatenate((paths, np.unique(ccpa_paths)))
+
+# Create a list of mrms file paths
+def get_mrms_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdates.... - (datetime object) List of datetimes used to fill templates
+        obs_acc... - (str) precip accumulation interval of mrms files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     mrms files in hours
+        nest...... - (str) domain used to find mrms files
+        paths..... - (list of str) list of paths to append the prepbufr paths to 
+                     Default is empty.
+    '''
+    mrms_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if int(target_acc) == 1:
+            if int(obs_acc) == 1:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 3:
+            if int(obs_acc) == 1:
+                offsets = [0, 1, 2]
+            elif int(obs_acc) == 3:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 24:
+            if int(obs_acc) == 1:
+                offsets = [
+                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+                    11, 12, 13, 14, 15, 16, 17, 18 , 19, 20, 
+                    21, 22, 23
+                ]
+            elif int(obs_acc) == 3:
+                offsets = [0, 3, 6, 9, 12, 15, 18, 21]
+            elif int(obs_acc) == 24:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        else:
+            raise ValueError(f"target_acc is not valid: \"{target_acc}\"")
+        for offset in offsets:
+            use_vdate = vdate - td(hours=int(offset))
+            use_vd = use_vdate.strftime('%Y%m%d')
+            use_vh = use_vdate.strftime('%H')
+            template = os.path.join(
+                indir, 
+                'mrms.{VDATE}',
+                'mrms.t{VHOUR}z.' + f'{obs_acc}h.{nest}.gb2'
+            )
+            mrms_paths.append(fname_constructor(
+                template, VDATE=use_vd, VHOUR=use_vh
+            ))
+    return np.concatenate((paths, np.unique(mrms_paths)))
+
+# Create a list of nohrsc file paths
+def get_nohrsc_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
+    '''
+        indir..... - (str) Input directory for nohrsc file data
+        vdates.... - (datetime object) List of datetimes used to fill templates
+        obs_acc... - (str) snow accumulation interval of nohrsc files in hours
+        target_acc - (str) target snow accumulation interval of combined
+                     nohrsc files in hours
+        nest...... - (str) domain used to find nohrsc files
+        paths..... - (list of str) list of paths to append the nohrsc paths to 
+                     Default is empty.
+    '''
+    nohrsc_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if int(target_acc) == 6:
+            if int(obs_acc) == 6:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 24:
+            if int(obs_acc) == 6:
+                offsets = [0, 6, 12, 18]
+            elif int(obs_acc) == 24:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        else:
+            raise ValueError(f"target_acc is not valid: \"{target_acc}\"")
+        for offset in offsets:
+            use_vdate = vdate - td(hours=int(offset))
+            use_vd = use_vdate.strftime('%Y%m%d')
+            use_vh = use_vdate.strftime('%H')
+            template = os.path.join(
+                indir, 
+                '{VDATE}', 'wgrbbul', 'nohrsc_snowfall',
+                f'sfav2_CONUS_{int(obs_acc)}h_' + '{VDATE}{VHOUR}_grid184.grb2'
+            )
+            nohrsc_paths.append(fname_constructor(
+                template, VDATE=use_vd, VHOUR=use_vh
+            ))
+    return np.concatenate((paths, np.unique(nohrsc_paths)))
+
+# Return a list of missing ccpa files needed to create "target_acc"
+def check_ccpa_files(indir, vdate, obs_acc, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        obs_acc... - (str) precip accumulation interval of ccpa files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     ccpa files in hours
+        nest...... - (str) domain used to find ccpa files
+    '''
+    paths = get_ccpa_qpe_templates(indir, [vdate], obs_acc, target_acc, nest)
+    return [path for path in paths if not os.path.exists(path)]
+
+# Return a list of missing mrms files needed to create "target_acc"
+def check_mrms_files(indir, vdate, obs_acc, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        obs_acc... - (str) precip accumulation interval of mrms files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     mrms files in hours
+        nest...... - (str) domain used to find mrms files
+    '''
+    paths = get_mrms_qpe_templates(indir, [vdate], obs_acc, target_acc, nest)
+    return [path for path in paths if not os.path.exists(path)]
+
+# Return a list of missing nohrsc files needed to create "target_acc"
+def check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        obs_acc... - (str) precip accumulation interval of nohrsc files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     nohrsc files in hours
+        nest...... - (str) domain used to find nohrsc files
+    '''
+    paths = get_nohrsc_qpe_templates(indir, [vdate], obs_acc, target_acc, nest)
+    return [path for path in paths if not os.path.exists(path)]
+
+# Return the obs accumulation interval needed to create target_acc, based on
+# available ccpa files
+def get_ccpa_accums(indir, vdate, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        target_acc - (str) target precip accumulation interval of combined
+                     ccpa files in hours
+        nest...... - (str) domain used to find ccpa files
+    '''
+    if int(target_acc) == 1:
+        # check 1-h obs
+        obs_acc = "01"
+        missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_ccpa:
+            return None
+        else:
+            return obs_acc
+    elif int(target_acc) == 3:
+        # check 3-h obs
+        obs_acc = "03"
+        missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_ccpa:
+            # check 1-h obs
+            obs_acc = "01"
+            missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_ccpa:
+                return None
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    elif int(target_acc) == 24:
+
+        # check 24-h obs
+        obs_acc = "24"
+        missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_ccpa:
+            # check 3-h obs
+            obs_acc = "03"
+            missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_ccpa:
+                # check 1-h obs
+                obs_acc = "01"
+                missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+                if missing_ccpa:
+                    return None
+                else:
+                    return obs_acc
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    else:
+        raise ValueError(f"Invalid target_acc: \"{target_acc}\"")
+
+# Return the obs accumulation interval needed to create target_acc, based on
+# available mrms files
+def get_mrms_accums(indir, vdate, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        target_acc - (str) target precip accumulation interval of combined
+                     mrms files in hours
+        nest...... - (str) domain used to find mrms files
+    '''
+    if int(target_acc) == 1:
+        # check 1-h obs
+        obs_acc = "01"
+        missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_mrms:
+            return None
+        else:
+            return obs_acc
+    elif int(target_acc) == 3:
+        # check 3-h obs
+        obs_acc = "03"
+        missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_mrms:
+            # check 1-h obs
+            obs_acc = "01"
+            missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_mrms:
+                return None
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    elif int(target_acc) == 24:
+
+        # check 24-h obs
+        obs_acc = "24"
+        missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_mrms:
+            # check 3-h obs
+            obs_acc = "03"
+            missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_mrms:
+                # check 1-h obs
+                obs_acc = "01"
+                missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+                if missing_mrms:
+                    return None
+                else:
+                    return obs_acc
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    else:
+        raise ValueError(f"Invalid target_acc: \"{target_acc}\"")
+
+# Return the obs accumulation interval needed to create target_acc, based on
+# available nohrsc files
+def get_nohrsc_accums(indir, vdate, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        target_acc - (str) target precip accumulation interval of combined
+                     nohrsc files in hours
+        nest...... - (str) domain used to find nohrsc files
+    '''
+    if int(target_acc) == 6:
+        # check 6-h obs
+        obs_acc = "06"
+        missing_nohrsc = check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_nohrsc:
+            return None
+        else:
+            return obs_acc
+    elif int(target_acc) == 24:
+        # check 24-h obs
+        obs_acc = "24"
+        missing_nohrsc = check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_nohrsc:
+            # check 6-h obs
+            obs_acc = "06"
+            missing_nohrsc = check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_nohrsc:
+                return None
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    else:
+        raise ValueError(f"Invalid target_acc: \"{target_acc}\"")
+
+# Return the obs accumulation interval needed to create target_acc, based on
+# available input files
+def get_obs_accums(indir, vdate, target_acc, nest, obsname, job_type='reformat'):
+    '''
+        indir..... - (str) Input directory for obs file data
+        vdate..... - (datetime object) datetime used to fill templates
+        target_acc - (str) target precip accumulation interval of combined
+                     obs files in hours
+        nest...... - (str) domain used to find obs files
+        obsname... - (str) name of input file dataset
+    '''
+    if obsname == "mrms":
+        return get_mrms_accums(indir, vdate, target_acc, nest)
+    elif obsname == "ccpa":
+        return get_ccpa_accums(indir, vdate, target_acc, nest)
+    elif obsname == "nohrsc":
+        return get_nohrsc_accums(indir, vdate, target_acc, nest)
+    else:
+        raise ValueError(f"Invalid obsname: \"{obsname}\"")
+
+# Return availability of obs needed for job
+def get_obs_avail(indir, vdate, nest, obsname):
+    '''
+        indir..... - (str) Input directory for obs file data
+        vdate..... - (datetime object) datetime used to fill templates
+        nest...... - (str) domain used to find obs files
+        obsname... - (str) name of input file dataset
+    '''
+    if obsname in ["raob", "metar"]:
+        paths = get_prepbufr_templates(indir, [vdate], obsname=obsname, already_preprocessed=True)
+        if paths.size > 0:
+            return all([os.path.exists(fname) for fname in paths])
+        else:
+            return False
+    else:
+        raise ValueError(f"Invalid obsname: \"{obsname}\"")
