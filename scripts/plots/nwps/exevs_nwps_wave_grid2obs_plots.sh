@@ -29,6 +29,9 @@ export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 #############################
 
 cd $DATA
+mkdir -p $DATA/ndbc_standard
+mkdir -p $DATA/wave
+
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
 set -x
