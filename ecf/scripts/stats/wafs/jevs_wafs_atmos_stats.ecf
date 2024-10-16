@@ -50,7 +50,7 @@ export VERIF_CASE=grid2grid
 ############################################################
 # Execute j-job
 ############################################################
-${HOMEevs}/jobs/JEVS_WAFS_ATMOS_STATS
+${HOMEevs}/jobs/JEVS_WAFS_STATS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

@@ -446,7 +446,9 @@ generate_stats_jobs_dict = {
                                    'var1_fcst_name': 'CAPE',
                                    'var1_fcst_levels': 'P90-0',
                                    'var1_fcst_options': ('cnt_thresh = '
-                                                         +'[ >0 ];'),
+                                                         +'[ NA ]; '
+                                                         +'cnt_logic = '
+                                                         +'INTERSECTION;'),
                                    'var1_fcst_threshs': ('ge500, ge1000, '
                                                          +'ge1500, ge2000, '
                                                          +'ge3000, ge4000, '
@@ -456,7 +458,7 @@ generate_stats_jobs_dict = {
                                    'var1_obs_options': ('cnt_thresh = '
                                                         +'[ >0 ]; '
                                                         +'cnt_logic = '
-                                                        +'UNION;'),
+                                                        +'INTERSECTION;'),
                                    'var1_obs_threshs': ('ge500, ge1000, '
                                                         +'ge1500, ge2000, '
                                                         +'ge3000, ge4000, '
@@ -472,7 +474,9 @@ generate_stats_jobs_dict = {
                                  'var1_fcst_name': 'CAPE',
                                  'var1_fcst_levels': 'Z0',
                                  'var1_fcst_options': ('cnt_thresh = '
-                                                       +'[ >0 ];'),
+                                                       +'[ NA ]; '
+                                                       +'cnt_logic = '
+                                                       +'INTERSECTION;'),
                                  'var1_fcst_threshs': ('ge500, ge1000, '
                                                        +'ge1500, ge2000, '
                                                        +'ge3000, ge4000, '
@@ -482,7 +486,7 @@ generate_stats_jobs_dict = {
                                  'var1_obs_options': ('cnt_thresh = '
                                                       +'[ >0 ]; '
                                                       +'cnt_logic = '
-                                                      +'UNION;'),
+                                                      +'INTERSECTION;'),
                                  'var1_obs_threshs': ('ge500, ge1000, '
                                                       +'ge1500, ge2000, '
                                                       +'ge3000, ge4000, '
