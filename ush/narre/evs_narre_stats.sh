@@ -161,8 +161,8 @@ else
    export err=$?; err_chk
 fi
 
->COMOUTsmall/stats_completed
-echo "stats are completed" >> COMOUTsmall/stats_completed
+>$COMOUTsmall/stats_completed
+echo "stats are completed" >> $COMOUTsmall/stats_completed
 
 fi # check restart for all tasks
 
