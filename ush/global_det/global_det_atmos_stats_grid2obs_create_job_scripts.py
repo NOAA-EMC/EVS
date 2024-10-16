@@ -37,6 +37,7 @@ METPLUS_PATH = os.environ['METPLUS_PATH']
 MET_ROOT = os.environ['MET_ROOT']
 PARMevs = os.environ['PARMevs']
 model_list = os.environ['model_list'].split(' ')
+model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
@@ -849,6 +850,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
+                    # Create job working directory
+                    job_env_dict['job_num_work_dir'] = os.path.join(
+                        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                        'job_work_dir', JOB_GROUP,
+                        f"job{job_env_dict['job_num']}"
+                    )
+                    job_env_dict['MET_TMP_DIR'] = os.path.join(
+                        job_env_dict['job_num_work_dir'], 'tmp'
+                    )
                     # Set any environment variables for special cases
                     if JOB_GROUP in ['assemble_data', 'generate_stats']:
                         if verif_type == 'pres_levs':
@@ -912,7 +922,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     check_model_files = True
                     if check_model_files:
                         (model_files_exist, valid_date_fhr_list,
-                         model_copy_output_DATA2COMOUT_list) = (
+                         copy_output_list) = (
                             gda_util.check_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = ', '.join(
@@ -1129,6 +1139,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 job.write(f'export {name}="{value}"\n')
                     # Write job commands
                     if write_job_cmds:
+                        gda_util.make_dir(job_env_dict['job_num_work_dir'])
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
                             job.write('export err=$?; err_chk'+'\n')
@@ -1158,13 +1169,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                             job.write(cmd+'\n')
                                             job.write('export err=$?; err_chk'
                                                       +'\n')
-                        if job_env_dict['SENDCOM'] == 'YES':
-                            for model_output_file_tuple \
-                                    in model_copy_output_DATA2COMOUT_list:
-                                job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
-                                          +f"cp -v {model_output_file_tuple[0]} "
-                                          +f"{model_output_file_tuple[1]}"
-                                          +f"; fi\n")
+                        for output_file_tuple in copy_output_list:
+                            job.write(f'if [ -f "{output_file_tuple[0]}" ]; then '
+                                      +f"cp -v {output_file_tuple[0]} "
+                                      +f"{output_file_tuple[1]}; fi\n")
                     else:
                         if JOB_GROUP == 'assemble_data':
                             if verif_type_job == 'TempAnom2m':

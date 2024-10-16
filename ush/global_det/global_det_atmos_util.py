@@ -1576,16 +1576,8 @@ def check_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
-                        model, job_dict['VERIF_CASE'], 'regrid_data_plane_'
-                        +job_dict['VERIF_TYPE']+'_'
-                        +job_dict['job_name']+'_init'
-                        +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_file_format_JOB = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'regrid_data_plane_'
                         +job_dict['VERIF_TYPE']+'_'
