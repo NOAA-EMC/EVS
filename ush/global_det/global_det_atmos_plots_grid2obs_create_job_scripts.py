@@ -448,7 +448,7 @@ for sfc_job in list(filter_stats_jobs_dict['sfc'].keys()):
     filter_stats_jobs_dict['sfc'][sfc_job]['grid'] = 'G104'
     filter_stats_jobs_dict['sfc'][sfc_job]['interps'] = ['BILIN/4']
     if 'CAPE' in sfc_job:
-        sfc_job_fcst_threshs = ['gt0||']
+        sfc_job_fcst_threshs = ['NA']
         sfc_job_obs_threshs = ['gt0']
     elif sfc_job == 'Ceiling':
         sfc_job_fcst_threshs = [
