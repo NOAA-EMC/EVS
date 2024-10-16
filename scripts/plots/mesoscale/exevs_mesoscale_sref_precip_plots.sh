@@ -19,7 +19,7 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
-restart=$COMOUTplots/restart/$past_days/sref_precip_plots
+restart=$COMOUTplots/restart/$last_days/sref_precip_plots
 if [ ! -d  $restart ] ; then
   mkdir -p $restart
 fi
@@ -37,7 +37,7 @@ model_list='GEFS SREF'
 models='GEFS, SREF'
 
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
     hrs=$((n*24))
     first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
     n=$((n+1))
@@ -47,10 +47,10 @@ export init_beg=$first_day
 export valid_beg=$first_day
 
 #*************************************************************************
-# Virtual link the  sref's stat data files of past 90 days
+# Virtual link the  sref's stat data files of last 90 days
 #**************************************************************************
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
   #hrs=`expr $n \* 24`
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
@@ -87,7 +87,15 @@ VARs=APCP_06
 FCST_LEVEL_values=A6
 
 for fcst_valid_hour in $fcst_valid_hours ; do
-
+   if [ $fcst_valid_hour = "0,3" ] ; then
+     valid="00z_03z"
+   elif [ $fcst_valid_hour = "6,9" ] ; then 
+     valid="06z_09z"
+   elif [ $fcst_valid_hour = "12,15" ] ; then
+     valid="12z_15z"
+   elif [ $fcst_valid_hour = "18,21" ] ; then
+     valid="18z_21z"
+   fi
 for stats in  ets fbias fss ; do 
 
  if [ $stats = ets ] ; then
@@ -212,8 +220,12 @@ elif [ $stats = fss ] ; then
          ####################################################################
          #Save for restart:
          ####################################################################
-         echo "cp ${plot_dir}/${score_type}*${stats}*.png $restart/." >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
-         echo "[[ $? = 0 ]] && >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+         echo "if [ ${score_type} = lead_average ] ; then" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "  cp ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+         echo "else" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "  cp ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "fi" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+         echo "[[ \$? = 0 ]] && >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh" >> run_all_poe.sh
@@ -286,17 +298,17 @@ for stats in  ets fbias fss  ; do
     if [ $score_type = lead_average ] ; then
       if [ $stats = ets ] || [ $stats = fbias ] ; then
        if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${last_days}days.${scoretype}_valid_${valid}.buk_conus.png
        fi
       elif [ $stats = fss ] ; then
        if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${last_days}days.${scoretype}_valid_${valid}.buk_conus.png
        fi
       fi
     elif [ $score_type = threshold_average ] ; then
 	 for lead in f24 f36 f48 f60 f72 f84 ; do 
 	   if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png ] ; then
-             mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid_${valid}.${lead}.buk_conus.png
+             mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png evs.sref.${stats}.apcp_6a.last${last_days}days.${scoretype}_valid_${valid}.${lead}.buk_conus.png
 	   fi
 	 done
     fi	 
@@ -306,16 +318,17 @@ for stats in  ets fbias fss  ; do
 done     #stats
 done     #valid
 
-tar -cvf evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+ tar -cvf evs.plots.sref.precip.last${last_days}days.v${VDATE}.tar *.png
+fi
 
-
-if [ $SENDCOM = YES ] && [ -s evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar ] ; then
- cp -v evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.sref.precip.last${last_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.sref.precip.last${last_days}days.v${VDATE}.tar  $COMOUTplots/.  
 fi
 
 
 if [ $SENDDBN = YES ] ; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.sref.precip.last${last_days}days.v${VDATE}.tar
 fi
 
 

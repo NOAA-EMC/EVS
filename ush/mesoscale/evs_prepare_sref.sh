@@ -36,12 +36,11 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
   #fday -> forecst running day 
   #fvhr -> forecast cycle hour
   for vvhr in 03 09 15 21  ; do
-    for fhr in  06 12 18 24 30 36 42 48 54 60 66 72 78 84 ; do
+    for fhr in 06 12 18 24 30 36 42 48 54 60 66 72 78 84 ; do
       obsv_vhr=${vday}${vvhr}     #validation time: xxxx.tvvhrz.f00
       fcst_time=`$ndate -$fhr $obsv_vhr`   #fcst running time in yyyyymmddhh
       export fday=${fcst_time:0:8}
       export fvhr=${fcst_time:8:2}
-      export modelpath=${COMINsref}/sref.${fday}/$fvhr/pgrb
       if [ ! -d $WORK/sref.${fday} ] ; then
        mkdir $WORK/sref.${fday}
       fi
@@ -50,6 +49,8 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
       if [ ! -d $COMOUTrestart/sref.${fday} ] ; then
         mkdir -p $COMOUTrestart/sref.${fday}
       fi
+
+      export modelpath=$WORK/sref.${fday}
 
       for base in arw nmb ; do
         for mb in ctl n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ; do
@@ -60,6 +61,17 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 	 #         if yes, copy it to the working directory (restart case)  
 	 ##################################################################################################
 	 if [ ! -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+
+	   if [ $base = arw ] && [ $fhr = 06 ] ; then
+	      sref03=${COMINsref}/sref.${fday}/$fvhr/pgrb/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
+	      $WGRIB2 $sref03|grep "^479:"|$WGRIB2 -i $sref03 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
+	      sref06=${COMINsref}/sref.${fday}/$fvhr/pgrb/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
+	      $WGRIB2 $sref06|grep "^479:"|$WGRIB2 -i $sref06 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
+	      export modelpath=$WORK/sref.${fday}
+            else
+              export modelpath=${COMINsref}/sref.${fday}/$fvhr/pgrb  
+           fi
+
            ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
            export err=$?; err_chk
 	   if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
@@ -251,13 +263,18 @@ export output_base=${WORK}/pb2nc
      #*******************************************************************************
      >$WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
      split_by_subset ${COMINobsproc}/gdas.${vday}/$vhr/atmos/gdas.t${vhr}z.prepbufr
-     cat $WORK/ADPSFC $WORK/SFCSHP $WORK/ADPUPA >> $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
-
+     for subset in ADPSFC SFCSHP ADPUPA ; do
+       if [ -s ${WORK}/${subset} ]; then
+          cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
+       fi
+     done
      export bufrpath=$WORK
-     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf
-     export err=$?; err_chk
-     if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
-       cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
+     if [ -s $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr ] ; then
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf
+       export err=$?; err_chk
+       if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
+         cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
+       fi
      fi
    done
 

@@ -59,20 +59,4 @@ chmod +x run_gather_all_poe.sh
 ${DATA}/run_gather_all_poe.sh
 export err=$?; err_chk
 
-echo "Print stat gather  metplus log files begin:"
-log_dir="$DATA/gather/logs"
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-            if [ -f "$log_file" ]; then
-                echo "Start: $log_file"
-                cat "$log_file"
-                echo "End: $log_file"
-            fi
-        done
-    fi
-fi
-echo "Print stat gather  metplus log files end"
 
