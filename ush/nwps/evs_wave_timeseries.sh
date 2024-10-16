@@ -15,7 +15,7 @@ periods='LAST31DAYS LAST90DAYS'
 
 inithours='00 12'
 fhrs='000 024 048 072 096 120 144 168 192 216 240'
-wave_vars='HTSGW'
+wave_vars='HTSGW WIND'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 ptype='time_series'
 
