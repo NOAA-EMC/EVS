@@ -17,7 +17,7 @@ periods='LAST31DAYS LAST90DAYS'
 inithours='01 07 13 19'
 fhrs='000,024,048,072,096,120,144'
 # fhr is hardcoded below!
-wave_vars='HTSGW'
+wave_vars='HTSGW WIND'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 ptype='lead_average'
 region='GreatLakes'
