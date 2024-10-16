@@ -22,7 +22,6 @@ export NET=${NET:-evs}
 export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-subseasonal}
 export RUN=${RUN:-atmos}
-export VERIF_CASE=${VERIF_CASE:-grid2grid}
 export machine=${machine:-WCOSS2}
 
 ################################################################

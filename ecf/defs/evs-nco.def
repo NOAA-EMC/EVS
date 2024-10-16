@@ -1061,6 +1061,10 @@ suite evs_nco
 	  family glwu
             task jevs_glwu_wave_grid2obs_prep
               time 14:30
+	  endfamily
+	  family nwps
+            task jevs_nwps_wave_grid2obs_prep
+              time 14:45
           endfamily
           family global_det
             task jevs_global_det_wave_prep
@@ -1129,6 +1133,10 @@ suite evs_nco
 	  family glwu
 	    task jevs_glwu_wave_grid2obs_stats
 	      trigger :TIME >= 1500 and ../../prep/glwu == complete
+	  endfamily
+	  family nwps
+	    task jevs_nwps_wave_grid2obs_stats
+	      trigger :TIME >= 1515 and ../../prep/nwps == complete
 	  endfamily
           family subseasonal
             task jevs_cfs_subseasonal_grid2obs_stats
