@@ -229,10 +229,11 @@ while valid_hr <= int(valid_hr_end):
                                          ][:])
                     daily_avg_obs_file_list.append(daily_avg_day_fhr_input_file)
             else:
-                print("No input file for forecast hour "+str(daily_avg_day_fhr)
-                      +', valid '+str(daily_avg_day_fhr_valid)
-                      +', init '+str(daily_avg_day_init)+": "
-                      +', '.join(check_input_file_list)+" do not exist")
+                if not found_input:
+                    print("No input file for forecast hour "+str(daily_avg_day_fhr)
+                          +', valid '+str(daily_avg_day_fhr_valid)
+                          +', init '+str(daily_avg_day_init)+": "
+                          +', '.join(check_input_file_list)+" do not exist")
             if job_name == 'DailyAvg_GeoHeightAnom':
                 daily_avg_day_fhr+=12
             else:
