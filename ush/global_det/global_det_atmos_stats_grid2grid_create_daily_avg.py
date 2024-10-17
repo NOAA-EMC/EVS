@@ -185,7 +185,7 @@ while valid_hr <= int(valid_hr_end):
             daily_avg_day_fhr_job_input_file_glob = glob.glob(
                 os.path.join(
                     DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
-                    'mpmd_work_dir', 'reformat_data', 'job*',
+                    'job_work_dir', 'reformat_data', 'job*',
                     daily_avg_day_fhr_COMOUT_input_file.rpartition(
                         f"{COMPONENT}/"
                     )[2]
