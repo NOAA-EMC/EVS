@@ -9,7 +9,6 @@ Run By: individual statistics job scripts generated through
 '''
 
 import os
-import glob
 import sys
 import numpy as np
 import glob
