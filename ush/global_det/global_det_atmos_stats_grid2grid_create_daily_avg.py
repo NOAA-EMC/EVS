@@ -253,14 +253,15 @@ while valid_hr <= int(valid_hr_end):
                 expected_nfiles = 5
             elif fhr_inc == '12':
                 expected_nfiles = 3
-        if len(daily_avg_fcst_file_list) == expected_nfiles \
-                and len(daily_avg_obs_file_list) == expected_nfiles:
-            make_daily_avg_output_file = True
-        else:
-            print("NOTE: Cannot create daily average file "
-                  +output_file+"; need "+str(expected_nfiles)+" "
-                  +"input files")
-            make_daily_avg_output_file = False
+        if make_daily_avg_output_file:
+            if len(daily_avg_fcst_file_list) == expected_nfiles \
+                    and len(daily_avg_obs_file_list) == expected_nfiles:
+                make_daily_avg_output_file = True
+            else:
+                print("NOTE: Cannot create daily average file "
+                      +output_file+"; need "+str(expected_nfiles)+" "
+                      +"input files")
+                make_daily_avg_output_file = False
         if make_daily_avg_output_file:
             print(f"Output File: {output_file}")
             if not os.path.exists(full_path_job_num_work_dir):
