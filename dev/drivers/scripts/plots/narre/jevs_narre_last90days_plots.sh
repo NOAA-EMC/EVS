@@ -1,25 +1,22 @@
 #!/bin/bash
 
-#PBS -N jevs_narre_past31days_plots
-#PBS -j oe
+#PBS -N jevs_narre_last90days_plots
+#PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=8:mem=8GB
+#PBS -l walltime=01:30:00
+#PBS -l place=vscatter,select=1:ncpus=8:mem=25GB
 #PBS -l debug=true
 
 
 export OMP_NUM_THREADS=1
 
+export NET=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-
 source $HOMEevs/versions/run.ver
 
-
 export envir=prod
-
-export NET=evs
 export STEP=plots
 export COMPONENT=narre
 export RUN=atmos
@@ -36,11 +33,11 @@ export SENDMAIL=YES
 export SENDDBN=NO
 
 export vhr=${vhr:-00}
-export past_days=31
+export last_days=90
 
 export run_mpi=yes
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
