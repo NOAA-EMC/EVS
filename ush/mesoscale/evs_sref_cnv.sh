@@ -13,8 +13,8 @@ export regrid='NONE'
 #********************************************
 # Check the input data files availability
 # ******************************************
-$USHevs/mesoscale/evs_check_sref_files.sh
-export err=$?; err_chk
+#$USHevs/mesoscale/evs_check_sref_files.sh
+#export err=$?; err_chk
 
 #*******************************************
 # Build POE script to collect sub-jobs
@@ -51,11 +51,11 @@ for  obsv in prepbufr ; do
   #*****************************************************
 
   for vhr in 00 06 12 18 ; do 
-   for fhr in 3 9 15 21 27 33 39 45 51 57 63 69 75 81 87 ; do
+   for fhr in 03 09 15 21 27 33 39 45 51 57 63 69 75 81 87 ; do
     
        >run_sref_cnv_${fhr}_${vhr}.sh
 
-    if [ ! -e $COMOUTrestart/run_sref_cnv_${fhr}.completed ] ; then
+    if [ ! -e $COMOUTrestart/run_sref_cnv_${fhr}_${vhr}.completed ] ; then
 
      ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
      iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
@@ -90,7 +90,7 @@ for  obsv in prepbufr ; do
        export mbr
        for base_model in arw nmb ; do 
 	  for mbr in ctl p1 p2 p3 p4 p5 p6  n1 n2 n3 n4 n5 n6  ; do
-	   input_fcst=${COMINsref}/sref.${iday}/${ihr}/pgrb/sref.${base_model}.t${ihr}z.pgrb212.${mbr}.f${fhr}.grib2
+	   input_fcst=${COMINsref}/sref.${iday}/${ihr}/pgrb/sref_${base_model}.t${ihr}z.pgrb212.${mbr}.f${fhr}.grib2
 	   if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 	    echo "export base_model=$base_model" >> run_sref_cnv_${fhr}_${vhr}.sh
 	    echo "export mbr=$mbr" >> run_sref_cnv_${fhr}_${vhr}.sh 
@@ -100,7 +100,7 @@ for  obsv in prepbufr ; do
        done
        
        echo "cd \$output_base/stat" >> run_sref_cnv_${fhr}_${vhr}.sh 
-       echo "$USHevs/mesoscale/evs_sref_average_cnv.sh $fhr" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo "$USHevs/mesoscale/evs_sref_average_cnv.sh $fhr $vhr" >> run_sref_cnv_${fhr}_${vhr}.sh
 
        #echo "rm \$output_base/stat/*SREFarw*.stat ">> run_sref_cnv_${fhr}_${vhr}.sh
        #echo "rm \$output_base/stat/*SREFnmb*.stat ">> run_sref_cnv_${fhr}_${vhr}.sh
@@ -110,7 +110,7 @@ for  obsv in prepbufr ; do
        echo "fi" >> run_sref_cnv_${fhr}_${vhr}.sh
 
        #For restart: 
-       echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_cnv_${fhr}.completed" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_cnv_${fhr}_${vhr}.completed" >> run_sref_cnv_${fhr}_${vhr}.sh
       
        chmod +x run_sref_cnv_${fhr}_${vhr}.sh
        echo "${DATA}/run_sref_cnv_${fhr}_${vhr}.sh" >> run_all_sref_cnv_poe.sh
@@ -127,7 +127,7 @@ done
 #*************************************************
 chmod 775 run_all_sref_cnv_poe.sh
 if [ $run_mpi = yes ] ; then
-   mpiexec  -n 15 -ppn 15 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_cnv_poe.sh
+   mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/run_all_sref_cnv_poe.sh
 else
    ${DATA}/run_all_sref_cnv_poe.sh
 fi 
