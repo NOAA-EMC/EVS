@@ -111,7 +111,7 @@ while valid_date_dt <= ENDDATE_dt:
         # Set output file
         output_file = os.path.join(
             full_path_job_num_work_dir, f"anomaly_{VERIF_TYPE}_{job_name}_"
-            +f"init{init_date_dt:%Y%m%d%H}_fhr{str(fhr).zfill(3)}.nc"
+            +f"init{init_date_dt:%Y%m%d%H}_fhr{str(fhr).zfill(3)}.stat"
         )
         output_file_DATA = os.path.join(
             full_path_DATA, output_file.rpartition('/')[2]
