@@ -106,38 +106,7 @@ assemble_data_jobs_dict = {
                       gda_util.python_command(
                           'global_det_atmos_stats_grid2obs_'
                           'create_merged_ptype.py',
-                          [os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_Rain_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           ),
-                           os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_Snow_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           ),
-                           os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_FrzRain_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           ),
-                           os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_IcePel_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           )]
+                          []
                       )
                   ]}
     },
@@ -161,22 +130,7 @@ assemble_data_jobs_dict = {
                                     gda_util.python_command(
                                         'global_det_atmos_stats_'
                                         'grid2obs_create_anomaly.py',
-                                        ['TMP_Z2',
-                                         os.path.join(
-                                             '$DATA',
-                                             '${VERIF_CASE}_${STEP}',
-                                             'METplus_output',
-                                             '${RUN}.'
-                                             +'{valid?fmt=%Y%m%d}',
-                                             '$MODEL', '$VERIF_CASE',
-                                             'point_stat_'
-                                             +'${VERIF_TYPE}_'
-                                             +'${job_name}_'
-                                             +'{lead?fmt=%2H}0000L_'
-                                             +'{valid?fmt=%Y%m%d}_'
-                                             +'{valid?fmt=%H}0000V'
-                                             +'.stat'
-                                         )]
+                                        []
                                     )]},
     }
 }
