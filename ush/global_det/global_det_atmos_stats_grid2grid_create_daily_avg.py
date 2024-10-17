@@ -140,7 +140,7 @@ while valid_hr <= int(valid_hr_end):
             +f"{daily_avg_valid_end:%Y%m%d%H}.nc"
         )
         output_file_DATA = os.path.join(
-            full_path_COMOUT, output_file.rpartition('/')[2]
+            full_path_DATA, output_file.rpartition('/')[2]
         )
         output_file_COMOUT = os.path.join(
             full_path_COMOUT, output_file.rpartition('/')[2]
