@@ -1623,6 +1623,8 @@ def calculate_stat(logger, model_data, stat, conversion):
          var_o = uvoobar - uobar*uobar - vobar*vobar
          covar = uvfobar - ufbar*uobar - vfbar*vobar
          stat_values = np.sqrt(var_f + var_o - 2*covar)
+      elif line_type == 'CTC':
+         stat_values = (fy_oy + fy_on)/(fy_oy + fn_oy)
    elif stat == 'msess':
       if line_type == 'SL1L2':
          mse = ffbar + oobar - 2*fobar
