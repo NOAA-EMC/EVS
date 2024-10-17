@@ -190,14 +190,6 @@ for OBS in OBSNAME:
                         prod_file, arch_file, CDATE_dt,
                         log_missing_file
                     )
-                    #sub_util.copy_file(prod_file, arch_file)
-                    #if os.path.exists(arch_file):
-                        #sub_util.run_shell_command(
-                            #['chmod', '640', arch_file]
-                        #)
-                        #sub_util.run_shell_command(
-                            #['chgrp', 'rstprod', arch_file]
-                        #)
         elif OBS == 'osi':
             daily_prod_file = sub_util.format_filler(
                 obs_dict['daily_prod_file_format'], CDATE_dt, CDATE_dt,
@@ -323,7 +315,7 @@ for OBS in OBSNAME:
                                 sub_util.copy_file(prod_file, arch_file)
                                 if os.path.exists(arch_file):
                                     sub_util.run_shell_command(
-                                        ['chmod', '640', arch_file]
+                                        ['chmod', '750', arch_file]
                                     )
                                     sub_util.run_shell_command(
                                         ['chgrp', 'rstprod', arch_file]
