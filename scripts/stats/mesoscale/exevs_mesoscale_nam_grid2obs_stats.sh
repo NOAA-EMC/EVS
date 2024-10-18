@@ -226,9 +226,9 @@ echo "*****************************"
      export evs_run_mode=$evs_run_mode
      source $config
      
-     if [ ${#VAR_NAME_LIST} -lt 1 ]; then
-        continue
-     fi
+##     if [ ${#VAR_NAME_LIST} -lt 1 ]; then
+##        continue
+##     fi
      
    # Create Output Directories
      python $USHevs/mesoscale/mesoscale_create_output_dirs.py
@@ -287,19 +287,30 @@ echo "Gather jobs done"
 echo "*****************************"
 
 # Copy stat output files to EVS COMOUTsmall directory
-  if [ $SENDCOM = YES ]; then
-     for VERIF_TYPE in $VERIF_TYPES;do
-        for MODEL_DIR_PATH in $MET_PLUS_OUT/$VERIF_TYPE/point_stat/$MODELNAME*; do
-           if [ -d $MODEL_DIR_PATH ]; then
-              MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
-              mkdir -p $COMOUTsmall
-              for FILE in $MODEL_DIR_PATH/*; do
-                 cp -v $FILE $COMOUTsmall/.
-              done
-           fi
-        done
-    done
-  fi
+#  if [ $SENDCOM = YES ]; then
+#     for VERIF_TYPE in $VERIF_TYPES;do
+#        for MODEL_DIR_PATH in $MET_PLUS_OUT/$VERIF_TYPE/point_stat/$MODELNAME*; do
+#           if [ -d $MODEL_DIR_PATH ]; then
+#              MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
+#              mkdir -p $COMOUTsmall
+#              for FILE in $MODEL_DIR_PATH/*; do
+#                 cp -v $FILE $COMOUTsmall/.
+#              done
+#           fi
+#        done
+#    done
+#  fi
+ 
+# Copy "gather" output files to EVS COMOUTsmall directory
+if [ $SENDCOM = YES ]; then
+   for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
+    for FILE in $MODEL_DIR_PATH/*; do
+      if [ -s "$FILE" ]; then
+        cp -v $FILE $COMOUTsmall/gather_small/.
+      fi
+     done
+   done
+fi
 
 echo "*****************************"
 echo "Gather3 jobs begin"

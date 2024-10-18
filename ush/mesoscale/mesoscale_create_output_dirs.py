@@ -28,6 +28,7 @@ print(f"BEGIN: {os.path.basename(__file__)}")
 evs_ver = os.environ['evs_ver']
 EVSIN = os.environ['EVSIN']
 COMOUT = os.environ['COMOUT']
+COMOUTsmall = os.environ['COMOUTsmall']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
@@ -361,6 +362,10 @@ elif STEP == 'stats':
             COMOUT_dir_list.append(os.path.join(
                 COMOUT_restart_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
+            COMOUT_dir_list.append(os.path.join(
+                COMOUTsmall,
+                'gather_small'
             ))
         date_dt = start_date_dt
         while date_dt <= vdate_dt+td(days=1):
