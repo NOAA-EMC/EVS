@@ -2013,6 +2013,10 @@ def check_model_files(job_dict):
             and job_dict['VERIF_CASE'] == 'grid2obs':
         if job_dict['job_name'] == 'TempAnom2m':
             fhr_list = input_fhr_list
+    if job_dict['JOB_GROUP'] == 'generate_stats' \
+            and job_dict['VERIF_CASE'] == 'grid2obs':
+        if job_dict['job_name'] == 'DailyAvg_TempAnom2m':
+            fhr_list = input_fhr_list
     return model_files_exist, fhr_list, copy_output_list
 
 def check_truth_files(job_dict):

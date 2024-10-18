@@ -1114,7 +1114,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if JOB_GROUP == 'assemble_data':
                             if verif_type_job == 'TempAnom2m':
                                 if job_env_dict['fhr_list'] != '':
-                                    job.write(verif_type_job_commands_list[1])
+                                    job.write(verif_type_job_commands_list[1]
+                                              +'\n')
+                                    job.write('export err=$?; err_chk\n')
+                        if JOB_GROUP == 'generate_stats':
+                            if verif_type_job == 'DailyAvg_TempAnom2m':
+                                if job_env_dict['fhr_list'] != '':
+                                    job.write(verif_type_job_commands_list[0]
+                                              +'\n')
+                                    job.write('export err=$?; err_chk\n')
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':
