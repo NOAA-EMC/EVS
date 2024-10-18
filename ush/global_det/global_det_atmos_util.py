@@ -2300,19 +2300,9 @@ def initalize_job_env_dict(verif_type, group,
                  'gather_stats', 'summarize_stats', 'write_reports',
                  'concatenate_reports']:
         if os.environ['VERIF_CASE'] == 'wmo':
-           os.environ['MET_TMP_DIR'] = os.path.join(
-                os.environ['DATA'], 'tmp'
-           )
            job_env_var_list.extend(['met_ver'])
-        else:
-            os.environ['MET_TMP_DIR'] = os.path.join(
-                os.environ['DATA'],
-                os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
-                'METplus_output', 'tmp'
-            )
-        make_dir(os.environ['MET_TMP_DIR'])
         job_env_var_list.extend(
-            ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR']
+            ['METPLUS_PATH', 'MET_ROOT']
         )
     elif group in ['condense_stats', 'filter_stats', 'make_plots',
                    'tar_images']:
