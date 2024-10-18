@@ -42,7 +42,7 @@ if [ $SENDMAIL = YES ] ; then
 fi
 
 # Create and run job scripts for reformat_data, assemble_data, generate_stats, and gather_stats
-for group in reformat_data assemble_data generate_stats; do
+for group in reformat_data assemble_data generate_stats gather_stats; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-obs stats: ${JOB_GROUP}"
     python $USHevs/global_det/global_det_atmos_stats_grid2obs_create_job_scripts.py

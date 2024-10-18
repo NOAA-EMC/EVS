@@ -1131,7 +1131,11 @@ elif JOB_GROUP == 'gather_stats':
         job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
         for model_idx in range(len(model_list)):
             job_env_dict['MODEL'] = model_list[model_idx]
+            job_env_dict['MODEL_EVS_DATA_DIR'] = (
+                model_evs_data_dir_list[model_idx]
+            )
             njobs+=1
+            job_env_dict['job_num'] = str(njobs)
             # Create job file
             job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
             print(f"Creating job script: {job_file}")
@@ -1139,6 +1143,15 @@ elif JOB_GROUP == 'gather_stats':
             job.write('#!/bin/bash\n')
             job.write('set -x\n')
             job.write('\n')
+            # Create job working directory
+            job_env_dict['job_num_work_dir'] = os.path.join(
+                DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                'job_work_dir', JOB_GROUP,
+                f"job{job_env_dict['job_num']}"
+            )
+            job_env_dict['MET_TMP_DIR'] = os.path.join(
+                job_env_dict['job_num_work_dir'], 'tmp'
+            )
             # Set any environment variables for special cases
             # Write environment variables
             for name, value in job_env_dict.items():
@@ -1149,16 +1162,24 @@ elif JOB_GROUP == 'gather_stats':
                         job.write(f'export {name}="{value}"\n')
             job.write('\n')
             # Do file checks
-            stat_files_exist = gda_util.check_stat_files(job_env_dict)
+            stat_files_exist, copy_output_list = gda_util.check_stat_files(
+                job_env_dict
+            )
             if stat_files_exist:
                 write_job_cmds = True
             else:
                 write_job_cmds = False
             # Write job commands
             if write_job_cmds:
+                gda_util.make_dir(job_env_dict['job_num_work_dir'])
                 for cmd in gather_stats_jobs_dict['commands']:
                     job.write(cmd+'\n')
                     job.write('export err=$?; err_chk'+'\n')
+                for output_file_tuple in copy_output_list:
+                    job.write(f'if [ -f "{output_file_tuple[0]}" ]; then '
+                              +f"cp -v {output_file_tuple[0]} "
+                              +f"{output_file_tuple[1]}"
+                              +f"; fi\n")
             job.close()
         date_dt = date_dt + datetime.timedelta(days=1)
 
