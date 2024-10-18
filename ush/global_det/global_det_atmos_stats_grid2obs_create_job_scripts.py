@@ -487,38 +487,13 @@ generate_stats_jobs_dict = {
                                 'commands': [gda_util.python_command(
                                                 'global_det_atmos_stats_'
                                                 'grid2obs_create_daily_avg.py',
-                                                ['TMP_ANOM_Z2',
-                                                  os.path.join(
-                                                      '$DATA',
-                                                      '${VERIF_CASE}_${STEP}',
-                                                      'METplus_output',
-                                                      '${RUN}.'
-                                                      +'{valid?fmt=%Y%m%d}',
-                                                      '$MODEL', '$VERIF_CASE',
-                                                      'anomaly_${VERIF_TYPE}_'
-                                                      +'TempAnom2m_init'
-                                                      +'{init?fmt=%Y%m%d%H}_'
-                                                      +'fhr{lead?fmt=%3H}.stat'
-                                                ),
-                                                os.path.join(
-                                                    '$COMIN', 'stats',
-                                                    '$COMPONENT',
-                                                    '${RUN}.{valid?fmt=%Y%m%d}',
-                                                    '$MODEL', '$VERIF_CASE',
-                                                    'anomaly_${VERIF_TYPE}_'
-                                                    +'TempAnom2m_init'
-                                                    +'{init?fmt=%Y%m%d%H}_'
-                                                    +'fhr{lead?fmt=%3H}.stat'
-                                                )]
+                                                []
                                             ),
                                             'ndaily_avg_stat_files='
                                             +'$(ls '+os.path.join(
-                                                '$DATA',
-                                                '${VERIF_CASE}_${STEP}',
-                                                'METplus_output',
-                                                '${RUN}.${DATE}',
-                                                '$MODEL', '$VERIF_CASE',
-                                                'daily_avg_*.stat'
+                                                '$COMOUT',
+                                                '${RUN}.${DATE}', '$MODEL',
+                                                '$VERIF_CASE', 'daily_avg_*'
                                             )+'|wc -l)',
                                             ('if [ $ndaily_avg_stat_files '
                                             +'-ne 0 ]; then'),
@@ -532,12 +507,20 @@ generate_stats_jobs_dict = {
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'DPT',
                                'var1_fcst_levels': 'Z2',
-                               'var1_fcst_options': 'cnt_thresh = [ NA, NA, NA, NA, NA, NA ]; cnt_logic = INTERSECTION;',
+                               'var1_fcst_options': ('cnt_thresh = '
+                                                     +'[ NA, NA, NA, NA, '
+                                                     +'NA, NA ]; cnt_logic = '
+                                                     +'INTERSECTION;'),
                                'var1_fcst_threshs': ('ge277.594, ge283.15, '
                                                      +'ge288.706, ge294.261'),
                                'var1_obs_name': 'DPT',
                                'var1_obs_levels': 'Z2',
-                               'var1_obs_options': 'cnt_thresh = [ NA, >=272.039, >=277.594, >=283.15, >=288.706, >=294.261 ]; cnt_logic = INTERSECTION;',
+                               'var1_obs_options': ('cnt_thresh = '
+                                                    +'[ NA, >=272.039, '
+                                                    +'>=277.594, >=283.15, '
+                                                    +'>=288.706, >=294.261 ]; '
+                                                    +'cnt_logic = '
+                                                    +'INTERSECTION;'),
                                'var1_obs_threshs': ('ge277.594, ge283.15, '
                                                     +'ge288.706, ge294.261'),
                                'met_config_overrides': ''},
