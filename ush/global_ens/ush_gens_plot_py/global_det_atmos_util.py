@@ -1867,7 +1867,7 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
     model_stat_files_wildcard = os.path.join(input_dir, model, model+'_*.stat')
     model_stat_files = glob.glob(model_stat_files_wildcard, recursive=True)
     if len(model_stat_files) == 0:
-        logger.warning(f"NO STAT FILES IN MATCHING "
+        logger.debug(f"NO STAT FILES IN MATCHING "
                        +f"{model_stat_files_wildcard}")
     else:
         if not os.path.exists(output_file):
