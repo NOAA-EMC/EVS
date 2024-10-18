@@ -33,6 +33,7 @@ print(f"BEGIN: {os.path.basename(__file__)}")
 evs_ver = os.environ['evs_ver']
 COMIN = os.environ['COMIN']
 COMOUT = os.environ['COMOUT']
+COMOUTsmall = os.environ['COMOUTsmall']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
@@ -270,6 +271,10 @@ elif STEP == 'stats':
                 COMOUT_restart_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
+            COMOUT_dir_list.append(os.path.join(
+                COMOUTsmall,
+                'gather_small'
+            ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
             MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
@@ -407,6 +412,10 @@ elif STEP == 'stats':
                 COMOUT_restart_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
+            COMOUT_dir_list.append(os.path.join(
+                COMOUTsmall,
+                'gather_small'
+            ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
             MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
@@ -497,6 +506,10 @@ elif STEP == 'stats':
             COMOUT_dir_list.append(os.path.join(
                 COMOUT_restart_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
+            COMOUT_dir_list.append(os.path.join(
+                COMOUTsmall,
+                'gather_small'
             ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 

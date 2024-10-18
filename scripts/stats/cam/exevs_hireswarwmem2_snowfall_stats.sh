@@ -298,7 +298,7 @@ if [ $SENDCOM = YES ]; then
     for MODEL_DIR_PATH in $MET_PLUS_OUT/stat_analysis/$MODELNAME*; do
         for FILE in $MODEL_DIR_PATH/*; do
             if [ -s "$FILE" ]; then
-               cp -v $FILE $COMOUTsmall/.
+               cp -v $FILE $COMOUTsmall/gather_small/.
             fi
         done
     done
