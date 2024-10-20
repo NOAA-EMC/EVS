@@ -1024,9 +1024,9 @@ suite evs_nco
         family plots
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/plots'
           family narre
-            task jevs_narre_past90days_plots
+            task jevs_narre_last90days_plots
               trigger ../../../../06/evs/stats/narre == complete
-            task jevs_narre_past31days_plots
+            task jevs_narre_last31days_plots
               trigger ../../../../06/evs/stats/narre == complete
           endfamily
           family global_ens

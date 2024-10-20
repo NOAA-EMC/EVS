@@ -45,6 +45,8 @@ if not os.path.exists(COMOUT_INITDATE):
 ###### OBS
 # Get operational observation data
 # Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
+# Group for High Resolution Sea Surface Temperature (GHRSST) Level 4 SST analysis for Office of Satellite and Product Operations (OSPO) - ghrsst_ospo
+# NCEP's Climatology-Calibrated Precipitation Analysis - ccpa
 subseasonal_obs_dict = {
     'gfs': {'prod_file_format': os.path.join(COMINgfs, 'gfs.'
                                              +'{init?fmt=%Y%m%d}',
@@ -184,18 +186,9 @@ for OBS in OBSNAME:
                     os.makedirs(arch_file_dir)
                 print("----> Trying to create "+arch_file)
                 if SENDCOM == 'YES':
-                    sub_util.copy_file(prod_file, arch_file)
-                    if os.path.exists(arch_file):
-                        sub_util.run_shell_command(
-                            ['chmod', '640', arch_file]
-                        )
-                        sub_util.run_shell_command(
-                            ['chgrp', 'rstprod', arch_file]
-                        )
-                if not os.path.exists(prod_file):
-                    sub_util.log_missing_file_obs(
-                        log_missing_file, prod_file, OBS,
-                        CDATE_dt
+                    sub_util.prep_prod_prepbufr_file(
+                        prod_file, arch_file, CDATE_dt,
+                        log_missing_file
                     )
         elif OBS == 'osi':
             daily_prod_file = sub_util.format_filler(
@@ -317,27 +310,34 @@ for OBS in OBSNAME:
                             prod_file, arch_file, CDATE_dt, log_missing_file)
                 elif OBS == 'ecmwf':
                     if SENDCOM == 'YES':
-                        sub_util.copy_file(prod_file, arch_file)
-                        if os.path.exists(arch_file):
-                            sub_util.run_shell_command(
-                                ['chmod', '640', arch_file]
+                        if sub_util.check_file_exists_size(prod_file):
+                            if not sub_util.check_grib1_file_corrupt(prod_file):
+                                sub_util.copy_file(prod_file, arch_file)
+                                if os.path.exists(arch_file):
+                                    sub_util.run_shell_command(
+                                        ['chmod', '750', arch_file]
+                                    )
+                                    sub_util.run_shell_command(
+                                        ['chgrp', 'rstprod', arch_file]
+                                    )
+                        else:
+                            sub_util.log_missing_file_obs(
+                                log_missing_file, prod_file, OBS,
+                                CDATE_dt
                             )
-                            sub_util.run_shell_command(
-                                ['chgrp', 'rstprod', arch_file]
-                            )
-                    if not os.path.exists(prod_file):
-                        sub_util.log_missing_file_obs(
-                            log_missing_file, prod_file, OBS,
-                            CDATE_dt
-                        )
-                else:
+                elif OBS == 'umd':
                     if SENDCOM == 'YES':
-                        sub_util.copy_file(prod_file, arch_file)
-                    if not os.path.exists(prod_file):
-                        sub_util.log_missing_file_obs(
-                            log_missing_file, prod_file, OBS,
-                            CDATE_dt
-                        )
+                        if sub_util.check_file_exists_size(prod_file):
+                            if not \
+                                    sub_util.check_netcdf_file_corrupt(
+                                        prod_file
+                                    ):
+                                sub_util.copy_file(prod_file, arch_file)
+                        else:
+                            sub_util.log_missing_file_obs(
+                                log_missing_file, prod_file, OBS,
+                                CDATE_dt
+                            )
     if OBS == 'ccpa':
         all_ccpa_file_exist = sub_util.check_ccpa_prep_files(
             DATA, STEP, INITDATE)
