@@ -74,22 +74,23 @@ cnvstat_file_format = os.path.join(
      'gdas.t{valid?fmt=%2H}z.cnvstat'
 )
 cnvstat_txt_file_format = os.path.join(
-    DATA, 'gdas_cnvstat', 'gdas_cnvstat_{valid?fmt=%Y%m%d%H}.txt'
+    '{job_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    'gdas_cnvstat_{valid?fmt=%Y%m%d%H}.txt'
 )
 prepbufr_file_format = os.path.join(
     COMINobsproc, 'gdas.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'atmos',
     'gdas.t{valid?fmt=%2H}z.prepbufr'
 )
 cnvstat_ascii2nc_file_format = os.path.join(
-    DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{job_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'ascii2nc_gdas_cnvstat_{valid?fmt=%Y%m%d%H}.nc'
 )
 prepbufr_pb2nc_file_format = os.path.join(
-    DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{job_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'pb2nc_gdas_prepbufr_{valid?fmt=%Y%m%d%H}.nc'
 )
 regriddataplane_file_format = os.path.join(
-    DATA , RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{job_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'regrid_data_plane_init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
 )
 stat_file_format = os.path.join(
@@ -144,6 +145,16 @@ if JOB_GROUP == 'reformat_data':
              wmo_verif_settings_dict[wmo_verif]['valid_hour_list']
          )
          for vhr in wmo_verif_valid_hour_list:
+             njobs+=1
+             job_env_dict['job_num'] = str(njobs)
+             # Create job working directory
+             job_env_dict['job_num_work_dir'] = os.path.join(
+                 DATA, 'job_work_dir', JOB_GROUP,
+                 f"job{job_env_dict['job_num']}"
+             )
+             job_env_dict['MET_TMP_DIR'] = os.path.join(
+                 job_env_dict['job_num_work_dir'], 'tmp'
+             )
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
              # Reformat observations
              for key_chk in ['fhr', 'fhr_file', 'tmp_regriddataplane_file',
@@ -158,7 +169,7 @@ if JOB_GROUP == 'reformat_data':
                  )
                  input_ascii2nc_file = gda_util.format_filler(
                      cnvstat_txt_file_format, valid_time_dt, valid_time_dt,
-                     'anl', {}
+                     'anl', {'job_dir': job_env_dict['job_num_work_dir']}
                  )
                  obtype = 'cnvstat'
              elif wmo_verif == 'grid2obs_sfc':
@@ -191,12 +202,13 @@ if JOB_GROUP == 'reformat_data':
              if wmo_verif == 'grid2obs_upperair':
                  tmp_obs2nc_file = gda_util.format_filler(
                      cnvstat_ascii2nc_file_format, valid_time_dt,
-                     valid_time_dt, 'anl', {}
+                     valid_time_dt, 'anl',
+                     {'job_dir': job_env_dict['job_num_work_dir']}
                  )
              elif wmo_verif == 'grid2obs_sfc':
                  tmp_obs2nc_file = gda_util.format_filler(
                      prepbufr_pb2nc_file_format, valid_time_dt, valid_time_dt,
-                     'anl', {}
+                     'anl', {'job_dir': job_env_dict['job_num_work_dir']}
                  )
              output_obs2nc_file = os.path.join(
                  COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
@@ -214,7 +226,6 @@ if JOB_GROUP == 'reformat_data':
              elif wmo_verif == 'grid2obs_sfc':
                  job_env_dict['obs_window'] = obs_window
              # Make job script
-             njobs+=1
              job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
              print(f"Creating job script: {job_file}")
              job = open(job_file, 'w')
@@ -243,6 +254,7 @@ if JOB_GROUP == 'reformat_data':
                  )
              else:
                  if have_obs:
+                     gda_util.make_dir(job_env_dict['job_num_work_dir'])
                      if wmo_verif == 'grid2obs_upperair':
                          job.write(
                              gda_util.python_command('global_det_atmos_stats_'
@@ -314,6 +326,16 @@ if JOB_GROUP == 'reformat_data':
                                +"WMO required init hours "
                                +f"{wmo_init_hour_list}")
                          continue
+                     njobs+=1
+                     job_env_dict['job_num'] = str(njobs)
+                     # Create job working directory
+                     job_env_dict['job_num_work_dir'] = os.path.join(
+                         DATA, 'job_work_dir', JOB_GROUP,
+                         f"job{job_env_dict['job_num']}"
+                     )
+                     job_env_dict['MET_TMP_DIR'] = os.path.join(
+                         job_env_dict['job_num_work_dir'], 'tmp'
+                     )
                      # Set forecast input paths
                      # grid2obs_sfc: gaussian grid prepped files
                      fhr_file = gda_util.format_filler(
@@ -334,7 +356,8 @@ if JOB_GROUP == 'reformat_data':
                      # Set forecst output paths
                      tmp_regriddataplane_file = gda_util.format_filler(
                          regriddataplane_file_format, valid_time_dt,
-                         init_time_dt, fhr, {}
+                         init_time_dt, fhr,
+                         {'job_dir': job_env_dict['job_num_work_dir']}
                      )
                      output_regriddataplane_file = os.path.join(
                          COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
@@ -353,7 +376,6 @@ if JOB_GROUP == 'reformat_data':
                          output_regriddataplane_file
                      )
                      # Make job script
-                     njobs+=1
                      job_file = os.path.join(JOB_GROUP_jobs_dir,
                                              'job'+str(njobs))
                      print(f"Creating job script: {job_file}")
@@ -373,6 +395,7 @@ if JOB_GROUP == 'reformat_data':
                          )
                          job.write('export err=$?; err_chk')
                      elif have_fhr:
+                         gda_util.make_dir(job_env_dict['job_num_work_dir'])
                          job.write(
                              gda_util.metplus_command(
                                  'RegridDataPlane_fcstGFS.conf'

@@ -23,10 +23,15 @@ evs_run_mode = os.environ['evs_run_mode']
 
 # Copy files to desired location
 if STEP == 'stats':
-    job_work_JOB_GROUP_dir = os.path.join(
-        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
-        'job_work_dir', JOB_GROUP
-    )
+    if VERIF_CASE == 'wmo':
+        job_work_JOB_GROUP_dir = os.path.join(
+            DATA, 'job_work_dir', JOB_GROUP
+        )
+    else:
+        job_work_JOB_GROUP_dir = os.path.join(
+            DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+            'job_work_dir', JOB_GROUP
+        )
     if JOB_GROUP == 'gather_stats':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', '*.*', '*'
@@ -39,8 +44,15 @@ if STEP == 'stats':
         output_file_end_path = output_file_JOB.partition(
             job_work_JOB_GROUP_dir+'/'
         )[2].partition('/')[2]
-        output_file_DATA = os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'METplus_output', output_file_end_path)
+        if VERIF_CASE == 'wmo':
+            output_file_DATA = os.path.join(
+                DATA, output_file_end_path
+            )
+        else:
+            output_file_DATA = os.path.join(
+                DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                output_file_end_path
+            )
         if not os.path.exists(output_file_DATA):
             gda_util.copy_file(output_file_JOB, output_file_DATA)
         else:

@@ -22,20 +22,11 @@ import global_det_atmos_util as gda_util
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
-COMIN = os.environ['COMIN']
-COMINgfs = os.environ['COMINgfs']
-SENDCOM = os.environ['SENDCOM']
-COMOUT = os.environ['COMOUT']
 DATA = os.environ['DATA']
-NET = os.environ['NET']
-RUN = os.environ['RUN']
-VERIF_CASE = os.environ['VERIF_CASE']
-STEP = os.environ['STEP']
-COMPONENT = os.environ['COMPONENT']
 valid_date = os.environ['valid_date']
-JOB_GROUP = os.environ['JOB_GROUP']
 obs_file = os.environ['obs_file']
 input_ascii2nc_file = os.environ['input_ascii2nc_file']
+job_num_work_dir = os.environ['job_num_work_dir']
 
 valid_date_dt = datetime.datetime.strptime(valid_date, '%Y%m%d%H')
 
@@ -64,7 +55,7 @@ ascii2nc_df_dict = {
     'Observation_Value': []
 }
 
-os.chdir(os.path.join(DATA, 'gdas_cnvstat'))
+os.chdir(job_num_work_dir)
 print(f"Working in {os.getcwd()}")
 
 for diag_var in list(diag_var_dict.keys()):
@@ -277,6 +268,8 @@ ascii2nc_df = ascii2nc_df[
 ]
 
 # Write out dataframe
+input_ascii2nc_file_dir = input_ascii2nc_file.rpartition('/')[0]
+gda_util.make_dir(input_ascii2nc_file_dir)
 print(f"Writing file to {input_ascii2nc_file}")
 ascii2nc_df.to_csv(
     input_ascii2nc_file, header=None, index=None, sep=' ', mode='w'
