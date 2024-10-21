@@ -94,12 +94,12 @@ regriddataplane_file_format = os.path.join(
     'regrid_data_plane_init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
 )
 stat_file_format = os.path.join(
-    DATA , RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     '{met_tool?fmt=str}_{wmo_verif?fmt=str}_{line_type?fmt=str}_'
     +'{lead?fmt=%2H}0000L_{valid?fmt=%Y%m%d_%H%M%S}V.stat'
 )
 pcpcombine_file_format = os.path.join(
-    DATA , RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'pcp_combine_precip_accum{accum?fmt=str}H_init{init?fmt=%Y%m%d%H}_'
     'fhr{lead?fmt=%3H}.nc'
 )
@@ -451,8 +451,9 @@ elif JOB_GROUP == 'assemble_data':
              valid_time_dt = datetime.datetime.strptime(VDATE+vhr, '%Y%m%d%H')
              pb2nc_file = gda_util.format_filler(
                  prepbufr_pb2nc_file_format, valid_time_dt, valid_time_dt,
-                 'anl', {}
+                 'anl', {'output_dir': DATA}
              )
+             have_pb2nc_file = gda_util.check_file_exists_size(pb2nc_file)
              for fhr in wmo_verif_fhr_list:
                  init_time_dt = (valid_time_dt
                                  - datetime.timedelta(hours=int(fhr)))
@@ -462,41 +463,62 @@ elif JOB_GROUP == 'assemble_data':
                                +"WMO required init hours "
                                +f"{wmo_init_hour_list}")
                          continue
+                 # Make modified temperate and dewpoint stats
+                 njobs+=1
+                 job_env_dict['job_num'] = str(njobs)
+                 # Create job working directory
+                 job_env_dict['job_num_work_dir'] = os.path.join(
+                     DATA, 'job_work_dir', JOB_GROUP,
+                     f"job{job_env_dict['job_num']}"
+                 )
+                 job_env_dict['MET_TMP_DIR'] = os.path.join(
+                     job_env_dict['job_num_work_dir'], 'tmp'
+                 )
                  # Set forecast input paths
                  # grid2obs_sfc: regrid_data_plane files
                  fhr_file = gda_util.format_filler(
                      regriddataplane_file_format, valid_time_dt, init_time_dt,
-                     fhr, {}
+                     fhr, {'output_dir': DATA}
                  )
                  have_fhr = gda_util.check_file_exists_size(fhr_file)
-                 # Match TMP/Z2, elevation, latitude, and longitude
-                 tmp_fhr_stat_file = gda_util.format_filler(
+                 # Set output paths
+                 # grid2obs_sfc: point_stat files
+                 output_fhr_stat_file = gda_util.format_filler(
                      stat_file_format, valid_time_dt, init_time_dt,
                      fhr,
                      {'met_tool': 'point_stat', 'wmo_verif': wmo_verif,
-                      'line_type': 'MPR',
-                      'output_dir': job_env_dict['job_num_work_dir']}
+                      'line_type': 'MPR', 'output_dir': COMOUT}
                  )
-                 tmp_fhr_elv_correction_stat_file = (
-                     tmp_fhr_stat_file.replace(
-                         f"point_stat_{wmo_verif}_MPR_",
-                         f"point_stat_{wmo_verif}_MPR_elv_correction_"
+                 have_fhr_stat = os.path.exists(output_fhr_stat_file)
+                 if have_fhr_stat:
+                     tmp_fhr_stat_file = output_fhr_stat_file.replace(
+                         COMOUT, DATA
                      )
-                 )
-                 output_fhr_stat_file = os.path.join(
-                     COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-                     VERIF_CASE, tmp_fhr_stat_file.rpartition('/')[2]
-                 )
+                 else:
+                     tmp_fhr_stat_file = output_fhr_stat_file.replace(
+                         COMOUT, job_env_dict['job_num_work_dir']
+                     )
                  output_fhr_elv_correction_stat_file = (
                      output_fhr_stat_file.replace(
                          f"point_stat_{wmo_verif}_MPR_",
                          f"point_stat_{wmo_verif}_MPR_elv_correction_"
                      )
                  )
-                 have_fhr_stat = os.path.exists(output_fhr_stat_file)
                  have_fhr_elv_correction_stat = (
                      os.path.exists(output_fhr_elv_correction_stat_file)
                  )
+                 if have_fhr_elv_correction_stat:
+                     tmp_fhr_elv_correction_stat_file = (
+                         output_fhr_elv_correction_stat_file.replace(
+                             COMOUT, DATA
+                         )
+                     )
+                 else:
+                     tmp_fhr_elv_correction_stat_file = (
+                         output_fhr_elv_correction_stat_file.replace(
+                             COMOUT, job_env_dict['job_num_work_dir']
+                         )
+                     )
                  # Set wmo_verif job variables
                  job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
                  job_env_dict['pb2nc_file'] = pb2nc_file
@@ -512,7 +534,6 @@ elif JOB_GROUP == 'assemble_data':
                  job_env_dict['output_fhr_elv_correction_stat_file'] = (
                      output_fhr_elv_correction_stat_file
                  )
-                 njobs+=1
                  job_file = os.path.join(JOB_GROUP_jobs_dir,
                                          'job'+str(njobs))
                  print(f"Creating job script: {job_file}")
@@ -538,6 +559,7 @@ elif JOB_GROUP == 'assemble_data':
                      )
                      job.write('export err=$?; err_chk')
                  elif have_fhr_stat and not have_fhr_elv_correction_stat:
+                     gda_util.make_dir(job_env_dict['job_num_work_dir'])
                      job.write(
                          'if [ -f $output_fhr_stat_file ]; then '
                          +'cp -v $output_fhr_stat_file '
@@ -560,7 +582,8 @@ elif JOB_GROUP == 'assemble_data':
                          )
                          job.write('export err=$?; err_chk')
                  else:
-                     if have_fhr:
+                     if have_fhr and have_pb2nc_file:
+                         gda_util.make_dir(job_env_dict['job_num_work_dir'])
                          job.write(
                              gda_util.metplus_command(
                                  'PointStat_fcstGFS_obsADPSFC_MPR.conf'
@@ -604,6 +627,7 @@ elif JOB_GROUP == 'assemble_data':
                          continue
                      if int(fhr) % accum != 0:
                          continue
+                     # Set input
                      fhr_maccum_file = gda_util.format_filler(
                          gaussian_file_format, valid_time_dt, init_time_dt,
                          str(fhr_maccum), {}
@@ -623,18 +647,36 @@ elif JOB_GROUP == 'assemble_data':
                              log_missing_fhr_maccum_file, fhr_maccum_file,
                              MODELNAME, init_time_dt, str(fhr_maccum).zfill(3)
                          )
-                     tmp_fhr_accum_pcpcombine_file = gda_util.format_filler(
-                         pcpcombine_file_format, valid_time_dt, init_time_dt,
-                         fhr, {'accum': str(accum)}
+                     # Set output
+                     njobs+=1
+                     job_env_dict['job_num'] = str(njobs)
+                     # Create job working directory
+                     job_env_dict['job_num_work_dir'] = os.path.join(
+                         DATA, 'job_work_dir', JOB_GROUP,
+                         f"job{job_env_dict['job_num']}"
                      )
-                     output_fhr_accum_pcpcombine_file = os.path.join(
-                         COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-                         VERIF_CASE,
-                         tmp_fhr_accum_pcpcombine_file.rpartition('/')[2]
+                     job_env_dict['MET_TMP_DIR'] = os.path.join(
+                         job_env_dict['job_num_work_dir'], 'tmp'
+                     )
+                     output_fhr_accum_pcpcombine_file = gda_util.format_filler(
+                         pcpcombine_file_format, valid_time_dt, init_time_dt,
+                         fhr, {'accum': str(accum), 'output_dir': COMOUT}
                      )
                      have_fhr_accum_pcpcombine = (
                          os.path.exists(output_fhr_accum_pcpcombine_file)
                      )
+                     if have_fhr_accum_pcpcombine:
+                         tmp_fhr_accum_pcpcombine_file = (
+                             output_fhr_accum_pcpcombine_file.replace(
+                                 COMOUT, DATA
+                             )
+                         )
+                     else:
+                         tmp_fhr_accum_pcpcombine_file = (
+                             output_fhr_accum_pcpcombine_file.replace(
+                                 COMOUT, job_env_dict['job_num_work_dir']
+                             )
+                         )
                      # Set wmo_verif job variables
                      job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
                      job_env_dict['fhr'] = fhr
@@ -648,7 +690,6 @@ elif JOB_GROUP == 'assemble_data':
                          output_fhr_accum_pcpcombine_file
                      )
                      # Make job script
-                     njobs+=1
                      job_file = os.path.join(JOB_GROUP_jobs_dir,
                                              'job'+str(njobs))
                      print(f"Creating job script: {job_file}")
@@ -671,6 +712,7 @@ elif JOB_GROUP == 'assemble_data':
                          job.write('export err=$?; err_chk')
                      else:
                          if have_fhr and have_fhr_maccum:
+                             gda_util.make_dir(job_env_dict['job_num_work_dir'])
                              job.write(
                                  gda_util.metplus_command(
                                      'PCPCombine_fcstGFS.conf'
