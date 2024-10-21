@@ -109,6 +109,34 @@ class Presets():
         self.date_presets = {
             'LAST90DAYS': {
                 'valid_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
+                ).strftime('%Y%m%d'),
+                'valid_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d'),
+                'init_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
+                ).strftime('%Y%m%d'),
+                'init_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d')
+            },
+            'LAST31DAYS': {
+                'valid_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
+                ).strftime('%Y%m%d'),
+                'valid_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d'),
+                'init_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
+                ).strftime('%Y%m%d'),
+                'init_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d')
+            },
+            'last90days': {
+                'valid_beg': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=90)
                 ).strftime('%Y%m%d'),
                 'valid_end': (
@@ -116,12 +144,12 @@ class Presets():
                 ).strftime('%Y%m%d'),
                 'init_beg': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=90)
-                    ).strftime('%Y%m%d'),
+                ).strftime('%Y%m%d'),
                 'init_end': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d')
             },
-            'LAST31DAYS': {
+            'last31days': {
                 'valid_beg': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=31)
                 ).strftime('%Y%m%d'),
@@ -130,7 +158,7 @@ class Presets():
                 ).strftime('%Y%m%d'),
                 'init_beg': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=31)
-                    ).strftime('%Y%m%d'),
+                ).strftime('%Y%m%d'),
                 'init_end': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d')

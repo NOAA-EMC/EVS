@@ -19,16 +19,22 @@ if [ $modnam = prepbufr ] ; then
 
  for vhr in 00  03  06  09  12  15  18   21  ; do
   if [ -s $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00 ] ; then 
+   split_by_subset $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00
+   for subset in ADPSFC SFCSHP MSONET; do
+    if [ -s ${WORK}/${subset} ]; then
+     cat ${WORK}/${subset} >> $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00
+    fi
+   done
+   export bufrpath=$WORK/prepbufr.$VDATE
    for grid in G130 G242 ; do
      export vbeg=${vhr}
      export vend=${vhr}
      export verif_grid=$grid
-     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.conf
-     export err=$?; err_chk
-     cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${VDATE}
-     echo "Pb2nc_obsRAP_Prepbufr  Metplus log file start:"
-     cat $output_base/logs/*
-     echo "Pb2nc_obsRAP_Prepbufr  Metplus log file End:"
+     if [ -s $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00 ] ; then
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.conf
+       export err=$?; err_chk
+       cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${VDATE}
+     fi
    done
   else 
     echo "WARNING:  No Prepbufr data available $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00 for ${VDATE}"
