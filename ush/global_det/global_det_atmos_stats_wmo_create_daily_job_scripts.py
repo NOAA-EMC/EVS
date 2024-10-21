@@ -784,13 +784,13 @@ elif JOB_GROUP == 'generate_stats':
                  obtype = 'cnvstat'
                  truth_file = gda_util.format_filler(
                      cnvstat_ascii2nc_file_format, valid_time_dt,
-                     valid_time_dt, 'anl', {}
+                     valid_time_dt, 'anl', {'output_dir': DATA}
                  )
              elif wmo_verif == 'grid2obs_sfc':
                  obtype = 'prepbufr'
                  truth_file = gda_util.format_filler(
                      prepbufr_pb2nc_file_format, valid_time_dt, valid_time_dt,
-                     'anl', {}
+                     'anl', {'output_dir': DATA}
                  )
                  if os.path.exists(truth_file):
                      pb2nc_data = netcdf.Dataset(truth_file)
@@ -848,10 +848,9 @@ elif JOB_GROUP == 'generate_stats':
                               stat_file_format, valid_time_dt, init_time_dt,
                               fhr,
                               {'met_tool': 'point_stat',
-                               'wmo_verif': wmo_verif, 'line_type': 'MPR'}
-                         ).replace(
-                             f"point_stat_{wmo_verif}_MPR_",
-                             f"point_stat_{wmo_verif}_MPR_elv_correction_"
+                               'wmo_verif': wmo_verif,
+                               'line_type': 'MPR_elv_correction',
+                               'output_dir': DATA}
                          )
                          have_fhr_elv_correction_stat = (
                              os.path.exists(fhr_stat_elv_correction_file)
@@ -859,7 +858,8 @@ elif JOB_GROUP == 'generate_stats':
                          for accum in [6, 24]:
                              fhr_accum_file = gda_util.format_filler(
                                  pcpcombine_file_format, valid_time_dt,
-                                 init_time_dt, fhr, {'accum': str(accum)}
+                                 init_time_dt, fhr,
+                                 {'accum': str(accum), 'output_dir': DATA}
                              )
                              if int(fhr)-accum >= 0 \
                                      and int(fhr) % accum == 0:
@@ -887,6 +887,16 @@ elif JOB_GROUP == 'generate_stats':
                          init_time_dt, fhr.zfill(3)
                      )
                  for wmo_verif_metplus_conf in wmo_verif_metplus_conf_list:
+                     njobs+=1
+                     job_env_dict['job_num'] = str(njobs)
+                     # Create job working directory
+                     job_env_dict['job_num_work_dir'] = os.path.join(
+                         DATA, 'job_work_dir', JOB_GROUP,
+                         f"job{job_env_dict['job_num']}"
+                     )
+                     job_env_dict['MET_TMP_DIR'] = os.path.join(
+                         job_env_dict['job_num_work_dir'], 'tmp'
+                     )
                      # Set up output file path
                      # grid2grid_upperair: grid_stat
                      # grid2obs_upperair: point_stat
@@ -911,18 +921,23 @@ elif JOB_GROUP == 'generate_stats':
                              met_tool = 'stat_analysis'
                          else:
                              met_tool = 'point_stat'
-                     tmp_fhr_stat_file = gda_util.format_filler(
+                     output_fhr_stat_file = gda_util.format_filler(
                          stat_file_format, valid_time_dt, init_time_dt,
                          fhr,
                          {'met_tool': met_tool,
                           'wmo_verif': wmo_verif,
-                          'line_type': wmo_verif_metplus_conf_line_type}
-                     )
-                     output_fhr_stat_file = os.path.join(
-                         COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-                         VERIF_CASE, tmp_fhr_stat_file.rpartition('/')[2]
+                          'line_type': wmo_verif_metplus_conf_line_type,
+                          'output_dir': COMOUT}
                      )
                      have_fhr_stat = os.path.exists(output_fhr_stat_file)
+                     if have_fhr_stat:
+                         tmp_fhr_stat_file = output_fhr_stat_file.replace(
+                             COMOUT, DATA
+                         )
+                     else:
+                         tmp_fhr_stat_file = output_fhr_stat_file.replace(
+                             COMOUT, job_env_dict['job_num_work_dir']
+                         )
                      # Set wmo_verif job variables
                      job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
                      job_env_dict['fhr'] = fhr
@@ -944,7 +959,6 @@ elif JOB_GROUP == 'generate_stats':
                              ','.join(synop_station_list)
                          )
                      # Make job script
-                     njobs+=1
                      job_file = os.path.join(JOB_GROUP_jobs_dir,
                                              'job'+str(njobs))
                      print(f"Creating job script: {job_file}")
@@ -967,6 +981,7 @@ elif JOB_GROUP == 'generate_stats':
                          job.write('export err=$?; err_chk')
                      else:
                          if have_truth and have_fhr:
+                             gda_util.make_dir(job_env_dict['job_num_work_dir'])
                              job.write(
                                  gda_util.metplus_command(
                                      wmo_verif_metplus_conf
