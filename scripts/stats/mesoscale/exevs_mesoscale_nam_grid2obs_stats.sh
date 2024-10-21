@@ -325,6 +325,10 @@ echo "*****************************"
 # Create Output Directories
   python $USHevs/mesoscale/mesoscale_create_output_dirs.py
   export err=$?; err_chk
+
+# Preprocess Prepbufr Data
+  python $USHevs/mesoscale/mesoscale_stats_grid2obs_preprocess_prepbufr.py
+  export err=$?; err_chk
   
 # Create Gather 3 Job Script
   python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py

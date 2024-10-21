@@ -104,6 +104,9 @@ elif VERIF_CASE == 'grid2obs':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'merged_ptype'))
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'tmp'))
+        data_dir_list.append(os.path.join(
+            data_base_dir, OBSNAME, 'prepbufr'
+        ))
 elif VERIF_CASE == 'snowfall':
     if STEP == 'stats':
         pass
@@ -225,11 +228,9 @@ elif STEP == 'stats':
                 working_output_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=1):
             COMOUT_dir_list.append(os.path.join(
                 COMOUT, 
-                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
             if job_type == 'reformat':
                 working_dir_list.append(os.path.join(
@@ -367,11 +368,9 @@ elif STEP == 'stats':
                 COMOUTsmall,
                 'gather_small'
             ))
-        date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=1):
             COMOUT_dir_list.append(os.path.join(
                 COMOUT, 
-                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
             if job_type == 'reformat':
                 working_dir_list.append(os.path.join(
