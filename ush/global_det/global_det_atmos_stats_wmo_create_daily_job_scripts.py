@@ -74,7 +74,7 @@ cnvstat_file_format = os.path.join(
      'gdas.t{valid?fmt=%2H}z.cnvstat'
 )
 cnvstat_txt_file_format = os.path.join(
-    '{job_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'gdas_cnvstat_{valid?fmt=%Y%m%d%H}.txt'
 )
 prepbufr_file_format = os.path.join(
@@ -82,15 +82,15 @@ prepbufr_file_format = os.path.join(
     'gdas.t{valid?fmt=%2H}z.prepbufr'
 )
 cnvstat_ascii2nc_file_format = os.path.join(
-    '{job_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'ascii2nc_gdas_cnvstat_{valid?fmt=%Y%m%d%H}.nc'
 )
 prepbufr_pb2nc_file_format = os.path.join(
-    '{job_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'pb2nc_gdas_prepbufr_{valid?fmt=%Y%m%d%H}.nc'
 )
 regriddataplane_file_format = os.path.join(
-    '{job_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     'regrid_data_plane_init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
 )
 stat_file_format = os.path.join(
@@ -169,7 +169,7 @@ if JOB_GROUP == 'reformat_data':
                  )
                  input_ascii2nc_file = gda_util.format_filler(
                      cnvstat_txt_file_format, valid_time_dt, valid_time_dt,
-                     'anl', {'job_dir': job_env_dict['job_num_work_dir']}
+                     'anl', {'output_dir': job_env_dict['job_num_work_dir']}
                  )
                  obtype = 'cnvstat'
              elif wmo_verif == 'grid2obs_sfc':
@@ -200,21 +200,26 @@ if JOB_GROUP == 'reformat_data':
                  )
              # Set output paths
              if wmo_verif == 'grid2obs_upperair':
-                 tmp_obs2nc_file = gda_util.format_filler(
+                 output_obs2nc_file = gda_util.format_filler(
                      cnvstat_ascii2nc_file_format, valid_time_dt,
                      valid_time_dt, 'anl',
-                     {'job_dir': job_env_dict['job_num_work_dir']}
+                     {'output_dir': COMOUT}
                  )
              elif wmo_verif == 'grid2obs_sfc':
-                 tmp_obs2nc_file = gda_util.format_filler(
-                     prepbufr_pb2nc_file_format, valid_time_dt, valid_time_dt,
-                     'anl', {'job_dir': job_env_dict['job_num_work_dir']}
+                 output_obs2nc_file = gda_util.format_filler(
+                     prepbufr_pb2nc_file_format, valid_time_dt,
+                     valid_time_dt, 'anl',
+                     {'output_dir': COMOUT}
                  )
-             output_obs2nc_file = os.path.join(
-                 COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-                 VERIF_CASE, tmp_obs2nc_file.rpartition('/')[2]
-             )
              have_obs2nc = os.path.exists(output_obs2nc_file)
+             if have_obs2nc:
+                 tmp_obs2nc_file = output_obs2nc_file.replace(
+                     COMOUT, DATA
+                 )
+             else:
+                 tmp_obs2nc_file = output_obs2nc_file.replace(
+                     COMOUT, job_env_dict['job_num_work_dir']
+                 )
              # Set job variables
              job_env_dict['valid_date'] = f"{valid_time_dt:%Y%m%d%H}"
              job_env_dict['COMINobsproc'] = COMINobsproc
@@ -354,18 +359,26 @@ if JOB_GROUP == 'reformat_data':
                              init_time_dt, fhr.zfill(3)
                          )
                      # Set forecst output paths
-                     tmp_regriddataplane_file = gda_util.format_filler(
+                     output_regriddataplane_file = gda_util.format_filler(
                          regriddataplane_file_format, valid_time_dt,
                          init_time_dt, fhr,
-                         {'job_dir': job_env_dict['job_num_work_dir']}
-                     )
-                     output_regriddataplane_file = os.path.join(
-                         COMOUT, f"{RUN}.{valid_time_dt:%Y%m%d}", MODELNAME,
-                         VERIF_CASE, tmp_regriddataplane_file.rpartition('/')[2]
+                         {'output_dir': COMOUT}
                      )
                      have_fhr_regriddataplane = os.path.exists(
                          output_regriddataplane_file
                      )
+                     if have_fhr_regriddataplane:
+                         tmp_regriddataplane_file = (
+                             output_regriddataplane_file.replace(
+                                 COMOUT, DATA
+                             )
+                         )
+                     else:
+                         tmp_regriddataplane_file = (
+                             output_regriddataplane_file.replace(
+                                 COMOUT, job_env_dict['job_num_work_dir']
+                             )
+                         )
                      # Set wmo_verif job variables
                      job_env_dict['fhr'] = fhr
                      job_env_dict['fhr_file'] = fhr_file
@@ -461,7 +474,8 @@ elif JOB_GROUP == 'assemble_data':
                      stat_file_format, valid_time_dt, init_time_dt,
                      fhr,
                      {'met_tool': 'point_stat', 'wmo_verif': wmo_verif,
-                      'line_type': 'MPR'}
+                      'line_type': 'MPR',
+                      'output_dir': job_env_dict['job_num_work_dir']}
                  )
                  tmp_fhr_elv_correction_stat_file = (
                      tmp_fhr_stat_file.replace(
