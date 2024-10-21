@@ -104,7 +104,7 @@ pcpcombine_file_format = os.path.join(
     'fhr{lead?fmt=%3H}.nc'
 )
 daily_stat_file_format = os.path.join(
-    DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
+    '{output_dir?fmt=str}', MODELNAME+'.{valid?fmt=%Y%m%d}',
     f"{NET}.{STEP}.{MODELNAME}.{RUN}.{VERIF_CASE}."
     +'v{valid?fmt=%Y%m%d}.stat'
 )
@@ -1016,38 +1016,56 @@ elif JOB_GROUP == 'gather_stats':
     else:
         have_fhr_stat_files = False
     # Set output file paths
-    tmp_stat_file = gda_util.format_filler(
+    output_stat_file = gda_util.format_filler(
         daily_stat_file_format,
         datetime.datetime.strptime(VDATE, '%Y%m%d'),
         datetime.datetime.strptime(VDATE, '%Y%m%d'),
-        'anl', {}
+        'anl', {'output_dir': COMOUT}
     )
-    tmp_stat_station_file = tmp_stat_file.replace(
+    output_stat_station_file = output_stat_file.replace(
         '.wmo.', '.wmo.station_info.'
     )
-    output_stat_file = os.path.join(
-        COMOUT, f"{MODELNAME}.{VDATE}", tmp_stat_file.rpartition('/')[2]
-    )
-    output_stat_station_file = os.path.join(
-        COMOUT, f"{MODELNAME}.{VDATE}",
-        tmp_stat_station_file.rpartition('/')[2]
-    )
     for metplus_conf in metplus_conf_list:
+        njobs+=1
+        job_env_dict['job_num'] = str(njobs)
+        # Create job working directory
+        job_env_dict['job_num_work_dir'] = os.path.join(
+            DATA, 'job_work_dir', JOB_GROUP,
+            f"job{job_env_dict['job_num']}"
+        )
+        job_env_dict['MET_TMP_DIR'] = os.path.join(
+            job_env_dict['job_num_work_dir'], 'tmp'
+        )
         if metplus_conf == 'filter':
-            job_env_dict['tmp_stat_file'] = tmp_stat_file
             job_env_dict['output_stat_file'] = output_stat_file
             have_stat = os.path.exists(output_stat_file)
+            if have_stat:
+                tmp_stat_file = output_stat_file.replace(
+                    COMOUT, DATA
+                )
+            else:
+                tmp_stat_file = output_stat_file.replace(
+                    COMOUT, job_env_dict['job_num_work_dir']
+                )
+            job_env_dict['tmp_stat_file'] = tmp_stat_file
         elif metplus_conf == 'filter_station_info':
+            job_env_dict['output_stat_file'] = output_stat_station_file
+            have_stat = os.path.exists(output_stat_station_file)
+            if have_stat:
+                tmp_stat_station_file = output_stat_station_file.replace(
+                    COMOUT, DATA
+                )
+            else:
+                tmp_stat_station_file = output_stat_station_file.replace(
+                    COMOUT, job_env_dict['job_num_work_dir']
+                )
             job_env_dict['tmp_stat_file'] = tmp_stat_station_file
             job_env_dict['tmp_stat_unfiltered_file'] = (
                 tmp_stat_station_file.replace(
                     '.station_info.', '.station_info.unfiltered.'
                 )
             )
-            job_env_dict['output_stat_file'] = output_stat_station_file
-            have_stat = os.path.exists(output_stat_station_file)
         # Make job script
-        njobs+=1
         job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
         print(f"Creating job script: {job_file}")
         job = open(job_file, 'w')

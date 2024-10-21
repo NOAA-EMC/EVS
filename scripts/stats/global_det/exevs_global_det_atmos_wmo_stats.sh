@@ -21,7 +21,7 @@ mkdir -p job_work_dir
 
 # Set jobs for temporal run
 if [ $temporal = daily ]; then
-    export group_list="reformat_data assemble_data generate_stats"
+    export group_list="reformat_data assemble_data generate_stats gather_stats"
 elif [ $temporal = monthly ]; then
     export group_list="summarize_stats write_reports concatenate_reports"
 fi
