@@ -97,12 +97,14 @@ fi
 #################################
 ## Make the command files for cfp 
 #################################
-
+# time_series
 ${USHevs}/${COMPONENT}/evs_wave_timeseries.sh
 export err=$?; err_chk
+
 # lead_averages
 ${USHevs}/${COMPONENT}/evs_wave_leadaverages.sh
 export err=$?; err_chk
+
 chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 ###########################################
