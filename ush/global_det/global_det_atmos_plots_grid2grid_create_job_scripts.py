@@ -22,6 +22,7 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
@@ -829,16 +830,30 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job_env_dict['valid_hr_start']
                     )
                     job_env_dict['valid_hr_inc'] = '24'
-                DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
-                    DATA, COMOUT, JOB_GROUP, job_env_dict
-                )
-                job_env_dict['DATAjob'] = DATAjob
-                job_env_dict['COMOUTjob'] = COMOUTjob
-                for output_dir in [job_env_dict['DATAjob'],
-                                   job_env_dict['COMOUTjob']]:
-                    gda_util.make_dir(output_dir)
-                # Create job file
+                # Set up output directories
                 njobs+=1
+                job_env_dict['job_id'] = 'job'+str(njobs)
+                job_work_dir, job_DATA_dir, job_COMOUT_dir = (
+                    gda_util.get_plot_job_dirs(DATA, COMOUT, JOB_GROUP,
+                                               job_env_dict)
+                )
+                job_env_dict['job_work_dir'] = job_work_dir
+                job_env_dict['job_DATA_dir'] = job_DATA_dir
+                job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
+                gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                if SENDCOM == 'YES':
+                    gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                # Check plot files
+                plot_files_exist, reset_job_env_dict = (
+                    gda_util.check_plot_files(job_env_dict)
+                )
+                if plot_files_exist:
+                    write_job_cmds = False
+                else:
+                    write_job_cmds = True
+                for reset_key in list(reset_job_env_dict.keys()):
+                    job_env_dict[reset_key] = reset_job_env_dict[reset_key]
+                # Create job file
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
                                         'job'+str(njobs))
                 print("Creating job script: "+job_file)
@@ -848,16 +863,17 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Write environment variables
-                job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
                     if name not in dont_write_env_var_list:
                         job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
-                job.write(
-                    gda_util.python_command('global_det_atmos_plots.py',[])
-                    +'\n'
-                )
-                job.write('export err=$?; err_chk'+'\n')
+                if write_job_cmds:
+                    gda_util.make_dir(job_env_dict['job_work_dir'])
+                    job.write(
+                        gda_util.python_command('global_det_atmos_plots.py',[])
+                        +'\n'
+                    )
+                    job.write('export err=$?; err_chk'+'\n')
                 job.close()
             elif JOB_GROUP == 'make_plots':
                 job_env_dict['event_equalization'] = os.environ[

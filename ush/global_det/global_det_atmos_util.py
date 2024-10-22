@@ -2181,6 +2181,57 @@ def check_stat_files(job_dict):
             copy_output_list.append(output_tuple)
     return stat_files_exist, copy_output_list
 
+def check_plot_files(job_dict):
+    """! Check what plot files or don't exist
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             plot_files_exist - if non-zero number of  model files
+                                exist or not (boolean)
+             reset_job_dict   - dictionary of job environment variables
+                                to reset
+    """
+    reset_job_dict = {}
+    plot_files_exist = False
+    if job_dict['JOB_GROUP'] == 'condense_stats':
+        reset_model_list = []
+        reset_model_plot_name_list = []
+        reset_obs_list = []
+        for model_idx in range(len(job_dict['model_list'].split(', '))):
+            model = job_dict['model_list'].split(', ')[model_idx]
+            job_COMOUT_file = os.path.join(
+                job_dict['job_COMOUT_dir'], f"condensed_stats_"
+                +f"{model}_{job_dict['line_type'].lower()}_"
+                +f"{job_dict['fcst_var_name'].lower()}_"
+                +(job_dict['fcst_var_level'].lower()\
+                  .replace('.','p').replace('-', '_'))
+                +f"_{job_dict['vx_mask'].lower()}.stat"
+            )
+            job_DATA_file = job_COMOUT_file.replace(
+                job_dict['job_COMOUT_dir'], job_dict['job_DATA_dir']
+            )
+            if os.path.exists(job_COMOUT_file):
+                copy_file(job_COMOUT_file, job_DATA_file)
+            else:
+                reset_model_list.append(model)
+                reset_model_plot_name_list.append(
+                    job_dict['model_plot_name_list'].split(', ')[model_idx]
+                )
+                reset_obs_list.append(
+                    job_dict['obs_list'].split(', ')[model_idx]
+                )
+        reset_job_dict['model_list'] = ', '.join(reset_model_list)
+        reset_job_dict['model_plot_name_list'] = (
+            ', '.join(reset_model_plot_name_list)
+        )
+        reset_job_dict['obs_list'] = ', '.join(reset_obs_list)
+        if len(reset_model_list) == 0:
+            plot_files_exist = True
+    return plot_files_exist, reset_job_dict
+
 def get_obs_valid_hrs(obs):
     """! This returns the valid hour start, end, and increment
          information for a given observation
@@ -2576,10 +2627,12 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
                                  set
 
          Returns:
-             DATAjob_dir    - path to plotting job's
-                              DATA directory
-             COMOUTjob_dir  - path to plotting job's
-                              COMOUT directory
+             job_work_dir    - path to plotting job's
+                               working directory
+             job_DATA_dir    - path to plotting job's
+                               DATA directory
+             job_COMOUT_dir  - path to plotting job's
+                               COMOUT directory
     """
     region_savefig_dict = {
         'Alaska': 'alaska',
@@ -2630,12 +2683,6 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     dir_ndays = ('last'+plot_job_env_dict['NDAYS']+'days').lower()
     dir_line_type = plot_job_env_dict['line_type'].lower()
     dir_parameter = plot_job_env_dict['fcst_var_name'].lower()
-    #if plot_job_env_dict['fcst_var_name'] == 'HGT_DECOMP':
-    #    dir_parameter = (
-    #        dir_parameter+'_'
-    #        +(plot_job_env_dict['interp_method']\
-    #          .replace('WV1_', '').replace('-', '_'))
-    #    )
     if job_group == 'make_plots':
         if plot_job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
             dir_level = plot_job_env_dict['vert_profile'].lower()
@@ -2649,8 +2696,9 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
         dir_level = dir_level.replace('z0', 'l0').replace('p90_0', 'l90')
     dir_region = region_savefig_dict[plot_job_env_dict['vx_mask']]
     if job_group in ['condense_stats', 'filter_stats']:
-        DATAjob_dir = os.path.join(
+        job_work_dir = os.path.join(
             DATA_base_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
+            'job_work_dir', job_group, f"{plot_job_env_dict['job_id']}",
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
             dir_ndays, dir_line_type,
@@ -2659,22 +2707,31 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
         )
     elif job_group == 'make_plots':
         dir_stat = plot_job_env_dict['stat'].lower()
-        DATAjob_dir = os.path.join(
+        job_work_dir = os.path.join(
             DATA_base_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
+            'job_work_dir', job_group, f"{plot_job_env_dict['job_id']}",
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
             dir_ndays, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region, dir_stat
         )
-    COMOUTjob_dir = DATAjob_dir.replace(
+    job_COMOUT_dir = job_work_dir.replace(
         os.path.join(DATA_base_dir,
                      f"{dir_verif_case}_{dir_step}",
-                     'plot_output', f"{plot_job_env_dict['RUN']}."
+                     'plot_output', 'job_work_dir', job_group,
+                     f"{plot_job_env_dict['job_id']}",
+                     f"{plot_job_env_dict['RUN']}."
                      +f"{plot_job_env_dict['end_date']}"),
         COMOUT_base_dir
     )
-    return DATAjob_dir, COMOUTjob_dir
+    job_DATA_dir = job_COMOUT_dir.replace(
+        COMOUT_base_dir,
+        os.path.join(DATA_base_dir, f"{dir_verif_case}_{dir_step}",
+                     'plot_output', f"{plot_job_env_dict['RUN']}."
+                     +f"{plot_job_env_dict['end_date']}")
+    )
+    return job_work_dir, job_DATA_dir, job_COMOUT_dir
 
 def get_daily_stat_file(model_name, source_stats_base_dir,
                         dest_model_name_stats_dir,
@@ -2735,6 +2792,7 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
     """
     model_stat_files_wildcard = os.path.join(input_dir, model, model+'_*.stat')
     model_stat_files = glob.glob(model_stat_files_wildcard, recursive=True)
+    make_dir(output_dir)
     output_file = os.path.join(
         output_dir, f"condensed_stats_{model.lower()}_{line_type.lower()}_"
         +f"{fcst_var_name.lower()}_"
@@ -2767,7 +2825,7 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
                 )
                 logger.debug(f"Ran {grep.args}")
                 all_grep_output = all_grep_output+grep.stdout
-            logger.info(f"Condensed {model} stat file at "
+            logger.info(f"Condensed {model} stat files at "
                         +f"{output_file}")
             with open(output_file, 'w') as f:
                 f.write(met_header_cols+all_grep_output)

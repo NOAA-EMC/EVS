@@ -22,10 +22,10 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
-DATAjob = os.environ['DATAjob']
+job_DATA_dir = os.environ['job_DATA_dir']
+job_work_dir = os.environ['job_work_dir']
 SENDCOM = os.environ['SENDCOM']
-COMOUTjob = os.environ['COMOUTjob']
-NET = os.environ['NET']
+job_COMOUT_dir = os.environ['job_COMOUT_dir']
 RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
@@ -104,19 +104,16 @@ elif JOB_GROUP == 'tar_images':
     KEEPDATA = os.environ['KEEPDATA']
 
 # Set variables
-VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 now = datetime.datetime.now()
 
 # Set up directory paths
 logo_dir = os.path.join(FIXevs, 'logos')
-VERIF_CASE_STEP_dir = os.path.join(DATA, VERIF_CASE_STEP)
+VERIF_CASE_STEP_dir = os.path.join(DATA, f"{VERIF_CASE}_{STEP}")
 stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
-plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
-logging_dir = os.path.join(plot_output_dir, 'logs')
-for output_dir in [logging_dir, DATAjob, COMOUTjob]:
-   gda_util.make_dir(output_dir)
+logging_dir = os.path.join(job_work_dir, 'logs')
+gda_util.make_dir(logging_dir)
 
 # Set up logging
 job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
@@ -218,32 +215,32 @@ if JOB_GROUP == 'condense_stats':
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         obs_name = obs_list[model_idx]
-        DATAjob_condensed_model_stat_file = os.path.join(
-            DATAjob, f"condensed_stats_{model.lower()}_{line_type.lower()}_"
+        job_work_condensed_model_stat_file = os.path.join(
+            job_work_dir, f"condensed_stats_{model.lower()}_{line_type.lower()}_"
             +f"{fcst_var_name.lower()}_"
             +f"{fcst_var_level.lower().replace('.','p').replace('-', '_')}_"
             +f"{vx_mask.lower()}.stat"
         )
-        COMOUTjob_condensed_model_stat_file = (
-            DATAjob_condensed_model_stat_file.replace(DATAjob, COMOUTjob)
+        job_COMOUT_condensed_model_stat_file = (
+            job_work_condensed_model_stat_file.replace(job_work_dir,
+                                                       job_COMOUT_dir)
         )
-        if os.path.exists(COMOUTjob_condensed_model_stat_file):
-            logger.info(f"Copying {COMOUTjob_condensed_model_stat_file} to "
-                        +f"{DATAjob_condensed_model_stat_file}")
-            gda_util.copy_file(COMOUTjob_condensed_model_stat_file,
-                               DATAjob_condensed_model_stat_file)
-        else:
+        job_DATA_condensed_model_stat_file = (
+            job_work_condensed_model_stat_file.replace(job_work_dir,
+                                                       job_DATA_dir)
+        )
+        if not os.path.exists(job_DATA_condensed_model_stat_file):
             gda_util.condense_model_stat_files(
-                logger, stat_base_dir, DATAjob, model, obs_name, vx_mask,
+                logger, stat_base_dir, job_work_dir, model, obs_name, vx_mask,
                 fcst_var_name, fcst_var_level, obs_var_name, obs_var_level,
                 line_type
             )
             if SENDCOM == 'YES' \
-                    and os.path.exists(DATAjob_condensed_model_stat_file):
-                logger.info(f"Copying {DATAjob_condensed_model_stat_file} to "
-                            +f"{COMOUTjob_condensed_model_stat_file}")
-                gda_util.copy_file(DATAjob_condensed_model_stat_file,
-                                   COMOUTjob_condensed_model_stat_file)
+                    and os.path.exists(job_work_condensed_model_stat_file):
+                logger.info(f"Copying {job_work_condensed_model_stat_file} to "
+                            +f"{job_COMOUT_condensed_model_stat_file}")
+                gda_util.copy_file(job_work_condensed_model_stat_file,
+                                   job_COMOUT_condensed_model_stat_file)
 elif JOB_GROUP == 'filter_stats':
     model_info_dict = original_model_info_dict.copy()
     date_info_dict = original_date_info_dict.copy()

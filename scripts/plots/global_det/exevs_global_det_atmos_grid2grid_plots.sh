@@ -40,7 +40,7 @@ python $USHevs/global_det/global_det_atmos_get_data_files.py
 export err=$?; err_chk
 
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
-for group in condense_stats filter_stats make_plots tar_images; do
+for group in condense_stats; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-grid plots: ${JOB_GROUP}"
     python $USHevs/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
@@ -74,7 +74,7 @@ for group in condense_stats filter_stats make_plots tar_images; do
         done
     fi
 done
-
+exit
 # Cat the plotting log files
 log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/logs
 log_file_count=$(find $log_dir -type f |wc -l)
