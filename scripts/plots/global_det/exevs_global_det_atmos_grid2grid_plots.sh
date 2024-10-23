@@ -73,19 +73,20 @@ for group in condense_stats; do
             export err=$?; err_chk
         done
     fi
+    python $USHevs/global_det/global_det_atmos_copy_job_dir_output.py
+    export err=$?; err_chk
+    # Cat the plotting log files
+    log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/*/*/logs
+    log_file_count=$(find $log_dir -type f |wc -l)
+    if [[ $log_file_count -ne 0 ]]; then
+        for log_file in $log_dir/*; do
+            echo "Start: $log_file"
+            cat $log_file
+            echo "End: $log_file"
+        done
+    fi
 done
 exit
-# Cat the plotting log files
-log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-        echo "Start: $log_file"
-        cat $log_file
-        echo "End: $log_file"
-    done
-fi
-
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file
