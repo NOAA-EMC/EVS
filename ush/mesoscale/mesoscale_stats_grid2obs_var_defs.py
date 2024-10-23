@@ -19,14 +19,14 @@ generate_stats_jobs_dict = {
             'rap': {
                 'var1_fcst_name': 'HGT',
                 'var1_fcst_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                     + "P300, P250, P200, P150, P100, P50, "
-                                     + "P20, P10'"),
+                                     + "P300, P250, P200, P150, P100, "
+                                     + "P50'"),
                 'var1_fcst_thresholds': '',
                 'var1_fcst_options': '',
                 'var1_obs_name': 'HGT',
                 'var1_obs_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                    + "P300, P250, P200, P150, P100, P50, "
-                                    + "P20, P10'"),
+                                    + "P300, P250, P200, P150, P100, "
+                                    + "P50'"),
                 'var1_obs_thresholds': '',
                 'var1_obs_options': '',
             },    
@@ -60,14 +60,14 @@ generate_stats_jobs_dict = {
             'rap': {
                 'var1_fcst_name': 'TMP',
                 'var1_fcst_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                     + "P300, P250, P200, P150, P100, P50, "
-                                     + "P20, P10'"),
+                                     + "P300, P250, P200, P150, P100, "
+                                     + "P50'"),
                 'var1_fcst_thresholds': '',
                 'var1_fcst_options': '',
                 'var1_obs_name': 'TMP',
                 'var1_obs_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                    + "P300, P250, P200, P150, P100, P50, "
-                                    + "P20, P10'"),
+                                    + "P300, P250, P200, P150, P100, "
+                                    + "P50'"),
                 'var1_obs_thresholds': '',
                 'var1_obs_options': '',
             },
@@ -113,26 +113,26 @@ generate_stats_jobs_dict = {
             'rap': {
                 'var1_fcst_name': 'UGRD',
                 'var1_fcst_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                     + "P300, P250, P200, P150, P100, P50, "
-                                     + "P20, P10'"),
+                                     + "P300, P250, P200, P150, P100, "
+                                     + "P50'"),
                 'var1_fcst_thresholds': '',
                 'var1_fcst_options': '',
                 'var1_obs_name': 'UGRD',
                 'var1_obs_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                    + "P300, P250, P200, P150, P100, P50, "
-                                    + "P20, P10'"),
+                                    + "P300, P250, P200, P150, P100, "
+                                    + "P50'"),
                 'var1_obs_thresholds': '',
                 'var1_obs_options': '',
                 'var2_fcst_name': 'VGRD',
                 'var2_fcst_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                     + "P300, P250, P200, P150, P100, P50, "
-                                     + "P20, P10'"),
+                                     + "P300, P250, P200, P150, P100, "
+                                     + "P50'"),
                 'var2_fcst_thresholds': '',
                 'var2_fcst_options': '',
                 'var2_obs_name': 'VGRD',
                 'var2_obs_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                    + "P300, P250, P200, P150, P100, P50, "
-                                    + "P20, P10'"),
+                                    + "P300, P250, P200, P150, P100, "
+                                    + "P50'"),
                 'var2_obs_thresholds': '',
                 'var2_obs_options': '',
             },
@@ -166,14 +166,14 @@ generate_stats_jobs_dict = {
             'rap': {
                 'var1_fcst_name': 'UGRD',
                 'var1_fcst_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                     + "P300, P250, P200, P150, P100, P50, "
-                                     + "P20, P10'"),
+                                     + "P300, P250, P200, P150, P100, "
+                                     + "P50'"),
                 'var1_fcst_thresholds': '',
                 'var1_fcst_options': '',
                 'var1_obs_name': 'UGRD',
                 'var1_obs_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                    + "P300, P250, P200, P150, P100, P50, "
-                                    + "P20, P10'"),
+                                    + "P300, P250, P200, P150, P100, "
+                                    + "P50'"),
                 'var1_obs_thresholds': '',
                 'var1_obs_options': '',
             },
@@ -207,14 +207,14 @@ generate_stats_jobs_dict = {
             'rap': {
                 'var1_fcst_name': 'VGRD',
                 'var1_fcst_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                     + "P300, P250, P200, P150, P100, P50, "
-                                     + "P20, P10'"),
+                                     + "P300, P250, P200, P150, P100, "
+                                     + "P50'"),
                 'var1_fcst_thresholds': '',
                 'var1_fcst_options': '',
                 'var1_obs_name': 'VGRD',
                 'var1_obs_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                    + "P300, P250, P200, P150, P100, P50, "
-                                    + "P20, P10'"),
+                                    + "P300, P250, P200, P150, P100, "
+                                    + "P50'"),
                 'var1_obs_thresholds': '',
                 'var1_obs_options': '',
             },
@@ -248,14 +248,14 @@ generate_stats_jobs_dict = {
             'rap': {
                 'var1_fcst_name': 'SPFH',
                 'var1_fcst_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                     + "P300, P250, P200, P150, P100, P50, "
-                                     + "P20, P10'"),
+                                     + "P300, P250, P200, P150, P100, "
+                                     + "P50'"),
                 'var1_fcst_thresholds': '',
                 'var1_fcst_options': 'set_attr_units = \\"g/kg\\"; convert(x)=x*1000',
                 'var1_obs_name': 'SPFH',
                 'var1_obs_levels': ("'P1000, P925, P850, P700, P500, P400, "
-                                    + "P300, P250, P200, P150, P100, P50, "
-                                    + "P20, P10'"),
+                                    + "P300, P250, P200, P150, P100, "
+                                    + "P50'"),
                 'var1_obs_thresholds': '',
                 'var1_obs_options': 'set_attr_units = \\"g/kg\\"; convert(x)=x*1000',
             },
@@ -688,7 +688,8 @@ generate_stats_jobs_dict = {
                 'var1_fcst_name': 'TCDC',
                 'var1_fcst_levels': 'L0',
                 'var1_fcst_thresholds': 'lt10,gt10,gt50,gt90',
-                'var1_fcst_options': 'set_attr_level = \\"TOTAL\\";',
+#                'var1_fcst_options': 'set_attr_level = \\"TOTAL\\"; GRIB2_ipdtmpl_index = [ 8 ]; GRIB2_ipdtmpl_val = [ {lead?fmt=%H} ];',
+                'var1_fcst_options': 'set_attr_level = \\"TOTAL\\"; GRIB2_ipdtmpl_index = [ 15 ]; GRIB2_ipdtmpl_val = [ {lead?fmt=%Y} ];',
                 'var1_obs_name': 'TCDC',
                 'var1_obs_levels': 'L0',
                 'var1_obs_thresholds': 'lt10,gt10,gt50,gt90',
@@ -698,7 +699,7 @@ generate_stats_jobs_dict = {
                 'var1_fcst_name': 'TCDC',
                 'var1_fcst_levels': 'L0',
                 'var1_fcst_thresholds': 'lt10,gt10,gt50,gt90',
-                'var1_fcst_options': 'set_attr_level = \\"TOTAL\\";',
+                'var1_fcst_options': 'set_attr_level = \\"TOTAL\\"; GRIB2_ipdtmpl_index = [ 9 ]; GRIB2_ipdtmpl_val = [ 10 ];',
                 'var1_obs_name': 'TCDC',
                 'var1_obs_levels': 'L0',
                 'var1_obs_thresholds': 'lt10,gt10,gt50,gt90',

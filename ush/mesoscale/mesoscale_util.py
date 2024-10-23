@@ -334,7 +334,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        shift = (filled_file_format_chunk.partition('shift=')[2]\
                                 .partition('}')[0])
                        init_shift_time_dt = (
-                           init_time_dt + datetime.timedelta(hours=int(shift))
+                           init_time_dt + td(hours=int(shift))
                        )
                        replace_format_opt_count = init_shift_time_dt.strftime(
                            format_opt_count_fmt
@@ -343,7 +343,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        shift = (filled_file_format_chunk.partition('shift=')[2]\
                                 .partition('}')[0])
                        valid_shift_time_dt = (
-                           valid_time_dt + datetime.timedelta(hours=int(shift))
+                           valid_time_dt + td(hours=int(shift))
                        )
                        replace_format_opt_count = valid_shift_time_dt.strftime(
                            format_opt_count_fmt
@@ -715,7 +715,7 @@ def precip_check_obs_input_output_files(job_dict):
              DATA_files_list       - list of output DATA
                                      files (strings)
     """
-    valid_date_dt = datetime.datetime.strptime(
+    valid_date_dt = datetime.strptime(
         job_dict['DATE']+job_dict['valid_hour_start'],
         '%Y%m%d%H'
     )
@@ -733,7 +733,7 @@ def precip_check_obs_input_output_files(job_dict):
                     job_dict['DATA'], 'data', 'ccpa', 
                     f"ccpa.accum{job_dict['ccpa_file_accum'].zfill(2)}hr.v"
                     +(valid_date_dt
-                      -datetime.timedelta(hours=(n-1)
+                      -td(hours=(n-1)
                                                  *int(job_dict['ccpa_file_accum'])))\
                     .strftime('%Y%m%d%H')
                 )
@@ -823,12 +823,12 @@ def precip_check_model_input_output_files(job_dict):
              DATA_files_list       - list of output DATA
                                      files (strings)
     """
-    valid_date_dt = datetime.datetime.strptime(
+    valid_date_dt = datetime.strptime(
         job_dict['DATE']+job_dict['valid_hour_start'],
         '%Y%m%d%H'
     )
     init_date_dt = (valid_date_dt
-                    - datetime.timedelta(hours=int(job_dict['fcst_hour'])))
+                    - td(hours=int(job_dict['fcst_hour'])))
     # Expected input file
     input_files_list = []
     if job_dict['JOB_GROUP'] == 'assemble_data':
@@ -950,7 +950,7 @@ def snowfall_check_obs_input_output_files(job_dict):
              DATA_files_list       - list of output DATA
                                      files (strings)
     """
-    valid_date_dt = datetime.datetime.strptime(
+    valid_date_dt = datetime.strptime(
         job_dict['DATE']+job_dict['valid_hour_start'],
         '%Y%m%d%H'
     )
@@ -1012,12 +1012,12 @@ def snowfall_check_model_input_output_files(job_dict):
              DATA_files_list       - list of output DATA
                                      files (strings)
     """
-    valid_date_dt = datetime.datetime.strptime(
+    valid_date_dt = datetime.strptime(
         job_dict['DATE']+job_dict['valid_hour_start'],
         '%Y%m%d%H'
     )
     init_date_dt = (valid_date_dt
-                    - datetime.timedelta(hours=int(job_dict['fcst_hour'])))
+                    - td(hours=int(job_dict['fcst_hour'])))
     # Expected input file
     input_files_list = []
     if job_dict['JOB_GROUP'] == 'assemble_data':

@@ -241,7 +241,6 @@ elif STEP == 'stats':
                     working_output_base_dir, 'pcp_combine', 
                     MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
                 ))
-            date_dt+=td(days=1)
     elif VERIF_CASE == "grid2obs":
         if job_type == 'reformat':
             working_output_base_dir = os.path.join(
@@ -381,7 +380,6 @@ elif STEP == 'stats':
                     working_output_base_dir, NEST, 'pb2nc', 
                     MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
                 ))
-            date_dt+=td(days=1)
     elif VERIF_CASE == "snowfall":
         pass
 elif STEP == 'plots':
