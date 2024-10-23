@@ -1559,6 +1559,8 @@ suite evs_nco
               trigger :TIME >= 1700 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
             task jevs_global_ens_atmos_gefs_precip_spatial_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_precip_stats == complete
+            task jevs_global_ens_atmos_naefs_precip_spatial_plots
+              trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_precip_stats == complete
             task jevs_global_ens_atmos_gefs_precip_past90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete
             task jevs_global_ens_atmos_gefs_precip_past31days_plots
