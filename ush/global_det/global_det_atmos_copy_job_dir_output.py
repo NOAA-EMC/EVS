@@ -57,7 +57,22 @@ elif STEP == 'plots':
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
             f"last{NDAYS}days", '*', '*', '*', 'fcst*.stat'
         )
-for output_file_JOB in sorted(glob.glob(job_wildcard_dir), key=len):
+    elif JOB_GROUP == 'make_plots':
+        job_wildcard_dir = os.path.join(
+            job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
+            f"last{NDAYS}days", '*', '*', '*', '*', '*.png'
+        )
+output_file_JOB_list = glob.glob(job_wildcard_dir)
+if STEP == 'plots' and JOB_GROUP == 'make_plots':
+    job_wildcard_dir2 = os.path.join(
+        job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
+        f"last{NDAYS}days", '*', '*', '*', '*', '*.gif'
+    )
+    output_file_JOB_list = (
+        output_file_JOB_list
+        + glob.glob(job_wildcard_dir2)
+    )
+for output_file_JOB in sorted(output_file_JOB_list, key=len):
     output_file_end_path = output_file_JOB.partition(
         job_work_JOB_GROUP_dir+'/'
     )[2].partition('/')[2]

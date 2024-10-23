@@ -844,15 +844,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 if SENDCOM == 'YES':
                     gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                 # Check plot files
-                plot_files_exist, reset_job_env_dict = (
-                    gda_util.check_plot_files(job_env_dict)
-                )
+                plot_files_exist = gda_util.check_plot_files(job_env_dict)
                 if plot_files_exist:
                     write_job_cmds = False
                 else:
                     write_job_cmds = True
-                for reset_key in list(reset_job_env_dict.keys()):
-                    job_env_dict[reset_key] = reset_job_env_dict[reset_key]
                 # Create job file
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
                                         'job'+str(njobs))
@@ -978,14 +974,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                              ['fcst_var_dict']['levels']\
                              .index(plot_loop_info[2])]
                         )
-                    DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
-                        DATA, COMOUT, JOB_GROUP, job_env_dict
-                    )
-                    job_env_dict['DATAjob'] = DATAjob
-                    job_env_dict['COMOUTjob'] = COMOUTjob
-                    for output_dir in [job_env_dict['DATAjob'],
-                                       job_env_dict['COMOUTjob']]:
-                        gda_util.make_dir(output_dir)
                     run_global_det_atmos_plots = ['global_det_atmos_plots.py']
                     if evs_run_mode == 'production' and \
                             verif_type in ['pres_levs', 'sfc'] and \
@@ -995,8 +983,29 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             'global_det_atmos_plots_production_tof240.py'
                         )
                     for run_global_det_atmos_plot in run_global_det_atmos_plots:
-                        # Create job file
+                        job_env_dict['plot_script'] = run_global_det_atmos_plot
+                        # Set up output directories
                         njobs+=1
+                        job_env_dict['job_id'] = 'job'+str(njobs)
+                        job_work_dir, job_DATA_dir, job_COMOUT_dir = (
+                            gda_util.get_plot_job_dirs(DATA, COMOUT, JOB_GROUP,
+                                                       job_env_dict)
+                        )
+                        job_env_dict['job_work_dir'] = job_work_dir
+                        job_env_dict['job_DATA_dir'] = job_DATA_dir
+                        job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
+                        gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                        if SENDCOM == 'YES':
+                            gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                        # Check plot files
+                        plot_files_exist = gda_util.check_plot_files(
+                            job_env_dict
+                        )
+                        if plot_files_exist:
+                             write_job_cmds = False
+                        else:
+                             write_job_cmds = True
+                        # Create job file
                         job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                 'job'+str(njobs))
                         print("Creating job script: "+job_file)
@@ -1011,11 +1020,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             if name not in dont_write_env_var_list:
                                 job.write('export '+name+'="'+value+'"\n')
                         job.write('\n')
-                        job.write(
-                            gda_util.python_command(run_global_det_atmos_plot,
-                                                    [])+'\n'
-                        )
-                        job.write('export err=$?; err_chk'+'\n')
+                        if write_job_cmds:
+                            gda_util.make_dir(job_env_dict['job_work_dir'])
+                            job.write(
+                                gda_util.python_command(run_global_det_atmos_plot,
+                                                        [])+'\n'
+                            )
+                            job.write('export err=$?; err_chk'+'\n')
                         job.close()
             elif JOB_GROUP == 'tar_images':
                 job_env_dict['DATAjob'] = loop_info
