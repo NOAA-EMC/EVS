@@ -297,8 +297,8 @@ elif JOB_GROUP == 'filter_stats':
                     +'/'+model_info_dict[model_num]['plot_name']
                 )
                 model_dict = model_info_dict[model_num]
-                DATAjob_filter_stats_model_file = os.path.join(
-                    DATAjob,
+                job_work_filter_stats_model_file = os.path.join(
+                    job_work_dir,
                     ('fcst'+model_dict['name']+'_'
                      +plot_info_dict['fcst_var_name']
                      +plot_info_dict['fcst_var_level']
@@ -321,17 +321,17 @@ elif JOB_GROUP == 'filter_stats':
                     .replace('0,*,*', '').replace('*,*', '')\
                     +'.stat'
                 )
-                COMOUTjob_filter_stats_model_file = (
-                    DATAjob_filter_stats_model_file.replace(DATAjob, COMOUTjob)
+                job_COMOUT_filter_stats_model_file = (
+                    job_work_filter_stats_model_file.replace(job_work_dir,
+                                                             job_COMOUT_dir)
                 )
-                if os.path.exists(COMOUTjob_filter_stats_model_file):
-                    logger.info(f"Copying {COMOUTjob_filter_stats_model_file} "
-                                +f"to {DATAjob_filter_stats_model_file}")
-                    gda_util.copy_file(COMOUTjob_filter_stats_model_file,
-                                       DATAjob_filter_stats_model_file)
-                else:
+                job_DATA_filter_stats_model_file = (
+                    job_work_filter_stats_model_file.replace(job_work_dir,
+                                                             job_DATA_dir)
+                )
+                if not os.path.exists(job_DATA_filter_stats_model_file):
                     all_model_df = gda_util.build_df(
-                        JOB_GROUP, logger, DATAjob, DATAjob,
+                        JOB_GROUP, logger, job_DATA_dir, job_work_dir,
                         model_info_dict, met_info_dict,
                         plot_info_dict['fcst_var_name'],
                         plot_info_dict['fcst_var_level'],
@@ -349,12 +349,13 @@ elif JOB_GROUP == 'filter_stats':
                         str(date_info_dict['forecast_hour'])
                     )
                     if SENDCOM == 'YES' \
-                            and os.path.exists(DATAjob_filter_stats_model_file):
+                            and \
+                            os.path.exists(job_work_filter_stats_model_file):
                         logger.info("Copying "
-                                    +f"{DATAjob_filter_stats_model_file} to "
-                                    +f"{COMOUTjob_filter_stats_model_file}")
-                        gda_util.copy_file(DATAjob_filter_stats_model_file,
-                                           COMOUTjob_filter_stats_model_file)
+                                    +f"{job_work_filter_stats_model_file} to "
+                                    +f"{job_COMOUT_filter_stats_model_file}")
+                        gda_util.copy_file(job_work_filter_stats_model_file,
+                                           job_COMOUT_filter_stats_model_file)
 elif JOB_GROUP == 'make_plots':
     if len(model_list) > 10:
         logger.error("Too many models requested ("+str(len(model_list))

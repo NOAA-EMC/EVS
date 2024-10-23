@@ -16,6 +16,7 @@ import glob
 import pandas as pd
 import logging
 import copy
+import itertools
 from time import sleep
 
 def run_shell_command(command):
@@ -2230,6 +2231,62 @@ def check_plot_files(job_dict):
         reset_job_dict['obs_list'] = ', '.join(reset_obs_list)
         if len(reset_model_list) == 0:
             plot_files_exist = True
+    elif job_dict['JOB_GROUP'] == 'filter_stats':
+        valid_hrs = list(
+            range(int(job_dict['valid_hr_start']),
+                  int(job_dict['valid_hr_end'])+int(job_dict['valid_hr_inc']),
+                  int(job_dict['valid_hr_inc']))
+        )
+        init_hrs = list(
+            range(int(job_dict['init_hr_start']),
+                  int(job_dict['init_hr_end'])+int(job_dict['init_hr_inc']),
+                  int(job_dict['init_hr_inc']))
+        )
+        fhrs = [int(i) for i in job_dict['fhr_list'].split(', ')]
+        plot_files_exist = True
+        reset_job_dict = {}
+        for filter_info in list(itertools.product(valid_hrs, fhrs)):
+            init_hr = get_init_hour(
+                int(filter_info[0]), int(filter_info[1])
+            )
+            if init_hr in init_hrs:
+                for model_idx in range(
+                        len(job_dict['model_list'].split(', '))
+                ):
+                    model = job_dict['model_list'].split(', ')[model_idx]
+                    obs = job_dict['obs_list'].split(', ')[model_idx]
+                    file_name = os.path.join(
+                        f"fcst{model}_{job_dict['fcst_var_name']}"
+                        +f"{job_dict['fcst_var_level']}"
+                        +f"{job_dict['fcst_var_thresh']}_"
+                        +f"obs{obs}_{job_dict['obs_var_name']}"
+                        +f"{job_dict['obs_var_level']}"
+                        +f"{job_dict['obs_var_thresh']}_"
+                        +f"linetype{job_dict['line_type']}_"
+                        +f"grid{job_dict['grid']}_"
+                        +f"vxmask{job_dict['vx_mask']}_"
+                        +f"interp{job_dict['interp_method']}"
+                        +f"{job_dict['interp_points']}_"
+                        +f"{job_dict['date_type'].lower()}"
+                        +f"{job_dict['start_date']}"
+                        +f"{str(filter_info[0]).zfill(2)}0000to"
+                        +f"{job_dict['end_date']}"
+                        +f"{str(filter_info[0]).zfill(2)}0000_"
+                        +f"fhr{str(filter_info[1]).zfill(3)}"
+                    )\
+                    .lower().replace('.','p').replace('-', '_')\
+                    .replace('&&', 'and').replace('||', 'or')\
+                    .replace('0,*,*', '').replace('*,*', '')\
+                    +'.stat'
+                    job_COMOUT_file = os.path.join(job_dict['job_COMOUT_dir'],
+                                                   file_name)
+                    job_DATA_file = job_COMOUT_file.replace(
+                        job_dict['job_COMOUT_dir'], job_dict['job_DATA_dir']
+                    )
+                    if os.path.exists(job_COMOUT_file):
+                        copy_file(job_COMOUT_file, job_DATA_file)
+                    else:
+                        plot_files_exist = False
     return plot_files_exist, reset_job_dict
 
 def get_obs_valid_hrs(obs):
