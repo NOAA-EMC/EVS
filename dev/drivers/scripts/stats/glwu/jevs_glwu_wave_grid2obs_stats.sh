@@ -14,7 +14,7 @@ export OMP_NUM_THREADS=1
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=glwu
-export OBTYPE=GDAS
+export OBTYPE=NDBC
 export NET=evs
 export COMPONENT=glwu
 export STEP=stats
