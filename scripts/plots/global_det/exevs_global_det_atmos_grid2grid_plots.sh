@@ -40,7 +40,7 @@ python $USHevs/global_det/global_det_atmos_get_data_files.py
 export err=$?; err_chk
 
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
-for group in condense_stats filter_stats make_plots tar_images; do
+for group in condense_stats filter_stats make_plots; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-grid plots: ${JOB_GROUP}"
     python $USHevs/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
@@ -90,7 +90,7 @@ for group in condense_stats filter_stats make_plots tar_images; do
         done
     fi
 done
-
+exit
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file

@@ -840,9 +840,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job_env_dict['job_work_dir'] = job_work_dir
                 job_env_dict['job_DATA_dir'] = job_DATA_dir
                 job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
-                gda_util.make_dir(job_env_dict['job_DATA_dir'])
                 if SENDCOM == 'YES':
                     gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                else:
+                    gda_util.make_dir(job_env_dict['job_DATA_dir'])
                 # Check plot files
                 plot_files_exist = gda_util.check_plot_files(job_env_dict)
                 if plot_files_exist:
@@ -994,9 +995,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job_env_dict['job_work_dir'] = job_work_dir
                         job_env_dict['job_DATA_dir'] = job_DATA_dir
                         job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
-                        gda_util.make_dir(job_env_dict['job_DATA_dir'])
                         if SENDCOM == 'YES':
                             gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                        else:
+                            gda_util.make_dir(job_env_dict['job_DATA_dir'])
                         # Check plot files
                         plot_files_exist = gda_util.check_plot_files(
                             job_env_dict

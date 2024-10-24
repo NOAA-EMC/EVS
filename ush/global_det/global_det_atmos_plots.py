@@ -229,7 +229,15 @@ if JOB_GROUP == 'condense_stats':
             job_work_condensed_model_stat_file.replace(job_work_dir,
                                                        job_DATA_dir)
         )
-        if not os.path.exists(job_DATA_condensed_model_stat_file):
+        if SENDCOM == 'YES':
+            check_job_condensed_model_stat_file = (
+                job_COMOUT_condensed_model_stat_file
+            )
+        else:
+            check_job_condensed_model_stat_file = (
+                job_DATA_condensed_model_stat_file
+            )
+        if not os.path.exists(check_job_condensed_model_stat_file):
             gda_util.condense_model_stat_files(
                 logger, stat_base_dir, job_work_dir, model, obs_name, vx_mask,
                 fcst_var_name, fcst_var_level, obs_var_name, obs_var_level,
@@ -329,9 +337,19 @@ elif JOB_GROUP == 'filter_stats':
                     job_work_filter_stats_model_file.replace(job_work_dir,
                                                              job_DATA_dir)
                 )
-                if not os.path.exists(job_DATA_filter_stats_model_file):
+                if SENDCOM == 'YES':
+                    check_job_filter_stats_model_file = (
+                        job_COMOUT_filter_stats_model_file
+                    )
+                    job_input_dir = job_COMOUT_dir
+                else:
+                    check_job_filter_stats_model_file = (
+                        job_DATA_filter_stats_model_file
+                    )
+                    job_input_dir = job_DATA_dir
+                if not os.path.exists(check_job_filter_stats_model_file):
                     all_model_df = gda_util.build_df(
-                        JOB_GROUP, logger, job_DATA_dir, job_work_dir,
+                        JOB_GROUP, logger, job_input_dir, job_work_dir,
                         model_info_dict, met_info_dict,
                         plot_info_dict['fcst_var_name'],
                         plot_info_dict['fcst_var_level'],
@@ -393,7 +411,14 @@ elif JOB_GROUP == 'make_plots':
             job_DATA_image_name = job_work_image_name.replace(
                 job_work_dir, job_DATA_dir
             )
-            if init_hr in init_hrs and not os.path.exists(job_DATA_image_name):
+            if SENCDOM == 'YES':
+                check_job_image_name = job_COMOUT_image_name
+                job_input_dir = job_COMOUT_dir
+            else:
+                check_job_image_name = job_DATA_image_name
+                job_input_dir = job_DATA_dir
+            if init_hr in init_hrs \
+                    and not os.path.exists(check_job_image_name):
                 make_ts = True
             else:
                 make_ts = False
@@ -401,12 +426,12 @@ elif JOB_GROUP == 'make_plots':
                     and str(date_info_dict['forecast_hour']) not in \
                     ['24', '72', '120']:
                 make_ts = False
-            if os.path.exists(job_DATA_image_name):
+            if os.path.exists(check_job_image_name):
                 make_ts = False
             else:
                 make_ts = True
             if make_ts:
-                plot_ts = gdap_ts.TimeSeries(logger, job_DATA_dir+'/..',
+                plot_ts = gdap_ts.TimeSeries(logger, job_input_dir+'/..',
                                              job_work_dir, model_info_dict,
                                              date_info_dict, plot_info_dict,
                                              met_info_dict, logo_dir)

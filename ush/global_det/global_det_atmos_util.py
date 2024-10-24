@@ -2195,8 +2195,6 @@ def check_plot_files(job_dict):
     """
     if job_dict['JOB_GROUP'] != 'tar_images':
         model_list = job_dict['model_list'].split(', ')
-        model_plot_name_list = job_dict['model_plot_name_list'].split(', ')
-        obs_list = job_dict['obs_list'].split(', ')
     if job_dict['JOB_GROUP'] in ['filter_stats', 'make_plots']:
         valid_hrs = list(
             range(int(job_dict['valid_hr_start']),
@@ -2231,76 +2229,54 @@ def check_plot_files(job_dict):
                   +"the same length")
             sys.exit(1)
     # Check files
+    plot_files_exist = True
     if job_dict['JOB_GROUP'] == 'condense_stats':
-        have_model_list = []
-        for model_idx in range(len(model_list)):
-            model = model_list[model_idx]
-            job_COMOUT_file = os.path.join(
-                job_dict['job_COMOUT_dir'], f"condensed_stats_"
-                +f"{model}_{job_dict['line_type'].lower()}_"
-                +f"{job_dict['fcst_var_name'].lower()}_"
-                +(job_dict['fcst_var_level'].lower()\
-                  .replace('.','p').replace('-', '_'))
-                +f"_{job_dict['vx_mask'].lower()}.stat"
-            )
-            job_DATA_file = job_COMOUT_file.replace(
-                job_dict['job_COMOUT_dir'], job_dict['job_DATA_dir']
-            )
-            if os.path.exists(job_COMOUT_file):
-                copy_file(job_COMOUT_file, job_DATA_file)
-                have_model_list.append(model)
-        if len(have_model_list) == len(model_list):
+        job_COMOUT_file_list = glob.glob(
+            os.path.join(job_dict['job_COMOUT_dir'], 'condensed_stats_*')
+        )
+        if len(job_COMOUT_file_list) == len(model_list):
             plot_files_exist = True
         else:
             plot_files_exist = False
     elif job_dict['JOB_GROUP'] == 'filter_stats':
-        plot_files_exist = True
         for filter_info in list(itertools.product(valid_hrs, fhrs)):
             init_hr = get_init_hour(
                 int(filter_info[0]), int(filter_info[1])
             )
             if init_hr in init_hrs:
-                for model_idx in range(
-                        len(job_dict['model_list'].split(', '))
-                ):
-                    model = job_dict['model_list'].split(', ')[model_idx]
-                    obs = job_dict['obs_list'].split(', ')[model_idx]
-                    file_name = os.path.join(
-                        f"fcst{model}_{job_dict['fcst_var_name']}"
-                        +f"{job_dict['fcst_var_level']}"
-                        +f"{job_dict['fcst_var_thresh']}_"
-                        +f"obs{obs}_{job_dict['obs_var_name']}"
-                        +f"{job_dict['obs_var_level']}"
-                        +f"{job_dict['obs_var_thresh']}_"
-                        +f"linetype{job_dict['line_type']}_"
-                        +f"grid{job_dict['grid']}_"
-                        +f"vxmask{job_dict['vx_mask']}_"
-                        +f"interp{job_dict['interp_method']}"
-                        +f"{job_dict['interp_points']}_"
-                        +f"{job_dict['date_type'].lower()}"
-                        +f"{job_dict['start_date']}"
-                        +f"{str(filter_info[0]).zfill(2)}0000to"
-                        +f"{job_dict['end_date']}"
-                        +f"{str(filter_info[0]).zfill(2)}0000_"
-                        +f"fhr{str(filter_info[1]).zfill(3)}"
-                    )\
-                    .lower().replace('.','p').replace('-', '_')\
-                    .replace('&&', 'and').replace('||', 'or')\
-                    .replace('0,*,*', '').replace('*,*', '')\
-                    +'.stat'
-                    job_COMOUT_file = os.path.join(job_dict['job_COMOUT_dir'],
-                                                   file_name)
-                    job_DATA_file = job_COMOUT_file.replace(
-                        job_dict['job_COMOUT_dir'], job_dict['job_DATA_dir']
-                    )
-                    if os.path.exists(job_COMOUT_file):
-                        copy_file(job_COMOUT_file, job_DATA_file)
-                    else:
-                        plot_files_exist = False
+                file_wc_list = (
+                    f"fcst*_{job_dict['fcst_var_name']}"
+                    +f"{job_dict['fcst_var_level']}"
+                    +f"{job_dict['fcst_var_thresh']}_"
+                    +f"obs*_{job_dict['obs_var_name']}"
+                    +f"{job_dict['obs_var_level']}"
+                    +f"{job_dict['obs_var_thresh']}_"
+                    +f"linetype{job_dict['line_type']}_"
+                    +f"grid{job_dict['grid']}_"
+                    +f"vxmask{job_dict['vx_mask']}_"
+                    +f"interp{job_dict['interp_method']}"
+                    +f"{job_dict['interp_points']}_"
+                    +f"{job_dict['date_type'].lower()}"
+                    +f"{job_dict['start_date']}"
+                    +f"{str(filter_info[0]).zfill(2)}0000to"
+                    +f"{job_dict['end_date']}"
+                    +f"{str(filter_info[0]).zfill(2)}0000_"
+                    +f"fhr{str(filter_info[1]).zfill(3)}"
+                ).lower().replace('.','p').replace('-', '_')\
+                 .replace('&&', 'and').replace('||', 'or')\
+                 .replace('0,*,*', '').replace('*,*', '')+'.stat'
+                job_COMOUT_file_list = glob.glob(
+                    os.path.join(job_dict['job_COMOUT_dir'], file_wc_list)
+                )
+                if len(job_COMOUT_file_list) == len(model_list):
+                    plot_files_exist = True
+                else:
+                    plot_files_exist = False
     elif job_dict['JOB_GROUP'] == 'make_plots':
         plot_files_exist = True
         if job_dict['plot'] == 'time_series':
             plot_info_list = list(itertools.product(valid_hrs, fhrs, var_info))
+        plots_files_exist_check_list = []
         for plot_info in plot_info_list:
             if job_dict['plot'] == 'time_series':
                 job_dict['valid_hr_start'] = str(plot_info[0])
@@ -2322,14 +2298,15 @@ def check_plot_files(job_dict):
                     continue
                 if init_hr not in init_hrs:
                     continue
-            job_COMOUT_image = plot_specs.get_savefig_name(
-                job_dict['job_COMOUT_dir'], job_dict, job_dict
-            )
-            job_DATA_image = job_COMOUT_image.replace(
-                job_dict['job_COMOUT_dir'], job_dict['job_DATA_dir']
-            )
-            if os.path.exists(job_COMOUT_image):
-                copy_file(job_COMOUT_image, job_DATA_image)
+                plot_check = plot_specs.get_savefig_name(
+                    job_dict['job_COMOUT_dir'], job_dict, job_dict
+                )
+                plots_files_exist_check_list.append(
+                    os.path.exists(plot_check)
+                )
+            if all(x == True for x in plots_files_exist_check_list) \
+                    and len(plots_files_exist_check_list) > 0:
+                plot_files_exist = True
             else:
                 plot_files_exist = False
     elif job_dict['JOB_GROUP'] == 'tar_images':

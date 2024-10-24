@@ -127,22 +127,26 @@ elif STEP == 'plots':
         os.path.join(working_output_base_dir, 'job_work_dir')
     )
     working_dir_list.append(
-        os.path.join(working_output_base_dir, f"{RUN}.{end_date_dt:%Y%m%d}")
-    )
-    working_dir_list.append(
         os.path.join(working_output_base_dir, 'tar_files')
     )
-    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+    if SENDCOM == 'NO':
         working_dir_list.append(
             os.path.join(working_output_base_dir,
-                         f"{RUN}.{end_date_dt:%Y%m%d}",
-                         f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
-                         f"last{NDAYS}days")
+            f"{RUN}.{end_date_dt:%Y%m%d}")
         )
-        output_dir_list.append(
-            os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
-                         f"last{NDAYS}days")
-        )
+    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+        if SENDCOM == 'NO':
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
+                             f"{RUN}.{end_date_dt:%Y%m%d}",
+                             f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
+                             f"last{NDAYS}days")
+            )
+        if SENDCOM == 'YES':
+            output_dir_list.append(
+                os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
+                             f"last{NDAYS}days")
+            )
 
 # Create working directories
 for working_dir in working_dir_list:
