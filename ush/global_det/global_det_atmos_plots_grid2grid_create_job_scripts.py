@@ -1029,14 +1029,30 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             job.write('export err=$?; err_chk'+'\n')
                         job.close()
             elif JOB_GROUP == 'tar_images':
-                job_env_dict['DATAjob'] = loop_info
-                job_env_dict['COMOUTjob'] = loop_info.replace(
-                    os.path.join(DATA,f"{VERIF_CASE}_{STEP}", 'plot_output',
+                # Set up output directories
+                njobs+=1
+                job_env_dict['job_id'] = 'job'+str(njobs)
+                job_env_dict['job_DATA_dir'] = loop_info
+                job_env_dict['job_COMOUT_dir'] = loop_info.replace(
+                    os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
                                  f"{RUN}.{end_date}"),
                     COMOUT
                 )
-                # Create job file
-                njobs+=1
+                job_env_dict['job_work_dir'] = loop_info.replace(
+                    f"{RUN}.{end_date}",
+                    f"job_work_dir/{job_env_dict['JOB_GROUP']}/"
+                    +f"{job_env_dict['job_id']}/{RUN}.{end_date}"
+                )
+                gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                if SENDCOM == 'YES':
+                    gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                # Check plot files
+                plot_files_exist = gda_util.check_plot_files(job_env_dict)
+                if plot_files_exist:
+                    write_job_cmds = False
+                else:
+                    write_job_cmds = True
+                # Create job files
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)
                 job = open(job_file, 'w')
@@ -1045,16 +1061,16 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Write environment variables
-                job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
                     if name not in dont_write_env_var_list:
                         job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
-                job.write(
-                    gda_util.python_command('global_det_atmos_plots.py', [])
-                    +'\n'
-                )
-                job.write('export err=$?; err_chk'+'\n')
+                if write_job_cmds:
+                    job.write(
+                        gda_util.python_command('global_det_atmos_plots.py', [])
+                        +'\n'
+                    )
+                    job.write('export err=$?; err_chk'+'\n')
                 job.close()
 
 # If running USE_CFP, create POE scripts

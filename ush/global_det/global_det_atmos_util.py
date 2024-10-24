@@ -2193,9 +2193,10 @@ def check_plot_files(job_dict):
              plot_files_exist - if non-zero number of  model files
                                 exist or not (boolean)
     """
-    model_list = job_dict['model_list'].split(', ')
-    model_plot_name_list = job_dict['model_plot_name_list'].split(', ')
-    obs_list = job_dict['obs_list'].split(', ')
+    if job_dict['JOB_GROUP'] != 'tar_images':
+        model_list = job_dict['model_list'].split(', ')
+        model_plot_name_list = job_dict['model_plot_name_list'].split(', ')
+        obs_list = job_dict['obs_list'].split(', ')
     if job_dict['JOB_GROUP'] in ['filter_stats', 'make_plots']:
         valid_hrs = list(
             range(int(job_dict['valid_hr_start']),
@@ -2251,7 +2252,7 @@ def check_plot_files(job_dict):
         if len(have_model_list) == len(model_list):
             plot_files_exist = True
         else:
-            plot_file_exist = False
+            plot_files_exist = False
     elif job_dict['JOB_GROUP'] == 'filter_stats':
         plot_files_exist = True
         for filter_info in list(itertools.product(valid_hrs, fhrs)):
@@ -2331,6 +2332,29 @@ def check_plot_files(job_dict):
                 copy_file(job_COMOUT_image, job_DATA_image)
             else:
                 plot_files_exist = False
+    elif job_dict['JOB_GROUP'] == 'tar_images':
+        plot_files_exist = True
+        tar_file_name = (
+            f"{job_dict['VERIF_CASE']}_{job_dict['VERIF_TYPE']}_"
+            +job_dict['job_COMOUT_dir'].replace(
+                os.path.join(job_dict['COMOUT'],
+                             f"{job_dict['VERIF_CASE']}_"
+                             +f"{job_dict['VERIF_TYPE']}",
+                             f"last{job_dict['NDAYS']}days/"),
+                ''
+            ).replace('/', '_')+'.tar'
+        )
+        job_COMOUT_tar = os.path.join(
+            job_dict['job_COMOUT_dir'], tar_file_name
+        )
+        job_DATA_tar = os.path.join(
+            job_dict['DATA'], f"{job_dict['VERIF_CASE']}_{job_dict['STEP']}",
+            'plot_output', 'tar_files', tar_file_name
+        )
+        if os.path.exists(job_COMOUT_tar):
+            copy_file(job_COMOUT_tar, job_DATA_tar)
+        else:
+            plot_files_exist = False
     return plot_files_exist
 
 def get_obs_valid_hrs(obs):

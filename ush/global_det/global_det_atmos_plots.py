@@ -818,28 +818,41 @@ elif JOB_GROUP == 'make_plots':
         sys.exit(1)
 elif JOB_GROUP == 'tar_images':
     cwd = os.getcwd()
-    tar_file = os.path.join(
-        DATA, f"{VERIF_CASE}_{STEP}", 'plot_output', 'tar_files',
+    job_work_tar_file = os.path.join(
+        job_work_dir,
         (f"{VERIF_CASE}_{VERIF_TYPE}_"
-         +DATAjob\
+         +job_DATA_dir\
           .replace(os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                 'plot_output', f"{RUN}.{end_date}",
                                 f"{VERIF_CASE}_{VERIF_TYPE}",
                                 f"last{NDAYS}days/"), '')\
           .replace('/', '_')+'.tar')
     )
-    if not os.path.exists(tar_file):
-        if len(glob.glob(DATAjob+'/*')) != 0:
-            os.chdir(DATAjob)
-            logger.debug(f"Making tar file {tar_file} from {DATAjob}")
-            gda_util.run_shell_command(['tar', '-cvf', tar_file, '*'])
+    job_COMOUT_tar_file = job_work_tar_file.replace(
+        job_work_dir, job_COMOUT_dir
+    )
+    job_DATA_tar_file = os.path.join(
+        DATA, f"{VERIF_CASE}_{STEP}", 'plot_output', 'tar_files',
+        job_work_tar_file.rpartition('/')[2]
+    )
+    if not os.path.exists(job_DATA_tar_file):
+        if len(glob.glob(job_DATA_dir+'/*')) != 0:
+            os.chdir(job_DATA_dir)
+            logger.debug(f"Making tar file {job_work_tar_file} "
+                         +f"from {job_DATA_dir}")
+            gda_util.run_shell_command(['tar', '-cvf', job_work_tar_file, '*'])
             os.chdir(cwd)
         else:
-            logger.debug(f"No images generated in {DATAjob}, "
+            logger.debug(f"No images generated in {job_DATA_dir}, "
                          +"cannot make tar file")
+    if SENDCOM == 'YES' \
+            and os.path.exists(job_work_tar_file):
+        logger.info(f"Copying {job_work_tar_file} to "
+                    +f"{job_COMOUT_tar_file}")
+        gda_util.copy_file(job_work_tar_file, job_COMOUT_tar_file)
     if KEEPDATA != 'YES':
-        if os.path.exists(DATAjob):
-            logger.info(f"Removing {DATAjob}")
-            shutil.rmtree(DATAjob)
+        if os.path.exists(job_DATA_dir):
+            logger.info(f"Removing {job_DATA_dir}")
+            shutil.rmtree(job_DATA_dir)
 
 print("END: "+os.path.basename(__file__))

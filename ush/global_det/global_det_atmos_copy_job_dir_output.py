@@ -62,6 +62,11 @@ elif STEP == 'plots':
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
             f"last{NDAYS}days", '*', '*', '*', '*', '*.png'
         )
+    elif JOB_GROUP == 'tar_images':
+        job_wildcard_dir = os.path.join(
+            job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
+            f"last{NDAYS}days", '*', '*', '*', '*', '*.tar'
+        )
 output_file_JOB_list = glob.glob(job_wildcard_dir)
 if STEP == 'plots' and JOB_GROUP == 'make_plots':
     job_wildcard_dir2 = os.path.join(
@@ -87,10 +92,16 @@ for output_file_JOB in sorted(output_file_JOB_list, key=len):
                 output_file_end_path
             )
     elif STEP == 'plots':
-        output_file_DATA =  os.path.join(
-            DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
-            output_file_end_path
-        )
+        if JOB_GROUP == 'tar_images':
+            output_file_DATA = os.path.join(
+                DATA, f"{VERIF_CASE}_{STEP}", 'plot_output', 'tar_files',
+                output_file_JOB.rpartition('/')[2]
+            )
+        else:
+            output_file_DATA =  os.path.join(
+                DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
+                output_file_end_path
+            )
     if not os.path.exists(output_file_DATA):
         gda_util.copy_file(output_file_JOB, output_file_DATA)
     else:
