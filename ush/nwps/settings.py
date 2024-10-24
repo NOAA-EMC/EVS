@@ -2304,7 +2304,7 @@ class Reference():
                 'SL1L2': {
                     'plot_stats_list': ('me, esd, rmse, bcrmse, pcor, si, fbar, obar'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['FULL','GOM','GLOBAL'],
                     'var_dict': {
                         'HTSGW': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
@@ -2320,7 +2320,7 @@ class Reference():
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
                                     'obs_var_names': ['PERPW', 'APD'],
-                                    'obs_var_levels': ['L0'],
+                                    'obs_var_levels': ['L0','Z0-500'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'sfc_wave'},
@@ -2329,7 +2329,7 @@ class Reference():
                                      'fcst_var_thresholds': '',
                                      'fcst_var_options': '',
                                      'obs_var_names': ['WVHGT'],
-                                     'obs_var_levels': ['L0'],
+                                     'obs_var_levels': ['L0','Z0-500'],
                                      'obs_var_thresholds': '',
                                      'obs_var_options': '',
                                      'plot_group':'sfc_wave'},
@@ -2364,7 +2364,7 @@ class Reference():
                                     'fcst_var_levels': ['L0'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['WIND'],
+                                    'obs_var_names': ['WSPD'],
                                     'obs_var_levels': ['Z10', 'L0', 'Z0-500'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
@@ -2375,7 +2375,7 @@ class Reference():
                     'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['FULL','GLOBAL','GOM'],
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
@@ -2472,7 +2472,7 @@ class Reference():
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['FULL','GLOBAL','GOM'],
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
