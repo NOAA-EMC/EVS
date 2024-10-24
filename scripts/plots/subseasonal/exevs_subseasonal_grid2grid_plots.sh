@@ -75,18 +75,34 @@ for group in condense_stats filter_stats make_plots tar_images; do
 	    nc=$((nc+1))
         done
     fi
+    python $USHevs/subseasonal/subseasonal_copy_job_dir_output.py
+    export err=$?; err_chk
+    # Cat the plotting log files
+    if [ $JOB_GROUP = make_plots ]; then
+	log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/*/*/*/logs
+    else
+	log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/*/*/logs
+    fi
+    log_file_count=$(find $log_dir -type f 2>/dev/null |wc -l)
+    if [[ $log_file_count -ne 0 ]]; then
+	for log_file in $log_dir/*; do
+	    echo "Start: $log_file"
+	    cat $log_file
+	    echo "End: $log_file"
+	done
+    fi
 done
 
 # Cat the plotting log files
-log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-	echo "Start: $log_file"
-	cat $log_file
-	echo "End: $log_file"
-    done
-fi
+#log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/logs
+#log_file_count=$(find $log_dir -type f |wc -l)
+#if [[ $log_file_count -ne 0 ]]; then
+    #for log_file in $log_dir/*; do
+	#echo "Start: $log_file"
+	#cat $log_file
+	#echo "End: $log_file"
+    #done
+#fi
 
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
