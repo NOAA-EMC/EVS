@@ -99,12 +99,14 @@ fi
 #################################
 ## Make the command files for cfp 
 #################################
-
+# time_series
 ${USHevs}/${COMPONENT}/evs_wave_timeseries.sh
 export err=$?; err_chk
+
 # lead_averages
 ${USHevs}/${COMPONENT}/evs_wave_leadaverages.sh
 export err=$?; err_chk
+
 chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 ###########################################
@@ -122,7 +124,7 @@ fi
 # Gather all the files 
 #######################
 
-periods='LAST31DAYS'
+periods='LAST31DAYS LAST90DAYS'
 if [ $gather = yes ] ; then
 	echo "copying all images into one directory"
 	cp ${DATA}/wave/*png ${DATA}/ndbc_standard/.  ## lead_average plots 
@@ -146,7 +148,7 @@ if [ $gather = yes ] ; then
 			set -x
 			echo ' '
 			echo '**************************************** '
-			echo '*** FATAL ERROR: NO ${period} PLOTS  *** '
+			echo "*** FATAL ERROR: NO ${period} PLOTS  *** "
 			echo "    found for ${VDATE} "
 			echo '**************************************** '
 			echo ' '
@@ -164,7 +166,7 @@ if [ $gather = yes ] ; then
 		fi
 		if [ $SENDCOM = YES ]; then
 			if [ -s evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ]; then
-				cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/.
+				cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}
 			fi
 		fi
 		if [ $SENDDBN = YES ]; then
