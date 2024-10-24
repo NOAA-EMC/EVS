@@ -23,18 +23,17 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
-if [ ! -d  $COMOUT/restart/$past_days ] ; then
-  mkdir -p $COMOUT/restart/$past_days
+if [ ! -d  $COMOUT/restart/$last_days ] ; then
+  mkdir -p $COMOUT/restart/$last_days
 fi
 
 export eval_period='TEST'
-#export past_days=0
 
 export init_end=$VDATE
 export valid_end=$VDATE
 
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
     hrs=$((n*24))
     first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
     n=$((n+1))
@@ -44,10 +43,10 @@ export init_beg=$first_day
 export valid_beg=$first_day
 
 #*************************************************************************
-# Virtual link the  narre's stat data files of past days (31 or 90 days)
+# Virtual link the  narre's stat data files of last days (31 or 90 days)
 #**************************************************************************
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
   #hrs=`expr $n \* 24`
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
@@ -70,7 +69,6 @@ mkdir -p ${plot_dir}
 > run_all_poe.sh 
 for grid in $VX_MASK_LIST ; do
 
- #for score_type in performance_diagram  threshold_average time_series valid_hour_average lead_average ; do
  for score_type in performance_diagram ; do
 
   for var in VISsfc HGTcldceil ; do 
@@ -91,7 +89,7 @@ for grid in $VX_MASK_LIST ; do
 
   #**********************************************************************************************
   # Check if this sub-job has been completed in the previous run for restart
-   if [ ! -e $COMOUT/restart/$past_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed ] ; then
+   if [ ! -e $COMOUT/restart/$last_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed ] ; then
   #************************************************************************************************
 
     if [ $grid = G130 ] ; then
@@ -179,8 +177,8 @@ for grid in $VX_MASK_LIST ; do
      echo "${DATA}/run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
  
      #For restart
-     echo "cp ${plot_dir}/${score_type}_regional_${grd}_valid_*${vname}_*.png  $COMOUT/restart/$past_days/." >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo ">$COMOUT/restart/$past_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "cp ${plot_dir}/${score_type}_regional_${grd}_valid_*${vname}_*.png  $COMOUT/restart/$last_days/." >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "[[ \$? = 0 ]] && >$COMOUT/restart/$last_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      
      chmod +x run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      echo "${DATA}/run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
@@ -188,17 +186,17 @@ for grid in $VX_MASK_LIST ; do
     else
 
       #For restart
-      cp $COMOUT/restart/$past_days/${score_type}_regional_${grd}_*${vname}_*.png ${plot_dir}/.
+      cp $COMOUT/restart/$last_days/${score_type}_regional_${grd}_*${vname}_*.png ${plot_dir}/.
 
     fi      
 
-    done #end of line_type
+    done 
 
-  done #end of var
+  done 
 
- done #end of score_type
+ done 
 
-done #end of grid 
+done  
 
 chmod +x run_all_poe.sh
 
@@ -235,18 +233,20 @@ for grid in g130 g242 ; do
 	  thrsh=_lt152lt305lt914lt1524lt3048
     fi	  
     if [ -s performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png ] ; then
-      cp  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${past_days}days.perfdiag_valid_all_times.${domain}.png
+      cp  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${last_days}days.perfdiag_valid_all_times.${domain}.png
     fi 
   done
 done
 
-tar -cvf evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+ tar -cvf evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar *.png
+fi
 
-if [ $SENDCOM = YES ] && [ -s evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar ] ; then
-   cp -v evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
+if [ $SENDCOM = YES ] && [ -s evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar ] ; then
+   cp -v evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar  $COMOUT/.
 fi
 
 if [ $SENDDBN = YES ] ; then    
-   $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar
+   $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar
 fi 
 

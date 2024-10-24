@@ -1,10 +1,10 @@
-#PBS -N evs_narre_past31days_plot
-#PBS -j oe
+#PBS -N evs_narre_last90days_plot
+#PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:shared,select=1:ncpus=8:mem=8GB
+#PBS -l walltime=01:30:00
+#PBS -l place=vscatter:shared,select=1:ncpus=8:mem=25GB
 #PBS -l debug=true
 
 export model=evs
@@ -47,7 +47,7 @@ export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=narre
-export past_days=31
+export last_days=90
 export run_mpi=yes
 
 ############################################################

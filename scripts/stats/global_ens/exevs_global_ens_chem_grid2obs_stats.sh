@@ -128,6 +128,7 @@ for ObsType in ${grid2obs_list}; do
               echo "WARNING: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z" > mailmsg
               echo "Missing file is ${fcst_file}" >> mailmsg
               echo "==============" >> mailmsg
+              flag_send_message=YES
             fi
 
             echo "WARNING: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z"
