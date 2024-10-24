@@ -134,6 +134,8 @@ if [ $gather = yes ] ; then
 		period_lower=$(echo ${period,,})
 		if [ ${period} = 'LAST31DAYS' ] ; then
 			period_out='last31days'
+		elif [ ${period} = 'LAST90DAYS' ] ; then
+			period_out='last90days'
 		fi
 
 		# check to see if the plots are there
