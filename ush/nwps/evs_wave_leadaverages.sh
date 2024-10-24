@@ -16,7 +16,7 @@ periods='LAST31DAYS LAST90DAYS'
 inithours='00 12'
 fhrs='000,024,048,072,096,120,144,168,192,216,240'
 # fhr is hardcoded below!
-wave_vars='HTSGW'
+wave_vars='WIND HTSGW PERPW'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 ptype='lead_average'
 
@@ -36,6 +36,7 @@ for period in ${periods} ; do
   for vhr in ${inithours} ; do
     for wvar in ${wave_vars} ; do
       for stats in ${stats_list}; do
+	echo "export VX_MASK_LIST=${MASK} " >> plot_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
         echo "export VERIF_CASE=${VERIF_CASE} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export RUN=${RUN} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export USHevs=${USHevs}/${COMPONENT} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
