@@ -35,7 +35,6 @@ DATA = os.environ['DATA']
 RESTART_DIR = os.environ['RESTART_DIR']
 VDATE = os.environ['VDATE']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
-MET_PLUS_OUT = os.environ['MET_PLUS_OUT']
 MET_CONFIG_OVERRIDES = os.environ['MET_CONFIG_OVERRIDES']
 metplus_launcher = 'run_metplus.py'
 machine_conf = os.path.join(
@@ -54,6 +53,9 @@ if job_type == 'reformat':
     MIN_IHOUR = os.environ['MIN_IHOUR']
     COMINobs = os.environ['COMINobs']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
     USHevs = os.environ['USHevs']
     SKIP_IF_OUTPUT_EXISTS = os.environ['SKIP_IF_OUTPUT_EXISTS']
     if NEST == 'spc_otlk':
@@ -83,6 +85,9 @@ elif job_type == 'generate':
     if NEST not in ['firewx', 'spc_otlk']:
         MASK_POLY_LIST = os.environ['MASK_POLY_LIST']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
     GRID = os.environ['GRID']
     USHevs = os.environ['USHevs']
     if NEST == 'spc_otlk':
@@ -96,10 +101,19 @@ elif job_type == 'generate':
 elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
 elif job_type == 'gather2':
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
 elif job_type == 'gather3':
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
     COMOUTsmall = os.environ['COMOUTsmall']
 
 # Get expanded details from variable name
@@ -1895,7 +1909,9 @@ elif STEP == 'stats':
                 + ')\"'
             )
         else:
-            if glob.glob(os.path.join(MET_PLUS_OUT,VERIF_TYPE,'point_stat',f'{MODELNAME}.{VDATE}','*stat')):
+            if glob.glob(os.path.join(
+                    DATA,VERIF_CASE,'METplus_output',VERIF_TYPE,'point_stat',
+                    f'{MODELNAME}.{VDATE}','*stat')):
                 job_cmd_list.append(
                     f'{metplus_launcher} -c {machine_conf} '
                     + f'-c {MET_PLUS_CONF}/'
@@ -1982,7 +1998,9 @@ elif STEP == 'stats':
                 + ')\"'
             )
         else:
-            if glob.glob(os.path.join(MET_PLUS_OUT,'gather_small','stat_analysis',f'{MODELNAME}.{VDATE}','*stat')):
+            if glob.glob(os.path.join(
+                    DATA,VERIF_CASE,'METplus_output','gather_small',
+                    'stat_analysis',f'{MODELNAME}.{VDATE}','*stat')):
                 job_cmd_list.append(
                     f'{metplus_launcher} -c {machine_conf} '
                     + f'-c {MET_PLUS_CONF}/'

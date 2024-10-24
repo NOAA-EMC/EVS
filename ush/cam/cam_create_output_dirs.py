@@ -33,7 +33,6 @@ print(f"BEGIN: {os.path.basename(__file__)}")
 evs_ver = os.environ['evs_ver']
 COMIN = os.environ['COMIN']
 COMOUT = os.environ['COMOUT']
-COMOUTsmall = os.environ['COMOUTsmall']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
@@ -104,6 +103,7 @@ elif VERIF_CASE == "headline":
         all_eval_periods = cutil.get_all_eval_periods(graphics_hdl)
         COMOUTplots = os.environ['COMOUTplots']
 if STEP == 'stats':
+    COMOUTsmall = os.environ['COMOUTsmall']
     RESTART_DIR = os.environ['RESTART_DIR']
     job_type = os.environ['job_type']
 if STEP == 'plots':
@@ -515,6 +515,9 @@ elif STEP == 'stats':
             COMOUT, 
             MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
         ))
+    working_dir_list.append(os.path.join(
+        DATA, VERIF_CASE, 'METplus_output', 'workdirs', job_type
+    ))
 elif STEP == 'plots':
     if VERIF_CASE == 'grid2obs':
 
@@ -527,6 +530,9 @@ elif STEP == 'plots':
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'workdirs'
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out', 'logs'
@@ -564,6 +570,9 @@ elif STEP == 'plots':
             working_output_base_dir, 'out'
         ))
         working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'workdirs'
+        ))
+        working_dir_list.append(os.path.join(
             working_output_base_dir, 'out', 'logs'
         ))
         COMOUT_dir_list.append(os.path.join(
@@ -597,6 +606,9 @@ elif STEP == 'plots':
             working_output_base_dir, 'out'
         ))
         working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'workdirs'
+        ))
+        working_dir_list.append(os.path.join(
             working_output_base_dir, 'out', 'logs'
         ))
         COMOUT_dir_list.append(os.path.join(
@@ -628,6 +640,9 @@ elif STEP == 'plots':
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'workdirs'
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out', 'logs'
