@@ -43,7 +43,7 @@ export NET=evs
 export RUN=wave
 export VERIF_CASE=grid2obs
 export MODELNAME=nwps
-export OBTYPE=NDBC
+export OBTYPE=NDBC_STANDARD
 export run_mpi='yes'
 export gather='yes'
 
