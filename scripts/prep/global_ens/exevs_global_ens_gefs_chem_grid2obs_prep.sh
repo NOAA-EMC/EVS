@@ -97,16 +97,30 @@ for OBTTYPE in ${obstype}; do
             vldhr=$(printf %2.2d ${ic})
             checkfile=${DCOMINairnow}/${INITDATE}/${OBTTYPE}/${HOURLY_INPUT_TYPE}_${INITDATE}${vldhr}.dat
             if [ -s ${checkfile} ]; then
-                export VHOUR=${vldhr}
-                if [ -s ${prep_config_file} ]; then
-                    run_metplus.py ${prep_config_file} ${config_common}
-                    export err=$?; err_chk
-                    if [ ${SENDCOM} = "YES" ]; then
-                        cpfile=${finalprep}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
-                        if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
+                screen_file=${DATA}/checked_${HOURLY_INPUT_TYPE}_${INITDATE}${vldhr}.dat
+	        python ${USHevs}/${COMPONENT}/screen_airnow_obs_hourly.py ${checkfile} ${screen_file}
+	        number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
+	        ## There is 1 header lines 
+                if [ ${number_of_record} -gt 1 ]; then
+                    export VHOUR=${vldhr}
+                    if [ -s ${prep_config_file} ]; then
+                        run_metplus.py ${prep_config_file} ${config_common}
+                        export err=$?; err_chk
+                        if [ ${SENDCOM} = "YES" ]; then
+                            cpfile=${finalprep}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
+                            if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
+                        fi
+                    else
+                        echo "WARNING: can not find ${prep_config_file}"
                     fi
                 else
-                    echo "WARNING: can not find ${prep_config_file}"
+                    if [ ${SENDMAIL} = "YES" ]; then
+                        echo "DEBUG : There is no valid record to be processed for ${checkfile}" >> mailmsg
+                        echo "File in question is ${checkfile}" >> mailmsg
+                        echo "==============" >> mailmsg
+                        flag_send_message=YES
+                    fi
+                    echo "DEBUG : There is no valid record to be processed for ${checkfile}"
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
