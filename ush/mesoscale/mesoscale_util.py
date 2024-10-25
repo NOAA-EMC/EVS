@@ -664,15 +664,15 @@ def initalize_job_env_dict():
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
         'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'evs_run_mode',
         'COMROOT', 'COMIN', 'COMOUT', 'COMOUTsmall', 'COMOUTfinal', 'EVSIN',
-        'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS', 'METPLUS_VERBOSITY',
-        'MET_ROOT', 'MET_VERBOSITY',
+        'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS', 
+        'MET_ROOT',
         'MET_TMP_DIR', 'MODELNAME', 'JOB_GROUP'
     ]
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
         if env_var in ['LOG_MET_OUTPUT_TO_METPLUS',
-                       'METPLUS_VERBOSITY', 'MET_VERBOSITY']:
+                       ]:
             job_env_dict[env_var.lower()] = os.environ[env_var]
     return job_env_dict
 
