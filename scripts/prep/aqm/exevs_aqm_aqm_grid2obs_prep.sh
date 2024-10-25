@@ -63,17 +63,33 @@ while [ ${ic} -le ${endvhr} ]; do
     vldhr=$(printf %2.2d ${ic})
     checkfile=${DCOMINairnow}/${INITDATE}/airnow/${HOURLY_INPUT_TYPE}_${INITDATE}${vldhr}.dat
     if [ -s ${checkfile} ]; then
-        export VHOUR=${vldhr}
-	if [ -s ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ]; then
-            run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ${PARMevs}/metplus_config/machine.conf
-	    export err=$?; err_chk
-	    if [ ${SENDCOM} = "YES" ]; then
-                cpfile=${PREP_SAVE_DIR}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
-                if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
-	    fi
+        screen_file=${DATA}/checked_${HOURLY_INPUT_TYPE}_${INITDATE}${vldhr}.dat
+        python ${USHevs}/${COMPONENT}/screen_airnow_obs_hourly.py ${checkfile} ${screen_file}
+        export err=$?; err_chk
+        number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
+        ## There is 1 header lines 
+        if [ ${number_of_record} -gt 1 ]; then
+            export VHOUR=${vldhr}
+            if [ -s ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ]; then
+                run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ${PARMevs}/metplus_config/machine.conf
+                export err=$?; err_chk
+                if [ ${SENDCOM} = "YES" ]; then
+                    cpfile=${PREP_SAVE_DIR}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
+                    if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
+                fi
+            else
+                echo "WARNING: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
+            fi
         else
-            echo "WARNING: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
-	fi
+            if [ ${SENDMAIL} = "YES" ]; then
+                export subject="NO AIRNOW ASCII Hourly Data for EVS ${COMPONENT}"
+                echo "DEBUG : There is no valid record to be processed for ${checkfile}" >> mailmsg
+                echo "File in question is ${checkfile}" >> mailmsg
+                echo "Job ID: $jobid" >> mailmsg
+                cat mailmsg | mail -s "$subject" $MAILTO 
+            fi
+            echo "DEBUG : There is no valid record to be processed for ${checkfile}"
+        fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
             export subject="AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}"
@@ -93,15 +109,30 @@ done
 ##
 checkfile=${DCOMINairnow}/${INITDATE}/airnow/daily_data_v2.dat
 if [ -s ${checkfile} ]; then
-    if [ -s ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ]; then
-        run_metplus.py ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ${PARMevs}/metplus_config/machine.conf
-        export err=$?; err_chk
-	if [ ${SENDCOM} = "YES" ]; then
-            cpfile=${PREP_SAVE_DIR}/airnow_daily_${INITDATE}.nc
-            if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc};fi
-	fi
+    screen_file=${DATA}/checked_daily_data_v2.dat
+    python ${USHevs}/${COMPONENT}/screen_airnow_obs_daily.py ${checkfile} ${screen_file}
+    export err=$?; err_chk
+    number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
+    if [ ${number_of_record} -gt 0 ]; then
+        if [ -s ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ]; then
+            run_metplus.py ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ${PARMevs}/metplus_config/machine.conf
+            export err=$?; err_chk
+            if [ ${SENDCOM} = "YES" ]; then
+                cpfile=${PREP_SAVE_DIR}/airnow_daily_${INITDATE}.nc
+                if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc};fi
+            fi
+        else
+            echo "WARNING: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
+        fi
     else
-        echo "WARNING: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
+        if [ ${SENDMAIL} = "YES" ]; then
+            export subject="NO AIRNOW ASCII Daily Data for EVS ${COMPONENT}"
+            echo "DEBUG : There is no valid record to be processed for ${checkfile}" >> mailmsg
+            echo "File in question is ${checkfile}" >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $MAILTO 
+        fi
+        echo "DEBUG : There is no valid record to be processed for ${checkfile}"
     fi
 else
     if [ ${SENDMAIL} = "YES" ]; then
@@ -143,11 +174,11 @@ for hour in 06 12; do
                 wgrib2 -d 1 ${ozmax8_file} -set_ftime "6-29 hour ave fcst"  -grib out1.grb2
                 wgrib2 -d 2 ${ozmax8_file} -set_ftime "30-53 hour ave fcst" -grib out2.grb2
                 wgrib2 -d 3 ${ozmax8_file} -set_ftime "54-77 hour ave fcst" -grib out3.grb2
-		comout_file=aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+                comout_file=aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
                 cat out1.grb2 out2.grb2 out3.grb2 > ${comout_file}
-        	if [ ${SENDCOM} = "YES" ]; then
+                if [ ${SENDCOM} = "YES" ]; then
                     if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTproc}; fi
-        	fi
+                fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
                     export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
@@ -169,11 +200,11 @@ for hour in 06 12; do
                 wgrib2 -d 1 ${ozmax8_file} -set_ftime "0-23 hour ave fcst" -grib out1.grb2
                 wgrib2 -d 2 ${ozmax8_file} -set_ftime "24-47 hour ave fcst" -grib out2.grb2
                 wgrib2 -d 3 ${ozmax8_file} -set_ftime "48-71 hour ave fcst" -grib out3.grb2
-		comout_file=aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+                comout_file=aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
                 cat out1.grb2 out2.grb2 out3.grb2 > ${comout_file}
-        	if [ ${SENDCOM} = "YES" ]; then
+                if [ ${SENDCOM} = "YES" ]; then
                     if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTproc}; fi
-        	fi
+                fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
                     export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
