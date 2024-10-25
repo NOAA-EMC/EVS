@@ -215,7 +215,6 @@ while valid_date_dt <= ENDDATE_dt:
             output_file_data.close()
             input_file_data.close()
             if gda_util.check_file_exists_size(output_file):
-                gda_util.copy_file(output_file, output_file_DATA)
                 if SENDCOM == 'YES':
                     gda_util.copy_file(output_file, output_file_COMOUT)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
