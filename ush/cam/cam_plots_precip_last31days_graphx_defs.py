@@ -228,7 +228,7 @@ graphics = {
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
                                     'FCST_INIT_HOURS':['0','12'],
-                                    'STATSs':['sratio,pod,csi'],
+                                    'STATSs':['fss'],
                                     'FCST_LEADS':['39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'A3',
                                     'OBS_LEVEL':'A3',
