@@ -39,10 +39,10 @@ export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-nwps}
 export MODELNAME=${MODELNAME:-nwps}
 export MODNAM=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
-export OBTYPE=${OBTYPE:-NDBC}
+export OBTYPE=${OBTYPE:-NDBC_STANDARD}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
-
+export MASK=${MASK:-GLOBAL}
 ####################################
 # Set EVS directories               
 ####################################
