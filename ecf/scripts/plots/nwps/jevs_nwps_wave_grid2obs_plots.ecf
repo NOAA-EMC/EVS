@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=1:ncpus=128:mem=500G
+#PBS -l place=vscatter,select=1:ncpus=36:mem=50G
 #PBS -l debug=true
 
 export model=evs
@@ -43,7 +43,7 @@ export NET=evs
 export RUN=wave
 export VERIF_CASE=grid2obs
 export MODELNAME=nwps
-export OBTYPE=NDBC
+export OBTYPE=NDBC_STANDARD
 export run_mpi='yes'
 export gather='yes'
 
