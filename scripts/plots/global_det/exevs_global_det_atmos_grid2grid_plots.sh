@@ -40,7 +40,7 @@ python $USHevs/global_det/global_det_atmos_get_data_files.py
 export err=$?; err_chk
 
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
-for group in condense_stats filter_stats make_plots; do
+for group in condense_stats filter_stats make_plots tar_images; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-grid plots: ${JOB_GROUP}"
     python $USHevs/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
@@ -48,7 +48,7 @@ for group in condense_stats filter_stats make_plots; do
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/*
     nc=1
     if [ $USE_CFP = YES ]; then
-        group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/poe* |wc -l)
+        group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/poe* 2>/dev/null| wc -l)
         while [ $nc -le $group_ncount_poe ]; do
             poe_script=$DATA/${VERIF_CASE}_${STEP}/plot_job_scripts/$group/poe_jobs${nc}
             chmod 775 $poe_script
@@ -67,7 +67,7 @@ for group in condense_stats filter_stats make_plots; do
             nc=$((nc+1))
         done
     else
-        group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job* |wc -l)
+        group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job* 2>/dev/null| wc -l)
         while [ $nc -le $group_ncount_job ]; do
             $DATA/${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job${nc}
             export err=$?; err_chk
@@ -90,14 +90,17 @@ for group in condense_stats filter_stats make_plots; do
         done
     fi
 done
-exit
+
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file
     cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
     for VERIF_TYPE in $g2gp_type_list; do
-        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
-        tar -cvf $large_tar_file ${VERIF_CASE}_${VERIF_TYPE}*.tar
+        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+        tar_file_count=$(find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null |wc -l)
+        if [[ $tar_file_count -ne 0 ]]; then
+            tar -cvf $large_tar_file *.tar
+        fi
         if [ -f $large_tar_file ]; then
            cp -v $large_tar_file $COMOUT/.
         fi

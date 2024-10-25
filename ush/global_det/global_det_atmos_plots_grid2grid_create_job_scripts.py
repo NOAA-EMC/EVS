@@ -657,45 +657,22 @@ if JOB_GROUP == 'make_plots':
 ################################################
 #### tar_images jobs
 ################################################
+if SENDCOM == 'YES':
+    search_dir = os.path.join(COMOUT, f"{VERIF_CASE}_means",
+                              f"last{NDAYS}days")
+else:
+    search_dir = os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
+                              f"{RUN}.{end_date}", f"{VERIF_CASE}_means",
+                              f"last{NDAYS}days")
 tar_images_jobs_dict = {
     'flux': {},
-    'means': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_means",
-                                        f"last{NDAYS}days")
-    },
+    'means': {'search_base_dir': search_dir},
     'ozone': {},
-    'precip': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_precip",
-                                        f"last{NDAYS}days")
-    },
-    'pres_levs': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_pres_levs",
-                                        f"last{NDAYS}days")
-    },
-    'sea_ice': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_sea_ice",
-                                        f"last{NDAYS}days")
-    },
-    'snow': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_snow",
-                                        f"last{NDAYS}days")
-    },
-    'sst': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_sst",
-                                        f"last{NDAYS}days")
-    },
+    'precip': {'search_base_dir': search_dir},
+    'pres_levs': {'search_base_dir': search_dir},
+    'sea_ice': {'search_base_dir': search_dir},
+    'snow': {'search_base_dir': search_dir},
+    'sst': {'search_base_dir': search_dir},
 }
 if JOB_GROUP == 'tar_images':
     JOB_GROUP_dict = tar_images_jobs_dict
@@ -1034,20 +1011,31 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 # Set up output directories
                 njobs+=1
                 job_env_dict['job_id'] = 'job'+str(njobs)
-                job_env_dict['job_DATA_dir'] = loop_info
-                job_env_dict['job_COMOUT_dir'] = loop_info.replace(
-                    os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
-                                 f"{RUN}.{end_date}"),
-                    COMOUT
+                if SENDCOM == 'YES':
+                   job_env_dict['job_COMOUT_dir'] = loop_info
+                   job_env_dict['job_DATA_dir'] = loop_info.replace(
+                       COMOUT,
+                       os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                    'plot_output', f"{RUN}.{end_date}")
+                   )
+                else:
+                   job_env_dict['job_DATA_dir'] = loop_info
+                   job_env_dict['job_COMOUT_dir'] = loop_info.replace(
+                       os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
+                                    f"{RUN}.{end_date}"),
+                       COMOUT
+                   )
+                job_env_dict['job_work_dir'] = (
+                    job_env_dict['job_DATA_dir'].replace(
+                        f"{RUN}.{end_date}",
+                        f"job_work_dir/{job_env_dict['JOB_GROUP']}/"
+                        +f"{job_env_dict['job_id']}/{RUN}.{end_date}"
+                    )
                 )
-                job_env_dict['job_work_dir'] = loop_info.replace(
-                    f"{RUN}.{end_date}",
-                    f"job_work_dir/{job_env_dict['JOB_GROUP']}/"
-                    +f"{job_env_dict['job_id']}/{RUN}.{end_date}"
-                )
-                gda_util.make_dir(job_env_dict['job_DATA_dir'])
                 if SENDCOM == 'YES':
                     gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                else:
+                    gda_util.make_dir(job_env_dict['job_DATA_dir'])
                 # Check plot files
                 plot_files_exist = gda_util.check_plot_files(job_env_dict)
                 if plot_files_exist:
@@ -1068,8 +1056,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
                 if write_job_cmds:
+                    gda_util.make_dir(job_env_dict['job_work_dir'])
                     job.write(
-                        gda_util.python_command('global_det_atmos_plots.py', [])
+                        gda_util.python_command('global_det_atmos_plots.py',
+                                                [])
                         +'\n'
                     )
                     job.write('export err=$?; err_chk'+'\n')

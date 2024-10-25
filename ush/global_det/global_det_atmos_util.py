@@ -2310,7 +2310,6 @@ def check_plot_files(job_dict):
             else:
                 plot_files_exist = False
     elif job_dict['JOB_GROUP'] == 'tar_images':
-        plot_files_exist = True
         tar_file_name = (
             f"{job_dict['VERIF_CASE']}_{job_dict['VERIF_TYPE']}_"
             +job_dict['job_COMOUT_dir'].replace(
@@ -2321,15 +2320,16 @@ def check_plot_files(job_dict):
                 ''
             ).replace('/', '_')+'.tar'
         )
-        job_COMOUT_tar = os.path.join(
+        job_COMOUT_tar_file = os.path.join(
             job_dict['job_COMOUT_dir'], tar_file_name
         )
-        job_DATA_tar = os.path.join(
+        job_DATA_tar_file = os.path.join(
             job_dict['DATA'], f"{job_dict['VERIF_CASE']}_{job_dict['STEP']}",
             'plot_output', 'tar_files', tar_file_name
         )
-        if os.path.exists(job_COMOUT_tar):
-            copy_file(job_COMOUT_tar, job_DATA_tar)
+        if os.path.exists(job_COMOUT_tar_file):
+            copy_file(job_COMOUT_tar_file, job_DATA_tar_file)
+            plot_files_exist = True
         else:
             plot_files_exist = False
     return plot_files_exist
