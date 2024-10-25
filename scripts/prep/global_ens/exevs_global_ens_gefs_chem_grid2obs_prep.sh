@@ -40,11 +40,12 @@ for OBTTYPE in ${obstype}; do
         checkfile=${DCOMINaeronet}/${INITDATE}/validation_data/aq/${OBTTYPE}/${INITDATE}.lev15
         if [ -s ${checkfile} ]; then
             screen_file=${DATA}/checked_${OBTTYPE}_${INITDATE}.lev15
-	    python ${USHevs}/${COMPONENT}/screen_aeronet_aod_lev15.py ${checkfile} ${screen_file}
-	    number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
-	    ## There is 6 comment and header lines 
+            python ${USHevs}/${COMPONENT}/screen_aeronet_aod_lev15.py ${checkfile} ${screen_file}
+            export err=$?; err_chk
+            number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
+            ## There is 6 comment and header lines 
             if [ ${number_of_record} -gt 6 ]; then
-		if [ -s ${prep_config_file} ]; then
+                if [ -s ${prep_config_file} ]; then
                     run_metplus.py ${prep_config_file} ${config_common}
                     export err=$?; err_chk
                     if [ ${SENDCOM} = "YES" ]; then
@@ -98,9 +99,10 @@ for OBTTYPE in ${obstype}; do
             checkfile=${DCOMINairnow}/${INITDATE}/${OBTTYPE}/${HOURLY_INPUT_TYPE}_${INITDATE}${vldhr}.dat
             if [ -s ${checkfile} ]; then
                 screen_file=${DATA}/checked_${HOURLY_INPUT_TYPE}_${INITDATE}${vldhr}.dat
-	        python ${USHevs}/${COMPONENT}/screen_airnow_obs_hourly.py ${checkfile} ${screen_file}
-	        number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
-	        ## There is 1 header lines 
+                python ${USHevs}/${COMPONENT}/screen_airnow_obs_hourly.py ${checkfile} ${screen_file}
+                export err=$?; err_chk
+                number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
+                ## There is 1 header lines 
                 if [ ${number_of_record} -gt 1 ]; then
                     export VHOUR=${vldhr}
                     if [ -s ${prep_config_file} ]; then

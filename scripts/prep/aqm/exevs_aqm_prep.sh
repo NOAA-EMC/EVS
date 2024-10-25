@@ -65,6 +65,7 @@ while [ ${ic} -le ${endvhr} ]; do
     if [ -s ${checkfile} ]; then
         screen_file=${DATA}/checked_${HOURLY_INPUT_TYPE}_${INITDATE}${vldhr}.dat
         python ${USHevs}/${COMPONENT}/screen_airnow_obs_hourly.py ${checkfile} ${screen_file}
+        export err=$?; err_chk
         number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
         ## There is 1 header lines 
         if [ ${number_of_record} -gt 1 ]; then
@@ -110,6 +111,7 @@ checkfile=${DCOMINairnow}/${INITDATE}/airnow/daily_data_v2.dat
 if [ -s ${checkfile} ]; then
     screen_file=${DATA}/checked_daily_data_v2.dat
     python ${USHevs}/${COMPONENT}/screen_airnow_obs_daily.py ${checkfile} ${screen_file}
+    export err=$?; err_chk
     number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
     if [ ${number_of_record} -gt 0 ]; then
         if [ -s ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ]; then
