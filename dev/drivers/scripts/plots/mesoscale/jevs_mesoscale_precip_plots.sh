@@ -35,7 +35,7 @@ export VERIF_CASE="precip"
 export MODELNAME=${COMPONENT}
 
 # EVS Settings
-export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/EVS_mesoscale_v2/EVS"
+export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/EVS"
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
 
@@ -48,7 +48,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs_beta5/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export vhr=${vhr:-${vhr}}
