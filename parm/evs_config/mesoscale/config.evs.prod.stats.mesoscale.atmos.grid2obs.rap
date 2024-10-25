@@ -19,10 +19,6 @@ export MET_CONFIG_OVERRIDES=""
 export RESTART_DIR="${COMOUTsmall}/restart/c${vhr}"
 export COMPLETED_JOBS_FILE="completed_jobs.txt"
 
-# Logging
-export METPLUS_VERBOSITY="DEBUG"
-export MET_VERBOSITY="2"
-
 # Time Settings
 export FHR_START=0
 export FHR_INCR=1
