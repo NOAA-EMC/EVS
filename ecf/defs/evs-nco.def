@@ -1586,6 +1586,10 @@ suite evs_nco
             task jevs_glwu_wave_grid2obs_plots
               trigger :TIME >= 1515 and ../../stats/glwu == complete
           endfamily
+	  family nwps
+            task jevs_nwps_wave_grid2obs_plots
+              trigger :TIME >= 1530 and ../../stats/nwps == complete
+          endfamily
           family mesoscale
             task jevs_mesoscale_sref_grid2obs_past90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete

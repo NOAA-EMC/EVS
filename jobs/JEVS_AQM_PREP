@@ -78,6 +78,7 @@ mkdir -p ${COMOUT} ${COMOUTproc}
 # alternative choice is dan option different from aqons
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 
+export DAILY_NCOL=${DAILY_NCOL:-13}
 
 #######################################################################
 # Execute the script.
