@@ -50,7 +50,7 @@ class Templates():
         FCST_VAR_NAME                       VIS
         VAR_NAME                            VISsfc
         MODEL                               HRRR
-        EVAL_PERIOD                         PAST30DAYS
+        EVAL_PERIOD                         LAST30DAYS
         valid?fmt=%Y%m or VALID?fmt=%Y%m    202206
 
         Additionally, variable names may have the _LOWER or _UPPER suffix to 
@@ -98,25 +98,25 @@ class Presets():
         the online documentation to learn how to use these libraries.
         '''
         self.date_presets = {
-            'PAST90DAYS': {
+            'LAST90DAYS': {
                 'valid_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
                 'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
             },
-            'PAST31DAYS': {
+            'LAST31DAYS': {
                 'valid_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
                 'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
             },
-            'PAST7DAYS': {
+            'LAST7DAYS': {
                 'valid_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
                 'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
             },
-            'PAST3DAYS': {
+            'LAST3DAYS': {
                 'valid_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
@@ -817,6 +817,7 @@ class Reference():
                                   'SWC': 'Southwest Coast',
                                   'NMT': 'Northern Mountain Region',
                                   'GRB': 'Great Basin',
+                                  'GRL': 'GreatLakes',
                                   'SMT': 'Southern Mountain Region',
                                   'SWD': 'Southwest Desert',
                                   'NPL': 'Northern Plains',
@@ -2304,14 +2305,14 @@ class Reference():
                 'SL1L2': {
                     'plot_stats_list': ('me, esd, rmse, bcrmse, pcor, si, fbar, obar'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['GreatLakes'],
                     'var_dict': {
                         'HTSGW': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
                                      'fcst_var_thresholds': '',
                                      'fcst_var_options': '',
-                                     'obs_var_names': ['HTSGW'],
-                                     'obs_var_levels': ['L0'],
+                                     'obs_var_names': ['HTSGW', 'WVHT'],
+                                     'obs_var_levels': ['L0', 'Z0-500'],
                                      'obs_var_thresholds': '',
                                      'obs_var_options': '',
                                      'plot_group':'sfc_wave'},
@@ -2319,8 +2320,8 @@ class Reference():
                                     'fcst_var_levels': ['L0'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['PERPW'],
-                                    'obs_var_levels': ['L0'],
+                                    'obs_var_names': ['PERPW', 'APD'],
+                                    'obs_var_levels': ['L0', 'Z0-500'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'sfc_wave'},
@@ -2364,8 +2365,8 @@ class Reference():
                                     'fcst_var_levels': ['L0'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['WIND'],
-                                    'obs_var_levels': ['Z10'],
+                                    'obs_var_names': ['WIND', 'WSPD'],
+                                    'obs_var_levels': ['Z10','L0', 'Z0-500'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'sfc_wave'},
@@ -2375,7 +2376,7 @@ class Reference():
                     'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['GreatLakes'],
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
@@ -2472,7 +2473,7 @@ class Reference():
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['GreatLakes'],
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
