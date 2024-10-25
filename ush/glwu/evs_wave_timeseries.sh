@@ -1,7 +1,8 @@
 #!/bin/bash
 ###########################################################
-# Name of Script: evs_wave_timeseries.sh                   
-# Deanna Spindler / Deanna.Spindler@noaa.gov               
+# Name of Script: evs_wave_timeseries.sh
+# Modified for EVS-GLWU: Samira Ardani (samira.ardani@noaa.gov)                   
+# Cited to: Deanna Spindler (Deanna.Spindler@noaa.gov)               
 # Purpose of Script: Make the time series command files    
 #                                                          
 
@@ -11,25 +12,26 @@
 
 # set up plot variables
 
-periods='PAST31DAYS PAST90DAYS'
+periods='LAST31DAYS LAST90DAYS'
 
 inithours='01 07 13 19'
 fhrs='000 024 048 072 096 120 144'
-wave_vars='HTSGW'
+wave_vars='HTSGW WIND'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 ptype='time_series'
-
+region='GreatLakes'
+export region=${region}
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
-mkdir ${DATA}/sfcshp
+mkdir -p ${DATA}/ndbc_standard
 touch plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 # write the commands
 for period in ${periods} ; do
-  if [ ${period} = 'PAST31DAYS' ] ; then
+  if [ ${period} = 'LAST31DAYS' ] ; then
     plot_start_date=${PDYm31}
-  elif [ ${period} = 'PAST90DAYS' ] ; then
+  elif [ ${period} = 'LAST90DAYS' ] ; then
     plot_start_date=${PDYm90}
   fi
   for vhr in ${inithours} ; do
