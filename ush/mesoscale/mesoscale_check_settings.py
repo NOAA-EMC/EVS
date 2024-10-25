@@ -55,7 +55,7 @@ else:
 evs_mesoscale_settings_dict['shared'] = []
 evs_mesoscale_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
 evs_mesoscale_settings_dict['RUN_GRID2OBS_PREP'] = [
-        'MET_PLUS_CONF','MET_PLUS_OUT',,
+        'MET_PLUS_CONF','MET_PLUS_OUT',
         'LOG_MET_OUTPUT_TO_METPLUS','NEST','TEMP_DIR','GRID_DIR','URL_HEAD',
         ]
 evs_mesoscale_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR', 'bufr_ROOT']
