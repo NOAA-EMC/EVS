@@ -242,6 +242,49 @@ def convert_grib2_grib2(grib2_fileA, grib2_fileB):
     os.system(cnvgrib+' -g22 '+grib2_fileA+' '
               +grib2_fileB+' > /dev/null 2>&1')
 
+def check_grib1_file_corrupt(grib1_file):
+    """! Checks if GRIB1 file is corrupt
+
+         Args:
+             grib1_file - string of the path to
+                          the GRIB1 file to
+                          check
+         Returns:
+             file_is_corrupt - True means file is corrupt
+                               False means file is not corrupt
+    """
+    WGRIB = os.environ['WGRIB']
+    chk_corrupt = subprocess.run(
+        f"{WGRIB} {grib1_file}  1> /dev/null 2>&1", shell=True
+    )
+    if chk_corrupt.returncode != 0:
+        print(f"WARNING: {grib1_file} is corrupt")
+        file_is_corrupt = True
+    else:
+        file_is_corrupt = False
+    return file_is_corrupt
+
+def check_netcdf_file_corrupt(netcdf_file):
+    """! Checks if netCDF file is corrupt
+
+         Args:
+             netcdf_file - string of the path to
+                           the netCDF file to
+                           check
+         Returns:
+             file_is_corrupt - True means file is corrupt
+                               False means file is not corrupt
+    """
+    chk_corrupt = subprocess.run(
+        f"ncks -H {netcdf_file}  1> /dev/null 2>&1", shell=True
+    )
+    if chk_corrupt.returncode != 0:
+        print(f"WARNING: {netcdf_file} is corrupt")
+        file_is_corrupt = True
+    else:
+        file_is_corrupt = False
+    return file_is_corrupt
+
 def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
                   fhr_list):
     """! Creates a list of dictionaries containing information
@@ -711,12 +754,13 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
         hem_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                         +hem_dest_file.rpartition('/')[2])
         if check_file_exists_size(hem_source_file):
-            run_shell_command(
-                [os.path.join(CDO_ROOT, 'bin', 'cdo'),
-                'remapbil,'
-                +os.path.join(FIXevs, 'cdo_grids', 'G003.grid'),
-                hem_source_file, hem_prepped_file]
-            )
+            if not check_netcdf_file_corrupt(hem_source_file):
+                run_shell_command(
+                    [os.path.join(CDO_ROOT, 'bin', 'cdo'),
+                    'remapbil,'
+                    +os.path.join(FIXevs, 'cdo_grids', 'G003.grid'),
+                    hem_source_file, hem_prepped_file]
+                )
         else:
             log_missing_file_obs(log_missing_file, hem_source_file,
                                  f"OSI-SAF {hem.upper()}", date_dt)
@@ -799,7 +843,8 @@ def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
                                       +daily_source_file.rpartition('/')[2])
     # Prep daily file
     if check_file_exists_size(daily_source_file):
-        copy_file(daily_source_file, daily_prepped_file)
+        if not check_netcdf_file_corrupt(daily_source_file):
+            copy_file(daily_source_file, daily_prepped_file)
     else:
         log_missing_file_obs(log_missing_file, daily_source_file,
                                'GHRSST OSPO', date_dt)
@@ -812,6 +857,43 @@ def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
         dly_prepped_data['time'][:] = dly_prepped_data['time'][:][0] + 43200
         dly_prepped_data.close()
     copy_file(daily_prepped_file, daily_dest_file)
+
+def prep_prod_prepbufr_file(source_file, dest_file, date_dt,
+                            log_missing_file):
+    """! Do prep work for obsproc prepbufr nam files
+
+         Args:
+             source_file      - source file (string)
+             dest_file        - destination file (string)
+             date_dt          - date (datetime object)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+         Returns:
+    """
+    # Environment variables and executables
+    SPLIT_BY_SUBSET = os.path.join(
+        os.environ['bufr_ROOT'], 'bin', 'split_by_subset'
+    )
+    # Temporary file names
+    prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                +dest_file.rpartition('/')[2])
+    split_file = os.path.join(os.getcwd(), 'ADPSFC')
+    # Prep file
+    if check_file_exists_size(source_file):
+        copy_file(source_file, prepped_file)
+        if os.path.exists(prepped_file):
+            run_shell_command(['chmod', '750', prepped_file])
+            run_shell_command(['chgrp', 'rstprod', prepped_file])
+            run_shell_command([SPLIT_BY_SUBSET, prepped_file])
+    else:
+        log_missing_file_obs(log_missing_file, source_file,
+                             f"Prepbufr NAM",
+                             date_dt)
+    if check_file_exists_size(split_file):
+        copy_file(split_file, dest_file)
+        if os.path.exists(dest_file):
+            run_shell_command(['chmod', '750', dest_file])
+            run_shell_command(['chgrp', 'rstprod', dest_file])
 
 def weekly_osi_saf_file(weekly_source_file_list, weekly_dest_file,
                         weekly_dates):
@@ -4475,13 +4557,13 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
             )
             for model_stat_file in model_stat_files:
                 logger.debug(f"Getting data from {model_stat_file}")
-                ps = subprocess.Popen(
+                ps = subprocess.run(
                     'grep -R "'+model+' " '+model_stat_file+grep_opts,
                     shell=True, stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT, encoding='UTF-8'
                 )
                 logger.debug(f"Ran {ps.args}")
-                all_grep_output = all_grep_output+ps.communicate()[0]
+                all_grep_output = all_grep_output+ps.stdout
             logger.debug(f"Condensed {model} .stat file at "
                          +f"{output_file}")
             with open(output_file, 'w') as f:
