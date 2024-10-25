@@ -292,21 +292,6 @@ echo "*****************************"
 echo "Gather jobs done"
 echo "*****************************"
 
-# Copy stat output files to EVS COMOUTsmall directory
-#  if [ $SENDCOM = YES ]; then
-#     for VERIF_TYPE in $VERIF_TYPES;do
-#        for MODEL_DIR_PATH in $MET_PLUS_OUT/$VERIF_TYPE/point_stat/$MODELNAME*; do
-#           if [ -d $MODEL_DIR_PATH ]; then
-#              MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
-#              mkdir -p $COMOUTsmall
-#              for FILE in $MODEL_DIR_PATH/*; do
-#                 cp -v $FILE $COMOUTsmall/.
-#              done
-#           fi
-#        done
-#    done
-#  fi
- 
 # Copy "gather" output files to EVS COMOUTsmall directory
 if [ $SENDCOM = YES ]; then
   for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
@@ -380,19 +365,6 @@ echo "*****************************"
 echo "Gather3 jobs done"
 echo "*****************************"
 
-# Copy output files into the correct EVS COMOUT directory
-#  if [ $SENDCOM = YES ]; then
-#     for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
-#        MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
-#        mkdir -p $COMOUT/$MODEL_DIR
-#        for FILE in $MODEL_DIR_PATH/*; do
-#           if [ -s $FILE ]; then
-#              cp -v $FILE $COMOUT/$MODEL_DIR/.
-#	   fi
-#        done
-#     done
-#   fi
-
 # Copy "gather" output files to EVS COMOUTsmall directory
 if [ $SENDCOM = YES ]; then
    for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
@@ -406,7 +378,4 @@ fi
 
 
 echo "******************************"
-#echo "Begin to print METplus Log files "
-#  cat $DATA/grid2obs/METplus_output/*/*/pb2nc/logs/*
-#echo "End to print METplus Log files "
 

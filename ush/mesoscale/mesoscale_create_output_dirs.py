@@ -28,13 +28,14 @@ print(f"BEGIN: {os.path.basename(__file__)}")
 evs_ver = os.environ['evs_ver']
 EVSIN = os.environ['EVSIN']
 COMOUT = os.environ['COMOUT']
-COMOUTsmall = os.environ['COMOUTsmall']
+STEP = os.environ['STEP']
+if STEP == 'stats':
+   COMOUTsmall = os.environ['COMOUTsmall']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 VERIF_CASE = os.environ['VERIF_CASE']
-STEP = os.environ['STEP']
 MODELNAME = os.environ['MODELNAME']
 VDATE = os.environ['VDATE']
 vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
