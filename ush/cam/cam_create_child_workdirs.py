@@ -17,8 +17,14 @@ if STEP == 'stats':
     job_type = os.environ['job_type']
 
 if STEP == 'prep':
-    print(
-        "WARNING: Child working directories are not being made for prep."
+    jobdir = os.path.join(
+        DATA, VERIF_CASE, STEP, 'prep_job_scripts'
+    )
+    outdir = os.path.join(
+        DATA, VERIF_CASE, 'data'
+    )
+    workdirs = os.path.join(
+        outdir, 'workdirs'
     )
 elif STEP == 'stats':
     jobdir = os.path.join(
@@ -65,7 +71,11 @@ else:
                 '\"*workdirs*\"', '-not', '-path', '\"*job*\"', '-exec', 
                 'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
             ])
-        if STEP == "stats":
+        if STEP == "prep":
+            print(
+                "Done making working directories for child prcoesses."
+            )
+        elif STEP == "stats":
             print(
                 "Done making working directories for child processes "
                 + f"({job_type} jobs)."

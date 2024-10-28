@@ -162,11 +162,11 @@ for job_scripts_dir in job_scripts_dirs:
 working_dir_list = []
 COMOUT_dir_list = []
 if STEP == 'prep':
+    working_output_base_dir = os.path.join(
+        DATA, VERIF_CASE
+    )
+    working_dir_list.append(working_output_base_dir)
     if VERIF_CASE == 'grid2obs':
-        working_output_base_dir = os.path.join(
-            DATA, VERIF_CASE
-        )
-        working_dir_list.append(working_output_base_dir)
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'data', 
             NEST+'.'+vdate_dt.strftime('%Y%m%d')
@@ -183,6 +183,9 @@ if STEP == 'prep':
             COMOUT, 
             NEST+'.'+vdate_dt.strftime('%Y%m%d')
         ))
+    working_dir_list.append(os.path.join(
+        working_output_base_dir, 'data', 'workdirs'
+    ))
 elif STEP == 'stats':
     if VERIF_CASE == 'precip':
         if job_type == 'reformat':
