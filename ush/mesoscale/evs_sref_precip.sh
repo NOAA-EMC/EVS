@@ -108,7 +108,9 @@ for  obsv in ccpa ; do
 	 echo " fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "else" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "  mkdir -p \$output_base/stat" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
-         echo "  cp $COMOUTrestart/GenEnsProd_SREF_CCPA*.nc \$output_base/stat" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "  if [ -s $COMOUTrestart/GenEnsProd_SREF_CCPA*.nc ] ; then " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "    cp $COMOUTrestart/GenEnsProd_SREF_CCPA*.nc \$output_base/stat" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "  fi" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "fi" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
          echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.EnsembleStat.completed ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh

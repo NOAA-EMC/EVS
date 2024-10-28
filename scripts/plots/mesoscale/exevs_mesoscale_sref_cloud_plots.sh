@@ -54,6 +54,7 @@ while [ $n -le $last_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/mesoscale/evs_get_sref_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 

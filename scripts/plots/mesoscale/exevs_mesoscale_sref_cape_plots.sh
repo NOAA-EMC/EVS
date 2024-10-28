@@ -201,7 +201,7 @@ for stat in  ets fbias; do
 	  echo "if [ ${score_type} = lead_average ] ; then " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
           echo " if [ ! -s $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png ] ; then  cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png $restart ; fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	  echo "else" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-	  echo "  cp -f ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png $restart" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	  echo "  [[ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png ]] && cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png $restart" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	  echo "fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	  echo "[[ \$? = 0 ]] && >$restart/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh 
 
@@ -211,9 +211,13 @@ for stat in  ets fbias; do
       else
 	 #For restart
 	 if [ ${score_type} = lead_average ] ; then
-           cp $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png ${plot_dir}/.
+	   if [ -s $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png ] ; then
+             cp $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png ${plot_dir}/.
+	   fi
 	 else
-	   cp $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*.png ${plot_dir}/.
+	   if [ -s $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*.png ] ; then
+	     cp $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*.png ${plot_dir}/.
+	   fi
 	 fi
       fi
 

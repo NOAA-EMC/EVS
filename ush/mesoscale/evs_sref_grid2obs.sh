@@ -10,12 +10,6 @@ set -x
 export vday=$VDATE
 export regrid='NONE'
 
-#********************************************
-# Check the input data files availability
-# ******************************************
-#$USHevs/mesoscale/evs_check_sref_files.sh
-#export err=$?; err_chk
-
 #*******************************************
 # Build POE script to collect sub-jobs
 # ******************************************
@@ -40,7 +34,9 @@ for  obsv in prepbufr ; do
      export err=$?; err_chk
   else
      #Restart: copy saved stat files from previous runs
-     cp -r $COMOUTrestart/prepbufr.${VDATE} $WORK/.
+     if [ -d $COMOUTrestart/prepbufr.${VDATE} ] ; then
+       cp -r $COMOUTrestart/prepbufr.${VDATE} $WORK/.
+     fi
   fi
 
   #*****************************************
@@ -99,7 +95,9 @@ for  obsv in prepbufr ; do
        echo " [[ \$? = 0 ]] &&  >$COMOUTrestart/run_sref_g2o_genensprod_${domain}.${obsv}.${fhr}.${vhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "else " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "  mkdir -p \$output_base/stat" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "  cp $COMOUTrestart/GenEnsProd_SREF_PREPBUFR*.nc \$output_base/stat" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  if [ -s $COMOUTrestart/GenEnsProd_SREF_PREPBUFR*.nc ] ; then"  >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "    cp $COMOUTrestart/GenEnsProd_SREF_PREPBUFR*.nc \$output_base/stat" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  fi" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "fi" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
 
        echo "if [ ! -e $COMOUTrestart/run_sref_g2o_ens_${domain}.${obsv}.${fhr}.${vhr}.completed ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh

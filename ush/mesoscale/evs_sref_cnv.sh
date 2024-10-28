@@ -10,12 +10,6 @@ set -x
 export vday=$VDATE
 export regrid='NONE'
 
-#********************************************
-# Check the input data files availability
-# ******************************************
-#$USHevs/mesoscale/evs_check_sref_files.sh
-#export err=$?; err_chk
-
 #*******************************************
 # Build POE script to collect sub-jobs
 # ******************************************
@@ -101,6 +95,7 @@ for  obsv in prepbufr ; do
        
        echo "cd \$output_base/stat" >> run_sref_cnv_${fhr}_${vhr}.sh 
        echo "$USHevs/mesoscale/evs_sref_average_cnv.sh $fhr $vhr" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo "export err=\$?; err_chk" >> run_sref_cnv_${fhr}_${vhr}.sh
 
        #echo "rm \$output_base/stat/*SREFarw*.stat ">> run_sref_cnv_${fhr}_${vhr}.sh
        #echo "rm \$output_base/stat/*SREFnmb*.stat ">> run_sref_cnv_${fhr}_${vhr}.sh

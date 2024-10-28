@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ksh
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the sref precip spatial map 
 #           plotting python script

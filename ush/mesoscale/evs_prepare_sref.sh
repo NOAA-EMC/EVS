@@ -3,6 +3,7 @@
 #  Purpose: Get required input forecast and validation data files
 #           for sref stat jobs
 #  Last update: 
+#               10/18/2024, resolved the duplicated APCP03 in arw/f03 and 06 members
 #               06/05/2024, add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               05/04/2024, (1) change gfs to gdas for prepbufr files
 #                           (2) split the prepbufr files before running METplus PB2NC
@@ -62,26 +63,38 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 	 ##################################################################################################
 	 if [ ! -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
 
+           ############################################################################################
+	   # Note: for arw/f03 and f06 members, the APCP03 is duplicated. So grab the second one (#479:)
+	   #       and save the files in the working directory 
+	   # ########################################################################################## 		 
 	   if [ $base = arw ] && [ $fhr = 06 ] ; then
 	      sref03=${COMINsref}/sref.${fday}/$fvhr/pgrb/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
-	      $WGRIB2 $sref03|grep "^479:"|$WGRIB2 -i $sref03 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
+	      if [ -s $sref03 ] ; then
+	        $WGRIB2 $sref03|grep "^479:"|$WGRIB2 -i $sref03 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
+	      fi
 	      sref06=${COMINsref}/sref.${fday}/$fvhr/pgrb/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
-	      $WGRIB2 $sref06|grep "^479:"|$WGRIB2 -i $sref06 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
+	      if  [ -s $sref06 ] ; then
+	        $WGRIB2 $sref06|grep "^479:"|$WGRIB2 -i $sref06 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
+	      fi
 	      export modelpath=$WORK/sref.${fday}
             else
               export modelpath=${COMINsref}/sref.${fday}/$fvhr/pgrb  
            fi
 
-           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
-           export err=$?; err_chk
-	   if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
-	     cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
-	     #save for restart:
-	     mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${fday}/.
+           if [ -s $modelpath/sref_${base}.t${fvhr}z.pgrb212.${mb}.f${fhr}.grib2 ] ; then
+              ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
+              export err=$?; err_chk
+              if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+	        cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
+	        #save for restart:
+	        mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${fday}/.
+	      fi
 	   fi
 	 else
 	   #Restart:
-	   cp $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}
+	   if [ -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+	     cp $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}
+	   fi
 	 fi
 
        done
@@ -131,7 +144,9 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
     if [ ! -d ${COMOUTfinal}/apcp24mean ] ; then
         mkdir -p ${COMOUTfinal}/apcp24mean
     fi
-    cp $output_base/*24mean*.nc ${COMOUTfinal}/apcp24mean
+    if [ -s $output_base/*24mean*.nc ] ; then
+      cp $output_base/*24mean*.nc ${COMOUTfinal}/apcp24mean
+    fi
   fi
 fi  
 
