@@ -77,7 +77,7 @@ fi
 
 # Copy Plots Output to Main Directory
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
-    cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
     export err=$?; err_chk
 done
 

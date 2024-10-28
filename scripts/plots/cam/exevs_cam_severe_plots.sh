@@ -193,7 +193,7 @@ fi
 # Copy Plots Output to Main Directory
 ###################################################################
 for CHILD_DIR in ${DATA}/out/workdirs/*; do
-    cp -ru $CHILD_DIR/* ${DATA}/out/.
+    cp -ruv $CHILD_DIR/* ${DATA}/out/.
     export err=$?; err_chk
 done
 

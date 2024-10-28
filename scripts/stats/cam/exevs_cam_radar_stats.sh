@@ -111,7 +111,7 @@ fi
 # Copy child output to main output directory
 ###################################################################
 for CHILD_DIR in ${DATA}/workdirs/*; do
-    cp -ru ${CHILD_DIR}/* ${DATA}/.
+    cp -ruv ${CHILD_DIR}/* ${DATA}/.
     export err=$?; err_chk
 done
 
