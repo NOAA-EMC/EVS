@@ -279,11 +279,11 @@ if [ "${num_mdl_grid}" != "0" ]; then
         goes_west_aod_file=${RUNTIME_PREP_DIR}/${goes_west_aod}
 
         if [ ! -s ${goes_east_aod_file} ] && [ -s ${COMOUTproc}/${goes_east_aod} ]; then
-            cp -v ${COMOUTproc}/${goes_east_aod} ${RUNTIME_PREP_DIR}
+            cpreq ${COMOUTproc}/${goes_east_aod} ${RUNTIME_PREP_DIR}
         fi
 
         if [ ! -s ${goes_west_aod_file} ] && [ -s ${COMOUTproc}/${goes_west_aod} ]; then
-            cp -v ${COMOUTproc}/${goes_west_aod} ${RUNTIME_PREP_DIR}
+            cpreq ${COMOUTproc}/${goes_west_aod} ${RUNTIME_PREP_DIR}
         fi
 
         join_script_name=${USHevs}/${COMPONENT}/integrate_goes_east_west_aod.py
