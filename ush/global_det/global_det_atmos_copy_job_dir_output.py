@@ -13,6 +13,7 @@ import global_det_atmos_util as gda_util
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
+SENDCOM = os.environ['SENDCOM']
 DATA = os.environ['DATA']
 RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -53,24 +54,24 @@ elif STEP == 'plots':
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
             f"last{NDAYS}days", '*', '*', '*', 'condensed_stats*'
         )
-        copy_from_job_to_DATA = False
     elif JOB_GROUP == 'filter_stats':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
             f"last{NDAYS}days", '*', '*', '*', 'fcst*.stat'
         )
-        copy_from_job_to_DATA = False
     elif JOB_GROUP == 'make_plots':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
             f"last{NDAYS}days", '*', '*', '*', '*', '*.png'
         )
-        copy_from_job_to_DATA = False
     elif JOB_GROUP == 'tar_images':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
             f"last{NDAYS}days", '*', '*', '*', '*', '*.tar'
         )
+    if SENDCOM == 'YES' and JOB_GROUP != 'tar_images':
+        copy_from_job_to_DATA = False
+    else:
         copy_from_job_to_DATA = True
 output_file_JOB_list = glob.glob(job_wildcard_dir)
 if STEP == 'plots' and JOB_GROUP == 'make_plots':

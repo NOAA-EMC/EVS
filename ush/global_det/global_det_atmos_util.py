@@ -17,6 +17,7 @@ import pandas as pd
 import logging
 import copy
 import itertools
+import copy
 from time import sleep
 
 def run_shell_command(command):
@@ -2195,6 +2196,7 @@ def check_plot_files(job_dict):
     """
     if job_dict['JOB_GROUP'] != 'tar_images':
         model_list = job_dict['model_list'].split(', ')
+        obs_list = job_dict['obs_list'].split(', ')
     if job_dict['JOB_GROUP'] in ['filter_stats', 'make_plots']:
         valid_hrs = list(
             range(int(job_dict['valid_hr_start']),
@@ -2231,10 +2233,22 @@ def check_plot_files(job_dict):
     # Check files
     plot_files_exist = True
     if job_dict['JOB_GROUP'] == 'condense_stats':
-        job_COMOUT_file_list = glob.glob(
-            os.path.join(job_dict['job_COMOUT_dir'], 'condensed_stats_*')
-        )
-        if len(job_COMOUT_file_list) == len(model_list):
+        job_COMOUT_file_exist_list = []
+        for model in model_list:
+            job_COMOUT_model_file = os.path.join(
+                os.path.join(job_dict['job_COMOUT_dir'],
+                f"condensed_stats_{model.lower()}_"
+                +f"{job_dict['line_type'].lower()}_"
+                +f"{job_dict['fcst_var_name'].lower()}_"
+                +(job_dict['fcst_var_level'].lower()\
+                  .replace('.','p').replace('-', '_'))
+                +f"_{job_dict['vx_mask'].lower()}.stat")
+            )
+            if os.path.exists(job_COMOUT_model_file):
+                job_COMOUT_file_exist_list.append(
+                    job_COMOUT_model_file
+                )
+        if len(job_COMOUT_file_exist_list) == len(model_list):
             plot_files_exist = True
         else:
             plot_files_exist = False
@@ -2244,31 +2258,38 @@ def check_plot_files(job_dict):
                 int(filter_info[0]), int(filter_info[1])
             )
             if init_hr in init_hrs:
-                file_wc_list = (
-                    f"fcst*_{job_dict['fcst_var_name']}"
-                    +f"{job_dict['fcst_var_level']}"
-                    +f"{job_dict['fcst_var_thresh']}_"
-                    +f"obs*_{job_dict['obs_var_name']}"
-                    +f"{job_dict['obs_var_level']}"
-                    +f"{job_dict['obs_var_thresh']}_"
-                    +f"linetype{job_dict['line_type']}_"
-                    +f"grid{job_dict['grid']}_"
-                    +f"vxmask{job_dict['vx_mask']}_"
-                    +f"interp{job_dict['interp_method']}"
-                    +f"{job_dict['interp_points']}_"
-                    +f"{job_dict['date_type'].lower()}"
-                    +f"{job_dict['start_date']}"
-                    +f"{str(filter_info[0]).zfill(2)}0000to"
-                    +f"{job_dict['end_date']}"
-                    +f"{str(filter_info[0]).zfill(2)}0000_"
-                    +f"fhr{str(filter_info[1]).zfill(3)}"
-                ).lower().replace('.','p').replace('-', '_')\
-                 .replace('&&', 'and').replace('||', 'or')\
-                 .replace('0,*,*', '').replace('*,*', '')+'.stat'
-                job_COMOUT_file_list = glob.glob(
-                    os.path.join(job_dict['job_COMOUT_dir'], file_wc_list)
-                )
-                if len(job_COMOUT_file_list) == len(model_list):
+                job_COMOUT_file_exist_list = []
+                for model_idx in range(len(model_list)):
+                    model = model_list[model_idx]
+                    obs = obs_list[model_idx]
+                    filename = (
+                        f"fcst{model}_{job_dict['fcst_var_name']}"
+                        +f"{job_dict['fcst_var_level']}"
+                        +f"{job_dict['fcst_var_thresh']}_"
+                        +f"obs{obs}_{job_dict['obs_var_name']}"
+                        +f"{job_dict['obs_var_level']}"
+                        +f"{job_dict['obs_var_thresh']}_"
+                        +f"linetype{job_dict['line_type']}_"
+                        +f"grid{job_dict['grid']}_"
+                        +f"vxmask{job_dict['vx_mask']}_"
+                        +f"interp{job_dict['interp_method']}"
+                        +f"{job_dict['interp_points']}_"
+                        +f"{job_dict['date_type'].lower()}"
+                        +f"{job_dict['start_date']}"
+                        +f"{str(filter_info[0]).zfill(2)}0000to"
+                        +f"{job_dict['end_date']}"
+                        +f"{str(filter_info[0]).zfill(2)}0000_"
+                        +f"fhr{str(filter_info[1]).zfill(3)}"
+                    ).lower().replace('.','p').replace('-', '_')\
+                    .replace('&&', 'and').replace('||', 'or')\
+                    .replace('0,*,*', '').replace('*,*', '')+'.stat'
+                    job_COMOUT_model_file = os.path.join(job_dict['job_COMOUT_dir'],
+                                                          filename)
+                    if os.path.exists(job_COMOUT_model_file):
+                        job_COMOUT_file_exist_list.append(
+                            job_COMOUT_model_file
+                        )
+                if len(job_COMOUT_file_exist_list) == len(model_list):
                     plot_files_exist = True
                 else:
                     plot_files_exist = False
@@ -2276,34 +2297,116 @@ def check_plot_files(job_dict):
         plot_files_exist = True
         if job_dict['plot'] == 'time_series':
             plot_info_list = list(itertools.product(valid_hrs, fhrs, var_info))
+        elif job_dict['plot'] == 'lead_average':
+            plot_info_list = list(itertools.product(valid_hrs, var_info))
+        elif job_dict['plot'] in ['precip_spatial_map', 'performance_diagram']:
+            plot_info_list = list(itertools.product(valid_hrs, fhrs))
         plots_files_exist_check_list = []
         for plot_info in plot_info_list:
-            if job_dict['plot'] == 'time_series':
-                job_dict['valid_hr_start'] = str(plot_info[0])
-                job_dict['valid_hr_end'] = str(plot_info[0])
-                job_dict['valid_hr_inc'] = '24'
-                job_dict['forecast_hour'] = str(plot_info[1])
-                job_dict['fcst_var_name'] = plot_info[2][0][0]
-                job_dict['fcst_var_level'] = plot_info[2][0][1]
-                job_dict['fcst_var_thresh'] = plot_info[2][0][2]
-                job_dict['obs_var_name'] = plot_info[2][1][0]
-                job_dict['obs_var_level'] = plot_info[2][1][1]
-                job_dict['obs_var_thresh'] = plot_info[2][1][2]
+            # Set up plot_dict
+            plot_dict = copy.deepcopy(job_dict)
+            plot_dict['valid_hr_start'] = str(plot_info[0])
+            plot_dict['valid_hr_end'] = str(plot_info[0])
+            plot_dict['valid_hr_inc'] = '24'
+            if plot_dict['plot'] in ['time_series', 'precip_spatial_map',
+                                     'performance_diagram']:
+                plot_dict['forecast_hour'] = str(plot_info[1])
+            else:
+                plot_dict['forecast_hours'] = fhrs
+            # Check for plots
+            if plot_dict['plot'] == 'time_series':
+                plot_dict['fcst_var_name'] = plot_info[2][0][0]
+                plot_dict['fcst_var_level'] = plot_info[2][0][1]
+                plot_dict['fcst_var_thresh'] = plot_info[2][0][2]
+                plot_dict['obs_var_name'] = plot_info[2][1][0]
+                plot_dict['obs_var_level'] = plot_info[2][1][1]
+                plot_dict['obs_var_thresh'] = plot_info[2][1][2]
                 init_hr = get_init_hour(
                     int(plot_info[0]), int(plot_info[1])
                 )
-                if job_dict['stat'] == 'FBAR_OBAR' \
-                        and str(job_dict['forecast_hour']) not in \
+                if plot_dict['stat'] == 'FBAR_OBAR' \
+                        and str(plot_dict['forecast_hour']) not in \
                         ['24', '72', '120']:
                     continue
                 if init_hr not in init_hrs:
                     continue
                 plot_check = plot_specs.get_savefig_name(
-                    job_dict['job_COMOUT_dir'], job_dict, job_dict
+                    plot_dict['job_COMOUT_dir'], plot_dict, plot_dict
                 )
                 plots_files_exist_check_list.append(
                     os.path.exists(plot_check)
                 )
+            elif plot_dict['plot'] == 'lead_average':
+                plot_dict['fcst_var_name'] = plot_info[1][0][0]
+                plot_dict['fcst_var_level'] = plot_info[1][0][1]
+                plot_dict['fcst_var_thresh'] = plot_info[1][0][2]
+                plot_dict['obs_var_name'] = plot_info[1][1][0]
+                plot_dict['obs_var_level'] = plot_info[1][1][1]
+                plot_dict['obs_var_thresh'] = plot_info[1][1][2]
+                if plot_dict['stat'] != 'FBAR_OBAR' \
+                        and len(fhrs) > 1:
+                    plot_check = plot_specs.get_savefig_name(
+                        plot_dict['job_COMOUT_dir'], plot_dict, plot_dict
+                    )
+                    plots_files_exist_check_list.append(
+                        os.path.exists(plot_check)
+                    )
+            elif plot_dict['plot'] == 'precip_spatial_map':
+                psm_model_list = model_list
+                if int(plot_dict['forecast_hour']) > 72 \
+                        or plot_dict['vx_mask'] != 'conus':
+                    psm_model_list = ['gfs']
+                elif int(plot_dict['forecast_hour']) > 48 \
+                        and plot_dict['vx_mask'] == 'conus':
+                    psm_model_list.remove('cmc_regional')
+                if plot_dict['vx_mask'] == 'conus' \
+                        and int(plot_dict['forecast_hour']) == 24:
+                    for img_type in ['png', 'gif']:
+                        plots_files_exist_check_list.append(os.path.join(
+                            plot_dict['job_COMOUT_dir'],
+                            f"qpe.v{plot_dict['end_date']}12."
+                            +f"{str(plot_dict['forecast_hour']).zfill(3)}h."
+                            +f"{plot_dict['vx_mask']}.{img_type}"
+                        ))
+                for psm_model in psm_model_list:
+                    for img_type in ['png', 'gif']:
+                        plots_files_exist_check_list.append(os.path.join(
+                            plot_dict['job_COMOUT_dir'],
+                            f"{psm_model}.v{plot_dict['end_date']}12."
+                            +f"{str(plot_dict['forecast_hour']).zfill(3)}h."
+                            +f"{plot_dict['vx_mask']}.{img_type}"
+                        ))
+                print(plots_files_exist_check_list)
+            elif plot_dict['plot'] == 'performance_diagram':
+                plot_dict['fcst_var_name'] = plot_dict['fcst_var_name']
+                plot_dict['fcst_var_threshs'] = (
+                     plot_dict['fcst_var_thresh_list'].split(', ')
+                )
+                plot_dict['obs_var_name'] = plot_dict['obs_var_name']
+                plot_dict['obs_var_threshs'] = (
+                     plot_dict['obs_var_thresh_list'].split(', ')
+                )
+                init_hr = get_init_hour(
+                    int(plot_info[0]), int(plot_info[1])
+                )
+                for l in range(
+                        len(plot_dict['fcst_var_level_list'].split(', '))
+                ):
+                    plot_dict['fcst_var_level'] = (
+                        plot_dict['fcst_var_level_list'].split(', ')[l]
+                    )
+                    plot_dict['obs_var_level'] = (
+                        plot_dict['obs_var_level_list'].split(', ')[l]
+                    )
+                    if init_hr not in init_hrs \
+                            or plot_dict['stat'] != 'PERFDIAG':
+                        continue
+                    plot_check = plot_specs.get_savefig_name(
+                        plot_dict['job_COMOUT_dir'], plot_dict, plot_dict
+                    )
+                    plots_files_exist_check_list.append(
+                        os.path.exists(plot_check)
+                    )
             if all(x == True for x in plots_files_exist_check_list) \
                     and len(plots_files_exist_check_list) > 0:
                 plot_files_exist = True

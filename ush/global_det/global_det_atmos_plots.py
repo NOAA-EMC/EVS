@@ -300,10 +300,6 @@ elif JOB_GROUP == 'filter_stats':
             else:
                 plot_dates = valid_dates
             for model_num in list(model_info_dict.keys()):
-                model_num_name = (
-                    model_num+'/'+model_info_dict[model_num]['name']
-                    +'/'+model_info_dict[model_num]['plot_name']
-                )
                 model_dict = model_info_dict[model_num]
                 job_work_filter_stats_model_file = os.path.join(
                     job_work_dir,
@@ -454,13 +450,22 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = la_info[1][1][0]
             plot_info_dict['obs_var_level'] = la_info[1][1][1]
             plot_info_dict['obs_var_thresh'] = la_info[1][1][2]
-            DATAjob_image_name = plot_specs.get_savefig_name(
-                DATAjob, plot_info_dict, date_info_dict
+            job_work_image_name = plot_specs.get_savefig_name(
+                job_work_dir, plot_info_dict, date_info_dict
             )
-            COMOUTjob_image_name = (
-                DATAjob_image_name.replace(DATAjob, COMOUTjob)
+            job_COMOUT_image_name = job_work_image_name.replace(
+                job_work_dir, job_COMOUT_dir
             )
-            if not os.path.exists(DATAjob_image_name) \
+            job_DATA_image_name = job_work_image_name.replace(
+                job_work_dir, job_DATA_dir
+            )
+            if SENDCOM == 'YES':
+                check_job_image_name = job_COMOUT_image_name
+                job_input_dir = job_COMOUT_dir
+            else:
+                check_job_image_name = job_DATA_image_name
+                job_input_dir = job_DATA_dir
+            if not os.path.exists(check_job_image_name) \
                     and plot_info_dict['stat'] != 'FBAR_OBAR':
                 if len(date_info_dict['forecast_hours']) <= 1:
                     logger.warning("No span of forecast hours to plot, "
@@ -471,21 +476,17 @@ elif JOB_GROUP == 'make_plots':
                     make_la = True
             else:
                 make_la = False
-            if os.path.exists(COMOUTjob_image_name):
-                logger.info(f"Copying {COMOUTjob_image_name} to "
-                            +f"{DATAjob_image_name}")
-                gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
-                make_la = False
             if make_la:
-                plot_la = gdap_la.LeadAverage(logger, DATAjob+'/..', DATAjob,
-                                              model_info_dict, date_info_dict,
-                                              plot_info_dict, met_info_dict,
-                                              logo_dir)
+                plot_la = gdap_la.LeadAverage(logger, job_work_dir+'/..',
+                                              job_work_dir, model_info_dict,
+                                              date_info_dict, plot_info_dict,
+                                              met_info_dict, logo_dir)
                 plot_la.make_lead_average()
-                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
-                    logger.info(f"Copying {DATAjob_image_name} to "
-                                +f"{COMOUTjob_image_name}")
-                    gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
+                if SENDCOM == 'YES' and os.path.exists(job_work_image_name):
+                    logger.info(f"Copying {job_work_image_name} to "
+                                +f"{job_COMOUT_image_name}")
+                    gda_util.copy_file(job_work_image_name,
+                                       job_COMOUT_image_name)
     elif plot == 'valid_hour_average':
         import global_det_atmos_plots_valid_hour_average as gdap_vha
         for vha_info in list(itertools.product(var_info)):
@@ -780,8 +781,13 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_level'] = obs_var_level_list[0]
             plot_info_dict['obs_var_thresh'] = 'NA'
             plot_info_dict['interp_points'] = 'NA'
+            if SENDCOM == 'YES':
+                job_final_output_dir = job_COMOUT_dir
+            else:
+                job_final_output_dir = job_DATA_dir
             plot_psm = gdap_psm.PrecipSpatialMap(logger, pcp_combine_base_dir,
-                                                 DATAjob, COMOUTjob,
+                                                 job_work_dir,
+                                                 job_final_output_dir,
                                                  model_info_dict,
                                                  date_info_dict,
                                                  plot_info_dict,
@@ -795,7 +801,6 @@ elif JOB_GROUP == 'make_plots':
             date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hour'] = str(pd_info[1])
             plot_info_dict['fcst_var_name'] = fcst_var_name
-            plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
@@ -806,26 +811,31 @@ elif JOB_GROUP == 'make_plots':
             for l in range(len(fcst_var_level_list)):
                 plot_info_dict['fcst_var_level'] = fcst_var_level_list[l]
                 plot_info_dict['obs_var_level'] = obs_var_level_list[l]
-                DATAjob_image_name = plot_specs.get_savefig_name(
-                    DATAjob, plot_info_dict, date_info_dict
+                job_work_image_name = plot_specs.get_savefig_name(
+                    job_work_dir, plot_info_dict, date_info_dict
                 )
-                COMOUTjob_image_name = (
-                    DATAjob_image_name.replace(DATAjob, COMOUTjob)
+                job_COMOUT_image_name = job_work_image_name.replace(
+                    job_work_dir, job_COMOUT_dir
                 )
+                job_DATA_image_name = job_work_image_name.replace(
+                    job_work_dir, job_DATA_dir
+                )
+                if SENDCOM == 'YES':
+                    check_job_image_name = job_COMOUT_image_name
+                    job_input_dir = job_COMOUT_dir
+                else:
+                    check_job_image_name = job_DATA_image_name
+                    job_input_dir = job_DATA_dir
                 if init_hr in init_hrs \
-                        and not os.path.exists(DATAjob_image_name) \
+                        and not os.path.exists(check_job_image_name) \
                         and plot_info_dict['stat'] == 'PERFDIAG':
                     make_pd = True
                 else:
                     make_pd = False
-                if os.path.exists(COMOUTjob_image_name):
-                    logger.info(f"Copying {COMOUTjob_image_name} to "
-                                +f"{DATAjob_image_name}")
-                    gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
-                    make_pd = False
                 if make_pd:
-                    plot_pd = gdap_pd.PerformanceDiagram(logger, DATAjob+'/..',
-                                                         DATAjob,
+                    plot_pd = gdap_pd.PerformanceDiagram(logger,
+                                                         job_input_dir+'/..',
+                                                         job_input_dir,
                                                          model_info_dict,
                                                          date_info_dict,
                                                          plot_info_dict,
@@ -833,11 +843,11 @@ elif JOB_GROUP == 'make_plots':
                                                          logo_dir)
                     plot_pd.make_performance_diagram()
                     if SENDCOM == 'YES' \
-                            and os.path.exists(DATAjob_image_name):
-                        logger.info(f"Copying {DATAjob_image_name} to "
-                                    +f"{COMOUTjob_image_name}")
-                        gda_util.copy_file(DATAjob_image_name,
-                                           COMOUTjob_image_name)
+                            and os.path.exists(job_work_image_name):
+                        logger.info(f"Copying {job_work_image_name} to "
+                                    +f"{job_COMOUT_image_name}")
+                        gda_util.copy_file(job_work_image_name,
+                                           job_COMOUT_image_name)
     else:
         logger.error(plot+" not recongized")
         sys.exit(1)

@@ -658,11 +658,11 @@ if JOB_GROUP == 'make_plots':
 #### tar_images jobs
 ################################################
 if SENDCOM == 'YES':
-    search_dir = os.path.join(COMOUT, f"{VERIF_CASE}_means",
+    search_dir = os.path.join(COMOUT, f"{VERIF_CASE}_VERIF_TYPE",
                               f"last{NDAYS}days")
 else:
     search_dir = os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
-                              f"{RUN}.{end_date}", f"{VERIF_CASE}_means",
+                              f"{RUN}.{end_date}", f"{VERIF_CASE}_VERIF_TYPE",
                               f"last{NDAYS}days")
 tar_images_jobs_dict = {
     'flux': {},
@@ -761,7 +761,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
         elif JOB_GROUP == 'tar_images':
             JOB_GROUP_verif_type_job_product_loops = []
             for root, dirs, files in os.walk(
-                verif_type_plot_jobs_dict['search_base_dir']
+                verif_type_plot_jobs_dict['search_base_dir'].replace(
+                    'VERIF_TYPE', verif_type
+                )
             ):
                 if not dirs \
                         and root not in JOB_GROUP_verif_type_job_product_loops:
