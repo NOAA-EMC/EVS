@@ -39,19 +39,22 @@ if os.path.exists(goes_east_aod) and os.path.exists(goes_west_aod):
         aodw=np.ma.filled(aodw,fill_value_read)
 
         ## Join GOES-East and GOES-West AOD
-        ## Use GOES-EAST as the main source, and fill the gap using GOES-WEST if existed
+        ## Use arithmetic mean when both satellites have non-filled_value,
+        ## use the non-filled_value if only one sattllite has filled_value, and
+        ## use filled_value if both satellites have filled_value.
 
         for i in range(0, imax-1):
             for j in range(0, jmax-1):
                 east=aode[i][j]
                 west=aodw[i][j]
-                if east != fill_value_read:
+                if east != fill_value_read and west != fill_value_read:
+                    aodm[i][j]=0.5*(east+west)
+                elif east != fill_value_read and west == fill_value_read:
                     aodm[i][j]=east
+                elif east == fill_value_read and west != fill_value_read:
+                    aodm[i][j]=west
                 else:
-                    if west != fill_value_read:
-                        aodm[i][j]=west
-                    else:
-                        aodm[i][j]=fill_value_read
+                    aodm[i][j]=west
         mask = aodm == fill_value_read
         aodm=np.ma.masked_array(aodm,mask)
 
@@ -76,7 +79,7 @@ if os.path.exists(goes_east_aod) and os.path.exists(goes_west_aod):
             for attr_name in var.ncattrs():
                 if attr_name == "orbital_slot":
                     olddesc=var.getncattr(attr_name)
-                    newdesc=olddesc.replace("East","East-West")
+                    newdesc=olddesc.replace("East","Join-East-West")
                     dst1.variables[name].setncattr(attr_name,newdesc)
                 elif attr_name == "platform_ID":
                     olddesc=var.getncattr(attr_name)
