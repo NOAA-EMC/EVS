@@ -477,7 +477,7 @@ elif JOB_GROUP == 'make_plots':
             else:
                 make_la = False
             if make_la:
-                plot_la = gdap_la.LeadAverage(logger, job_work_dir+'/..',
+                plot_la = gdap_la.LeadAverage(logger, job_input_dir+'/..',
                                               job_work_dir, model_info_dict,
                                               date_info_dict, plot_info_dict,
                                               met_info_dict, logo_dir)
@@ -835,7 +835,7 @@ elif JOB_GROUP == 'make_plots':
                 if make_pd:
                     plot_pd = gdap_pd.PerformanceDiagram(logger,
                                                          job_input_dir+'/..',
-                                                         job_input_dir,
+                                                         job_work_dir,
                                                          model_info_dict,
                                                          date_info_dict,
                                                          plot_info_dict,
