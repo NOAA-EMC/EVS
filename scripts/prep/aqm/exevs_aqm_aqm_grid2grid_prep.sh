@@ -142,9 +142,6 @@ if [ "${num_mdl_grid}" != "0" ]; then
             fi
           else
             if [ ${nsat} -lt ${num_sat} ]; then
-		    echo "${nsat}"
-		    echo "${satellite_list[0]}"
-		    echo "${satellite_list[1]}"
               out_file_prefix=${ObsType}_${goes_scan_list[0]}_${MODELNAME}_${satellite_list[${nstat}]}
               checkfile=${COMOUTproc}/${out_file_prefix}_${VDATE}_00_${AOD_QC_NAME}.nc
               if [ -s ${checkfile} ]; then
@@ -175,39 +172,189 @@ if [ "${num_mdl_grid}" != "0" ]; then
         ## Check gridded L3 AOD files for restart ability
         ######################################################
         ##
+	#
+	## The cutoff time is linked to the usage of
+	## time_offset_warning and OBS_WINDOW_* currently
+	## set as +- 15 mins
+	#
+	let forward_search_cutoff_time=1500
+	let backward_search_cutoff_time=4500
+	#
         while [ ${ic} -le ${endvhr} ]; do
           vldhr=$(printf %2.2d ${ic})
-          checkfile="OR_${OBSTYPE}-L2-${AOD_SCAN}-M*_${SATID}_s${jday}${vldhr}*.nc"
-          obs_file_count=$(find ${DCOMINabi}/GOES_${AOD_SCAN} -name ${checkfile} | wc -l )
-          if [ ${obs_file_count} -gt 0 ]; then
-            export VHOUR=${vldhr}    # config variable
-            ## ls ${DCOMINabi}/GOES_${ADP_SCAN}/${checkfile} > all_hourly_adp_file
-            ## export filein_adp=$(head -n1 all_hourly_adp_file)    # config variable
-            ls ${DCOMINabi}/GOES_${AOD_SCAN}/${checkfile} > all_hourly_aod_file
-            export filein_aod=$(head -n1 all_hourly_aod_file)    # config variable
-            if [ -s ${conf_dir}/${config_file} ]; then
-              run_metplus.py ${conf_dir}/${config_file} ${config_common}
-              ## out_file=${RUNTIME_PREP_DIR}/${out_file_prefix}_${VDATE}_${VHOUR}_${AOD_QC_NAME}.nc
-              ## point2grid ${filein_aod} ${filein_mdl_grid} ${out_file} -field 'name="AOD"; level="(*,*)";' -method UW_MEAN -v 2 -qc ${AOD_QC_FLAG}
-              export err=$?; err_chk
-              if [ "${SENDCOM}" = "YES" ]; then
-                cpfile=${RUNTIME_PREP_DIR}/${out_file_prefix}_${VDATE}_${VHOUR}_${AOD_QC_NAME}.nc
-                if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
+	  export VHOUR=${vldhr}    # config variable
+          flag_find_abi=no
+          flag_reverse_find=no
+          idir=${DCOMINabi}/${VDATE}/goes_abi/GOES_${AOD_SCAN}
+          if [ -d ${idir} ]; then
+            checkfile="OR_${OBSTYPE}-L2-${AOD_SCAN}-M*_${SATID}_s${jday}${vldhr}*.nc"
+            obs_file_count=$(find ${idir} -name ${checkfile} | wc -l )
+            if [ ${obs_file_count} -gt 0 ]; then
+              ls ${idir}/${checkfile} > all_hourly_aod_file
+              export filein_aod=$(head -n1 all_hourly_aod_file)    # config variable
+              extract_file=$( basename ${filein_aod} )
+              scan_start_time=$(echo ${extract_file} | awk -F"_" '{print $4}')
+              check_digit11=$(echo "${scan_start_time}" | cut -c11-11)
+              if [ "${check_digit11}" == "0" ]; then
+                check_digit12=$(echo "${scan_start_time}" | cut -c12-12)
+                if [ "${check_digit12}" == "0" ]; then
+                  minsec=$(echo "${scan_start_time}" | cut -c13-14)
+                else
+                  minsec=$(echo "${scan_start_time}" | cut -c12-14)
+                fi
+              else
+                  minsec=$(echo "${scan_start_time}" | cut -c11-14)
+              fi
+              let scan_min_sec=${minsec}
+              if [ ${scan_min_sec} -gt ${forward_search_cutoff_time} ]; then
+                echo "DEBUG :: NO valid aod file within time limit; start reverse search"
+                flag_reverse_find=yes
+              else
+                echo "DEBUG :: Find ${filein_aod} for valid hour ${vldhr}"
+                flag_find_abi=yes
               fi
             else
-              echo "WARNING: can not find ${conf_dir}/${config_file}"
+              echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${vldhr} in forward search"
+              flag_reverse_find=yes
+            fi
+            if [ "${flag_reverse_find}" == "yes" ]; then
+              VDATEm1=$(${NDATE} -1 ${VDATE}${vldhr} | cut -c1-8)
+              vldhrm1=$(${NDATE} -1 ${VDATE}${vldhr} | cut -c9-10)
+              jdaym1=$(date2jday.sh ${VDATEm1})
+              echo "DEBUG ::  reverse search start; checking file for ${jdaym1}${vldhrm1}"
+              idirm1=${DCOMINabi}/${VDATEm1}/goes_abi/GOES_${AOD_SCAN}
+              if [ -d ${idirm1} ]; then
+                checkfile="OR_${OBSTYPE}-L2-${AOD_SCAN}-M*_${SATID}_s${jdaym1}${vldhrm1}*.nc"
+                obs_file_count=$(find ${idirm1} -name ${checkfile} | wc -l )
+                if [ ${obs_file_count} -gt 0 ]; then
+                  ls ${idirm1}/${checkfile} > all_hourly_aod_file
+                  export filein_aod=$(tail -n1 all_hourly_aod_file)    # config variable
+                  extract_file=$( basename ${filein_aod} )
+                  scan_start_time=$(echo ${extract_file} | awk -F"_" '{print $4}')
+                  check_digit11=$(echo "${scan_start_time}" | cut -c11-11)
+                  if [ "${check_digit11}" == "0" ]; then
+                    check_digit12=$(echo "${scan_start_time}" | cut -c12-12)
+                    if [ "${check_digit12}" == "0" ]; then
+                      minsec=$(echo "${scan_start_time}" | cut -c13-14)
+                    else
+                      minsec=$(echo "${scan_start_time}" | cut -c12-14)
+                    fi
+                  else
+                    minsec=$(echo "${scan_start_time}" | cut -c11-14)
+                  fi
+                  let scan_min_sec=${minsec}
+                  if [ ${scan_min_sec} -lt ${backward_search_cutoff_time} ]; then
+                    echo "DEBUG :: NO valid aod file within time limit in reverse search"
+                  else
+                    echo "DEBUG :: Find ${filein_aod} for valid hour ${vldhr}"
+                    flag_find_abi=yes
+                  fi
+                else
+                  echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${VDATEm1} ${vldhrm1}"
+                fi
+              else
+                echo "DEBUG :: Can not find ${idirm1}, skip reverse search for hour ${VDATE} ${vldhr}"
+              fi
+            fi
+            if [ "${flag_find_abi}" == "yes" ];then
+              if [ -s ${conf_dir}/${config_file} ]; then
+                ## check corrupted input file
+                msg=$(ncdump -h ${filein_aod} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
+		if [ ${msg} -eq 0 ]; then
+                  run_metplus.py ${conf_dir}/${config_file} ${config_common}
+                  export err=$?; err_chk
+
+                  if [ "${SENDCOM}" = "YES" ]; then
+                    cpfile=${RUNTIME_PREP_DIR}/${out_file_prefix}_${VDATE}_${VHOUR}_${AOD_QC_NAME}.nc
+                    if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
+                  fi
+                else
+                  if [ "${SENDMAIL}" = "YES" ]; then
+                    echo "WARNING :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> mailmsg
+                    echo "==============" >> mailmsg
+                    flag_send_message=YES
+                  fi
+                fi
+              else
+                echo "WARNING: can not find ${conf_dir}/${config_file}"
+              fi
+            else
+              if [ "${SENDMAIL}" = "YES" ]; then
+                echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${VDATE} ${vldhr}" >> mailmsg
+                echo "==============" >> mailmsg
+                flag_send_message=YES
+              fi
             fi
           else
-            if [ "${SENDMAIL}" = "YES" ]; then
-              echo "WARNING: No ${OBSTYPE} ${SATID} ${AOD_SCAN} was avaiable valid ${VDATE}${vldhr}" >> mailmsg
-              echo "Missing file is ${checkfile}" >> mailmsg
-              echo "==============" >> mailmsg
-              flag_send_message=YES
+            if [ "${vldhr}" == "00" ]; then
+              VDATEm1=$(${NDATE} -1 ${VDATE}${vldhr} | cut -c1-8)
+              vldhrm1=$(${NDATE} -1 ${VDATE}${vldhr} | cut -c9-10)
+              jdaym1=$(date2jday.sh ${VDATEm1})
+              echo "DEBUG ::  reverse search start; checking file for ${jdaym1}${vldhrm1}"
+              idirm1=${DCOMINabi}/${VDATEm1}/goes_abi/GOES_${AOD_SCAN}
+              if [ -d ${idirm1} ]; then
+                checkfile="OR_${OBSTYPE}-L2-${AOD_SCAN}-M*_${SATID}_s${jdaym1}${vldhrm1}*.nc"
+                obs_file_count=$(find ${idirm1} -name ${checkfile} | wc -l )
+                if [ ${obs_file_count} -gt 0 ]; then
+                  ls ${idirm1}/${checkfile} > all_hourly_aod_file
+                  export filein_aod=$(tail -n1 all_hourly_aod_file)    # config variable
+                  extract_file=$( basename ${filein_aod} )
+                  scan_start_time=$(echo ${extract_file} | awk -F"_" '{print $4}')
+                  check_digit11=$(echo "${scan_start_time}" | cut -c11-11)
+                  if [ "${check_digit11}" == "0" ]; then
+                    check_digit12=$(echo "${scan_start_time}" | cut -c12-12)
+                    if [ "${check_digit12}" == "0" ]; then
+                      minsec=$(echo "${scan_start_time}" | cut -c13-14)
+                    else
+                      minsec=$(echo "${scan_start_time}" | cut -c12-14)
+                    fi
+                  else
+                    minsec=$(echo "${scan_start_time}" | cut -c11-14)
+                  fi
+                  let scan_min_sec=${minsec}
+                  if [ ${scan_min_sec} -lt ${backward_search_cutoff_time} ]; then
+                    echo "DEBUG :: NO valid aod file within time limit in reverse search"
+                  else
+                    echo "DEBUG :: Find ${filein_aod} for valid hour ${vldhr}"
+                    flag_find_abi=yes
+                  fi
+                else
+                  echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${VDATEm1} ${vldhrm1}"
+                fi
+              else
+                echo "DEBUG :: Can not find ${idirm1}, skip reverse search for hour ${VDATE} ${vldhr}"
+              fi
             fi
-    
-            echo "WARNING: No ${OBSTYPE} ${SATID} ${AOD_SCAN} was avaiable valid ${VDATE}${vldhr}"
-            echo "WARNING: Missing file is ${checkfile}"
-          fi
+            if [ "${flag_find_abi}" == "yes" ];then
+              if [ -s ${conf_dir}/${config_file} ]; then
+                ## check corrupted input file
+                msg=$(ncdump -h ${filein_aod} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
+		if [ ${msg} -eq 0 ]; then
+                  run_metplus.py ${conf_dir}/${config_file} ${config_common}
+                  export err=$?; err_chk
+                  if [ "${SENDCOM}" = "YES" ]; then
+                    cpfile=${RUNTIME_PREP_DIR}/${out_file_prefix}_${VDATE}_${VHOUR}_${AOD_QC_NAME}.nc
+                    if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
+                  fi
+                else
+                  if [ "${SENDMAIL}" = "YES" ]; then
+                    echo "WARNING :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> mailmsg
+                    echo "==============" >> mailmsg
+                    flag_send_message=YES
+                  fi
+                fi
+              else
+                echo "WARNING: can not find ${conf_dir}/${config_file}"
+              fi
+            else
+              if [ "${SENDMAIL}" = "YES" ]; then
+                echo "DEBUG :: Can not find ${idir} for ${VDATE} ${vldhr}" >> mailmsg
+                echo "==============" >> mailmsg
+                flag_send_message=YES
+              fi
+            fi
+            echo "DEBUG :: Can not find ${idir} for ${VDATE} ${vldhr}, skip ro next valid hour"
+          fi  ## find idir
           ((ic++))
         done  # vldhr
       done  # AOD_SCAN
