@@ -276,7 +276,8 @@ elif job_type == 'generate':
             'dependent_vars': {
                 'names': ['MASK_POLY_LIST'],
                 'values': [(
-                    f'{MET_PLUS_OUT}/{VERIF_TYPE}/genvxmask/{NEST}.'
+                    f'{DATA}/{VERIF_CASE}/METplus_output/{VERIF_TYPE}'
+                    + f'/genvxmask/{NEST}.'
                     + '${VDATE}'+ f'/{NEST}_t{VHOUR}z_'+ 'f${FHR}.nc'
                 )],
             }
