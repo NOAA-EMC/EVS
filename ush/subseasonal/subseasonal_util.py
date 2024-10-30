@@ -1871,8 +1871,7 @@ def check_days6_10_model_files(job_dict):
                                  exist or not (boolean)
              fhr_list          - list of forecast hours that model
                                  files exist for (string)
-             model_copy_output_DATA2COMOUT_list - list of files to copy from
-                                                  DATA to COMOUT
+             model_copy_output_list - list of files to copy
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -1918,16 +1917,8 @@ def check_days6_10_model_files(job_dict):
                                                          +'.{init?fmt=%Y%m%d%H}.'
                                                          +'f{lead?fmt=%3H}')
                     if job_dict['VERIF_CASE'] == 'grid2grid':
-                        output_DATA_file_format = os.path.join(
-                            verif_case_dir, 'METplus_output',
-                            job_dict['RUN']+'.'+job_dict['DATE'],
-                            job_dict['MODEL'], job_dict['VERIF_CASE'],
-                            'grid_stat_'+job_dict['VERIF_TYPE']+'_'
-                            +job_dict['job_name']+'_{lead?fmt=%2H}'
-                            '0000L_{valid?fmt=%Y%m%d_%H%M%S}V_pairs.nc'
-                        )
-                        output_COMOUT_file_format = os.path.join(
-                            job_dict['COMOUT'],
+                        output_JOB_file_format = os.path.join(
+                            job_dict['job_num_work_dir'],
                             job_dict['RUN']+'.'+job_dict['DATE'],
                             job_dict['MODEL'], job_dict['VERIF_CASE'],
                             'grid_stat_'+job_dict['VERIF_TYPE']+'_'
@@ -2075,22 +2066,30 @@ def check_days6_10_model_files(job_dict):
     )
     input_fhr_list = copy.deepcopy(fhr_list)
     # Check output files
-    model_copy_output_DATA2COMOUT_list = []
+    output_DATA_file_format = output_JOB_file_format.replace(
+        job_dict['job_num_work_dir'],
+        os.path.join(verif_case_dir, 'METplus_output')
+    )
+    output_COMOUT_file_format = output_JOB_file_format.replace(
+        job_dict['job_num_work_dir'], job_dict['COMOUT']
+    )
+    model_copy_output_list = []
     for fhr_key in list(fhr_check_output_dict.keys()):
         for fhr_fileN_key in list(fhr_check_output_dict[fhr_key].keys()):
-            fhr_fileN_DATA = format_filler(
-                output_DATA_file_format,
+            fhr_fileN_JOB = format_filler(
+                output_JOB_file_format,
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['valid_date'],
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['init_date'],
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
                 {}
             )
-            fhr_fileN_COMOUT = format_filler(
-                output_COMOUT_file_format,
-                fhr_check_output_dict[fhr_key][fhr_fileN_key]['valid_date'],
-                fhr_check_output_dict[fhr_key][fhr_fileN_key]['init_date'],
-                fhr_check_output_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
-                {}
+            fhr_fileN_DATA = fhr_fileN_JOB.replace(
+                job_dict['job_num_work_dir'],
+                os.path.join(verif_case_dir, 'METplus_output')
+            )
+            fhr_fileN_COMOUT = fhr_fileN_JOB.replace(
+                job_dict['job_num_work_dir'],
+                job_dict['COMOUT']
             )
             if os.path.exists(fhr_fileN_COMOUT):
                 # Copy restart files from COMOUT to DATA dir
@@ -2109,10 +2108,10 @@ def check_days6_10_model_files(job_dict):
                 if fhr_check_output_dict[fhr_key]\
                         [fhr_fileN_key]['forecast_hour'] \
                         in fhr_list:
-                    if (fhr_fileN_DATA, fhr_fileN_COMOUT) \
-                            not in model_copy_output_DATA2COMOUT_list:
-                        model_copy_output_DATA2COMOUT_list.append(
-                            (fhr_fileN_DATA, fhr_fileN_COMOUT)
+                    if (fhr_fileN_JOB, fhr_fileN_COMOUT) \
+                            not in model_copy_output_list:
+                        model_copy_output_list.append(
+                            (fhr_fileN_JOB, fhr_fileN_COMOUT)
                         )
     if len(input_fhr_list) >= 9:
         model_files_exist = True
@@ -2120,7 +2119,7 @@ def check_days6_10_model_files(job_dict):
         model_files_exist = False
     if len(fhr_list) == 0:
         model_files_exist = False
-    return model_files_exist, fhr_list, model_copy_output_DATA2COMOUT_list
+    return model_files_exist, fhr_list, model_copy_output_list
 
 
 def check_weeks3_4_model_files(job_dict):
@@ -2135,8 +2134,7 @@ def check_weeks3_4_model_files(job_dict):
                                  exist or not (boolean)
              fhr_list          - list of forecast hours that model
                                  files exist for (string)
-             model_copy_output_DATA2COMOUT_list - list of files to copy from
-                                                  DATA to COMOUT
+             model_copy_output_list - list of files to copy
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -2182,16 +2180,8 @@ def check_weeks3_4_model_files(job_dict):
                                                          +'.{init?fmt=%Y%m%d%H}.'
                                                          +'f{lead?fmt=%3H}')
                     if job_dict['VERIF_CASE'] == 'grid2grid':
-                        output_DATA_file_format = os.path.join(
-                            verif_case_dir, 'METplus_output',
-                            job_dict['RUN']+'.'+job_dict['DATE'],
-                            job_dict['MODEL'], job_dict['VERIF_CASE'],
-                            'grid_stat_'+job_dict['VERIF_TYPE']+'_'
-                            +job_dict['job_name']+'_{lead?fmt=%2H}'
-                            '0000L_{valid?fmt=%Y%m%d_%H%M%S}V_pairs.nc'
-                        )
-                        output_COMOUT_file_format = os.path.join(
-                            job_dict['COMOUT'],
+                        output_JOB_file_format = os.path.join(
+                            job_dict['job_num_work_dir'],
                             job_dict['RUN']+'.'+job_dict['DATE'],
                             job_dict['MODEL'], job_dict['VERIF_CASE'],
                             'grid_stat_'+job_dict['VERIF_TYPE']+'_'
@@ -2339,22 +2329,30 @@ def check_weeks3_4_model_files(job_dict):
     )
     input_fhr_list = copy.deepcopy(fhr_list)
     # Check output files
-    model_copy_output_DATA2COMOUT_list = []
+    output_DATA_file_format = output_JOB_file_format.replace(
+        job_dict['job_num_work_dir'],
+        os.path.join(verif_case_dir, 'METplus_output')
+    )
+    output_COMOUT_file_format = output_JOB_file_format.replace(
+        job_dict['job_num_work_dir'], job_dict['COMOUT']
+    )
+    model_copy_output_list = []
     for fhr_key in list(fhr_check_output_dict.keys()):
         for fhr_fileN_key in list(fhr_check_output_dict[fhr_key].keys()):
-            fhr_fileN_DATA = format_filler(
-                output_DATA_file_format,
+            fhr_fileN_JOB = format_filler(
+                output_JOB_file_format,
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['valid_date'],
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['init_date'],
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
                 {}
             )
-            fhr_fileN_COMOUT = format_filler(
-                output_COMOUT_file_format,
-                fhr_check_output_dict[fhr_key][fhr_fileN_key]['valid_date'],
-                fhr_check_output_dict[fhr_key][fhr_fileN_key]['init_date'],
-                fhr_check_output_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
-                {}
+            fhr_fileN_DATA = fhr_fileN_JOB.replace(
+                job_dict['job_num_work_dir'],
+                os.path.join(verif_case_dir, 'METplus_output')
+            )
+            fhr_fileN_COMOUT = fhr_fileN_JOB.replace(
+                job_dict['job_num_work_dir'],
+                job_dict['COMOUT']
             )
             if os.path.exists(fhr_fileN_COMOUT):
                 # Copy restart files from COMOUT to DATA dir
@@ -2373,10 +2371,10 @@ def check_weeks3_4_model_files(job_dict):
                 if fhr_check_output_dict[fhr_key]\
                         [fhr_fileN_key]['forecast_hour'] \
                         in fhr_list:
-                    if (fhr_fileN_DATA, fhr_fileN_COMOUT) \
-                            not in model_copy_output_DATA2COMOUT_list:
-                        model_copy_output_DATA2COMOUT_list.append(
-                            (fhr_fileN_DATA, fhr_fileN_COMOUT)
+                    if (fhr_fileN_JOB, fhr_fileN_COMOUT) \
+                            not in model_copy_output_list:
+                        model_copy_output_list.append(
+                            (fhr_fileN_JOB, fhr_fileN_COMOUT)
                         )
     if len(input_fhr_list) >= 23:
         model_files_exist = True
@@ -2384,7 +2382,7 @@ def check_weeks3_4_model_files(job_dict):
         model_files_exist = False
     if len(fhr_list) == 0:
         model_files_exist = False
-    return model_files_exist, fhr_list, model_copy_output_DATA2COMOUT_list
+    return model_files_exist, fhr_list, model_copy_output_list
 
 
 def check_model_files(job_dict):
@@ -2399,8 +2397,7 @@ def check_model_files(job_dict):
                                  exist or not (boolean)
              fhr_list          - list of forecast hours that model
                                  files exist for (string)
-             model_copy_output_DATA2COMOUT_list - list of files to copy from
-                                                  DATA to COMOUT
+             model_copy_output_list - list of files to copy
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -2467,17 +2464,8 @@ def check_model_files(job_dict):
                                                      +'_init'
                                                      +'{init?fmt=%Y%m%d%H}_'
                                                      +'fhr{lead?fmt=%3H}.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'weekly_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'weekly_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2502,17 +2490,8 @@ def check_model_files(job_dict):
                                                      +'_init'
                                                      +'{init?fmt=%Y%m%d%H}_'
                                                      +'fhr{lead?fmt=%3H}.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'days6_10_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'days6_10_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2537,17 +2516,8 @@ def check_model_files(job_dict):
                                                      +'_init'
                                                      +'{init?fmt=%Y%m%d%H}_'
                                                      +'fhr{lead?fmt=%3H}.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'weeks3_4_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'weeks3_4_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2572,17 +2542,8 @@ def check_model_files(job_dict):
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'daily_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-24}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'daily_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2608,17 +2569,8 @@ def check_model_files(job_dict):
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'weekly_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'weekly_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2644,17 +2596,8 @@ def check_model_files(job_dict):
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'monthly_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-720}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'monthly_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2677,17 +2620,8 @@ def check_model_files(job_dict):
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'weekly_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'weekly_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2710,17 +2644,8 @@ def check_model_files(job_dict):
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'weekly_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'weekly_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2743,17 +2668,8 @@ def check_model_files(job_dict):
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'days6_10_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'days6_10_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2776,17 +2692,8 @@ def check_model_files(job_dict):
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'days6_10_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'days6_10_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2809,17 +2716,8 @@ def check_model_files(job_dict):
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'weeks3_4_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'weeks3_4_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2842,17 +2740,8 @@ def check_model_files(job_dict):
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
                                                      +'pairs.nc')
-                    output_DATA_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.'+job_dict['DATE'],
-                        model, job_dict['VERIF_CASE'], 'weeks3_4_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
-                        +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                    output_COMOUT_file_format = os.path.join(
-                        job_dict['COMOUT'],
+                    output_JOB_file_format = os.path.join(
+                        job_dict['job_num_work_dir'],
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'weeks3_4_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
@@ -2971,16 +2860,8 @@ def check_model_files(job_dict):
                     }
         elif job_dict['JOB_GROUP'] == 'generate_stats':
             if job_dict['VERIF_CASE'] == 'grid2grid':
-                output_DATA_file_format = os.path.join(
-                    verif_case_dir, 'METplus_output',
-                    job_dict['RUN']+'.'+job_dict['DATE'],
-                    model, job_dict['VERIF_CASE'],
-                    'grid_stat_'+job_dict['VERIF_TYPE']+'_'
-                    +job_dict['job_name']+'_{lead?fmt=%2H}'
-                    '0000L_{valid?fmt=%Y%m%d_%H%M%S}V.stat'
-                )
-                output_COMOUT_file_format = os.path.join(
-                    job_dict['COMOUT'],
+                output_JOB_file_format = os.path.join(
+                    job_dict['job_num_work_dir'],
                     job_dict['RUN']+'.'+job_dict['DATE'],
                     model, job_dict['VERIF_CASE'],
                     'grid_stat_'+job_dict['VERIF_TYPE']+'_'
@@ -3032,18 +2913,6 @@ def check_model_files(job_dict):
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
                     )
-                #elif job_dict['VERIF_TYPE'] in ['sst', 'seaice'] \
-                        #and job_dict['job_name'] in ['WeeklyAvg_SST',
-                                                     #'WeeklyAvg_Concentration']:
-                    #input_file_format = os.path.join(
-                        #verif_case_dir, 'METplus_output',
-                        #job_dict['RUN']+'.'+job_dict['DATE'],
-                        #model, job_dict['VERIF_CASE'], 'weekly_avg_'
-                        #+job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        #+'_init{init?fmt=%Y%m%d%H}_'
-                        #+'valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
-                        #+'to{valid?fmt=%Y%m%d%H}.nc'
-                    #)
                 elif job_dict['VERIF_TYPE'] in ['sst', 'seaice'] \
                         and job_dict['job_name'] in ['MonthlyAvg_SST',
                                                      'MonthlyAvg_Concentration']:
@@ -3455,22 +3324,30 @@ def check_model_files(job_dict):
     )
     input_fhr_list = copy.deepcopy(fhr_list)
     # Check output files
-    model_copy_output_DATA2COMOUT_list = []
+    output_DATA_file_format = output_JOB_file_format.replace(
+        job_dict['job_num_work_dir'],
+        os.path.join(verif_case_dir, 'METplus_output')
+    )
+    output_COMOUT_file_format = output_JOB_file_format.replace(
+        job_dict['job_num_work_dir'], job_dict['COMOUT']
+    )
+    model_copy_output_list = []
     for fhr_key in list(fhr_check_output_dict.keys()):
         for fhr_fileN_key in list(fhr_check_output_dict[fhr_key].keys()):
-            fhr_fileN_DATA = format_filler(
-                output_DATA_file_format,
+            fhr_fileN_JOB = format_filler(
+                output_JOB_file_format,
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['valid_date'],
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['init_date'],
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
                 {}
             )
-            fhr_fileN_COMOUT = format_filler(
-                output_COMOUT_file_format,
-                fhr_check_output_dict[fhr_key][fhr_fileN_key]['valid_date'],
-                fhr_check_output_dict[fhr_key][fhr_fileN_key]['init_date'],
-                fhr_check_output_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
-                {}
+            fhr_fileN_DATA = fhr_fileN_JOB.replace(
+                job_dict['job_num_work_dir'],
+                os.path.join(verif_case_dir, 'METplus_output')
+            )
+            fhr_fileN_COMOUT = fhr_fileN_JOB.replace(
+                job_dict['job_num_work_dir'],
+                job_dict['COMOUT']
             )
             if os.path.exists(fhr_fileN_COMOUT):
                 # Copy restart files from COMOUT to DATA dir
@@ -3479,16 +3356,16 @@ def check_model_files(job_dict):
                 if fhr_check_output_dict[fhr_key]\
                         [fhr_fileN_key]['forecast_hour'] \
                         in fhr_list:
-                    if (fhr_fileN_DATA, fhr_fileN_COMOUT) \
-                            not in model_copy_output_DATA2COMOUT_list:
-                        model_copy_output_DATA2COMOUT_list.append(
-                            (fhr_fileN_DATA, fhr_fileN_COMOUT)
+                    if (fhr_fileN_JOB, fhr_fileN_COMOUT) \
+                            not in model_copy_output_list:
+                        model_copy_output_list.append(
+                            (fhr_fileN_JOB, fhr_fileN_COMOUT)
                         )
     if len(fhr_list) != 0:
         model_files_exist = True
     else:
         model_files_exist = False
-    return model_files_exist, fhr_list, model_copy_output_DATA2COMOUT_list
+    return model_files_exist, fhr_list, model_copy_output_list
 
 def check_weekly_truth_files(job_dict):
     """! Check if obs files exist for weekly reformat and assemble step
@@ -3500,8 +3377,7 @@ def check_weekly_truth_files(job_dict):
          Returns:
              truth_files_exist - if 80% of truth files
                                  exist or not (boolean)
-             truth_copy_output_DATA2COMOUT_list - list of files to copy
-                                                  from DATA to COMOUT
+             truth_copy_output_list - list of files to copy
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -3614,11 +3490,11 @@ def check_weekly_truth_files(job_dict):
                     truth_input_file_list.append(pb2nc_file)
                     nf+=1
     truth_output_files_exist_list = []
-    truth_copy_output_DATA2COMOUT_list = truth_output_file_list
+    truth_copy_output_list = truth_output_file_list
     for truth_file_tuple in truth_output_file_list:
         if os.path.exists(truth_file_tuple[1]):
             truth_output_files_exist_list.append(True)
-            truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
+            truth_copy_output_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
     if all(x == True for x in truth_output_files_exist_list) \
@@ -3636,7 +3512,7 @@ def check_weekly_truth_files(job_dict):
             truth_files_exist = True
         else:
             truth_files_exist = False
-    return truth_files_exist, truth_copy_output_DATA2COMOUT_list
+    return truth_files_exist, truth_copy_output_list
 
 def check_days6_10_truth_files(job_dict):
     """! Check if obs files exist for Days 6-10 reformat and assemble step
@@ -3648,8 +3524,7 @@ def check_days6_10_truth_files(job_dict):
          Returns:
              truth_files_exist - if 80% of truth files
                                  exist or not (boolean)
-             truth_copy_output_DATA2COMOUT_list - list of files to copy
-                                                  from DATA to COMOUT
+             truth_copy_output_list - list of files to copy
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -3762,11 +3637,11 @@ def check_days6_10_truth_files(job_dict):
                     truth_input_file_list.append(pb2nc_file)
                     nf+=1
     truth_output_files_exist_list = []
-    truth_copy_output_DATA2COMOUT_list = truth_output_file_list
+    truth_copy_output_list = truth_output_file_list
     for truth_file_tuple in truth_output_file_list:
         if os.path.exists(truth_file_tuple[1]):
             truth_output_files_exist_list.append(True)
-            truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
+            truth_copy_output_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
     if all(x == True for x in truth_output_files_exist_list) \
@@ -3784,7 +3659,7 @@ def check_days6_10_truth_files(job_dict):
             truth_files_exist = True
         else:
             truth_files_exist = False
-    return truth_files_exist, truth_copy_output_DATA2COMOUT_list
+    return truth_files_exist, truth_copy_output_list
 
 def check_weeks3_4_truth_files(job_dict):
     """! Check if obs files exist for Weeks 3-4 reformat and assemble step
@@ -3796,8 +3671,7 @@ def check_weeks3_4_truth_files(job_dict):
          Returns:
              truth_files_exist - if 80% of truth files
                                  exist or not (boolean)
-             truth_copy_output_DATA2COMOUT_list - list of files to copy
-                                                  from DATA to COMOUT
+             truth_copy_output_list - list of files to copy
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -3913,13 +3787,13 @@ def check_weeks3_4_truth_files(job_dict):
                     truth_input_file_list.append(pb2nc_file)
                     nf+=1
     truth_output_files_exist_list = []
-    truth_copy_output_DATA2COMOUT_list = truth_output_file_list
+    truth_copy_output_list = truth_output_file_list
     for truth_file_tuple in truth_output_file_list:
         if os.path.exists(truth_file_tuple[1]):
             truth_output_files_exist_list.append(True)
             # Copy restart files from COMOUT to DATA dir
             copy_file(truth_file_tuple[1], truth_file_tuple[0])
-            truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
+            truth_copy_output_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
     if all(x == True for x in truth_output_files_exist_list) \
@@ -3945,7 +3819,7 @@ def check_weeks3_4_truth_files(job_dict):
                 truth_files_exist = True
             else:
                 truth_files_exist = False
-    return truth_files_exist, truth_copy_output_DATA2COMOUT_list
+    return truth_files_exist, truth_copy_output_list
 
 def check_truth_files(job_dict):
     """!
