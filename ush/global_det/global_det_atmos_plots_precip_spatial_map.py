@@ -39,7 +39,7 @@ class PrecipSpatialMap:
                  logger            - logger object
                  input_dir         - path to input directory (string)
                  working_dir       - path to working directory (string)
-                 output_dir         - path to output directory (string)
+                 output_dir        - path to output directory (string)
                  model_info_dict   - model infomation dictionary (strings)
                  plot_info_dict    - plot information dictionary (strings)
                  date_info_dict    - date information dictionary (strings)

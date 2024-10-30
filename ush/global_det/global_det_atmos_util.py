@@ -2351,6 +2351,14 @@ def check_plot_files(job_dict):
                     plots_files_exist_check_list.append(
                         os.path.exists(plot_check)
                     )
+            elif plot_dict['plot'] == 'nohrsc_spatial_map':
+                for img_type in ['png', 'gif']:
+                    plots_files_exist_check_list.append(os.path.join(
+                        plot_dict['job_COMOUT_dir'],
+                        f"nohrsc.v{plot_dict['end_date']}12."
+                        +f"{str(plot_dict['forecast_hour']).zfill(3)}h."
+                        +f"{plot_dict['vx_mask']}.{img_type}"
+                    ))
             elif plot_dict['plot'] == 'precip_spatial_map':
                 psm_model_list = model_list
                 if int(plot_dict['forecast_hour']) > 72 \

@@ -758,9 +758,15 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['valid_hr_inc'] = '24'
         plot_info_dict['obs_var_name'] = obs_var_name
         plot_info_dict['obs_var_level'] = obs_var_level_list[0]
-        plot_nsm = gdap_nsm.NOHRSCSpatialMap(logger, nohrsc_data_dir, DATAjob,
-                                             COMOUTjob, date_info_dict,
-                                             plot_info_dict, logo_dir)
+        if SENDCOM == 'YES':
+            job_final_output_dir = job_COMOUT_dir
+        else:
+            job_final_output_dir = job_DATA_dir
+        plot_nsm = gdap_nsm.NOHRSCSpatialMap(logger, nohrsc_data_dir,
+                                             job_work_dir,
+                                             job_final_output_dir,
+                                             date_info_dict, plot_info_dict,
+                                             logo_dir)
         plot_nsm.make_nohrsc_spatial_map()
     elif plot == 'precip_spatial_map':
         model_info_dict['obs'] = {'name': 'ccpa',
