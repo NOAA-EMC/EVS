@@ -15,12 +15,12 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=nwps
 export OBTYPE=NDBC
-export NET=evs
+export NET=evs_beta5
 export COMPONENT=nwps
 export STEP=stats
 export RUN=wave
 export VERIF_CASE=grid2obs
-
+export WFO=hgx
 ############################################################
 # read version file and set model_ver
 ############################################################
@@ -52,7 +52,7 @@ export KEEPDATA=${KEEPDATA:-YES}
 ### developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER"
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/${NET}/${evs_ver_2d}
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}
  
 export run_mpi='yes'
