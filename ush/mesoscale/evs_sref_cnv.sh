@@ -89,6 +89,7 @@ for  obsv in prepbufr ; do
 	    echo "export base_model=$base_model" >> run_sref_cnv_${fhr}_${vhr}.sh
 	    echo "export mbr=$mbr" >> run_sref_cnv_${fhr}_${vhr}.sh 
             echo "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_cnv.conf">> run_sref_cnv_${fhr}_${vhr}.sh
+	    export err=$?; err_chk
 	   fi
          done
        done

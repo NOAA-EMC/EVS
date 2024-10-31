@@ -41,8 +41,10 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
 
     if [ $verify = grid2obs ] ; then   
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstSREF_obsPREPBUFR_GatherByDay.conf " >> run_gather_${verify}.sh
+      echo  "export err=$?; err_chk" >> run_gather_${verify}.sh
     elif [ $verify = precip ] ; then
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/StatAnlysis_fcstSREF_obsCCPA_GatherByDay.conf " >> run_gather_${verify}.sh
+      echo  "export err=$?; err_chk" >> run_gather_${verify}.sh
     fi
 
    echo "[[ $SENDCOM = YES  &&  -s ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat ]] && cp -v ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${model}.${verify}.v${vday}.stat">>run_gather_${verify}.sh

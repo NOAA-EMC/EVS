@@ -10,16 +10,11 @@
 set -x 
 
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
-cd $DATA
+mkdir -p $DATA/scripts
+cd $DATA/scripts
 
-export prune_dir=$DATA/data
-export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
-mkdir -p $prune_dir
-mkdir -p $save_dir
 mkdir -p $output_base_dir
-mkdir -p $DATA/logs
 
 restart=$COMOUTplots/restart/$last_days/sref_cnv_plots
 if [ ! -d  $restart ] ; then
@@ -53,7 +48,6 @@ export valid_beg=$first_day
 #**************************************************************************
 n=0
 while [ $n -le $last_days ] ; do
-  #hrs=`expr $n \* 24`
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
@@ -67,11 +61,6 @@ VX_MASK_LIST="CONUS"
 export fcst_init_hour="0,3,6,9,12,15,18,21"
 export fcst_valid_hour="0,6,12,18"
 init_time='init00_to_21z'
-
-export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-if [ ! -d $plot_dir ] ; then
- mkdir -p $plot_dir
-fi
 
 verif_case=grid2obs
 line_type='ctc'
@@ -168,6 +157,16 @@ for VAR in $VARS ; do
 
         verif_type=conus_sfc
 
+        save_dir=$DATA/plots/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}
+	plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
+        mkdir -p $plot_dir
+	mkdir -p $save_dir/data
+
+        echo "#!/bin/ksh" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	echo "export save_dir=$save_dir" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+        echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	echo "export prune_dir=$save_dir/data" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+
         echo "export PLOT_TYPE=$score_type" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
         echo "export field=${var}_${level}" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
@@ -186,7 +185,6 @@ for VAR in $VARS ; do
         else
           echo "export date_type=VALID" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
         fi
-
 
          echo "export var_name=$VAR" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
          echo "export fcts_level=$FCST_LEVEL_value" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
@@ -215,27 +213,17 @@ for VAR in $VARS ; do
 
          chmod +x  run_py.${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-         echo "${DATA}/run_py.${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "${DATA}/scripts/run_py.${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
          
-         #Save for restart:
+         #tar all files and save for restart:
          echo "if [ ${score_type} = lead_average ] ; then " >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-         echo "  cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_*${thresh}.png $restart/." >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_*${thresh}.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_*${thresh}.png $restart ; >$restart/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed ; fi " >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
          echo "else" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-         echo "  cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_${lead}.png $restart/." >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_${lead}.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_${lead}.png $restart ; >$restart/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed ; fi " >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
          echo "fi " >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-         echo "[[ \$? = 0 ]] && >$restart/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
          chmod +x  run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh 
-         echo "${DATA}/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_all_poe.sh
-
-      else
-
-         #For restart
-	 if [ ${score_type} = lead_average ] ; then 
-           cp $restart/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_*${thresh}.png ${plot_dir}/.
-	 else
-           cp $restart/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_*.png ${plot_dir}/.
-	 fi
+         echo "${DATA}/scripts/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_all_poe.sh
 
       fi
 
@@ -257,10 +245,10 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
 if [ $run_mpi = yes ] ; then
-  mpiexec -np 176 -ppn 88 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+  mpiexec -np 176 -ppn 88 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
   export err=$?; err_chk
 else
-   ${DATA}/run_all_poe.sh
+   ${DATA}/scripts/run_all_poe.sh
    export err=$?; err_chk
 fi
 
@@ -269,7 +257,7 @@ echo "run_all_poe done!"
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $plot_dir
+cd $restart
 
 for var in vis hgt ; do
    levels=L0
@@ -329,8 +317,8 @@ for var in vis hgt ; do
  done    
 done
 
-if [ -s *.png ] ; then
- tar -cvf evs.plots.sref.cnv.last${last_days}days.v${VDATE}.tar *.png
+if [ -s evs*.png ] ; then
+ tar -cvf evs.plots.sref.cnv.last${last_days}days.v${VDATE}.tar evs*.png
 fi
 
 if [ $SENDCOM = YES ] && [ -s evs.plots.sref.cnv.last${last_days}days.v${VDATE}.tar ] ; then
