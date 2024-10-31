@@ -241,7 +241,7 @@ fi
 ##
 ## Headline Plots
 ##
-mkdir -p ${COMOUTplots}/headline
+mkdir -p ${COMOUTheadline}/headline
 for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
     export region
     case ${region} in
@@ -296,7 +296,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
             figtype=csi
 
             figfile=headline_${COMPONENT}.${figtype}_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
-            cpfile=${COMOUTplots}/headline/${figfile}
+            cpfile=${COMOUTheadline}/headline/${figfile}
             if [ ! -e ${cpfile} ]; then
                 ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}_headline.config
                 export err=$?; err_chk
@@ -308,7 +308,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
             cpfile=${PLOTDIR_headline}/${figfile}
             if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]; then
                 mv ${PLOTDIR_headline}/aq/*/evs*png ${cpfile}
-                cp -v ${cpfile} ${COMOUTplots}/headline
+                cp -v ${cpfile} ${COMOUTheadline}/headline
             elif [ ! -e ${cpfile} ]; then
                 echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} ${region}"
                 echo "WARNING: This is possible where there is no exceedance of the critical threshold in the last 31 days"
