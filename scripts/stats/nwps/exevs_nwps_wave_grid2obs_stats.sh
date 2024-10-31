@@ -169,7 +169,7 @@ if [ $gather = yes ] ; then
 
 	   if [ $SENDCOM = YES ]; then
 		   if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-			   cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+			   cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${VDATE}.stat 
 		   else
 			   echo "DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
 		   fi
