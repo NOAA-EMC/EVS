@@ -89,6 +89,7 @@ else
         export AOD_SCAN_TYPE=${AOD_SCAN_TYPE:-AODC}
         export ADP_SCAN_TYPE=${ADP_SCAN_TYPE:-ADPC}
         export AOD_QC_NAME=${AOD_QC_NAME:-high}
+        export restart_mode=${restart_mode:-YES}
     else
         echo "DEBUG :: DATA_TYPE == ${DATA_TYPE} is not defined, exit"
 	exit

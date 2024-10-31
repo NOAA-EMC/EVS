@@ -54,7 +54,7 @@ if os.path.exists(goes_east_aod) and os.path.exists(goes_west_aod):
                 elif east == fill_value_read and west != fill_value_read:
                     aodm[i][j]=west
                 else:
-                    aodm[i][j]=west
+                    aodm[i][j]=fill_value_read
         mask = aodm == fill_value_read
         aodm=np.ma.masked_array(aodm,mask)
 
