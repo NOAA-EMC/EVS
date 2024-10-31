@@ -954,16 +954,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                              ['fcst_var_dict']['levels']\
                              .index(plot_loop_info[2])]
                         )
-                    run_global_det_atmos_plots = ['global_det_atmos_plots.py']
+                    run_global_det_atmos_plots = ['plots']
                     if evs_run_mode == 'production' and \
                             verif_type in ['pres_levs', 'sfc'] and \
                             job_env_dict['plot'] in \
                             ['lead_average', 'lead_by_level', 'lead_by_date']:
-                        run_global_det_atmos_plots.append(
-                            'global_det_atmos_plots_production_tof240.py'
-                        )
+                        run_global_det_atmos_plots.append('plots_tof240.py')
                     for run_global_det_atmos_plot in run_global_det_atmos_plots:
-                        job_env_dict['plot_script'] = run_global_det_atmos_plot
                         # Set up output directories
                         njobs+=1
                         job_env_dict['job_id'] = 'job'+str(njobs)
@@ -1001,10 +998,19 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             if name not in dont_write_env_var_list:
                                 job.write('export '+name+'="'+value+'"\n')
                         job.write('\n')
+                        if run_global_det_atmos_plot == 'plots_tof240.py':
+                            fhrs_tof240 = []
+                            for fhr in job_env_dict['fhr_list'].split(', '):
+                                if int(fhr) <= 240:
+                                    fhrs_tof240.append(str(fhr))
+                            job.write(
+                                'export fhr_list="'
+                                +', '.join(fhrs_tof240)+'"\n'
+                            )
                         if write_job_cmds:
                             gda_util.make_dir(job_env_dict['job_work_dir'])
                             job.write(
-                                gda_util.python_command(run_global_det_atmos_plot,
+                                gda_util.python_command('global_det_atmos_plots.py',
                                                         [])+'\n'
                             )
                             job.write('export err=$?; err_chk'+'\n')
