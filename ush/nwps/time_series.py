@@ -1031,6 +1031,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         domain_string = 'latlon_0p25_glb'
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
+                 + f'{str(WFO).lower()}.'
                  + f'{str(metric1_name).lower()}.'
                  + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                  + f'{str(time_period_savename).lower()}.'

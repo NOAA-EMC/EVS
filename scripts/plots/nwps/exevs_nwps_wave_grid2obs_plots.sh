@@ -55,17 +55,17 @@ echo '-----------------------------'
 [[ "$LOUD" = YES ]] && set -x
 
 mkdir -p ${DATA}/stats
-
+wfo=${WFO}
 plot_start_date=${PDYm90}
 plot_end_date=${VDATE}
 
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
   EVSINnwps=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
-    if [ -s ${EVSINnwps}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
-	    cp ${EVSINnwps}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+    if [ -s ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
+	    cp ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
     else
-	    echo "WARNING: ${EVSINnwps}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
+	    echo "WARNING: ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
     fi
     theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
 done
@@ -168,11 +168,11 @@ if [ $gather = yes ] ; then
 		fi
 		if [ $SENDCOM = YES ]; then
 			if [ -s evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ]; then
-				cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}
+				cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
 			fi
 		fi
 		if [ $SENDDBN = YES ]; then
-			$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
+			$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
 		fi
 
 	done
