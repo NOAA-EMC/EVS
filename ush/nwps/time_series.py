@@ -48,7 +48,7 @@ presets = Presets()
 model_colors = ModelSpecs()
 reference = Reference()
 
-
+WFO = os.environ ['WFO']
 # =================== FUNCTIONS =========================
 
 
