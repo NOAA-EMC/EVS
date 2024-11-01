@@ -288,6 +288,17 @@ if [ -s evs*.png ] ; then
   tar -cvf evs.plots.sref.cloud.last${last_days}days.v${VDATE}.tar evs*.png
 fi
 
+#Cat the plotting log files
+log_dir="$DATA/plots"
+if [ -s $log_dir/*/log*.out ]; then
+  log_files=`ls $log_dir/*/log*.out`
+  for log_file in $log_files ; do
+     echo "Start: $log_file"
+     cat  "$log_file"
+     echo "End: $log_file"
+  done
+fi
+
 if [ $SENDCOM = YES ] && [ -s evs.plots.sref.cloud.last${last_days}days.v${VDATE}.tar ] ; then
  cp -v evs.plots.sref.cloud.last${last_days}days.v${VDATE}.tar  $COMOUTplots/.  
 fi
