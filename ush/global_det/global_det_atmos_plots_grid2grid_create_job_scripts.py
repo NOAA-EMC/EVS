@@ -959,7 +959,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             verif_type in ['pres_levs', 'sfc'] and \
                             job_env_dict['plot'] in \
                             ['lead_average', 'lead_by_level', 'lead_by_date']:
-                        run_global_det_atmos_plots.append('plots_tof240.py')
+                        run_global_det_atmos_plots.append('plots_tof240')
                     for run_global_det_atmos_plot in run_global_det_atmos_plots:
                         # Set up output directories
                         njobs+=1
@@ -998,7 +998,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             if name not in dont_write_env_var_list:
                                 job.write('export '+name+'="'+value+'"\n')
                         job.write('\n')
-                        if run_global_det_atmos_plot == 'plots_tof240.py':
+                        if run_global_det_atmos_plot == 'plots_tof240':
                             fhrs_tof240 = []
                             for fhr in job_env_dict['fhr_list'].split(', '):
                                 if int(fhr) <= 240:
