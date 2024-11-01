@@ -32,28 +32,18 @@ job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
 D6_10START = os.environ['D6_10START']
 DATE = os.environ['DATE']
+var1_obs_name = os.environ['var1_obs_name']
+var1_obs_levels = os.environ['var1_obs_levels']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_list = os.environ['CORRECT_LEAD_SEQ'].split(',')
+job_num_work_dir = os.environ['job_num_work_dir']
 
-# Process run time arguments
-if len(sys.argv) != 3:
-    print("FATAL ERROR: Not given correct number of run time arguments..."
-          +os.path.basename(__file__)+" VARNAME_VARLEVEL FILE_FORMAT")
+# Check variable settings
+if ' ' in var1_obs_levels or ',' in var1_obs_levels:
+    print("ERROR: Cannot accept list of observation levels")
     sys.exit(1)
-else:
-    if '_' not in sys.argv[1]:
-        print("FATAL ERROR: variable and level runtime argument formatted "
-              +"incorrectly, be sure to separate variable and level with "
-              +"an underscore (_), example TMP_Z2")
-        sys.exit(1)
-    else:
-        var_level = sys.argv[1]
-        print("Using var_level = "+var_level)
-    file_format = sys.argv[2]
-var = var_level.split('_')[0]
-level = var_level.split('_')[1]
 
 # Set MET MPR columns
 MET_MPR_column_list = [
@@ -78,46 +68,61 @@ fhr_end = int(fhr_list[-1])
 valid_date_dt = STARTDATE_dt
 fhr = fhr_start
 while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
-    init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
-    input_file = sub_util.format_filler(
-        file_format, valid_date_dt, init_date_dt, str(fhr), {}
+    # Set full paths for dates
+    full_path_job_num_work_dir = os.path.join(
+        job_num_work_dir, RUN+'.'
+        +ENDDATE_dt.strftime('%Y%m%d'),
+        MODEL, VERIF_CASE
     )
-    if os.path.exists(input_file):
-        output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
-                                  'METplus_output',
-                                  RUN+'.'
-                                  +ENDDATE_dt.strftime('%Y%m%d'),
-                                  MODEL, VERIF_CASE)
-        output_DATA_file = os.path.join(output_dir, 'anomaly_'
-                                        +VERIF_TYPE+'_'+job_name+'_init'
-                                        +init_date_dt.strftime('%Y%m%d%H')+'_'
-                                        +'fhr'+str(fhr).zfill(3)+'.stat')
-        output_COMOUT_file = os.path.join(COMOUT, RUN+'.'
-                                          +ENDDATE_dt.strftime('%Y%m%d'),
-                                          MODEL, VERIF_CASE, 'anomaly_'
-                                          +VERIF_TYPE+'_'+job_name+'_init'
-                                          +init_date_dt.strftime('%Y%m%d%H')+'_'
-                                          +'fhr'+str(fhr).zfill(3)+'.stat')
-        if os.path.exists(output_COMOUT_file):
-            make_anomaly_output_file = False
-            sub_util.copy_file(output_COMOUT_file, output_DATA_file)
-        else:
-            if not os.path.exists(output_DATA_file):
-                make_anomaly_output_file = True
-            else:
-                make_anomaly_output_file = False
-                print(f"DATA Output File exists: {output_DATA_file}")
-                if SENDCOM == 'YES' \
-                        and sub_util.check_file_size_exists(
-                            output_DATA_file
-                        ):
-                    sub_util.copy_file(output_DATA_file,
-                                       output_COMOUT_file)
-    else:
-        print(f"\nWARNING: {input_file} does not exist")
+    full_path_DATA = os.path.join(
+        DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
+        RUN+'.'+ENDDATE_dt.strftime('%Y%m%d'),
+        MODEL, VERIF_CASE
+    )
+    full_path_COMOUT = os.path.join(
+        COMOUT, RUN+'.'+ENDDATE_dt.strftime('%Y%m%d'),
+        MODEL, VERIF_CASE
+    )
+    init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+    input_file_name = (
+         f"point_stat_{VERIF_TYPE}_{job_name}_{str(fhr).zfill(2)}0000L_"
+         +f"{valid_date_dt:%Y%m%d_%H}0000V.stat"
+    )
+    # Check possible input files
+    check_input_file_list = [
+        os.path.join(full_path_job_num_work_dir, input_file_name),
+        os.path.join(full_path_DATA, input_file_name),
+        os.path.join(full_path_COMOUT, input_file_name)
+    ]
+    found_input = False
+    for check_input_file in check_input_file_list:
+        if os.path.exists(check_input_file):
+            input_file = check_input_file
+            found_input = True
+            break
+    # Set output file
+    output_file = os.path.join(
+        full_path_job_num_work_dir, f"anomaly_{VERIF_TYPE}_{job_name}_"
+        +f"init{init_date_dt:%Y%m%d%H}_fhr{str(fhr).zfill(3)}.stat"
+    )
+    output_DATA_file = os.path.join(
+        full_path_DATA, output_file.rpartition('/')[2]
+    )
+    output_COMOUT_file = os.path.join(
+        full_path_COMOUT, output_file.rpartition('/')[2]
+    )
+    # Check input and output files
+    if os.path.exists(output_COMOUT_file):
+        print(f"COMOUT Output File exists: {output_COMOUT_file}")
         make_anomaly_output_file = False
-    if make_anomaly_output_file:
+        sub_util.copy_file(output_COMOUT_file, output_DATA_file)
+    else:
+        make_anomaly_output_file = True
+    if found_input and make_anomaly_output_file:
         print("\nInput file: "+input_file)
+        print(f"Output File: {output_file}")
+        if not os.path.exists(full_path_job_num_work_dir):
+            os.makedirs(full_path_job_num_work_dir)
         with open(input_file, 'r') as infile:
             input_file_header = infile.readline()
         sub_util.run_shell_command(['sed', '-i', '"s/   a//g"',
@@ -127,7 +132,10 @@ while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
                                     names=MET_MPR_column_list, 
                                     na_filter=False, dtype=str)
         input_file_var_level_df = input_file_df[
-            (input_file_df['FCST_VAR'] == var) & (input_file_df['FCST_LEV'] == level)
+            (input_file_df['FCST_VAR'] == var1_obs_name) \
+            & (input_file_df['FCST_LEV'] == var1_obs_levels) \
+            & (input_file_df['OBS_VAR'] == var1_obs_name) \
+            & (input_file_df['OBS_LEV'] == var1_obs_levels)
         ]
         fcst_var_level = np.array(
             input_file_var_level_df['FCST'].values, dtype=float
@@ -145,15 +153,13 @@ while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
         output_file_df['CLIMO_MEAN'] = 'NA'
         output_file_df['FCST'] = fcst_anom_var_level
         output_file_df['OBS'] = obs_anom_var_level
-        output_file_df['FCST_VAR'] = var+'_ANOM'
-        output_file_df['OBS_VAR'] = var+'_ANOM'
-        print(f"DATA Output File: {output_DATA_file}")
-        print(f"COMOUT Output File: {output_COMOUT_file}")
-        output_file_df.to_csv(output_DATA_file, header=input_file_header,
+        output_file_df['FCST_VAR'] = f"{var1_obs_name}_ANOM"
+        output_file_df['OBS_VAR'] = f"{var1_obs_name}_ANOM"
+        output_file_df.to_csv(output_file, header=input_file_header,
                               index=None, sep=' ', mode='w')
         if SENDCOM == 'YES' \
-                and sub_util.check_file_exists_size(output_DATA_file):
-            sub_util.copy_file(output_DATA_file, output_COMOUT_file)
+                and sub_util.check_file_exists_size(output_file):
+            sub_util.copy_file(output_file, output_COMOUT_file)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
     fhr+=int(valid_hr_inc)
 
