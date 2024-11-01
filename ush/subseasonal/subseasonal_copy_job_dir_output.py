@@ -82,7 +82,5 @@ for output_file_JOB in sorted(output_file_JOB_list, key=len):
         )
     if not os.path.exists(output_file_DATA):
         sub_util.copy_file(output_file_JOB, output_file_DATA)
-    else:
-        print(f"WARNING: {output_file_DATA} exists")
 
 print("END: "+os.path.basename(__file__))
