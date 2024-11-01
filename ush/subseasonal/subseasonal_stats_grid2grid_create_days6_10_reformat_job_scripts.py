@@ -254,7 +254,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         check_truth_files = False
                     if check_truth_files:
                         (all_truth_file_exist,
-                         truth_copy_output_DATA2COMOUT_list) = (
+                         truth_copy_output_list) = (
                             sub_util.check_days6_10_truth_files(job_env_dict)
                         )
                         if model_files_exist and all_truth_file_exist:
