@@ -24,6 +24,7 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
 #************************************************
 # Build sub-jobs
 # ***********************************************
+cd $WORK/scripts
 >run_gather_${verify}.sh
 
     echo  "export output_base=${WORK}/gather" >> run_gather_${verify}.sh 
@@ -51,14 +52,14 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
 
   chmod +x run_gather_${verify}.sh
 
-  echo "${DATA}/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
+  echo "${DATA}/scripts/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
 
 chmod +x run_gather_all_poe.sh
 
 #********************************************
 #  Run the POE script
 #*******************************************
-${DATA}/run_gather_all_poe.sh
+${DATA}/scripts/run_gather_all_poe.sh
 export err=$?; err_chk
 
 

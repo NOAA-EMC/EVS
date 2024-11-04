@@ -9,17 +9,11 @@ set -x
 
 export vday=$VDATE
 export regrid='NONE'
-############################################################
-
-#********************************************
-# Check the input data files availability
-# ******************************************
-$USHevs/mesoscale/evs_check_sref_files.sh
-export err=$?; err_chk
 
 #*******************************************
 # Build POE script to collect sub-jobs
 # ******************************************
+cd $WORK/scripts
 >run_all_sref_precip_poe
 
 export model=sref
@@ -148,7 +142,7 @@ for  obsv in ccpa ; do
          echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
          chmod +x run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
-         echo "${DATA}/run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh" >> run_all_sref_precip_poe
+         echo "${DATA}/scripts/run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh" >> run_all_sref_precip_poe
 
      fi 	 
     fi  # check restart for the sub-job
@@ -163,9 +157,9 @@ chmod +x  run_all_sref_precip_poe
 # Run POE script to get small stat files
 #*************************************************
 if [ $run_mpi = yes ] ; then
-  mpiexec  -n 28 -ppn 28 --cpu-bind verbose,core cfp ${DATA}/run_all_sref_precip_poe
+  mpiexec  -n 28 -ppn 28 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_precip_poe
 else
-   ${DATA}/run_all_sref_precip_poe
+   ${DATA}/scripts/run_all_sref_precip_poe
 fi 
 export err=$?; err_chk
 

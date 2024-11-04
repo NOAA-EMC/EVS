@@ -42,6 +42,7 @@ for  obsv in prepbufr ; do
   #*****************************************
   # Build sub-jobs
   #*****************************************
+  cd $WORK/scripts
   for vhr in 00 06 12 18 ; do 
    for fhr in 03 09 15 21 27 33 39 45 51 57 63 69 75 81 87 ; do
        >run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
@@ -126,7 +127,7 @@ for  obsv in prepbufr ; do
        echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.completed" >>run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
 
        chmod +x run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "${DATA}/run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh" >> run_all_sref_g2o_poe.sh
+       echo "${DATA}/scripts/run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh" >> run_all_sref_g2o_poe.sh
 
       fi  
     fi  # check restart for the sub-job
@@ -140,9 +141,9 @@ done
 #*************************************************
 chmod 775 run_all_sref_g2o_poe.sh
 if [ $run_mpi = yes ] ; then
-   mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/run_all_sref_g2o_poe.sh
+   mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_g2o_poe.sh
 else
-   ${DATA}/run_all_sref_g2o_poe.sh
+   ${DATA}/scripts/run_all_sref_g2o_poe.sh
 fi 
 export err=$?; err_chk
 

@@ -44,6 +44,7 @@ for  obsv in prepbufr ; do
   # otherwise, continue building this sub-task
   #*****************************************************
 
+  cd $WORK/scripts
   for vhr in 00 06 12 18 ; do 
    for fhr in 03 09 15 21 27 33 39 45 51 57 63 69 75 81 87 ; do
     
@@ -109,7 +110,7 @@ for  obsv in prepbufr ; do
        echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_cnv_${fhr}_${vhr}.completed" >> run_sref_cnv_${fhr}_${vhr}.sh
       
        chmod +x run_sref_cnv_${fhr}_${vhr}.sh
-       echo "${DATA}/run_sref_cnv_${fhr}_${vhr}.sh" >> run_all_sref_cnv_poe.sh
+       echo "${DATA}/scripts/run_sref_cnv_${fhr}_${vhr}.sh" >> run_all_sref_cnv_poe.sh
 
     fi # check restart for the sub-job
 
@@ -123,9 +124,9 @@ done
 #*************************************************
 chmod 775 run_all_sref_cnv_poe.sh
 if [ $run_mpi = yes ] ; then
-   mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/run_all_sref_cnv_poe.sh
+   mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_cnv_poe.sh
 else
-   ${DATA}/run_all_sref_cnv_poe.sh
+   ${DATA}/scripts/run_all_sref_cnv_poe.sh
 fi 
 export err=$?; err_chk
 
