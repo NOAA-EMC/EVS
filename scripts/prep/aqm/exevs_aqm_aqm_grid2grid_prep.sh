@@ -117,6 +117,10 @@ if [ "${num_mdl_grid}" != "0" ]; then
         export AOD_SCAN
         export Aod_Scan=$(echo ${AOD_SCAN} | tr A-Z a-z)    # config variable
 
+        export MET_TMP_DIR=${DATA}/METPLUSTMP_${SatId}_${Aod_Scan}_${MODELNAME}_${VDATE}
+        if [ -d ${MET_TMP_DIR} ]; then /bin/rm -rf ${MET_TMP_DIR}; fi
+        mkdir -p ${MET_TMP_DIR}
+
         let ic=0
         let endvhr=23
         let total_num_file=${endvhr}+1
