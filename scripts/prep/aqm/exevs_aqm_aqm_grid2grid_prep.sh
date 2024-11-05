@@ -118,13 +118,15 @@ if [ "${num_mdl_grid}" != "0" ]; then
         export Aod_Scan=$(echo ${AOD_SCAN} | tr A-Z a-z)    # config variable
 	#
 	# If no MET_GEOSTATIONARY_DATA (unique to each satellite) has been
-	# provided for grid mapping, # grid mapping will be generated
-	# (time-costly) and saved in MET_TMP_DIR.  The following point2grid
-	# calls will search for a existing grid mapping in MET_TMP_DIR.
-        # If found the one will be used for grid mapping in subsequent
-	# point2grid calls.  New grid mapping need to be re-generated for
-	# different Satellites and Scan-modes in MET_TMP_DIR, and the old
-	# grid mapping need to be removed manauelly.
+	# provided for grid mapping, a file to perform grid mapping will be
+	# generated using first GOES AOD grabule input (time-costly) and
+        # saved in MET_TMP_DIR.  The following point2grid calls will search
+	# for an existing grid mapping doc in MET_TMP_DIR.  If found, it
+        # will be used for grid mapping in subsequent point2grid calls.
+	#
+        # New grid mapping file needs to be re-generated in MET_TMP_DIR when
+	# switching satellite or Scan-modes or both, and the old file need
+	# to be removed manauelly.
 	#
         export MET_TMP_DIR=${DATA}/GEOSTATIONARY_${SatId}_${Aod_Scan}_${MODELNAME}_${VDATE}
         if [ -d ${MET_TMP_DIR} ]; then /bin/rm -rf ${MET_TMP_DIR}; fi
