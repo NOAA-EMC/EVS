@@ -25,7 +25,8 @@ export SENDMAIL=YES
 export envir=prod
 export NET=evs
 export STEP=stats
-export RUN=osisaf
+export RUN=ocean
+export OBTYPE=osisaf
 export VERIF_CASE=grid2grid
 export COMPONENT=rtofs
 

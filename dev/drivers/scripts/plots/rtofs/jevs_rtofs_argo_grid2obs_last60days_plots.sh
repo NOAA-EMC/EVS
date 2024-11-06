@@ -26,7 +26,8 @@ export envir=prod
 export NET=evs
 export STEP=plots
 export COMPONENT=rtofs
-export RUN=argo
+export RUN=ocean
+export OBTYPE=argo
 export VERIF_CASE=grid2obs
 
 source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh

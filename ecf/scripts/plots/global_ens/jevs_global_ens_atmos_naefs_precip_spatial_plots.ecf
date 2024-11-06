@@ -1,10 +1,10 @@
-#PBS -N evs_narre_past90days_plot
-#PBS -j oe 
+#PBS -N evs_global_ens_atmos_naefs_precip_spatial_plots
+#PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=01:30:00
-#PBS -l place=vscatter:shared,select=1:ncpus=8:mem=8GB
+#PBS -l walltime=00:15:00
+#PBS -l place=shared,select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
 export model=evs
@@ -15,16 +15,13 @@ export model=evs
 # Load modules
 ############################################################
 set -x
-export COMPONENT=narre
+export COMPONENT=global_ens
 export STEP=plots
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
-module load cray-pals/${craypals_ver}
-module load prod_util/${prod_util_ver}
-module load cfp/${cfp_ver}
 module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
@@ -32,6 +29,11 @@ module load jasper/${jasper_ver}
 module load udunits/${udunits_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
+module load cray-pals/${craypals_ver}
+module load cfp/${cfp_ver}
+module load imagemagick/${imagemagick_ver}
+module load met/${met_ver}
+module load metplus/${metplus_ver}
 module list
 
 ############################################################
@@ -42,18 +44,15 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export OMP_NUM_THREADS=1
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=grid2obs
-export MODELNAME=narre
-export past_days=90
-export run_mpi=yes
+export VERIF_CASE=precip_spatial
+export MODELNAME=naefs
 
 ############################################################
 # Execute j-job
 ############################################################
-${HOMEevs}/jobs/JEVS_NARRE_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

@@ -40,10 +40,6 @@ for verify in $verifys   ; do
 
     echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstNARRE_obsPREPBUFR_GatherByDay.conf " >> run_gather_${verify}.sh
 
-    echo "echo gather Metplus log file start:" >> run_gather_${verify}.sh
-    echo "cat \$output_base/logs/*" >> run_gather_${verify}.sh
-    echo "echo gather Metplus log file end:" >> run_gather_${verify}.sh 
-
     echo "[[ $SENDCOM = "YES" && -s ${WORK}/gather/${vday}/${MODEL}_MEAN_grid2obs_${vday}.stat ]] && cp -v ${WORK}/gather/${vday}/${MODEL}_MEAN_grid2obs_${vday}.stat  $COMOUTfinal/evs.stats.${model}.mean.grid2obs.v${vday}.stat">>run_gather_${verify}.sh
 
   chmod +x run_gather_${verify}.sh

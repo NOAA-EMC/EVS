@@ -1,4 +1,4 @@
-#PBS -N jevs_glwu_grid2obs_plots
+#PBS -N jevs_glwu_wave_grid2obs_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -12,7 +12,7 @@ set -x
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=glwu
-export OBTYPE=GDAS
+export OBTYPE=NDBC_STANDARD
 export NET=evs
 export COMPONENT=glwu
 export STEP=plots
@@ -53,7 +53,7 @@ export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}
 export run_mpi='yes'
 export gather='yes'
 
-export job=${PBS_JOBNAME:-jevs_glwu_grid2obs_plots}
+export job=${PBS_JOBNAME:-jevs_glwu_wave_grid2obs_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)

@@ -63,7 +63,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
 export KEEPDATA=YES
 
-$HOMEevs/jobs/JEVS_WAFS_ATMOS_PLOTS
+$HOMEevs/jobs/JEVS_WAFS_PLOTS
 
 ############################################################
 ## Purpose: This job generates the grid2grid statistics stat

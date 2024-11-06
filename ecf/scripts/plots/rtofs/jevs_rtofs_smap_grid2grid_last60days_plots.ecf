@@ -36,7 +36,8 @@ else
   export vhr=00
 fi
 export NET=evs
-export RUN=smap
+export RUN=ocean
+export OBTYPE=smap
 export VERIF_CASE=grid2grid
 
 ############################################################
