@@ -129,7 +129,7 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
     done
   done
   for nfhr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 ; do
-   echo $nfhr |$HOMEevs/exec/sref_precip.x
+   echo $nfhr |$EXECevs/sref_precip.x
   done
 
   export lead='24, 48, 72'
