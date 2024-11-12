@@ -4,7 +4,6 @@
 # Name:          threshold_average.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Dec. 1, 2021 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                forecast threshold
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -107,7 +106,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         return None
     # filter by forecast lead times
     if isinstance(flead, list):
-        if len(flead) <= 8:
+        if len(flead) <= 3:
             if len(flead) > 1:
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
@@ -784,8 +783,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     var_savename = df['FCST_VAR'].tolist()[0]
     if any(field in var_savename.upper() for field in ['APCP']):
         var_savename = re.sub('[^a-zA-Z \n\.]', '', var_savename)
-    elif any(field in var_savename.upper() for field in ['ASNOW','SNOD']):
+    elif any(field in var_savename.upper() for field in ['ASNOW']):
         var_savename = 'ASNOW'
+    elif any(field in var_savename.upper() for field in ['SNOD']):
+        var_savename = 'SNOD'
     elif 'PROB_MXUPHL25_A24_GEHWT' in var_savename.upper():
         var_savename = 'MXUPHL25'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:

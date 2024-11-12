@@ -34,7 +34,6 @@ DATA = os.environ['DATA']
 RESTART_DIR = os.environ['RESTART_DIR']
 VDATE = os.environ['VDATE']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
-MET_PLUS_OUT = os.environ['MET_PLUS_OUT']
 MET_CONFIG_OVERRIDES = os.environ['MET_CONFIG_OVERRIDES']
 machine_conf = os.path.join(
     os.environ['PARMevs'], 'metplus_config', 'machine.conf'
@@ -54,6 +53,9 @@ if job_type == 'reformat':
     OBS_LEV = os.environ['OBS_LEV']
     MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
     BUCKET_INTERVAL = os.environ['BUCKET_INTERVAL']
 elif job_type == 'generate':
     VERIF_TYPE = os.environ['VERIF_TYPE']
@@ -73,14 +75,26 @@ elif job_type == 'generate':
     MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
     MASK_POLY_LIST = os.environ['MASK_POLY_LIST']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
 elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
 elif job_type == 'gather2': 
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
 elif job_type == 'gather3':
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
     COMOUTsmall = os.environ['COMOUTsmall']
 if VERIF_CASE == 'precip':
     if job_type == 'reformat':
@@ -464,7 +478,9 @@ if VERIF_CASE == 'precip':
                     + ')\"'
                 )
             else:
-                if glob.glob(os.path.join(MET_PLUS_OUT,VERIF_TYPE,'grid_stat',f'{MODELNAME}.{VDATE}','*stat')):
+                if glob.glob(os.path.join(
+                        DATA,VERIF_CASE,'METplus_output',VERIF_TYPE,
+                        'grid_stat',f'{MODELNAME}.{VDATE}','*stat')):
                     job_cmd_list.append(
                             f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
@@ -551,7 +567,9 @@ if VERIF_CASE == 'precip':
                     + ')\"'
                 )
             else:
-                if glob.glob(os.path.join(MET_PLUS_OUT,'gather_small','stat_analysis',f'{MODELNAME}.{VDATE}','*stat')):
+                if glob.glob(os.path.join(
+                        DATA,VERIF_CASE,'METplus_output','gather_small',
+                        'stat_analysis',f'{MODELNAME}.{VDATE}','*stat')):
                     job_cmd_list.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'

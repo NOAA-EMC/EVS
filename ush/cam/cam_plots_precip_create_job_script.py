@@ -75,7 +75,7 @@ job_env_vars_dict = {
     'USH_DIR': USH_DIR,
     'FIXevs': FIXevs,
     'PRUNE_DIR': PRUNE_DIR,
-    'SAVE_DIR': SAVE_DIR,
+    'SAVE_DIR': SAVE_DIR.format(njob=njob),
     'RESTART_DIR': RESTART_DIR,
     'STAT_OUTPUT_BASE_DIR': STAT_OUTPUT_BASE_DIR,
     'STAT_OUTPUT_BASE_TEMPLATE': STAT_OUTPUT_BASE_TEMPLATE,

@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:10:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=128GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=3:ompthreads=1:mem=128GB
 #PBS -l debug=true
 
 export model=evs
@@ -42,13 +42,13 @@ module list
 ############################################################
 # Specify environment variables
 ############################################################
-export nproc=128
+export nproc=3
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
   export vhr=00
 fi
-export USE_CFP=NO
+export USE_CFP=YES
 export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="precip"
