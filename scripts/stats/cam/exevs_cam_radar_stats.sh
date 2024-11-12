@@ -72,6 +72,7 @@ for PROD in ${PRODS}; do
       for RADAR_FIELD in ${RADAR_FIELDS}; do
 
          echo "${USHevs}/${COMPONENT}/evs_cam_stats_radar.sh $DOMAIN $RADAR_FIELD $PROD $njob" >> $DATA/poescript
+         mkdir -p ${DATA}/workdirs/job${njob}
          njob=$((njob+1))
 
       done
@@ -104,6 +105,15 @@ else
    export err=$?; err_chk
 
 fi
+
+
+###################################################################
+# Copy child output to main output directory
+###################################################################
+for CHILD_DIR in ${DATA}/workdirs/*; do
+    cp -ruv ${CHILD_DIR}/* ${DATA}/.
+    export err=$?; err_chk
+done
 
 
 ###################################################################
