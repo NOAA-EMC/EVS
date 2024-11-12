@@ -40,6 +40,10 @@ if [ $USE_CFP = YES ]; then
     export err=$?; err_chk
 fi
 
+# Create Working Directories
+python $USHevs/cam/cam_create_child_workdirs.py
+export err=$?; err_chk
+
 # Run All CAM precip/plots Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/plotting_job_scripts/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/plotting_job_scripts/job* |wc -l)
@@ -71,6 +75,12 @@ else
     set -x
 fi
 
+# Copy Plots Output to Main Directory
+for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
+    export err=$?; err_chk
+done
+
 # Cat the plotting log files
 log_dir="$DATA/$VERIF_CASE/out/logs"
 if [ -d $log_dir ]; then
@@ -88,7 +98,7 @@ if [ -d $log_dir ]; then
 fi
 
 # Tar and Copy output files to EVS COMOUT directory
-find ${DATA}/${VERIF_CASE}/* -type f \( -name "*.png" -o -name "*.gif"  \) -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar --transform='s#.*/##' -T -
+find ${DATA}/${VERIF_CASE}/* -type f \( -name "*.png" -o -name "*.gif"  \) -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar --transform='s#.*/##' -T -
 
 if [ $SENDCOM = YES ]; then
     FILE=${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar
