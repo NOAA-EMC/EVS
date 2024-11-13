@@ -124,28 +124,25 @@ elif STEP == 'plots':
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
     working_dir_list.append(
-        os.path.join(working_output_base_dir, 'job_work_dir')
-    )
-    working_dir_list.append(
         os.path.join(working_output_base_dir,
                      RUN+'.'+end_date_dt.strftime('%Y%m%d'))
     )
-    #working_dir_list.append(
-        #os.path.join(working_output_base_dir,
-                     #RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                     #'logs')
-    #)
-    #for VCS_type in VCS_type_list:
-        #working_dir_list.append(
-            #os.path.join(working_output_base_dir,
-                         #RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                         #'images', VCS_type)
-        #)
-        #working_dir_list.append(
-            #os.path.join(working_output_base_dir,
-                         #RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                         #VCS_type)
-        #)
+    working_dir_list.append(
+        os.path.join(working_output_base_dir,
+                     RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+                     'logs')
+    )
+    for VCS_type in VCS_type_list:
+        working_dir_list.append(
+            os.path.join(working_output_base_dir,
+                         RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+                         'images', VCS_type)
+        )
+        working_dir_list.append(
+            os.path.join(working_output_base_dir,
+                         RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+                         VCS_type)
+        )
     COMOUT_dir_list.append(COMOUT)
 
 # Create working output directories
