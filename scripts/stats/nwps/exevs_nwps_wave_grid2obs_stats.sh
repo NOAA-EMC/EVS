@@ -114,7 +114,7 @@ for wfo in ${WFO}; do
 				    			if [[ -s $EVSINmodelfilename ]]; then
 				    				cp -v  $EVSINmodelfilename $DATAmodelfilename
 			    				else
-				    				echo "DOES NOT EXIST $EVSINobsfilename"
+				    				echo "DOES NOT EXIST $EVSINmodelfilename"
 			    				fi
 		    				fi
 			    			if [[ -s $DATAmodelfilename ]]; then
