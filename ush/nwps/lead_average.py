@@ -1031,6 +1031,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     if metric2_name is not None:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
+                     + f'{str(WFO).lower()}.'
                      + f'{str(metric1_name).lower()}_{str(metric2_name).lower()}.'
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
@@ -1039,6 +1040,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
+                     + f'{str(WFO).lower()}.'
                      + f'{str(metric1_name).lower()}_{str(thresholds_save_phrase).lower()}.'
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
