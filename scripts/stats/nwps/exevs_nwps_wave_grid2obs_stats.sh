@@ -132,6 +132,8 @@ for wfo in ${WFO}; do
 							fi
 						    	chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
 						    	echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+						else
+							echo "DOES NOT EXIST $DATAmodelfilename"
 				    		fi
 			    		fi
 				fi
