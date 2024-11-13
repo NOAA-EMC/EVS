@@ -43,7 +43,7 @@ if STEP == 'stats':
 elif STEP == 'plots':
     COMOUTplots = os.environ['COMOUTplots']
     RESTART_DIR = os.environ['RESTART_DIR']
-    SAVE_DIR = os.environ['SAVE_DIR']
+    working_dir = os.path.join(DATA, VERIF_CASE, 'out')
     if VERIF_CASE == "grid2obs":
         completed_jobs_file = os.path.join(
             RESTART_DIR, 
@@ -59,7 +59,7 @@ elif STEP == 'plots':
     if os.path.exists(completed_jobs_file):
         if os.stat(completed_jobs_file).st_size != 0:
             cutil.run_shell_command(
-                ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), SAVE_DIR]
+                ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), working_dir]
             )
 
 
