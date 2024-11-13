@@ -3577,6 +3577,7 @@ def check_weeks3_4_truth_files(job_dict):
     )
     truth_input_file_list = []
     truth_output_file_list = []
+    truth_c_output_file_list = []
     if job_dict['JOB_GROUP'] == 'reformat_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
             if job_dict['VERIF_TYPE'] == 'temp':
@@ -3697,7 +3698,10 @@ def check_weeks3_4_truth_files(job_dict):
                     truth_input_file_list.append(pb2nc_file)
                     nf+=1
     truth_output_files_exist_list = []
-    truth_copy_output_list = truth_c_output_file_list
+    if job_dict['VERIF_CASE'] == 'grid2grid':
+        truth_copy_output_list = truth_output_file_list
+    elif job_dict['VERIF_CASE'] == 'grid2obs':
+        truth_copy_output_list = truth_c_output_file_list
     for truth_file_tuple in truth_output_file_list:
         if os.path.exists(truth_file_tuple[1]):
             truth_output_files_exist_list.append(True)
