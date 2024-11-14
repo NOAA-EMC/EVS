@@ -3707,7 +3707,6 @@ def check_weeks3_4_truth_files(job_dict):
             truth_output_files_exist_list.append(True)
             # Copy restart files from COMOUT to DATA dir
             copy_file(truth_file_tuple[1], truth_file_tuple[0])
-            #truth_copy_output_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
     if all(x == True for x in truth_output_files_exist_list) \
