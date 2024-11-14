@@ -50,12 +50,9 @@ export PRUNE_DIR=${DATA}/data
 export STAT_OUTPUT_BASE_DIR=${DATA}/stat_archive
 export STAT_OUTPUT_BASE_TEMPLATE="{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL}.${RUN}.${VERIF_CASE}.v{valid?fmt=%Y%m%d}.stat"
 
-export SAVE_DIR=${DATA}/out
-export LOG_DIR=${SAVE_DIR}/logs
-export OUTPUT_DIR=${SAVE_DIR}/${VERIF_CASE}/${eval_period}
+export OUTPUT_DIR=${DATA}/out/${VERIF_CASE}/${eval_period}
 export IMG_HEADER=${NET}.${COMPONENT}
 
-export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job{njob}_$($NDATE)_$$.out"
 export LOG_LEVEL="DEBUG"
 
 export PYTHONDONTWRITEBYTECODE=1
@@ -75,8 +72,8 @@ export MET_VERSION="${MET_VERSION%.}"
 # Create working directories 
 mkdir -p ${PRUNE_DIR}
 mkdir -p ${STAT_OUTPUT_BASE_DIR}
-mkdir -p ${LOG_DIR}
 mkdir -p ${OUTPUT_DIR}
+mkdir -p ${DATA}/out/logs # main log output dir
 
 
 model_list="hrrr namnest hireswarw hireswarwmem2 hireswfv3 href_pmmn"
@@ -92,7 +89,7 @@ for model in ${model_list}; do
       stat_file=evs.stats.${model}.${RUN}.${VERIF_CASE}.v${day}.stat
       dest=${STAT_OUTPUT_BASE_DIR}/${model}.${day}/${stat_file}
 
-      if [ ${model:0:4} = href ]; then
+      if [ "${model:0:4}" = "href" ]; then
 	 origin=${COMIN}/stats/${COMPONENT}/${model:0:4}.${day}/${stat_file}
       else
 	 origin=${COMIN}/stats/${COMPONENT}/${model}.${day}/${stat_file}
@@ -109,9 +106,9 @@ done
 
 
 
-if [ $LINE_TYPE = nbrcnt ]; then
+if [ "$LINE_TYPE" = "nbrcnt" ]; then
    PLOT_TYPES="lead_average threshold_average"
-elif [ $LINE_TYPE = nbrctc ]; then
+elif [ "$LINE_TYPE" = "nbrctc" ]; then
    PLOT_TYPES="lead_average performance_diagram threshold_average"
 fi
 
@@ -125,9 +122,9 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
    for DOMAIN in ${DOMAINS}; do
 
       # Set list of fields based on domain
-      if [ $DOMAIN = conus ]; then
+      if [ "$DOMAIN" = "conus" ]; then
          RADAR_FIELDS="REFC RETOP"
-      elif [ $DOMAIN = alaska ]; then
+      elif [ "$DOMAIN" = "alaska" ]; then
          RADAR_FIELDS="REFC"
       fi
 
@@ -138,6 +135,7 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
          for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
 	
             echo "${USHevs}/${COMPONENT}/evs_cam_plots_radar.sh $PLOT_TYPE $DOMAIN $RADAR_FIELD $LINE_TYPE $FCST_INIT_HOUR $njob" >> $DATA/poescript
+            mkdir -p ${DATA}/out/workdirs/job${njob}/logs
             njob=$((njob+1))
 
          done
@@ -161,7 +159,7 @@ export MP_CMDFILE=${DATA}/poescript
 
 export USE_CFP=YES
 
-if [ $USE_CFP = YES ]; then
+if [ "$USE_CFP" = "YES" ]; then
 
    echo "running cfp"
    mpiexec -np $nproc --cpu-bind verbose,core cfp ${MP_CMDFILE} 
@@ -178,6 +176,15 @@ fi
 
 
 ###################################################################
+# Copy Plots Output to Main Directory
+###################################################################
+for CHILD_DIR in ${DATA}/out/workdirs/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/out/.
+    export err=$?; err_chk
+done
+
+
+###################################################################
 # Copy output to $COMOUT
 ###################################################################
 
@@ -189,13 +196,13 @@ if [ "$(ls -A $OUTPUT_DIR)" ]; then
    tar -cvf ${tarfile} ./*.png
 fi
 
-if [ $SENDCOM = YES ]; then
+if [ "$SENDCOM" = "YES" ]; then
 
    mkdir -p $COMOUT/${RUN}.${VDATE}
 
    if [ -s $tarfile ]; then
       cp -v $tarfile $COMOUT/${RUN}.${VDATE}/
-      if [ $SENDDBN = YES ]; then
+      if [ "$SENDDBN" = "YES" ]; then
           $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/${RUN}.${VDATE}/${tarfile}
       fi
    else
