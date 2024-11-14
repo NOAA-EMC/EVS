@@ -64,6 +64,7 @@ export ARCmodel=${COMIN}/prep/${COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/${WFO}
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+export COMINhist=${COMINnwps}/${MODELNAME}.${VDATE}/nwges/dcom_hist.txt
 
 mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal} 
 
@@ -71,8 +72,15 @@ mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
 ####################################
 # Execute the script                
 ####################################
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
-export err=$?; err_chk
+if grep -q "${WFO}" "$COMINhist"; then
+	echo "Found ${WFO}- Continue verification"
+
+	$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+	export err=$?; err_chk
+	
+else
+	echo "Found no ${WFO}- Exit"
+fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 

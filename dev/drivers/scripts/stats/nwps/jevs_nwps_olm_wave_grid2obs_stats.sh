@@ -1,4 +1,4 @@
-#PBS -N jevs_nwps_hgx_wave_grid2obs_stats
+#PBS -N jevs_nwps_olm_wave_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -20,7 +20,7 @@ export COMPONENT=nwps
 export STEP=stats
 export RUN=wave
 export VERIF_CASE=grid2obs
-export WFO=hgx
+export WFO=olm
 ############################################################
 # read version file and set model_ver
 ############################################################
@@ -58,7 +58,7 @@ export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}
 export run_mpi='yes'
 export gather='yes'
  
-export job=${PBS_JOBNAME:-jevs_nwps_hgx_wave_grid2obs_stats}
+export job=${PBS_JOBNAME:-jevs_nwps_olm_wave_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)

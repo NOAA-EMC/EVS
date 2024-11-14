@@ -15,7 +15,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=nwps
 export OBTYPE=NDBC
-export NET=evs_beta5
+export NET=evs
 export COMPONENT=nwps
 export STEP=stats
 export RUN=wave
