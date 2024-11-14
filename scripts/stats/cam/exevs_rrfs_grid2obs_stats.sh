@@ -116,7 +116,7 @@ fi
 
 # Copy Reformat Output to Main Directory
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
-    cp -ru $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+    cp -ruv $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
 
@@ -195,7 +195,7 @@ fi
 
 # Copy Generate Output to Main Directory
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
-    cp -ru $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+    cp -ruv $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
 
@@ -263,7 +263,7 @@ fi
 
 # Copy Gather Output to Main Directory
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
-    cp -ru $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+    cp -ruv $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
 
@@ -329,7 +329,7 @@ fi
 
 # Copy Gather 2 Output to Main Directory
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
-    cp -ru $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+    cp -ruv $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
 
@@ -339,7 +339,7 @@ if [ $SENDCOM = YES ]; then
     for MODEL_DIR_PATH in $MET_PLUS_OUT/stat_analysis/$MODELNAME*; do
         for FILE in $MODEL_DIR_PATH/*; do
             if [ -s "$FILE" ]; then
-                cp -v $FILE $COMOUTsmall/.
+                cp -v $FILE $COMOUTsmall/gather_small/.
             fi
         done
     done
@@ -406,7 +406,7 @@ if [ "$vhr" -ge "$last_cyc" ]; then
 
         # Copy Gather 3 Output to Main Directory
         for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
-            cp -ru $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+            cp -ruv $CHLD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
             export err=$?; err_chk
         done
     fi

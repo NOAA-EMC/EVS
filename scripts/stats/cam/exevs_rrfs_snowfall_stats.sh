@@ -97,6 +97,10 @@ if [ $USE_CFP = YES ]; then
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
+# Create Reformat Working Directories
+python $USHevs/cam/cam_create_child_workdirs.py
+export err=$?; err_chk
+
 # Run All RRFS snowfall/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
@@ -126,6 +130,12 @@ else
         nc=$((nc+1))
     done
 fi
+
+# Copy Reformat Output to Main Directory
+for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+    export err=$?; err_chk
+done
 
 # Generate MET Data
 export job_type="generate"
@@ -183,6 +193,10 @@ if [ $USE_CFP = YES ]; then
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
+# Create Generate Working Directories
+python $USHevs/cam/cam_create_child_workdirs.py
+export err=$?; err_chk
+
 # Run All RRFS snowfall/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
@@ -213,6 +227,12 @@ else
     done
 fi
 
+# Copy Generate Output to Main Directory
+for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+    export err=$?; err_chk
+done
+
 export job_type="gather"
 export njob=1
 for NEST in $NEST_LIST; do
@@ -239,6 +259,10 @@ if [ $USE_CFP = YES ]; then
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
+
+# Create Gather Working Directories
+python $USHevs/cam/cam_create_child_workdirs.py
+export err=$?; err_chk
 
 # Run All RRFS snowfall/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
@@ -270,6 +294,12 @@ else
     done
 fi
 
+# Copy Gather Output to Main Directory
+for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+    export err=$?; err_chk
+done
+
 export job_type="gather2"
 export njob=1
 source $config
@@ -294,7 +324,11 @@ if [ $USE_CFP = YES ]; then
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All HiRes Window FV3 snowfall/stats Gather 2 Jobs
+# Create Gather 2 Working Directories
+python $USHevs/cam/cam_create_child_workdirs.py
+export err=$?; err_chk
+
+# Run All RRFS snowfall/stats Gather 2 Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
@@ -324,12 +358,18 @@ else
     done
 fi
 
+# Copy Gather 2 Output to Main Directory
+for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+    export err=$?; err_chk
+done
+
 # Copy files to desired location
 #all commands to copy output files into the correct EVS COMOUT directory
 if [ $SENDCOM = YES ]; then
     for MODEL_DIR_PATH in $MET_PLUS_OUT/stat_analysis/$MODELNAME*; do
         for FILE in $MODEL_DIR_PATH/*; do
-            cp -v $FILE $COMOUTsmall/.
+            cp -v $FILE $COMOUTsmall/gather_small/.
         done
     done
 fi
@@ -361,7 +401,11 @@ if [ "$vhr" -ge "$last_cyc" ]; then
             [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
         fi
 
-        # Run All HiRes Window FV3 snowfall/stats Gather 3 Jobs
+        # Create Gather 3 Working Directories
+        python $USHevs/cam/cam_create_child_workdirs.py
+        export err=$?; err_chk
+
+        # Run All RRFS snowfall/stats Gather 3 Jobs
         chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
         ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
         nc=1
@@ -390,5 +434,11 @@ if [ "$vhr" -ge "$last_cyc" ]; then
                 nc=$((nc+1))
             done
         fi
+        
+        # Copy Gather 3 Output to Main Directory
+        for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+            cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+            export err=$?; err_chk
+        done
     fi
 fi
