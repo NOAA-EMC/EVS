@@ -67,6 +67,7 @@ elif VERIF_CASE == "grid2obs":
         start_date_dt = vdate_dt - td(hours=fhr_end_max)
         VERIF_TYPE = os.environ['VERIF_TYPE']
         OBSNAME = os.environ['OBSNAME']
+        COMOUTsmall = os.environ['COMOUTsmall']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
         COMOUTplots = os.environ['COMOUTplots']
