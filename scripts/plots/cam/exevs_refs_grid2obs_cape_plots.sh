@@ -17,6 +17,7 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
+
 restart=$COMOUT/restart/$last_days/refs_cape_plots
 if [ ! -d  $restart ] ; then
   mkdir -p $restart

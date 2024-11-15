@@ -394,7 +394,9 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
  done    #score_type
 done
 
-tar -cvf evs.plots.refs.grid2obs.ctc.last${last_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+ tar -cvf evs.plots.refs.grid2obs.ctc.last${last_days}days.v${VDATE}.tar *.png
+fi
 
 # Cat the plotting log files
 log_dir="$DATA/logs"

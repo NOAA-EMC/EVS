@@ -335,7 +335,9 @@ for var in apcp_01 apcp_03 apcp_24 ; do
 done
 
 
-tar -cvf evs.plots.refs.precip.last${last_days}days.v${VDATE}.tar *.png
+if  [ -s *.png ] ; then
+  tar -cvf evs.plots.refs.precip.last${last_days}days.v${VDATE}.tar *.png
+fi
 
 # Cat the plotting log files
 log_dir="$DATA/logs"

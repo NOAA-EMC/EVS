@@ -281,8 +281,9 @@ for var in weasd ; do
  done
 done
 
-
-tar -cvf evs.plots.refs.snowfall.last${last_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+ tar -cvf evs.plots.refs.snowfall.last${last_days}days.v${VDATE}.tar *.png
+fi
 
 # Cat the plotting log files
 log_dir="$DATA/logs"
