@@ -50,7 +50,7 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=128
+export nproc=64
 export evs_run_mode="production"
 export USE_CFP=YES
 export NET=evs
