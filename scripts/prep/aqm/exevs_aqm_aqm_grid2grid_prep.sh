@@ -128,9 +128,18 @@ if [ "${num_mdl_grid}" != "0" ]; then
 	# switching satellite or Scan-modes or both, and the old file need
 	# to be removed manauelly.
 	#
-        export MET_TMP_DIR=${DATA}/GEOSTATIONARY_${SatId}_${Aod_Scan}_${MODELNAME}_${VDATE}
-        if [ -d ${MET_TMP_DIR} ]; then /bin/rm -rf ${MET_TMP_DIR}; fi
-        mkdir -p ${MET_TMP_DIR}
+	# Reset MET_TMP_DIR will generate warning message from 2024/11/18,
+	# thus a new method need to be produced for different mapping files
+	#
+        # export MET_TMP_DIR=${DATA}/GEOSTATIONARY_${SatId}_${Aod_Scan}_${MODELNAME}_${VDATE}
+        # if [ -d ${MET_TMP_DIR} ]; then /bin/rm -rf ${MET_TMP_DIR}; fi
+        # mkdir -p ${MET_TMP_DIR}
+	#
+	# TMP_DIR is defined in ${PARMevs}/metplus_config/machine.conf, i.e.,
+	#    TMP_DIR = {OUTPUT_BASE}/tmp
+	# OUTPUT_BASE is defined in Point2Grid_hourly_obs${OBSTYPE}.conf
+	num_mapping_file=$( find ${DATA}/tmp -name CONUS_2500_1500_56_-56* | wc -l )
+        if [ ${num_mapping_file} -gt 0 ]; then /bin/rm -f ${DATA}/tmp/CONUS_2500_1500_56_-56*; fi 
 
         let ic=0
         let endvhr=23
