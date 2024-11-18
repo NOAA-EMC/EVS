@@ -23,7 +23,7 @@ export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
-export nproc=128
+export nproc=64
 export evs_run_mode="production"
 
 # General Verification Settings
