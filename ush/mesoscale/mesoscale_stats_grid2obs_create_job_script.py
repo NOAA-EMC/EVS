@@ -38,10 +38,7 @@ DATA = os.environ['DATA']
 
 VDATE = os.environ['VDATE']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
-MET_PLUS_OUT = os.environ['MET_PLUS_OUT']
 MET_CONFIG_OVERRIDES = os.environ['MET_CONFIG_OVERRIDES']
-METPLUS_VERBOSITY = os.environ['METPLUS_VERBOSITY']
-MET_VERBOSITY = os.environ['MET_VERBOSITY']
 metplus_launcher = 'run_metplus.py'
 machine_conf = os.path.join(
     os.environ['PARMevs'], 'metplus_config', 'machine.conf'
@@ -61,6 +58,9 @@ if job_type == 'reformat':
     MIN_IHOUR = os.environ['MIN_IHOUR']
     COMINobs = os.environ['COMINobs']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
     USHevs = os.environ['USHevs']
     SKIP_IF_OUTPUT_EXISTS = os.environ['SKIP_IF_OUTPUT_EXISTS']
     if NEST == 'spc_otlk':
@@ -85,6 +85,9 @@ elif job_type == 'generate':
     if NEST not in ['firewx', 'spc_otlk']:
         MASK_POLY_LIST = os.environ['MASK_POLY_LIST']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
     GRID = os.environ['GRID']
     USHevs = os.environ['USHevs']
     if NEST == 'spc_otlk':
@@ -92,9 +95,15 @@ elif job_type == 'generate':
 elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
 elif job_type in ['gather2','gather3']:
     VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
+    MET_PLUS_OUT = os.path.join(
+        os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
+    )
 
 # Get expanded details from variable name
 if job_type == 'generate':
@@ -172,8 +181,6 @@ job_env_vars_dict = {
     'MET_PLUS_CONF': MET_PLUS_CONF,
     'MET_PLUS_OUT': MET_PLUS_OUT,
     'MET_CONFIG_OVERRIDES': MET_CONFIG_OVERRIDES,
-    'METPLUS_VERBOSITY': METPLUS_VERBOSITY,
-    'MET_VERBOSITY': MET_VERBOSITY,
 }
 job_iterate_over_env_lists_dict = {}
 job_iterate_over_custom_lists_dict = {}
