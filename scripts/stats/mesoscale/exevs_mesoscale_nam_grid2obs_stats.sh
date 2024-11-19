@@ -386,6 +386,12 @@ echo "*****************************"
 echo "Gather3 jobs done"
 echo "*****************************"
 
+# Copy Gather 3 Output to Main Directory
+  for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+      cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+      export err=$?; err_chk
+  done
+
 # Copy "gather" output files to EVS COMOUTsmall directory
   if [ $SENDCOM = YES ]; then
      for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
