@@ -96,11 +96,11 @@ done
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file
-    cd $DATA/$VERIF_CASE_STEP/plot_output/${RUN}.${end_date}/images
-    for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/images/*; do
+    cd $DATA/$VERIF_CASE_STEP/plot_output/${RUN}.${end_date}/tar_files
+    for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/tar_files/*; do
 	VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
 	cd $VERIF_TYPE_SUBDIR
-	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${end_date}.tar
+	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/tar_files/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${end_date}.tar
         tar -cvf $large_tar_file *.tar
 	if [ -s $large_tar_file ]; then
 	    cp -v $large_tar_file $COMOUT/.
