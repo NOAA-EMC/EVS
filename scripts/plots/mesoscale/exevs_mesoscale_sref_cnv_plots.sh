@@ -302,11 +302,11 @@ for var in vis hgt ; do
 
 	   if [ $score_type = lead_average ] ; then
              if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png ] ; then
-               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${last_days}days.${scoretype}.valid_${valid}.buk_conus.png
+               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
 	     fi
            elif [ $score_type = threshold_average ] ; then
              if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${lead}.png ] ; then
-               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}.valid_${valid}.${new_lead}.buk_conus.png
+               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid${valid}.${new_lead}.buk_conus.png
 	     fi
            fi
 

@@ -137,12 +137,13 @@ for stat in  ets fbias; do
 
         verif_type=conus_sfc
 
-	save_dir=$DATA/plots/$restart/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}
+	save_dir=$DATA/plots/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}
         plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
 	mkdir -p $plot_dir
 	mkdir -p $save_dir/data
 
 	echo "#!/bin/ksh" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	echo "set -x" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	echo "export save_dir=$save_dir" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	echo "export prune_dir=$save_dir/data" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
@@ -267,11 +268,11 @@ for stat in $stats ; do
 
 	   if [ $score_type = lead_average ] ; then
              if [ -s ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${threshold}.png ] ; then
-               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${last_days}days.${scoretype}_valid_${valid}.buk_conus.png
+               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
 	     fi
            elif [ $score_type = threshold_average ] ; then
              if [ -s ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${lead}.png ] ; then
-               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid_${valid}.${new_lead}.buk_conus.png
+               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid${valid}_${new_lead}.buk_conus.png
 	     fi
            fi
 

@@ -365,11 +365,11 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
       
          if [ $unit = mb ] || [ $unit = m ] ; then
 	   if [ -s ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}${end} ] ; then 
-             mv ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid_${valid}.buk_conus.png
+             mv ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
 	   fi
          else
            if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}${end} ] ; then
-             mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid_${valid}.buk_conus.png
+             mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
 	   fi 
          fi
                
@@ -381,11 +381,11 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
 
            if [ $unit = m ] ; then
 	    if [ -s ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}_${end} ] ; then	   
-	      mv ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid_${valid}.buk_conus.png
+	      mv ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
 	    fi
 	   else
 	    if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${end} ]; then
-              mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid_${valid}.buk_conus.png
+              mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
 	    fi
            fi
          fi
