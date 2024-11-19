@@ -83,22 +83,7 @@ assemble_data_model_jobs_dict = {
                                         'subseasonal_stats_'
                                         'grid2obs_create_'
                                         'days6_10_anomaly.py',
-                                        ['TMP_Z2',
-                                         os.path.join(
-                                             '$DATA',
-                                             '${VERIF_CASE}_${STEP}',
-                                             'METplus_output',
-                                             '${RUN}.'
-                                             +'$DATE',
-                                             '$MODEL', '$VERIF_CASE',
-                                             'point_stat_'
-                                             +'${VERIF_TYPE}_'
-                                             +'${job_name}_'
-                                             +'{lead?fmt=%2H}0000L_'
-                                             +'{valid?fmt=%Y%m%d}_'
-                                             +'{valid?fmt=%H}0000V'
-                                             +'.stat'
-                                         )]
+                                        []
                                     )]},
     }
 }
@@ -245,6 +230,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     for model_idx in range(len(model_list)):
                         job_env_dict['MODEL'] = model_list[model_idx]
                         njobs = (int(njobs) + 1)
+                        job_env_dict['job_num'] = str(njobs)
                         # Create job file
                         job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                         print("Creating job script: "+job_file)
@@ -252,6 +238,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         job.write('#!/bin/bash\n')
                         job.write('set -x\n')
                         job.write('\n')
+                        # Create job working directory
+                        job_env_dict['job_num_work_dir'] = os.path.join(
+                            DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                            'job_work_dir', JOB_GROUP,
+                            f"job{job_env_dict['job_num']}"
+                        )
+                        job_env_dict['MET_TMP_DIR'] = os.path.join(
+                            job_env_dict['job_num_work_dir'], 'tmp'
+                        )
                         # Set any environment variables for special cases
                         if JOB_GROUP == 'assemble_data':
                             if verif_type == 'prepbufr':
@@ -280,7 +275,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         check_truth_files = True
                         if check_model_files:
                             (model_files_exist, valid_date_fhr_list,
-                             model_copy_output_DATA2COMOUT_list) = (
+                             model_copy_output_list) = (
                                 sub_util.check_days6_10_model_files(job_env_dict)
                             )
                             job_env_dict['fhr_list'] = (
@@ -291,7 +286,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict.pop('fhr_inc')
                         if check_truth_files:
                             (all_truth_file_exist,
-                             truth_copy_output_DATA2COMOUT_list) = (
+                             truth_copy_output_list) = (
                                 sub_util.check_days6_10_truth_files(job_env_dict)
                             )
                             if model_files_exist and all_truth_file_exist:
@@ -309,14 +304,16 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         job.write('\n')
                         # Write job commands
                         if write_job_cmds:
+                            if not os.path.exists(job_env_dict['job_num_work_dir']):
+                                os.makedirs(job_env_dict['job_num_work_dir'])
                             for cmd in verif_type_job_commands_list:
                                 job.write(cmd+'\n')
                                 job.write('export err=$?; err_chk'+'\n')
-                            # Copy DATA files to COMOUT restart dir
+                            # Copy files to COMOUT restart dir
                             # to be used in possible restart
                             if job_env_dict['SENDCOM'] == 'YES':
                                 for model_output_file_tuple \
-                                        in model_copy_output_DATA2COMOUT_list:
+                                        in model_copy_output_list:
                                     job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
                                               +f"cp -v {model_output_file_tuple[0]} "
                                               +f"{model_output_file_tuple[1]}"

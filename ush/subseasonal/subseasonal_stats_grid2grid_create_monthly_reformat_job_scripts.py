@@ -153,6 +153,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 for model_idx in range(len(model_list)):
                     job_env_dict['MODEL'] = model_list[model_idx]
                     njobs = (int(njobs) + 1)
+                    job_env_dict['job_num'] = str(njobs)
                     # Create job file
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                     print("Creating job script: "+job_file)
@@ -160,6 +161,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
+                    # Create job working directory
+                    job_env_dict['job_num_work_dir'] = os.path.join(
+                        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                        'job_work_dir', JOB_GROUP,
+                        f"job{job_env_dict['job_num']}"
+                    )
+                    job_env_dict['MET_TMP_DIR'] = os.path.join(
+                        job_env_dict['job_num_work_dir'], 'tmp'
+                    )
                     # Set any environment variables for special cases
                     # Do file checks
                     all_truth_file_exist = False
@@ -168,7 +178,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     check_model_files = True
                     if check_model_files:
                         (model_files_exist, valid_date_fhr_list,
-                         model_copy_output_DATA2COMOUT_list) = (
+                         model_copy_output_list) = (
                             sub_util.check_monthly_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
@@ -200,6 +210,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     job.write('\n')
                     # Write job commands
                     if write_job_cmds:
+                        if not os.path.exists(job_env_dict['job_num_work_dir']):
+                            os.makedirs(job_env_dict['job_num_work_dir'])
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
                             job.write('export err=$?; err_chk'+'\n')
