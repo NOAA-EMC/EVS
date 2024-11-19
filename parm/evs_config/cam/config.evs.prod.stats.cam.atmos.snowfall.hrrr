@@ -71,7 +71,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export COMINobs=${DCOMINsnow}
         export OBSNAME=${VERIF_TYPE}
         if [ "$OBSNAME" = "nohrsc" ]; then
-            export VAR_NAME_LIST="WEASD ASNOW"
+            export VAR_NAME_LIST="WEASD SNOD ASNOW"
         else
             err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         fi
@@ -92,7 +92,7 @@ else
         export COMINobs=${DCOMINsnow}
         export OBSNAME=${VERIF_TYPE}
         if [ "$OBSNAME" = "nohrsc" ]; then
-            export VAR_NAME_LIST="WEASD ASNOW"
+            export VAR_NAME_LIST="WEASD SNOD ASNOW"
         else
             err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         fi

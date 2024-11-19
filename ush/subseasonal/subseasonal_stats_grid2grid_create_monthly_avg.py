@@ -35,6 +35,7 @@ valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_list = os.environ['fhr_list'].split(',')
 fhr_inc = '12'
+job_num_work_dir = os.environ['job_num_work_dir']
 
 # Process run time arguments
 if len(sys.argv) != 4:
@@ -54,9 +55,9 @@ else:
     DATAROOT_file_format = sys.argv[2]
     COMIN_file_format = sys.argv[3]
 
-# Set input and output directories
-output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
-                          RUN+'.'+DATE)
+# Set DATA output directory
+full_path_DATA = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
+                          RUN+'.'+DATE, MODEL, VERIF_CASE)
 
 # Create monthly average files
 print("\nCreating monthly average files")
@@ -71,14 +72,17 @@ while valid_hr <= int(valid_hr_end):
     monthly_avg_day_start = 30
     monthly_avg_day = monthly_avg_day_start
     while monthly_avg_day <= monthly_avg_day_end:
+        full_path_job_num_work_dir = os.path.join(
+            job_num_work_dir, RUN+'.'+DATE,
+            MODEL, VERIF_CASE
+        )
         monthly_avg_day_fhr_end = int(monthly_avg_day * 24)
         monthly_avg_file_list = []
         monthly_avg_day_fhr_start = monthly_avg_day_fhr_end - 720
         monthly_avg_day_init = (monthly_avg_valid_end
                                - datetime.timedelta(days=monthly_avg_day))
         monthly_avg_day_fhr = monthly_avg_day_fhr_start
-        output_file = os.path.join(output_dir, MODEL,
-                                   VERIF_CASE,
+        output_file = os.path.join(full_path_job_num_work_dir,
                                    'monthly_avg_'
                                    +VERIF_TYPE+'_'+job_name+'_init'
                                    +monthly_avg_day_init.strftime('%Y%m%d%H')
@@ -87,6 +91,9 @@ while valid_hr <= int(valid_hr_end):
                                    .strftime('%Y%m%d%H')+'to'
                                    +monthly_avg_valid_end\
                                    .strftime('%Y%m%d%H')+'.nc')
+        output_file_DATA = os.path.join(
+            full_path_DATA, output_file.rpartition('/')[2]
+        )
         if os.path.exists(output_file):
             os.remove(output_file)
         monthly_avg_fcst_sum = 0
@@ -163,6 +170,8 @@ while valid_hr <= int(valid_hr_end):
         if len(monthly_avg_fcst_file_list) >= expected_nfiles \
                 and len(monthly_avg_obs_file_list) >= expected_nfiles:
             print("Output File: "+output_file)
+            if not os.path.exists(full_path_job_num_work_dir):
+                os.makedirs(full_path_job_num_work_dir)
             output_file_data = netcdf.Dataset(output_file, 'w',
                                               format='NETCDF3_CLASSIC')
             for attr in input_file_data.ncattrs():

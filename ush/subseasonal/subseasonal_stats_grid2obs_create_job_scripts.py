@@ -95,9 +95,7 @@ generate_stats_jobs_dict = {
                                              ),
                                              'nweekly_avg_stat_files='
                                              +'$(ls '+os.path.join(
-                                                 '$DATA',
-                                                 '${VERIF_CASE}_${STEP}',
-                                                 'METplus_output',
+                                                 '$COMOUT',
                                                  '${RUN}.${DATE}',
                                                  '$MODEL', '$VERIF_CASE',
                                                  'weekly_avg_prepbufr_'
@@ -151,9 +149,7 @@ generate_stats_jobs_dict = {
                                                ),
                                                'ndays6_10_avg_stat_files='
                                                +'$(ls '+os.path.join(
-                                                   '$DATA',
-                                                   '${VERIF_CASE}_${STEP}',
-                                                   'METplus_output',
+                                                   '$COMOUT',
                                                    '${RUN}.${DATE}',
                                                    '$MODEL', '$VERIF_CASE',
                                                    'days6_10_avg_prepbufr_'
@@ -207,9 +203,7 @@ generate_stats_jobs_dict = {
                                                ),
                                                'nweeks3_4_avg_stat_files='
                                                +'$(ls '+os.path.join(
-                                                   '$DATA',
-                                                   '${VERIF_CASE}_${STEP}',
-                                                   'METplus_output',
+                                                   '$COMOUT',
                                                    '${RUN}.${DATE}',
                                                    '$MODEL', '$VERIF_CASE',
                                                    'weeks3_4_avg_prepbufr_'
@@ -269,9 +263,7 @@ generate_stats_jobs_dict = {
                                          ),
                                          'nweekly_avg_stat_files='
                                          +'$(ls '+os.path.join(
-                                             '$DATA',
-                                             '${VERIF_CASE}_${STEP}',
-                                             'METplus_output',
+                                             '$COMOUT',
                                              '${RUN}.${DATE}',
                                              '$MODEL', '$VERIF_CASE',
                                              'weekly_avg_prepbufr_'
@@ -332,9 +324,7 @@ generate_stats_jobs_dict = {
                                            ),
                                            'ndays6_10_avg_stat_files='
                                            +'$(ls '+os.path.join(
-                                               '$DATA',
-                                               '${VERIF_CASE}_${STEP}',
-                                               'METplus_output',
+                                               '$COMOUT',
                                                '${RUN}.${DATE}',
                                                '$MODEL', '$VERIF_CASE',
                                                'days6_10_avg_prepbufr_'
@@ -395,9 +385,7 @@ generate_stats_jobs_dict = {
                                            ),
                                            'nweeks3_4_avg_stat_files='
                                            +'$(ls '+os.path.join(
-                                               '$DATA',
-                                               '${VERIF_CASE}_${STEP}',
-                                               'METplus_output',
+                                               '$COMOUT',
                                                '${RUN}.${DATE}',
                                                '$MODEL', '$VERIF_CASE',
                                                'weeks3_4_avg_prepbufr_'
@@ -482,6 +470,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                 for model_idx in range(len(model_list)):
                     job_env_dict['MODEL'] = model_list[model_idx]
                     njobs+=1
+                    job_env_dict['job_num'] = str(njobs)
                     # Create job file
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                     print("Creating job script: "+job_file)
@@ -489,6 +478,15 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
+                    # Create job working directory
+                    job_env_dict['job_num_work_dir'] = os.path.join(
+                        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                        'job_work_dir', JOB_GROUP,
+                        f"job{job_env_dict['job_num']}"
+                    )
+                    job_env_dict['MET_TMP_DIR'] = os.path.join(
+                        job_env_dict['job_num_work_dir'], 'tmp'
+                    )
                     # Set any environment variables for special cases
                     if JOB_GROUP in ['assemble_data', 'generate_stats']:
                         if verif_type == 'prepbufr':
@@ -516,7 +514,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     check_model_files = True
                     if check_model_files:
                         (model_files_exist, valid_date_fhr_list,
-                         model_copy_output_DATA2COMOUT_list) = (
+                         model_copy_output_list) = (
                             sub_util.check_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
@@ -546,13 +544,15 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     job.write('\n')
                     # Write job commands
                     if write_job_cmds:
+                        if not os.path.exists(job_env_dict['job_num_work_dir']):
+                            os.makedirs(job_env_dict['job_num_work_dir'])
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
                             job.write('export err=$?; err_chk'+'\n')
-                        # Copy DATA files to COMOUT restart dir
+                        # Copy files to COMOUT restart dir
                         if job_env_dict['SENDCOM'] == 'YES':
                             for model_output_file_tuple \
-                                    in model_copy_output_DATA2COMOUT_list:
+                                    in model_copy_output_list:
                                 job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
                                           +f"cp -v {model_output_file_tuple[0]} "
                                           +f"{model_output_file_tuple[1]}"
@@ -649,6 +649,7 @@ elif JOB_GROUP == 'gather_stats':
         for model_idx in range(len(model_list)):
             job_env_dict['MODEL'] = model_list[model_idx]
             njobs+=1
+            job_env_dict['job_num'] = str(njobs)
             # Create job file
             job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
             print("Creating job script: "+job_file)
@@ -656,6 +657,15 @@ elif JOB_GROUP == 'gather_stats':
             job.write('#!/bin/bash\n')
             job.write('set -x\n')
             job.write('\n')
+            # Create job working directory
+            job_env_dict['job_num_work_dir'] = os.path.join(
+                DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                'job_work_dir', JOB_GROUP,
+                f"job{job_env_dict['job_num']}"
+            )
+            job_env_dict['MET_TMP_DIR'] = os.path.join(
+                job_env_dict['job_num_work_dir'], 'tmp'
+            )
             # Set any environment variables for special cases
             # Write environment variables
             for name, value in job_env_dict.items():
@@ -669,6 +679,8 @@ elif JOB_GROUP == 'gather_stats':
                 write_job_cmds = False
             # Write job commands
             if write_job_cmds:
+                if not os.path.exists(job_env_dict['job_num_work_dir']):
+                    os.makedirs(job_env_dict['job_num_work_dir'])
                 for cmd in gather_stats_jobs_dict['commands']:
                     job.write(cmd+'\n')
                     job.write('export err=$?; err_chk'+'\n')

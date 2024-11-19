@@ -5,7 +5,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=128GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=3:ompthreads=1:mem=128GB
 #PBS -l debug=true
 
 set -x
@@ -21,8 +21,8 @@ export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_hireswarw_precip_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
-export USE_CFP=NO
-export nproc=128
+export USE_CFP=YES
+export nproc=3
 
 # General Verification Settings
 export NET="evs"

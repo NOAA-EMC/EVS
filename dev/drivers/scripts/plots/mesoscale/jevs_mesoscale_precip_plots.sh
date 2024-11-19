@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=04:00:00
-#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=150GB
+#PBS -l walltime=05:00:00
+#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=500GB
 #PBS -l debug=true
 
 set -x
@@ -49,7 +49,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
-export DATAROOT=/lfs/h2/emc/ptmp/${USER}/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export vhr=${vhr:-${vhr}}
 

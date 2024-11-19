@@ -19,6 +19,14 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
+#################################
+# Define NET/RUN variables
+#################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-mesoscale}
+export RUN=${RUN:-atmos}
+
 
 ####################################
 # Set EVS directories
@@ -79,14 +87,6 @@ else
     fi
 fi
 
-
-####################################
-# Define NET/RUN variables:
-####################################
-export NET=${NET:-evs}
-export STEP=${STEP:-stats}
-export COMPONENT=${COMPONENT:-mesoscale}
-export RUN=${RUN:-atmos}
 
 if [ $RUN = atmos ] ; then
   export INITDATE=${INITDATE:-$PDYm2}

@@ -90,9 +90,4 @@ for group in $JOB_GROUP_list; do
     fi
 done
 
-echo "******************************"
-echo "Begin to print METplus Log files "
-  cat $DATA/logs/*
-echo "End to print METplus Log files "
-
 
