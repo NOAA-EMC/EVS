@@ -40,8 +40,6 @@ VDATE = os.environ['VDATE']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
 MET_PLUS_OUT = os.environ['MET_PLUS_OUT']
 MET_CONFIG_OVERRIDES = os.environ['MET_CONFIG_OVERRIDES']
-METPLUS_VERBOSITY = os.environ['METPLUS_VERBOSITY']
-MET_VERBOSITY = os.environ['MET_VERBOSITY']
 metplus_launcher = 'run_metplus.py'
 machine_conf = os.path.join(
     os.environ['PARMevs'], 'metplus_config', 'machine.conf'
@@ -172,8 +170,6 @@ job_env_vars_dict = {
     'MET_PLUS_CONF': MET_PLUS_CONF,
     'MET_PLUS_OUT': MET_PLUS_OUT,
     'MET_CONFIG_OVERRIDES': MET_CONFIG_OVERRIDES,
-    'METPLUS_VERBOSITY': METPLUS_VERBOSITY,
-    'MET_VERBOSITY': MET_VERBOSITY,
 }
 job_iterate_over_env_lists_dict = {}
 job_iterate_over_custom_lists_dict = {}

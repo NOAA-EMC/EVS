@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:mem=150GB:ompthreads=1
+#PBS -l place=vscatter:exclhost,select=1:ncpus=16:mem=20GB:ompthreads=1
 #PBS -l debug=true
 
 set -x
@@ -22,7 +22,7 @@ export job=${PBS_JOBNAME:-jevs_mesoscale_headline_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
-export nproc=128
+export nproc=16
 export evs_run_mode="production"
 
 # General Verification Settings

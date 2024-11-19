@@ -15,10 +15,6 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
 export MET_CONFIG_OVERRIDES=""
 
-# Logging
-export METPLUS_VERBOSITY="DEBUG"
-export MET_VERBOSITY="5"
-
 # Time Settings
 export FHR_START=0
 export FHR_INCR=1

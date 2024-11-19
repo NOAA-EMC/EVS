@@ -41,6 +41,14 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
+################################
+# Define NET/RUN variables
+################################
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-mesoscale}
+export RUN=${RUN:-atmos}
+
 export machine=${machine:-WCOSS2}
 export MET_PLUS_PATH=${MET_PLUS_PATH:-$METPLUS_PATH}
 export MET_PATH=$MET_ROOT

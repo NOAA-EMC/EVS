@@ -18,6 +18,8 @@ export FCST_LEAD=$5
 export JOBNUM=$6
 export job_name="job${JOBNUM}"
 
+export SAVE_DIR=${DATA}/out/workdirs/job${JOBNUM}
+export LOG_DIR=${SAVE_DIR}/logs
 export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job${JOBNUM}_$($NDATE)_$$.out"
 
 
