@@ -21,22 +21,6 @@ import re
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
-# Construct a file name given a template
-def fname_constructor(template_str, IDATE="YYYYmmdd", IHOUR="HH", 
-                      VDATE="YYYYmmdd", VHOUR="HH", VDATEHOUR="YYYYmmddHH",
-                      VDATEm1H="YYYYmmdd", VDATEHOURm1H="YYYYmmddHH", 
-                      FHR="HH", LVL="0"):
-    template_str = template_str.replace('{IDATE}', IDATE)
-    template_str = template_str.replace('{IHOUR}', IHOUR)
-    template_str = template_str.replace('{VDATE}', VDATE)
-    template_str = template_str.replace('{VHOUR}', VHOUR)
-    template_str = template_str.replace('{VDATEHOUR}', VDATEHOUR)
-    template_str = template_str.replace('{VDATEm1H}', VDATEm1H)
-    template_str = template_str.replace('{VDATEHOURm1H}', VDATEHOURm1H)
-    template_str = template_str.replace('{FHR}', FHR)
-    template_str = template_str.replace('{LVL}', LVL)
-    return template_str
-
 
 # Determine whether or not to proceed
 STEP = os.environ['STEP']
@@ -289,7 +273,7 @@ if proceed:
             IDATE = inits_list[v][i].strftime('%Y%m%d')
             IHOUR = inits_list[v][i].strftime('%H')
             for template in fcst_templates:
-                fcst_paths.append(fname_constructor(
+                fcst_paths.append(cutil.fname_constructor(
                         template, IDATE=IDATE, IHOUR=IHOUR, 
                         FHR=str(int(FHR)).zfill(2)
                 ))
@@ -422,30 +406,10 @@ if proceed:
 
     # Check for missing obs data (analyses or da)
     # Make list of paths
-    anl_templates = []
+    anl_paths= []
     if STEP == 'stats':
         if VERIF_CASE == 'grid2obs':
-            # Expect PrepBufr to at least be available at these times
-            if VHOUR in ['00', '06', '12', '18']:
-                anl_templates.append(os.path.join(
-                    COMINobsproc, 
-                    'nam.{VDATE}',
-                    'nam.t{VHOUR}z.prepbufr.tm00'
-                ))
-                anl_templates.append(os.path.join(
-                    COMINobsproc, 
-                    'gdas.{VDATE}',
-                    '{VHOUR}',
-                    'atmos',
-                    'gdas.t{VHOUR}z.prepbufr'
-                ))
-    anl_paths = []
-    for v, vdate in enumerate(vdates):
-        for template in anl_templates:
-            anl_paths.append(fname_constructor(
-                    template, VDATE=vdate.strftime('%Y%m%d'), VHOUR=vdate.strftime('%H')
-            ))
-    anl_paths = np.unique(anl_paths)
+            anl_paths = cutil.get_prepbufr_templates(COMINobsproc, vdates, paths=anl_paths)
 
     # Record paths that don't exist
     missing_anl_paths = []

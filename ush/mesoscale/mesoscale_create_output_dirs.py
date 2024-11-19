@@ -52,6 +52,7 @@ if VERIF_CASE == "precip":
         start_date_dt = vdate_dt - td(hours=fhr_end_max)
         VERIF_TYPE = os.environ['VERIF_TYPE']
         OBSNAME = os.environ['OBSNAME']
+        COMOUTsmall = os.environ['COMOUTsmall']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_pcp)
         COMOUTplots = os.environ['COMOUTplots']
@@ -66,6 +67,7 @@ elif VERIF_CASE == "grid2obs":
         start_date_dt = vdate_dt - td(hours=fhr_end_max)
         VERIF_TYPE = os.environ['VERIF_TYPE']
         OBSNAME = os.environ['OBSNAME']
+        COMOUTsmall = os.environ['COMOUTsmall']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
         COMOUTplots = os.environ['COMOUTplots']
@@ -102,6 +104,9 @@ elif VERIF_CASE == 'grid2obs':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'merged_ptype'))
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'tmp'))
+        data_dir_list.append(os.path.join(
+            data_base_dir, OBSNAME, 'prepbufr'
+        ))
 elif VERIF_CASE == 'snowfall':
     if STEP == 'stats':
         pass
@@ -207,11 +212,9 @@ elif STEP == 'stats':
                 working_output_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=1):
             COMOUT_dir_list.append(os.path.join(
                 COMOUT, 
-                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
             if job_type == 'reformat':
                 working_dir_list.append(os.path.join(
@@ -222,7 +225,6 @@ elif STEP == 'stats':
                     working_output_base_dir, 'pcp_combine', 
                     MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
                 ))
-            date_dt+=td(days=1)
     elif VERIF_CASE == "grid2obs":
         if job_type == 'reformat':
             working_output_base_dir = os.path.join(
@@ -310,22 +312,23 @@ elif STEP == 'stats':
                 working_output_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=1):
+            COMOUT_dir_list.append(os.path.join(
+                COMOUTsmall,
+                'gather_small'
+            ))
             COMOUT_dir_list.append(os.path.join(
                 COMOUT, 
-                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
             if job_type == 'reformat':
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, NEST, 'pb2nc', 
-                    OBSNAME+'.'+date_dt.strftime('%Y%m%d')
+                    OBSNAME+'.'+vdate_dt.strftime('%Y%m%d')
                 ))
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, NEST, 'pb2nc', 
-                    MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
+                    MODELNAME+'.'+vdate_dt.strftime('init%Y%m%d')
                 ))
-            date_dt+=td(days=1)
     elif VERIF_CASE == "snowfall":
         pass
 elif STEP == 'plots':
