@@ -337,6 +337,15 @@ do
 
 	export stat
 
+        if [ $var = VISsfc ]
+        then
+          export thresh="<805, <1609, <4828, <8045,  <16090"
+        elif [ $var = HGTcldceil ]
+        then
+          export thresh="<152, <305, <914, <1524, <3048"
+        fi
+
+
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
 	export err=$?; err_chk
@@ -358,9 +367,23 @@ do
 	then
         for thresh in 805 1609 4828 8045 16090
 	do
-
+        
+        if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_timeseries_ctc
+	export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $PLOTDIR
+	fi
+
+	if [ -e ${PLOTDIR}/ceil_vis/*/evs*png ]
+	then
 	mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
+        cp ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	fi
 
         done
 	fi
@@ -370,8 +393,22 @@ do
         for thresh in 152 305 914 1524 3048 
         do
 
+	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
         $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_timeseries_ctc
+	export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $PLOTDIR
+        fi
+
+	if [ -e ${PLOTDIR}/ceil_vis/*/evs*png ]
+	then
         mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
+	cp ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
+        elif [ -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	fi
 
         done
         fi
@@ -418,8 +455,24 @@ if [ $plot = yes ]; then
 
         for thresh in 10 50 90
 	do
+	
+	if [ ! -e $COMOUTplots/$var//evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
 	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_timeseries_ctc_tcdc
+	export err=$?; err_chk
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$var//evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $PLOTDIR
+	fi
+
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
+	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
+	cp ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
+	then
+	echo "WARNING: NO PLOT FOR",$var,$region,$anl
+	fi
+
         done
 
         done
