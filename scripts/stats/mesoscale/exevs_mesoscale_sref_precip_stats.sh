@@ -12,6 +12,7 @@ export machine=${machine:-"WCOSS2"}
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export WORK=$DATA
 cd $WORK
+mkdir -p $WORK/scripts
 
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
