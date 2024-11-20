@@ -20,7 +20,7 @@ export COMPONENT=nwps
 export STEP=stats
 export RUN=wave
 export VERIF_CASE=grid2obs
-#export WFO=hgx
+
 ############################################################
 # read version file and set model_ver
 ############################################################
