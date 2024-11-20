@@ -529,9 +529,16 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 # Write environment variables
                 job_env_dict['job_id'] = 'job'+str(njobs)
+                job_env_dict['job_work_dir'] = os.path.join(
+                    DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+                    'job_work_dir', JOB_GROUP,
+                    f"{job_env_dict['job_id']}"
+                )
                 for name, value in job_env_dict.items():
                     job.write('export '+name+'='+value+'\n')
                 job.write('\n')
+                if not os.path.exists(job_env_dict['job_work_dir']):
+                    os.makedirs(job_env_dict['job_work_dir'])
                 job.write(
                     sub_util.python_command('subseasonal_plots.py',[])
                     +'\n'
