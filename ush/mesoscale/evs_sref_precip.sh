@@ -9,24 +9,16 @@ set -x
 
 export vday=$VDATE
 export regrid='NONE'
-############################################################
-
-#********************************************
-# Check the input data files availability
-# ******************************************
-$USHevs/mesoscale/evs_check_sref_files.sh
-export err=$?; err_chk
 
 #*******************************************
 # Build POE script to collect sub-jobs
 # ******************************************
+cd $WORK/scripts
 >run_all_sref_precip_poe
 
 export model=sref
 
 for  obsv in ccpa ; do 
-
-#####for  obsv in ndas ccpa ; do 
 
  export domain=CONUS
 
@@ -56,9 +48,10 @@ for  obsv in ccpa ; do
   #*******************************************************
   # Build sub-jobs
   #*****************************************************
-  for fhr in fhr1 fhr2 ; do
+  for vhr in 03 09 15 21 ; do
+    for fhr in 06 12 18 24 30 36 42 48 54 60 66 72 78 84 ; do
   
-    >run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+    >run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
     #############################################################################################################
     # Adding following "if blocks"  for restart capability: 
@@ -67,96 +60,95 @@ for  obsv in ccpa ; do
     #  3. if any one of the 5 exits, skip it. But for genensprod, all of the nc files generated from previous run
     #       are copied back to the output_base/stat directory
     ###############################################################################################################
-    if [ ! -e $COMOUTrestart/run_sref_mpi_${domain}.${obsv}.${fhr}.completed ] ; then
+    if [ ! -e $COMOUTrestart/run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.completed ] ; then
 
-       echo  "#!/bin/ksh" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export output_base=$WORK/precip/${domain}.${obsv}.${fhr}" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh 
+      ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
+      iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
+      input_fcst="${WORK}/sref.${iday}/sref_???.t${ihr}z.*.pgrb212.6hr.f${fhr}.nc"
+      input_obsv212="$WORK/ccpa.${VDATE}/ccpa.t${vhr}z.grid212.06h.f00.nc"
+      input_obsv240="$WORK/ccpa.${VDATE}/ccpa.t${vhr}z.grid240.06h.f00.nc"
 
+      if [ -s $input_fcst ] && [ -s $input_obsv212 ] && [ -s $input_obsv240 ] ; then
+       echo  "#!/bin/ksh" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export output_base=$WORK/precip/${domain}.${obsv}.${fhr}.${vhr}" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh 
    
-       echo  "export obsvhead=$obsv" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export obsvpath=$WORK" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export vbeg=03" >>run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export vend=21" >>run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export valid_increment=21600" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-    
-       if [ $fhr = fhr1 ] ; then   
-          echo  "export lead='6, 12, 18, 24, 30, 36, 42'" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       elif [ $fhr = fhr2 ] ; then
-          echo  "export lead='48, 54, 60, 66, 72, 78, 84'" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       fi  
+       echo  "export obsvhead=$obsv" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export obsvpath=$WORK" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export vbeg=$vhr" >>run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export vend=$vhr" >>run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export valid_increment=21600" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export lead=$fhr" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export domain=CONUS" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export model=sref"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export MODEL=SREF" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export regrid=NONE " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export modelhead=sref" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
-       echo  "export domain=CONUS" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export model=sref"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export MODEL=SREF" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export regrid=NONE " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export modelhead=sref" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+       echo  "export modelpath=$WORK" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export modelgrid=pgrb212.6hr" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export modeltail='.nc'" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo  "export extradir=''" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
-    if [ $obsv = ccpa ] ; then
-       echo  "export modelpath=$WORK" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export modelgrid=pgrb212.6hr" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export modeltail='.nc'" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export extradir=''" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-
-    else
-       echo  "export modelpath=$COMINsref" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export modelgrid=pgrb212" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export modeltail='.grib2'" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export extradir=''" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-
-    fi
-
-	 echo  "export grid=G212"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh      
-	 echo  "export obsvgrid=grid212" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+	 echo  "export grid=G212"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh      
+	 echo  "export obsvgrid=grid212" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
 	 #Adding following 5 "if-blocks"  for restart capability:
-         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.GenEnsProd.completed ] ; then " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GenEnsProd_fcstSREF_obsCCPA_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-	 echo " if [ -s \$output_base/stat/GenEnsProd_SREF_CCPA*.nc ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  cp \$output_base/stat/GenEnsProd_SREF_CCPA*.nc $COMOUTrestart" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  [[ \$? = 0 ]] && >$COMOUTrestart/${domain}.${obsv}.${fhr}.GenEnsProd.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-	 echo " fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "else" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  mkdir -p \$output_base/stat" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  cp $COMOUTrestart/GenEnsProd_SREF_CCPA*.nc \$output_base/stat" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "fi" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.GenEnsProd.completed ] ; then " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GenEnsProd_fcstSREF_obsCCPA_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "   export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo " if [ -s \$output_base/stat/GenEnsProd_SREF_CCPA*.nc ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  cp \$output_base/stat/GenEnsProd_SREF_CCPA*.nc $COMOUTrestart" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  [[ \$? = 0 ]] && >$COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.GenEnsProd.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo " fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "else" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  mkdir -p \$output_base/stat" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "  if [ -s $COMOUTrestart/GenEnsProd_SREF_CCPA*.nc ] ; then " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "    cp $COMOUTrestart/GenEnsProd_SREF_CCPA*.nc \$output_base/stat" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "  fi" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "fi" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
-         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.EnsembleStat.completed ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/EnsembleStat_fcstSREF_obsCCPA_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  [[ \$? = 0 ]] &&  >$COMOUTrestart/${domain}.${obsv}.${fhr}.EnsembleStat.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.EnsembleStat.completed ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/EnsembleStat_fcstSREF_obsCCPA_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "   export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "  [[ \$? = 0 ]] &&  >$COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.EnsembleStat.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
-         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.GridStat_mean.completed ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_mean_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  [[ \$? = 0 ]] &&  >$COMOUTrestart/${domain}.${obsv}.${fhr}.GridStat_mean.completed " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean.completed ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  [[ -s \$output_base/stat/GenEnsProd_SREF_CCPA_G212_FHR${fhr}_${VDATE}_${vhr}0000V_ens.nc ]] && ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_mean_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  [[ \$? = 0 ]] &&  >$COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean.completed " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "   export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
-         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.GridStat_prob.completed ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_prob_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo " [[ \$? = 0 ]] && >$COMOUTrestart/${domain}.${obsv}.${fhr}.GridStat_prob.completed " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.GridStat_prob.completed ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  [[ -s \$output_base/stat/GenEnsProd_SREF_CCPA_G212_FHR${fhr}_${VDATE}_${vhr}0000V_ens.nc ]] && ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_prob_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "   export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo " [[ \$? = 0 ]] && >$COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.GridStat_prob.completed " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
-         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.GridStat_mean_G240.completed ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  export obsvgrid=grid240" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  export grid=G240"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  export regrid=OBS" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_mean_G240.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "  [[ \$? = 0 ]] && >$COMOUTrestart/${domain}.${obsv}.${fhr}.GridStat_mean_G240.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo "if [ ! -e $COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean_G240.completed ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  export obsvgrid=grid240" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  export grid=G240"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  export regrid=OBS" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "  [[ -s \$output_base/stat/GenEnsProd_SREF_CCPA_G212_FHR${fhr}_${VDATE}_${vhr}0000V_ens.nc ]] && ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_mean_G240.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "   export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "  [[ \$? = 0 ]] && >$COMOUTrestart/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean_G240.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
-         echo "if [ -s \$output_base/stat/*.stat ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo " cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "fi" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo "if [ -s \$output_base/stat/*.stat ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo " cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "fi" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
 	 #Mark that all of the  5 METplus processes are completed for next restart run:
-         echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_mpi_${domain}.${obsv}.${fhr}.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 
-         chmod +x run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo "${DATA}/run_sref_mpi_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_precip_poe
+         chmod +x run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+         echo "${DATA}/scripts/run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh" >> run_all_sref_precip_poe
 
+     fi 	 
     fi  # check restart for the sub-job
 
   done
-
+ done
 done
 
 chmod +x  run_all_sref_precip_poe
@@ -165,30 +157,11 @@ chmod +x  run_all_sref_precip_poe
 # Run POE script to get small stat files
 #*************************************************
 if [ $run_mpi = yes ] ; then
-  mpiexec  -n 4 -ppn 4 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_precip_poe
+  mpiexec  -n 28 -ppn 28 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_precip_poe
 else
-   ${DATA}/run_all_sref_precip_poe
+   ${DATA}/scripts/run_all_sref_precip_poe
 fi 
 export err=$?; err_chk
-
-echo "Print stat generation  metplus log files begin:"
-log_dirs="$DATA/precip/*/logs"
-for log_dir in $log_dirs; do
-    if [ -d $log_dir ]; then
-        log_file_count=$(find $log_dir -type f | wc -l)
-        if [[ $log_file_count -ne 0 ]]; then
-            log_files=("$log_dir"/*)
-            for log_file in "${log_files[@]}"; do
-                if [ -f "$log_file" ]; then
-                    echo "Start: $log_file"
-                    cat "$log_file"
-                    echo "End: $log_file"
-                fi
-            done
-        fi
-    fi
-done
-echo "Print stat generation  metplus log files end"
 
 #***********************************************
 # Gather small stat files to forma big stat file

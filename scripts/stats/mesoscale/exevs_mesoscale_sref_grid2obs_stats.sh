@@ -13,6 +13,7 @@ export machine=${machine:-"WCOSS2"}
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export WORK=$DATA
 cd $WORK
+mkdir -p $WORK/scripts
 
 export MET_bin_exec='bin'
 
