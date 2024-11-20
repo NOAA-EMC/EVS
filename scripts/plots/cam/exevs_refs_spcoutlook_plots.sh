@@ -229,11 +229,11 @@ for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrg
   if [ $var = cape ] ; then
     var_new=cape
     level=l0
-    valid=valid_00z_12z
+    valid=valid00z12z
   elif [ $var = mlcape ] ; then
     var_new=mlcape
     level=ml
-    valid=valid_00z_12z
+    valid=valid00z12z
   fi
   for all_times in 00z 12z 00z_12z ; do
     if ls lead_average_regional_${domain}_valid_${all_times}_${var}*.png 1> /dev/null 2>&1; then

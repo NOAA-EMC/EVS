@@ -323,12 +323,12 @@ for score_type in lead_average threshold_average; do
    
           for thresh in ge250 ge500 ge1000 ge2000 ; do
 	   if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png ] ; then
-             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png evs.refs.${stat}.${var}_${level}.${thresh}.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png evs.refs.${stat}.${var}_${level}.${thresh}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
            fi
           done
       else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png ] ; then   
-           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png  evs.refs.${stat}.${var}_${level}.last${last_days}days.${scoretype}_valid_${valid}.${new_lead}.${new_domain}.png
+           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png  evs.refs.${stat}.${var}_${level}.last${last_days}days.${scoretype}_valid${valid}_${new_lead}.${new_domain}.png
 
      	  fi
        fi

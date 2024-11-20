@@ -288,7 +288,7 @@ for stats in ets fbias fss ; do
  
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png ] ; then
         ls ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png
-        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.refs.${stats}.${var}h.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.refs.${stats}.${var}h.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
       fi
     done
   done
@@ -327,7 +327,7 @@ for var in apcp_01 apcp_03 apcp_24 ; do
      fi
 
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png ] ; then
-       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.refs.ctc.${var}h.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.refs.ctc.${var}h.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
       fi
 
     done
