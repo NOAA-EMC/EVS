@@ -44,6 +44,7 @@ WFO=${WFO}
 CG='CG1'
 lead_hours='0 24 48 72 96 120 144'
 
+
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
@@ -194,7 +195,6 @@ for wfo in ${WFO}; do
    fi
 done
 fi
-
 
 ###############################################################################
 echo ' '
