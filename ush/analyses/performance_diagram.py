@@ -667,7 +667,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
-        if str(var_long_name_key).upper() == 'HGTCLDCEIL':
+        if str(var_long_name_key).upper() in ['HGTCLDCEIL', 'CEIL']: 
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                if units in ['m', 'gpm']:
                    units = 'gpm'
