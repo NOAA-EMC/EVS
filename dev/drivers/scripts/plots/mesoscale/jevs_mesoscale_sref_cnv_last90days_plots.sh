@@ -1,23 +1,21 @@
-#PBS -N jevs_mesoscale_sref_cnv_past90days_plots
+#PBS -N jevs_mesoscale_sref_cnv_last90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=2:ncpus=88:mem=300GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter,select=2:ncpus=88:mem=20GB
 #PBS -l debug=true
 
 set -x
 
 export OMP_NUM_THREADS=1
 
+export NET=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-
 source $HOMEevs/versions/run.ver
 
 export envir=prod
-
-export NET=evs
 export STEP=plots
 export COMPONENT=mesoscale
 export RUN=atmos
@@ -33,7 +31,7 @@ export KEEPDATA=YES
 export SENDMAIL=YES
 export SENDDBN=NO
 
-export past_days=90
+export last_days=90
 
 export run_mpi=yes
 export valid_time=both

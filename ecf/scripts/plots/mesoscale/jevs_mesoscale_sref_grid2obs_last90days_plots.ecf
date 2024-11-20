@@ -1,10 +1,10 @@
-#PBS -N evs_mesoscale_sref_precip_past90days_plots
+#PBS -N evs_mesoscale_sref_grid2obs_last90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=100:mem=300GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter:exclhost,select=3:ncpus=72:mem=100GB
 #PBS -l debug=true
 
 export model=evs
@@ -53,9 +53,9 @@ fi
 export OMP_NUM_THREADS=1
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=precip
+export VERIF_CASE=grid2obs
 export MODELNAME=sref
-export past_days=90
+export last_days=90
 export run_mpi=yes
 export valid_time=both
 

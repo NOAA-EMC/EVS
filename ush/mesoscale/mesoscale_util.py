@@ -11,7 +11,7 @@
 
 import os
 import sys
-import datetime
+from datetime import datetime, timedelta as td
 import numpy as np
 import glob
 import subprocess
@@ -334,7 +334,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        shift = (filled_file_format_chunk.partition('shift=')[2]\
                                 .partition('}')[0])
                        init_shift_time_dt = (
-                           init_time_dt + datetime.timedelta(hours=int(shift))
+                           init_time_dt + td(hours=int(shift))
                        )
                        replace_format_opt_count = init_shift_time_dt.strftime(
                            format_opt_count_fmt
@@ -343,7 +343,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        shift = (filled_file_format_chunk.partition('shift=')[2]\
                                 .partition('}')[0])
                        valid_shift_time_dt = (
-                           valid_time_dt + datetime.timedelta(hours=int(shift))
+                           valid_time_dt + td(hours=int(shift))
                        )
                        replace_format_opt_count = valid_shift_time_dt.strftime(
                            format_opt_count_fmt
@@ -386,15 +386,15 @@ def initalize_job_env_dict():
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
         'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'evs_run_mode',
         'COMROOT', 'COMIN', 'COMOUT', 'COMOUTsmall', 'COMOUTfinal', 'EVSIN',
-        'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS', 'METPLUS_VERBOSITY',
-        'MET_ROOT', 'MET_VERBOSITY',
+        'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS',
+        'MET_ROOT', 
         'MET_TMP_DIR', 'MODELNAME', 'JOB_GROUP'
     ]
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
         if env_var in ['LOG_MET_OUTPUT_TO_METPLUS',
-                       'METPLUS_VERBOSITY', 'MET_VERBOSITY']:
+                       ]:
             job_env_dict[env_var.lower()] = os.environ[env_var]
     return job_env_dict
 
@@ -437,7 +437,7 @@ def precip_check_obs_input_output_files(job_dict):
              DATA_files_list       - list of output DATA
                                      files (strings)
     """
-    valid_date_dt = datetime.datetime.strptime(
+    valid_date_dt = datetime.strptime(
         job_dict['DATE']+job_dict['valid_hour_start'],
         '%Y%m%d%H'
     )
@@ -455,7 +455,7 @@ def precip_check_obs_input_output_files(job_dict):
                     job_dict['DATA'], 'data', 'ccpa', 
                     f"ccpa.accum{job_dict['ccpa_file_accum'].zfill(2)}hr.v"
                     +(valid_date_dt
-                      -datetime.timedelta(hours=(n-1)
+                      -td(hours=(n-1)
                                                  *int(job_dict['ccpa_file_accum'])))\
                     .strftime('%Y%m%d%H')
                 )
@@ -545,12 +545,12 @@ def precip_check_model_input_output_files(job_dict):
              DATA_files_list       - list of output DATA
                                      files (strings)
     """
-    valid_date_dt = datetime.datetime.strptime(
+    valid_date_dt = datetime.strptime(
         job_dict['DATE']+job_dict['valid_hour_start'],
         '%Y%m%d%H'
     )
     init_date_dt = (valid_date_dt
-                    - datetime.timedelta(hours=int(job_dict['fcst_hour'])))
+                    - td(hours=int(job_dict['fcst_hour'])))
     # Expected input file
     input_files_list = []
     if job_dict['JOB_GROUP'] == 'assemble_data':
@@ -672,7 +672,7 @@ def snowfall_check_obs_input_output_files(job_dict):
              DATA_files_list       - list of output DATA
                                      files (strings)
     """
-    valid_date_dt = datetime.datetime.strptime(
+    valid_date_dt = datetime.strptime(
         job_dict['DATE']+job_dict['valid_hour_start'],
         '%Y%m%d%H'
     )
@@ -734,12 +734,12 @@ def snowfall_check_model_input_output_files(job_dict):
              DATA_files_list       - list of output DATA
                                      files (strings)
     """
-    valid_date_dt = datetime.datetime.strptime(
+    valid_date_dt = datetime.strptime(
         job_dict['DATE']+job_dict['valid_hour_start'],
         '%Y%m%d%H'
     )
     init_date_dt = (valid_date_dt
-                    - datetime.timedelta(hours=int(job_dict['fcst_hour'])))
+                    - td(hours=int(job_dict['fcst_hour'])))
     # Expected input file
     input_files_list = []
     if job_dict['JOB_GROUP'] == 'assemble_data':
@@ -828,6 +828,7 @@ def snowfall_check_model_input_output_files(job_dict):
             all_COMOUT_file_exist, COMOUT_files_list,
             DATA_files_list)
 
+
 def get_completed_jobs(completed_jobs_file):
     completed_jobs = set()
     if os.path.exists(completed_jobs_file):
@@ -838,3 +839,111 @@ def get_completed_jobs(completed_jobs_file):
 def mark_job_completed(completed_jobs_file, job_name):
     with open(completed_jobs_file, 'a') as f:
         f.write(job_name + "\n")
+
+# Construct a file name given a template
+def fname_constructor(template_str, IDATE="YYYYmmdd", IHOUR="HH",
+                      VDATE="YYYYmmdd", VHOUR="HH", VDATEHOUR="YYYYmmddHH",
+                      VDATEm1H="YYYYmmdd", VDATEHOURm1H="YYYYmmddHH",
+                      FHR="HH", LVL="0", OFFSET="HH"):
+    template_str = template_str.replace('{IDATE}', IDATE)
+    template_str = template_str.replace('{IHOUR}', IHOUR)
+    template_str = template_str.replace('{VDATE}', VDATE)
+    template_str = template_str.replace('{VHOUR}', VHOUR)
+    template_str = template_str.replace('{VDATEHOUR}', VDATEHOUR)
+    template_str = template_str.replace('{VDATEm1H}', VDATEm1H)
+    template_str = template_str.replace('{VDATEHOURm1H}', VDATEHOURm1H)
+    template_str = template_str.replace('{FHR}', FHR)
+    template_str = template_str.replace('{LVL}', LVL)
+    template_str = template_str.replace('{OFFSET}', OFFSET)
+    return template_str
+
+# Create a list of prepbufr file paths
+def get_prepbufr_templates(indir, vdates, paths=[], obsname='both', already_preprocessed=False):
+    '''
+        indir  - (str) Input directory for prepbufr file data
+        vdates - (datetime object) List of datetimes used to fill templates
+        paths  - (list of str) list of paths to append the prepbufr paths to 
+                 Default is empty.
+    '''
+    prepbufr_templates = []
+    prepbufr_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if vh in ['00', '03', '06', '09', '12', '15', '18', '21']:
+            if vh in ['03', '09', '15', '21']:
+                offsets = ['03']
+            elif vh in ['00', '06', '12', '18']:
+                offsets = ['00', '06']
+                if obsname in ['both', 'raob']:
+                    if not already_preprocessed:
+                        prepbufr_templates.append(os.path.join(
+                            indir, 
+                            'gdas.{VDATE}',
+                            '{VHOUR}',
+                            'atmos',
+                            'gdas.t{VHOUR}z.prepbufr'
+                        ))
+                    else:
+                        prepbufr_templates.append(os.path.join(
+                            indir, 
+                            'gdas.t{VHOUR}z.prepbufr'
+                        ))
+            for offset in offsets:
+                use_vdate = vdate + td(hours=int(offset))
+                use_vd = use_vdate.strftime('%Y%m%d')
+                use_vh = use_vdate.strftime('%H')
+                if obsname in ['both', 'metar']:
+                    if not already_preprocessed:
+                        template = os.path.join(
+                            indir, 
+                            'nam.{VDATE}',
+                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                        )
+                    else:
+                        template = os.path.join(
+                            indir, 
+                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                        )
+                    prepbufr_paths.append(fname_constructor(
+                        template, VDATE=use_vd, VHOUR=use_vh, OFFSET=offset
+                    ))
+        for template in prepbufr_templates:
+            prepbufr_paths.append(fname_constructor(
+                template, VDATE=vd, VHOUR=vh
+            ))
+    return np.concatenate((paths, np.unique(prepbufr_paths)))
+
+def preprocess_prepbufr(indir, fname, workdir, outdir, subsets):
+    if os.path.exists(os.path.join(outdir, fname)):
+        print(f"{fname} exists in {outdir} so we can skip preprocessing.")
+    else:
+        wd = os.getcwd()
+        os.chdir(workdir)
+        if os.path.isfile(os.path.join(indir, fname)):
+            run_shell_command(
+                [
+                    os.path.join(os.environ['bufr_ROOT'], 'bin', 'split_by_subset'), 
+                    os.path.join(indir, fname)
+                ]
+            )
+            if all([os.path.isfile(subset) for subset in subsets]):
+                run_shell_command(
+                    np.concatenate((
+                        ['cat'], subsets, ['>>', os.path.join(outdir, fname)]
+                    ))
+                )
+            else:
+                raise FileNotFoundError(
+                    f"The following prepbufr subsets do not exist in {workdir}: " 
+                    + ', '.join([subset for subset in subsets if not os.path.isfile(subset)])
+                    + ". Cannot concatenate subsets."
+                )
+        else:
+            print(
+                "WARNING: The following file does not exist: "
+                + f"{os.path.join(indir, fname)}."
+                + " Skipping split by subset."
+            )
+        os.chdir(wd)
+
