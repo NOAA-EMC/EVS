@@ -1889,13 +1889,12 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
             )
             for model_stat_file in model_stat_files:
                 logger.debug(f"Getting data from {model_stat_file}")
-                ps = subprocess.Popen(
-                    'grep -R "'+model+' " '+model_stat_file+grep_opts,
-                    shell=True, stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT, encoding='UTF-8'
-                )
+                grep = subprocess.run('grep -R "'+model+'" '+model_stat_file+grep_opts,
+                                  shell=True, capture_output=True, encoding="utf8")
                 logger.debug(f"Ran {ps.args}")
-                all_grep_output = all_grep_output+ps.communicate()[0]
+
+                all_grep_output = all_grep_output+grep.stdout
+
             logger.debug(f"Condensed {model} .stat file at "
                          +f"{output_file}")
             with open(output_file, 'w') as f:
