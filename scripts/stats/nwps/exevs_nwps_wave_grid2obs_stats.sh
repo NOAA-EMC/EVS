@@ -148,12 +148,9 @@ for wfo in ${WFO}; do
 			done
 		done
 	done
-done
                                                                                                                                                                                              #########################																					
 # Run the command file
 #########################                                                                                                                                                                        
-for wfo in ${WFO}; do
-	export wfo=${wfo}
 	if [[ -s ${DATA}/jobs/${wfo}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh ]]; then
     		if [ ${run_mpi} = 'yes' ] ; then
        			export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
@@ -165,37 +162,33 @@ for wfo in ${WFO}; do
 			sh ${DATA}/jobs/${wfo}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
     		fi
 	fi
-done
 
 ##########################
 # Gather all the files
 #########################
-if [ $gather = yes ] ; then
-# check to see if the small stat files are there
-for wfo in ${WFO}; do
-   export wfo=${wfo}
-   #mkdir -p ${DATA}/stats
-   #mkdir -p ${DATA}/stats/${wfo}
-   nc=$(ls ${DATA}/all_stats/${wfo}/*stat | wc -l | awk '{print $1}')
-   if [ "${nc}" != '0' ]; then
-           echo " Found ${nc} ${DATA}/all_stats/${wfo}/*stat files for ${VDATE}"
-           # Use StatAnalysis to gather the small stat files into one file
-           run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNWPS_obs$OBSNAME.conf
-	   export err=$?; err_chk
+	if [ $gather = yes ] ; then
+	# check to see if the small stat files are there
+	   #mkdir -p ${DATA}/stats
+	   #mkdir -p ${DATA}/stats/${wfo}
+	   nc=$(ls ${DATA}/all_stats/${wfo}/*stat | wc -l | awk '{print $1}')
+	   if [ "${nc}" != '0' ]; then
+		   echo " Found ${nc} ${DATA}/all_stats/${wfo}/*stat files for ${VDATE}"
+		   # Use StatAnalysis to gather the small stat files into one file
+		   run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNWPS_obs$OBSNAME.conf
+		   export err=$?; err_chk
 
-	   if [ $SENDCOM = YES ]; then
-		   if [ -s ${DATA}/stats/${wfo}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-			   cp -v ${DATA}/stats/${wfo}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${VDATE}.stat 
-		   else
-			   echo "DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+		   if [ $SENDCOM = YES ]; then
+			   if [ -s ${DATA}/stats/${wfo}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+				   cp -v ${DATA}/stats/${wfo}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${VDATE}.stat 
+			   else
+				   echo "DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+			   fi
 		   fi
+	   else
+		   echo "NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
 	   fi
-   else
-	   echo "NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
-   fi
+	fi
 done
-fi
-
 ###############################################################################
 echo ' '
 echo "Ending at : `date`"
