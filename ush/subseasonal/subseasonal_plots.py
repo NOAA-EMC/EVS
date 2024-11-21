@@ -65,12 +65,13 @@ fhr_end = os.environ['fhr_end']
 fhr_inc = os.environ['fhr_inc']
 job_id = os.environ['job_id']
 job_DATA_dir = os.environ['job_DATA_dir']
-job_work_dir = os.environ['job_work_dir']
 if JOB_GROUP == 'make_plots':
     job_DATA_images_dir = os.environ['job_DATA_images_dir']
     job_work_images_dir = os.environ['job_work_images_dir']
     stat = os.environ['stat']
     plot = os.environ['plot']
+else:
+    job_work_dir = os.environ['job_work_dir']
 
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
@@ -83,8 +84,9 @@ logo_dir = os.path.join(FIXevs, 'logos')
 VERIF_CASE_STEP_dir = os.path.join(DATA, VERIF_CASE_STEP)
 stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
 #plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
-VERIF_TYPE_tar_dir = os.path.join(job_work_dir, RUN+'.'+end_date,
-                                  'tar_files', VERIF_TYPE)
+if JOB_GROUP == 'tar_images':
+    VERIF_TYPE_tar_dir = os.path.join(job_work_dir, RUN+'.'+end_date,
+                                      'tar_files', VERIF_TYPE)
 if JOB_GROUP == 'make_plots':
     logging_dir = os.path.join(job_work_images_dir, 'logs')
 elif JOB_GROUP == 'tar_images':
@@ -639,7 +641,11 @@ elif JOB_GROUP == 'make_plots':
 # Create tar file of plots and move to main image directory
 elif JOB_GROUP == 'tar_images':
     logger.info("Tar'ing up images")
-    job_input_image_dir = job_DATA_images_dir
+    job_input_image_dir = os.path.join(
+        DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+        RUN+'.'+end_date, VERIF_TYPE,
+        job_name.replace('/','_'), 'images'
+    )
     cwd = os.getcwd()
     if len(glob.glob(job_input_image_dir+'/*')) != 0:
         os.chdir(job_input_image_dir)
