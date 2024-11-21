@@ -498,6 +498,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             job.write('export err=$?; err_chk'+'\n')
                             job.close()
             elif JOB_GROUP == 'tar_images':
+                job_DATA_dir = os.path.join(
+                    DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+                    RUN+'.'+end_date, 'tar_files', verif_type
+                )
+                job_env_dict['job_DATA_dir'] = job_DATA_dir
+                if not os.path.exists(job_env_dict['job_DATA_dir']):
+                    os.makedirs(job_env_dict['job_DATA_dir'])
                 job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
                 job_env_dict['model_plot_name_list'] = (
                     "'"+f"{', '.join(model_plot_name_list)}"+"'"

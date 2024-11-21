@@ -82,10 +82,15 @@ now = datetime.datetime.now()
 logo_dir = os.path.join(FIXevs, 'logos')
 VERIF_CASE_STEP_dir = os.path.join(DATA, VERIF_CASE_STEP)
 stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
-plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
-logging_dir = os.path.join(job_work_dir, 'logs')
+#plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
 VERIF_TYPE_tar_dir = os.path.join(job_work_dir, RUN+'.'+end_date,
                                   'tar_files', VERIF_TYPE)
+if JOB_GROUP == 'make_plots':
+    logging_dir = os.path.join(job_work_images_dir, 'logs')
+elif JOB_GROUP == 'tar_images':
+    logging_dir = os.path.join(VERIF_TYPE_tar_dir, 'logs')
+else:
+    logging_dir = os.path.join(job_work_dir, 'logs')
 #job_output_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
                               #VERIF_TYPE, job_name.replace('/','_'))
 #if not os.path.exists(job_output_dir):

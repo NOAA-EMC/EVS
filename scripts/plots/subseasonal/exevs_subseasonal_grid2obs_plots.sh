@@ -79,9 +79,9 @@ for group in condense_stats filter_stats make_plots tar_images; do
     export err=$?; err_chk
     # Cat the plotting log files
     if [ $JOB_GROUP = make_plots ]; then
-	log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/*/*/*/logs
+	log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/logs
     else
-	log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/*/*/logs
+	log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/logs
     fi
     log_file_count=$(find $log_dir -type f |wc -l)
     if [[ $log_file_count -ne 0 ]]; then
