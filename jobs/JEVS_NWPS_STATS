@@ -64,7 +64,6 @@ export ARCmodel=${COMIN}/prep/${COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
-export COMINhist=${COMINnwps}/${MODELNAME}.${VDATE}/nwges/dcom_hist.txt
 
 mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal} 
 

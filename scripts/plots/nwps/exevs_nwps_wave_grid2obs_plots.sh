@@ -57,7 +57,6 @@ echo '-----------------------------'
 mkdir -p ${DATA}/stats
 
 WFO='hgx bro'
-WFO=${WFO}
 
 for wfo in ${WFO}; do
 	export wfo=$wfo

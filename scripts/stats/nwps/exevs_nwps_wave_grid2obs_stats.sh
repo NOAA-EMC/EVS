@@ -40,7 +40,6 @@ mkdir -p ${DATA}/SFCSHP
 
 vhours='00 06 12 18'
 WFO='hgx bro'
-WFO=${WFO}
 CG='CG1'
 lead_hours='0 24 48 72 96 120 144'
 
@@ -181,11 +180,11 @@ for wfo in ${WFO}; do
 			   if [ -s ${DATA}/stats/${wfo}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
 				   cp -v ${DATA}/stats/${wfo}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${VDATE}.stat 
 			   else
-				   echo "DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+				   echo "DOES NOT EXIST ${DATA}/stats/${wfo}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
 			   fi
 		   fi
 	   else
-		   echo "NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
+		   echo "NO SMALL STAT FILES FOUND IN ${DATA}/all_stats/${wfo}"
 	   fi
 	fi
 done
