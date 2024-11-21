@@ -30,9 +30,11 @@ export RUN_GRID2OBS_PLOTS="YES"
 #model_list:                 model names
 #model_evs_data_dir_list:    base path to "evs_data" directory
 #model_file_format_list:     file format of model files
-export model_list="aqmv708_raw"
+aqm_ver_id=$( echo ${aqm_ver} | awk -F"." '{print $1$2}' )
+modelid=${MODELNAME}${aqm_ver_id}
+export model_list="${modelid} ${modelid}"
 export model_file_format_list="${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.cmaq.f{lead?fmt=%3H}.793.grib2"
-export model_evs_data_dir_list="${STATDIR}"
+export model_evs_data_dir_list="${STATDIR} ${STATDIR}"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
 export OUTPUTROOT="${DATAROOT}"
@@ -57,9 +59,9 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #    g2op_*_fhr_min: forecast hour to start verification: HH[H]
     #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
     #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
-    export g2op_model_plot_name_list="aqmv708_raw""
-    export g2op_type_list="aeronetaod"
-    export g2op_obs_list="aod"
+    export g2op_model_plot_name_list="${modelid} ${modelid}"
+    export g2op_type_list="raw bc"
+    export g2op_obs_list="aeronetaod aeronetaod"
     export g2op_event_equalization="YES"
     export g2op_aeronet_init_hr_list="06 12"
     export g2op_aeronet_valid_hr_list="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
