@@ -27,6 +27,8 @@ export PS4='$SECONDS + '
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
+export pid=$$
+
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
@@ -77,13 +79,13 @@ export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 #######################################################################
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_chk
 
+msg="JOB ${job} HAS COMPLETED NORMALLY."
+postmsg "${msg}"
 
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
-
-if [ "$KEEPDATA" != "YES" ] ; then
-    cd $DATAROOT
-    rm -rf $DATA
+if [ "${KEEPDATA}" != "YES" ]; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
 fi
 

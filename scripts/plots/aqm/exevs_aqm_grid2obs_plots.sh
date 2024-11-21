@@ -1,13 +1,16 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_ens_chem_gefs_grid2obs_plots.sh
+# Name of Script: exevs_aqm_grid2obs_plots.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
 # Original Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
 # Original Author: Mallory Row / Mallory.Row@noaa.gov
-# Purpose of Script: This script is run for the global_ens_chem_gefs plots step
-#                    for the grid-to-obs verification. It uses EMC-developed
+# Purpose of Script: This script is run for the aqm plots step for
+#                    the grid-to-obs verification. It uses EMC-developed
 #                    python scripts to do the plotting.
+#
+#   Change Logs:
+#   11/21/2024   Ho-Chun Huang  Use GLOBAL_DET CFP approach for regular plots
 ###############################################################################
 
 set -x
@@ -15,16 +18,13 @@ set -x
 export VERIF_CASE_STEP_abbrev="g2op"
 echo "RUN MODE:${evs_run_mode}"
 
+## export PLOTDIR=${DATA}/plots
+## export OUTDIR=${DATA}/out
+## export PRUNEDIR=${DATA}/prune
+
 export STATDIR=${DATA}/stats
-
-export PLOTDIR=${DATA}/plots
 export PLOTDIR_headline=${DATA}/plots_headline
-export OUTDIR=${DATA}/out
-export PRUNEDIR=${DATA}/prune
-
-mkdir -p ${LOGDIR}   ${LOGDIR_headline}
-mkdir -p ${STATDIR}  ${PLOTDIR} ${PLOTDIR_headline}
-mkdir -p ${PRUNEDIR} ${OUTDIR}
+mkdir -p ${STATDIR} ${PLOTDIR_headline}
 
 # Source config
 source ${config}
@@ -33,29 +33,28 @@ export err=$?; err_chk
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
+aqm_ver_id=$( echo ${aqm_ver} | awk -F"." '{print $1$2}' )
+modelid=${MODELNAME}${aqm_ver_id}
+
+ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
+export ObsType
+
 # Bring in all stats files, and change into display name
 # for different models or types of solution.
 
-STARTDATE=${start_date}00
-ENDDATE=${end_date}00
-
-modelid="aqmv708"
-for aqmtyp in ozone pm25 ozmax8 pmave; do
-    for biasc in raw bc; do
-        DATE=${VDATE_START}
-        while [ ${DATE} -ge ${VDATE_END} ]; do
-            echo ${DATE} > curdate
-            DAY=$( cut -c 1-8 curdate`
-            cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
-            sedfile=evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
-            if [ -s ${EVSINaqm}.${DAY}/${cpfile} ]; then
-                cpreq ${EVSINaqm}.${DAY}/${cpfile} ${STATDIR}
-                sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
-            else
-                echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${EVSINaqm}.${DAY}/${cpfile}"
-            fi
-	    DATE=$( ${NDATE} -24 ${DATE} )
-        done
+for biasc in raw bc; do
+    NOW=${VDATE_START}
+    while [ ${NOW} -ge ${VDATE_END} ]; do
+        cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ObsType}.v${NOW}.stat
+        sedfile=evs.stats.${ObsType}_${biasc}.${RUN}.${VERIF_CASE}.v${NOW}.stat
+        if [ -s ${EVSINaqm}/${MODELNAME}.${NOW}/${cpfile} ]; then
+            cpreq ${EVSINaqm/${MODELNAME}}.${NOW}/${cpfile} ${STATDIR}
+            sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
+        else
+            echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${EVSINaqm}.${NOW}/${cpfile}"
+        fi
+	cdate=${NOW}"00"
+	DATE=$( ${NDATE} -24 ${cdate} )
     done
 done
 
@@ -71,15 +70,15 @@ total_days=$(expr ${diff_days} + 1)
 NDAYS=${NDAYS:-${total_days}}
 
 # Check user's config settings
-python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_check_settings.py
+python ${USHevs}/${COMPONENT}/${COMPONENT}_check_settings.py
 export err=$?; err_chk
 
 # Create output directories
-python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_create_output_dirs.py
+python ${USHevs}/${COMPONENT}/${COMPONENT}_create_output_dirs.py
 export err=$?; err_chk
 
 # Link needed data files and set up model information
-python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_get_data_files.py
+python ${USHevs}/${COMPONENT}/${COMPONENT}_get_data_files.py
 export err=$?; err_chk
 
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
@@ -88,12 +87,12 @@ declare -a proc_list=( condense_stats filter_stats make_plots tar_images )
 for group in "${proc_list[@]}"; do
     export JOB_GROUP=${group}
     echo "Creating and running jobs for grid-to-obs plots: ${JOB_GROUP}"
-    python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_${STEP}_${VERIF_CASE}_create_job_scripts.py
+    python ${USHevs}/${COMPONENT}/${COMPONENT}_${STEP}_${VERIF_CASE}_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/*
     nc=1
-    if [ $USE_CFP = YES ]; then
-        group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/poe* |wc -l)
+    if [ "${USE_CFP}" == "YES" ]; then
+        group_ncount_poe=$( find  ${DATA}/${VERIF_CASE}_${STEP}/plot_job_scripts/${group} -name poe* | wc -l )
         while [ $nc -le ${group_ncount_poe} ]; do
             poe_script=${DATA}/${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/poe_jobs${nc}
             chmod 775 ${poe_script}
@@ -112,7 +111,7 @@ for group in "${proc_list[@]}"; do
             nc=$((nc+1))
         done
     else
-        group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/job* |wc -l)
+        group_ncount_poe=$( find  ${DATA}/${VERIF_CASE}_${STEP}/plot_job_scripts/${group} -name job* | wc -l )
         while [ ${nc} -le ${group_ncount_job} ]; do
             ${DATA}/${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/job${nc}
             export err=$?; err_chk
@@ -190,12 +189,12 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
             esac
             export linetype=CTC
             export select_headline_threshold=">${select_headline_csi}"
-            mkdir -p ${COMOUTplots}/${var}
+            mkdir -p ${COMOUT}/${var}
             smlev=`echo ${lev} | tr A-Z a-z`
             smvar=`echo ${var} | tr A-Z a-z`
             figtype=csi
 
-            figfile=headline_${COMPONENT}.${figtype}_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+            figfile=headline_${COMPONENT}.${figtype}_gt${select_headline_csi}.${smvar}.${smlev}.last${NDAYS}days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
             cpfile=${COMOUTheadline}/headline/${figfile}
             if [ ! -e ${cpfile} ]; then
                 ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}_headline.config
@@ -211,7 +210,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
                 cp -v ${cpfile} ${COMOUTheadline}/headline
             elif [ ! -e ${cpfile} ]; then
                 echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} ${region}"
-                echo "WARNING: This is possible where there is no exceedance of the critical threshold in the last 31 days"
+                echo "WARNING: This is possible where there is no exceedance of the critical threshold in the last ${NDAYS} days"
             fi
         done
     done
@@ -221,7 +220,7 @@ done
 # Tar up headline plot tarball and copy to the headline plot directory
 
 cd ${PLOTDIR_headline}
-tarfile=evs.plots.${COMPONENT}.${RUN}.headline.last31days.v${VDATE}.tar
+tarfile=evs.plots.${COMPONENT}.${RUN}.headline.last${NDAYS}days.v${VDATE}.tar
 tar -cvf ${tarfile} *png
 
 if [ "${SENDCOM}" == "YES" ]; then

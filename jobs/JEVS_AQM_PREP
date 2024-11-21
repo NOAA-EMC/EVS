@@ -85,12 +85,13 @@ export DAILY_NCOL=${DAILY_NCOL:-13}
 #######################################################################
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh
+export err=$?; err_chk
 
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
+msg="JOB ${job} HAS COMPLETED NORMALLY."
+postmsg "${msg}"
 
-if [ "$KEEPDATA" != "YES" ] ; then
-    cd $DATAROOT
-    rm -rf $DATA
+if [ "${KEEPDATA}" != "YES" ]; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
 fi
 
