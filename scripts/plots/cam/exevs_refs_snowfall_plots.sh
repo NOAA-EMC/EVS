@@ -251,7 +251,7 @@ for stats in ets fbias fss ; do
 
    for domain in conus conus_east conus_west conus_south conus_central  ; do
      if [ -s ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png ] ; then
-       mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.refs.${stats}.${var}_${level}.last${last_days}days.${scoretype}_valid_all_times.buk_${domain}.png
+       mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.refs.${stats}.${var}_${level}.last${last_days}days.${scoretype}_valid00z12z.buk_${domain}.png
      fi
    done
 
@@ -275,7 +275,7 @@ for var in weasd ; do
 
    for domain in conus conus_east conus_west conus_south conus_central  ; do
       if [ -s ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png ] ; then
-         mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png  evs.refs.ctc.${var}_${level}.last${last_days}days.${scoretype}_valid_all_times.buk_${domain}.png
+         mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png  evs.refs.ctc.${var}_${level}.last${last_days}days.${scoretype}_valid00z12z.buk_${domain}.png
       fi 
    done
  done
