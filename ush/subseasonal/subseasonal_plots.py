@@ -91,6 +91,8 @@ elif JOB_GROUP == 'tar_images':
     logging_dir = os.path.join(VERIF_TYPE_tar_dir, 'logs')
 else:
     logging_dir = os.path.join(job_work_dir, 'logs')
+if not os.path.exists(logging_dir):
+    os.makedirs(logging_dir)
 #job_output_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
                               #VERIF_TYPE, job_name.replace('/','_'))
 #if not os.path.exists(job_output_dir):
