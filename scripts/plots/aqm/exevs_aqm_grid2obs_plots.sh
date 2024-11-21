@@ -1,243 +1,143 @@
 #!/bin/bash
-#######################################################################
-## UNIX Script Documentation Block
-##                      .
-## Script name:         exevs_analyses_grid2obs_plots.sh
-## Script description:  This script runs plotting codes to generate plots
-##                      of aqm vs airnow observations
-## Original Author   :  Perry C. Shafran (perry.shafran@noaa.gov)
-##
-##   Change Logs:
-##
-##   11/14/2023   Ho-Chun Huang  replace cp with cpreq
-##   11/15/2023   Ho-Chun Huang  combine similar code for multiple variable
-##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
-##   06/25/2024   Ho-Chun Huang  Remove concatenating log file sections
-##
-## Plotting Information
-##    OZMAX8 forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
-##                                    init::12z are day1::F23, day2::F47, and day3::F71
-##    PMAVE  forecast lead option for init::06z are day1::F22, day2::F46, and day3::F70
-##                                    init::12z are day1::F16, day2::F40, and day3::F64
-##    Selected csi values need to be defined in settings.py
-##        ('grid2obs_aq'::'CTC'::'var_dict'::'OZMAX8'::'obs_var_thresholds'
-##          and 'fcst_var_thresholds')
-#######################################################################
+###############################################################################
+# Name of Script: exevs_global_ens_chem_gefs_grid2obs_plots.sh
+# Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
+#
+# Original Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
+# Original Author: Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_ens_chem_gefs plots step
+#                    for the grid-to-obs verification. It uses EMC-developed
+#                    python scripts to do the plotting.
+###############################################################################
 
 set -x
 
-export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
-source $config
-
-# Set up initial directories and initialize variables
-
-export LOGDIR=${DATA}/plots/logs
-export LOGDIR_headline=${DATA}/plots_headline/logs
+export VERIF_CASE_STEP_abbrev="g2op"
+echo "RUN MODE:${evs_run_mode}"
 
 export STATDIR=${DATA}/stats
+
 export PLOTDIR=${DATA}/plots
 export PLOTDIR_headline=${DATA}/plots_headline
 export OUTDIR=${DATA}/out
 export PRUNEDIR=${DATA}/prune
 
-mkdir -p  ${LOGDIR}  ${LOGDIR_headline}
+mkdir -p ${LOGDIR}   ${LOGDIR_headline}
 mkdir -p ${STATDIR}  ${PLOTDIR} ${PLOTDIR_headline}
 mkdir -p ${PRUNEDIR} ${OUTDIR}
+
+# Source config
+source ${config}
+export err=$?; err_chk
 
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
-# Bring in 31 days of stats files
+# Bring in all stats files, and change into display name
+# for different models or types of solution.
 
-STARTDATE=${VDATE}00
-ENDDATE=${PDYm31}00
+STARTDATE=${start_date}00
+ENDDATE=${end_date}00
 
+modelid="aqmv708"
 for aqmtyp in ozone pm25 ozmax8 pmave; do
     for biasc in raw bc; do
-        DATE=${STARTDATE}
-        while [ ${DATE} -ge ${ENDDATE} ]; do
+        DATE=${VDATE_START}
+        while [ ${DATE} -ge ${VDATE_END} ]; do
             echo ${DATE} > curdate
-            DAY=`cut -c 1-8 curdate`
+            DAY=$( cut -c 1-8 curdate`
             cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
             sedfile=evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
             if [ -s ${EVSINaqm}.${DAY}/${cpfile} ]; then
                 cpreq ${EVSINaqm}.${DAY}/${cpfile} ${STATDIR}
-                sed "s/${model1}/${aqmtyp}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
+                sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
             else
                 echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${EVSINaqm}.${DAY}/${cpfile}"
             fi
-            DATE=`${NDATE} -24 ${DATE}`
+	    DATE=$( ${NDATE} -24 ${DATE} )
         done
     done
 done
 
-# Create plot for each region
+# Make directory
+mkdir -p ${VERIF_CASE}_${STEP}
 
-for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia CPlains DeepSouth GreatBasin GreatLakes Mezquital MidAtlantic NorthAtlantic NPlains NRockies PacificNW PacificSW Prairie Southeast Southwest SPlains SRockies; do
-    export region
-    case ${region} in
-        CONUS)         smregion=conus;;
-        CONUS_East)    smregion=conus_e;;
-        CONUS_West)    smregion=conus_w;;
-        CONUS_South)   smregion=conus_s;;
-        CONUS_Central) smregion=conus_c;;
-        Appalachia)    smregion=apl;;
-        CPlains)       smregion=cpl;;
-        DeepSouth)     smregion=ds;;
-        GreatBasin)    smregion=grb;;
-        GreatLakes)    smregion=grlk;;
-        Mezquital)     smregion=mez;;
-        MidAtlantic)   smregion=matl;;
-        NorthAtlantic) smregion=ne;;
-        NPlains)       smregion=npl;;
-        NRockies)      smregion=nrk;;
-        PacificNW)     smregion=npw;;
-        PacificSW)     smregion=psw;;
-        Prairie)       smregion=pra;;
-        Southeast)     smregion=se;;
-        Southwest)     smregion=sw;;
-        SPlains)       smregion=spl;;
-        SRockies)      smregion=srk;;
-        *) echo "Selected region is not defined, reset to CONUS"
-           smregion="conus";;
-    esac
-    #
-    # Hourly Plots for ozone and pm25 and 
-    #   figure type of bcrmse_me fbar_obar
-    #
-    for inithr in 06 12; do
-        export inithr
+# Set number of days being plotted
+start_date_seconds=$(date +%s -d ${start_date})
+end_date_seconds=$(date +%s -d ${end_date})
+diff_seconds=$(expr ${end_date_seconds} - ${start_date_seconds})
+diff_days=$(expr ${diff_seconds} \/ 86400)
+total_days=$(expr ${diff_days} + 1)
+NDAYS=${NDAYS:-${total_days}}
 
-        for smvar in ozone pm25; do
-            case ${smvar} in
-                ozone)
-                      config_name=awpozcon
-                      export var=OZCON1
-                      export lev=A1
-                      export lev_obs=A1;;
-                pm25)
-                      config_name=pm25
-                      export var=PMTF
-                      export lev=L1
-                      export lev_obs=A1;;
-            esac
-            export linetype=SL1L2
-            mkdir -p ${COMOUTplots}/${var}
-            smlev=`echo ${lev} | tr A-Z a-z`
+# Check user's config settings
+python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_check_settings.py
+export err=$?; err_chk
 
-            for figtype in bcrmse_me fbar_obar; do
-                case ${figtype} in
-                    bcrmse_me)
-                          config_file=py_plotting_${config_name}.config;;
-                    fbar_obar)
-                          config_file=py_plotting_${config_name}_fbar.config;;
-                esac
-                figfile=evs.${COMPONENT}.${figtype}.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
-                cpfile=${COMOUTplots}/${var}/${figfile}
-                if [ ! -e ${cpfile} ]; then
-                    ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/${config_file}
-                    export err=$?; err_chk
-                else
-                    echo "RESTART - ${var} ${figtype} ${region} plot exists; copying over to plot directory"
-                    cpreq ${cpfile} ${PLOTDIR}
-                fi
-  
-                cpfile=${PLOTDIR}/${figfile}
-                if [ -e ${PLOTDIR}/aq/*/evs*png ]; then
-                    mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
-                    cp -v ${cpfile} ${COMOUTplots}/${var}
-                elif [ ! -e ${cpfile} ]; then
-                    echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
-                fi
+# Create output directories
+python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_create_output_dirs.py
+export err=$?; err_chk
 
-            done
+# Link needed data files and set up model information
+python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_get_data_files.py
+export err=$?; err_chk
+
+# Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
+## for group in condense_stats filter_stats make_plots tar_images; do
+declare -a proc_list=( condense_stats filter_stats make_plots tar_images )
+for group in "${proc_list[@]}"; do
+    export JOB_GROUP=${group}
+    echo "Creating and running jobs for grid-to-obs plots: ${JOB_GROUP}"
+    python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_${STEP}_${VERIF_CASE}_create_job_scripts.py
+    export err=$?; err_chk
+    chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/*
+    nc=1
+    if [ $USE_CFP = YES ]; then
+        group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/poe* |wc -l)
+        while [ $nc -le ${group_ncount_poe} ]; do
+            poe_script=${DATA}/${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/poe_jobs${nc}
+            chmod 775 ${poe_script}
+            export MP_PGMMODEL=mpmd
+            export MP_CMDFILE=${poe_script}
+            if [ "${machine}" == "WCOSS2" ]; then
+                nselect=$(cat ${PBS_NODEFILE} | wc -l)
+                nnp=$((${nselect} * ${nproc}))
+                launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+            elif [ "${machine}" == "HERA" ] || [ "${machine}" = "ORION" ] || [ "${machine}" = "S4" ] || [ "${machine}" == "JET" ]; then
+                export SLURM_KILL_BAD_EXIT=0
+                launcher="srun --export=ALL --multi-prog"
+            fi
+            ${launcher} ${MP_CMDFILE}
+            export err=$?; err_chk
+            nc=$((nc+1))
         done
-    done
-    #
-    # Daily Plots for maximum 8-hr average ozone 
-    #   and 24-hr average PM2.5
-    #   for figure type of perfdiag
-    #
-    for inithr in 06 12; do
-        export inithr
-
-        for var in OZMAX8 PMAVE; do
-            export var
-
-            case ${var} in
-                OZMAX8)
-                    if [ "${inithr}" == "06" ]; then
-                        fcst_lead=( 29 53 77 )
-                    elif [ "${inithr}" == "12" ]; then
-                        fcst_lead=( 23 47 71 )
-                    fi
-                    export lev=L1
-                    export lev_obs=A8;;
-                PMAVE)
-                    if [ "${inithr}" == "06" ]; then
-                        fcst_lead=( 22 46 70 )
-                    elif [ "${inithr}" == "12" ]; then
-                        fcst_lead=( 16 40 64 )
-                    fi
-                    export lev=A23
-                    export lev_obs=A1;;
-            esac
-            export linetype=CTC
-            mkdir -p ${COMOUTplots}/${var}
-            smlev=`echo ${lev} | tr A-Z a-z`
-            smvar=`echo ${var} | tr A-Z a-z`
-            smlinetype=`echo ${linetype} | tr A-Z a-z`
-            figtype=perfdiag
-
-            for flead in "${fcst_lead[@]}"; do
-                export flead
-                figfile=evs.${COMPONENT}.${smlinetype}.${smvar}.${smlev}.last31days.${figtype}_init${inithr}z_f${flead}.buk_${smregion}.png
-                cpfile=${COMOUTplots}/${var}/${figfile}
-                if [ ! -e ${cpfile} ]; then
-                    ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}.config
-                    export err=$?; err_chk
-                else
-                    echo "RESTART - plot exists; copying over to plot directory"
-                    cpreq ${cpfile} ${PLOTDIR}
-                fi
-
-                cpfile=${PLOTDIR}/${figfile}
-                if [ -e ${PLOTDIR}/aq/*/evs*png ]; then
-                    mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
-                    cp -v ${cpfile} ${COMOUTplots}/${var}
-                elif [ ! -e ${cpfile} ]; then
-                    echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
-                    echo "WARNING: This is possible where there is no exceedance of any threshold in the last 31 days"
-                fi
-
-            done
+    else
+        group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/job* |wc -l)
+        while [ ${nc} -le ${group_ncount_job} ]; do
+            ${DATA}/${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/job${nc}
+            export err=$?; err_chk
+            nc=$((nc+1))
         done
-    done
+    fi
 done
 
-# Tar up plot directory and copy to the plot output directory
-
-cd ${PLOTDIR}
-tarfile=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar
-tar -cvf ${tarfile} *png
-
+# Copy files to desired location
 if [ "${SENDCOM}" == "YES" ]; then
-    if [ -s ${tarfile} ]; then
-        mkdir -m 775 -p ${COMOUTplots}
-        cp -v ${tarfile} ${COMOUTplots}
-    else
-        echo "WARNING: Can not find ${PLOTDIR}/${tarfile}"
-    fi
+    # Make and copy tar file
+    cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
+    for VERIF_TYPE in ${g2op_type_list}; do
+        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+        tar -cvf ${large_tar_file} ${VERIF_CASE}_${VERIF_TYPE}*.tar
+        if [ -f ${large_tar_file} ]; then
+           cp -v ${large_tar_file} ${COMOUT}/.
+        fi
+    done
+    cd ${DATA}
 fi
 
-if [ "${SENDDBN}" == "YES" ] ; then     
-    if [ -s ${COMOUTplots}/${tarfile} ]; then
-        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${tarfile}
-    else
-        echo "WARNING: Can not find ${COMOUTplots}/${tarfile}"
-    fi
+if [ "${SENDDBN}" == "YES" ]; then
+    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
 fi
-
 ##
 ## Headline Plots
 ##
@@ -342,5 +242,3 @@ if [ "${SENDDBN}" == "YES" ]; then
 fi
 
 exit
-
-

@@ -30,8 +30,9 @@ export RUN_GRID2OBS_PLOTS="YES"
 #model_list:                 model names
 #model_evs_data_dir_list:    base path to "evs_data" directory
 #model_file_format_list:     file format of model files
-export model_list="aqmv70 aqmv70_bc"
+export model_list="aqmv708_raw aqmv708_bc"
 export model_evs_data_dir_list="${COMIN}/stats/${COMPONENT}/aqm ${COMIN}/stats/${COMPONENT}/aqm"
+export model_evs_data_dir_list="${STATDIR}"
 export model_file_format_list="${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.awpozcon.f{lead?fmt=%3H}.793.grib2 ${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.awpozcon_bc.f{lead?fmt=%3H}.793.grib2"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
@@ -57,10 +58,10 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #    g2op_*_fhr_min: forecast hour to start verification: HH[H]
     #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
     #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
-    export g2op_model_plot_name_list="aqmv70 aqmv70_bc"
+    export g2op_model_plot_name_list="aqmv708_raw aqmv708_bc"
     export g2op_type_list="pmave"
-    export g2op_event_equalization="NO"
-    export g2op_airnow_init_hr_list="00 06 12 18"
+    export g2op_event_equalization="YES"
+    export g2op_airnow_init_hr_list="06 12"
     export g2op_airnow_valid_hr_list="04"
     export g2op_airnow_fhr_list="0 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72"
 fi
