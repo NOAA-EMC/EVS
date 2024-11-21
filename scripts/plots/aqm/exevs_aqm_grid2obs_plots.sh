@@ -20,7 +20,8 @@ echo "RUN MODE:${evs_run_mode}"
 
 ## export PLOTDIR=${DATA}/plots
 ## export OUTDIR=${DATA}/out
-## export PRUNEDIR=${DATA}/prune
+export PRUNEDIR=${DATA}/prune    ## for headline
+mkdir -p ${PRUNEDIR}
 
 export STATDIR=${DATA}/stats
 export PLOTDIR_headline=${DATA}/plots_headline
@@ -34,7 +35,7 @@ model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
 aqm_ver_id=$( echo ${aqm_ver} | awk -F"." '{print $1$2}' )
-modelid=${MODELNAME}${aqm_ver_id}
+export modelid=${MODELNAME}${aqm_ver_id}
 
 ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
 export ObsType
