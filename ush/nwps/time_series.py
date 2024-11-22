@@ -48,7 +48,7 @@ presets = Presets()
 model_colors = ModelSpecs()
 reference = Reference()
 
-
+WFO = os.environ ['WFO']
 # =================== FUNCTIONS =========================
 
 
@@ -760,16 +760,21 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     ]).flatten()
     round_to_nearest_categories = y_range_categories/20.
     y_range = y_max-y_min
-    round_to_nearest =  round_to_nearest_categories[
+    if str(y_range) == '-inf':
+        ylim_min = 0
+        ylim_max = 1
+        yticks = np.arange(ylim_min, ylim_max, 0.05)
+    else:
+        round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
-    ]
-    ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
-    ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
-    if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
-        ylim_min = float(
-            np.format_float_scientific(ylim_min, unique=False, precision=3)
-        )
-    yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
+        ]
+        ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
+        ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+        if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
+            ylim_min = float(
+                np.format_float_scientific(ylim_min, unique=False, precision=3)
+            )
+        yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
         if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
@@ -1036,7 +1041,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'{str(domain_string).lower()}_'
+                 + f'{str(WFO).lower()}')
     if metric2_name is not None:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1045,7 +1051,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'{str(domain_string).lower()}_'
+                 + f'{str(WFO).lower()}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1054,7 +1061,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'{str(domain_string).lower()}_'
+                 + f'{str(WFO).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
     save_subdir = os.path.join(

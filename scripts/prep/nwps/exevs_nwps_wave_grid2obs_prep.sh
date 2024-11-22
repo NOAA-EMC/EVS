@@ -52,7 +52,7 @@ for region in ${regions} ; do
 	fi
 done
 
-wfos='aer afg ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfi mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
+wfos='aer afg ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
 #CG1 is the main domain. CG2-CG6 are the nested domains.
 #CGs='CG1 CG2 CG3 CG4 CG5 CG6'
 CGs='CG1'

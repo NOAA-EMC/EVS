@@ -13,7 +13,6 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=nwps
 export OBTYPE=NDBC_STANDARD
-export MASK=GOM
 export NET=evs
 export COMPONENT=nwps
 export STEP=plots
