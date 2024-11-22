@@ -45,7 +45,7 @@ export ObsType
 
 for biasc in raw bc; do
     NOW=${VDATE_START}
-    while [ ${NOW} -ge ${VDATE_END} ]; do
+    while [ ${NOW} -le ${VDATE_END} ]; do
         cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ObsType}.v${NOW}.stat
         sedfile=evs.stats.${modelid}_${biasc}_${ObsType}.${RUN}.${VERIF_CASE}.v${NOW}.stat
         if [ -s ${EVSINaqm}/${MODELNAME}.${NOW}/${cpfile} ]; then
@@ -55,7 +55,7 @@ for biasc in raw bc; do
             echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${EVSINaqm}.${NOW}/${cpfile}"
         fi
 	cdate=${NOW}"00"
-	DATE=$( ${NDATE} -24 ${cdate} )
+	DATE=$( ${NDATE} +24 ${cdate} )
     done
 done
 
