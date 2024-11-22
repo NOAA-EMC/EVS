@@ -49,7 +49,7 @@ for biasc in raw bc; do
         cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ObsType}.v${NOW}.stat
         sedfile=evs.stats.${modelid}_${biasc}_${ObsType}.${RUN}.${VERIF_CASE}.v${NOW}.stat
         if [ -s ${EVSINaqm}/${MODELNAME}.${NOW}/${cpfile} ]; then
-            cpreq ${EVSINaqm/${MODELNAME}}.${NOW}/${cpfile} ${STATDIR}
+            cpreq ${EVSINaqm}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
             sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
         else
             echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${EVSINaqm}.${NOW}/${cpfile}"
