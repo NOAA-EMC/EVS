@@ -126,11 +126,6 @@ elif STEP == 'plots':
         os.path.join(working_output_base_dir,
                      RUN+'.'+end_date_dt.strftime('%Y%m%d'))
     )
-    #working_dir_list.append(
-        #os.path.join(working_output_base_dir,
-                     #RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                     #'logs')
-    #)
     for VCS_type in VCS_type_list:
         working_dir_list.append(
             os.path.join(working_output_base_dir,
