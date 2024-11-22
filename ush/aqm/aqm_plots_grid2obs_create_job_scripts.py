@@ -242,7 +242,7 @@ for pmave_job in list(filter_stats_jobs_dict['pmave'].keys()):
     filter_stats_jobs_dict['pmave'][pmave_job]['obs_var_dict']['threshs'] = (
         pmave_job_obs_threshs
     )
-    if pmave_job in ['PM25']:
+    if pmave_job in ['PMAVE']:
         ## Already defined above, only add line for variables not defined above
         ## filter_stats_jobs_dict['pmave'][pmave_job]['line_types'] = ['SL1L2']
         filter_stats_jobs_dict['pmave'][f"{pmave_job}_Thresh"] = copy.deepcopy(
@@ -251,7 +251,7 @@ for pmave_job in list(filter_stats_jobs_dict['pmave'].keys()):
         filter_stats_jobs_dict['pmave'][f"{pmave_job}_Thresh"]['line_types'] = [
             'CTC'
         ]
-        if pmave_job == 'PM25':
+        if pmave_job == 'PMAVE':
             (filter_stats_jobs_dict['pmave'][f"{pmave_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
                  'gt5',  'gt10', 'gt12', 'gt15', 'gt20', 'gt25', 'gt35',
@@ -322,8 +322,8 @@ for ozone_job in list(make_plots_jobs_dict['ozone'].keys()):
         make_plots_jobs_dict['ozone'][ozone_job+'_FBAR_OBAR']['plots'] = [
             'time_series', 'lead_average', 'valid_hour_average'
         ]
-    elif ozone_job in ['OZONE_Thresh']:
-        ozone_job_line_type_stats = ['CTC/CSI']
+    ## elif ozone_job in ['OZONE_Thresh']:
+    ##     ozone_job_line_type_stats = ['CTC/CSI']
     else:
         ozone_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
     make_plots_jobs_dict['ozone'][ozone_job]['line_type_stats'] = (
@@ -332,8 +332,8 @@ for ozone_job in list(make_plots_jobs_dict['ozone'].keys()):
 
     if ozone_job in ['OZONE']:
         ozone_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
-    elif ozone_job in ['OZONE_Thresh']:
-        ozone_job_plots = ['time_series', 'lead_average', 'threshold_average']
+    ## elif ozone_job in ['OZONE_Thresh']:
+    ##     ozone_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
         ozone_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['ozone'][ozone_job]['plots'] = ozone_job_plots
@@ -358,8 +358,8 @@ for pm25_job in list(make_plots_jobs_dict['pm25'].keys()):
         make_plots_jobs_dict['pm25'][pm25_job+'_FBAR_OBAR']['plots'] = [
             'time_series', 'lead_average', 'threshold_average'
         ]
-    elif pm25_job in ['PM25_Thresh']:
-        pm25_job_line_type_stats = ['CTC/CSI']
+    ## elif pm25_job in ['PM25_Thresh']:
+    ##     pm25_job_line_type_stats = ['CTC/CSI']
     else:
         pm25_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
     make_plots_jobs_dict['pm25'][pm25_job]['line_type_stats'] = (
@@ -368,8 +368,8 @@ for pm25_job in list(make_plots_jobs_dict['pm25'].keys()):
 
     if pm25_job in ['PM25']:
         pm25_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
-    elif pm25_job in ['PM25_Thresh']:
-        pm25_job_plots = ['time_series', 'lead_average', 'threshold_average']
+    ## elif pm25_job in ['PM25_Thresh']:
+    ##     pm25_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
         pm25_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['pm25'][pm25_job]['plots'] = pm25_job_plots
