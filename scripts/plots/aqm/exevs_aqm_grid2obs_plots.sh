@@ -55,7 +55,7 @@ for biasc in raw bc; do
             echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${EVSINaqm}.${NOW}/${cpfile}"
         fi
 	cdate=${NOW}"00"
-	DATE=$( ${NDATE} +24 ${cdate} )
+	NOW=$( ${NDATE} +24 ${cdate} )
     done
 done
 
