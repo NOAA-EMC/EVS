@@ -110,7 +110,7 @@ class NOHRSCSpatialMap:
                 ['wgrib2', nohrsc_grib2_file, '-netcdf',
                  nohrsc_netcdf_file]
             )
-            if check_convert.returncode != 0:
+            if run_convert.returncode != 0:
                 self.logger.error("Could not convert {nohrsc_grib2_file} "
                                   +'to netCDF using wgrib2')
                 sys.exit(1)

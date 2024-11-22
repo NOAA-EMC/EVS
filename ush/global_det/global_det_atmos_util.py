@@ -2302,7 +2302,7 @@ def check_plot_files(job_dict):
         elif job_dict['plot'] == 'valid_hour_average':
             plot_info_list = list(itertools.product(var_info))
         elif job_dict['plot'] in ['precip_spatial_map', 'performance_diagram',
-                                  'threshold_average']:
+                                  'threshold_average', 'nohrsc_spatial_map']:
             plot_info_list = list(itertools.product(valid_hrs, fhrs))
         elif job_dict['plot'] == 'stat_by_level':
             plot_info_list = list(itertools.product(valid_hrs, fhrs,
@@ -2447,8 +2447,7 @@ def check_plot_files(job_dict):
                 for img_type in ['png', 'gif']:
                     plots_files_exist_check_list.append(os.path.join(
                         plot_dict['job_COMOUT_dir'],
-                        f"nohrsc.v{plot_dict['end_date']}12."
-                        +f"{str(plot_dict['forecast_hour']).zfill(3)}h."
+                        f"nohrsc.v{plot_dict['end_date']}12.024h."
                         +f"{plot_dict['vx_mask']}.{img_type}"
                     ))
             elif plot_dict['plot'] == 'precip_spatial_map':
