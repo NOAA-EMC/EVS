@@ -101,82 +101,82 @@ class Presets():
         self.date_presets = {
             'LAST90DAYS': {
                 'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=90)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=90)
                 ).strftime('%Y%m%d'),
                 'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d'),
                 'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=90)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=90)
                     ).strftime('%Y%m%d'),
                 'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d')
             },
             'LAST31DAYS': {
                 'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=31)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=31)
                 ).strftime('%Y%m%d'),
                 'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d'),
                 'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=31)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=31)
                     ).strftime('%Y%m%d'),
                 'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d')
             },
             'LAST30DAYS': {
                 'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=30)
                 ).strftime('%Y%m%d'),
                 'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d'),
                 'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=30)
                     ).strftime('%Y%m%d'),
                 'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d')
             },
             'LAST7DAYS': {
                 'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=7)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=7)
                 ).strftime('%Y%m%d'),
                 'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d'),
                 'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=7)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=7)
                     ).strftime('%Y%m%d'),
                 'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d')
             },
             'LAST3DAYS': {
                 'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=3)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=3)
                 ).strftime('%Y%m%d'),
                 'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d'),
                 'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=3)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=3)
                     ).strftime('%Y%m%d'),
                 'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d')
             },
             'PDYM1': {
                 'valid_beg': '',
                 'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                     ).strftime('%Y%m%d'),
                 'init_beg': '',
                 'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    datetime.strptime(os.environ['VDATE_END'], '%Y%m%d')-td(days=1)
                     ).strftime('%Y%m%d'),
             },
             '2020': {

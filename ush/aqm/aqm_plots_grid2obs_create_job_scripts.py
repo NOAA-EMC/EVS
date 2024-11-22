@@ -525,31 +525,31 @@ tar_images_jobs_dict = {
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_ozone",
                                         f"last{NDAYS}days")
-    }
+    },
     'pm25': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_pm25",
                                         f"last{NDAYS}days")
-    }
+    },
     'ozmax8': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_ozmax8",
                                         f"last{NDAYS}days")
-    }
+    },
     'pmave': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_pmave",
                                         f"last{NDAYS}days")
-    }
+    },
     'aeronetaod': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_aeronetaod",
                                         f"last{NDAYS}days")
-    },
+    }
 }
 if JOB_GROUP == 'tar_images':
     JOB_GROUP_dict = tar_images_jobs_dict
