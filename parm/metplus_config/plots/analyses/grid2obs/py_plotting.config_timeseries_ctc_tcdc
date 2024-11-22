@@ -143,8 +143,8 @@ export INTERP="BILIN"
 
 # Will use statistics for all comma-separated thresholds. Use symbols (e.g., >=) to define 
 # thresholds. **
-export FCST_THRESH="<${thresh}"
-export OBS_THRESH="<${thresh}"
+export FCST_THRESH=">${thresh}"
+export OBS_THRESH=">${thresh}"
 
 # Will plot all comma-separated metrics.  For performance diagram, metrics must be "sratio,pod,csi". 
 # Depending on the VERIF_CASE, VERIF_TYPE, and LINE_TYPE, only some settings are allowed. **
