@@ -56,7 +56,7 @@ VERIF_CASE_STEP_type_list = (
 )
 valid_VERIF_CASE_STEP_type_opts_dict = {
     'RUN_GRID2GRID_PLOTS': ['abiaod', 'viirsaod'],
-    'RUN_GRID2OBS_PLOTS': ['ozone', 'pm25', 'aeronetaod' ]
+    'RUN_GRID2OBS_PLOTS': ['ozone', 'pm25', 'ozmax8', 'pmave', 'aeronetaod' ]
 }
 for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
     if VERIF_CASE_STEP_type \
