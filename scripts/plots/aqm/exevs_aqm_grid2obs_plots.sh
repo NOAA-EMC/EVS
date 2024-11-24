@@ -141,6 +141,13 @@ fi
 ##
 ## Headline Plots
 ##
+## Need to process met_version in Marcel's version
+##
+IFS='.' read -ra MET_VER <<< "$met_ver"
+printf -v MET_VERSION '%s.' "${MET_VER[@]:0:2}"
+export MET_VERSION="${MET_VERSION%.}"
+echo " Headline MET_VERSION = ${MET_VERSION}"
+
 mkdir -p ${COMOUTheadline}/headline
 for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
     export region
@@ -221,7 +228,7 @@ done
 # Tar up headline plot tarball and copy to the headline plot directory
 
 cd ${PLOTDIR_headline}
-tarfile=evs.plots.${COMPONENT}.${RUN}.headline.last${NDAYS}days.v${VDATE}.tar
+tarfile=evs.plots.${COMPONENT}.${RUN}.headline.last${NDAYS}days.v${VDATE_END}.tar
 tar -cvf ${tarfile} *png
 
 if [ "${SENDCOM}" == "YES" ]; then
