@@ -69,7 +69,7 @@ class TimeSeries:
         self.logger.debug(f"Plot information dictionary: "
                           +f"{self.plot_info_dict}")
         # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
+        output_image_dir = self.output_dir
         if not os.path.exists(output_image_dir):
             os.makedirs(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
