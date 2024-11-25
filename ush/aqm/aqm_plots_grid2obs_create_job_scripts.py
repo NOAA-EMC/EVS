@@ -111,6 +111,24 @@ base_plot_jobs_info_dict = {
                                   'levels': ['A24']},
                  'obs_name': 'AIRNOW_DAILY_V2'}
     },
+    'ozmax8_headline': {
+        'OZMAX8': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
+                                'CONUS_South', 'CONUS_West'],
+                 'fcst_var_dict': {'name': 'OZMAX8',
+                                   'levels': ['L1']},
+                 'obs_var_dict': {'name': 'OZONE-8HR',
+                                  'levels': ['A8']},
+                 'obs_name': 'AIRNOW_DAILY_V2'}
+    },
+    'pmave_headline': {
+        'PMAVE': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
+                               'CONUS_South', 'CONUS_West'],
+                 'fcst_var_dict': {'name': 'PMAVE',
+                                   'levels': ['A23']},
+                 'obs_var_dict': {'name': 'PM2.5-24hr',
+                                  'levels': ['A24']},
+                 'obs_name': 'AIRNOW_DAILY_V2'}
+    },
     'aeronetaod': {
         'AOD': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                              'CONUS_South', 'CONUS_West',
@@ -160,6 +178,20 @@ for pmave_job in list(condense_stats_jobs_dict['pmave'].keys()):
     else:
         pmave_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['pmave'][pmave_job]['line_types'] = pmave_job_line_types
+#### ozmax8_headline
+for ozmax8_job in list(condense_stats_jobs_dict['ozmax8_headline'].keys()):
+    if ozmax8_job == 'OZMAX8':
+        ozmax8_job_line_types = [ 'CTC' ]
+    else:
+        ozmax8_job_line_types = ['SL1L2']
+    condense_stats_jobs_dict['ozmax8_headline'][ozmax8_job]['line_types'] = ozmax8_job_line_types
+#### pmave_headline
+for pmave_job in list(condense_stats_jobs_dict['pmave_headline'].keys()):
+    if pmave_job == 'PMAVE':
+        pmave_job_line_types = [ 'CTC' ]
+    else:
+        pmave_job_line_types = ['SL1L2']
+    condense_stats_jobs_dict['pmave_headline'][pmave_job]['line_types'] = pmave_job_line_types
 #### aeronetaod
 for aeronetaod_job in list(condense_stats_jobs_dict['aeronetaod'].keys()):
     if aeronetaod_job == 'AOD':
@@ -262,6 +294,58 @@ for pmave_job in list(filter_stats_jobs_dict['pmave'].keys()):
                  'gt5',  'gt10', 'gt12', 'gt15', 'gt20', 'gt25', 'gt35',
                  'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
              ]
+#### ozmax8_headline
+for ozmax8_job in list(filter_stats_jobs_dict['ozmax8_headline'].keys()):
+    filter_stats_jobs_dict['ozmax8_headline'][ozmax8_job]['grid'] = 'NA'
+    filter_stats_jobs_dict['ozmax8_headline'][ozmax8_job]['interps'] = ['BILIN/4']
+    ozmax8_job_fcst_threshs = ['NA']
+    ozmax8_job_obs_threshs = ['NA']
+    filter_stats_jobs_dict['ozmax8_headline'][ozmax8_job]['fcst_var_dict']['threshs'] = (
+        ozmax8_job_fcst_threshs
+    )
+    filter_stats_jobs_dict['ozmax8_headline'][ozmax8_job]['obs_var_dict']['threshs'] = (
+        ozmax8_job_obs_threshs
+    )
+    if ozmax8_job in ['OZMAX8']:
+        ## Already defined above, only add line for variables not defined above
+        ## filter_stats_jobs_dict['ozmax8_headline'][ozmax8_job]['line_types'] = ['SL1L2']
+        filter_stats_jobs_dict['ozmax8_headline'][f"{ozmax8_job}_Thresh"] = copy.deepcopy(
+            filter_stats_jobs_dict['ozmax8_headline'][ozmax8_job]
+        )
+        filter_stats_jobs_dict['ozmax8_headline'][f"{ozmax8_job}_Thresh"]['line_types'] = [
+            'CTC'
+        ]
+        if ozmax8_job == 'OZMAX8':
+            (filter_stats_jobs_dict['ozmax8_headline'][f"{ozmax8_job}_Thresh"]\
+             ['fcst_var_dict']['threshs']) = [ 'gt70' ]
+            (filter_stats_jobs_dict['ozmax8_headline'][f"{ozmax8_job}_Thresh"]\
+             ['obs_var_dict']['threshs']) = [ 'gt70' ]
+#### pmave_headline
+for pmave_job in list(filter_stats_jobs_dict['pmave'].keys()):
+    filter_stats_jobs_dict['pmave_headline'][pmave_job]['grid'] = 'NA'
+    filter_stats_jobs_dict['pmave_headline'][pmave_job]['interps'] = ['BILIN/4']
+    pmave_job_fcst_threshs = ['NA']
+    pmave_job_obs_threshs = ['NA']
+    filter_stats_jobs_dict['pmave_headline'][pmave_job]['fcst_var_dict']['threshs'] = (
+        pmave_job_fcst_threshs
+    )
+    filter_stats_jobs_dict['pmave_headline'][pmave_job]['obs_var_dict']['threshs'] = (
+        pmave_job_obs_threshs
+    )
+    if pmave_job in ['PMAVE']:
+        ## Already defined above, only add line for variables not defined above
+        ## filter_stats_jobs_dict['pmave_headline'][pmave_job]['line_types'] = ['SL1L2']
+        filter_stats_jobs_dict['pmave_headline'][f"{pmave_job}_Thresh"] = copy.deepcopy(
+            filter_stats_jobs_dict['pmave_headline'][pmave_job]
+        )
+        filter_stats_jobs_dict['pmave_headline'][f"{pmave_job}_Thresh"]['line_types'] = [
+            'CTC'
+        ]
+        if pmave_job == 'PMAVE':
+            (filter_stats_jobs_dict['pmave_headline'][f"{pmave_job}_Thresh"]\
+             ['fcst_var_dict']['threshs']) = [ 'gt35' ]
+            (filter_stats_jobs_dict['pmave_headline'][f"{pmave_job}_Thresh"]\
+             ['obs_var_dict']['threshs']) = [ 'gt35' ]
 #### aeronetaod
 for aeronetaod_job in list(filter_stats_jobs_dict['aeronetaod'].keys()):
     ## column of "DESC" values
@@ -466,6 +550,40 @@ for pmave_job in list(make_plots_jobs_dict['pmave'].keys()):
         make_plots_jobs_dict['pmave'][f"{pmave_job}_PerfDiag"]['plots'] = [
             'performance_diagram'
         ]
+#### ozmax8_headline
+for ozmax8_job in list(make_plots_jobs_dict['ozmax8_headline'].keys()):
+    del make_plots_jobs_dict['ozmax8_headline'][ozmax8_job]['line_types']
+    if ozmax8_job in ['OZMAX8_Thresh']:
+        ozmax8_job_line_type_stats = ['CTC/CSI']
+    else:
+        ozmax8_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
+    make_plots_jobs_dict['ozmax8_headline'][ozmax8_job]['line_type_stats'] = (
+        ozmax8_job_line_type_stats
+    )
+
+    if ozmax8_job in ['OZMAX8_Thresh']:
+        ozmax8_job_plots = ['time_series']
+    else:
+        ozmax8_job_plots = ['time_series']
+    make_plots_jobs_dict['ozmax8_headline'][ozmax8_job]['plots'] = ozmax8_job_plots
+
+#### pmave
+for pmave_job in list(make_plots_jobs_dict['pmave_headline'].keys()):
+    del make_plots_jobs_dict['pmave_headline'][pmave_job]['line_types']
+    if pmave_job in ['PMAVE_Thresh']:
+        pmave_job_line_type_stats = ['CTC/CSI']
+    else:
+        pmave_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
+    make_plots_jobs_dict['pmave_headline'][pmave_job]['line_type_stats'] = (
+        pmave_job_line_type_stats
+    )
+
+    if pmave_job in ['PMAVE_Thresh']:
+        pmave_job_plots = ['time_series']
+    else:
+        pmave_job_plots = ['time_series']
+    make_plots_jobs_dict['pmave_headline'][pmave_job]['plots'] = pmave_job_plots
+
 #### aeronetaod
 for aeronetaod_job in list(make_plots_jobs_dict['aeronetaod'].keys()):
     del make_plots_jobs_dict['aeronetaod'][aeronetaod_job]['line_types']
@@ -541,6 +659,18 @@ tar_images_jobs_dict = {
     'pmave': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
+                                        f"{VERIF_CASE}_pmave",
+                                        f"last{NDAYS}days")
+    },
+    'ozmax8_headline': {
+        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                        'plot_output', f"headline.{end_date}",
+                                        f"{VERIF_CASE}_ozmax8",
+                                        f"last{NDAYS}days")
+    },
+    'pmave_headline': {
+        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                        'plot_output', f"headline.{end_date}",
                                         f"{VERIF_CASE}_pmave",
                                         f"last{NDAYS}days")
     },
