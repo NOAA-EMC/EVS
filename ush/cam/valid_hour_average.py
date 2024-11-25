@@ -4,7 +4,6 @@
 # Name:          valid_hour_average.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Jul. 05, 2023 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                valid or init hour
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 

@@ -30,28 +30,22 @@ job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
 D6_10START = os.environ['D6_10START']
 DATE = os.environ['DATE']
+var1_name = os.environ['var1_name']
+var1_levels = os.environ['var1_levels']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_list = os.environ['CORRECT_LEAD_SEQ'].split(',')
+job_num_work_dir = os.environ['job_num_work_dir']
 
-# Process run time arguments
-if len(sys.argv) != 3:
-    print("FATAL ERROR: Not given correct number of run time arguments..."
-          +os.path.basename(__file__)+" VARNAME_VARLEVEL FILE_FORMAT")
+# Check variable settings
+if ' ' in var1_levels or ',' in var1_levels:
+    print("ERROR: Cannot accept list of levels")
     sys.exit(1)
-else:
-    if '_' not in sys.argv[1]:
-        print("FATAL ERROR: variable and level runtime argument formatted "
-              +"incorrectly, be sure to separate variable and level with "
-              +"an underscore (_), example HGT_P500")
-        sys.exit(1)
-    else:
-        var_level = sys.argv[1]
-        print("Using var_level = "+var_level)
-    file_format = sys.argv[2]
-output_var_level = (var_level.split('_')[0]+'_ANOM_'
-                    +var_level.split('_')[-1])
+
+# Set variable to make anomalies
+var_level = f"{var1_name}_{var1_levels}"
+output_var_level = f"{var1_name}_ANOM_{var1_levels}"
 
 # Create fcst and obs anomaly data
 STARTDATE_dt = datetime.datetime.strptime(
@@ -65,11 +59,44 @@ fhr_end = int(fhr_list[-1])
 valid_date_dt = STARTDATE_dt
 fhr = fhr_start
 while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
-    init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
-    input_file = sub_util.format_filler(
-        file_format, valid_date_dt, init_date_dt, str(fhr), {}
+    # Set full paths for dates
+    full_path_job_num_work_dir = os.path.join(
+        job_num_work_dir, RUN+'.'
+        +ENDDATE_dt.strftime('%Y%m%d'),
+        MODEL, VERIF_CASE
     )
-    if os.path.exists(input_file):
+    full_path_DATA = os.path.join(
+        DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
+        RUN+'.'+ENDDATE_dt.strftime('%Y%m%d'),
+        MODEL, VERIF_CASE
+    )
+    init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+    input_file_name =  (
+        f"grid_stat_{VERIF_TYPE}_{job_name}_{str(fhr).zfill(2)}0000L_"
+        +f"{valid_date_dt:%Y%m%d_%H}0000V_pairs.nc"
+    )
+    # Check possible input files
+    check_input_file_list = [
+        os.path.join(full_path_job_num_work_dir, input_file_name),
+        os.path.join(full_path_DATA, input_file_name)
+    ]
+    found_input = False
+    for check_input_file in check_input_file_list:
+        if os.path.exists(check_input_file):
+            input_file = check_input_file
+            found_input = True
+            break
+    # Set output file
+    output_file = os.path.join(
+        full_path_job_num_work_dir, 'anomaly_'
+        +VERIF_TYPE+'_'+job_name+'_init'
+        +init_date_dt.strftime('%Y%m%d%H')+'_'
+        +'fhr'+str(fhr).zfill(3)+'.nc'
+    )
+    output_file_DATA = os.path.join(
+        full_path_DATA, output_file.rpartition('/')[2]
+    )
+    if found_input:
         print("\nInput file: "+input_file)
         input_file_data = netcdf.Dataset(input_file)
         input_file_data_var_list = list(input_file_data.variables.keys())
@@ -81,16 +108,9 @@ while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
             print("WARNING: "+input_file+" does not contain any "
                   +"climo variable cannot make anomaly data")
         else:
-            output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
-                                      'METplus_output',
-                                      RUN+'.'
-                                      +ENDDATE_dt.strftime('%Y%m%d'),
-                                      MODEL, VERIF_CASE)
-            output_file = os.path.join(output_dir, 'anomaly_'
-                                       +VERIF_TYPE+'_'+job_name+'_init'
-                                       +init_date_dt.strftime('%Y%m%d%H')+'_'
-                                       +'fhr'+str(fhr).zfill(3)+'.nc')
             print("Output File: "+output_file)
+            if not os.path.exists(full_path_job_num_work_dir):
+                os.makedirs(full_path_job_num_work_dir)
             if os.path.exists(output_file):
                 os.remove(output_file)
             output_file_data = netcdf.Dataset(output_file, 'w',

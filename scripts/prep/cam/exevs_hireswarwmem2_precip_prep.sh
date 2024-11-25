@@ -51,6 +51,10 @@ if [ $USE_CFP = YES ]; then
     export err=$?; err_chk
 fi
 
+# Create Working Directories
+python $USHevs/cam/cam_create_child_workdirs.py
+export err=$?; err_chk
+
 # Run all Hires Window ARW Member 2 precip/prep jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/job* |wc -l)
@@ -80,6 +84,12 @@ else
         nc=$((nc+1))
     done
 fi
+
+# Copy Prep Output to Main Directory
+for CHILD_DIR in ${DATA}/${VERIF_CASE}/data/workdirs/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/data/.
+    export err=$?; err_chk
+done
 
 for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST

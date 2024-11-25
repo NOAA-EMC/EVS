@@ -4,7 +4,6 @@
 # Name:          threshold_average.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Dec. 1, 2021 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                forecast threshold
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 

@@ -56,7 +56,8 @@ if STEP == 'prep':
                         VDATEm = VDATEHOURm.strftime('%Y%m%d')
                         VHOURm = VDATEHOURm.strftime('%H')
                         COMOUTobs = os.path.join(
-                            DATA, VERIF_CASE, 'data', 'ccpa', f'ccpa.{VDATEm}'
+                            DATA, VERIF_CASE, 'data', 'workdirs', f'job{njob}', 
+                            'ccpa', f'ccpa.{VDATEm}'
                         )
                         if not os.path.isfile(os.path.join(
                                 COMOUTobs, 
@@ -109,7 +110,8 @@ if STEP == 'prep':
                         VMINm = VDATEHOURm.strftime('%M')
                         VSECm = VDATEHOURm.strftime('%S')
                         COMOUTobs = os.path.join(
-                            DATA, VERIF_CASE, 'data', 'mrms', f'mrms.{VDATEm}'
+                            DATA, VERIF_CASE, 'data', 'workdirs', f'job{njob}', 
+                            'mrms', f'mrms.{VDATEm}'
                         )
                         outfilename=f'mrms.t{VHOURm}z.{OBS_ACC}h.{NEST}.gb2'
                         if not os.path.isfile(os.path.join(

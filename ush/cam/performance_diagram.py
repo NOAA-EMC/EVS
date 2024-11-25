@@ -4,7 +4,6 @@
 # Name:          performance_diagram.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Mar. 15, 2023 by Marcel Caron             
 # Title:         Performance Diagram: plot displaying multiple skill scores
 # Abstract:      Plots METplus output as a line plot, expressed as prob. 
 #                of detection as a function of success ratio but displaying 

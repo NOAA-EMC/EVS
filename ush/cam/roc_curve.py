@@ -4,7 +4,6 @@
 # Name:          roc_curve.py
 # Contact(s):    Marcel Caron
 # Developed:     Sep. 26, 2022 by Marcel Caron 
-# Last Modified: Sep. 26, 2022 by Marcel Caron             
 # Title:         Receiver Operator Characteristic (ROC) curve
 # Abstract:      Plots METplus CTC output as a line plot, probability of
 #                detection, which represents the y-axis, varying by false alarm 

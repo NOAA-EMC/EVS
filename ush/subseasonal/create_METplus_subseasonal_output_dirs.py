@@ -76,10 +76,9 @@ if STEP == 'stats':
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'METplus_output')
     working_dir_list.append(working_output_base_dir)
-    working_dir_list.append(os.path.join(working_output_base_dir, 'confs'))
-    working_dir_list.append(os.path.join(working_output_base_dir, 'logs'))
-    working_dir_list.append(os.path.join(working_output_base_dir, 'tmp'))
-    working_dir_list.append(os.path.join(working_output_base_dir, 'stage'))
+    working_dir_list.append(
+        os.path.join(working_output_base_dir, 'job_work_dir')
+    )
     date_dt = start_date_dt
     while date_dt <= end_date_dt:
         for model in model_list:
