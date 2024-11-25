@@ -14,6 +14,7 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 evs_ver = os.environ['evs_ver']
+SENDCOM = os.environ['SENDCOM']
 COMOUT = os.environ['COMOUT']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
@@ -25,6 +26,7 @@ VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 model_list = os.environ['model_list'].split(' ')
+model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 
@@ -58,15 +60,19 @@ if not os.path.exists(job_scripts_dir):
 # Build information of working and COMOUT output directories
 working_dir_list = []
 COMOUT_dir_list = []
+output_dir_list = []
 if STEP == 'plots':
     NDAYS = str(os.environ['NDAYS'])
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
+    ## new code  os.path.join(working_output_base_dir, 'job_work_dir')
     working_dir_list.append(
         os.path.join(working_output_base_dir,
                      RUN+'.'+end_date_dt.strftime('%Y%m%d'))
     )
+    ## new code  os.path.join(working_output_base_dir, 'tar_files')
+    ## old code
     working_dir_list.append(
         os.path.join(working_output_base_dir,
                      'logs')
@@ -86,7 +92,17 @@ if STEP == 'plots':
             os.path.join(COMOUT, VERIF_CASE+'_'+VERIF_CASE_STEP_type,
                          'last'+NDAYS+'days')
         )
+    ## old code
+    ## add new code from ush/global_det/global_det_atmos_create_output_dirs.py
 
+## # Create working directories
+## for working_dir in working_dir_list:
+##     gda_util.make_dir(working_dir)
+## 
+## # Create output directories
+## for output_dir in output_dir_list:
+##     gda_util.make_dir(output_dir)
+## old code
 # Create working output directories
 for working_output_dir in working_dir_list:
     gda_util.make_dir(working_output_dir)
@@ -94,5 +110,6 @@ for working_output_dir in working_dir_list:
 # Create COMOUT output directories
 for COMOUT_dir in COMOUT_dir_list:
     gda_util.make_dir(COMOUT_dir)
+## old code
 
 print("END: "+os.path.basename(__file__))
