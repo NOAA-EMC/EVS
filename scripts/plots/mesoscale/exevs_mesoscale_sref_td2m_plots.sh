@@ -195,7 +195,7 @@ for stat in  ets fbias; do
 
          #Save for restart:         
 	 echo "if [ ${score_type} = lead_average ] ; then " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-	 echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_2m_dpt_${stat}_ge${threshold}.png] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_2m_dpt_${stat}_ge${threshold}.png $restart ; >$restart/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed ; fi ">>run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_2m_dpt_${stat}_ge${threshold}.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_2m_dpt_${stat}_ge${threshold}.png $restart ; >$restart/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed ; fi ">>run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "else" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_2m_dpt_${stat}_${lead}.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_2m_dpt_${stat}_${lead}.png $restart ; >$restart/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed ; fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "fi" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
