@@ -20,12 +20,12 @@ echo "RUN MODE:${evs_run_mode}"
 
 ## export PLOTDIR=${DATA}/plots
 ## export OUTDIR=${DATA}/out
-export PRUNEDIR=${DATA}/prune    ## for headline
-mkdir -p ${PRUNEDIR}
+## export PRUNEDIR=${DATA}/prune    ## for headline
+## mkdir -p ${PRUNEDIR}
 
 export STATDIR=${DATA}/stats
-export PLOTDIR_headline=${DATA}/plots_headline
-mkdir -p ${STATDIR} ${PLOTDIR_headline}
+## export PLOTDIR_headline=${DATA}/plots_headline
+## mkdir -p ${STATDIR} ${PLOTDIR_headline}
 
 # Source config
 source ${config}
@@ -140,7 +140,11 @@ if [ "${SENDCOM}" == "YES" ]; then
         tar -cvf ${large_tar_file} ${VERIF_CASE}_${VERIF_TYPE}*.tar
 	# old code
         if [ -f ${large_tar_file} ]; then
-           cp -v ${large_tar_file} ${COMOUT}/.
+	    if [[ ${DATA_TYPE} == *"headline"* ]]; then
+                cp -v ${large_tar_file} ${COMOUTheadline}/.
+            else
+                cp -v ${large_tar_file} ${COMOUT}/.
+            fi
         fi
     done
     cd ${DATA}
