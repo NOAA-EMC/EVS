@@ -60,34 +60,35 @@ if STEP == 'plots' :
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         model_evs_data_dir = model_evs_data_dir_list[model_idx]
-        obsvar = g2op_type_list[model_idx]
-        date_dt = start_date_dt
-        while date_dt <= end_date_dt:
-            if date_type == 'VALID':
-                if evs_run_mode == 'production':
-                    source_model_date_stat_file = os.path.join(
-                        model_evs_data_dir,
-                        'evs.stats.'+model+'_'+obsvar+"."+RUN+'.'+VERIF_CASE+'.'
-                        +'v'+date_dt.strftime('%Y%m%d')+'.stat'
+        for obsvar_idx in range(len(g2op_type_list)):
+            obsvar = g2op_type_list[obsvar_idx]
+            date_dt = start_date_dt
+            while date_dt <= end_date_dt:
+                if date_type == 'VALID':
+                    if evs_run_mode == 'production':
+                        source_model_date_stat_file = os.path.join(
+                            model_evs_data_dir,
+                            'evs.stats.'+model+'_'+obsvar+"."+RUN+'.'+VERIF_CASE+'.'
+                            +'v'+date_dt.strftime('%Y%m%d')+'.stat'
+                        )
+                    else:
+                        source_model_date_stat_file = os.path.join(
+                            model_evs_data_dir,
+                            'evs.stats.'+model+'_'+obsvar+"."+RUN+'.'+VERIF_CASE+'.'
+                            +'v'+date_dt.strftime('%Y%m%d')+'.stat'
+                        )
+                    dest_model_date_stat_file = os.path.join(
+                        VERIF_CASE_STEP_data_dir, model,
+                        model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
-                else:
-                    source_model_date_stat_file = os.path.join(
-                        model_evs_data_dir,
-                        'evs.stats.'+model+'_'+obsvar+"."+RUN+'.'+VERIF_CASE+'.'
-                        +'v'+date_dt.strftime('%Y%m%d')+'.stat'
-                    )
-                dest_model_date_stat_file = os.path.join(
-                    VERIF_CASE_STEP_data_dir, model,
-                    model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
-                )
-            if not os.path.exists(dest_model_date_stat_file):
-                if gda_util.check_file_exists_size(
-                        source_model_date_stat_file
-                ):
-                    print("Linking "+source_model_date_stat_file+" to "
-                          +dest_model_date_stat_file)
-                    os.symlink(source_model_date_stat_file,
-                               dest_model_date_stat_file)
-            date_dt = date_dt + datetime.timedelta(days=1)
+                if not os.path.exists(dest_model_date_stat_file):
+                    if gda_util.check_file_exists_size(
+                            source_model_date_stat_file
+                    ):
+                        print("Linking "+source_model_date_stat_file+" to "
+                              +dest_model_date_stat_file)
+                        os.symlink(source_model_date_stat_file,
+                                   dest_model_date_stat_file)
+                date_dt = date_dt + datetime.timedelta(days=1)
 
 print("END: "+os.path.basename(__file__))
