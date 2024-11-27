@@ -145,6 +145,7 @@ else
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="ccpa"
         export COMINobs=${EVSINccpa}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="ccpa"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -154,6 +155,7 @@ else
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -163,6 +165,7 @@ else
     elif [ "$NEST" = "hi" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -172,6 +175,7 @@ else
     elif [ "$NEST" = "pr" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
