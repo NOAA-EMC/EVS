@@ -628,10 +628,14 @@ class PlotSpecs:
                  plot_title - full plot title that will be
                               displayed on the plot
                               (string)
-        """
         plot_title = (
             self.get_stat_plot_name(plot_info_dict['stat'])+' - '
             +plot_info_dict['grid']+'/'
+            +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
+        )
+        """
+        plot_title = (
+            self.get_stat_plot_name(plot_info_dict['stat'])+' - '
             +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
         )
         if date_info_dict['date_type'] == 'VALID':
@@ -702,13 +706,17 @@ class PlotSpecs:
             units = 'F'
         elif plot_info_dict['fcst_var_name'] == 'AOTK':
             units = 'unitless'
-        elif plot_info_dict['fcst_var_name'] == 'PMTF':
+        elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
             units = '$\u03bcg/m^3$'
+        elif plot_info_dict['fcst_var_name'] == 'OZCON1' or plot_info_dict['fcst_var_name'] == 'OZMAX8':
+            units = 'ppbV'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
             if plot_info_dict['fcst_var_name'] == 'AOTK':
                 plot_title = plot_title+', '+var_thresh_for_title.replace("ge","$\u2265$")
-            elif plot_info_dict['fcst_var_name'] == 'PMTF':
+            elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
+                plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
+            elif plot_info_dict['fcst_var_name'] == 'OZCON1' or plot_info_dict['fcst_var_name'] == 'OZMAX8':
                 plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
             else:
                 plot_title = plot_title+', '+var_thresh_for_title+' '+units

@@ -1652,7 +1652,7 @@ def initalize_job_env_dict(verif_type, group,
             )
             fhr_list = [str(i) for i in fhr_range]
         job_env_dict['fhr_list'] = ', '.join(fhr_list)
-        if verif_type in ['pres_levs', 'means', 'sfc', 'ptype', 'abi', 'viirs', 'aeronet', 'airnow']:
+        if verif_type in [ 'abiaod', 'viirsaod', 'pm25', 'ozone', 'ozmax8', 'pmave', 'aeronetaod' ]:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
                 .split(' ')
