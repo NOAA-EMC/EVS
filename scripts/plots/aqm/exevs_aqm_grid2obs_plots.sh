@@ -24,6 +24,7 @@ echo "RUN MODE:${evs_run_mode}"
 ## mkdir -p ${PRUNEDIR}
 
 export STATDIR=${DATA}/stats
+mkdir -p ${STATDIR}
 ## export PLOTDIR_headline=${DATA}/plots_headline
 ## mkdir -p ${STATDIR} ${PLOTDIR_headline}
 
