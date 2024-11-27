@@ -55,7 +55,7 @@ base_plot_jobs_info_dict = {
         'OZONE': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                                'CONUS_South', 'CONUS_West',
                                'Appalachia', 'CPlains', 'DeepSouth',
-                               'GreatBasin', 'GreatLakes', 'Mezqutial',
+                               'GreatBasin', 'GreatLakes', 'Mezquital',
                                'MidAtlantic', 'NorthAtlantic',
                                'NPlains', 'NRockies', 'PacificNW',
                                'PacificSW', 'Prairie', 'Southeast',
@@ -70,7 +70,7 @@ base_plot_jobs_info_dict = {
         'PM25': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                               'CONUS_South', 'CONUS_West',
                               'Appalachia', 'CPlains', 'DeepSouth',
-                              'GreatBasin', 'GreatLakes', 'Mezqutial',
+                              'GreatBasin', 'GreatLakes', 'Mezquital',
                               'MidAtlantic', 'NorthAtlantic',
                               'NPlains', 'NRockies', 'PacificNW',
                               'PacificSW', 'Prairie', 'Southeast',
@@ -85,7 +85,7 @@ base_plot_jobs_info_dict = {
         'OZMAX8': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                                 'CONUS_South', 'CONUS_West',
                                 'Appalachia', 'CPlains', 'DeepSouth',
-                                'GreatBasin', 'GreatLakes', 'Mezqutial',
+                                'GreatBasin', 'GreatLakes', 'Mezquital',
                                 'MidAtlantic', 'NorthAtlantic',
                                 'NPlains', 'NRockies', 'PacificNW',
                                 'PacificSW', 'Prairie', 'Southeast',
@@ -100,7 +100,7 @@ base_plot_jobs_info_dict = {
         'PMAVE': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                                'CONUS_South', 'CONUS_West',
                                'Appalachia', 'CPlains', 'DeepSouth',
-                               'GreatBasin', 'GreatLakes', 'Mezqutial',
+                               'GreatBasin', 'GreatLakes', 'Mezquital',
                                'MidAtlantic', 'NorthAtlantic',
                                'NPlains', 'NRockies', 'PacificNW',
                                'PacificSW', 'Prairie', 'Southeast',
@@ -133,7 +133,7 @@ base_plot_jobs_info_dict = {
         'AOD': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                              'CONUS_South', 'CONUS_West',
                              'Appalachia', 'CPlains', 'DeepSouth',
-                             'GreatBasin', 'GreatLakes', 'Mezqutial',
+                             'GreatBasin', 'GreatLakes', 'Mezquital',
                              'MidAtlantic', 'NorthAtlantic',
                              'NPlains', 'NRockies', 'PacificNW',
                              'PacificSW', 'Prairie', 'Southeast',
@@ -399,7 +399,7 @@ for ozone_job in list(make_plots_jobs_dict['ozone'].keys()):
         ]
         make_plots_jobs_dict['ozone'][ozone_job+'_FBAR_OBAR']['vx_masks']=[
             'CONUS', 'CONUS_Central', 'CONUS_East', 'CONUS_South', 'CONUS_West',
-            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezqutial',
+            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital',
             'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW',
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
@@ -435,7 +435,7 @@ for pm25_job in list(make_plots_jobs_dict['pm25'].keys()):
         ]
         make_plots_jobs_dict['pm25'][pm25_job+'_FBAR_OBAR']['vx_masks']=[
             'CONUS', 'CONUS_Central', 'CONUS_East', 'CONUS_South', 'CONUS_West',
-            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezqutial',
+            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital',
             'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW',
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
@@ -471,7 +471,7 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8'].keys()):
         ]
         make_plots_jobs_dict['ozmax8'][ozmax8_job+'_FBAR_OBAR']['vx_masks']=[
             'CONUS', 'CONUS_Central', 'CONUS_East', 'CONUS_South', 'CONUS_West',
-            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezqutial',
+            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital',
             'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW',
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
@@ -517,7 +517,7 @@ for pmave_job in list(make_plots_jobs_dict['pmave'].keys()):
         ]
         make_plots_jobs_dict['pmave'][pmave_job+'_FBAR_OBAR']['vx_masks']=[
             'CONUS', 'CONUS_Central', 'CONUS_East', 'CONUS_South', 'CONUS_West',
-            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezqutial',
+            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital',
             'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW',
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
@@ -597,7 +597,7 @@ for aeronetaod_job in list(make_plots_jobs_dict['aeronetaod'].keys()):
         ]
         make_plots_jobs_dict['aeronetaod'][aeronetaod_job+'_FBAR_OBAR']['vx_masks']=[
             'CONUS', 'CONUS_Central', 'CONUS_East', 'CONUS_South', 'CONUS_West',
-            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezqutial',
+            'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital',
             'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW',
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
