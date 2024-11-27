@@ -864,7 +864,7 @@ class PlotSpecs:
             'GLOBAL': 'glb',
             'GreatBasin': 'buk_grb',
             'GreatLakes': 'buk_grlk',
-            'Mezqutial': 'buk_mez',
+            'Mezquital': 'buk_mez',
             'MidAtlantic': 'buk_matl',
             'N60N90': 'n60',
             'NAMERICA': 'namer',

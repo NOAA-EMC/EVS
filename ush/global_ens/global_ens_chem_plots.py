@@ -21,10 +21,13 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
-DATAjob = os.environ['DATAjob']
+DATAjob = os.environ['DATAjob']   ## to be removed
+## job_DATA_dir = os.environ['job_DATA_dir']
+## job_work_dir = os.environ['job_work_dir']
 SENDCOM = os.environ['SENDCOM']
-COMOUTjob = os.environ['COMOUTjob']
-NET = os.environ['NET']
+COMOUTjob = os.environ['COMOUTjob']   ## to be removed
+NET = os.environ['NET']               ## to be removed
+## job_COMOUT_dir = os.environ['job_COMOUT_dir']
 RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
@@ -103,13 +106,14 @@ elif JOB_GROUP == 'tar_images':
     KEEPDATA = os.environ['KEEPDATA']
 
 # Set variables
-VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
+VERIF_CASE_STEP = VERIF_CASE+'_'+STEP   ## to be removed
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 now = datetime.datetime.now()
 
 # Set up directory paths
 logo_dir = os.path.join(FIXevs, 'logos')
+## new code VERIF_CASE_STEP_dir = os.path.join(DATA, f"{VERIF_CASE}_{STEP}")
 VERIF_CASE_STEP_dir = os.path.join(DATA, VERIF_CASE_STEP)
 stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
 plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
@@ -217,15 +221,24 @@ if JOB_GROUP == 'condense_stats':
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         obs_name = obs_list[model_idx]
+        ## job_work_condensed_model_stat_file = os.path.join(
+        ##     job_work_dir, f"condensed_stats_{model.lower()}_{line_type.lower()}_"
+        ## replae next 2 lines
         DATAjob_condensed_model_stat_file = os.path.join(
             DATAjob, f"condensed_stats_{model.lower()}_{line_type.lower()}_"
             +f"{fcst_var_name.lower()}_"
             +f"{fcst_var_level.lower().replace('.','p').replace('-', '_')}_"
             +f"{vx_mask.lower()}.stat"
         )
+        ## job_COMOUT_condensed_model_stat_file = (
+        ##     job_work_condensed_model_stat_file.replace(job_work_dir, job_COMOUT_dir)
+        ## )
+        ## old code
         COMOUTjob_condensed_model_stat_file = (
             DATAjob_condensed_model_stat_file.replace(DATAjob, COMOUTjob)
         )
+        ## old code
+        ## more work from 245; consult  ush/global_det/global_det_atmos_plots.py
         if os.path.exists(COMOUTjob_condensed_model_stat_file):
             logger.info(f"Copying {COMOUTjob_condensed_model_stat_file} to "
                         +f"{DATAjob_condensed_model_stat_file}")
