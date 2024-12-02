@@ -185,7 +185,7 @@ if JOB_GROUP == 'make_plots':
                 list(itertools.product(valid_hrs, fhrs, var_info)):
             date_info_dict['valid_hr_start'] = str(ts_info[0])
             date_info_dict['valid_hr_end'] = str(ts_info[0])
-            date_info_dict['valid_hr_inc'] = '12'
+            date_info_dict['valid_hr_inc'] = '3'
             date_info_dict['forecast_hour'] = str(ts_info[1])
             plot_info_dict['fcst_var_name'] = ts_info[2][0][0]
             plot_info_dict['fcst_var_level'] = ts_info[2][0][1]
