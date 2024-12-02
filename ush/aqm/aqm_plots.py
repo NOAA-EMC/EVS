@@ -846,7 +846,7 @@ elif JOB_GROUP == 'tar_images':
         if len(glob.glob(DATAjob+'/*')) != 0:
             os.chdir(DATAjob)
             logger.debug(f"Making tar file {tar_file} from {DATAjob}")
-            gda_util.run_shell_command(['tar', '-cvf', tar_file, '*'])
+            gda_util.run_shell_command(['tar', '-cvf', tar_file, '*.png'])
             os.chdir(cwd)
         else:
             logger.debug(f"No images generated in {DATAjob}, "
