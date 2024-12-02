@@ -161,7 +161,9 @@ do
 	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ ! -e  ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
@@ -181,7 +183,9 @@ do
 	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
         if [ $SENDCOM = "YES" ]; then	
+	if [ -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ ! -e  ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
@@ -217,7 +221,9 @@ do
 	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
         then
@@ -237,7 +243,9 @@ do
 	then
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
@@ -272,7 +280,9 @@ do
 	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
         then
@@ -292,7 +302,9 @@ do
 	then
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
@@ -339,7 +351,9 @@ do
 	then
 	mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]
 	then
@@ -372,7 +386,9 @@ do
 	then
 	mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
 	then
@@ -396,7 +412,9 @@ do
 	then
 	mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
         cp ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
@@ -423,7 +441,9 @@ do
 	then
         mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
+	fi
 	fi
         elif [ -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
@@ -469,7 +489,9 @@ if [ $plot = yes ]; then
 	then
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $COMOUTplots/$var
+	fi
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
 	then
@@ -491,7 +513,9 @@ if [ $plot = yes ]; then
 	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
 	if [ $SENDCOM = "YES" ]; then
+	if [ -e ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
 	cp ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$var
+	fi
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
