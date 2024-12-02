@@ -415,7 +415,6 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = False
             if plot_info_dict['stat'] == 'FBAR_OBAR' \
                     and str(date_info_dict['forecast_hour']) not in \
-                    ## ['24', '48', '72']:
                     ['06', '12', '24', '30', '36', '42', '48', '54', '60', '66', '72']:
                 make_ts = False
             if os.path.exists(COMOUTjob_image_name):
