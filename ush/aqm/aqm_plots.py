@@ -267,7 +267,8 @@ elif JOB_GROUP == 'filter_stats':
     for filter_info in list(itertools.product(valid_hrs, fhrs)):
         date_info_dict['valid_hr_start'] = str(filter_info[0])
         date_info_dict['valid_hr_end'] = str(filter_info[0])
-        date_info_dict['valid_hr_inc'] = '24'
+        ## date_info_dict['valid_hr_inc'] = '24'
+        date_info_dict['valid_hr_inc'] = '1'
         date_info_dict['forecast_hour'] = str(filter_info[1])
         init_hr = gda_util.get_init_hour(
             int(date_info_dict['valid_hr_start']),
@@ -389,7 +390,8 @@ elif JOB_GROUP == 'make_plots':
                 list(itertools.product(valid_hrs, fhrs, var_info)):
             date_info_dict['valid_hr_start'] = str(ts_info[0])
             date_info_dict['valid_hr_end'] = str(ts_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
+            ## date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['valid_hr_inc'] = '1'
             date_info_dict['forecast_hour'] = str(ts_info[1])
             plot_info_dict['fcst_var_name'] = ts_info[2][0][0]
             plot_info_dict['fcst_var_level'] = ts_info[2][0][1]
@@ -413,7 +415,8 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = False
             if plot_info_dict['stat'] == 'FBAR_OBAR' \
                     and str(date_info_dict['forecast_hour']) not in \
-                    ['24', '48', '72', '96', '120']:
+                    ## ['24', '48', '72']:
+                    ['06', '12', '24', '30', '36', '42', '48', '54', '60', '66', '72']:
                 make_ts = False
             if os.path.exists(COMOUTjob_image_name):
                 logger.info(f"Copying {COMOUTjob_image_name} to "
@@ -435,7 +438,7 @@ elif JOB_GROUP == 'make_plots':
         for la_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(la_info[0])
             date_info_dict['valid_hr_end'] = str(la_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['valid_hr_inc'] = '1'
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = la_info[1][0][0]
             plot_info_dict['fcst_var_level'] = la_info[1][0][1]
@@ -528,7 +531,7 @@ elif JOB_GROUP == 'make_plots':
         for ta_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(ta_info[0])
             date_info_dict['valid_hr_end'] = str(ta_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['valid_hr_inc'] = '1'
             date_info_dict['forecast_hour'] = str(ta_info[1])
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
@@ -585,7 +588,7 @@ elif JOB_GROUP == 'make_plots':
         for lbd_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(lbd_info[0])
             date_info_dict['valid_hr_end'] = str(lbd_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['valid_hr_inc'] = '1'
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = lbd_info[1][0][0]
             plot_info_dict['fcst_var_level'] = lbd_info[1][0][1]
@@ -781,7 +784,7 @@ elif JOB_GROUP == 'make_plots':
         for pd_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(pd_info[0])
             date_info_dict['valid_hr_end'] = str(pd_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['valid_hr_inc'] = '1'
             date_info_dict['forecast_hour'] = str(pd_info[1])
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
