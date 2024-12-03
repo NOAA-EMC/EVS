@@ -406,6 +406,7 @@ for ozone_job in list(make_plots_jobs_dict['ozone'].keys()):
         make_plots_jobs_dict['ozone'][ozone_job+'_FBAR_OBAR']['plots'] = [
             'time_series', 'lead_average', 'valid_hour_average'
         ]
+        ##     'time_series'
     ## elif ozone_job in ['OZONE_Thresh']:
     ##     ozone_job_line_type_stats = ['CTC/CSI']
     else:
@@ -442,6 +443,7 @@ for pm25_job in list(make_plots_jobs_dict['pm25'].keys()):
         make_plots_jobs_dict['pm25'][pm25_job+'_FBAR_OBAR']['plots'] = [
             'time_series', 'lead_average', 'threshold_average'
         ]
+        ##     'time_series'
     ## elif pm25_job in ['PM25_Thresh']:
     ##     pm25_job_line_type_stats = ['CTC/CSI']
     else:
@@ -478,6 +480,7 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8'].keys()):
         make_plots_jobs_dict['ozmax8'][ozmax8_job+'_FBAR_OBAR']['plots'] = [
             'time_series', 'lead_average', 'threshold_average'
         ]
+        ##     'time_series'
     elif ozmax8_job in ['OZMAX8_Thresh']:
         ozmax8_job_line_type_stats = ['CTC/CSI']
     else:
@@ -524,6 +527,7 @@ for pmave_job in list(make_plots_jobs_dict['pmave'].keys()):
         make_plots_jobs_dict['pmave'][pmave_job+'_FBAR_OBAR']['plots'] = [
             'time_series', 'lead_average', 'threshold_average'
         ]
+        ##     'time_series'
     elif pmave_job in ['PMAVE_Thresh']:
         pmave_job_line_type_stats = ['CTC/CSI']
     else:
@@ -850,6 +854,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job_env_dict['vx_mask'] = loop_info[2]
                 job_env_dict['interp_method'] = loop_info[3].split('/')[0]
                 job_env_dict['interp_points'] = loop_info[3].split('/')[1]
+                ## if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average' or job_env_dict['plot'] == 'time_series':
                 if job_env_dict['plot'] == 'valid_hour_average':
                     plot_valid_hrs_loop = [valid_hrs]
                 else:
@@ -878,6 +883,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                       plot_fcst_threshs_loop,
                                       plot_fcst_levels_loop)
                 ):
+                    ## if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average' or job_env_dict['plot'] == 'time_series':
                     if job_env_dict['plot'] == 'valid_hour_average':
                         job_env_dict['valid_hr_start'] = str(
                             plot_loop_info[0][0]
