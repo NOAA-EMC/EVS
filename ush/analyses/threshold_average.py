@@ -567,7 +567,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             metric_mean_fmt_string = f'{model_plot_name}'
         plt.plot(
             x_vals, y_vals_metric, 
-            marker='o', c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
+            marker=mod_setting_dicts[m]['marker'], c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
             figure=fig, ms=12, ls=mod_setting_dicts[m]['linestyle'], 
             lw=mod_setting_dicts[m]['linewidth'],
             label=f'{metric_mean_fmt_string}'

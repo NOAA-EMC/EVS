@@ -732,7 +732,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 ref_color_dict = model_colors.get_color_dict('obs')
                 plt.plot(
                     x_vals1.tolist(), reference1,
-                    marker=ref_color_dict['marker'],
+                    marker='None',
                     c=ref_color_dict['color'], mew=2., mec='white',
                     figure=fig, ms=0, ls='solid',
                     lw=ref_color_dict['linewidth']
@@ -741,7 +741,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         else:
             plt.plot(
                 x_vals1.tolist(), y_vals_metric1, 
-                marker=mod_setting_dicts[m]['marker'], 
+                marker='None', 
                 c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
                 figure=fig, ms=0, ls='solid', 
                 lw=mod_setting_dicts[m]['linewidth']
@@ -756,7 +756,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     ref_color_dict = model_colors.get_color_dict('obs')
                     plt.plot(
                         x_vals2.tolist(), reference2,
-                        marker=ref_color_dict['marker'],
+                        marker='None',
                         c=ref_color_dict['color'], mew=2., mec='white',
                         figure=fig, ms=0, ls='dashed',
                         lw=ref_color_dict['linewidth']
@@ -765,7 +765,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             else:
                 plt.plot(
                     x_vals2.tolist(), y_vals_metric2, 
-                    marker=mod_setting_dicts[m]['marker'], 
+                    marker='None', 
                     c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
                     figure=fig, ms=0, 
                     ls='dashed', lw=mod_setting_dicts[m]['linewidth']
@@ -929,7 +929,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         ax.xaxis.get_major_ticks()[mt].tick1line.set_markersize(8)
 
     ax.legend(
-        handles, labels, loc='upper center', fontsize=15, framealpha=1, 
+        handles, labels, markerscale=0, loc='upper center', fontsize=15, framealpha=1, 
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
