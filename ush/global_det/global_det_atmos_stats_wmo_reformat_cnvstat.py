@@ -66,10 +66,19 @@ for diag_var in list(diag_var_dict.keys()):
         with tarfile.open(obs_file, 'r') as tf:
             print(f"Extracting {diag_var_zipfile} from {obs_file}")
             tf.extract(member=diag_var_zipfile)
-        with gzip.open(diag_var_zipfile, 'rb') as dvzf:
-            with open(diag_var_file, 'wb') as dvf:
-                print(f"Unzipping {diag_var_zipfile} to {diag_var_file}")
-                shutil.copyfileobj(dvzf, dvf)
+            if os.path.exists(diag_var_zipfile):
+                gda_util.run_shell_command(['chmod', '750', diag_var_zipfile])
+                gda_util.run_shell_command(['chgrp', 'rstprod',
+                                            diag_var_zipfile])
+                with gzip.open(diag_var_zipfile, 'rb') as dvzf:
+                    with open(diag_var_file, 'wb') as dvf:
+                        print(f"Unzipping {diag_var_zipfile} to {diag_var_file}")
+                        shutil.copyfileobj(dvzf, dvf)
+                        if os.path.exists(diag_var_file):
+                            gda_util.run_shell_command(['chmod', '750',
+                                                        diag_var_file])
+                            gda_util.run_shell_command(['chgrp', 'rstprod',
+                                                        diag_var_file])
     if gda_util.check_file_exists_size(diag_var_file):
         print(f"Processing {diag_var_dict[diag_var]} from {diag_var_file}")
         diag_var_nc = netcdf.Dataset(diag_var_file, 'r')
