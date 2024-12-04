@@ -21,9 +21,9 @@ print("BEGIN: "+os.path.basename(__file__))
 # Read in environment variables
 DATA = os.environ['DATA']
 COMOUT = os.environ['COMOUT']
+COMIN = os.environ['COMIN']
 SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
-NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
@@ -31,6 +31,10 @@ VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
 DATE = os.environ['DATE']
+var1_fcst_name = os.environ['var1_fcst_name']
+var1_fcst_levels = os.environ['var1_fcst_levels']
+var1_obs_name = os.environ['var1_obs_name']
+var1_obs_levels = os.environ['var1_obs_levels']
 valid_hr_start = '06'
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
@@ -39,24 +43,15 @@ fhr_list = os.environ['fhr_list'].split(', ')
 #fhr_start = os.environ['fhr_start']
 #fhr_end = os.environ['fhr_end']
 #fhr_inc = os.environ['fhr_inc']
+job_num_work_dir = os.environ['job_num_work_dir']
 
-# Process run time agruments
-if len(sys.argv) != 3:
-    print("FATAL ERROR: Not given correct number of run time agruments..."
-          +os.path.basename(__file__)+" VARNAME_VARLEVEL FILE_FORMAT")
+# Check variable settings
+if ' ' in var1_fcst_levels or ',' in var1_fcst_levels:
+    print("ERROR: Cannot accept list of forecast levels")
     sys.exit(1)
-else:
-    if '_' not in sys.argv[1]:
-        print("FATAL ERROR: variable and level runtime agrument formated "
-              +"incorrectly, be sure to separate variable and level with "
-              +"an underscore (_), example TMP_Z2")
-        sys.exit(1)
-    else:
-        var_level = sys.argv[1]
-        print("Using var_level = "+var_level)
-    file_format = sys.argv[2]
-var = var_level.split('_')[0]
-level = var_level.split('_')[1]
+if ' ' in var1_obs_levels or ',' in var1_obs_levels:
+    print("ERROR: Cannot accept list of observation levels")
+    sys.exit(1)
 
 # Set MET MPR columns
 MET_MPR_column_list = [
@@ -78,48 +73,64 @@ ENDDATE_dt = datetime.datetime.strptime(
 )
 valid_date_dt = STARTDATE_dt
 while valid_date_dt <= ENDDATE_dt:
+    # Set full paths for dates
+    full_path_job_num_work_dir = os.path.join(
+        job_num_work_dir, f"{RUN}.{valid_date_dt:%Y%m%d}", MODEL, VERIF_CASE
+    )
+    full_path_DATA = os.path.join(
+        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+        f"{RUN}.{valid_date_dt:%Y%m%d}", MODEL, VERIF_CASE
+    )
+    full_path_COMIN = os.path.join(
+        COMIN, STEP, COMPONENT, f"{RUN}.{valid_date_dt:%Y%m%d}",
+        MODEL, VERIF_CASE
+    )
+    full_path_COMOUT = os.path.join(
+        COMOUT, f"{RUN}.{valid_date_dt:%Y%m%d}", MODEL, VERIF_CASE
+    )
     for fhr_str in fhr_list:
         fhr = int(fhr_str)
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
-        input_file = gda_util.format_filler(
-            file_format, valid_date_dt, init_date_dt, str(fhr), {}
+        input_file_name = (
+             f"point_stat_{VERIF_TYPE}_{job_name}_{str(fhr).zfill(2)}0000L_"
+             +f"{valid_date_dt:%Y%m%d_%H}0000V.stat"
         )
-        output_DATA_file = os.path.join(
-            DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
-            RUN+'.'+valid_date_dt.strftime('%Y%m%d'),
-            MODEL, VERIF_CASE, 'anomaly_'+VERIF_TYPE+'_'
-            +job_name+'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
-            +'fhr'+str(fhr).zfill(3)+'.stat'
+        # Check possible input files
+        check_input_file_list = [
+            os.path.join(full_path_job_num_work_dir, input_file_name),
+            os.path.join(full_path_DATA, input_file_name),
+            os.path.join(full_path_COMOUT, input_file_name),
+            os.path.join(full_path_COMIN, input_file_name)
+        ]
+        found_input = False
+        for check_input_file in check_input_file_list:
+            if os.path.exists(check_input_file):
+                input_file = check_input_file
+                found_input = True
+                break
+        # Set output file
+        output_file = os.path.join(
+            full_path_job_num_work_dir, f"anomaly_{VERIF_TYPE}_{job_name}_"
+            +f"init{init_date_dt:%Y%m%d%H}_fhr{str(fhr).zfill(3)}.stat"
         )
-        output_COMOUT_file = os.path.join(
-            COMOUT,
-            RUN+'.'+valid_date_dt.strftime('%Y%m%d'),
-            MODEL, VERIF_CASE, 'anomaly_'+VERIF_TYPE+'_'
-            +job_name+'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
-            +'fhr'+str(fhr).zfill(3)+'.stat'
+        output_file_DATA = os.path.join(
+            full_path_DATA, output_file.rpartition('/')[2]
         )
-        if gda_util.check_file_exists_size(input_file):
-            if os.path.exists(output_COMOUT_file):
-                make_anomaly_output_file = False
-                gda_util.copy_file(output_COMOUT_file, output_DATA_file)
-            else:
-                if not os.path.exists(output_DATA_file):
-                    make_anomaly_output_file = True
-                else:
-                    make_anomaly_output_file = False
-                    print(f"DATA Output File exists: {output_DATA_file}")
-                    if SENDCOM == 'YES' \
-                            and gda_util.check_file_size_exists(
-                                output_DATA_file
-                            ):
-                        gda_util.copy_file(output_DATA_file,
-                                           output_COMOUT_file)
-        else:
-            print(f"NOTE: Cannot make anomaly file {output_DATA_file} - "
-                  +f"{input_file} does not exist")
+        output_file_COMOUT = os.path.join(
+            full_path_COMOUT, output_file.rpartition('/')[2]
+        )
+        # Check input and output files
+        if os.path.exists(output_file_COMOUT):
+            print(f"COMOUT Output File exists: {output_file_COMOUT}")
             make_anomaly_output_file = False
-        if make_anomaly_output_file:
+            gda_util.copy_file(output_file_COMOUT, output_file_DATA)
+        else:
+            make_anomaly_output_file = True
+        if found_input and make_anomaly_output_file:
             print(f"\nInput file: {input_file}")
+            print(f"Output File: {output_file}")
+            if not os.path.exists(full_path_job_num_work_dir):
+                gda_util.make_dir(full_path_job_num_work_dir)
             with open(input_file, 'r') as infile:
                 input_file_header = infile.readline()
             gda_util.run_shell_command(['sed', '-i', '"s/   a//g"',
@@ -129,7 +140,10 @@ while valid_date_dt <= ENDDATE_dt:
                                         names=MET_MPR_column_list,
                                         na_filter=False, dtype=str)
             input_file_var_level_df = input_file_df[
-                (input_file_df['FCST_VAR'] == var) & (input_file_df['FCST_LEV'] == level)
+                (input_file_df['FCST_VAR'] == var1_fcst_name) \
+                & (input_file_df['FCST_LEV'] == var1_fcst_levels) \
+                & (input_file_df['OBS_VAR'] == var1_obs_name) \
+                & (input_file_df['OBS_LEV'] == var1_obs_levels)
             ]
             fcst_var_level = np.array(
                 input_file_var_level_df['FCST'].values, dtype=float
@@ -147,15 +161,13 @@ while valid_date_dt <= ENDDATE_dt:
             output_file_df['CLIMO_MEAN'] = 'NA'
             output_file_df['FCST'] = fcst_anom_var_level
             output_file_df['OBS'] = obs_anom_var_level
-            output_file_df['FCST_VAR'] = var+'_ANOM'
-            output_file_df['OBS_VAR'] = var+'_ANOM'
-            print(f"DATA Output File: {output_DATA_file}")
-            print(f"COMOUT Output File: {output_COMOUT_file}")
-            output_file_df.to_csv(output_DATA_file, header=input_file_header,
+            output_file_df['FCST_VAR'] = f"{var1_fcst_name}_ANOM"
+            output_file_df['OBS_VAR'] = f"{var1_obs_name}_ANOM"
+            output_file_df.to_csv(output_file, header=input_file_header,
                                   index=None, sep=' ', mode='w')
-            if SENDCOM == 'YES' \
-                    and gda_util.check_file_exists_size(output_DATA_file):
-                gda_util.copy_file(output_DATA_file, output_COMOUT_file)
+            if gda_util.check_file_exists_size(output_file):
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(output_file, output_file_COMOUT)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
 
 print("END: "+os.path.basename(__file__))
