@@ -22,7 +22,6 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 from cartopy import config
-import refs_atmos_util as gda_util
 from refs_atmos_plots_specs import PlotSpecs
 
 class PrecipSpatialMap:

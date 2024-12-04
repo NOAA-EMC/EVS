@@ -14,7 +14,6 @@ import glob
 import subprocess
 import itertools
 import shutil
-import refs_atmos_util as gda_util
 from refs_atmos_plots_specs import PlotSpecs
 
 print("BEGIN: "+os.path.basename(__file__))
