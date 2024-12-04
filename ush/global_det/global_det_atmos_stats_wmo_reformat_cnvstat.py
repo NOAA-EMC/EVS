@@ -22,20 +22,11 @@ import global_det_atmos_util as gda_util
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
-COMIN = os.environ['COMIN']
-COMINgfs = os.environ['COMINgfs']
-SENDCOM = os.environ['SENDCOM']
-COMOUT = os.environ['COMOUT']
 DATA = os.environ['DATA']
-NET = os.environ['NET']
-RUN = os.environ['RUN']
-VERIF_CASE = os.environ['VERIF_CASE']
-STEP = os.environ['STEP']
-COMPONENT = os.environ['COMPONENT']
 valid_date = os.environ['valid_date']
-JOB_GROUP = os.environ['JOB_GROUP']
 obs_file = os.environ['obs_file']
 input_ascii2nc_file = os.environ['input_ascii2nc_file']
+job_num_work_dir = os.environ['job_num_work_dir']
 
 valid_date_dt = datetime.datetime.strptime(valid_date, '%Y%m%d%H')
 
@@ -64,7 +55,7 @@ ascii2nc_df_dict = {
     'Observation_Value': []
 }
 
-os.chdir(os.path.join(DATA, 'gdas_cnvstat'))
+os.chdir(job_num_work_dir)
 print(f"Working in {os.getcwd()}")
 
 for diag_var in list(diag_var_dict.keys()):
@@ -75,10 +66,19 @@ for diag_var in list(diag_var_dict.keys()):
         with tarfile.open(obs_file, 'r') as tf:
             print(f"Extracting {diag_var_zipfile} from {obs_file}")
             tf.extract(member=diag_var_zipfile)
-        with gzip.open(diag_var_zipfile, 'rb') as dvzf:
-            with open(diag_var_file, 'wb') as dvf:
-                print(f"Unzipping {diag_var_zipfile} to {diag_var_file}")
-                shutil.copyfileobj(dvzf, dvf)
+            if os.path.exists(diag_var_zipfile):
+                gda_util.run_shell_command(['chmod', '750', diag_var_zipfile])
+                gda_util.run_shell_command(['chgrp', 'rstprod',
+                                            diag_var_zipfile])
+                with gzip.open(diag_var_zipfile, 'rb') as dvzf:
+                    with open(diag_var_file, 'wb') as dvf:
+                        print(f"Unzipping {diag_var_zipfile} to {diag_var_file}")
+                        shutil.copyfileobj(dvzf, dvf)
+                        if os.path.exists(diag_var_file):
+                            gda_util.run_shell_command(['chmod', '750',
+                                                        diag_var_file])
+                            gda_util.run_shell_command(['chgrp', 'rstprod',
+                                                        diag_var_file])
     if gda_util.check_file_exists_size(diag_var_file):
         print(f"Processing {diag_var_dict[diag_var]} from {diag_var_file}")
         diag_var_nc = netcdf.Dataset(diag_var_file, 'r')
@@ -277,6 +277,8 @@ ascii2nc_df = ascii2nc_df[
 ]
 
 # Write out dataframe
+input_ascii2nc_file_dir = input_ascii2nc_file.rpartition('/')[0]
+gda_util.make_dir(input_ascii2nc_file_dir)
 print(f"Writing file to {input_ascii2nc_file}")
 ascii2nc_df.to_csv(
     input_ascii2nc_file, header=None, index=None, sep=' ', mode='w'
