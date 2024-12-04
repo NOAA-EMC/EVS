@@ -37,6 +37,7 @@ METPLUS_PATH = os.environ['METPLUS_PATH']
 MET_ROOT = os.environ['MET_ROOT']
 PARMevs = os.environ['PARMevs']
 model_list = os.environ['model_list'].split(' ')
+model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
@@ -105,38 +106,7 @@ assemble_data_jobs_dict = {
                       gda_util.python_command(
                           'global_det_atmos_stats_grid2obs_'
                           'create_merged_ptype.py',
-                          [os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_Rain_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           ),
-                           os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_Snow_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           ),
-                           os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_FrzRain_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           ),
-                           os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_IcePel_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           )]
+                          []
                       )
                   ]}
     },
@@ -160,22 +130,7 @@ assemble_data_jobs_dict = {
                                     gda_util.python_command(
                                         'global_det_atmos_stats_'
                                         'grid2obs_create_anomaly.py',
-                                        ['TMP_Z2',
-                                         os.path.join(
-                                             '$DATA',
-                                             '${VERIF_CASE}_${STEP}',
-                                             'METplus_output',
-                                             '${RUN}.'
-                                             +'{valid?fmt=%Y%m%d}',
-                                             '$MODEL', '$VERIF_CASE',
-                                             'point_stat_'
-                                             +'${VERIF_TYPE}_'
-                                             +'${job_name}_'
-                                             +'{lead?fmt=%2H}0000L_'
-                                             +'{valid?fmt=%Y%m%d}_'
-                                             +'{valid?fmt=%H}0000V'
-                                             +'.stat'
-                                         )]
+                                        []
                                     )]},
     }
 }
@@ -532,38 +487,13 @@ generate_stats_jobs_dict = {
                                 'commands': [gda_util.python_command(
                                                 'global_det_atmos_stats_'
                                                 'grid2obs_create_daily_avg.py',
-                                                ['TMP_ANOM_Z2',
-                                                  os.path.join(
-                                                      '$DATA',
-                                                      '${VERIF_CASE}_${STEP}',
-                                                      'METplus_output',
-                                                      '${RUN}.'
-                                                      +'{valid?fmt=%Y%m%d}',
-                                                      '$MODEL', '$VERIF_CASE',
-                                                      'anomaly_${VERIF_TYPE}_'
-                                                      +'TempAnom2m_init'
-                                                      +'{init?fmt=%Y%m%d%H}_'
-                                                      +'fhr{lead?fmt=%3H}.stat'
-                                                ),
-                                                os.path.join(
-                                                    '$COMIN', 'stats',
-                                                    '$COMPONENT',
-                                                    '${RUN}.{valid?fmt=%Y%m%d}',
-                                                    '$MODEL', '$VERIF_CASE',
-                                                    'anomaly_${VERIF_TYPE}_'
-                                                    +'TempAnom2m_init'
-                                                    +'{init?fmt=%Y%m%d%H}_'
-                                                    +'fhr{lead?fmt=%3H}.stat'
-                                                )]
+                                                []
                                             ),
                                             'ndaily_avg_stat_files='
                                             +'$(ls '+os.path.join(
-                                                '$DATA',
-                                                '${VERIF_CASE}_${STEP}',
-                                                'METplus_output',
-                                                '${RUN}.${DATE}',
-                                                '$MODEL', '$VERIF_CASE',
-                                                'daily_avg_*.stat'
+                                                '$COMOUT',
+                                                '${RUN}.${DATE}', '$MODEL',
+                                                '$VERIF_CASE', 'daily_avg_*'
                                             )+'|wc -l)',
                                             ('if [ $ndaily_avg_stat_files '
                                             +'-ne 0 ]; then'),
@@ -577,12 +507,20 @@ generate_stats_jobs_dict = {
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'DPT',
                                'var1_fcst_levels': 'Z2',
-                               'var1_fcst_options': 'cnt_thresh = [ NA, NA, NA, NA, NA, NA ]; cnt_logic = INTERSECTION;',
+                               'var1_fcst_options': ('cnt_thresh = '
+                                                     +'[ NA, NA, NA, NA, '
+                                                     +'NA, NA ]; cnt_logic = '
+                                                     +'INTERSECTION;'),
                                'var1_fcst_threshs': ('ge277.594, ge283.15, '
                                                      +'ge288.706, ge294.261'),
                                'var1_obs_name': 'DPT',
                                'var1_obs_levels': 'Z2',
-                               'var1_obs_options': 'cnt_thresh = [ NA, >=272.039, >=277.594, >=283.15, >=288.706, >=294.261 ]; cnt_logic = INTERSECTION;',
+                               'var1_obs_options': ('cnt_thresh = '
+                                                    +'[ NA, >=272.039, '
+                                                    +'>=277.594, >=283.15, '
+                                                    +'>=288.706, >=294.261 ]; '
+                                                    +'cnt_logic = '
+                                                    +'INTERSECTION;'),
                                'var1_obs_threshs': ('ge277.594, ge283.15, '
                                                     +'ge288.706, ge294.261'),
                                'met_config_overrides': ''},
@@ -849,6 +787,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
+                    # Create job working directory
+                    job_env_dict['job_num_work_dir'] = os.path.join(
+                        DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                        'job_work_dir', JOB_GROUP,
+                        f"job{job_env_dict['job_num']}"
+                    )
+                    job_env_dict['MET_TMP_DIR'] = os.path.join(
+                        job_env_dict['job_num_work_dir'], 'tmp'
+                    )
                     # Set any environment variables for special cases
                     if JOB_GROUP in ['assemble_data', 'generate_stats']:
                         if verif_type == 'pres_levs':
@@ -912,7 +859,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     check_model_files = True
                     if check_model_files:
                         (model_files_exist, valid_date_fhr_list,
-                         model_copy_output_DATA2COMOUT_list) = (
+                         copy_output_list) = (
                             gda_util.check_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = ', '.join(
@@ -1129,6 +1076,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 job.write(f'export {name}="{value}"\n')
                     # Write job commands
                     if write_job_cmds:
+                        gda_util.make_dir(job_env_dict['job_num_work_dir'])
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
                             job.write('export err=$?; err_chk'+'\n')
@@ -1158,18 +1106,23 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                             job.write(cmd+'\n')
                                             job.write('export err=$?; err_chk'
                                                       +'\n')
-                        if job_env_dict['SENDCOM'] == 'YES':
-                            for model_output_file_tuple \
-                                    in model_copy_output_DATA2COMOUT_list:
-                                job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
-                                          +f"cp -v {model_output_file_tuple[0]} "
-                                          +f"{model_output_file_tuple[1]}"
-                                          +f"; fi\n")
+                        for output_file_tuple in copy_output_list:
+                            job.write(f'if [ -f "{output_file_tuple[0]}" ]; then '
+                                      +f"cp -v {output_file_tuple[0]} "
+                                      +f"{output_file_tuple[1]}; fi\n")
                     else:
                         if JOB_GROUP == 'assemble_data':
                             if verif_type_job == 'TempAnom2m':
                                 if job_env_dict['fhr_list'] != '':
-                                    job.write(verif_type_job_commands_list[1])
+                                    job.write(verif_type_job_commands_list[1]
+                                              +'\n')
+                                    job.write('export err=$?; err_chk\n')
+                        if JOB_GROUP == 'generate_stats':
+                            if verif_type_job == 'DailyAvg_TempAnom2m':
+                                if job_env_dict['fhr_list'] != '':
+                                    job.write(verif_type_job_commands_list[0]
+                                              +'\n')
+                                    job.write('export err=$?; err_chk\n')
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':
@@ -1186,7 +1139,11 @@ elif JOB_GROUP == 'gather_stats':
         job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
         for model_idx in range(len(model_list)):
             job_env_dict['MODEL'] = model_list[model_idx]
+            job_env_dict['MODEL_EVS_DATA_DIR'] = (
+                model_evs_data_dir_list[model_idx]
+            )
             njobs+=1
+            job_env_dict['job_num'] = str(njobs)
             # Create job file
             job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
             print(f"Creating job script: {job_file}")
@@ -1194,6 +1151,15 @@ elif JOB_GROUP == 'gather_stats':
             job.write('#!/bin/bash\n')
             job.write('set -x\n')
             job.write('\n')
+            # Create job working directory
+            job_env_dict['job_num_work_dir'] = os.path.join(
+                DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                'job_work_dir', JOB_GROUP,
+                f"job{job_env_dict['job_num']}"
+            )
+            job_env_dict['MET_TMP_DIR'] = os.path.join(
+                job_env_dict['job_num_work_dir'], 'tmp'
+            )
             # Set any environment variables for special cases
             # Write environment variables
             for name, value in job_env_dict.items():
@@ -1204,16 +1170,24 @@ elif JOB_GROUP == 'gather_stats':
                         job.write(f'export {name}="{value}"\n')
             job.write('\n')
             # Do file checks
-            stat_files_exist = gda_util.check_stat_files(job_env_dict)
+            stat_files_exist, copy_output_list = gda_util.check_stat_files(
+                job_env_dict
+            )
             if stat_files_exist:
                 write_job_cmds = True
             else:
                 write_job_cmds = False
             # Write job commands
             if write_job_cmds:
+                gda_util.make_dir(job_env_dict['job_num_work_dir'])
                 for cmd in gather_stats_jobs_dict['commands']:
                     job.write(cmd+'\n')
                     job.write('export err=$?; err_chk'+'\n')
+                for output_file_tuple in copy_output_list:
+                    job.write(f'if [ -f "{output_file_tuple[0]}" ]; then '
+                              +f"cp -v {output_file_tuple[0]} "
+                              +f"{output_file_tuple[1]}"
+                              +f"; fi\n")
             job.close()
         date_dt = date_dt + datetime.timedelta(days=1)
 

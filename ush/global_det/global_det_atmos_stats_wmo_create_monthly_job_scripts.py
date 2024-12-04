@@ -60,30 +60,30 @@ dont_write_env_var_list = [
 
 # Set file formats
 daily_stat_file_format = os.path.join(
-    DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
+    '{output_dir?fmt=str}', MODELNAME+'.{valid?fmt=%Y%m%d}',
     f"{NET}.{STEP}.{MODELNAME}.{RUN}.{VERIF_CASE}."
     +'v{valid?fmt=%Y%m%d}.stat'
 )
 filtered_station_file_format = os.path.join(
-    DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     f"evs.stats.gfs.atmos.wmo.station_info.v{VDATE_dt:%Y%m}.stat"
 )
 stat_analysis_job_file_format = os.path.join(
-    DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     MODELNAME+'.{wmo_verif?fmt=str}.{valid?fmt=%Y%m}_{valid?fmt=%H}Z.'
     +'f{lead?fmt=%H}.{stat_analysis_job?fmt=str}.{line_type?fmt=str}.stat'
 )
 wmo_rec2_report_file_format = os.path.join(
-    DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
+    '{output_dir?fmt=str}', MODELNAME+'.{valid?fmt=%Y%m%d}',
     '{valid?fmt=%Y%m}_kwbc_{temporal?fmt=str}.rec2'
 )
 wmo_svs_report_vhr_fhr_file_format = os.path.join(
-    DATA, RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
+    '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
     '{valid?fmt=%Y%m}_kwbc_{param?fmt=str}_'
     +'valid{valid?fmt=%H}Z_fhr{lead?fmt=%3H}.svs'
 )
 wmo_svs_report_file_format = os.path.join(
-    DATA, MODELNAME+'.{valid?fmt=%Y%m%d}',
+    '{output_dir?fmt=str}', MODELNAME+'.{valid?fmt=%Y%m%d}',
     '{valid?fmt=%Y%m}_kwbc_{param?fmt=str}.svs'
 )
 
@@ -119,9 +119,9 @@ if JOB_GROUP == 'summarize_stats':
     date_dt = VDATE_dt
     while date_dt >= VYYYYmm_dt:
         input_date_stat_file = gda_util.format_filler(
-            daily_stat_file_format, date_dt, date_dt,
-            'anl', {}
-        ).replace(DATA, os.path.join(COMIN, 'stats', COMPONENT))
+            daily_stat_file_format, date_dt, date_dt, 'anl',
+            {'output_dir': os.path.join(COMIN, 'stats', COMPONENT)}
+        )
         tmp_date_stat_file = os.path.join(
             VYYYYmm_daily_stats_dir, input_date_stat_file.rpartition('/')[2]
         )
@@ -150,11 +150,12 @@ if JOB_GROUP == 'summarize_stats':
         os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*')
     )
     tmp_filtered_station_info_file = gda_util.format_filler(
-        filtered_station_file_format, VDATE_dt, VDATE_dt, 'anl', {}
+        filtered_station_file_format, VDATE_dt, VDATE_dt, 'anl',
+        {'output_dir': DATA}
     )
-    output_filtered_station_info_file = os.path.join(
-        COMOUT , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
-        tmp_filtered_station_info_file.rpartition('/')[2]
+    output_filtered_station_info_file = gda_util.format_filler(
+        filtered_station_file_format, VDATE_dt, VDATE_dt, 'anl',
+        {'output_dir': COMOUT}
     )
     have_filtered_station_info = os.path.exists(
         output_filtered_station_info_file
@@ -267,31 +268,23 @@ if JOB_GROUP == 'summarize_stats':
                         elif stat_analysis_job == 'aggregate':
                             line_type = line_type_info
                         job_env_dict['line_type'] = line_type
-                        tmp_stat_analysis_job_file = gda_util.format_filler(
+                        njobs+=1
+                        job_env_dict['job_num'] = str(njobs)
+                        # Create job working directory
+                        job_env_dict['job_num_work_dir'] = os.path.join(
+                            DATA, 'job_work_dir', JOB_GROUP,
+                            f"job{job_env_dict['job_num']}"
+                        )
+                        job_env_dict['MET_TMP_DIR'] = os.path.join(
+                            job_env_dict['job_num_work_dir'], 'tmp'
+                        )
+                        output_stat_analysis_job_file = gda_util.format_filler(
                             stat_analysis_job_file_format, valid_time_dt,
                             valid_time_dt, fhr,
                             {'wmo_verif': wmo_verif,
                              'stat_analysis_job': stat_analysis_job,
-                             'line_type': line_type}
-                        )
-                        job_env_dict['tmp_stat_analysis_job_file'] = (
-                            tmp_stat_analysis_job_file
-                        )
-                        job_env_dict['tmp_stat_analysis_job_dump_row_file'] = (
-                            tmp_stat_analysis_job_file.replace(
-                                f".{line_type}.stat",
-                                f".{line_type}.dump_row.stat"
-                            )
-                        )
-                        job_env_dict['tmp_stat_analysis_job_grep_file'] = (
-                            tmp_stat_analysis_job_file.replace(
-                                f".{line_type}.stat",
-                                f".{line_type}.grep.stat"
-                            )
-                        )
-                        output_stat_analysis_job_file = os.path.join(
-                            COMOUT , f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
-                            tmp_stat_analysis_job_file.rpartition('/')[2]
+                             'line_type': line_type,
+                             'output_dir': COMOUT}
                         )
                         job_env_dict['output_stat_analysis_job_file'] = (
                             output_stat_analysis_job_file
@@ -311,7 +304,33 @@ if JOB_GROUP == 'summarize_stats':
                         have_stat = os.path.exists(
                             output_stat_analysis_job_file
                         )
-                        njobs+=1
+                        if have_stat:
+                            tmp_dir = DATA
+                        else:
+                            tmp_dir = job_env_dict['job_num_work_dir']
+                        tmp_stat_analysis_job_file = gda_util.format_filler(
+                            stat_analysis_job_file_format, valid_time_dt,
+                            valid_time_dt, fhr,
+                            {'wmo_verif': wmo_verif,
+                             'stat_analysis_job': stat_analysis_job,
+                             'line_type': line_type,
+                             'output_dir': tmp_dir}
+                        )
+                        job_env_dict['tmp_stat_analysis_job_file'] = (
+                            tmp_stat_analysis_job_file
+                        )
+                        job_env_dict['tmp_stat_analysis_job_dump_row_file'] = (
+                            tmp_stat_analysis_job_file.replace(
+                                f".{line_type}.stat",
+                                f".{line_type}.dump_row.stat"
+                            )
+                        )
+                        job_env_dict['tmp_stat_analysis_job_grep_file'] = (
+                            tmp_stat_analysis_job_file.replace(
+                                f".{line_type}.stat",
+                                f".{line_type}.grep.stat"
+                            )
+                        )
                         job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                 'job'+str(njobs))
                         print(f"Creating job script: {job_file}")
@@ -352,6 +371,14 @@ if JOB_GROUP == 'summarize_stats':
                             job.write('export err=$?; err_chk')
                         else:
                             if ndaily_stat_files > 0:
+                                gda_util.make_dir(
+                                    job_env_dict['job_num_work_dir']
+                                )
+                                gda_util.make_dir(
+                                    job_env_dict[
+                                        'tmp_stat_analysis_job_grep_file'
+                                    ].rpartition('/')[0]
+                                )
                                 job.write(
                                     'grep -h '
                                     +f'"{wmo_verif}.*{fhr.zfill(2)}0000 '
@@ -409,18 +436,30 @@ elif JOB_GROUP == 'write_reports':
     job_env_dict['VDATE'] = VDATE
     # Write jobs for rec2
     for rec2_temporal in ['daily', 'monthly']:
+        njobs+=1
+        job_env_dict['job_num'] = str(njobs)
+        # Create job working directory
+        job_env_dict['job_num_work_dir'] = os.path.join(
+            DATA, 'job_work_dir', JOB_GROUP, f"job{job_env_dict['job_num']}"
+        )
+        output_rec2_file = gda_util.format_filler(
+            wmo_rec2_report_file_format, valid_time_dt, valid_time_dt,
+            'anl', {'temporal': rec2_temporal,
+                    'output_dir': COMOUT}
+        )
+        have_report = os.path.exists(output_rec2_file)
+        if have_report:
+            tmp_dir = DATA
+        else:
+            tmp_dir = job_env_dict['job_num_work_dir']
         tmp_rec2_file = gda_util.format_filler(
             wmo_rec2_report_file_format, valid_time_dt, valid_time_dt,
-            'anl', {'temporal': rec2_temporal}
-        )
-        output_rec2_file = os.path.join(
-            COMOUT, f"{MODELNAME}.{VDATE}", tmp_rec2_file.rpartition('/')[2]
+            'anl', {'temporal': rec2_temporal,
+                    'output_dir': tmp_dir}
         )
         job_env_dict['tmp_report_file'] = tmp_rec2_file
         job_env_dict['output_report_file'] = output_rec2_file
-        have_report = os.path.exists(output_rec2_file)
         # Make job script
-        njobs+=1
         job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
         print(f"Creating job script: {job_file}")
         job = open(job_file, 'w')
@@ -436,6 +475,7 @@ elif JOB_GROUP == 'write_reports':
                       +'cp -v $output_report_file $tmp_report_file; fi\n')
             job.write('export err=$?; err_chk')
         else:
+            gda_util.make_dir(job_env_dict['job_num_work_dir'])
             job.write(
                 gda_util.python_command(
                     'global_det_atmos_stats_wmo_format_'
@@ -475,21 +515,35 @@ elif JOB_GROUP == 'write_reports':
                            +"WMO required init hours "
                            +f"{wmo_init_hour_list}")
                      continue
+                njobs+=1
+                job_env_dict['job_num'] = str(njobs)
+                # Create job working directory
+                job_env_dict['job_num_work_dir'] = os.path.join(
+                     DATA, 'job_work_dir', JOB_GROUP,
+                     f"job{job_env_dict['job_num']}"
+                )
+                output_report_file = gda_util.format_filler(
+                    wmo_svs_report_vhr_fhr_file_format,
+                    valid_time_dt+datetime.timedelta(hours=int(vhr)),
+                    valid_time_dt+datetime.timedelta(hours=int(vhr)),
+                    fhr, {'param': param,
+                          'output_dir': COMOUT}
+                )
+                have_report = os.path.exists(output_report_file)
+                if have_report:
+                    tmp_dir = DATA
+                else:
+                    tmp_dir = job_env_dict['job_num_work_dir']
                 tmp_report_file = gda_util.format_filler(
                     wmo_svs_report_vhr_fhr_file_format,
                     valid_time_dt+datetime.timedelta(hours=int(vhr)),
                     valid_time_dt+datetime.timedelta(hours=int(vhr)),
-                    fhr, {'param': param}
-                )
-                output_report_file = os.path.join(
-                    COMOUT, f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
-                    tmp_report_file.rpartition('/')[2]
+                    fhr, {'param': param,
+                          'output_dir': tmp_dir}
                 )
                 job_env_dict['tmp_report_file'] = tmp_report_file
                 job_env_dict['output_report_file'] = output_report_file
-                have_report = os.path.exists(output_report_file)
                 # Make job script
-                njobs+=1
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print(f"Creating job script: {job_file}")
                 job = open(job_file, 'w')
@@ -506,6 +560,7 @@ elif JOB_GROUP == 'write_reports':
                               +'fi\n')
                     job.write('export err=$?; err_chk')
                 else:
+                    gda_util.make_dir(job_env_dict['job_num_work_dir'])
                     job.write(
                         gda_util.python_command(
                             'global_det_atmos_stats_wmo_format_'
@@ -527,19 +582,30 @@ elif JOB_GROUP == 'concatenate_reports':
     # Write jobs for svs
     for param in ['t2m', 'ff10m', 'dd10m', 'tp24', 'td2m', 'rh2m',
                   'tcc', 'tp06']:
+        njobs+=1
+        job_env_dict['job_num'] = str(njobs)
+        # Create job working directory
+        job_env_dict['job_num_work_dir'] = os.path.join(
+            DATA, 'job_work_dir', JOB_GROUP, f"job{job_env_dict['job_num']}"
+        )
+        output_report_file = gda_util.format_filler(
+            wmo_svs_report_file_format, valid_time_dt,
+            valid_time_dt, 'anl',
+            {'param': param, 'output_dir': COMOUT}
+        )
+        have_report = os.path.exists(output_report_file)
+        if have_report:
+            tmp_dir = DATA
+        else:
+            tmp_dir = job_env_dict['job_num_work_dir']
         tmp_report_file = gda_util.format_filler(
             wmo_svs_report_file_format, valid_time_dt,
-            valid_time_dt, 'anl', {'param': param}
-        )
-        output_report_file = os.path.join(
-            COMOUT, f"{MODELNAME}.{valid_time_dt:%Y%m%d}",
-            tmp_report_file.rpartition('/')[2]
+            valid_time_dt, 'anl',
+            {'param': param, 'output_dir': tmp_dir}
         )
         job_env_dict['tmp_report_file'] = tmp_report_file
         job_env_dict['output_report_file'] = output_report_file
-        have_report = os.path.exists(output_report_file)
         # Make job script
-        njobs+=1
         job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
         print(f"Creating job script: {job_file}")
         job = open(job_file, 'w')
@@ -564,6 +630,10 @@ elif JOB_GROUP == 'concatenate_reports':
                 svs_param_vhr_fhr_wildcard
             )
             if len(svs_param_vhr_fhr_files) > 0:
+                gda_util.make_dir(job_env_dict['job_num_work_dir'])
+                gda_util.make_dir(
+                    job_env_dict['tmp_report_file'].rpartition('/')[0]
+                )
                 job.write(
                     f"cat {' '.join(svs_param_vhr_fhr_files)} >& "
                     +'$tmp_report_file\n'
