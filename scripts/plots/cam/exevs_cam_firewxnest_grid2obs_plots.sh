@@ -35,7 +35,7 @@ while [ $DATE -ge $ENDDATE ]; do
 
 	if [ -e ${EVSINnam}.$DAY/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
 	then
-	 cp -v ${EVSINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	 cp -v ${EVSINnam}.$DAY/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 
 	 sed "s/$model1/nam_$MODELNAME/g" $STATDIR/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
 	 sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
