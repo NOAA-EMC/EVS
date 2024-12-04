@@ -21,9 +21,9 @@ print("BEGIN: "+os.path.basename(__file__))
 # Read in environment variables
 DATA = os.environ['DATA']
 COMOUT = os.environ['COMOUT']
+COMIN = os.environ['COMIN']
 SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
-NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
@@ -31,28 +31,23 @@ VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
 DATE = os.environ['DATE']
+var1_fcst_name = os.environ['var1_fcst_name']
+var1_fcst_levels = os.environ['var1_fcst_levels']
+var1_obs_name = os.environ['var1_obs_name']
+var1_obs_levels = os.environ['var1_obs_levels']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_end = os.environ['fhr_list'].split(', ')[-1]
+job_num_work_dir = os.environ['job_num_work_dir']
 
-# Process run time agruments
-if len(sys.argv) != 4:
-    print("FATAL ERROR: Not given correct number of run time agruments..."
-          +os.path.basename(__file__)+" VARNAME_VARLEVEL DATA_FILE_FORMAT "
-          +"COMIN_FILE_FORMART")
+# Check variable settings
+if ' ' in var1_fcst_levels or ',' in var1_fcst_levels:
+    print("ERROR: Cannot accept list of forecast levels")
     sys.exit(1)
-else:
-    if '_' not in sys.argv[1]:
-        print("FATAL ERROR: variable and level runtime agrument formated "
-              +"incorrectly, be sure to separate variable and level with "
-              +"an underscore (_), example HGT_P500")
-        sys.exit(1)
-    else:
-        var_level = sys.argv[1]
-        print("Using var_level = "+var_level)
-    DATA_file_format = sys.argv[2]
-    COMIN_file_format = sys.argv[3]
+if ' ' in var1_obs_levels or ',' in var1_obs_levels:
+    print("ERROR: Cannot accept list of observation levels")
+    sys.exit(1)
 
 # Set MET MPR columns
 MET_MPR_column_list = [
@@ -65,6 +60,26 @@ MET_MPR_column_list = [
     'CLIMO_MEAN', 'CLIMO_STDEV', 'CLIMO_CDF'
 ]
 
+# Set input file formats
+if job_name == 'DailyAvg_TempAnom2m':
+    input_file_format_COMIN = os.path.join(
+        COMIN, STEP, COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+        MODEL, VERIF_CASE,
+        f"anomaly_{VERIF_TYPE}_TempAnom2m_init"
+        +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.stat'
+    )
+else:
+    print(f"ERROR: job_name={job_name} not known to get file format")
+    sys.exit(1)
+input_file_format_DATA = os.path.join(
+    DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',  RUN+'.{valid?fmt=%Y%m%d}',
+    MODEL, VERIF_CASE, input_file_format_COMIN.rpartition('/')[2]
+)
+input_file_format_COMOUT = os.path.join(
+    COMOUT, RUN+'.{valid?fmt=%Y%m%d}', MODEL, VERIF_CASE,
+    input_file_format_COMIN.rpartition('/')[2]
+)
+
 # Create daily average files
 print("\nCreating daily average files")
 valid_hr = int(valid_hr_start)
@@ -76,89 +91,126 @@ while valid_hr <= int(valid_hr_end):
     daily_avg_day_start = 1
     daily_avg_day = daily_avg_day_start
     while daily_avg_day <= daily_avg_day_end:
+        full_path_job_num_work_dir = os.path.join(
+            job_num_work_dir, f"{RUN}.{DATE}",
+            MODEL, VERIF_CASE
+        )
+        full_path_DATA = os.path.join(
+            DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+            f"{RUN}.{DATE}", MODEL, VERIF_CASE
+        )
+        full_path_COMIN = os.path.join(
+            COMIN, STEP, COMPONENT, f"{RUN}.{DATE}",
+            MODEL, VERIF_CASE
+        )
+        full_path_COMOUT = os.path.join(
+            COMOUT, f"{RUN}.{DATE}", MODEL, VERIF_CASE
+        )
         daily_avg_file_list = []
         daily_avg_day_fhr_end = daily_avg_day * 24
         daily_avg_day_fhr_start = daily_avg_day_fhr_end - 12
         daily_avg_day_init = (daily_avg_valid_end
                               - datetime.timedelta(days=daily_avg_day))
         daily_avg_day_fhr = daily_avg_day_fhr_start
-        output_DATA_file = os.path.join(
-            DATA, VERIF_CASE+'_'+STEP, 'METplus_output', RUN+'.'+DATE, MODEL,
-            VERIF_CASE, 'daily_avg_'+VERIF_TYPE+'_'+job_name+'_init'
-            +daily_avg_day_init.strftime('%Y%m%d%H')+'_valid'
-            +daily_avg_valid_start.strftime('%Y%m%d%H')+'to'
-            +daily_avg_valid_end.strftime('%Y%m%d%H')+'.stat'
+        # Set output file
+        output_file = os.path.join(
+            full_path_job_num_work_dir,
+            f"daily_avg_{VERIF_TYPE}_{job_name}_init"
+            +f"{daily_avg_day_init:%Y%m%d%H}_valid"
+            +f"{daily_avg_valid_start:%Y%m%d%H}to"
+            +f"{daily_avg_valid_end:%Y%m%d%H}.stat"
         )
-        output_COMOUT_file = os.path.join(
-            COMOUT, RUN+'.'+DATE, MODEL,
-            VERIF_CASE, 'daily_avg_'+VERIF_TYPE+'_'+job_name+'_init'
-            +daily_avg_day_init.strftime('%Y%m%d%H')+'_valid'
-            +daily_avg_valid_start.strftime('%Y%m%d%H')+'to'
-            +daily_avg_valid_end.strftime('%Y%m%d%H')+'.stat'
+        output_file_DATA = os.path.join(
+            full_path_DATA, output_file.rpartition('/')[2]
         )
+        output_file_COMOUT = os.path.join(
+            full_path_COMOUT, output_file.rpartition('/')[2]
+        )
+        # Check input and output files
+        if os.path.exists(output_file_COMOUT):
+            print(f"COMOUT Output File exists: {output_file_COMOUT}")
+            gda_util.copy_file(output_file_COMOUT, output_file_DATA)
+            make_daily_avg_output_file = False
+        else:
+            make_daily_avg_output_file = True
         while daily_avg_day_fhr <= daily_avg_day_fhr_end:
             daily_avg_day_fhr_valid = (
                 daily_avg_day_init
                 + datetime.timedelta(hours=daily_avg_day_fhr)
             )
+            # Check possible input files
             daily_avg_day_fhr_DATA_input_file = gda_util.format_filler(
-                    DATA_file_format, daily_avg_day_fhr_valid,
-                    daily_avg_day_init,
-                    str(daily_avg_day_fhr), {}
+                input_file_format_DATA, daily_avg_day_fhr_valid,
+                daily_avg_day_init,
+                str(daily_avg_day_fhr), {}
+            )
+            daily_avg_day_fhr_COMOUT_input_file = gda_util.format_filler(
+                input_file_format_COMOUT, daily_avg_day_fhr_valid,
+                daily_avg_day_init,
+                str(daily_avg_day_fhr), {}
             )
             daily_avg_day_fhr_COMIN_input_file = gda_util.format_filler(
-                    COMIN_file_format, daily_avg_day_fhr_valid,
+                    input_file_format_COMIN, daily_avg_day_fhr_valid,
                     daily_avg_day_init,
                     str(daily_avg_day_fhr), {}
             )
-            if os.path.exists(daily_avg_day_fhr_COMIN_input_file):
-                daily_avg_day_fhr_input_file = (
-                    daily_avg_day_fhr_COMIN_input_file)
-            else:
-                daily_avg_day_fhr_input_file = (
-                    daily_avg_day_fhr_DATA_input_file
+            check_input_file_list = [
+                daily_avg_day_fhr_DATA_input_file,
+                daily_avg_day_fhr_COMOUT_input_file,
+                daily_avg_day_fhr_COMIN_input_file
+            ]
+            daily_avg_day_fhr_job_input_file_glob = glob.glob(
+                os.path.join(
+                    DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                    'job_work_dir', 'assemble_data', 'job*',
+                    daily_avg_day_fhr_COMOUT_input_file.rpartition(
+                        f"{COMPONENT}/"
+                    )[2]
                 )
-            if os.path.exists(daily_avg_day_fhr_input_file):
+            )
+            if len(daily_avg_day_fhr_job_input_file_glob) == 1:
+                check_input_file_list.insert(
+                    0,daily_avg_day_fhr_job_input_file_glob[0]
+                )
+            found_input = False
+            for check_input_file in check_input_file_list:
+                daily_avg_day_fhr_input_file = check_input_file
+                if os.path.exists(daily_avg_day_fhr_input_file):
+                    daily_avg_day_fhr_input_file = check_input_file
+                    found_input = True
+                    break
+            if found_input and make_daily_avg_output_file:
                 print("Input file for forecast hour "+str(daily_avg_day_fhr)
                       +', valid '+str(daily_avg_day_fhr_valid)
                       +', init '+str(daily_avg_day_init)+": "
                       +daily_avg_day_fhr_input_file)
                 daily_avg_file_list.append(daily_avg_day_fhr_input_file)
             else:
-                print("No input file for forecast hour "+str(daily_avg_day_fhr)
-                      +', valid '+str(daily_avg_day_fhr_valid)
-                      +', init '+str(daily_avg_day_init)+" "
-                      +daily_avg_day_fhr_DATA_input_file+" or "
-                      +daily_avg_day_fhr_COMIN_input_file)
+                if not found_input:
+                    print("No input file for forecast hour "
+                          +str(daily_avg_day_fhr)
+                          +', valid '+str(daily_avg_day_fhr_valid)
+                          +', init '+str(daily_avg_day_init)+": "
+                          +', '.join(check_input_file_list)+" do not exist")
             daily_avg_day_fhr+=12
         daily_avg_df_list = []
-        if os.path.exists(output_COMOUT_file):
-            gda_util.copy_file(output_COMOUT_file, output_DATA_file)
-            make_daily_avg_output_file = False
-        else:
-            if len(daily_avg_file_list) == 2:
-                if not os.path.exists(output_DATA_file):
-                    make_daily_avg_output_file = True
-                else:
-                    make_daily_avg_output_file = False
-                    print(f"DATA Output File exist: {output_DATA_file}")
-                    if SENDCOM == 'YES' \
-                            and gda_util.check_file_exists_size(
-                                output_DATA_file
-                            ):
-                        gda_util.copy_file(output_DATA_file,
-                                           output_COMOUT_file)
-            else:
-                print("NOTE: Need 2 files to create daily average")
-                make_daily_avg_output_file = False
         if make_daily_avg_output_file:
-            print(f"DATA Output File: {output_DATA_file}")
-            print(f"COMOUT Output File: {output_COMOUT_file}")
+            if len(daily_avg_file_list) == 2:
+                make_daily_avg_output_file = True
+            else:
+                make_daily_avg_output_file = False
+                print("NOTE: Cannot creat daily average file "
+                      +output_file+"; need 2 input files")
+        if make_daily_avg_output_file:
+            print(f"Output File: {output_file}")
+            if not os.path.exists(full_path_job_num_work_dir):
+                gda_util.make_dir(full_path_job_num_work_dir)
             all_daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
             for daily_avg_file in daily_avg_file_list:
                 with open(daily_avg_file, 'r') as infile:
                     input_file_header = infile.readline()
-                daily_avg_file_df = pd.read_csv(daily_avg_file, sep=" ", skiprows=1,
+                daily_avg_file_df = pd.read_csv(daily_avg_file, sep=" ",
+                                                skiprows=1,
                                                 skipinitialspace=True, header=None,
                                                 names=MET_MPR_column_list,
                                                 na_filter=False, dtype=str)
@@ -237,12 +289,12 @@ while valid_hr <= int(valid_hr_end):
                 daily_avg_df_list, axis=1, ignore_index=True
             ).T
             daily_avg_df.to_csv(
-                output_DATA_file, header=input_file_header,
+                output_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
             )
-            if SENDCOM == 'YES' \
-                    and gda_util.check_file_exists_size(output_DATA_file):
-                gda_util.copy_file(output_DATA_file, output_COMOUT_file)
+            if gda_util.check_file_exists_size(output_file):
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(output_file, output_file_COMOUT)
         print("")
         daily_avg_day+=1
     valid_hr+=int(valid_hr_inc)

@@ -57,8 +57,9 @@ for period in ${periods} ; do
                   if [ $region = "GLOBAL" ]; then
                       regionl="glb"
                   else
-                      regionl=`echo $region | tr '[A-Z]' '[a-z]'`
+                      regionl=$(echo $region | tr '[A-Z]' '[a-z]')
                   fi
+                  job_work_dir=${DATA}/job_work_dir/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}
                   echo "export MODNAM=${modnam_list} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export PERIOD=${period} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export VERIF_CASE=${VERIF_CASE} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
@@ -68,6 +69,7 @@ for period in ${periods} ; do
                   echo "export VALID_HOUR=${valid_hour} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export REGION=${region} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export MET_VERSION_major_minor=${MET_VERSION_major_minor} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export job_work_dir=${job_work_dir}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   case ${stats} in
                     'stats1')
                       image_stat="me_rmse"
@@ -109,19 +111,25 @@ for period in ${periods} ; do
                   echo "export PTYPE=${ptype}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   # Make COMOUT restart directory
                   output_job_dir=$COMOUT/$VERIF_CASE/last${NDAYS}days/sl1l2/${image_var}_${image_level}/${regionl}/${image_stat}
-                  mkdir -p $output_job_dir
+                  if [ ! -d $output_job_dir ]; then
+                      mkdir -p $output_job_dir
+                  fi
                   #Define DATA and COMOUT image name
                   imagename=evs.${COMPONENT}.${image_stat}.${image_var}_${image_level}_${obtypel}.last${NDAYS}days.timeseries_valid${valid_hour}z_f${fhr}.latlon_0p25_${regionl}.png
                   output_image=$output_job_dir/$imagename
                   tmp_image=$DATA/images/$imagename
+                  job_image=$job_work_dir/images/$imagename
                   # Add commands
                   if [[ -s $output_image ]]; then
                       echo "cp -v $output_image $tmp_image" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   else
+                      if [[ ! -d $job_work_dir ]]; then
+                          mkdir -p $job_work_dir
+                      fi
                       echo "${GRID2OBS_CONF}/py_plotting_wave.config"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                       echo "export err=\$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                       if [ $SENDCOM = YES ]; then
-                          echo "if [ -f $tmp_image ]; then cp -v $tmp_image $output_image; fi" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                          echo "if [ -f $job_image ]; then cp -v $job_image $output_image; fi" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${valid_hour}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                       fi
                   fi
 
@@ -135,4 +143,3 @@ for period in ${periods} ; do
     done  # end of obsname
   done  # end of valid hours
 done  # end of periods
-

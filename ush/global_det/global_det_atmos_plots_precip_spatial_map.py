@@ -31,15 +31,15 @@ class PrecipSpatialMap:
     Make a precipitation spatial map graphic
     """
 
-    def __init__(self, logger, input_dir, DATA_output_dir, COMOUT_output_dir,
+    def __init__(self, logger, input_dir, working_dir, output_dir,
                  model_info_dict, date_info_dict, plot_info_dict,
                  met_info_dict, logo_dir):
         """! Initalize PrecipSpatialMap class
              Args:
                  logger            - logger object
                  input_dir         - path to input directory (string)
-                 DATA_output_dir   - path to DATA output directory (string)
-                 COMOUT_outpur_dir - path to COMOUT output directory (string)
+                 working_dir       - path to working directory (string)
+                 output_dir        - path to output directory (string)
                  model_info_dict   - model infomation dictionary (strings)
                  plot_info_dict    - plot information dictionary (strings)
                  date_info_dict    - date information dictionary (strings)
@@ -50,8 +50,8 @@ class PrecipSpatialMap:
         """
         self.logger = logger
         self.input_dir = input_dir
-        self.DATA_output_dir = DATA_output_dir
-        self.COMOUT_output_dir = COMOUT_output_dir
+        self.working_dir = working_dir
+        self.output_dir = output_dir
         self.model_info_dict = model_info_dict
         self.date_info_dict = date_info_dict
         self.plot_info_dict = plot_info_dict
@@ -65,7 +65,8 @@ class PrecipSpatialMap:
         """
         self.logger.info(f"Plot Type: Preciptation Spatial Map")
         self.logger.debug(f"Input directory: {self.input_dir}")
-        self.logger.debug(f"Output directory: {self.DATA_output_dir}")
+        self.logger.debug(f"Working directory: {self.working_dir}")
+        self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
                           +f"{self.model_info_dict}")
         self.logger.debug(f"Date information dictionary: "
@@ -120,15 +121,15 @@ class PrecipSpatialMap:
                 image_forecast_hour = (
                     self.date_info_dict['forecast_hour'].zfill(3)
                 )
-            DATA_png_name = os.path.join(
-                self.DATA_output_dir,
+            working_png_name = os.path.join(
+                self.working_dir,
                 image_data_source
                 +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
                 +image_forecast_hour+'h.'
                 +self.plot_info_dict['vx_mask']+'.png'
             )
-            COMOUT_png_name = DATA_png_name.replace(
-                self.DATA_output_dir, self.COMOUT_output_dir
+            output_png_name = working_png_name.replace(
+                self.working_dir, self.output_dir
             )
             if model_num == 'obs':
                 model_num_file = os.path.join(
@@ -136,7 +137,7 @@ class PrecipSpatialMap:
                     'ccpa_precip_accum24hr_24hrAccum_valid'
                     +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
                 )
-                if not os.path.exists(DATA_png_name):
+                if not os.path.exists(working_png_name):
                     make_png = True
             else:
                 model_num_file = os.path.join(
@@ -146,7 +147,7 @@ class PrecipSpatialMap:
                     +'fhr'+self.date_info_dict['forecast_hour'].zfill(3)
                     +'.nc'
                 )
-            if not os.path.exists(DATA_png_name):
+            if not os.path.exists(working_png_name):
                 if os.path.exists(model_num_file):
                     make_png = True
                 else:
@@ -157,8 +158,8 @@ class PrecipSpatialMap:
             if model_num_name != 'gfs' \
                     and self.plot_info_dict['vx_mask'] != 'conus':
                 make_png = False
-            if make_png and os.path.exists(COMOUT_png_name):
-                gda_util.copy_file(COMOUT_png_name, DATA_png_name)
+            if make_png and os.path.exists(output_png_name):
+                gda_util.copy_file(output_png_name, working_png_name)
                 make_png = False
             if make_png:
                 self.logger.info(f"Plotting data from {model_num_file}")
@@ -350,18 +351,18 @@ class PrecipSpatialMap:
                             str(round(tick,3)).rstrip('0')
                         )
                 cbar.ax.set_xticklabels(cbar_tick_labels_list)
-                self.logger.info(f"Saving image as {DATA_png_name}")
-                plt.savefig(DATA_png_name)
+                self.logger.info(f"Saving image as {working_png_name}")
+                plt.savefig(working_png_name)
                 plt.clf()
                 plt.close('all')
-                gda_util.copy_file(DATA_png_name, COMOUT_png_name)
-            DATA_gif_name = DATA_png_name.replace('.png', '.gif')
-            COMOUT_gif_name = COMOUT_png_name.replace('.png', '.gif')
-            if os.path.exists(COMOUT_gif_name):
-                gda_util.copy_file(COMOUT_gif_name, DATA_gif_name)
+                gda_util.copy_file(working_png_name, output_png_name)
+            working_gif_name = working_png_name.replace('.png', '.gif')
+            output_gif_name = output_png_name.replace('.png', '.gif')
+            if os.path.exists(output_gif_name):
+                gda_util.copy_file(output_gif_name, working_gif_name)
                 make_gif = False
-            elif os.path.exists(DATA_png_name) \
-                    and not os.path.exists(DATA_gif_name):
+            elif os.path.exists(working_png_name) \
+                    and not os.path.exists(working_gif_name):
                 make_gif = True
             if make_gif:
                 # Convert png to gif, if possible
@@ -370,20 +371,20 @@ class PrecipSpatialMap:
                     stderr=subprocess.DEVNULL
                 )
                 if check_convert.returncode == 0:
-                    self.logger.info(f"Converting {DATA_png_name} to "
-                                     +f"{DATA_gif_name}")
+                    self.logger.info(f"Converting {working_png_name} to "
+                                     +f"{working_gif_name}")
                     run_convert = subprocess.run(
-                        ['convert', DATA_png_name, DATA_gif_name]
+                        ['convert', working_png_name, working_gif_name]
                     )
-                    gda_util.copy_file(DATA_gif_name, COMOUT_gif_name)
+                    gda_util.copy_file(working_gif_name, output_gif_name)
                 else:
                     self.logger.warning("convert executable not in PATH")
 
 def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
-    DATA_OUTPUT_DIR = os.environ['HOME']
-    COMOUT_OUTPUT_DIR = os.environ['HOME']
+    WORKING_DIR = os.environ['HOME']
+    OUTPUT_DIR = os.environ['HOME']
     LOGO_DIR = os.environ['HOME']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
@@ -446,7 +447,7 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = PrecipSpatialMap(logger, INPUT_DIR, DATA_OUTPUT_DIR, COMOUT_OUTPUT_DIR,
+    p = PrecipSpatialMap(logger, INPUT_DIR, WORKING_DIR, OUTPUT_DIR,
                          MODEL_INFO_DICT, DATE_INFO_DICT, PLOT_INFO_DICT,
                          MET_INFO_DICT, LOGO_DIR)
     p.make_precip_spatial_map()
