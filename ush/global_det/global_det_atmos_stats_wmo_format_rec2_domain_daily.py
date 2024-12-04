@@ -16,20 +16,14 @@ import global_det_atmos_util as gda_util
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
-COMIN = os.environ['COMIN']
-SENDCOM = os.environ['SENDCOM']
 DATA = os.environ['DATA']
-NET = os.environ['NET']
 RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
-STEP = os.environ['STEP']
-COMPONENT = os.environ['COMPONENT']
 VDATE = os.environ['VDATE']
 MODELNAME = os.environ['MODELNAME']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
 tmp_report_file = os.environ['tmp_report_file']
-output_report_file = os.environ['output_report_file']
 
 VDATE_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
 month_date_dt = datetime.datetime.strptime(f"{VDATE_dt:%Y%m}01", '%Y%m%d')
@@ -59,7 +53,6 @@ wmo_met_par_match_dict = {
 
 # Set output file paths
 tmp_VDATE_daily_rec2_file = tmp_report_file
-output_VDATE_daily_rec2_file = output_report_file
 
 wmo_verif_info_dict = {
     'grid2grid_upperair': {
@@ -233,6 +226,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
 
 # Write daily file
 print(f"Writing REC2 daily domain data to {tmp_VDATE_daily_rec2_file}")
+gda_util.make_dir(tmp_VDATE_daily_rec2_file.rpartition('/')[0])
 with open(tmp_VDATE_daily_rec2_file, 'w') as f:
     for line in VDATE_daily_rec2_lines:
         f.write(line)
