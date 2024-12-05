@@ -23,7 +23,7 @@ import matplotlib.dates as md
 import aqm_util as gda_util
 from aqm_plots_specs import PlotSpecs
 
-class LeadAverage:
+class LeadAverageVhrMean:
     """
     Make a lead average graphic
     """
@@ -53,7 +53,7 @@ class LeadAverage:
         self.met_info_dict = met_info_dict
         self.logo_dir = logo_dir
 
-    def make_lead_average(self):
+    def make_lead_average_vhr_mean(self):
         """! Make the lead average graphic
 
              Args:
@@ -698,9 +698,9 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = LeadAverage(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
+    p = LeadAverageVhrMean(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
                     DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT, LOGO_DIR)
-    p.make_lead_average()
+    p.make_lead_average_vhr_mean()
 
 if __name__ == "__main__":
     main()

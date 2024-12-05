@@ -56,6 +56,7 @@ class PlotSpecs:
         self.fig_size=(16.,16.)
         if self.plot_type in ['time_series',
                               'time_series_multifhr',
+                              'time_series_fhr_mean',
                               'long_term_time_series',
                               'long_term_time_series_multifhr']:
             self.fig_size = (16., 8.)
@@ -83,6 +84,7 @@ class PlotSpecs:
             self.xtick_label_size = 15
             self.ytick_label_size = 15
         elif self.plot_type in ['lead_average', 'valid_hour_average',
+                                'lead_average_vhr_mean',
                                 'threshold_average',
                                 'long_term_time_series_diff']:
             self.fig_size = (16., 16.)
@@ -597,6 +599,7 @@ class PlotSpecs:
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
                               +', valid: '+', '.join(title_other_hr_list))
         if plot_type not in ['lead_average', 'valid_hour_average',
+                             'time_series_fhr_mean', 'lead_average_vhr_mean',
                              'lead_by_date', 'lead_by_level']:
             forecast_day_list = []
             for forecast_hour in forecast_hour_list:
@@ -809,7 +812,11 @@ class PlotSpecs:
             plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'time_series_multifhr':
             plot_type_savefig_name = 'timeseries'
+        elif self.plot_type == 'time_series_fhr_mean':
+            plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'lead_average':
+            plot_type_savefig_name = 'fhrmean'
+        elif self.plot_type == 'lead_average_vhr_mean':
             plot_type_savefig_name = 'fhrmean'
         elif self.plot_type == 'lead_by_date':
             plot_type_savefig_name = 'leaddate'
@@ -836,12 +843,20 @@ class PlotSpecs:
                                           +str(valid_hr).zfill(2))
                 valid_hr+=int(date_info_dict['valid_hr_inc'])
             plot_type_savefig_name = plot_type_savefig_name+'Z'
+        if self.plot_type in ['lead_average_vhr_mean']:
+            plot_type_savefig_name = (
+                 plot_type_savefig_name+'_validmean'
+            )
         if self.plot_type in ['time_series',
                               'stat_by_level', 'performance_diagram',
                               'threshold_average']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+date_info_dict['forecast_hour'].zfill(3)
+            )
+        if self.plot_type in ['time_series_fhr_mean']:
+            plot_type_savefig_name = (
+                 plot_type_savefig_name+'_fmean'
             )
         elif self.plot_type == 'time_series_multifhr':
             plot_type_savefig_name = (

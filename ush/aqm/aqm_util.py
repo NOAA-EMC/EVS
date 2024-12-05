@@ -2358,6 +2358,265 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
             all_model_df = pd.concat([all_model_df, model_num_df])
     return all_model_df
 
+def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
+             met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
+             obs_var_name, obs_var_level, obs_var_thresh, line_type,
+             grid, vx_mask, interp_method, interp_points, date_type, dates,
+             met_format_valid_dates, fhr):
+    """! Build the data frame for all model stats,
+         Read the model's filtered file, and if doesn't exist
+         filter the model file for need information and write file
+
+         Args:
+             job_group              - either filter_stats or make_plots
+                                      (string)
+             logger                 - logger object
+             input_dir              - path to input directory (string)
+             output_dir             - path to output directory (string)
+             model_info_dict        - model infomation dictionary (strings)
+             met_info_dict          - MET information dictionary (strings)
+             fcst_var_name          - forecast variable name (string)
+             fcst_var_level         - forecast variable level (string)
+             fcst_var_tresh         - forecast variable treshold (string)
+             obs_var_name           - observation variable name (string)
+             obs_var_level          - observation variable level (string)
+             obs_var_tresh          - observation variable treshold (string)
+             line_type              - MET line type (string)
+             grid                   - verification grid (string)
+             vx_mask                - verification masking region (string)
+             interp_method          - interpolation method (string)
+             interp_points          - interpolation points (string)
+             date_type              - type of date (string, VALID or INIT)
+             dates                  - array of dates (datetime)
+             met_format_valid_dates - list of valid dates formatted
+                                      like they are in MET stat files
+             fhr                    - array of forecast hour (string)
+
+         Returns:
+             all_model_df                - dataframe of all the information
+    """
+    met_version_line_type_col_list = get_met_line_type_cols(
+        logger, met_info_dict['root'], met_info_dict['version'], line_type
+    )
+    for model_num in list(model_info_dict.keys()):
+        model_num_name = (
+            model_num+'/'+model_info_dict[model_num]['name']
+            +'/'+model_info_dict[model_num]['plot_name']
+        )
+        model_num_df_index = pd.MultiIndex.from_product(
+            [[model_num_name], met_format_valid_dates],
+            names=['model', 'valid_dates']
+        )
+        model_dict = model_info_dict[model_num]
+        condensed_model_file = os.path.join(
+            input_dir, 'condensed_stats_'
+            +f"{model_info_dict[model_num]['name'].lower()}_"
+            +f"{line_type.lower()}_"
+            +f"{fcst_var_name.lower()}_"
+            +f"{fcst_var_level.lower().replace('.','p').replace('-', '_')}_"
+            +f"{vx_mask.lower()}.stat"
+        )
+        if len(dates) != 0:
+            filtered_model_stat_file_name = (
+                'fcst'+model_dict['name']+'_'
+                +fcst_var_name+fcst_var_level+fcst_var_thresh+'_'
+                +'obs'+model_dict['obs_name']+'_'
+                +obs_var_name+obs_var_level+obs_var_thresh+'_'
+                +'linetype'+line_type+'_'
+                +'grid'+grid+'_'+'vxmask'+vx_mask+'_'
+                +'interp'+interp_method+interp_points+'_'
+                +date_type.lower()
+                +dates[0].strftime('%Y%m%d%H%M%S')+'to'
+                +dates[-1].strftime('%Y%m%d%H%M%S')+'_'
+                +'fhr'+fhr[0].zfill(3)+'_'+fhr[-1].zfill(3)
+            ).lower().replace('.','p').replace('-', '_')\
+            .replace('&&', 'and').replace('||', 'or')\
+            .replace('0,*,*', '').replace('*,*', '')+'.stat'
+            input_filtered_model_stat_file = os.path.join(
+                input_dir, filtered_model_stat_file_name
+            )
+            output_filtered_model_stat_file = os.path.join(
+                output_dir, filtered_model_stat_file_name
+            )
+            if os.path.exists(input_filtered_model_stat_file):
+                filtered_model_stat_file = input_filtered_model_stat_file
+            else:
+                filtered_model_stat_file = output_filtered_model_stat_file
+            if not os.path.exists(filtered_model_stat_file):
+                write_filtered_stat_file = True
+                read_filtered_stat_file = True
+            else:
+                write_filtered_stat_file = False
+                read_filtered_stat_file = True
+            if job_group == 'filter_stats':
+                read_filtered_stat_file = False
+        else:
+            write_filtered_stat_file = False
+            read_filtered_stat_file = False
+        if os.path.exists(condensed_model_file) and line_type == 'MCTC':
+            tmp_df = pd.read_csv(
+                condensed_model_file, sep=" ", skiprows=1,
+                skipinitialspace=True,
+                keep_default_na=False, dtype='str', header=None
+            )
+            if len(tmp_df) > 0:
+                ncat = int(tmp_df[25][0])
+                new_met_version_line_type_col_list = []
+                for col in met_version_line_type_col_list:
+                    if col == '(N_CAT)':
+                        new_met_version_line_type_col_list.append('N_CAT')
+                    elif col == 'F[0-9]*_O[0-9]*':
+                        fcount = 1
+                        ocount = 1
+                        totcount = 1
+                        while totcount <= ncat*ncat:
+                            new_met_version_line_type_col_list.append(
+                                'F'+str(fcount)+'_'+'O'+str(ocount)
+                            )
+                            if ocount < ncat:
+                                ocount+=1
+                            elif ocount == ncat:
+                                ocount = 1
+                                fcount+=1
+                            totcount+=1
+                    else:
+                        new_met_version_line_type_col_list.append(col)
+                met_version_line_type_col_list = (
+                    new_met_version_line_type_col_list
+                )
+        if write_filtered_stat_file:
+            if fcst_var_thresh != 'NA':
+                fcst_var_thresh_symbol, fcst_var_thresh_letter = (
+                    format_thresh(fcst_var_thresh)
+                )
+            else:
+                fcst_var_thresh_symbol = fcst_var_thresh
+                fcst_vat_thresh_letter = fcst_var_thresh
+            if obs_var_thresh != 'NA':
+                obs_var_thresh_symbol, obs_var_thresh_letter = (
+                    format_thresh(obs_var_thresh)
+                )
+            else:
+                obs_var_thresh_symbol = obs_var_thresh
+                obs_vat_thresh_letter = obs_var_thresh
+            if os.path.exists(condensed_model_file):
+                logger.info(f"Filtering file {condensed_model_file} for "
+                            +f"MODEL: {model_dict['name']}, DESC: {grid} "
+                            +f"FCST_VAR: {fcst_var_name}, "
+                            +f"FCST_LEV: {fcst_var_level}, "
+                            +f"OBS_VAR: {obs_var_name}, "
+                            +f"OBS_LEV: {obs_var_level}, "
+                            +f"OBTYPE: {model_dict['obs_name']}, "
+                            +f"VX_MASK: {vx_mask}, "
+                            +f"INTERP_MTHD: {interp_method}, "
+                            +f"INTERP_PNTS: {interp_points}, "
+                            +f"FCST_THRESH: {fcst_var_thresh_symbol}, "
+                            +f"OBS_THRESH: {obs_var_thresh_symbol}, "
+                            +f"LINE_TYPE: {line_type}")
+                condensed_model_df = pd.read_csv(
+                    condensed_model_file, sep=" ", skiprows=1,
+                    skipinitialspace=True, names=met_version_line_type_col_list,
+                    keep_default_na=False, dtype='str', header=None
+                )
+                filtered_model_df = condensed_model_df[
+                    (condensed_model_df['MODEL'] == model_dict['name'])
+                     & (condensed_model_df['DESC'] == grid)
+                     & (condensed_model_df['FCST_VAR'] \
+                        == fcst_var_name)
+                     & (condensed_model_df['FCST_LEV'] \
+                        == fcst_var_level)
+                     & (condensed_model_df['OBS_VAR'] \
+                        == obs_var_name)
+                     & (condensed_model_df['OBS_LEV'] \
+                        == obs_var_level)
+                     & (condensed_model_df['OBTYPE'] == model_dict['obs_name'])
+                     & (condensed_model_df['VX_MASK'] \
+                        == vx_mask)
+                     & (condensed_model_df['INTERP_MTHD'] \
+                        == interp_method)
+                     & (condensed_model_df['INTERP_PNTS'] \
+                        == interp_points)
+                     & (condensed_model_df['FCST_THRESH'] \
+                        == fcst_var_thresh_symbol)
+                     & (condensed_model_df['OBS_THRESH'] \
+                        == obs_var_thresh_symbol)
+                     & (condensed_model_df['LINE_TYPE'] \
+                        == line_type)
+                ]
+                filtered_model_df = filtered_model_df[
+                    filtered_model_df['FCST_VALID_BEG'].isin(met_format_valid_dates)
+                ]
+                filtered_model_df['FCST_VALID_BEG'] = pd.to_datetime(
+                    filtered_model_df['FCST_VALID_BEG'], format='%Y%m%d_%H%M%S'
+                )
+                filtered_model_df = filtered_model_df.sort_values(by='FCST_VALID_BEG')
+                filtered_model_df['FCST_VALID_BEG'] = (
+                    filtered_model_df['FCST_VALID_BEG'].dt.strftime('%Y%m%d_%H%M%S')
+                )
+                filtered_model_df.to_csv(
+                    filtered_model_stat_file, header=met_version_line_type_col_list,
+                    index=None, sep=' ', mode='w'
+                )
+            else:
+                logger.debug(f"{condensed_model_file} does not exist")
+            if os.path.exists(filtered_model_stat_file):
+                logger.info(f"Filtered {model_dict['name']} file "
+                            +f"at {filtered_model_stat_file}")
+            else:
+                logger.debug(f"Could not create {filtered_model_stat_file}")
+        model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
+                                    columns=met_version_line_type_col_list)
+        if read_filtered_stat_file:
+            if os.path.exists(filtered_model_stat_file):
+                logger.info(f"Reading {filtered_model_stat_file} for "
+                            +f"{model_dict['name']}")
+                model_stat_file_df = pd.read_csv(
+                    filtered_model_stat_file, sep=" ", skiprows=1,
+                    skipinitialspace=True, names=met_version_line_type_col_list,
+                    na_values=['NA'], header=None
+                )
+                df_dtype_dict = {}
+                float_idx = met_version_line_type_col_list.index('TOTAL')
+                for col in met_version_line_type_col_list:
+                    col_idx = met_version_line_type_col_list.index(col)
+                    if col_idx < float_idx:
+                        df_dtype_dict[col] = str
+                    else:
+                        df_dtype_dict[col] = np.float64
+                model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
+                for valid_date in met_format_valid_dates:
+                    model_stat_file_df_valid_date_idx_list = (
+                        model_stat_file_df.index[
+                            model_stat_file_df['FCST_VALID_BEG'] == valid_date
+                        ]
+                    ).tolist()
+                    if len(model_stat_file_df_valid_date_idx_list) == 0:
+                        logger.debug("No data matching valid date "
+                                     +f"{valid_date} in "
+                                     +f"{filtered_model_stat_file}")
+                        continue
+                    elif len(model_stat_file_df_valid_date_idx_list) > 1:
+                        logger.debug(f"Multiple lines matching valid date "
+                                     +f"{valid_date} in "
+                                     +f"{filtered_model_stat_file} "
+                                     +f"using first one")
+                    else:
+                        logger.debug(f"One line matching valid date "
+                                     +f"{valid_date} in "
+                                     +f"{filtered_model_stat_file}")
+                    model_num_df.loc[(model_num_name, valid_date)] = (
+                        model_stat_file_df.loc\
+                        [model_stat_file_df_valid_date_idx_list[0]]\
+                        [:]
+                    )
+            else:
+                logger.debug(f"{filtered_model_stat_file} does not exist")
+        if model_num == 'model1':
+            all_model_df = model_num_df
+        else:
+            all_model_df = pd.concat([all_model_df, model_num_df])
+    return all_model_df
+
 def calculate_stat(logger, data_df, line_type, stat):
    """! Calculate the statistic from the data from the
         read in MET .stat file(s)

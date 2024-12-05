@@ -404,9 +404,9 @@ for ozone_job in list(make_plots_jobs_dict['ozone'].keys()):
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
         make_plots_jobs_dict['ozone'][ozone_job+'_FBAR_OBAR']['plots'] = [
-            'time_series', 'lead_average', 'valid_hour_average'
+            'time_series_fhr_mean'
         ]
-        ##     'time_series'
+        ##     'time_series', 'lead_average', 'valid_hour_average'
     ## elif ozone_job in ['OZONE_Thresh']:
     ##     ozone_job_line_type_stats = ['CTC/CSI']
     else:
@@ -416,7 +416,7 @@ for ozone_job in list(make_plots_jobs_dict['ozone'].keys()):
     )
 
     if ozone_job in ['OZONE']:
-        ozone_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
+        ozone_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
     ## elif ozone_job in ['OZONE_Thresh']:
     ##     ozone_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
@@ -441,9 +441,9 @@ for pm25_job in list(make_plots_jobs_dict['pm25'].keys()):
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
         make_plots_jobs_dict['pm25'][pm25_job+'_FBAR_OBAR']['plots'] = [
-            'time_series', 'lead_average', 'threshold_average'
+            'time_series_fhr_mean'
         ]
-        ##     'time_series'
+        ##     'time_series', 'lead_average', 'valid_hour_average'
     ## elif pm25_job in ['PM25_Thresh']:
     ##     pm25_job_line_type_stats = ['CTC/CSI']
     else:
@@ -453,7 +453,7 @@ for pm25_job in list(make_plots_jobs_dict['pm25'].keys()):
     )
 
     if pm25_job in ['PM25']:
-        pm25_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
+        pm25_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
     ## elif pm25_job in ['PM25_Thresh']:
     ##     pm25_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
@@ -478,9 +478,9 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8'].keys()):
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
         make_plots_jobs_dict['ozmax8'][ozmax8_job+'_FBAR_OBAR']['plots'] = [
-            'time_series', 'lead_average', 'threshold_average'
+            'time_series_fhr_mean'
         ]
-        ##     'time_series'
+        ##     'time_series', 'lead_average', 'valid_hour_average'
     elif ozmax8_job in ['OZMAX8_Thresh']:
         ozmax8_job_line_type_stats = ['CTC/CSI']
     else:
@@ -490,9 +490,9 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8'].keys()):
     )
 
     if ozmax8_job in ['OZMAX8']:
-        ozmax8_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
+        ozmax8_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
     elif ozmax8_job in ['OZMAX8_Thresh']:
-        ozmax8_job_plots = ['time_series', 'lead_average', 'threshold_average']
+        ozmax8_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
     else:
         ozmax8_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['ozmax8'][ozmax8_job]['plots'] = ozmax8_job_plots
@@ -525,9 +525,9 @@ for pmave_job in list(make_plots_jobs_dict['pmave'].keys()):
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
         make_plots_jobs_dict['pmave'][pmave_job+'_FBAR_OBAR']['plots'] = [
-            'time_series', 'lead_average', 'threshold_average'
+            'time_series_fhr_mean'
         ]
-        ##     'time_series'
+        ##     'time_series', 'lead_average', 'valid_hour_average'
     elif pmave_job in ['PMAVE_Thresh']:
         pmave_job_line_type_stats = ['CTC/CSI']
     else:
@@ -537,9 +537,9 @@ for pmave_job in list(make_plots_jobs_dict['pmave'].keys()):
     )
 
     if pmave_job in ['PMAVE']:
-        pmave_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
+        pmave_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
     elif pmave_job in ['PMAVE_Thresh']:
-        pmave_job_plots = ['time_series', 'lead_average', 'threshold_average']
+        pmave_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
     else:
         pmave_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['pmave'][pmave_job]['plots'] = pmave_job_plots
@@ -566,7 +566,7 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8_headline'].keys()):
     )
 
     if ozmax8_job in ['OZMAX8_Thresh']:
-        ozmax8_job_plots = ['time_series']
+        ozmax8_job_plots = ['time_series_fhr_mean']
     else:
         ozmax8_job_plots = ['time_series']
     make_plots_jobs_dict['ozmax8_headline'][ozmax8_job]['plots'] = ozmax8_job_plots
@@ -583,7 +583,7 @@ for pmave_job in list(make_plots_jobs_dict['pmave_headline'].keys()):
     )
 
     if pmave_job in ['PMAVE_Thresh']:
-        pmave_job_plots = ['time_series']
+        pmave_job_plots = ['time_series_fhr_mean']
     else:
         pmave_job_plots = ['time_series']
     make_plots_jobs_dict['pmave_headline'][pmave_job]['plots'] = pmave_job_plots
@@ -606,8 +606,9 @@ for aeronetaod_job in list(make_plots_jobs_dict['aeronetaod'].keys()):
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
         make_plots_jobs_dict['aeronetaod'][aeronetaod_job+'_FBAR_OBAR']['plots'] = [
-            'time_series', 'lead_average', 'threshold_average'
+            'time_series_fhr_mean'
         ]
+        ##     'time_series', 'lead_average', 'valid_hour_average'
     elif aeronetaod_job in ['AOD_Thresh']:
         aeronetaod_job_line_type_stats = ['CTC/CSI']
     else:
@@ -618,9 +619,9 @@ for aeronetaod_job in list(make_plots_jobs_dict['aeronetaod'].keys()):
     )
 
     if aeronetaod_job in ['AOD']:
-        aeronetaod_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
+        aeronetaod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
     elif aeronetaod_job in ['AOD_Thresh']:
-        aeronetaod_job_plots = ['time_series', 'lead_average', 'threshold_average']
+        aeronetaod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
     else:
         aeronetaod_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['aeronetaod'][aeronetaod_job]['plots'] = aeronetaod_job_plots
@@ -854,8 +855,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job_env_dict['vx_mask'] = loop_info[2]
                 job_env_dict['interp_method'] = loop_info[3].split('/')[0]
                 job_env_dict['interp_points'] = loop_info[3].split('/')[1]
-                ## if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average' or job_env_dict['plot'] == 'time_series':
-                if job_env_dict['plot'] == 'valid_hour_average':
+                ## if job_env_dict['plot'] == 'valid_hour_average':
+                if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average_vhr_mean' or job_env_dict['plot'] == 'time_series_fhr_mean':
                     plot_valid_hrs_loop = [valid_hrs]
                 else:
                     plot_valid_hrs_loop = valid_hrs
@@ -883,8 +884,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                       plot_fcst_threshs_loop,
                                       plot_fcst_levels_loop)
                 ):
-                    ## if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average' or job_env_dict['plot'] == 'time_series':
-                    if job_env_dict['plot'] == 'valid_hour_average':
+                    ## if job_env_dict['plot'] == 'valid_hour_average':
+                    if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average' or job_env_dict['plot'] == 'time_series_fhr_mean':
                         job_env_dict['valid_hr_start'] = str(
                             plot_loop_info[0][0]
                         ).zfill(2)
@@ -949,14 +950,17 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                        job_env_dict['COMOUTjob']]:
                         gda_util.make_dir(output_dir)
                     run_aqm_plots = ['aqm_plots.py']
-                    if evs_run_mode == 'production' and \
-                            verif_type in ['ozone', 'pm25', 'ozmax', 'pmave'] and \
-                            job_env_dict['plot'] in \
-                            ['lead_average', 'lead_by_level',
-                             'lead_by_date']:
-                        run_aqm_plots.append(
-                            'aqm_plots_production_tof72.py'
-                        )
+                    ##
+                    ##  AQM do not need separate plot to cover portion of the fhr list
+                    ##
+                    ## if evs_run_mode == 'production' and \
+                    ##         verif_type in ['ozone', 'pm25', 'ozmax', 'pmave'] and \
+                    ##         job_env_dict['plot'] in \
+                    ##         ['lead_average_vhr_mean', 'lead_by_level',
+                    ##          'lead_by_date']:
+                    ##     run_aqm_plots.append(
+                    ##         'aqm_plots_production_tof72.py'
+                    ##     )
                     for run_aqm_plot in run_aqm_plots:
                         # Create job file
                         njobs+=1

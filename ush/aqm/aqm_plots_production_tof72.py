@@ -137,6 +137,7 @@ for fhr in fhr_list.split(', '):
         fhrs.append(int(fhr))
 
 # Set up plot information dictionary
+# line_type, vx_mask  not in aqm_plots.py
 original_plot_info_dict = {
     'line_type': line_type,
     'vx_mask': vx_mask,
