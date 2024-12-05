@@ -485,11 +485,11 @@ elif JOB_GROUP == 'make_plots':
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_ts = False
             if make_ts:
-                plot_ts = gdap_ts.TimeSeriesVhrMean(logger, DATAjob+'/..', DATAjob,
+                plot_ts = gdap_ts.TimeSeriesFhrMean(logger, DATAjob+'/..', DATAjob,
                                              model_info_dict, date_info_dict,
                                              plot_info_dict, met_info_dict,
                                              logo_dir)
-                plot_ts.make_time_series_vhr_mean()
+                plot_ts.make_time_series_fhr_mean()
                 if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
                     logger.info(f"Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
@@ -552,28 +552,17 @@ elif JOB_GROUP == 'make_plots':
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'lead_average_vhr_mean':
         import aqm_plots_lead_average_vhr_mean as gdap_la
-        ## how to handle the dict for all valid hours ?  as below?
-        ## for la_info in list(itertools.product(var_info)):
-        ## will the changes impact the copy_file further down?
-        for la_info in list(itertools.product(valid_hrs, var_info)):
-            date_info_dict['valid_hr_start'] = str(la_info[0])
-            date_info_dict['valid_hr_end'] = str(la_info[0])
-            date_info_dict['valid_hr_inc'] = '1'
-            ## how to handle the dict for all valid hours ?  as below?
-            ## date_info_dict['valid_hr_start'] = valid_hr_start
-            ## date_info_dict['valid_hr_end'] = valid_hr_end
-            ## date_info_dict['valid_hr_inc'] = valid_hr_inc
-            ##
+        for la_info in list(itertools.product(var_info)):
+            date_info_dict['valid_hr_start'] = valid_hr_start
+            date_info_dict['valid_hr_end'] = valid_hr_end
+            date_info_dict['valid_hr_inc'] = valid_hr_inc
             date_info_dict['forecast_hours'] = fhrs
-            ##
-            ## change ts_info[1] to ts_info[0]
-            ##
-            plot_info_dict['fcst_var_name'] = la_info[1][0][0]
-            plot_info_dict['fcst_var_level'] = la_info[1][0][1]
-            plot_info_dict['fcst_var_thresh'] = la_info[1][0][2]
-            plot_info_dict['obs_var_name'] = la_info[1][1][0]
-            plot_info_dict['obs_var_level'] = la_info[1][1][1]
-            plot_info_dict['obs_var_thresh'] = la_info[1][1][2]
+            plot_info_dict['fcst_var_name'] = la_info[0][0][0]
+            plot_info_dict['fcst_var_level'] = la_info[0][0][1]
+            plot_info_dict['fcst_var_thresh'] = la_info[0][0][2]
+            plot_info_dict['obs_var_name'] = la_info[0][1][0]
+            plot_info_dict['obs_var_level'] = la_info[0][1][1]
+            plot_info_dict['obs_var_thresh'] = la_info[0][1][2]
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -597,11 +586,11 @@ elif JOB_GROUP == 'make_plots':
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_la = False
             if make_la:
-                plot_la = gdap_la.LeadAverage(logger, DATAjob+'/..', DATAjob,
+                plot_la = gdap_la.LeadAverageVhrMean(logger, DATAjob+'/..', DATAjob,
                                               model_info_dict, date_info_dict,
                                               plot_info_dict, met_info_dict,
                                               logo_dir)
-                plot_la.make_lead_average()
+                plot_la.make_lead_average_vhr_mean()
                 if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
                     logger.info(f"Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
