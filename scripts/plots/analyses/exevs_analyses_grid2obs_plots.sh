@@ -445,7 +445,7 @@ do
 	cp ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
 	fi
 	fi
-        elif [ -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
+        elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
 	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
 	fi
