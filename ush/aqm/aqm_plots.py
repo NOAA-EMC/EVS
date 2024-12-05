@@ -386,24 +386,12 @@ elif JOB_GROUP == 'make_plots':
     met_info_dict = original_met_info_dict.copy()
     if plot == 'time_series':
         import aqm_plots_time_series as gdap_ts
-        ## how to handle the dict for all fcst hours?  as below?
-        ## for ts_info in \
-        ##         list(itertools.product(var_info)):
-        ## will the changes impact the copy_file further down?
         for ts_info in \
                 list(itertools.product(valid_hrs, fhrs, var_info)):
             date_info_dict['valid_hr_start'] = str(ts_info[0])
             date_info_dict['valid_hr_end'] = str(ts_info[0])
             date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hour'] = str(ts_info[1])
-            ## how to handle the dict for all valid hours all fcst hours?  as below?
-            ## date_info_dict['valid_hr_start'] = valid_hr_start
-            ## date_info_dict['valid_hr_end'] = valid_hr_end
-            ## date_info_dict['valid_hr_inc'] = valid_hr_inc
-            ## date_info_dict['forecast_hours'] = fhrs
-            ##
-            ## change ts_info[2] to ts_info[0]
-            ##
             plot_info_dict['fcst_var_name'] = ts_info[2][0][0]
             plot_info_dict['fcst_var_level'] = ts_info[2][0][1]
             plot_info_dict['fcst_var_thresh'] = ts_info[2][0][2]
@@ -426,9 +414,7 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = False
             if plot_info_dict['stat'] == 'FBAR_OBAR' \
                     and str(date_info_dict['forecast_hour']) not in \
-                    ['06', '12', '18', '24', '30', '36', '42', '48', '54', '60', '66', '72']:
-                    ## how to handle the dict for all fcst hours?  from 1-72?
-                    ## can it be written as not in fhrs?
+                    [ '24', '48', '72']:
                 make_ts = False
             if os.path.exists(COMOUTjob_image_name):
                 logger.info(f"Copying {COMOUTjob_image_name} to "
@@ -446,19 +432,18 @@ elif JOB_GROUP == 'make_plots':
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'time_series_fhr_mean':
-        import aqm_plots_time_series_fhr_mean as gdap_ts
-        for ts_info in \
-                list(itertools.product(var_info)):
+        import aqm_plots_time_series_fhr_mean as gdap_tsfm
+        for ts_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
             date_info_dict['forecast_hours'] = str(fhrs)
-            plot_info_dict['fcst_var_name'] = ts_info[0][0][0]
-            plot_info_dict['fcst_var_level'] = ts_info[0][0][1]
-            plot_info_dict['fcst_var_thresh'] = ts_info[0][0][2]
-            plot_info_dict['obs_var_name'] = ts_info[0][1][0]
-            plot_info_dict['obs_var_level'] = ts_info[0][1][1]
-            plot_info_dict['obs_var_thresh'] = ts_info[0][1][2]
+            plot_info_dict['fcst_var_name'] = ts_info[0][0]
+            plot_info_dict['fcst_var_level'] = ts_info[0][1]
+            plot_info_dict['fcst_var_thresh'] = ts_info[0][2]
+            plot_info_dict['obs_var_name'] = ts_info[1][0]
+            plot_info_dict['obs_var_level'] = ts_info[1][1]
+            plot_info_dict['obs_var_thresh'] = ts_info[1][2]
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -475,9 +460,7 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = False
             ## if plot_info_dict['stat'] == 'FBAR_OBAR' \
             ##         and str(date_info_dict['forecast_hour']) not in \
-            ##         ['06', '12', '18', '24', '30', '36', '42', '48', '54', '60', '66', '72']:
-            ##         ## how to handle the dict for all fcst hours?  from 1-72?
-            ##         ## can it be written as not in fhrs?
+            ##         [ '24', '48', '72']:
             ##     make_ts = False
             if os.path.exists(COMOUTjob_image_name):
                 logger.info(f"Copying {COMOUTjob_image_name} to "
@@ -485,33 +468,22 @@ elif JOB_GROUP == 'make_plots':
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_ts = False
             if make_ts:
-                plot_ts = gdap_ts.TimeSeriesFhrMean(logger, DATAjob+'/..', DATAjob,
+                plot_tsfm = gdap_tsfm.TimeSeriesFhrMean(logger, DATAjob+'/..', DATAjob,
                                              model_info_dict, date_info_dict,
                                              plot_info_dict, met_info_dict,
                                              logo_dir)
-                plot_ts.make_time_series_fhr_mean()
+                plot_tsfm.make_time_series_fhr_mean()
                 if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
                     logger.info(f"Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'lead_average':
         import aqm_plots_lead_average as gdap_la
-        ## how to handle the dict for all valid hours ?  as below?
-        ## for la_info in list(itertools.product(var_info)):
-        ## will the changes impact the copy_file further down?
         for la_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(la_info[0])
             date_info_dict['valid_hr_end'] = str(la_info[0])
-            date_info_dict['valid_hr_inc'] = '1'
-            ## how to handle the dict for all valid hours ?  as below?
-            ## date_info_dict['valid_hr_start'] = valid_hr_start
-            ## date_info_dict['valid_hr_end'] = valid_hr_end
-            ## date_info_dict['valid_hr_inc'] = valid_hr_inc
-            ##
+            date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hours'] = fhrs
-            ##
-            ## change ts_info[1] to ts_info[0]
-            ##
             plot_info_dict['fcst_var_name'] = la_info[1][0][0]
             plot_info_dict['fcst_var_level'] = la_info[1][0][1]
             plot_info_dict['fcst_var_thresh'] = la_info[1][0][2]
@@ -551,18 +523,18 @@ elif JOB_GROUP == 'make_plots':
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'lead_average_vhr_mean':
-        import aqm_plots_lead_average_vhr_mean as gdap_la
-        for la_info in list(itertools.product(var_info)):
+        import aqm_plots_lead_average_vhr_mean as gdap_lavm
+        for la_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
             date_info_dict['forecast_hours'] = fhrs
-            plot_info_dict['fcst_var_name'] = la_info[0][0][0]
-            plot_info_dict['fcst_var_level'] = la_info[0][0][1]
-            plot_info_dict['fcst_var_thresh'] = la_info[0][0][2]
-            plot_info_dict['obs_var_name'] = la_info[0][1][0]
-            plot_info_dict['obs_var_level'] = la_info[0][1][1]
-            plot_info_dict['obs_var_thresh'] = la_info[0][1][2]
+            plot_info_dict['fcst_var_name'] = la_info[0][0]
+            plot_info_dict['fcst_var_level'] = la_info[0][1]
+            plot_info_dict['fcst_var_thresh'] = la_info[0][2]
+            plot_info_dict['obs_var_name'] = la_info[1][0]
+            plot_info_dict['obs_var_level'] = la_info[1][1]
+            plot_info_dict['obs_var_thresh'] = la_info[1][2]
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -586,28 +558,28 @@ elif JOB_GROUP == 'make_plots':
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_la = False
             if make_la:
-                plot_la = gdap_la.LeadAverageVhrMean(logger, DATAjob+'/..', DATAjob,
+                plot_lavm = gdap_lavm.LeadAverageVhrMean(logger, DATAjob+'/..', DATAjob,
                                               model_info_dict, date_info_dict,
                                               plot_info_dict, met_info_dict,
                                               logo_dir)
-                plot_la.make_lead_average_vhr_mean()
+                plot_lavm.make_lead_average_vhr_mean()
                 if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
                     logger.info(f"Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'valid_hour_average':
         import aqm_plots_valid_hour_average as gdap_vha
-        for vha_info in list(itertools.product(var_info)):
+        for vha_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
             date_info_dict['forecast_hours'] = fhrs
-            plot_info_dict['fcst_var_name'] = vha_info[0][0][0]
-            plot_info_dict['fcst_var_level'] = vha_info[0][0][1]
-            plot_info_dict['fcst_var_thresh'] = vha_info[0][0][2]
-            plot_info_dict['obs_var_name'] = vha_info[0][1][0]
-            plot_info_dict['obs_var_level'] = vha_info[0][1][1]
-            plot_info_dict['obs_var_thresh'] = vha_info[0][1][2]
+            plot_info_dict['fcst_var_name'] = vha_info[0][0]
+            plot_info_dict['fcst_var_level'] = vha_info[0][1]
+            plot_info_dict['fcst_var_thresh'] = vha_info[0][2]
+            plot_info_dict['obs_var_name'] = vha_info[1][0]
+            plot_info_dict['obs_var_level'] = vha_info[1][1]
+            plot_info_dict['obs_var_thresh'] = vha_info[1][2]
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -705,7 +677,7 @@ elif JOB_GROUP == 'make_plots':
         for lbd_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(lbd_info[0])
             date_info_dict['valid_hr_end'] = str(lbd_info[0])
-            date_info_dict['valid_hr_inc'] = '1'
+            date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = lbd_info[1][0][0]
             plot_info_dict['fcst_var_level'] = lbd_info[1][0][1]

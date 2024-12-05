@@ -115,11 +115,6 @@ class LeadAverage:
                                   +', '.join(format_valid_dates))
                 plot_dates = init_dates
             # Read in data
-            ## how to include all valid hours ??
-            ## from valid_dates, init_dates generated from gda_util.get_plot_dates  above??
-            ## then from  plot_dates = valid_dates ??  if one change the setting of 
-            ## valid_hr_start, valid_hr_end, valid_hr_inc to include all valid hours in
-            ## aqm_plots.py or aqm_plots_production_tof72.py
             all_model_df = gda_util.build_df(
                 'make_plots', self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
