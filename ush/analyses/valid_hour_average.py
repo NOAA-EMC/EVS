@@ -1143,7 +1143,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}, {frange_string}')
+              + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=40
