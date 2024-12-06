@@ -6,14 +6,9 @@
 #*******************************************************************************************
 set -x 
 
-#vday=20221018
-
 typeset -Z2 fhr
 fhr=$1
-
-
-for vvfhr in 00 06 12 18 ; do 
-#for vvfhr in 00  ; do 
+vvfhr=$2
 
   for n in 2 3 4 5 6 7 8 9 10 11 12 13 ; do
     ctc25[$n]=0
@@ -24,9 +19,11 @@ for vvfhr in 00 06 12 18 ; do
 
   >point_stat_SREF_PREPBUFR_CONUS_FHR${fhr}_CNV_${fhr}0000L_${vday}_${vvfhr}0000V.stat
 
-  for base_model in arw nmb ; do 
+for base_model in arw nmb ; do 
     for mbr in ctl p1 p2 p3 p4 p5 p6 n1 n2 n3 n4 n5 n6 ; do
-      	    line=1
+     line=1
+
+     if [ -s point_stat_SREF${base_model}_${mbr}_PREPBUFR_CONUS_FHR${fhr}_${fhr}0000L_${vday}_${vvfhr}0000V.stat ] ; then	    
       while read -r LINE; do
         set -A data $LINE
 	
@@ -57,10 +54,8 @@ for vvfhr in 00 06 12 18 ; do
           fi
 	fi
        line=$((line+1))
-     done < point_stat_SREF${base_model}_${mbr}_PREPBUFR_CONUS_FHR${fhr}_${fhr}0000L_${vday}_${vvfhr}0000V.stat
-
-  done
+      done < point_stat_SREF${base_model}_${mbr}_PREPBUFR_CONUS_FHR${fhr}_${fhr}0000L_${vday}_${vvfhr}0000V.stat
+    fi
 
  done
-
 done

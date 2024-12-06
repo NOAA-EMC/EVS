@@ -1591,17 +1591,17 @@ suite evs_nco
               trigger :TIME >= 1530 and ../../stats/nwps == complete
           endfamily
           family mesoscale
-            task jevs_mesoscale_sref_grid2obs_past90days_plots
+            task jevs_mesoscale_sref_grid2obs_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_mesoscale_sref_precip_past90days_plots
+            task jevs_mesoscale_sref_precip_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete
-            task jevs_mesoscale_sref_cnv_past90days_plots
+            task jevs_mesoscale_sref_cnv_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_cnv_stats == complete
-            task jevs_mesoscale_sref_cape_past90days_plots
+            task jevs_mesoscale_sref_cape_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_mesoscale_sref_cloud_past90days_plots
+            task jevs_mesoscale_sref_cloud_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_mesoscale_sref_td2m_past90days_plots
+            task jevs_mesoscale_sref_td2m_last90days_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
             task jevs_mesoscale_sref_precip_spatial_plots
               trigger :TIME >= 1300 and ../../../../06/evs/stats/mesoscale/jevs_mesoscale_sref_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete

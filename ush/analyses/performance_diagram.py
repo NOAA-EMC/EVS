@@ -667,7 +667,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
-        if str(var_long_name_key).upper() == 'HGTCLDCEIL':
+        if str(var_long_name_key).upper() in ['HGTCLDCEIL', 'CEIL']: 
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                if units in ['m', 'gpm']:
                    units = 'gpm'
@@ -976,7 +976,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     else:
         title2 = (f'{level_string}{var_long_name} ({units}), {domain_string}')
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}, {frange_string}')
+              + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     ax.set_title(title_center, loc=plotter.title_loc) 
     logger.info("... Plotting complete.")
