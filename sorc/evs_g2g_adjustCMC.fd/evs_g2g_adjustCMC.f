@@ -260,19 +260,18 @@ C  raw data
 
         call baopenr(ngefs,gefsmbr,ierr)
         if (ierr.ne.0) then
-         write(*,*) ngefs, trim(gefsmbr),' open gefs error'
+         write(*,*) 'Debug: opening ', ngefs, trim(gefsmbr)
         end if
         call baopenr(ncmce,cmcembr,ierr)
         if (ierr.ne.0) then
-         write(*,*) ncmce, trim(cmcembr),' open cmce error'
+         write(*,*) 'Debug: opening ', ncmce, trim(cmcembr)
         end if
 
         !open output file name to write out
         call baopen(nadj,cmcembr_adj,ierr)
         if (ierr.ne.0) then
-         write(*,*) nadj, ' open cmcembr_adj error'
+         write(*,*) 'Debug: opening ', nadj
         end if
-
 
 
        do 1000 i = 1,12 
