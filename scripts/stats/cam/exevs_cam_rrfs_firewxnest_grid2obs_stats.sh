@@ -119,7 +119,7 @@ if [ -e $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} ]
 then
  obfound=1
  mkdir -p $DATA/$OBSDIR/nam.${obday}
-  cpreq $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
+  cp -v $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
 else
   echo "WARNING: File $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} is missing."
   if [ $SENDMAIL = "YES" ]; then

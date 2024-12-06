@@ -445,7 +445,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group1, fcst_group2, var_group1, namnest':{
+                'init_group1, fcst_group2, var_group1, namnest, rrfs':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -537,6 +537,114 @@ graphics = {
                                     'INTERP_PNTSs':[''],
                                 },
                                 'SNOD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'init_group1, fcst_group2, var_group2, rrfs':{
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':['last31days','last90days'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'ASNOW_06':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fbias','ets'],
+                                    'FCST_LEADS':['42,48,54,60'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A06',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'ASNOW_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fbias','ets'],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'nbrcnt':{
+                                'ASNOW_06':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fss'],
+                                    'FCST_LEADS':['42,48,54,60'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A06',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NBRHD_SQUARE',
+                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                },
+                                'ASNOW_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fss'],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NBRHD_SQUARE',
+                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':['last31days','last90days'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'ASNOW_06':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['42,48,54,60'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A06',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'ASNOW_24':{
                                     'FCST_VALID_HOURS':[''],
                                     'FCST_INIT_HOURS':['0','12'],
                                     'STATSs':['sratio,pod,csi'],
@@ -822,6 +930,75 @@ graphics = {
                                     'INTERP_PNTSs':[''],
                                 },
                                 'SNOD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['6','18'],
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['54'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'init_group2, fcst_group2, var_group2, rrfs':{
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':['last31days','last90days'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'ASNOW_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['6','18'],
+                                    'STATSs':['fbias','ets'],
+                                    'FCST_LEADS':['54'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'nbrcnt':{
+                                'ASNOW_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['6','18'],
+                                    'STATSs':['fss'],
+                                    'FCST_LEADS':['54'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NBRHD_SQUARE',
+                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':['last31days','last90days'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'ASNOW_24':{
                                     'FCST_VALID_HOURS':[''],
                                     'FCST_INIT_HOURS':['6','18'],
                                     'STATSs':['sratio,pod,csi'],

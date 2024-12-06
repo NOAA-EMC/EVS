@@ -414,7 +414,7 @@ if proceed:
                     COMINfcst,
                     'rrfs.{IDATE}',
                     '{IHOUR}',
-                    'rrfs.t{IHOUR}z.prslev.f0{FHR}.grib2'
+                    'rrfs.t{IHOUR}z.prslev.f0{FHR}.conus.grib2'
                 ))
             elif NEST == 'ak':
                 fcst_templates.append(os.path.join(
@@ -442,7 +442,7 @@ if proceed:
                     COMINfcst,
                     'rrfs.{IDATE}',
                     '{IHOUR}',
-                    'rrfs.t{IHOUR}z.prslev.f0{FHR}.grib2'
+                    'rrfs.t{IHOUR}z.prslev.f0{FHR}.conus.grib2'
                 ))
         else:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized."

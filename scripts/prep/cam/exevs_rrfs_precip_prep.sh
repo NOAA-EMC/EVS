@@ -17,22 +17,30 @@ export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 export njob=1
 for NEST in "conus" "ak"; do
     export NEST=$NEST
+    if [ "${NEST}" == "conus" ]; then
+        OBS_ACCs="01"
+    else
+        OBS_ACCs="01 03 24"
+    fi
     for ACC in "24"; do
         export ACC=$ACC
-        source $config
- 
-        # Check User's Configuration Settings
-        python $USHevs/cam/cam_check_settings.py
-        export err=$?; err_chk
- 
-        # Create Output Directories
-        python $USHevs/cam/cam_create_output_dirs.py
-        export err=$?; err_chk
- 
-        # Create Job Script 
-        python $USHevs/cam/cam_prep_precip_create_job_script.py
-        export err=$?; err_chk
-        export njob=$((njob+1))
+        for OBS_ACC in $OBS_ACCs; do
+            export OBS_ACC=$OBS_ACC
+            source $config
+     
+            # Check User's Configuration Settings
+            python $USHevs/cam/cam_check_settings.py
+            export err=$?; err_chk
+     
+            # Create Output Directories
+            python $USHevs/cam/cam_create_output_dirs.py
+            export err=$?; err_chk
+     
+            # Create Job Script 
+            python $USHevs/cam/cam_prep_precip_create_job_script.py
+            export err=$?; err_chk
+            export njob=$((njob+1))
+        done
     done
 done
 
@@ -41,6 +49,10 @@ if [ $USE_CFP = YES ]; then
     python $USHevs/cam/cam_prep_precip_create_poe_job_scripts.py
     export err=$?; err_chk
 fi
+
+# Create Working Directories
+python $USHevs/cam/cam_create_child_workdirs.py
+export err=$?; err_chk
 
 # Run all RRFS precip/prep jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/*
@@ -71,6 +83,12 @@ else
         nc=$((nc+1))
     done
 fi
+
+# Copy Prep Output to Main Directory
+for CHILD_DIR in ${DATA}/${VERIF_CASE}/data/workdirs/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/data/.
+    export err=$?; err_chk
+done
 
 for NEST in "conus" "ak"; do
     export NEST=$NEST

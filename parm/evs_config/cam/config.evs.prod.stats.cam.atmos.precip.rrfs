@@ -26,7 +26,6 @@ export FHR_END_SHORT="18"
 
 # Model/Obs Settings
 export COMINfcst=${COMINrrfs}
-export OBS_ACC="01"
 
 # Additional Verification Settings
 if [ "$ACC" = "01" ]; then
@@ -99,6 +98,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="ccpa"
         export COMINobs=${EVSINccpa}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="ccpa"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -108,6 +108,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -117,6 +118,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     elif [ "$NEST" = "hi" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -126,6 +128,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     elif [ "$NEST" = "pr" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -142,6 +145,7 @@ else
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="ccpa"
         export COMINobs=${EVSINccpa}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="ccpa"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -151,6 +155,7 @@ else
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -160,6 +165,7 @@ else
     elif [ "$NEST" = "hi" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -169,6 +175,7 @@ else
     elif [ "$NEST" = "pr" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"

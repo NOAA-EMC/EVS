@@ -26,7 +26,6 @@ export COMINfcst=${COMINrrfs}
 export OBSNAME=${VERIF_TYPE}
 
 # Additional Verification Settings
-export GRID="FCST"
 if [ "$NEST" = "conus" ]; then
     export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
@@ -34,11 +33,13 @@ if [ "$NEST" = "conus" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.conus.grib2"
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
+        export GRID="G240"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.conus.grib2"
         export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
+        export GRID="FCST"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
@@ -57,11 +58,13 @@ elif [ "$NEST" = "subreg" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.conus.grib2"
         export VAR_NAME_LIST=""
+        export GRID="G218"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.conus.grib2"
         export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc VIS CEILING"
+        export GRID="FCST"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
@@ -80,11 +83,13 @@ elif [ "$NEST" = "ak" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.ak.grib2"
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
+        export GRID="G091"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.ak.grib2"
         export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
+        export GRID="FCST"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
@@ -103,11 +108,13 @@ elif [ "$NEST" = "hi" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.hi.grib2"
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+        export GRID="G196"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.hi.grib2"
         export VAR_NAME_LIST="TMP2m DPT2m UGRD_VGRD10m"
+        export GRID="FCST"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
@@ -126,11 +133,13 @@ elif [ "$NEST" = "pr" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.pr.grib2"
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+        export GRID="G194"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.pr.grib2"
         export VAR_NAME_LIST=""
+        export GRID="FCST"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
@@ -149,11 +158,13 @@ elif [ "$NEST" = "firewx" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.grib2"
         export VAR_NAME_LIST="HPBL"
+        export GRID="G240"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.grib2"
         export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc"
+        export GRID="FCST"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
@@ -172,11 +183,13 @@ elif [ "$NEST" = "spc_otlk" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.grib2"
         export VAR_NAME_LIST="SBCAPE MLCAPE"
+        export GRID="G240"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.grib2"
         export VAR_NAME_LIST=""
+        export GRID="FCST"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"

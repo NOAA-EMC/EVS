@@ -1,11 +1,11 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_rrfs_severe_prep.sh
-# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Contact(s):     Marcel Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script preprocesses RRFS control UH data for 
 #                    CAM severe verification.
 # History Log:
-# 3/2023: Initial script assembled by Logan Dawson 
+# 3/2023: Initial script assembled
 ###############################################################################
 
 
