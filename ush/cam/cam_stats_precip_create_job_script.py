@@ -279,7 +279,7 @@ if VERIF_CASE == 'precip':
                     + f'-c {MET_PLUS_CONF}/'
                     + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
                 )
-                job_cmd_list.append(
+                job_cmd_list_iterative.append(
                     f'#python -c '
                     + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                     + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -308,7 +308,7 @@ if VERIF_CASE == 'precip':
                         + f'-c {MET_PLUS_CONF}/'
                         + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
                     )
-                    job_cmd_list.append(
+                    job_cmd_list_iterative.append(
                         f'#python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -337,7 +337,7 @@ if VERIF_CASE == 'precip':
                         + f'-c {MET_PLUS_CONF}/'
                         + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
                     )
-                    job_cmd_list.append(
+                    job_cmd_list_iterative.append(
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
