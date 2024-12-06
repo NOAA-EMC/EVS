@@ -302,7 +302,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 820 -ppn 82 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 512 -ppn 85 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi

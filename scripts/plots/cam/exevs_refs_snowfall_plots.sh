@@ -112,11 +112,14 @@ for stats in ets_fbias ratio_pod_csi fss ; do
     	 if [ $FCST_LEVEL_value  = A06 ] ; then
             export fcst_leads='6,12,18,24,30,36,42,48'
             export fcst_valid_hours='00 06 12 18'
+            accum=06h
          elif [ $FCST_LEVEL_value = A24 ] ; then
             export fcst_leads='24,30,36,42,48'
             export fcst_valid_hours='00 12'
+	    accum=24h
          fi
 
+         	 
       for lead in $fcst_leads ; do
 
         level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
@@ -178,8 +181,9 @@ for stats in ets_fbias ratio_pod_csi fss ; do
          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
 	 #Save for restart
-	 echo "if [ -s ${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
-         echo "  cp -v ${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+	 echo "if [ -s ${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${accum}_${var}*.png ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+	 #threshold_average_regional_conus_east_valid_12z_24h_weasd_ets_f24-30-36-42-48.png
+         echo "  cp -v ${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${accum}_${var}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 	 echo "  >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
@@ -188,8 +192,8 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
 	else
 	 #Restart from existing png files of previous run
-	 if [ -s $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png ] ; then
-	  cp  $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png ${plot_dir}/.
+	 if [ -s $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${accum}_${var}*.png ] ; then
+	  cp  $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${accum}_${var}*.png ${plot_dir}/.
 	 fi
         fi
 
