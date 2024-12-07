@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ksh
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the refs precip spatial map plotting 
 #           python script
@@ -77,8 +77,9 @@ export err=$?; err_chk
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 
-tar -cvf evs.plots.refs.precip.spatial.map.v${VDATE}.tar *.gif
-
+if [ -s refs*.gif ] ; then
+ tar -cvf evs.plots.refs.precip.spatial.map.v${VDATE}.tar *.gif
+fi 
 
 # Cat the plotting log files
 log_dirs="$DATA/*/*/*/logs"

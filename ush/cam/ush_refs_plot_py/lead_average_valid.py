@@ -188,12 +188,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                          + f" obs thresholds.")
                     logger.error(e)
                     logger.error("Quitting ...")
-                    raise ValueError(e+"\nQuitting ...")
+                    raise ValueError(e)
         if not symbol_found:
             e = "FATAL ERROR: None of the requested obs thresholds contain a valid symbol."
             logger.error(e)
             logger.error("Quitting ...")
-            raise ValueError(e+"\nQuitting ...")
+            raise ValueError(e)
         df_obs_thresh_symbol, df_obs_thresh_letter = list(
             zip(*[
                 plot_util.format_thresh(t) 
@@ -243,12 +243,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                          + f" fcst thresholds.")
                     logger.error(e)
                     logger.error("Quitting ...")
-                    raise ValueError(e+"\nQuitting ...")
+                    raise ValueError(e)
         if not symbol_found:
             e = "FATAL ERROR: None of the requested fcst thresholds contain a valid symbol."
             logger.error(e)
             logger.error("Quitting ...")
-            raise ValueError(e+"\nQuitting ...")
+            raise ValueError(e)
         df_fcst_thresh_symbol, df_fcst_thresh_letter = list(
             zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
         )
@@ -356,13 +356,57 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-    
+   
+    units = df['FCST_UNITS'].tolist()[0]
+    var_long_name_key = df['FCST_VAR'].tolist()[0]
+    if str(var_long_name_key).upper() == 'PROB_MXUPHL25_A24_GEHWT':
+        units = 'decimal'
+    metrics_using_var_units = [
+        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
+        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR','SPREAD',
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+    ]
+    coef, const = (None, None)
+    unit_convert = False
+    if units in reference.unit_conversions:
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        elif str(var_long_name_key).upper() == 'TMP' and level[0] == 'P':
+            unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
+        if unit_convert:
+            if metric2_name is not None:
+                if (str(metric1_name).upper() in metrics_using_var_units
+                        and str(metric2_name).upper() in metrics_using_var_units):
+                    coef, const = (
+                        reference.unit_conversions[units]['formula'](
+                            None,
+                            return_terms=True
+                        )
+                    )
+            elif str(metric1_name).upper() in metrics_using_var_units:
+                coef, const = (
+                    reference.unit_conversions[units]['formula'](
+                        None,
+                        return_terms=True
+                    )
+                )
     # Calculate desired metric
     metric_long_names = []
     for stat in [metric1_name, metric2_name]:
         if stat:
             stat_output = plot_util.calculate_stat(
-                logger, df_aggregated, str(stat).lower()
+                logger, df_aggregated, str(stat).lower(), [coef, const]
             )
             df_aggregated[str(stat).upper()] = stat_output[0]
             metric_long_names.append(stat_output[2])
@@ -370,7 +414,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = df_groups.apply(
                     lambda x: plot_util.calculate_bootstrap_ci(
                         logger, bs_method, x, str(stat).lower(), bs_nrep, 
-                        ci_lev, bs_min_samp
+                        ci_lev, bs_min_samp, [coef, const]
                     )
                 )
                 if any(ci_output['STATUS'] == 1):
@@ -387,6 +431,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = (
                     ci_output
                     .reindex(df_aggregated.index)
+                    #.reindex(ci_output.index)
                 )
                 df_aggregated[str(stat).upper()+'_BLERR'] = ci_output[
                     'CI_LOWER'
@@ -407,18 +452,20 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     ]
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
-        index='LEAD_HOURS'
+        index='LEAD_HOURS', dropna=False
     )
     if sample_equalization:
         pivot_counts = pd.pivot_table(
             df_aggregated, values='COUNTS', columns='MODEL',
             index='LEAD_HOURS'
         )
+    #pivot_metric1 = pivot_metric1.dropna() 
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
-            index='LEAD_HOURS'
+            index='LEAD_HOURS', dropna=False
         )
+        #pivot_metric2 = pivot_metric2.dropna() 
     if confidence_intervals:
         pivot_ci_lower1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BLERR',
@@ -915,27 +962,28 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
     units = df['FCST_UNITS'].tolist()[0]
-    if units in reference.unit_conversions:
+    if unit_convert:
         if fcst_thresh and '' not in fcst_thresh:
             fcst_thresh_labels = [float(tlab) for tlab in fcst_thresh_labels]
             fcst_thresh_labels = (
-                reference.unit_conversions[units]['formula'](fcst_thresh_labels)
+                reference.unit_conversions[units]['formula'](
+                    fcst_thresh_labels,
+                    rounding=True
+                )
             )
             fcst_thresh_labels = [str(tlab) for tlab in fcst_thresh_labels]
         if obs_thresh and '' not in obs_thresh:
             obs_thresh_labels = [float(tlab) for tlab in obs_thresh_labels]
             obs_thresh_labels = (
-                reference.unit_conversions[units]['formula'](obs_thresh_labels)
+                reference.unit_conversions[units]['formula'](
+                    obs_thresh_labels,
+                    rounding=True
+                )
             )
             obs_thresh_labels = [str(tlab) for tlab in obs_thresh_labels]
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
-    metrics_using_var_units = [
-        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
-        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
-    ]
     if metric2_name is not None:
         metric1_string, metric2_string = metric_long_names
         if (str(metric1_name).upper() in metrics_using_var_units
@@ -977,8 +1025,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
+    #fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
     fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
-    fig.subplots_adjust(top=0.85)
+    fig.subplots_adjust(top=0.85) 
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
@@ -1000,6 +1049,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             xytext=(-50, 21), textcoords='offset points', va='top', 
             fontsize=11, color='dimgrey', ha='center'
         )
+        #fig.subplots_adjust(top=.9)
         fig.subplots_adjust(top=.85)
 
     # Title
@@ -1080,6 +1130,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         level_string = f'{level}'
         level_savename = f'{level}_'
+    if var_savename == 'ICEC_Z0_mean':
+        level_string = ''
+    if var_savename == 'TMP_Z0_mean':
+        level_string = 'Sea Surface '
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'
     else:
@@ -1088,6 +1142,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         title1+=f' {interp_pts_string}'
     fcst_thresh_on = (fcst_thresh and '' not in fcst_thresh)
     obs_thresh_on = (obs_thresh and '' not in obs_thresh)
+    if metric1_string == 'Brier Score':
+        fcst_thresh_on = False
+        obs_thresh_on = False
     if fcst_thresh_on:
         fcst_thresholds_phrase = ', '.join([
             f'{opt}{fcst_thresh_label}' 
@@ -1129,10 +1186,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
+        #title_pad=40
         title_pad=30
     else:
         title_pad=None
-    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
+    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad)
     logger.info("... Plotting complete.")
 
     # Logos
@@ -1204,11 +1262,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
-        try:
-            os.makedirs(save_subdir)
-        except FileExistsError as e:
-            logger.warning(f"Several processes are making {save_subdir} at "
-                           + f"the same time. Passing")
+        os.makedirs(save_subdir)
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")
@@ -1375,7 +1429,7 @@ def main():
     if e:
         logger.error(e)
         logger.error("Quitting ...")
-        raise ValueError(e+"\nQuitting ...")
+        raise ValueError(e)
     if (str(INTERP).upper()
             not in case_specs['interp'].replace(' ','').split(',')):
         e = (f"FATAL ERROR: The requested interp method is not valid for the"
@@ -1383,7 +1437,7 @@ def main():
              + f" line_type ({LINE_TYPE}): {INTERP}")
         logger.error(e)
         logger.error("Quitting ...")
-        raise ValueError(e+"\nQuitting ...")
+        raise ValueError(e)
     for metric in metrics:
         if metric is not None:
             if (str(metric).lower()
@@ -1394,7 +1448,7 @@ def main():
                      + f" line_type ({LINE_TYPE}): {metric}")
                 logger.error(e)
                 logger.error("Quitting ...")
-                raise ValueError(e+"\nQuitting ...")
+                raise ValueError(e)
     for requested_var in VARIABLES:
         if requested_var in list(case_specs['var_dict'].keys()):
             var_specs = case_specs['var_dict'][requested_var]
@@ -1451,7 +1505,7 @@ def main():
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")
-                raise ValueError(e+"\nQuitting ...")
+                raise ValueError(e)
             if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
                     or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid: "

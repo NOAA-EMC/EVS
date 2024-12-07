@@ -22,7 +22,6 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 from cartopy import config
-import refs_atmos_util as gda_util
 from refs_atmos_plots_specs import PlotSpecs
 
 class PrecipSpatialMap:
@@ -102,7 +101,6 @@ class PrecipSpatialMap:
                         'goldenrod', 'yellow']
         cmap_over_color_mm = '#ffaeb9'
         # Set Cartopy shapefile location
-        #config['data_dir'] = f"{os.environ['cartopyDataDir']}"
         config['data_dir'] = config['repo_data_dir']
         # Read in data
         self.logger.info(f"Reading in model files from {self.input_dir}")

@@ -339,11 +339,11 @@ for valid in 00z 12z ; do
 
        if [ ${score_type} = lead_average ] ; then	
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end} ] ; then
-             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end}  evs.refs.${stats}.${var_new}.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end}  evs.refs.${stats}.${var_new}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
           fi 
        else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png ] ; then
-   	     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png  evs.refs.${stats}.${var_new}.last${last_days}days.${scoretype}_valid_${valid}_${new_lead}.${new_domain}.png
+   	     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png  evs.refs.${stats}.${var_new}.last${last_days}days.${scoretype}_valid${valid}_${new_lead}.${new_domain}.png
           fi 
        fi
       done #lead
@@ -354,8 +354,9 @@ for valid in 00z 12z ; do
 done     #stats
 done     #vlaid
 
-
-tar -cvf evs.plots.refs.profile.last${last_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+ tar -cvf evs.plots.refs.profile.last${last_days}days.v${VDATE}.tar *.png
+fi
 
 # Cat the plotting log files
 log_dir="$DATA/logs"
