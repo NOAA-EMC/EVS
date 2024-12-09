@@ -35,7 +35,7 @@ export nproc=25
 
 export OMP_NUM_THREADS=1
 
-export MAILTO='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,qi.shi@noaa.gov'
 
 export envir=prod
 export NET=evs
