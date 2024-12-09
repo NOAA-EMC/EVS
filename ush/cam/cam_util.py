@@ -339,7 +339,8 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                          job_type=None, var_name=None, vhour=None, 
                          fhr_start=None, fhr_end=None, fhr_incr=None, 
                          njob=None, acc=None, nbrhd=None):
-    sub_dirs = []
+    sub_dirs_in = []
+    sub_dirs_out = []
     copy_files = []
     if met_tool == "ascii2nc":
         check_if_none = [
@@ -350,7 +351,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
-        sub_dirs.append(os.path.join(
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'reformat',
+            f'job{njob}',
+            verif_type, 
+            vx_mask, 
+            met_tool, 
+        ))
+        sub_dirs_out.append(os.path.join(
             'METplus_output',
             verif_type, 
             vx_mask, 
@@ -366,7 +376,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
-        sub_dirs.append(os.path.join(
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'reformat',
+            f'job{njob}',
+            verif_type,
+            met_tool,
+            f'{vx_mask}.{vdate}',
+        ))
+        sub_dirs_out.append(os.path.join(
             'METplus_output',
             verif_type,
             met_tool,
@@ -385,7 +404,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
-            sub_dirs.append(os.path.join(
+            sub_dirs_in.append(os.path.join(
+                'METplus_output',
+                'workdirs',
+                'generate',
+                f'job{njob}',
+                verif_type,
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            sub_dirs_out.append(os.path.join(
                 'METplus_output',
                 verif_type,
                 met_tool,
@@ -405,7 +433,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
-            sub_dirs.append(os.path.join(
+            sub_dirs_in.append(os.path.join(
+                'METplus_output',
+                'workdirs',
+                'generate',
+                f'job{njob}',
+                verif_type,
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            sub_dirs_out.append(os.path.join(
                 'METplus_output',
                 verif_type,
                 met_tool,
@@ -425,7 +462,12 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} output to COMOUT directory.")
             raise TypeError(e)
-        sub_dirs.append(os.path.join(
+        sub_dirs_in.append(os.path.join(
+            'data',
+            model,
+            met_tool,
+        ))
+        sub_dirs_out.append(os.path.join(
             'data',
             model,
             met_tool,
@@ -448,7 +490,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
-        sub_dirs.append(os.path.join(
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'reformat',
+            f'job{njob}',
+            verif_type,
+            vx_mask,
+            met_tool,
+        ))
+        sub_dirs_out.append(os.path.join(
             'METplus_output',
             verif_type,
             vx_mask,
@@ -470,7 +521,15 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 idt = vdt - td(hours=int(fhr))
                 idate = idt.strftime('%Y%m%d')
                 ihour = idt.strftime('%H')
-                sub_dirs.append(os.path.join(
+                sub_dirs_in.append(os.path.join(
+                    'METplus_output',
+                    'workdirs',
+                    'reformat',
+                    f'job{njob}',
+                    verif_type,
+                    met_tool,
+                ))
+                sub_dirs_out.append(os.path.join(
                     'METplus_output',
                     verif_type,
                     met_tool,
@@ -492,7 +551,15 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 idt = vdt - td(hours=int(fhr))
                 idate = idt.strftime('%Y%m%d')
                 ihour = idt.strftime('%H')
-                sub_dirs.append(os.path.join(
+                sub_dirs_in.append(os.path.join(
+                    'METplus_output',
+                    'workdirs',
+                    'reformat',
+                    f'job{njob}',
+                    verif_type,
+                    met_tool,
+                ))
+                sub_dirs_out.append(os.path.join(
                     'METplus_output',
                     verif_type,
                     met_tool,
@@ -509,7 +576,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
-        sub_dirs.append(os.path.join(
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'generate',
+            f'job{njob}',
+            verif_type,
+            met_tool,
+            f'{model}.{vdate}'
+        ))
+        sub_dirs_out.append(os.path.join(
             'METplus_output',
             verif_type,
             met_tool,
@@ -529,7 +605,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
-        sub_dirs.append(os.path.join(
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'generate',
+            f'job{njob}',
+            verif_type,
+            met_tool,
+            f'{model}.{vdate}'
+        ))
+        sub_dirs_out.append(os.path.join(
             'METplus_output',
             verif_type,
             met_tool,
@@ -550,7 +635,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
-            sub_dirs.append(os.path.join(
+            sub_dirs_in.append(os.path.join(
+                'METplus_output',
+                'workdirs',
+                'gather',
+                f'job{njob}',
+                'gather_small',
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            sub_dirs_out.append(os.path.join(
                 'METplus_output',
                 'gather_small',
                 met_tool,
@@ -569,7 +663,15 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
-            sub_dirs.append(os.path.join(
+            sub_dirs_in.append(os.path.join(
+                'METplus_output',
+                'workdirs',
+                'gather2',
+                f'job{njob}',
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            sub_dirs_out.append(os.path.join(
                 'METplus_output',
                 met_tool,
                 f'{model}.{vdate}'
@@ -577,12 +679,12 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             copy_files.append(
                 f'{net}.{step}.{model}.{run}.{verif_case}.v{vdate}.c{vhr}z.stat'
             )
-    for sub_dir in sub_dirs:
+    for s, sub_dir_out in enumerate(sub_dirs_out):
         for copy_file in copy_files:
             origin_path = os.path.join(
-                data_dir, verif_case, sub_dir, copy_file
+                data_dir, verif_case, sub_dirs_in[s], copy_file
             )
-            dest_path = os.path.join(restart_dir, sub_dir)
+            dest_path = os.path.join(restart_dir, sub_dir_out)
             if not glob.glob(origin_path):
                 continue
             if not os.path.exists(dest_path):
