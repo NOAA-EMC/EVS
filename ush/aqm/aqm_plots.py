@@ -455,10 +455,10 @@ elif JOB_GROUP == 'make_plots':
             ## )
             ## logger.info(f"init_hr = {init_hr}")
             init_in_init_hrs=False
-            for strfhr in date_info_dict['forecast_hours']:
+            for ifhr in fhrs:
                 init_hr = gda_util.get_init_hour(
                     int(date_info_dict['valid_hr_start']),
-                    int(strfhr)
+                    ifhr
                 )
                 if init_hr in init_hrs:
                     init_in_init_hrs=True
