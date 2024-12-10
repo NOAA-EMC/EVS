@@ -82,7 +82,7 @@ class TimeSeriesFhrMean:
             self.date_info_dict['init_hr_start'],
             self.date_info_dict['init_hr_end'],
             self.date_info_dict['init_hr_inc'],
-            self.date_info_dict['forecast_hour']
+            self.date_info_dict['forecast_hours']
         )
         format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
                               for d in range(len(valid_dates))]
@@ -92,7 +92,7 @@ class TimeSeriesFhrMean:
             self.logger.debug("Based on date information, plot will display "
                               +"valid dates "+', '.join(format_valid_dates)+" "
                               +"for forecast hour "
-                              +f"{self.date_info_dict['forecast_hour']} "
+                              +f"{self.date_info_dict['forecast_hours']} "
                               +"with initialization dates "
                               +', '.join(format_init_dates))
             if len(valid_dates) == 0:
@@ -121,7 +121,7 @@ class TimeSeriesFhrMean:
                               +"initialization dates "
                               +', '.join(format_init_dates)+" "
                               +"for forecast hour "
-                              +f"{self.date_info_dict['forecast_hour']} "
+                              +f"{self.date_info_dict['forecast_hours']} "
                               +"with valid dates "
                               +', '.join(format_valid_dates))
             if len(init_dates) == 0:
@@ -163,7 +163,7 @@ class TimeSeriesFhrMean:
             self.plot_info_dict['interp_points'],
             self.date_info_dict['date_type'],
             plot_dates, format_valid_dates,
-            str(self.date_info_dict['forecast_hour'])
+            str(self.date_info_dict['forecast_hours'])
         )
         # Calculate statistic
         self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
@@ -571,7 +571,7 @@ def main():
         'init_hr_start': 'INIT_HR_START',
         'init_hr_end': 'INIT_HR_END',
         'init_hr_inc': 'INIT_HR_INC',
-        'forecast_hour': 'FORECAST_HOUR'
+        'forecast_hours': 'FORECAST_HOUR'
     }
     PLOT_INFO_DICT = {
         'line_type': 'LINE_TYPE',

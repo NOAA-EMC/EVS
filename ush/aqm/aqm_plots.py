@@ -432,9 +432,11 @@ elif JOB_GROUP == 'make_plots':
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'time_series_fhr_mean':
-        logger.info(f"aqm_plots.py process time_series_fhr_mean")
         import aqm_plots_time_series_fhr_mean as gdap_tsfm
+        logger.info(f"aqm_plots.py process time_series_fhr_mean")
+        logger.info(f"aqm_plots.py {var_info}")
         for ts_info in list(var_info):
+            logger.info(f"aqm_plots.py {ts_info}")
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
@@ -446,20 +448,26 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_level'] = ts_info[1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[1][2]
             ## does it take forecast_hour as a list?
-            init_hr = gda_util.get_init_hour(
-                int(date_info_dict['valid_hr_start']),
-                int(date_info_dict['forecast_hour'])
-            )
+            ## Ans : it take single valid_hr_start and single forecast_hour to cal init_hr
+            ## init_hr = gda_util.get_init_hour(
+            ##     int(date_info_dict['valid_hr_start']),
+            ##     int(date_info_dict['forecast_hour'])
+            ## )
+            ## logger.info(f"init_hr = {init_hr}")
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
             COMOUTjob_image_name = (
                 DATAjob_image_name.replace(DATAjob, COMOUTjob)
             )
-            if init_hr in init_hrs and not os.path.exists(DATAjob_image_name):
-                make_ts = True
-            else:
-                make_ts = False
+            logger.info(f"DATAjob_image_name = {DATAjob_image_name}")
+            logger.info(f"COMOUTjob_image_name = {COMOUTjob_image_name}")
+            ## if init_hr in init_hrs and not os.path.exists(DATAjob_image_name):
+            ##     make_ts = True
+            ## else:
+            ##     make_ts = False
+            make_ts = True
+            logger.info(f"make_ts = {make_ts}")
             ## if plot_info_dict['stat'] == 'FBAR_OBAR' \
             ##         and str(date_info_dict['forecast_hour']) not in \
             ##         [ '24', '48', '72']:
