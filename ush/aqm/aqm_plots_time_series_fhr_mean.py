@@ -90,7 +90,7 @@ class TimeSeriesFhrMean:
             )
             self.logger.debug("forecast hour = {strfhr} and valid_date = {valid_date}")
         valid_dates.append(valid_date)
-        self.logger.debug(valid_dates = {valid_dates}")
+        self.logger.debug(f"valid_dates = {valid_dates}")
         init_dates.append(init_date)
         format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
                               for d in range(len(valid_dates))]
