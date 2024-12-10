@@ -2403,7 +2403,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
              obs_var_name, obs_var_level, obs_var_thresh, line_type,
              grid, vx_mask, interp_method, interp_points, date_type, dates,
-             met_format_valid_dates, fhrs):
+             met_format_valid_dates):
     """! Build the data frame for all model stats,
          Read the model's filtered file, and if doesn't exist
          filter the model file for need information and write file
@@ -2431,7 +2431,6 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              dates                  - array of dates (datetime)
              met_format_valid_dates - list of valid dates formatted
                                       like they are in MET stat files
-             fhrs                   - list of forecast hour (integer)
 
          Returns:
              all_model_df                - dataframe of all the information
@@ -2457,6 +2456,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
             +f"{fcst_var_level.lower().replace('.','p').replace('-', '_')}_"
             +f"{vx_mask.lower()}.stat"
         )
+
         if len(dates) != 0:
             filtered_model_stat_file_name = (
                 'fcst'+model_dict['name']+'_'
@@ -2468,8 +2468,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                 +'interp'+interp_method+interp_points+'_'
                 +date_type.lower()
                 +dates[0].strftime('%Y%m%d%H%M%S')+'to'
-                +dates[-1].strftime('%Y%m%d%H%M%S')+'_'
-                +'fhr'+fhrs[0].zfill(3)+'_'+fhrs[-1].zfill(3)
+                +dates[-1].strftime('%Y%m%d%H%M%S')
             ).lower().replace('.','p').replace('-', '_')\
             .replace('&&', 'and').replace('||', 'or')\
             .replace('0,*,*', '').replace('*,*', '')+'.stat'

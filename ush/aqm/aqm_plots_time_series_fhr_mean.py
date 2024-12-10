@@ -90,7 +90,7 @@ class TimeSeriesFhrMean:
                 self.date_info_dict['init_hr_inc'],
                 str(ifhr)
             )
-            self.logger.debug("forecast hour = {strfhr} and valid_date = {valid_date}")
+            self.logger.debug(f"forecast hour = {ifhr} and valid_date = {valid_date}")
             valid_dates.extend(valid_date)
             init_dates.extend(init_date)
         self.logger.debug(f"valid_dates = {valid_dates}")
@@ -173,7 +173,6 @@ class TimeSeriesFhrMean:
             self.plot_info_dict['interp_points'],
             self.date_info_dict['date_type'],
             plot_dates, format_valid_dates,
-            str(self.date_info_dict['forecast_hours'])
         )
         # Calculate statistic
         self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
