@@ -2521,6 +2521,8 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                 filtered_model_df = condensed_model_df[
                     (condensed_model_df['MODEL'] == model_dict['name'])
                      & (condensed_model_df['DESC'] == grid)
+                     & (condensed_model_df['FCST_LEAD'] \
+                        == fhr)
                      & (condensed_model_df['FCST_VAR'] \
                         == fcst_var_name)
                      & (condensed_model_df['FCST_LEV'] \
