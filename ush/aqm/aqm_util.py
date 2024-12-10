@@ -2403,7 +2403,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
              obs_var_name, obs_var_level, obs_var_thresh, line_type,
              grid, vx_mask, interp_method, interp_points, date_type, dates,
-             met_format_valid_dates, fhr):
+             met_format_valid_dates, fhrs):
     """! Build the data frame for all model stats,
          Read the model's filtered file, and if doesn't exist
          filter the model file for need information and write file
@@ -2431,7 +2431,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              dates                  - array of dates (datetime)
              met_format_valid_dates - list of valid dates formatted
                                       like they are in MET stat files
-             fhr                    - list of forecast hour (string)
+             fhrs                   - list of forecast hour (integer)
 
          Returns:
              all_model_df                - dataframe of all the information
@@ -2562,8 +2562,6 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                 filtered_model_df = condensed_model_df[
                     (condensed_model_df['MODEL'] == model_dict['name'])
                      & (condensed_model_df['DESC'] == grid)
-                     & (condensed_model_df['FCST_LEAD'] \
-                        == fhr)
                      & (condensed_model_df['FCST_VAR'] \
                         == fcst_var_name)
                      & (condensed_model_df['FCST_LEV'] \
