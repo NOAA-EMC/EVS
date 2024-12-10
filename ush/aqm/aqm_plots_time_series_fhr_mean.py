@@ -74,7 +74,7 @@ class TimeSeriesFhrMean:
         self.logger.debug("Making valid and init date arrays")
         valid_dates=[]
         init_dates=[]
-        for strfhr in self.date_info_dict['forecast_hours']:
+        for ifhr in self.date_info_dict['forecast_hours']:
             valid_date, init_date = gda_util.get_plot_dates(
                 self.logger,
                 self.date_info_dict['date_type'],
@@ -86,7 +86,7 @@ class TimeSeriesFhrMean:
                 self.date_info_dict['init_hr_start'],
                 self.date_info_dict['init_hr_end'],
                 self.date_info_dict['init_hr_inc'],
-                strfhr
+                str(ihr)
             )
             self.logger.debug("forecast hour = {strfhr} and valid_date = {valid_date}")
         valid_dates.append(valid_date)
