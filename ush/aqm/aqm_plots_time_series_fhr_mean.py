@@ -74,7 +74,9 @@ class TimeSeriesFhrMean:
         self.logger.debug("Making valid and init date arrays")
         valid_dates=[]
         init_dates=[]
-        for ifhr in self.date_info_dict['forecast_hours']:
+        fhrs=self.date_info_dict['forecast_hours']
+        for ifhr in fhrs:
+            self.logger.debug(f"ifhr={ifhr}")
             valid_date, init_date = gda_util.get_plot_dates(
                 self.logger,
                 self.date_info_dict['date_type'],
@@ -89,9 +91,9 @@ class TimeSeriesFhrMean:
                 str(ifhr)
             )
             self.logger.debug("forecast hour = {strfhr} and valid_date = {valid_date}")
-        valid_dates.append(valid_date)
+            valid_dates.extend(valid_date)
+            init_dates.extend(init_date)
         self.logger.debug(f"valid_dates = {valid_dates}")
-        init_dates.append(init_date)
         format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
                               for d in range(len(valid_dates))]
         format_init_dates = [init_dates[d].strftime('%Y%m%d_%H%M%S') \

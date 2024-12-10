@@ -440,7 +440,7 @@ elif JOB_GROUP == 'make_plots':
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
-            date_info_dict['forecast_hours'] = str(fhrs)
+            date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = ts_info[0][0]
             plot_info_dict['fcst_var_level'] = ts_info[0][1]
             plot_info_dict['fcst_var_thresh'] = ts_info[0][2]

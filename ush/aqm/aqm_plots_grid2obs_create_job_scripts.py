@@ -878,7 +878,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                       plot_fcst_threshs_loop,
                                       plot_fcst_levels_loop)
                 ):
-                    if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average' or job_env_dict['plot'] == 'time_series_fhr_mean':
+                    if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average_vhr_mean' or job_env_dict['plot'] == 'time_series_fhr_mean':
                         job_env_dict['valid_hr_start'] = str(
                             plot_loop_info[0][0]
                         ).zfill(2)
