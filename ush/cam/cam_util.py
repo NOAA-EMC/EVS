@@ -563,7 +563,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 f'{verif_type}.{vdate}'
             ))
             copy_files.append(
-                f'{verif_type}.t{ihour}z.a{acc}h.{vx_mask}.nc'
+                f'{verif_type}.t{vhour}z.a{acc}h.{vx_mask}.nc'
             )
             # Copy forecasts
             for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
