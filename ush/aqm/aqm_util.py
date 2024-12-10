@@ -399,6 +399,27 @@ def get_init_hour(valid_hour, forecast_hour):
         init_hour = init_hour - 24
     return init_hour
 
+
+def get_init_hours(valid_hour, forecast_hours):
+    """! Get a list of a initialization hour
+
+         Args:
+             valid_hour    - a single valid hour (integer)
+             forecast_hours - list of forecast hour (integer)
+    """
+    init_hours=[]
+    for ifhr in forecast_hours:
+        init_hour = 24 + (valid_hour - (ifhr%24))
+        if ifhr % 24 == 0:
+            init_hour = valid_hour
+        else:
+            init_hour = 24 + (valid_hour - (ifhr%24))
+        if init_hour >= 24:
+            init_hour = init_hour - 24
+        init_hours.append(init_hour)
+    return init_hours
+
+
 def get_valid_hour(init_hour, forecast_hour):
     """! Get a valid hour
 
@@ -414,6 +435,26 @@ def get_valid_hour(init_hour, forecast_hour):
     if valid_hour >= 24:
         valid_hour = valid_hour - 24
     return valid_hour
+
+
+def get_valid_hours(init_hour, forecast_hours):
+    """! Get a valid hour
+
+         Args:
+             init_hour    - a single init hour (integer)
+             forecast_hours - list of forecast hour (integer)
+    """
+    valid_hours=[]
+    for ifhr in forecast_hours:
+        valid_hour = (init_hour + (ifhr%24))
+        if ifhr % 24 == 0:
+            valid_hour = init_hour
+        else:
+            valid_hour = (init_hour + (ifhr%24))
+        if valid_hour >= 24:
+            valid_hour = valid_hour - 24
+        valid_hours.append(valid_hour)
+    return valid_hours
 
 
 def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
