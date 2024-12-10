@@ -2469,7 +2469,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                 +date_type.lower()
                 +dates[0].strftime('%Y%m%d%H%M%S')+'to'
                 +dates[-1].strftime('%Y%m%d%H%M%S')+'_'
-                +'fhr'+fhr[0].zfill(3)+'_'+fhr[-1].zfill(3)
+                +'fhr'+fhrs[0].zfill(3)+'_'+fhrs[-1].zfill(3)
             ).lower().replace('.','p').replace('-', '_')\
             .replace('&&', 'and').replace('||', 'or')\
             .replace('0,*,*', '').replace('*,*', '')+'.stat'
