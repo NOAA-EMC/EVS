@@ -64,7 +64,8 @@ MET_MPR_column_list = [
     'VX_MASK', 'INTERP_MTHD', 'INTERP_PNTS', 'FCST_THRESH', 'OBS_THRESH',
     'COV_THRESH', 'ALPHA', 'LINE_TYPE', 'TOTAL', 'INDEX', 'OBS_SID',
     'OBS_LAT', 'OBS_LON', 'OBS_LVL', 'OBS_ELV', 'FCST', 'OBS', 'OBS_QC',
-    'CLIMO_MEAN', 'CLIMO_STDEV', 'CLIMO_CDF'
+    'OBS_CLIMO_MEAN', 'OBS_CLIMO_STDEV', 'OBS_CLIMO_CDF',
+    'FCST_CLIMO_MEAN', 'FCST_CLIMO_STDEV'
 ]
 
 # Create weekly average files
@@ -207,7 +208,13 @@ while valid_hr <= int(valid_hr_end):
                         if job_name == 'WeeklyAvg_Temp2m':
                             all_weekly_avg_obtype_sid_vx_mask_climo_mean = (
                                 np.array(
-                                    all_weekly_avg_obtype_sid_vx_mask_df['CLIMO_MEAN']\
+                                    all_weekly_avg_obtype_sid_vx_mask_df['OBS_CLIMO_MEAN']\
+                                    .values, dtype=float
+                                ).mean()
+                            )
+                            all_weekly_avg_obtype_sid_vx_mask_fclimo_mean = (
+                                np.array(
+                                    all_weekly_avg_obtype_sid_vx_mask_df['FCST_CLIMO_MEAN']\
                                     .values, dtype=float
                                 ).mean()
                             )
@@ -245,8 +252,11 @@ while valid_hr <= int(valid_hr_end):
                             all_weekly_avg_obtype_sid_vx_mask_obs_mean
                         )
                         if job_name == 'WeeklyAvg_Temp2m':
-                            weekly_avg_obtype_sid_vx_mask_df['CLIMO_MEAN'] = str(
+                            weekly_avg_obtype_sid_vx_mask_df['OBS_CLIMO_MEAN'] = str(
                                 all_weekly_avg_obtype_sid_vx_mask_climo_mean
+                            )
+                            weekly_avg_obtype_sid_vx_mask_df['FCST_CLIMO_MEAN'] = str(
+                                all_weekly_avg_obtype_sid_vx_mask_fclimo_mean
                             )
                         weekly_avg_df_list.append(
                             weekly_avg_obtype_sid_vx_mask_df
