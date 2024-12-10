@@ -86,7 +86,7 @@ class TimeSeriesFhrMean:
                 self.date_info_dict['init_hr_start'],
                 self.date_info_dict['init_hr_end'],
                 self.date_info_dict['init_hr_inc'],
-                str(ihr)
+                str(ifhr)
             )
             self.logger.debug("forecast hour = {strfhr} and valid_date = {valid_date}")
         valid_dates.append(valid_date)
