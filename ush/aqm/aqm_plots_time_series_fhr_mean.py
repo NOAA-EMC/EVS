@@ -60,7 +60,7 @@ class TimeSeriesFhrMean:
 
              Returns:
         """
-        self.logger.info(f"Plot Type: Time Series")
+        self.logger.info(f"Plot Type: Time Series all fhr by plot time")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "

@@ -432,6 +432,7 @@ elif JOB_GROUP == 'make_plots':
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'time_series_fhr_mean':
+        logger.info(f"aqm_plots.py process time_series_fhr_mean")
         import aqm_plots_time_series_fhr_mean as gdap_tsfm
         for ts_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
@@ -469,6 +470,7 @@ elif JOB_GROUP == 'make_plots':
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_ts = False
             if make_ts:
+                logger.info(f"define plot_tsfm = gdap_tsfm.TimeSeriesFhrMean")
                 plot_tsfm = gdap_tsfm.TimeSeriesFhrMean(logger, DATAjob+'/..', DATAjob,
                                              model_info_dict, date_info_dict,
                                              plot_info_dict, met_info_dict,
