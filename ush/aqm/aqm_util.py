@@ -2390,7 +2390,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              dates                  - array of dates (datetime)
              met_format_valid_dates - list of valid dates formatted
                                       like they are in MET stat files
-             fhr                    - array of forecast hour (string)
+             fhr                    - list of forecast hour (string)
 
          Returns:
              all_model_df                - dataframe of all the information

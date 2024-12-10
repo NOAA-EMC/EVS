@@ -70,20 +70,28 @@ class TimeSeriesFhrMean:
         self.logger.debug(f"Plot information dictionary: "
                           +f"{self.plot_info_dict}")
         # Get dates to plot
+        ##         self.date_info_dict['forecast_hours']
         self.logger.debug("Making valid and init date arrays")
-        valid_dates, init_dates = gda_util.get_plot_dates(
-            self.logger,
-            self.date_info_dict['date_type'],
-            self.date_info_dict['start_date'],
-            self.date_info_dict['end_date'],
-            self.date_info_dict['valid_hr_start'],
-            self.date_info_dict['valid_hr_end'],
-            self.date_info_dict['valid_hr_inc'],
-            self.date_info_dict['init_hr_start'],
-            self.date_info_dict['init_hr_end'],
-            self.date_info_dict['init_hr_inc'],
-            self.date_info_dict['forecast_hours']
-        )
+        valid_dates=[]
+        init_dates=[]
+        for strfhr in self.date_info_dict['forecast_hours']:
+            valid_date, init_date = gda_util.get_plot_dates(
+                self.logger,
+                self.date_info_dict['date_type'],
+                self.date_info_dict['start_date'],
+                self.date_info_dict['end_date'],
+                self.date_info_dict['valid_hr_start'],
+                self.date_info_dict['valid_hr_end'],
+                self.date_info_dict['valid_hr_inc'],
+                self.date_info_dict['init_hr_start'],
+                self.date_info_dict['init_hr_end'],
+                self.date_info_dict['init_hr_inc'],
+                strfhr
+            )
+            self.logger.debug("forecast hour = {strfhr} and valid_date = {valid_date}")
+        valid_dates.append(valid_date)
+        self.logger.debug(valid_dates = {valid_dates}")
+        init_dates.append(init_date)
         format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
                               for d in range(len(valid_dates))]
         format_init_dates = [init_dates[d].strftime('%Y%m%d_%H%M%S') \

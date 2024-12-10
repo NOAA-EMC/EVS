@@ -454,6 +454,15 @@ elif JOB_GROUP == 'make_plots':
             ##     int(date_info_dict['forecast_hour'])
             ## )
             ## logger.info(f"init_hr = {init_hr}")
+            init_in_init_hrs=False
+            for strfhr in date_info_dict['forecast_hours']:
+                init_hr = gda_util.get_init_hour(
+                    int(date_info_dict['valid_hr_start']),
+                    int(strfhr)
+                )
+                if init_hr in init_hrs:
+                    init_in_init_hrs=True
+                    break
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -466,8 +475,10 @@ elif JOB_GROUP == 'make_plots':
             ##     make_ts = True
             ## else:
             ##     make_ts = False
-            make_ts = True
-            logger.info(f"make_ts = {make_ts}")
+            if init_in_init_hrs and not os.path.exists(DATAjob_image_name):
+                make_ts = True
+            else:
+                make_ts = False
             ## if plot_info_dict['stat'] == 'FBAR_OBAR' \
             ##         and str(date_info_dict['forecast_hour']) not in \
             ##         [ '24', '48', '72']:
