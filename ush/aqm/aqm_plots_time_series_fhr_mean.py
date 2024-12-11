@@ -90,7 +90,6 @@ class TimeSeriesFhrMean:
                 self.date_info_dict['init_hr_inc'],
                 str(ifhr)
             )
-            self.logger.debug(f"forecast hour = {ifhr} and valid_date = {valid_date}")
             valid_dates.extend(valid_date)
             init_dates.extend(init_date)
         self.logger.debug(f"valid_dates = {valid_dates}")
@@ -157,6 +156,9 @@ class TimeSeriesFhrMean:
                 plot_dates = init_dates
         # Read in data
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
+        perform_fcst_hour_filtering=True
+        selected_fcst_hours=[ str(ifhr) for ifhr in fhrs ]
+        self.logger.info(f"selected forecast hours = {selected_fcst_hours}")
         all_model_df = gda_util.build_df_fhr_mean(
             'make_plots', self.logger, self.input_dir, self.output_dir,
             self.model_info_dict, self.met_info_dict,
@@ -173,6 +175,8 @@ class TimeSeriesFhrMean:
             self.plot_info_dict['interp_points'],
             self.date_info_dict['date_type'],
             plot_dates, format_valid_dates,
+            perform_fcst_hour_filtering,
+            selected_fcst_hours
         )
         # Calculate statistic
         self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "

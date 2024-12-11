@@ -2403,7 +2403,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
              obs_var_name, obs_var_level, obs_var_thresh, line_type,
              grid, vx_mask, interp_method, interp_points, date_type, dates,
-             met_format_valid_dates):
+             met_format_valid_dates,filter_fhr_flag,forecast_hours):
     """! Build the data frame for all model stats,
          Read the model's filtered file, and if doesn't exist
          filter the model file for need information and write file
@@ -2431,6 +2431,8 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              dates                  - array of dates (datetime)
              met_format_valid_dates - list of valid dates formatted
                                       like they are in MET stat files
+             filter_fhr_flag        - status of filtering by forecast_hours (boolean)
+             forecast_hours         - list of forecast hour (string)
 
          Returns:
              all_model_df                - dataframe of all the information
@@ -2583,6 +2585,11 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                      & (condensed_model_df['LINE_TYPE'] \
                         == line_type)
                 ]
+                if filter_fhr_flag:
+                    selected_forecast_hours=[ fhr.zfill(2)+'0000' for fhr in forecast_hours ]
+                    filtered_model_df = filtered_model_df[
+                        filtered_model_df['FCST_LEAD'].isin(selected_forecast_hours)
+                    ]
                 filtered_model_df = filtered_model_df[
                     filtered_model_df['FCST_VALID_BEG'].isin(met_format_valid_dates)
                 ]
