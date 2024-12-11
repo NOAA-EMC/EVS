@@ -6,7 +6,6 @@ import datetime
 import sys
 import os
 import numpy as np
-import refs_atmos_util as gda_util
 
 class PlotSpecs:
     def __init__(self, logger, plot_type):

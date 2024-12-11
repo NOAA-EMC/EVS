@@ -302,7 +302,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 820 -ppn 82 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 510 -ppn 85 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -342,7 +342,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
   fi
 
   if [ -s performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png ] ; then
-    mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.refs.ctc.${var_new}_${level}.last${last_days}days.perfdiag_valid_${valid}.${new_domain}.png
+    mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.refs.ctc.${var_new}_${level}.last${last_days}days.perfdiag_valid${valid}.${new_domain}.png
   fi 
 
  done
@@ -385,7 +385,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
      fi
     
      if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png ] ; then
-         mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.refs.${stat}.${var_new}_${level}.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+         mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.refs.${stat}.${var_new}_${level}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
      fi
 
        done #domain
@@ -394,7 +394,9 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
  done    #score_type
 done
 
-tar -cvf evs.plots.refs.grid2obs.ctc.last${last_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+ tar -cvf evs.plots.refs.grid2obs.ctc.last${last_days}days.v${VDATE}.tar *.png
+fi
 
 # Cat the plotting log files
 log_dir="$DATA/logs"

@@ -192,6 +192,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     requested_thresh_symbol, requested_thresh_letter = list(
         zip(*[plot_util.format_thresh(t) for t in thresh])
     )
+    requested_thresh_value = [float(str(item)[2:]) for item in requested_thresh_letter]
     symbol_found = False
     for opt in ['>=', '>', '==','!=','<=', '<']:
         if any(opt in t for t in requested_thresh_symbol):
@@ -297,9 +298,43 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
 
+    units = df['FCST_UNITS'].tolist()[0]
+    var_long_name_key = df['FCST_VAR'].tolist()[0]
+    if str(var_long_name_key).upper() == 'PROB_MXUPHL25_A24_GEHWT':
+        units = 'decimal'
+    metrics_using_var_units = [
+        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
+        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+    ]
+    coef, const = (None, None)
+    unit_convert = False
+    if units in reference.unit_conversions:
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
+        if unit_convert:
+            if str(metric_name).upper() in metrics_using_var_units:
+                coef, const = (
+                    reference.unit_conversions[units]['formula'](
+                        None,
+                        return_terms=True
+                    )
+                )
+
     # Calculate desired metric
     stat_output = plot_util.calculate_stat(
-        logger, df_aggregated, str(metric_name).lower()
+        logger, df_aggregated, str(metric_name).lower(), [coef, const]
     )
     df_aggregated[str(metric_name).upper()] = stat_output[0]
     metric_long_name = stat_output[2]
@@ -307,7 +342,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         ci_output = df_groups.apply(
             lambda x: plot_util.calculate_bootstrap_ci(
                 logger, bs_method, x, str(metric_name).lower(), bs_nrep,
-                ci_lev, bs_min_samp
+                ci_lev, bs_min_samp, [coef, const]
             )
         )
         if any(ci_output['STATUS'] == 1):
@@ -342,7 +377,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     ]
 
     pivot_metric = pd.pivot_table(
-        df_aggregated, values=str(metric_name).upper(), columns='MODEL', 
+        df_aggregated, values=str(metric_name).upper(), columns='MODEL',
         index='FCST_THRESH_VALUE'
     )
     if sample_equalization:
@@ -372,7 +407,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-
     models_renamed = []
     count_renamed = 1
     for requested_model in model_list:
@@ -443,9 +477,15 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
     units = df['FCST_UNITS'].tolist()[0]
     x_vals = pivot_metric.index.astype(float).tolist()
-    if units in reference.unit_conversions:
-        x_vals = reference.unit_conversions[units]['formula'](x_vals)
-        units = reference.unit_conversions[units]['convert_to']
+    if unit_convert:
+        x_vals = reference.unit_conversions[units]['formula'](
+            x_vals,
+            rounding=True
+        ) 
+        requested_thresh_value = reference.unit_conversions[units]['formula'](
+            requested_thresh_value,
+            rounding=True
+        )
     if units == '-':
         units = ''
     x_vals_argsort = np.argsort(x_vals)
@@ -549,7 +589,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
 
     # Configure axis ticks
     if units in reference.unit_conversions:
-        x_vals_incr = reference.unit_conversions[units]['formulas'](x_vals)
+        x_vals_incr = reference.unit_conversions[units]['formula'](x_vals)
+        units = reference.unit_conversions[units]['convert_to']
 
     xticks_min = np.min(x_vals)
     xticks_max = np.max(x_vals)
@@ -638,17 +679,12 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
             var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
-    metrics_using_var_units = [
-        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
-        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
-    ]
     if str(metric_name).upper() in metrics_using_var_units:
         if units:
             ylabel = f'{var_long_name} ({units})'
         else:
             ylabel = f'{var_long_name} (unitless)'
-    else:
+    else:       
         ylabel = f'{metric_long_name}'
     ax.set_ylim(ylim_min, ylim_max)
     ax.set_ylabel(ylabel)
@@ -859,11 +895,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
-        try:
-            os.makedirs(save_subdir)
-        except FileExistsError as e:
-            logger.warning(f"Several processes are making {save_subdir} at "
-                           + f"the same time. Passing")
+        os.makedirs(save_subdir)
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")
