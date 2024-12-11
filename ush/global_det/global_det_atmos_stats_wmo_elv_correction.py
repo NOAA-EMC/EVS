@@ -20,16 +20,8 @@ import global_det_atmos_util as gda_util
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
-DATA = os.environ['DATA']
-RUN = os.environ['RUN']
-NET = os.environ['NET']
-VERIF_CASE = os.environ['VERIF_CASE']
-STEP = os.environ['STEP']
-COMPONENT = os.environ['COMPONENT']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
-MODELNAME = os.environ['MODELNAME']
-wmo_verif = os.environ['wmo_verif']
 valid_date = os.environ['valid_date']
 fhr = os.environ['fhr']
 tmp_fhr_stat_file = os.environ['tmp_fhr_stat_file']
@@ -117,6 +109,9 @@ stat_elv_correction_df = pd.DataFrame(stat_elv_correction_dict)
 # Write out dataframe
 print("Writing forecast value elevations to "
       +f"{tmp_fhr_elv_correction_stat_file}")
+gda_util.make_dir(
+    tmp_fhr_elv_correction_stat_file.rpartition('/')[0]
+)
 stat_elv_correction_df.to_csv(
     tmp_fhr_elv_correction_stat_file, header=headers, index=None, sep=' ',
     mode='w'

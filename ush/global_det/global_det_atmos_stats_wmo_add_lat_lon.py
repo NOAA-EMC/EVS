@@ -2,8 +2,8 @@
 '''
 Name: global_det_atmos_stats_wmo_add_lat_lon.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
-Abstract: This gather the GridStat stat files and puts them in one
-          file in the WMO required format for doma
+Abstract: This adds latitude, longitude, and elevation
+          data to the RegridDataPlane files
 Run By: Individual job scripts
 '''
 
