@@ -2631,6 +2631,10 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                     else:
                         df_dtype_dict[col] = np.float64
                 model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
+    """
+                The following section is to assure one fcst_lead associated with one valid_date
+                remove this section for multiple fcst hours with one valid_date
+
                 for valid_date in met_format_valid_dates:
                     model_stat_file_df_valid_date_idx_list = (
                         model_stat_file_df.index[
@@ -2656,6 +2660,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                         [model_stat_file_df_valid_date_idx_list[0]]\
                         [:]
                     )
+    """
             else:
                 logger.debug(f"{filtered_model_stat_file} does not exist")
         if model_num == 'model1':
