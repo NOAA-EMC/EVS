@@ -90,7 +90,7 @@ for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
 done
 
 # Tar and Copy output files to EVS COMOUT directory
-   find ${DATA}/${VERIF_CASE}/* -name "*.png" -type f -not -path "*workdirs" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##' -T -
+   find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##' -T -
 
 if [ $SENDCOM = YES ]; then
     cpreq -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
