@@ -238,6 +238,10 @@ elif STEP == 'stats':
             COMOUT_dir_list.append(os.path.join(
                 COMOUT_restart_base_dir, 'pcp_combine', 
             ))
+            COMOUT_dir_list.append(os.path.join(
+                COMOUT_restart_base_dir, 'pcp_combine', 
+                OBSNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
         if job_type == 'generate':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'out', 'confs'
