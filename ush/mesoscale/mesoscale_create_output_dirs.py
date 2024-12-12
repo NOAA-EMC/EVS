@@ -456,7 +456,7 @@ elif STEP == 'plots':
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
         ))
-         working_dir_list.append(os.path.join(
+        working_dir_list.append(os.path.join(
             working_output_base_dir, 'out', 'workdirs'
         ))
         working_dir_list.append(os.path.join(

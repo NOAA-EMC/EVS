@@ -20,6 +20,7 @@ COMOUT = os.environ['COMOUT']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
+VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 
 # Copy files for restart
