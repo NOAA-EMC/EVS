@@ -51,7 +51,7 @@ output_merged_ptype_file = os.path.join(
 
 # Create temp nc files for reading
 regrid_dir = os.path.join(
-    DATA, VERIF_CASE, 'METplus_output', 'workdirs', job_type, f'job{njob}', 
+    DATA, VERIF_CASE, 'METplus_output', 'workdirs', job_type, f'{job_name}', 
     VERIF_TYPE, 'regrid_data_plane', f'{MODELNAME}.{VDATE}'
 )
 regrid_fname = (f'regrid_data_plane_{MODELNAME}_t{VHOUR}z_{VERIF_TYPE}_{NEST}_'
