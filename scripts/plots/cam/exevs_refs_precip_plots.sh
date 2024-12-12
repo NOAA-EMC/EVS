@@ -233,7 +233,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 312 -ppn 78 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 304 -ppn 76 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -288,7 +288,7 @@ for stats in ets fbias fss ; do
  
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png ] ; then
         ls ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png
-        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.refs.${stats}.${var}h.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.refs.${stats}.${var}h.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
       fi
     done
   done
@@ -327,7 +327,7 @@ for var in apcp_01 apcp_03 apcp_24 ; do
      fi
 
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png ] ; then
-       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.refs.ctc.${var}h.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.refs.ctc.${var}h.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
       fi
 
     done
@@ -335,7 +335,9 @@ for var in apcp_01 apcp_03 apcp_24 ; do
 done
 
 
-tar -cvf evs.plots.refs.precip.last${last_days}days.v${VDATE}.tar *.png
+if  [ -s *.png ] ; then
+  tar -cvf evs.plots.refs.precip.last${last_days}days.v${VDATE}.tar *.png
+fi
 
 # Cat the plotting log files
 log_dir="$DATA/logs"

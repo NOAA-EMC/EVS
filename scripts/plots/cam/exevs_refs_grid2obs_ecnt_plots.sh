@@ -222,7 +222,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 66 -ppn 66 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -269,11 +269,11 @@ for stats in  rmse_spread ; do
 
       if [ $var = mslet ] || [ $var = gust ] || [  $var = hpbl ] ; then
 	if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png ] ; then
-          mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png  evs.refs.${stats}.${var}_${level}.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+          mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png  evs.refs.${stats}.${var}_${level}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
         fi 
       else
 	if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png ] ; then
-          mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png  evs.refs.${stats}.${var}_${level}.last${last_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+          mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png  evs.refs.${stats}.${var}_${level}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
         fi
       fi
 
@@ -284,7 +284,9 @@ done     #stats
 done     #valid 
 
 
-tar -cvf evs.plots.refs.grid2obs.ecnt.last${last_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+ tar -cvf evs.plots.refs.grid2obs.ecnt.last${last_days}days.v${VDATE}.tar *.png
+fi
 
 # Cat the plotting log files
 log_dir="$DATA/logs"

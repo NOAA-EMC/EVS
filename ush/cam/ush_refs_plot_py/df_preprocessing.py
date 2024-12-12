@@ -169,11 +169,13 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             df.reset_index(drop=True, inplace=True)
             return df
     except UnboundLocalError as e:
-        logger.warning(e)
-        logger.warning(
-            "Nonexistent dataframe. Stats directory may be empty.  Check the logfile for more details."
+        logger.error(e)
+        logger.error(
+            "FATAL ERROR: Nonexistent dataframe. Check for earlier warning "
+            + "or error messages."
         )
-        return None
+        logger.error("Quitting ...")
+        sys.exit(1)
 
 def filter_by_level_type(df, logger, verif_type):
     if df is None:

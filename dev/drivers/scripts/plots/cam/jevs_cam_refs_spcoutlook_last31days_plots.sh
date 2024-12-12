@@ -4,23 +4,20 @@
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:10:00
-#PBS -l place=vscatter,select=1:ncpus=6:mem=100GB
+#PBS -l place=vscatter,select=1:ncpus=6:mem=5GB
 #PBS -l debug=true
 
 set -x
 
 export OMP_NUM_THREADS=1
 
+export NET=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
-
-
-
 export envir=prod
 
-export NET=evs
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos

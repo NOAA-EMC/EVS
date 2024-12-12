@@ -175,19 +175,23 @@ for stats in csi_fbias ratio_pod_csi ; do
 	 echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
 	 #Save for restart
-         echo "if [ -s ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-	 echo "  cp -v ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-	 echo "  >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "for valid_rst in 00z 12z 00z_12z ; do" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "  if [ -s ${plot_dir}/${score_type}_regional_*_\${valid_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "    cp -v ${plot_dir}/${score_type}_regional_*_\${valid_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "    >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "  fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "done" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
 
        else
 	 #Restart from png files of previous runs
-	if [ -s $restart/${score_type}_regional_*_${valid_rst}_${var_rst}*.png ] ; then
-         cp $restart/${score_type}_regional_*_${valid_rst}_${var_rst}*.png ${plot_dir}/.
-	fi
+	 for valid_rst in 00z 12z 00z_12z ; do
+          if [ -s $restart/${score_type}_regional_*_valid_${var_rst}*.png ] ; then
+            cp $restart/${score_type}_regional_*_${valid_rst}*.png ${plot_dir}/.
+	  fi
+	 done
        fi
 
       done #end of line_type
@@ -225,18 +229,22 @@ for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrg
   if [ $var = cape ] ; then
     var_new=cape
     level=l0
-    valid=valid_00z_12z
+    valid=valid00z12z
   elif [ $var = mlcape ] ; then
     var_new=mlcape
     level=ml
-    valid=valid_00z_12z
+    valid=valid00z12z
   fi
-  if ls lead_average_regional_${domain}_valid_all_times_${var}*.png 1> /dev/null 2>&1; then
-     mv lead_average_regional_${domain}_valid_all_times_${var}*.png  evs.refs.csi_fbias.${var_new}_${level}.last${last_days}days.fhrmean_${valid}.${domain}.png
-  fi
+  for all_times in 00z 12z 00z_12z ; do
+    if ls lead_average_regional_${domain}_valid_${all_times}_${var}*.png 1> /dev/null 2>&1; then
+     mv lead_average_regional_${domain}_valid_${all_times}_${var}*.png  evs.refs.csi_fbias.${var_new}_${level}.last${last_days}days.fhrmean_${valid}.${domain}.png
+    fi
+  done
+
   if ls threshold_average_regional_${domain}_valid_*_${var}_csi*.png 1> /dev/null 2>&1; then
      mv threshold_average_regional_${domain}_valid_*_${var}_csi*.png  evs.refs.csi.${var_new}_${level}.last${last_days}days.threshmean_${valid}.${domain}.png
   fi
+
   if ls threshold_average_regional_${domain}_valid_*_${var}_fbias*.png 1> /dev/null 2>&1; then
      mv threshold_average_regional_${domain}_valid_*_${var}_fbias*.png  evs.refs.fbias.${var_new}_${level}.last${last_days}days.threshmean_${valid}.${domain}.png
   fi
@@ -247,8 +255,9 @@ for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrg
  done
 done
  	
-
-tar -cvf evs.plots.refs.spcoutlook.last${last_days}days.v${VDATE}.tar *.png
+if [ -s *.png ] ; then
+  tar -cvf evs.plots.refs.spcoutlook.last${last_days}days.v${VDATE}.tar *.png
+fi 
 
 # Cat the plotting log files
 log_dir="$DATA/logs"

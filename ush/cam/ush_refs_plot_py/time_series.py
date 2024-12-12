@@ -301,12 +301,54 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
+
+    units = df['FCST_UNITS'].tolist()[0]
+    metrics_using_var_units = [
+        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
+        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR','SPREAD',
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+    ]
+    coef, const = (None, None)
+    unit_convert = False
+    if units in reference.unit_conversions:
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m','gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        elif str(var_long_name_key).upper() == 'TMP' and level[0] == 'P':
+            unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
+        if unit_convert:
+            if metric2_name is not None:
+                if (str(metric1_name).upper() in metrics_using_var_units
+                        and str(metric2_name).upper() in metrics_using_var_units):
+                    coef, const = (
+                        reference.unit_conversions[units]['formula'](
+                            None,
+                            return_terms=True
+                        )
+                    )
+            elif str(metric1_name).upper() in metrics_using_var_units:
+                coef, const = (
+                    reference.unit_conversions[units]['formula'](
+                        None,
+                        return_terms=True
+                    )
+                )
     # Calculate desired metric
     metric_long_names = []
     for stat in [metric1_name, metric2_name]:
         if stat:
             stat_output = plot_util.calculate_stat(
-                logger, df_aggregated, str(stat).lower()
+                logger, df_aggregated, str(stat).lower(), [coef, const]
             )
             df_aggregated[str(stat).upper()] = stat_output[0]
             metric_long_names.append(stat_output[2])
@@ -322,7 +364,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = df_groups.apply(
                     lambda x: plot_util.calculate_bootstrap_ci(
                         logger, bs_method, x, str(stat).lower(), bs_nrep,
-                        ci_lev, bs_min_samp
+                        ci_lev, bs_min_samp, [coef, const]
                     )
                 )
                 if any(ci_output['STATUS'] == 1):
@@ -359,7 +401,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     ]
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
-        index=str(date_type).upper()
+        index=str(date_type).upper(), dropna=False
     )
     if sample_equalization:
         pivot_counts = pd.pivot_table(
@@ -371,7 +413,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
-            index=str(date_type).upper()
+            index=str(date_type).upper(), dropna=False
         )
         if keep_shared_events_only:
             pivot_metric2 = pivot_metric2.dropna()
@@ -828,20 +870,17 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
             var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
-    units = df['FCST_UNITS'].tolist()[0]
-    if units in reference.unit_conversions:
+    if unit_convert:
         if thresh and '' not in thresh:
             thresh_labels = [float(tlab) for tlab in thresh_labels]
-            thresh_labels = reference.unit_conversions[units]['formula'](thresh_labels)
+            thresh_labels = reference.unit_conversions[units]['formula'](
+                thresh_labels,
+                rounding=True
+            )
             thresh_labels = [str(tlab) for tlab in thresh_labels]
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
-    metrics_using_var_units = [
-        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
-        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
-    ]
     if metric2_name is not None:
         metric1_string, metric2_string = metric_long_names
         if (str(metric1_name).upper() in metrics_using_var_units
@@ -885,7 +924,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
     fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
-    fig.subplots_adjust(top=.85)
+    fig.subplots_adjust(top=0.85)
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
@@ -907,6 +946,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             xytext=(-50, 21), textcoords='offset points', va='top', 
             fontsize=11, color='dimgrey', ha='center'
         )
+        #fig.subplots_adjust(top=.9)
         fig.subplots_adjust(top=.85)
 
     # Title
@@ -986,10 +1026,16 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     else:
         level_string = f'{level}'
         level_savename = f'{level}_'
+    if var_savename == 'ICEC_Z0_mean':
+        level_string = ''
+    if var_savename == 'TMP_Z0_mean':
+        level_string = 'Sea Surface '
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'
     else:
         title1 = f'{metric1_string}'
+    if metric1_string == 'Brier Score':
+        thresh = ''
     if interp_pts and '' not in interp_pts:
         title1+=f' {interp_pts_string}'
     if thresh and '' not in thresh:
@@ -1090,11 +1136,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
-        try:
-            os.makedirs(save_subdir)
-        except FileExistsError as e:
-            logger.warning(f"Several processes are making {save_subdir} at "
-                           + f"the same time. Passing")
+        os.makedirs(save_subdir)
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")

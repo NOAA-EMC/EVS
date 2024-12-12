@@ -13,10 +13,10 @@ export OMP_NUM_THREADS=1
 
 ## 3x7 conus(ccpa) + 3x7 alaska(mrms) + 2 snow = 44 jobs 
 
+export NET=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
-export NET=evs
 export STEP=stats
 export COMPONENT=cam
 export RUN=atmos
