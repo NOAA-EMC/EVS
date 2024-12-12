@@ -14,12 +14,10 @@ export VYYYYmm=$(echo $VDATE | cut -c1-6)
 
 # Make directories
 mkdir -p ${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE} ${MODELNAME}.${VDATE}
-mkdir -p gdas_cnvstat
-chmod 750 gdas_cnvstat
-chgrp rstprod gdas_cnvstat
 mkdir -p ${VYYYYmm}_daily_stats
 mkdir -p ${VYYYYmm}_station_info
-mkdir -p jobs logs confs tmp
+mkdir -p jobs
+mkdir -p job_work_dir
 
 # Set jobs for temporal run
 if [ $temporal = daily ]; then
@@ -64,6 +62,8 @@ for group in $group_list; do
             nc=$((nc+1))
         done
     fi
+    python $USHevs/global_det/global_det_atmos_copy_job_dir_output.py
+    export err=$?; err_chk
 done
 
 # Send for missing files

@@ -76,19 +76,6 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
             nc=$((nc+1))
         done
     fi
+    python $USHevs/global_det/global_det_atmos_copy_job_dir_output.py
+    export err=$?; err_chk
 done
-
-# Copy files to desired location
-if [ $SENDCOM = YES ]; then
-    # Copy model files
-    for MODEL in $model_list; do
-        for MODEL_DATE_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL.*; do
-            MODEL_DATE_SUBDIR=$(echo ${MODEL_DATE_PATH##*/})
-            for FILE in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL_DATE_SUBDIR/*; do
-                if [ -f $FILE ]; then
-                    cp -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
-                fi
-            done
-        done
-    done
-fi
