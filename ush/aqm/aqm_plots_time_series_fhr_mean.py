@@ -155,7 +155,9 @@ class TimeSeriesFhrMean:
         # Read in data
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
         perform_fcst_hour_filtering=True
-        selected_fcst_hours=[ str(ifhr) for ifhr in fhrs ]
+        ## selected_fcst_hours=[ str(ifhr) for ifhr in fhrs ]
+        test_fcst_hours=[ 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48 ]
+        selected_fcst_hours=[ str(ifhr) for ifhr in test_fcst_hours ]
         self.logger.info(f"selected forecast hours = {selected_fcst_hours}")
         all_model_df = gda_util.build_df_fhr_mean(
             'make_plots', self.logger, self.input_dir, self.output_dir,
