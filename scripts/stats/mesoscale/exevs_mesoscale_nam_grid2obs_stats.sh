@@ -347,7 +347,7 @@ echo "*****************************"
      export err=$?; err_chk
   fi
  
- Create Gather 3 Working Directories
+#Create Gather 3 Working Directories
  python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
  export err=$?; err_chk
   
