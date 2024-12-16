@@ -96,6 +96,10 @@ echo "*****************************"
      export err=$?; err_chk
   fi
 
+# Create Reformat Working Directories
+  python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+  export err=$?; err_chk
+
 echo "*****************************"
 echo "Reformat jobs begin"
 echo "*****************************"
@@ -130,6 +134,12 @@ echo "*****************************"
         nc=$((nc+1))
      done
   fi
+
+# Copy Reformat Output to Main Directory
+ for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+     cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+     export err=$?; err_chk
+ done
 
 echo "*****************************"
 echo "Reformat jobs done"
@@ -178,6 +188,10 @@ echo "*****************************"
      export err=$?; err_chk
   fi
 
+# Create Generate Working Directories
+ python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+ export err=$?; err_chk
+
 echo "*****************************"
 echo "Generate jobs begin"
 echo "*****************************"
@@ -213,6 +227,12 @@ echo "*****************************"
      done
   fi
 
+# Copy Generate Output to Main Directory
+ for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+     cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+     export err=$?; err_chk
+ done
+
 echo "*****************************"
 echo "Generate jobs done"
 echo "*****************************"
@@ -240,6 +260,10 @@ echo "*****************************"
      python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
      export err=$?; err_chk
   fi
+ 
+# Create Gather Working Directories
+ python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+ export err=$?; err_chk
 
 echo "*****************************"
 echo "Gather jobs begin"
@@ -275,6 +299,12 @@ echo "*****************************"
 	nc=$((nc+1))
      done
   fi
+
+# Copy Gather Output to Main Directory
+ for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+     cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+     export err=$?; err_chk
+ done 
 
 echo "*****************************"
 echo "Gather jobs done"
@@ -316,6 +346,10 @@ echo "*****************************"
      python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
      export err=$?; err_chk
   fi
+ 
+#Create Gather 3 Working Directories
+ python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+ export err=$?; err_chk
   
 # Run All NAM grid2obs/stats Gather 3 Jobs
   chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
@@ -351,6 +385,12 @@ echo "*****************************"
 echo "*****************************"
 echo "Gather3 jobs done"
 echo "*****************************"
+
+# Copy Gather 3 Output to Main Directory
+  for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+      cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+      export err=$?; err_chk
+  done
 
 # Copy "gather" output files to EVS COMOUTsmall directory
   if [ $SENDCOM = YES ]; then
