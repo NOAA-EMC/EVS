@@ -68,6 +68,10 @@ stormName=$(sed "s/ //g" <<< $VARIABLE2)
 echo "Name_${stormName}_Name"
 echo "${stormBasin}, ${stormNumber}, ${stormYear}, ${stormName}"
 
+### NOTE TO USERS ###
+# CTCX runs were not available for AL01, AL02, or AL03 for 2024  #
+# This causes the code to break, so CTCX lines are commented out #
+
 #---Storm Plots 
 export LOGOroot=${FIXevs}/logos
 export PLOTDATA=${STORMroot}
@@ -136,6 +140,10 @@ elif [ ${stormBasin} = "wp" ]; then
   cp -r ${COMINstats}/WestPacific/tc_stat .
   cp $metTCcomout/tc_stat/tc_stat_basin.out $metTCcomout/tc_stat/tc_stat.out
 fi
+
+### NOTE TO USERS ###
+# CTCX runs were not available for AL01, AL02, or AL03 for 2024  #
+# This causes the code to break, so CTCX lines are commented out #
 
 #--- Basin-Storms Plots 
 export LOGOroot=${FIXevs}/logos
