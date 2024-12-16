@@ -10,9 +10,6 @@
 
 set -x
 
-#%include <head.h>
-#%include <envir-p1.h>
-
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source ${HOMEevs}/versions/run.ver
 
@@ -44,15 +41,8 @@ export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
 
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
-#rm -rf ${COMROOT}/evs/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
-
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_HURRICANE_STATS
-
-%include <tail.h>
-%manual
-
-%end
 
