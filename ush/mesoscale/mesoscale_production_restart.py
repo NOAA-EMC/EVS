@@ -20,6 +20,7 @@ COMOUT = os.environ['COMOUT']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
+VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 
 # Copy files for restart
@@ -27,12 +28,12 @@ if STEP == 'plots':
     COMOUTplots = os.environ['COMOUTplots']
     RESTART_DIR = os.environ['RESTART_DIR']
     COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
-    SAVE_DIR = os.environ['SAVE_DIR']
+    working_dir = os.path.join(DATA, VERIF_CASE, 'out')
     completed_jobs_file = os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)
     if os.path.exists(completed_jobs_file):
         if os.stat(completed_jobs_file).st_size != 0:
             cutil.run_shell_command(
-                ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), SAVE_DIR]
+                ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), working_dir]
             )
 
 print("END: "+os.path.basename(__file__))
