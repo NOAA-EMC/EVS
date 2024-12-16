@@ -2612,6 +2612,9 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                             +f"at {filtered_model_stat_file}")
             else:
                 logger.debug(f"Could not create {filtered_model_stat_file}")
+        """
+        Set model_num_df size : NOTE here define the size is 2x744
+        """
         model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
                                     columns=met_version_line_type_col_list)
         if read_filtered_stat_file:
@@ -2632,10 +2635,6 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                     else:
                         df_dtype_dict[col] = np.float64
                 model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
-
-                """
-                The following section is to assure one fcst_lead associated with one valid_date
-                remove this section for multiple fcst hours with one valid_date
 
                 for valid_date in met_format_valid_dates:
                     model_stat_file_df_valid_date_idx_list = (
@@ -2662,7 +2661,6 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                         [model_stat_file_df_valid_date_idx_list[0]]\
                         [:]
                     )
-                """
             else:
                 logger.debug(f"{filtered_model_stat_file} does not exist")
         if model_num == 'model1':
@@ -2686,59 +2684,6 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_array    - array of the statistic
    """
    if line_type == 'SL1L2':
-       ##
-       ## need to make the record size <= 2x744 (24*31) to avoid error in reshape fun
-       ## (1) will be added to new def calculate_stat_fhr_mean
-       ## (2) Apply same treatment for ME, RMSE time series
-       ## (3) I also need to compute init time by get_init_hour(valid_hour, forecast_hour)
-       ##     to separate 06Z and 12Z run
-       ## 
-       ## validtime, FBAR, and OBAR are arrarys (list?), combine every n array index into one
-       ## validtime= data_df.loc[:]['FCST_VALID_BEG']
-       ## FBAR_ALL = data_df.loc[:]['FBAR']
-       ## OBAR_ALL = data_df.loc[:]['OBAR']
-       ##
-       ## FBAR=[]
-       ## OBAR=[]
-       ## icnt=len(validtime)
-       ## for irec in range(0,icnt):
-       ##     if irec == 0 :
-       ##         validtime_ref=validtime[irec]
-       ##         fbar_sum=FBAR_ALL[irec]
-       ##         obar_sum=OBAR_ALL[irec]
-       ##         nrec=1
-       ##     elif irec == icnt-1:                  ## last record
-       ##         fbar_sum=fbar_sum+FBAR_ALL[irec]
-       ##         obar_sum=obar_sum+OBAR_ALL[irec]
-       ##         nrec+=1
-       ##         fbar_mean=fbar_sum/float(nrec)
-       ##         obar_mean=obar_sum/float(nrec)
-       ##         FBAR.append(fbar_mean)
-       ##         OBAR.append(obar_mean)
-       ##     else:
-       ##         if validtime[irec] != validtime_ref:
-       ##             if nrec ! = 0:
-       ##                 fbar_mean=fbar_sum/float(nrec)
-       ##                 obar_mean=obar_sum/float(nrec)
-       ##                 FBAR.append(fbar_mean)
-       ##                 OBAR.append(obar_mean)
-       ##             else:
-       ##                 logger.debug("encounter zero denominator; irec={irec}")
-       ##             validtime_ref=validtime[irec]
-       ##             fbar_sum=FBAR_ALL[irec]
-       ##             obar_sum=OBAR_ALL[irec]
-       ##             nrec=1
-       ##         else:
-       ##             fbar_sum=fbar_sum+FBAR_ALL[irec]
-       ##             obar_sum=obar_sum+OBAR_ALL[irec]
-       ##             nrec+=1
-       ##
-       FBAR = data_df.loc[:]['FBAR']
-       logger.info(f"STAT={line_type}/{stat}")
-       nrec=len(FBAR):
-       for i in range(0,11):
-           logger.info(f"fbar={FBAR[i]}")
-
        OBAR = data_df.loc[:]['OBAR']
        FOBAR = data_df.loc[:]['FOBAR']
        FFBAR = data_df.loc[:]['FFBAR']
@@ -3165,7 +3110,60 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
         Returns:
            stat_df       - dataframe of the statistic
            stat_array    - array of the statistic
+       ##
+       ## need to make the record size <= 2x744 (24*31) to avoid error in reshape fun
+       ## (1) will be added to new def calculate_stat_fhr_mean
+       ## (2) Apply same treatment for ME, RMSE time series
+       ## (3) I also need to compute init time by get_init_hour(valid_hour, forecast_hour)
+       ##     to separate 06Z and 12Z run
+       ## 
+       ## validtime, FBAR, and OBAR are arrarys (list?), combine every n array index into one
+       ## validtime= data_df.loc[:]['FCST_VALID_BEG']
+       ## FBAR_ALL = data_df.loc[:]['FBAR']
+       ## OBAR_ALL = data_df.loc[:]['OBAR']
+       ##
+       ## FBAR=[]
+       ## OBAR=[]
+       ## icnt=len(validtime)
+       ## for irec in range(0,icnt):
+       ##     if irec == 0 :
+       ##         validtime_ref=validtime[irec]
+       ##         fbar_sum=FBAR_ALL[irec]
+       ##         obar_sum=OBAR_ALL[irec]
+       ##         nrec=1
+       ##     elif irec == icnt-1:                  ## last record
+       ##         fbar_sum=fbar_sum+FBAR_ALL[irec]
+       ##         obar_sum=obar_sum+OBAR_ALL[irec]
+       ##         nrec+=1
+       ##         fbar_mean=fbar_sum/float(nrec)
+       ##         obar_mean=obar_sum/float(nrec)
+       ##         FBAR.append(fbar_mean)
+       ##         OBAR.append(obar_mean)
+       ##     else:
+       ##         if validtime[irec] != validtime_ref:
+       ##             if nrec != 0:
+       ##                 fbar_mean=fbar_sum/float(nrec)
+       ##                 obar_mean=obar_sum/float(nrec)
+       ##                 FBAR.append(fbar_mean)
+       ##                 OBAR.append(obar_mean)
+       ##             else:
+       ##                 logger.debug("encounter zero denominator; irec={irec}")
+       ##             validtime_ref=validtime[irec]
+       ##             fbar_sum=FBAR_ALL[irec]
+       ##             obar_sum=OBAR_ALL[irec]
+       ##             nrec=1
+       ##         else:
+       ##             fbar_sum=fbar_sum+FBAR_ALL[irec]
+       ##             obar_sum=obar_sum+OBAR_ALL[irec]
+       ##             nrec+=1
+       ##
+       FBAR = data_df.loc[:]['FBAR']
+       logger.info(f"STAT={line_type}/{stat}")
+       nrec=len(FBAR)
+       for i in range(0,11):
+           logger.info(f"fbar={FBAR[i]}")
    """
+
    ##
    ## Read metric values from data_df
    ##
@@ -3496,7 +3494,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    BIASME_MEAN.append(biasme_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            biasme_mean=biasme_sum/float(nrec)
                            BIASME_MEAN.append(biasme_mean)
                        else:
@@ -3510,7 +3508,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
            logger.info(f"STAT={line_type}/{stat}_MEAN")
            BIASME_MEAN[BIASME_MEAN<0] = np.nan
            stat_df = np.sqrt(BIASME_MEAN)
-           nrec=len(BIASME_MEAN):
+           nrec=len(BIASME_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={BIASME_MEAN[i]}")
        elif line_type == 'CNT':
@@ -3528,7 +3526,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    ME_MEAN.append(me_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            me_mean=me_sum/float(nrec)
                            ME_MEAN.append(me_mean)
                        else:
@@ -3541,7 +3539,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                        nrec+=1
            stat_df = ME_MEAN
            logger.info(f"STAT={line_type}/{stat}_MEAN")
-           nrec=len(ME_MEAN):
+           nrec=len(ME_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={ME_MEAN[i]}")
        elif line_type == 'VL1L2':
@@ -3571,7 +3569,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    CORR_MEAN.append(corr_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            corr_mean=corr_sum/float(nrec)
                            CORR_MEAN.append(corr_mean)
                        else:
@@ -3585,7 +3583,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
            logger.info(f"STAT={line_type}/{stat}_MEAN")
            CORR_MEAN[CORR_MEAN<0] = np.nan
            stat_df = np.sqrt(CORR_MEAN)
-           nrec=len(CORR_MEAN):
+           nrec=len(CORR_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={CORR_MEAN[i]}")
    elif stat == 'CSI': # Critical Success Index'
@@ -3605,7 +3603,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    CSI_MEAN.append(csi_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            csi_mean=csi_sum/float(nrec)
                            CSI_MEAN.append(csi_mean)
                        else:
@@ -3619,7 +3617,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
            logger.info(f"STAT={line_type}/{stat}_MEAN")
            CSI_MEAN[CSI_MEAN<0] = np.nan
            stat_df = np.sqrt(CSI_MEAN)
-           nrec=len(CSI_MEAN):
+           nrec=len(CSI_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={CSI_MEAN[i]}")
    elif stat == 'F1_O1': # Count of forecast category 1 and observation category 1
@@ -3633,7 +3631,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
        elif line_type == 'CTS':
            stat_df = GSS
    elif stat == 'FBAR': # Forecast Mean
-       nrec=len(FBAR):
+       nrec=len(FBAR)
        for i in range(0,11):
            logger.info(f"fbar={FBAR[i]}")
        ##
@@ -3664,7 +3662,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    FBAR_MEAN.append(fbar_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            fbar_mean=fbar_sum/float(nrec)
                            FBAR_MEAN.append(fbar_mean)
                        else:
@@ -3677,7 +3675,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                        nrec+=1
            logger.info(f"STAT={line_type}/{stat}_MEAN")
            stat_df = FBAR_MEAN
-           nrec=len(FBAR_MEAN):
+           nrec=len(FBAR_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={FBAR_MEAN[i]}")
    elif stat == 'FBIAS': # Frequency Bias
@@ -3697,7 +3695,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    FBIAS_MEAN.append(fbias_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            fbias_mean=fbias_sum/float(nrec)
                            FBIAS_MEAN.append(fbias_mean)
                        else:
@@ -3711,7 +3709,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
            logger.info(f"STAT={line_type}/{stat}_MEAN")
            FBIAS_MEAN[FBIAS_MEAN<0] = np.nan
            stat_df = np.sqrt(FBIAS_MEAN)
-           nrec=len(FBIAS_MEAN):
+           nrec=len(FBIAS_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={FBIAS_MEAN[i]}")
        elif line_type == 'CTS':
@@ -3729,7 +3727,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    FBIAS_MEAN.append(fbias_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            fbias_mean=fbias_sum/float(nrec)
                            FBIAS_MEAN.append(fbias_mean)
                        else:
@@ -3742,7 +3740,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                        nrec+=1
            stat_df = FBIAS_MEAN
            logger.info(f"STAT={line_type}/{stat}_MEAN")
-           nrec=len(FBIAS_MEAN):
+           nrec=len(FBIAS_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={FBIAS_MEAN[i]}")
    elif stat == 'FSS': # Fraction Skill Score
@@ -3760,7 +3758,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
            stat_df = (FY_OY + FN_ON - C)/(TOTAL - C)
    elif stat == 'OBAR': # Observation Mean
        if line_type == 'SL1L2':
-           nrec=len(OBAR):
+           nrec=len(OBAR)
            for i in range(0,11):
                logger.info(f"fbar={OBAR[i]}")
            ## validtime= data_df.loc[:]['FCST_VALID_BEG']
@@ -3780,7 +3778,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    OBAR_MEAN.append(obar_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            obar_mean=obar_sum/float(nrec)
                            OBAR_MEAN.append(obar_mean)
                        else:
@@ -3793,7 +3791,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                        nrec+=1
            stat_df = OBAR_MEAN
            logger.info(f"STAT={line_type}/{stat}_MEAN")
-           nrec=len(OBAR_MEAN):
+           nrec=len(OBAR_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={OBAR_MEAN[i]}")
    elif stat == 'POD': # Probability of Detection
@@ -3815,7 +3813,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    POD_MEAN.append(pod_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            pod_mean=pod_sum/float(nrec)
                            POD_MEAN.append(pod_mean)
                        else:
@@ -3828,7 +3826,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                        nrec+=1
            stat_df = POD_MEAN
            logger.info(f"STAT={line_type}/{stat}_MEAN")
-           nrec=len(POD_MEAN):
+           nrec=len(POD_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={POD_MEAN[i]}")
    elif stat == 'RMSE': # Root Mean Square Error
@@ -3848,7 +3846,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    RMSE_MEAN.append(rmse_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            rmse_mean=rmse_sum/float(nrec)
                            RMSE_MEAN.append(rmse_mean)
                        else:
@@ -3862,7 +3860,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
            logger.info(f"STAT={line_type}/{stat}_MEAN")
            RMSE_MEAN[RMSE_MEAN<0] = np.nan
            stat_df = np.sqrt(RMSE_MEAN)
-           nrec=len(RMSE_MEAN):
+           nrec=len(RMSE_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={RMSE_MEAN[i]}")
        elif line_type == 'CNT':
@@ -3880,7 +3878,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    RMSE_MEAN.append(rmse_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            rmse_mean=rmse_sum/float(nrec)
                            RMSE_MEAN.append(rmse_mean)
                        else:
@@ -3893,7 +3891,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                        nrec+=1
            stat_df = RMSE_MEAN
            logger.info(f"STAT={line_type}/{stat}_MEAN")
-           nrec=len(RMSE_MEAN):
+           nrec=len(RMSE_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={RMSE_MEAN[i]}")
        elif line_type == 'VL1L2':
@@ -3912,7 +3910,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    RMSE_MEAN.append(rmse_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            rmse_mean=rmse_sum/float(nrec)
                            RMSE_MEAN.append(rmse_mean)
                        else:
@@ -3926,7 +3924,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
            logger.info(f"STAT={line_type}/{stat}_MEAN")
            RMSE_MEAN[RMSE_MEAN<0] = np.nan
            stat_df = np.sqrt(RMSE_MEAN)
-           nrec=len(RMSE_MEAN):
+           nrec=len(RMSE_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={RMSE_MEAN[i]}")
    elif stat == 'S1': # S1
@@ -3949,7 +3947,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                    SRATIO_MEAN.append(sratio_mean)
                else:
                    if validtime[irec] != validtime_ref:
-                       if nrec ! = 0:
+                       if nrec != 0:
                            sratio_mean=sratio_sum/float(nrec)
                            SRATIO_MEAN.append(sratio_mean)
                        else:
@@ -3962,7 +3960,7 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
                        nrec+=1
            stat_df = SRATIO_MEAN
            logger.info(f"STAT={line_type}/{stat}_MEAN")
-           nrec=len(SRATIO_MEAN):
+           nrec=len(SRATIO_MEAN)
            for i in range(0,11):
                logger.info(f"fbar={SRATIO_MEAN[i]}")
    elif stat == 'STDEV_ERR': # Standard Deviation of Error

@@ -70,88 +70,36 @@ class TimeSeriesFhrMean:
         self.logger.debug(f"Plot information dictionary: "
                           +f"{self.plot_info_dict}")
         # Get dates to plot
-        ##         self.date_info_dict['forecast_hours']
-        self.logger.debug("Making valid and init date arrays")
-        valid_dates=[]
-        init_dates=[]
-        fhrs=self.date_info_dict['forecast_hours']
-        for ifhr in fhrs:
-            valid_date, init_date = gda_util.get_plot_dates(
-                self.logger,
-                self.date_info_dict['date_type'],
-                self.date_info_dict['start_date'],
-                self.date_info_dict['end_date'],
-                self.date_info_dict['valid_hr_start'],
-                self.date_info_dict['valid_hr_end'],
-                self.date_info_dict['valid_hr_inc'],
-                self.date_info_dict['init_hr_start'],
-                self.date_info_dict['init_hr_end'],
-                self.date_info_dict['init_hr_inc'],
-                str(ifhr)
-            )
-            valid_dates.extend(valid_date)
-            init_dates.extend(init_date)
-        format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
-                              for d in range(len(valid_dates))]
-        format_init_dates = [init_dates[d].strftime('%Y%m%d_%H%M%S') \
-                             for d in range(len(init_dates))]
         if self.date_info_dict['date_type'] == 'VALID':
+            valid_dates = np.arange(
+                datetime.datetime.strptime(
+                    self.date_info_dict['start_date']
+                    +self.date_info_dict['valid_hr_start'],
+                    '%Y%m%d%H'
+                ),
+                datetime.datetime.strptime(
+                    self.date_info_dict['end_date']
+                    +self.date_info_dict['valid_hr_end'],
+                    '%Y%m%d%H'
+                )
+                +datetime.timedelta(
+                    hours=int(self.date_info_dict['valid_hr_inc'])
+                ),
+                datetime.timedelta(
+                    hours=int(self.date_info_dict['valid_hr_inc'])
+                )
+            ).astype(datetime.datetime)
+            format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
+                                  for d in range(len(valid_dates))]
+            plot_dates = valid_dates
             self.logger.debug("Based on date information, plot will display "
                               +"valid dates "+', '.join(format_valid_dates)+" "
-                              +"for forecast hour "
-                              +f"{self.date_info_dict['forecast_hours']} "
-                              +"with initialization dates "
-                              +', '.join(format_init_dates))
-            if len(valid_dates) == 0:
-                plot_dates = np.arange(
-                    datetime.datetime.strptime(
-                        self.date_info_dict['start_date']
-                        +self.date_info_dict['valid_hr_start'],
-                        '%Y%m%d%H'
-                    ),
-                    datetime.datetime.strptime(
-                        self.date_info_dict['end_date']
-                        +self.date_info_dict['valid_hr_end'],
-                        '%Y%m%d%H'
-                    )
-                    +datetime.timedelta(
-                        hours=int(self.date_info_dict['valid_hr_inc'])
-                    ),
-                    datetime.timedelta(
-                        hours=int(self.date_info_dict['valid_hr_inc'])
-                    )
-                ).astype(datetime.datetime)
-            else:
-                plot_dates = valid_dates
-        elif self.date_info_dict['date_type'] == 'INIT':
-            self.logger.debug("Based on date information, plot will display "
-                              +"initialization dates "
-                              +', '.join(format_init_dates)+" "
-                              +"for forecast hour "
-                              +f"{self.date_info_dict['forecast_hours']} "
-                              +"with valid dates "
-                              +', '.join(format_valid_dates))
-            if len(init_dates) == 0:
-                plot_dates = np.arange(
-                    datetime.datetime.strptime(
-                        self.date_info_dict['start_date']
-                        +self.date_info_dict['init_hr_start'],
-                        '%Y%m%d%H'
-                    ),
-                    datetime.datetime.strptime(
-                        self.date_info_dict['end_date']
-                        +self.date_info_dict['init_hr_end'],
-                        '%Y%m%d%H'
-                    )
-                    +datetime.timedelta(
-                        hours=int(self.date_info_dict['init_hr_inc'])
-                    ),
-                    datetime.timedelta(
-                        hours=int(self.date_info_dict['init_hr_inc'])
-                    )
-                ).astype(datetime.datetime)
-            else:
-                plot_dates = init_dates
+                              +"for all forecast hour average")
+        else:
+            self.logger.debug("The only option for data_type in "
+                              +"def make_time_series_fhr_mean(self) is VALID"
+                              +"program exit")
+            sys.exit(99)
         # Read in data
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
         perform_fcst_hour_filtering=True
