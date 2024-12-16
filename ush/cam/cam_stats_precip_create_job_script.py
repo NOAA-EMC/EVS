@@ -642,7 +642,7 @@ if VERIF_CASE == 'precip':
                         + f"\"job{njob}\", job_type=\"{job_type}\")'"
                     )
         elif job_type == 'gather3':
-            if glob.glob(os.path.join(COMOUTsmall,'*stat')):
+            if glob.glob(os.path.join(COMOUTsmall,'gather_small','*stat')):
                 job_cmd_list.append(
                     f'{metplus_launcher} -c {machine_conf} '
                     + f'-c {MET_PLUS_CONF}/'
