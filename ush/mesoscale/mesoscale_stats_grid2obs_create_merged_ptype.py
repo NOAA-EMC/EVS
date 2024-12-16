@@ -34,6 +34,8 @@ VHOUR= os.environ['VHOUR']
 fhr = os.environ['FHR']
 #fhr = os.environ['FHR_START']
 fhr = int(fhr)
+job_type = os.environ['job_type']
+njob = os.environ['njob']
 
 # Create merged ptype data
 valid_date_dt = datetime.datetime.strptime(
@@ -49,7 +51,8 @@ output_merged_ptype_file = os.path.join(
 
 # Create temp nc files for reading
 regrid_dir = os.path.join(
-    DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE, 'regrid_data_plane', f'{MODELNAME}.{VDATE}'
+    DATA, VERIF_CASE, 'METplus_output', 'workdirs', job_type, f'{job_name}', 
+    VERIF_TYPE, 'regrid_data_plane', f'{MODELNAME}.{VDATE}'
 )
 regrid_fname = (f'regrid_data_plane_{MODELNAME}_t{VHOUR}z_{VERIF_TYPE}_{NEST}_'
               + f'{job_name}_fhr{str(fhr).zfill(2)}.nc')
