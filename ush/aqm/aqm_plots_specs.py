@@ -642,13 +642,16 @@ class PlotSpecs:
             +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
         )
         if date_info_dict['date_type'] == 'VALID':
-            date_type_hr_list = [
-                str(hr).zfill(2)+'Z' \
-                for hr in range(int(date_info_dict['valid_hr_start']),
-                                int(date_info_dict['valid_hr_end'])
-                                +int(date_info_dict['valid_hr_inc']),
-                                int(date_info_dict['valid_hr_inc']))
-            ]
+            if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean' ]:
+                 date_type_hr_list = [ 'mean' ]
+            else:
+                date_type_hr_list = [
+                    str(hr).zfill(2)+'Z' \
+                    for hr in range(int(date_info_dict['valid_hr_start']),
+                                    int(date_info_dict['valid_hr_end'])
+                                    +int(date_info_dict['valid_hr_inc']),
+                                    int(date_info_dict['valid_hr_inc']))
+                ]
             other_hr_list = [
                 str(hr).zfill(2)+'Z' \
                 for hr in range(int(date_info_dict['init_hr_start']),
@@ -674,6 +677,8 @@ class PlotSpecs:
         if self.plot_type in ['time_series', 'stat_by_level',
                               'performance_diagram', 'threshold_average']:
             fhr_for_title = [date_info_dict['forecast_hour']]
+        elif self.plot_type in ['time_series_fhr_mean', 'lead_average_vhr_mean' ]:
+            fhr_for_title = 'mean'
         else:
             fhr_for_title = date_info_dict['forecast_hours']
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':

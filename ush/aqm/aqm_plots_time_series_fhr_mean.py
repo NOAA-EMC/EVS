@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Name: aqm_plots_time_series.py
+Name: aqm_plots_time_series_fhr_mean.py
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a time series plot.
           (x-axis: dates; y-axis: statistics value)
@@ -176,7 +176,7 @@ class TimeSeriesFhrMean:
                     ).values)
         # Set up plot
         self.logger.info(f"Setting up plot")
-        plot_specs_ts = PlotSpecs(self.logger, 'time_series')
+        plot_specs_ts = PlotSpecs(self.logger, 'time_series_fhr_mean')
         plot_specs_ts.set_up_plot()
         n_xticks = 5
         if len(plot_dates) < n_xticks:
