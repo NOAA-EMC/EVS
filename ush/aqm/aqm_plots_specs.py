@@ -571,19 +571,22 @@ class PlotSpecs:
                           +end_date_dt.strftime('%d%b%Y')+' ')
         title_other_hr_list = []
         if date_type == 'VALID':
-            for date_type_hr in date_type_hr_list:
-                for forecast_hour in forecast_hour_list:
-                    other_hr = gda_util.get_init_hour(
-                        int(date_type_hr.replace('Z', '')),
-                        int(forecast_hour)
-                    )
-                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
-                            and str(other_hr).zfill(2)+'Z' in other_hr_list:
-                        title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
-            title_other_hr_list.sort()
-            date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
-                              +', init. hours: '
-                              +', '.join(title_other_hr_list))
+            if "mean" in date_type_hr_list:
+                date_plot_name = (date_plot_name+', FHR:ALL, INIT:TBD')
+            else:
+                for date_type_hr in date_type_hr_list:
+                    for forecast_hour in forecast_hour_list:
+                        other_hr = gda_util.get_init_hour(
+                            int(date_type_hr.replace('Z', '')),
+                            int(forecast_hour)
+                        )
+                        if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
+                                and str(other_hr).zfill(2)+'Z' in other_hr_list:
+                            title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+                title_other_hr_list.sort()
+                date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
+                                  +', init. hours: '
+                                  +', '.join(title_other_hr_list))
         elif date_type == 'INIT':
             for date_type_hr in date_type_hr_list:
                 for forecast_hour in forecast_hour_list:
