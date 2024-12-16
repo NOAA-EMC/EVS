@@ -1,9 +1,9 @@
 #PBS -S /bin/bash
 #PBS -N jevs_hurricane_regional_tropcyc_stats
 #PBS -j oe
-#PBS -A ENSTRACK-DEV
+#PBS -A VERF-DEV
 #PBS -q dev
-#PBS -l select=1:ncpus=2:mem=4GB
+#PBS -l select=1:ncpus=1:mem=4GB
 ##PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l walltime=00:30:00
 #PBS -l debug=true
@@ -39,11 +39,11 @@ export PDY=20241231
 
 #Define TC-vital file, TC track file and the directory for Bdeck files
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/syndat_tcvitals.2024
-export COMINtrack=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/regional.tracks.atcfunix.24
+export COMINtrack=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/tracks.atcfunix.24
 export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
 
-export DATAROOT=/lfs/h2/emc/stmp/$USER
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 #rm -rf ${COMROOT}/evs/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
@@ -54,9 +54,6 @@ $HOMEevs/jobs/JEVS_HURRICANE_STATS
 
 %include <tail.h>
 %manual
-######################################################################
-# Purpose: This job will generate the grid2obs statistics for the HRRR
-#          model and generate stat files.
-######################################################################
+
 %end
 

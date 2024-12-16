@@ -1,7 +1,7 @@
 #PBS -S /bin/bash
 #PBS -N jevs_hurricane_global_ens_spread_plots
 #PBS -j oe
-#PBS -A ENSTRACK-DEV
+#PBS -A VERF-DEV
 #PBS -q dev
 #PBS -l select=1:ncpus=1:mem=4GB
 #PBS -l walltime=01:00:00
@@ -42,7 +42,7 @@ export COMINvit=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/syndat_tcvitals.2024
 export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
 
-export DATAROOT=/lfs/h2/emc/stmp/$USER
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export KEEPDATA=YES
 
