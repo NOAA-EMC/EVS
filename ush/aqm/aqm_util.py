@@ -2684,6 +2684,7 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_array    - array of the statistic
    """
    if line_type == 'SL1L2':
+       FBAR = data_df.loc[:]['FBAR']
        OBAR = data_df.loc[:]['OBAR']
        FOBAR = data_df.loc[:]['FOBAR']
        FFBAR = data_df.loc[:]['FFBAR']
@@ -2938,6 +2939,12 @@ def calculate_stat(logger, data_df, line_type, stat):
        UVFOBAR = data_df.loc[:]['UVFOBAR']
        UVFFBAR = data_df.loc[:]['UVFFBAR']
        UVOOBAR = data_df.loc[:]['UVOOBAR']
+       F_SPEED_BAR = data_df.loc[:]['F_SPEED_BAR']
+       O_SPEED_BAR = data_df.loc[:]['O_SPEED_BAR']
+       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
+       DIR_ME = data_df.loc[:]['DIR_ME']
+       DIR_MAE = data_df.loc[:]['DIR_MAE']
+       DIR_MSE = data_df.loc[:]['DIR_MSE']
    elif line_type == 'VAL1L2':
        UFABAR = data_df.loc[:]['UFABAR']
        VFABAR = data_df.loc[:]['VFABAR']
@@ -2948,6 +2955,10 @@ def calculate_stat(logger, data_df, line_type, stat):
        UVOOABAR = data_df.loc[:]['UVOOABAR']
        FA_SPEED_BAR = data_df.loc[:]['FA_SPEED_BAR']
        OA_SPEED_BAR = data_df.loc[:]['OA_SPEED_BAR']
+       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
+       DIRA_ME = data_df.loc[:]['DIRA_ME']
+       DIRA_MAE = data_df.loc[:]['DIRA_MAE']
+       DIRA_MSE = data_df.loc[:]['DIRA_MSE']
    elif line_type == 'VCNT':
        FBAR = data_df.loc[:]['FBAR']
        OBAR = data_df.loc[:]['OBAR']
@@ -2975,6 +2986,19 @@ def calculate_stat(logger, data_df, line_type, stat):
        ANOM_CORR_UNCNTR = data_df.loc[:]['ANOM_CORR_UNCNTR']
        ANOM_CORR_UNCNTR_BCL = data_df.loc[:]['ANOM_CORR_UNCNTR_BCL']
        ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
+       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
+       DIR_ME = data_df.loc[:]['DIR_ME']
+       DIR_ME_BCL = data_df.loc[:]['DIR_ME_BCL']
+       DIR_ME_BCU = data_df.loc[:]['DIR_ME_BCU']
+       DIR_MAE = data_df.loc[:]['DIR_MAE']
+       DIR_MAE_BCL = data_df.loc[:]['DIR_MAE_BCL']
+       DIR_MAE_BCU = data_df.loc[:]['DIR_MAE_BCU']
+       DIR_MSE = data_df.loc[:]['DIR_MSE']
+       DIR_MSE_BCL = data_df.loc[:]['DIR_MSE_BCL']
+       DIR_MSE_BCU = data_df.loc[:]['DIR_MSE_BCU']
+       DIR_RMSE = data_df.loc[:]['DIR_RMSE']
+       DIR_RMSE_BCL = data_df.loc[:]['DIR_RMSE_BCL']
+       DIR_RMSE_BCU = data_df.loc[:]['DIR_RMSE_BCU']
    if stat == 'ACC': # Anomaly Correlation Coefficient
        if line_type == 'SAL1L2':
            radicand = (FFABAR - FABAR*FABAR)*(OOABAR - OABAR*OABAR)
@@ -3072,12 +3096,6 @@ def calculate_stat(logger, data_df, line_type, stat):
    else:
         logger.error(stat+" is not an option")
         sys.exit(1)
-
-   logger.info(f"STAT={line_type}/{stat}")
-   logger.info(f"stat_df")
-   for i in FBAR:
-         logger.info(str(i))
-
    idx = 0
    idx_dict = {}
    while idx < stat_df.index.nlevels:
@@ -3093,8 +3111,6 @@ def calculate_stat(logger, data_df, line_type, stat):
        stat_array = stat_df.values.reshape(
            idx_dict['index0'], idx_dict['index1']
        )
-   logger.info(f"stat_array")
-   logger.info(stat_array)
    return stat_df, stat_array
 
 def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
@@ -3425,6 +3441,12 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
        UVFOBAR = data_df.loc[:]['UVFOBAR']
        UVFFBAR = data_df.loc[:]['UVFFBAR']
        UVOOBAR = data_df.loc[:]['UVOOBAR']
+       F_SPEED_BAR = data_df.loc[:]['F_SPEED_BAR']
+       O_SPEED_BAR = data_df.loc[:]['O_SPEED_BAR']
+       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
+       DIR_ME = data_df.loc[:]['DIR_ME']
+       DIR_MAE = data_df.loc[:]['DIR_MAE']
+       DIR_MSE = data_df.loc[:]['DIR_MSE']
    elif line_type == 'VAL1L2':
        UFABAR = data_df.loc[:]['UFABAR']
        VFABAR = data_df.loc[:]['VFABAR']
@@ -3435,6 +3457,10 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
        UVOOABAR = data_df.loc[:]['UVOOABAR']
        FA_SPEED_BAR = data_df.loc[:]['FA_SPEED_BAR']
        OA_SPEED_BAR = data_df.loc[:]['OA_SPEED_BAR']
+       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
+       DIRA_ME = data_df.loc[:]['DIRA_ME']
+       DIRA_MAE = data_df.loc[:]['DIRA_MAE']
+       DIRA_MSE = data_df.loc[:]['DIRA_MSE']
    elif line_type == 'VCNT':
        FBAR = data_df.loc[:]['FBAR']
        OBAR = data_df.loc[:]['OBAR']
@@ -3462,6 +3488,19 @@ def calculate_stat_fhr_mean(logger, data_df, line_type, stat):
        ANOM_CORR_UNCNTR = data_df.loc[:]['ANOM_CORR_UNCNTR']
        ANOM_CORR_UNCNTR_BCL = data_df.loc[:]['ANOM_CORR_UNCNTR_BCL']
        ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
+       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
+       DIR_ME = data_df.loc[:]['DIR_ME']
+       DIR_ME_BCL = data_df.loc[:]['DIR_ME_BCL']
+       DIR_ME_BCU = data_df.loc[:]['DIR_ME_BCU']
+       DIR_MAE = data_df.loc[:]['DIR_MAE']
+       DIR_MAE_BCL = data_df.loc[:]['DIR_MAE_BCL']
+       DIR_MAE_BCU = data_df.loc[:]['DIR_MAE_BCU']
+       DIR_MSE = data_df.loc[:]['DIR_MSE']
+       DIR_MSE_BCL = data_df.loc[:]['DIR_MSE_BCL']
+       DIR_MSE_BCU = data_df.loc[:]['DIR_MSE_BCU']
+       DIR_RMSE = data_df.loc[:]['DIR_RMSE']
+       DIR_RMSE_BCL = data_df.loc[:]['DIR_RMSE_BCL']
+       DIR_RMSE_BCU = data_df.loc[:]['DIR_RMSE_BCU']
    ##
    ## Compute stats from read-in values, and perform averaging per validtime
    ##
