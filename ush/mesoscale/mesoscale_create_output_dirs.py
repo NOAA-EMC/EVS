@@ -212,19 +212,19 @@ elif STEP == 'stats':
                 working_output_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-            COMOUT_dir_list.append(os.path.join(
-                COMOUT, 
-                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+            MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+        if job_type == 'reformat':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'pcp_combine', 
+                OBSNAME+'.'+date_dt.strftime('%Y%m%d')
             ))
-            if job_type == 'reformat':
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'pcp_combine', 
-                    OBSNAME+'.'+date_dt.strftime('%Y%m%d')
-                ))
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'pcp_combine', 
-                    MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
-                ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'pcp_combine', 
+                MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
+            ))
     elif VERIF_CASE == "grid2obs":
         if job_type == 'reformat':
             working_output_base_dir = os.path.join(
@@ -312,25 +312,28 @@ elif STEP == 'stats':
                 working_output_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-            COMOUT_dir_list.append(os.path.join(
-                COMOUTsmall,
-                'gather_small'
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTsmall,
+            'gather_small'
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+            MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+        if job_type == 'reformat':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'pb2nc', 
+                OBSNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-            COMOUT_dir_list.append(os.path.join(
-                COMOUT, 
-                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'pb2nc', 
+                MODELNAME+'.'+vdate_dt.strftime('init%Y%m%d')
             ))
-            if job_type == 'reformat':
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, NEST, 'pb2nc', 
-                    OBSNAME+'.'+vdate_dt.strftime('%Y%m%d')
-                ))
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, NEST, 'pb2nc', 
-                    MODELNAME+'.'+vdate_dt.strftime('init%Y%m%d')
-                ))
     elif VERIF_CASE == "snowfall":
         pass
+    working_dir_list.append(os.path.join(
+        DATA, VERIF_CASE, 'METplus_output', 'workdirs', job_type
+    ))
 elif STEP == 'plots':
     if VERIF_CASE == 'grid2obs':
 
@@ -343,6 +346,9 @@ elif STEP == 'plots':
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'workdirs'
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out', 'logs'
@@ -376,6 +382,9 @@ elif STEP == 'plots':
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'workdirs'
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out', 'logs'
@@ -412,6 +421,9 @@ elif STEP == 'plots':
             working_output_base_dir, 'out'
         ))
         working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'workdirs'
+        ))
+        working_dir_list.append(os.path.join(
             working_output_base_dir, 'out', 'logs'
         ))
         COMOUT_dir_list.append(os.path.join(
@@ -443,6 +455,9 @@ elif STEP == 'plots':
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'workdirs'
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out', 'logs'
