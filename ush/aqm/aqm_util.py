@@ -2403,7 +2403,8 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
              obs_var_name, obs_var_level, obs_var_thresh, line_type,
              grid, vx_mask, interp_method, interp_points, date_type, dates,
-             met_format_valid_dates,filter_fhr_flag,forecast_hours):
+             met_format_valid_dates,filter_fhr_flag,forecast_hours,
+                     filter_inithr_flag, filter_init_hour):
     """! Build the data frame for all model stats,
          Read the model's filtered file, and if doesn't exist
          filter the model file for need information and write file
@@ -2433,6 +2434,9 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                                       like they are in MET stat files
              filter_fhr_flag        - status of filtering by forecast_hours (boolean)
              forecast_hours         - list of forecast hour (string)
+
+             filter_inithr_flag     - status of filtering by init_hours (boolean)
+             filter_init_hour       - selected init hour (string)
 
          Returns:
              all_model_df                - dataframe of all the information
@@ -2585,6 +2589,27 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                      & (condensed_model_df['LINE_TYPE'] \
                         == line_type)
                 ]
+                if filter_inithr_flag:
+                    fcst_lead_time=filtered_model_df['FCST_LEAD'].tolist()
+                    fcst_lead_values=[]
+                    for strtime in fcst_lead_time:
+                        lead_obj=int(strtime[0:2])
+                        fcst_lead_values.append(lead_obj)
+                    fcst_valid_time=filtered_model_df['FCST_VALID_BEG'].tolist()
+                    for strtime in fcst_valid_time:
+                        dt_obj=datetime.datetime.strptime(strtime, "%Y%m%d_%H%M%S")
+                        datetime_valid.append(dt_obj)
+                    num_data=len(fcst_lead_values)
+                    num_check=len(datetime_valid)
+                    if num_data == num_check:
+                        array_init_hour=[]
+                        for i in range(0,num_data):
+                            init_obj=get_init_hour( datetime_valid[i].hour, fcst_lead_values[i])
+                            array_init_hour.append(init_obj)
+                    else:
+                        print(f"number of data are different fcst_lead {num_data} and valid_time {num_check}")
+                    remove_index=[ idx for idx in range(num_data) if array_init_hour[idx] != filtered_init_hour ]
+                    filtered_model_df.drop(filtered_model_df.index[remove_index], inplace=True)
                 if filter_fhr_flag:
                     selected_forecast_hours=[ fhr.zfill(2)+'0000' for fhr in forecast_hours ]
                     logger.debug(f"selected_forecast_hours={selected_forecast_hours}")

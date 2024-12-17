@@ -102,6 +102,8 @@ class TimeSeriesFhrMean:
             sys.exit(99)
         # Read in data
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
+        perform_init_hour_filtering=True
+        selected_filter_init_hour=self.date_info_dict['init_hr_start']
         perform_fcst_hour_filtering=True
         ## selected_fcst_hours=[ str(ifhr) for ifhr in fhrs ]
         test_fcst_hours=[ 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48 ]
@@ -124,7 +126,9 @@ class TimeSeriesFhrMean:
             self.date_info_dict['date_type'],
             plot_dates, format_valid_dates,
             perform_fcst_hour_filtering,
-            selected_fcst_hours
+            selected_fcst_hours,
+            perform_init_hour_filtering,
+            self.date_info_dict['init_hr_start']
         )
         # Calculate statistic
         self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "

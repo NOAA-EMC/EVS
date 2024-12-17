@@ -704,6 +704,15 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['end_date'] = end_date
         job_env_dict['NDAYS'] = NDAYS
         job_env_dict['date_type'] = 'VALID'
+        """
+        if JOB_GROUP in ['make_plots']:
+            init_hr_start = int(job_env_dict['init_hr_start'])
+            init_hr_end = int(job_env_dict['init_hr_end'])
+            init_hr_inc = int(job_env_dict['init_hr_inc'])
+            init_hrs = list(range(init_hr_start,
+                                   init_hr_end+init_hr_inc,
+                                   init_hr_inc))
+        """
         if JOB_GROUP in ['filter_stats', 'make_plots']:
             valid_hr_start = int(job_env_dict['valid_hr_start'])
             valid_hr_end = int(job_env_dict['valid_hr_end'])
