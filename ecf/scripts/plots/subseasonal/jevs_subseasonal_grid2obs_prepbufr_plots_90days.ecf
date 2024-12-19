@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:10:00
-#PBS -l place=vscatter:shared,select=1:ncpus=32:ompthreads=1:mem=35GB
+#PBS -l place=vscatter,select=1:ncpus=80:ompthreads=1:mem=35GB
 #PBS -l debug=true
 
 export model=evs
@@ -46,7 +46,7 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=32
+export nproc=80
 export USE_CFP=YES
 export NET=evs
 export RUN=atmos
