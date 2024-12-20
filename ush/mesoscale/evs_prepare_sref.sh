@@ -3,6 +3,7 @@
 #  Purpose: Get required input forecast and validation data files
 #           for sref stat jobs
 #  Last update: 
+#               10/18/2024, resolved the duplicated APCP03 in arw/f03 and 06 members
 #               06/05/2024, add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               05/04/2024, (1) change gfs to gdas for prepbufr files
 #                           (2) split the prepbufr files before running METplus PB2NC
@@ -36,12 +37,11 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
   #fday -> forecst running day 
   #fvhr -> forecast cycle hour
   for vvhr in 03 09 15 21  ; do
-    for fhr in  06 12 18 24 30 36 42 48 54 60 66 72 78 84 ; do
+    for fhr in 06 12 18 24 30 36 42 48 54 60 66 72 78 84 ; do
       obsv_vhr=${vday}${vvhr}     #validation time: xxxx.tvvhrz.f00
       fcst_time=`$ndate -$fhr $obsv_vhr`   #fcst running time in yyyyymmddhh
       export fday=${fcst_time:0:8}
       export fvhr=${fcst_time:8:2}
-      export modelpath=${COMINsref}/sref.${fday}/$fvhr/pgrb
       if [ ! -d $WORK/sref.${fday} ] ; then
        mkdir $WORK/sref.${fday}
       fi
@@ -50,6 +50,8 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
       if [ ! -d $COMOUTrestart/sref.${fday} ] ; then
         mkdir -p $COMOUTrestart/sref.${fday}
       fi
+
+      export modelpath=$WORK/sref.${fday}
 
       for base in arw nmb ; do
         for mb in ctl n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ; do
@@ -60,16 +62,39 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 	 #         if yes, copy it to the working directory (restart case)  
 	 ##################################################################################################
 	 if [ ! -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
-           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
-           export err=$?; err_chk
-	   if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
-	     cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
-	     #save for restart:
-	     mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${fday}/.
+
+           ############################################################################################
+	   # Note: for arw/f03 and f06 members, the APCP03 is duplicated. So grab the second one (#479:)
+	   #       and save the files in the working directory 
+	   # ########################################################################################## 		 
+	   if [ $base = arw ] && [ $fhr = 06 ] ; then
+	      sref03=${COMINsref}/sref.${fday}/$fvhr/pgrb/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
+	      if [ -s $sref03 ] ; then
+	        $WGRIB2 $sref03|grep "^479:"|$WGRIB2 -i $sref03 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
+	      fi
+	      sref06=${COMINsref}/sref.${fday}/$fvhr/pgrb/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
+	      if  [ -s $sref06 ] ; then
+	        $WGRIB2 $sref06|grep "^479:"|$WGRIB2 -i $sref06 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
+	      fi
+	      export modelpath=$WORK/sref.${fday}
+            else
+              export modelpath=${COMINsref}/sref.${fday}/$fvhr/pgrb  
+           fi
+
+           if [ -s $modelpath/sref_${base}.t${fvhr}z.pgrb212.${mb}.f${fhr}.grib2 ] ; then
+              ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
+              export err=$?; err_chk
+              if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+	        cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
+	        #save for restart:
+	        mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${fday}/.
+	      fi
 	   fi
 	 else
 	   #Restart:
-	   cp $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}
+	   if [ -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+	     cp $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}
+	   fi
 	 fi
 
        done
@@ -104,7 +129,7 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
     done
   done
   for nfhr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 ; do
-   echo $nfhr |$HOMEevs/exec/sref_precip.x
+   echo $nfhr |$EXECevs/sref_precip.x
   done
 
   export lead='24, 48, 72'
@@ -119,7 +144,9 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
     if [ ! -d ${COMOUTfinal}/apcp24mean ] ; then
         mkdir -p ${COMOUTfinal}/apcp24mean
     fi
-    cp $output_base/*24mean*.nc ${COMOUTfinal}/apcp24mean
+    if [ -s $output_base/*24mean*.nc ] ; then
+      cp $output_base/*24mean*.nc ${COMOUTfinal}/apcp24mean
+    fi
   fi
 fi  
 
@@ -251,13 +278,18 @@ export output_base=${WORK}/pb2nc
      #*******************************************************************************
      >$WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
      split_by_subset ${COMINobsproc}/gdas.${vday}/$vhr/atmos/gdas.t${vhr}z.prepbufr
-     cat $WORK/ADPSFC $WORK/SFCSHP $WORK/ADPUPA >> $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
-
+     for subset in ADPSFC SFCSHP ADPUPA ; do
+       if [ -s ${WORK}/${subset} ]; then
+          cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
+       fi
+     done
      export bufrpath=$WORK
-     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf
-     export err=$?; err_chk
-     if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
-       cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
+     if [ -s $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr ] ; then
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf
+       export err=$?; err_chk
+       if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
+         cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
+       fi
      fi
    done
 

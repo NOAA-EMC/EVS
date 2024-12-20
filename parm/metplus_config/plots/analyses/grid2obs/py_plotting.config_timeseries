@@ -1,0 +1,161 @@
+#!/bin/bash 
+
+# ================================================================================================
+# NCEP EMC PYTHON PLOTTING OF CAM VERIFICATION
+# 
+# CONTRIBUTORS:     Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#
+# PURPOSE:          Set up configurations to plot METPLUS output statistics
+#
+# DESCRIPTION:      This configuration file defines environment variables that are meant to be 
+#                   edited by the user and that are called by python scripts at runtime to define 
+#                   the plotting task, resulting in one or more graphics output files. 
+#
+# BEFORE YOU BEGIN: Make sure to set up Verif Plotting if you haven't already.  To set up, 
+#                   clone the Github repository:
+#
+#                   or else choose any directory that will house Verif Plotting.  As an example, 
+#                   we'll call that directory PY_PLOT_DIR.  Then on the command line:
+#
+#                   $ PY_PLOT_DIR="/path/to/my/directory"
+#                   $ mkdir -p ${PY_PLOT_DIR}/out/logs ${PY_PLOT_DIR}/data ${PY_PLOT_DIR}/ush
+#                   $ BASE_DIR="/path/to/verif_plotting"
+#                   $ cp -r ${BASE_DIR}/ush/* ${PY_PLOT_DIR}/ush/.
+#                   $ cp ${BASE_DIR}/py_plotting.config ${PY_PLOT_DIR}/.
+#
+# CONFIGURATION:    After setting up Verif Plotting, edit the exported variables below.  Each 
+#                   variable is a string that will be ingested by the python code.  You'll need to 
+#                   be able to point to a correctly structured metplus statistics archive (see the 
+#                   comment for Directory Settings below for details).  
+#
+#                   LIMITATIONS   
+#                   In some cases, settings will be limited to what is listed in the
+#                   metplus .stat files or the statistics archive (e.g., FCST_LEAD or MODEL).  In 
+#                   others, they will be limited to what has been predefined elsewhere in Verif 
+#                   Plotting (e.g., EVAL_PERIOD).  Finally, some settings must match certain 
+#                   allowable settings, which are defined in ${USH_DIR}/settings.py in the case_type 
+#                   attribute of the Reference() class.  Two asterisks mark these latter settings in 
+#                   the comments below. 
+#
+#                   CONFIGURING PLOT TYPE
+#                   The plot type is requested via the last line.  Replace the python script with 
+#                   the desired plot type as explained in the comment.  In most cases, a plot will 
+#                   include all of the listed settings; for example, the python code will attempt to
+#                   plot all of the listed models in MODEL on the same plot, as well as all of the 
+#                   init/valid hours in FCST_INIT/VALID_HOUR and lead times in FCST_LEAD.  
+#                   Exceptions to this are the listed var_names and listed domains (VX_MASK_LIST), 
+#                   for which individual plots will be made. Listed levels are also plotted 
+#                   separately unless the plot type is stat_by_level.
+#
+# EXECUTION:        After configuring this script, it can be run on the command line:
+#
+#                   $ /bin/sh ${PY_PLOT_DIR}/py_plotting.config
+#
+#                   ... which will set the environment variables and run the python code. The python 
+#                   code then follows these steps:
+#                   (1) Save environment variables as global python variables. Make sure the 
+#                       datatypes are correct
+#                   (2) Check the user settings and throw errors if an issue is encountered
+#                   (3) Send the settings to df_preprocessing.py, which pulls and prunes the .stat 
+#                       files--creating temporary data files in the process and storing those in 
+#                       PRUNE_DIR--then loads the data as pandas dataframes, which are filtered 
+#                       several times according to user settings. 
+#                   (4) Send the dataframe and user settings to a plotting function, which creates a 
+#                       figure object, filters the data, plots the data, adjusts plot features, then 
+#                       saves the plot as a png.
+#
+# DEBUGGING:        Part of the configuration for this script involves setting a logfile path. 
+#                   Running the script will print the logfile path for your specific task, which you 
+#                   can check for debugging.  The lowest log level that is currently functional is 
+#                   "INFO". "DEBUG" statements may be included in a later implementation.
+#                
+# ================================================================================================
+set -x
+
+# Case type settings are used to check if settings are allowed. **
+export VERIF_CASE="grid2obs"
+export VERIF_TYPE="conus_sfc"
+
+# Used to name the graphics ouput files. File names will start with the URL_HEADER, followed by plot 
+# details.  Leave blank ("") to include only plot details in the file names.
+export URL_HEADER=""
+
+# Directory Settings.  Make sure USH_DIR, PRUNE_DIR, and SAVE_DIR point to desired .../ush, 
+# .../data, and .../out directories.  OUTPUT_BASE_DIR is the location of the metplus stat archive.  
+# The format must be ${OUTPUT_BASE_DIR}/${VERIF_CASE}/${MODEL_NAME}/${Ym}/${MODEL_NAME}*.stat
+# The format requirement can be changed by editing the ${USH_DIR}/prune_stat_files.py file 
+# at line 30
+export USH_DIR="$USHevs/analyses"
+export IMG_HEADER="${NET}.${COMPONENT}"
+export PRUNE_DIR="$PRUNEDIR"
+export SAVE_DIR="$PLOTDIR"
+export OUTPUT_BASE_DIR="$STATDIR"
+
+export STAT_OUTPUT_BASE_DIR="$STATDIR"
+export STAT_OUTPUT_BASE_TEMPLATE="${NET}.stats.{MODEL}.${RUN}.${VERIF_CASE}.v{valid?fmt=%Y%m%d}.stat"
+
+# Logfile settings. Log level options are "DEBUG", "INFO", "WARNING", "ERROR", and "CRITICAL"
+export LOG_TEMPLATE="${SAVE_DIR}/logs/EVS_plotting_job_`date '+%Y%m%d-%H%M%S'`_$$.out"
+export LOG_LEVEL="DEBUG"
+
+# Version of MET listed in the metplus .stat files used to create graphics
+
+# Will use statistics for all comma-separated models.  Case-insensitive by default, but names must 
+# match the model naming convention in ${OUTPUT_BASE_DIR}
+export MODELS="${anl}_anl, ${anl}_ges"
+
+# Will use valid or init datetimes based on the setting below. Options are "VALID" or "INIT"
+export DATE_TYPE="INIT"
+
+# Will choose a valid or init range based on a preset EVAL_PERIOD.  Use "TEST" if you want to use 
+# the custom-defined range below. Presets are defined in ${USH_DIR}/settings.py in the Presets() 
+# class. 
+export EVAL_PERIOD="TEST"
+
+# If EVAL_PERIOD="TEST", will use statistics from the valid or init range below. If not, ignores 
+# these settings. DATE_TYPE decides whether valid or init is used.
+export VALID_BEG="$PDYm31"
+export VALID_END="$VDATE"
+export INIT_BEG="$PDYm31"
+export INIT_END="$VDATE"
+
+# Will use statistics for all comma-separated valid or init hours. DATE_TYPE decides whether valid 
+# or init is used.
+export FCST_INIT_HOUR="00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+export FCST_VALID_HOUR="00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
+
+# Settings below are used to select desired variable and domain. **
+export FCST_LEVEL="$lev"
+export OBS_LEVEL="${lev_obs}"
+export var_name="$var"
+export VX_MASK_LIST="$region"
+
+# Will use statistics for all comma-separated lead times 
+export FCST_LEAD="00"
+
+# Line type in metplus .stat files used to compute desired metric(s). **
+export LINE_TYPE="$linetype"
+
+# Interpolation, as listed in metplus .stat files. **
+export INTERP="BILIN"
+
+# Will use statistics for all comma-separated thresholds. Use symbols (e.g., >=) to define 
+# thresholds. **
+export FCST_THRESH=""
+export OBS_THRESH=""
+
+# Will plot all comma-separated metrics.  For performance diagram, metrics must be "sratio,pod,csi". 
+# Depending on the VERIF_CASE, VERIF_TYPE, and LINE_TYPE, only some settings are allowed. **
+export STATS="bcrmse,me"
+
+# String of True or False. If "True", will plot bootstrap confidence intervals. Other confidence 
+# interval settings can be configured in ${USH_DIR}/settings.py
+export INTERP_PNTS=""
+export CONFIDENCE_INTERVALS="False"
+
+# Executes the desired python script.  Scripts in $USH_DIR currently include {lead_average.py, 
+# performance_diagram.py, stat_by_level.py, threshold_average.py, time_series.py, 
+# valid_hour_average.py}
+python $USH_DIR/time_series.py
+
+exit

@@ -71,8 +71,10 @@ mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
 ####################################
 # Execute the script                
 ####################################
+
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
+	
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 

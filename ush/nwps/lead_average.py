@@ -48,7 +48,7 @@ presets = Presets()
 model_colors = ModelSpecs()
 reference = Reference()
 
-
+WFO = os.environ ['WFO']
 # =================== FUNCTIONS =========================
 
 
@@ -341,7 +341,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     # Reindex pivot table with full list of lead hours, introducing NaNs 
     x_vals_pre = pivot_metric1.index.tolist()
     lead_time_incr = np.diff(x_vals_pre)
-    min_incr = np.min(lead_time_incr)
+    if lead_time_incr.size > 0:
+        min_incr = np.min(lead_time_incr)
+    else:
+        min_incr = 1
+
     incrs = [1,6,12,24]
     incr_idx = np.digitize(min_incr, incrs)
     if incr_idx < 1:
@@ -751,16 +755,21 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     ]).flatten()
     round_to_nearest_categories = y_range_categories/20.
     y_range = y_max-y_min
-    round_to_nearest =  round_to_nearest_categories[
+    if str(y_range) == '-inf':
+        ylim_min = 0
+        ylim_max = 1
+        yticks = np.arange(ylim_min, ylim_max, 0.05)
+    else:
+        round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
-    ]
-    ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
-    ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
-    if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
-        ylim_min = float(
-            np.format_float_scientific(ylim_min, unique=False, precision=3)
-        )
-    yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
+        ]
+        ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
+        ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+        if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
+            ylim_min = float(
+                np.format_float_scientific(ylim_min, unique=False, precision=3)
+            )
+        yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
         if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
@@ -1026,7 +1035,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                  + f'{str(time_period_savename).lower()}.'
                  + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'{str(domain_string).lower()}_'
+                 + f'{str(WFO).lower()}')
     if metric2_name is not None:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
@@ -1034,7 +1044,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
                      + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
-                     + f'{str(domain_string).lower()}')
+                     + f'{str(domain_string).lower()}_'
+                     + f'{str(WFO).lower()}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
@@ -1042,7 +1053,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
                      + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
-                     + f'{str(domain).lower()}')
+                     + f'{str(domain).lower()}_'
+                     + f'{str(WFO).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
     save_subdir = os.path.join(

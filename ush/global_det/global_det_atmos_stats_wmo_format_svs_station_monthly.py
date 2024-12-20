@@ -18,21 +18,14 @@ import numpy as np
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
-COMIN = os.environ['COMIN']
-COMOUT = os.environ['COMOUT']
-SENDCOM = os.environ['SENDCOM']
 DATA = os.environ['DATA']
-NET = os.environ['NET']
 RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
-STEP = os.environ['STEP']
-COMPONENT = os.environ['COMPONENT']
 VDATE = os.environ['VDATE']
 MODELNAME = os.environ['MODELNAME']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
 tmp_report_file = os.environ['tmp_report_file']
-output_report_file = os.environ['output_report_file']
 
 VDATE_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
 
@@ -66,13 +59,12 @@ wmo_d = f"{VDATE_dt:%Y%m}"
 
 # Set input file paths
 tmp_station_info_file = os.path.join(
-    COMOUT, f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
+    DATA, f"{RUN}.{VDATE}", MODELNAME, VERIF_CASE,
     f"evs.stats.gfs.atmos.wmo.station_info.v{VDATE_dt:%Y%m}.stat"
 )
 
 # Set output file paths
 tmp_VDATE_monthly_svs_file = tmp_report_file
-output_VDATE_monthly_svs_file = output_report_file
 
 # Set wmo_verif information
 if wmo_param in ['t2m', 'ff10m', 'dd10m', 'tp24',
@@ -325,8 +317,8 @@ for time_score_iter in time_score_iter_list:
                         note_msg = 'No matching stat line'
                     elif len(stat_line) > 1:
                         note_msg = 'Multiple matching stats lines'
-                    print(f"NOTE: {note_msg} for station {met_vx_mask} " 
-                          +f"{wmo_sc}")
+                        print(f"NOTE: {note_msg} for station {met_vx_mask} "
+                              +f"{wmo_sc}")
                 if have_stat_line:
                     if wmo_param == 'dd10m':
                         wmo_n = stat_line_gt0['TOTAL'].values[0]
@@ -379,6 +371,7 @@ for time_score_iter in time_score_iter_list:
 
 # Write monthly file
 print(f"Writing SVS monthly station data to {tmp_VDATE_monthly_svs_file}")
+gda_util.make_dir(tmp_VDATE_monthly_svs_file.rpartition('/')[0])
 with open(tmp_VDATE_monthly_svs_file, 'w') as f:
     for line in VDATE_monthly_svs_lines:
         f.write(line)
