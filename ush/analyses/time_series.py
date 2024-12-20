@@ -732,18 +732,18 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 ref_color_dict = model_colors.get_color_dict('obs')
                 plt.plot(
                     x_vals1.tolist(), reference1,
-                    marker=ref_color_dict['marker'],
+                    marker='None',
                     c=ref_color_dict['color'], mew=2., mec='white',
-                    figure=fig, ms=ref_color_dict['markersize'], ls='solid',
+                    figure=fig, ms=0, ls='solid',
                     lw=ref_color_dict['linewidth']
                 )
                 plotted_reference[0] = True
         else:
             plt.plot(
                 x_vals1.tolist(), y_vals_metric1, 
-                marker=mod_setting_dicts[m]['marker'], 
+                marker='None', 
                 c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
-                figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid', 
+                figure=fig, ms=0, ls='solid', 
                 lw=mod_setting_dicts[m]['linewidth']
             )
         if metric2_name is not None:
@@ -756,18 +756,18 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     ref_color_dict = model_colors.get_color_dict('obs')
                     plt.plot(
                         x_vals2.tolist(), reference2,
-                        marker=ref_color_dict['marker'],
+                        marker='None',
                         c=ref_color_dict['color'], mew=2., mec='white',
-                        figure=fig, ms=ref_color_dict['markersize'], ls='dashed',
+                        figure=fig, ms=0, ls='dashed',
                         lw=ref_color_dict['linewidth']
                     )
                     plotted_reference[1] = True
             else:
                 plt.plot(
                     x_vals2.tolist(), y_vals_metric2, 
-                    marker=mod_setting_dicts[m]['marker'], 
+                    marker='None', 
                     c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
-                    figure=fig, ms=mod_setting_dicts[m]['markersize'], 
+                    figure=fig, ms=0, 
                     ls='dashed', lw=mod_setting_dicts[m]['linewidth']
                 )
         if confidence_intervals:
@@ -842,7 +842,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         x_val for x_val in daterange(x_vals1[0], x_vals1[-1], td(hours=incr))
     ] 
     xtick_labels = [xtick.strftime('%HZ %m/%d') for xtick in xticks]
-    number_of_ticks_dig = [15,30,45,60,75,90,105,120,135,150,165,180,195,210,225]
+    
+    incr_skip=2
+    max_ticks=94
+    number_of_ticks_dig = np.arange(incr_skip, max_ticks, incr_skip, dtype=int)
+
     show_xtick_every = np.ceil((
         np.digitize(len(xtick_labels), number_of_ticks_dig) + 2
     )/2.)*2
@@ -925,34 +929,16 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         ax.xaxis.get_major_ticks()[mt].tick1line.set_markersize(8)
 
     ax.legend(
-        handles, labels, loc='upper center', fontsize=15, framealpha=1, 
+        handles, labels, markerscale=0, loc='upper center', fontsize=15, framealpha=1, 
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
-    fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
+    fig.subplots_adjust(top=.9, bottom=.2, wspace=0, hspace=0)
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
     
-    if sample_equalization:
-        counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
-        for count, xval in zip(counts, x_vals1.tolist()):
-            if not isinstance(count, str):
-                count = str(int(count))
-            ax.annotate(
-                f'{count}', xy=(xval,1.), 
-                xycoords=('data','axes fraction'), xytext=(0,18), 
-                textcoords='offset points', va='top', fontsize=16, 
-                color='dimgrey', ha='center'
-            )
-        ax.annotate(
-            '#SAMPLES', xy=(0.,1.), xycoords='axes fraction', 
-            xytext=(-50, 21), textcoords='offset points', va='top', 
-            fontsize=11, color='dimgrey', ha='center'
-        )
-        fig.subplots_adjust(top=.9)
-
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
@@ -1064,7 +1050,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         else:
             title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}, {frange_string}')
+              + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=40

@@ -554,13 +554,14 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 +verif_type_job+'/'
                 +job_env_dict['vx_mask']
             )
-            job_output_dir = os.path.join(
+            job_DATA_dir = os.path.join(
                 DATA, VERIF_CASE+'_'+STEP, 'plot_output',
                 RUN+'.'+end_date, verif_type,
                 job_env_dict['job_name'].replace('/','_')
             )
-            if not os.path.exists(job_output_dir):
-                os.makedirs(job_output_dir)
+            job_env_dict['job_DATA_dir'] = job_DATA_dir
+            if not os.path.exists(job_DATA_dir):
+                os.makedirs(job_DATA_dir)
             if JOB_GROUP == 'condense_stats':
                 for JOB_GROUP_loop in list(
                     itertools.product(model_list, [fcst_var_levels],
@@ -598,10 +599,18 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     # Set any environment variables for special cases
                     # Write environment variables
                     job_env_dict['job_id'] = 'job'+str(njobs)
+                    job_env_dict['job_work_dir'] = os.path.join(
+                        DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+                        'job_work_dir', JOB_GROUP,
+                        f"{job_env_dict['job_id']}", RUN+'.'+end_date,
+                        verif_type, job_env_dict['job_name'].replace('/','_')
+                    )
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
                     job.write('\n')
                     # Write job commands
+                    if not os.path.exists(job_env_dict['job_work_dir']):
+                        os.makedirs(job_env_dict['job_work_dir'])
                     job.write(
                         sub_util.python_command('subseasonal_plots.py',[])
                         +'\n'
@@ -650,9 +659,17 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job.write('\n')
                     # Write environment variables
                     job_env_dict['job_id'] = 'job'+str(njobs)
+                    job_env_dict['job_work_dir'] = os.path.join(
+                        DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+                        'job_work_dir', JOB_GROUP,
+                        f"{job_env_dict['job_id']}", RUN+'.'+end_date,
+                        verif_type, job_env_dict['job_name'].replace('/','_')
+                    )
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
                     job.write('\n')
+                    if not os.path.exists(job_env_dict['job_work_dir']):
+                        os.makedirs(job_env_dict['job_work_dir'])
                     job.write(
                         sub_util.python_command('subseasonal_plots.py',[])
                         +'\n'
@@ -660,13 +677,14 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job.write('export err=$?; err_chk'+'\n')
                     job.close()
             elif JOB_GROUP == 'make_plots':
-                job_output_images_dir = os.path.join(
+                job_DATA_images_dir = os.path.join(
                     DATA, VERIF_CASE+'_'+STEP, 'plot_output',
                     RUN+'.'+end_date, verif_type,
                     job_env_dict['job_name'].replace('/','_'), 'images'
                 )
-                if not os.path.exists(job_output_images_dir):
-                    os.makedirs(job_output_images_dir)
+                job_env_dict['job_DATA_images_dir'] = job_DATA_images_dir
+                if not os.path.exists(job_DATA_images_dir):
+                    os.makedirs(job_DATA_images_dir)
                 job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
                 job_env_dict['model_plot_name_list'] = (
                     "'"+f"{', '.join(model_plot_name_list)}"+"'"
@@ -756,9 +774,19 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             job.write('\n')
                             # Write environment variables
                             job_env_dict['job_id'] = 'job'+str(njobs)
+                            job_env_dict['job_work_images_dir'] = os.path.join(
+                                DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+                                'job_work_dir', JOB_GROUP,
+                                f"{job_env_dict['job_id']}", RUN+'.'+end_date,
+                                verif_type,
+                                job_env_dict['job_name'].replace('/','_'),
+                                'images'
+                            )
                             for name, value in job_env_dict.items():
                                 job.write('export '+name+'='+value+'\n')
                             job.write('\n')
+                            if not os.path.exists(job_env_dict['job_work_images_dir']):
+                                os.makedirs(job_env_dict['job_work_images_dir'])
                             job.write(
                                 sub_util.python_command(run_subseasonal_plot,
                                                         [])+'\n'
@@ -766,6 +794,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             job.write('export err=$?; err_chk'+'\n')
                             job.close()
             elif JOB_GROUP == 'tar_images':
+                job_DATA_dir = os.path.join(
+                    DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+                    RUN+'.'+end_date, 'tar_files', verif_type
+                )
+                job_env_dict['job_DATA_dir'] = job_DATA_dir
+                if not os.path.exists(job_env_dict['job_DATA_dir']):
+                    os.makedirs(job_env_dict['job_DATA_dir'])
                 job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
                 job_env_dict['model_plot_name_list'] = (
                     "'"+f"{', '.join(model_plot_name_list)}"+"'"
@@ -797,9 +832,16 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 # Write environment variables
                 job_env_dict['job_id'] = 'job'+str(njobs)
+                job_env_dict['job_work_dir'] = os.path.join(
+                    DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+                    'job_work_dir', JOB_GROUP,
+                    f"{job_env_dict['job_id']}"
+                )
                 for name, value in job_env_dict.items():
                     job.write('export '+name+'='+value+'\n')
                 job.write('\n')
+                if not os.path.exists(job_env_dict['job_work_dir']):
+                    os.makedirs(job_env_dict['job_work_dir'])
                 job.write(
                     sub_util.python_command('subseasonal_plots.py',[])
                     +'\n'

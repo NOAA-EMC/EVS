@@ -24,6 +24,7 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
 #************************************************
 # Build sub-jobs
 # ***********************************************
+cd $WORK/scripts
 >run_gather_${verify}.sh
 
     echo  "export output_base=${WORK}/gather" >> run_gather_${verify}.sh 
@@ -41,38 +42,24 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
 
     if [ $verify = grid2obs ] ; then   
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstSREF_obsPREPBUFR_GatherByDay.conf " >> run_gather_${verify}.sh
+      echo  "export err=$?; err_chk" >> run_gather_${verify}.sh
     elif [ $verify = precip ] ; then
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/StatAnlysis_fcstSREF_obsCCPA_GatherByDay.conf " >> run_gather_${verify}.sh
+      echo  "export err=$?; err_chk" >> run_gather_${verify}.sh
     fi
 
    echo "[[ $SENDCOM = YES  &&  -s ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat ]] && cp -v ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${model}.${verify}.v${vday}.stat">>run_gather_${verify}.sh
 
   chmod +x run_gather_${verify}.sh
 
-  echo "${DATA}/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
+  echo "${DATA}/scripts/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
 
 chmod +x run_gather_all_poe.sh
 
 #********************************************
 #  Run the POE script
 #*******************************************
-${DATA}/run_gather_all_poe.sh
+${DATA}/scripts/run_gather_all_poe.sh
 export err=$?; err_chk
 
-echo "Print stat gather  metplus log files begin:"
-log_dir="$DATA/gather/logs"
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-            if [ -f "$log_file" ]; then
-                echo "Start: $log_file"
-                cat "$log_file"
-                echo "End: $log_file"
-            fi
-        done
-    fi
-fi
-echo "Print stat gather  metplus log files end"
 

@@ -59,6 +59,7 @@ export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 export EVSINnwps=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
 export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}
+export COMINnwps=${COMINnwps:-$(compath.py ${envir}/com/${MODELNAME}/${nwps_ver})}
 
 # make the directory where the plots will be kept
 mkdir -p ${COMOUTplots}
@@ -67,6 +68,7 @@ mkdir -p ${COMOUTplots}
 ####################################
 # Execute the script                
 ####################################
+
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 

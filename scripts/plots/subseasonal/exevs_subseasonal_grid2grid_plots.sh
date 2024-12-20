@@ -75,27 +75,32 @@ for group in condense_stats filter_stats make_plots tar_images; do
 	    nc=$((nc+1))
         done
     fi
+    python $USHevs/subseasonal/subseasonal_copy_job_dir_output.py
+    export err=$?; err_chk
+    # Cat the plotting log files
+    if [ $JOB_GROUP = make_plots ]; then
+	log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/logs
+    else
+	log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/logs
+    fi
+    log_file_count=$(find $log_dir -type f |wc -l)
+    if [[ $log_file_count -ne 0 ]]; then
+	for log_file in $log_dir/*; do
+	    echo "Start: $log_file"
+	    cat $log_file
+	    echo "End: $log_file"
+	done
+    fi
 done
-
-# Cat the plotting log files
-log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-	echo "Start: $log_file"
-	cat $log_file
-	echo "End: $log_file"
-    done
-fi
 
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file
-    cd $DATA/$VERIF_CASE_STEP/plot_output/${RUN}.${end_date}/images
-    for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/images/*; do
+    cd $DATA/$VERIF_CASE_STEP/plot_output/${RUN}.${end_date}/tar_files
+    for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/tar_files/*; do
 	VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
 	cd $VERIF_TYPE_SUBDIR
-	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${end_date}.tar
+	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/tar_files/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${end_date}.tar
         tar -cvf $large_tar_file *.tar
 	if [ -s $large_tar_file ]; then
 	    cp -v $large_tar_file $COMOUT/.
