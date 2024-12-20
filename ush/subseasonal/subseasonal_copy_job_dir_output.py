@@ -19,8 +19,6 @@ VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
 JOB_GROUP = os.environ['JOB_GROUP']
-if STEP == 'plots':
-    NDAYS = os.environ['NDAYS']
 
 # Copy files to desired location
 if STEP == 'stats':
@@ -44,28 +42,24 @@ elif STEP == 'plots':
     if JOB_GROUP == 'condense_stats':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
-            f"last{NDAYS}days", '*', '*', '*', 'condensed_stats*'
+            '*', 'model1_*.stat'
         )
     elif JOB_GROUP == 'filter_stats':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
-            f"last{NDAYS}days", '*', '*', '*', 'fcst*.stat'
+            '*', 'fcst*.stat'
         )
     elif JOB_GROUP == 'make_plots':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
-            f"last{NDAYS}days", '*', '*', '*', '*', '*.png'
+            '*', '*', '*.png'
+        )
+    elif JOB_GROUP == 'tar_images':
+        job_wildcard_dir = os.path.join(
+            job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
+            '*', '*.tar'
         )
 output_file_JOB_list = glob.glob(job_wildcard_dir)
-if STEP == 'plots' and JOB_GROUP == 'make_plots':
-    job_wildcard_dir2 = os.path.join(
-        job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
-        f"last{NDAYS}days", '*', '*', '*', '*', '*.gif'
-    )
-    output_file_JOB_list = (
-        output_file_JOB_list
-        + glob.glob(job_wildcard_dir2)
-    )
 for output_file_JOB in sorted(output_file_JOB_list, key=len):
     output_file_end_path = output_file_JOB.partition(
         job_work_JOB_GROUP_dir+'/'

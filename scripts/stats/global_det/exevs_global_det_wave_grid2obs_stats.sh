@@ -25,11 +25,9 @@ echo ' '
 export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
 mkdir -p ${DATA}/gribs
 mkdir -p ${DATA}/ncfiles
-mkdir -p ${DATA}/all_stats
 mkdir -p ${DATA}/jobs
-mkdir -p ${DATA}/logs
-mkdir -p ${DATA}/confs
-mkdir -p ${DATA}/tmp
+mkdir -p ${DATA}/job_work_dir
+mkdir -p ${DATA}/all_stats
 
 valid_hours='0 6 12 18'
 
@@ -219,27 +217,31 @@ for valid_hour in ${valid_hours} ; do
                 elif [ $OBSNAME = JASON3 ]; then
                     tmp_OBSNAME_file=${DATA}/ncfiles/jason3.${VDATE}.nc
                 fi
-                tmp_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
+                job_work_dir=$DATA/job_work_dir/PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}
+                job_stat_file=$job_work_dir/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
+                all_stats_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
                 output_stat_file=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
                 if [[ -s $output_stat_file ]]; then
-                    cp -v $output_stat_file $tmp_stat_file
+                    cp -v $output_stat_file $all_stats_stat_file
                 else
                     if [[ -s $tmp_OBSNAME_file ]]; then
+                        if [[ ! -d $job_work_dir ]]; then
+                            mkdir -p $job_work_dir
+                        fi
                         echo "#!/bin/bash" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export DATA=${DATA}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export VDATE=${VDATE}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export FIXevs=${FIXevs}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export valid_hour2=$valid_hour2" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export flead=${flead}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export MODNAM=${MODNAM}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                        echo "export job_work_dir=${job_work_dir}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                        echo "export MET_TMP_DIR=${job_work_dir}/tmp" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PointStat_fcstGLOBAL_DET_obs${OBSNAME}_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         if [ $SENDCOM = YES ]; then
-                            echo "if [ -f $tmp_stat_file ]; then cp -v $tmp_stat_file $output_stat_file; fi" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "if [ -f $job_stat_file ]; then cp -v $job_stat_file $output_stat_file; fi" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         fi
                         chmod +x ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
                         echo "${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh" >> $poe_script
@@ -267,30 +269,45 @@ if [[ $ncount_job -gt 0 ]]; then
 fi
 
 ####################
+# copy all the jobs files
+####################
+for valid_hour in ${valid_hours} ; do
+    valid_hour2=$(printf "%02d" "${valid_hour}")
+    for fhr in ${lead_hours} ; do
+        flead=$(printf "%03d" "${fhr}")
+        flead2=$(printf "%02d" "${fhr}")
+        for OBSNAME in GDAS NDBC JASON3; do
+            job_stat_file=$DATA/job_work_dir/PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
+            all_stats_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
+            if [ -s $job_stat_file ]; then
+                cp -v $job_stat_file $all_stats_stat_file
+            fi
+        done
+    done
+done
+
+####################
 # gather all the files
 ####################
 nc=$(ls ${DATA}/all_stats/*stat | wc -l | awk '{print $1}')
 echo " Found ${nc} ${DATA}/all_stats/*stat files for valid date ${VDATE} "
 if [ "${nc}" != '0' ]; then
     echo "Small stat files found for valid date ${VDATE}"
+    export job_work_dir=$DATA/job_work_dir/StatAnalysis_${VDATE}
+    export MET_TMP_DIR=$DATA/job_work_dir/StatAnalysis_${VDATE}/tmp
     # Use StatAnalysis to gather the small stat files into one file
     run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/StatAnalysis_fcstGLOBAL_DET.conf
     export err=$?; err_chk
 else
-    echo "WARNING: No small stat files found in ${DATA}/all_stats/*stat"
+    echo "NOTE: No small stat files found in ${DATA}/all_stats/*stat"
 fi
 # check to see if the large stat file was made, copy it to $COMOUTfinal
-nc=$(ls ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat | wc -l | awk '{print $1}')
-echo " Found ${nc} large stat file for valid date ${VDATE} "
-if [ "${nc}" != '0' ]; then
-    echo "Large stat file found for ${VDATE}"
-    if [ $SENDCOM = YES ]; then
-        if [ -f ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-            cp -v ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
-        fi
+if [ $SENDCOM = YES ]; then
+    if [ -f ${job_work_dir}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+        cp -v ${job_work_dir}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+    else
+        echo "NOTE: No large stat file found at ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
     fi
-else
-    echo "WARNING: No large stat file found at ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."

@@ -24,7 +24,7 @@ export modnam_list=$(echo $model_list | tr '[a-z]' '[A-Z]')
 
 mkdir -p ${DATA}/stats
 mkdir -p ${DATA}/jobs
-mkdir -p ${DATA}/logs
+mkdir -p ${DATA}/job_work_dir
 mkdir -p ${DATA}/images
 
 ############################
@@ -73,7 +73,6 @@ export err=$?; err_chk
 ## lead_averages
 ${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_leadaverages.sh
 export err=$?; err_chk
-
 chmod 775 $DATA/jobs/run_all_${RUN}_g2o_plots_poe.sh
 
 ###########################################
@@ -98,7 +97,7 @@ if [[ $plot_ncount_job -gt 0 ]]; then
 fi
 
 # Cat the plotting log files
-log_dir=$DATA/logs
+log_dir=$DATA/job_work_dir/*/logs
 log_file_count=$(find $log_dir -type f |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
     for log_file in $log_dir/*; do
@@ -107,6 +106,11 @@ if [[ $log_file_count -ne 0 ]]; then
         echo "End: $log_file"
     done
 fi
+####################
+# copy all the jobs files
+####################
+${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_copy_plots.sh
+export err=$?; err_chk
 
 #######################
 # Gather all the files

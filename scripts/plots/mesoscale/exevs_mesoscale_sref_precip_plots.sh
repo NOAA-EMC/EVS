@@ -8,18 +8,13 @@
 set -x 
 
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
-cd $DATA
+mkdir $DATA/scripts
+cd $DATA/scripts
 
-export prune_dir=$DATA/data
-export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
-mkdir -p $prune_dir
-mkdir -p $save_dir
 mkdir -p $output_base_dir
-mkdir -p $DATA/logs
 
-restart=$COMOUTplots/restart/$past_days/sref_precip_plots
+restart=$COMOUTplots/restart/$last_days/sref_precip_plots
 if [ ! -d  $restart ] ; then
   mkdir -p $restart
 fi
@@ -37,7 +32,7 @@ model_list='GEFS SREF'
 models='GEFS, SREF'
 
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
     hrs=$((n*24))
     first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
     n=$((n+1))
@@ -47,11 +42,10 @@ export init_beg=$first_day
 export valid_beg=$first_day
 
 #*************************************************************************
-# Virtual link the  sref's stat data files of past 90 days
+# Virtual link the  sref's stat data files of last 90 days
 #**************************************************************************
 n=0
-while [ $n -le $past_days ] ; do
-  #hrs=`expr $n \* 24`
+while [ $n -le $last_days ] ; do
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
@@ -87,7 +81,15 @@ VARs=APCP_06
 FCST_LEVEL_values=A6
 
 for fcst_valid_hour in $fcst_valid_hours ; do
-
+   if [ $fcst_valid_hour = "0,3" ] ; then
+     valid="00z_03z"
+   elif [ $fcst_valid_hour = "6,9" ] ; then 
+     valid="06z_09z"
+   elif [ $fcst_valid_hour = "12,15" ] ; then
+     valid="12z_15z"
+   elif [ $fcst_valid_hour = "18,21" ] ; then
+     valid="18z_21z"
+   fi
 for stats in  ets fbias fss ; do 
 
  if [ $stats = ets ] ; then
@@ -170,6 +172,16 @@ elif [ $stats = fss ] ; then
 	    if [ ! -e $restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed ] ; then
 	#*******************************************************************************************************************
 
+        save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}
+	plot_dir=$save_dir/precip/${valid_beg}-${valid_end}
+	mkdir -p $plot_dir
+        mkdir -p $save_dir/data
+
+	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	echo "export save_dir=$save_dir" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	echo "export prune_dir=$save_dir/data" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
         echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
@@ -207,16 +219,19 @@ elif [ $stats = fss ] ; then
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
-         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+         echo "${DATA}/scripts/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
          ####################################################################
-         #Save for restart:
+         #tar all files and save for restart:
          ####################################################################
-         echo "cp ${plot_dir}/${score_type}*${stats}*.png $restart/." >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
-         echo "[[ $? = 0 ]] && >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+         echo "if [ ${score_type} = lead_average ] ; then" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png $restart ; >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed ; fi " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+         echo "else" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png $restart ; >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed ; fi " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "fi" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh 
-         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh" >> run_all_poe.sh
+         echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh" >> run_all_poe.sh
 
         else 
       
@@ -246,17 +261,17 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 100 -ppn 100 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 100 -ppn 100 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
    export err=$?; err_chk
 else
-  ${DATA}/run_all_poe.sh
+  ${DATA}/scripts/run_all_poe.sh
   export err=$?; err_chk
 fi
 
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $plot_dir
+cd $restart
 
 for valid in 00z_03z 06z_09z 12z_15z 18z_21z ; do
 for stats in  ets fbias fss  ; do
@@ -286,17 +301,17 @@ for stats in  ets fbias fss  ; do
     if [ $score_type = lead_average ] ; then
       if [ $stats = ets ] || [ $stats = fbias ] ; then
        if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
        fi
       elif [ $stats = fss ] ; then
        if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
        fi
       fi
     elif [ $score_type = threshold_average ] ; then
 	 for lead in f24 f36 f48 f60 f72 f84 ; do 
 	   if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png ] ; then
-             mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid_${valid}.${lead}.buk_conus.png
+             mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png evs.sref.${stats}.apcp_6a.last${last_days}days.${scoretype}_valid${valid}_${lead}.buk_conus.png
 	   fi
 	 done
     fi	 
@@ -306,16 +321,29 @@ for stats in  ets fbias fss  ; do
 done     #stats
 done     #valid
 
-tar -cvf evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar *.png
+if [ -s evs*.png ] ; then
+ tar -cvf evs.plots.sref.precip.last${last_days}days.v${VDATE}.tar evs*.png
+fi
+
+#Cat the plotting log files
+log_dir="$DATA/plots"
+if [ -s $log_dir/*/log*.out ]; then
+  log_files=`ls $log_dir/*/log*.out`
+  for log_file in $log_files ; do
+     echo "Start: $log_file"
+     cat  "$log_file"
+     echo "End: $log_file"
+  done
+fi
 
 
-if [ $SENDCOM = YES ] && [ -s evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar ] ; then
- cp -v evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.sref.precip.last${last_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.sref.precip.last${last_days}days.v${VDATE}.tar  $COMOUTplots/.  
 fi
 
 
 if [ $SENDDBN = YES ] ; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.sref.precip.last${last_days}days.v${VDATE}.tar
 fi
 
 

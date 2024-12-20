@@ -64,9 +64,14 @@ fhr_start = os.environ['fhr_start']
 fhr_end = os.environ['fhr_end']
 fhr_inc = os.environ['fhr_inc']
 job_id = os.environ['job_id']
+job_DATA_dir = os.environ['job_DATA_dir']
 if JOB_GROUP == 'make_plots':
+    job_DATA_images_dir = os.environ['job_DATA_images_dir']
+    job_work_images_dir = os.environ['job_work_images_dir']
     stat = os.environ['stat']
     plot = os.environ['plot']
+else:
+    job_work_dir = os.environ['job_work_dir']
 
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
@@ -78,14 +83,17 @@ now = datetime.datetime.now()
 logo_dir = os.path.join(FIXevs, 'logos')
 VERIF_CASE_STEP_dir = os.path.join(DATA, VERIF_CASE_STEP)
 stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
-plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
-logging_dir = os.path.join(plot_output_dir, RUN+'.'+end_date, 'logs')
-VERIF_TYPE_image_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
-                                    'images', VERIF_TYPE)
-job_output_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
-                              VERIF_TYPE, job_name.replace('/','_'))
-if not os.path.exists(job_output_dir):
-    os.makedirs(job_output_dir)
+if JOB_GROUP == 'tar_images':
+    VERIF_TYPE_tar_dir = os.path.join(job_work_dir, RUN+'.'+end_date,
+                                      'tar_files', VERIF_TYPE)
+if JOB_GROUP == 'make_plots':
+    logging_dir = os.path.join(job_work_images_dir, 'logs')
+elif JOB_GROUP == 'tar_images':
+    logging_dir = os.path.join(VERIF_TYPE_tar_dir, 'logs')
+else:
+    logging_dir = os.path.join(job_work_dir, 'logs')
+if not os.path.exists(logging_dir):
+    os.makedirs(logging_dir)
 
 # Set up logging
 job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
@@ -172,13 +180,14 @@ if JOB_GROUP == 'condense_stats':
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         obs_name = obs_list[model_idx]
-        condensed_model_stat_file = os.path.join(job_output_dir, 'model'
+        condensed_model_stat_file = os.path.join(job_work_dir, 'model'
                                                  +str(model_idx+1)+'_'+model
                                                  +'.stat')
         sub_util.condense_model_stat_files(logger, stat_base_dir,
                                            condensed_model_stat_file, model,
                                            obs_name, grid, vx_mask,
-                                           fcst_var_name, obs_var_name, line_type)
+                                           fcst_var_name, obs_var_name, 
+                                           line_type)
 elif JOB_GROUP == 'filter_stats':
     logger.info("Filtering model .stat files")
     model_info_dict = original_model_info_dict.copy()
@@ -241,7 +250,7 @@ elif JOB_GROUP == 'filter_stats':
             else:
                 plot_dates = valid_dates
             all_model_df = sub_util.build_df(
-                logger, job_output_dir, job_output_dir,
+                logger, job_DATA_dir, job_work_dir,
                 model_info_dict, met_info_dict,
                 plot_info_dict['fcst_var_name'],
                 plot_info_dict['fcst_var_level'],
@@ -292,7 +301,7 @@ elif JOB_GROUP == 'make_plots':
                 int(date_info_dict['forecast_hour'])
             )
             image_name = plot_specs.get_savefig_name(
-                os.path.join(job_output_dir, 'images'),
+                job_work_images_dir,
                 plot_info_dict, date_info_dict
             )
             if init_hr in init_hrs:
@@ -303,8 +312,9 @@ elif JOB_GROUP == 'make_plots':
             else:
                 make_ts = False
             if make_ts:
-                plot_ts = subp_ts.TimeSeries(logger, job_output_dir,
-                                             job_output_dir, model_info_dict,
+                plot_ts = subp_ts.TimeSeries(logger, job_DATA_dir,
+                                             job_work_images_dir, 
+                                             model_info_dict,
                                              date_info_dict, plot_info_dict,
                                              met_info_dict, logo_dir)
                 plot_ts.make_time_series()
@@ -325,7 +335,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_thresh'] = la_info[1][1][2]
             plot_info_dict['interp_points'] = str(la_info[2])
             image_name = plot_specs.get_savefig_name(
-                os.path.join(job_output_dir, 'images'),
+                job_work_images_dir,
                 plot_info_dict, date_info_dict
             )
             if not os.path.exists(image_name):
@@ -342,8 +352,9 @@ elif JOB_GROUP == 'make_plots':
             else:
                 make_la = False
             if make_la:
-                plot_la = subp_la.LeadAverage(logger, job_output_dir,
-                                              job_output_dir, model_info_dict,
+                plot_la = subp_la.LeadAverage(logger, job_DATA_dir,
+                                              job_work_images_dir, 
+                                              model_info_dict,
                                               date_info_dict, plot_info_dict,
                                               met_info_dict, logo_dir)
                 plot_la.make_lead_average()
@@ -363,7 +374,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_thresh'] = vha_info[0][1][2]
             plot_info_dict['interp_points'] = str(vha_info[1])
             image_name = plot_specs.get_savefig_name(
-                os.path.join(job_output_dir, 'images'),
+                job_work_images_dir,
                 plot_info_dict, date_info_dict
             )
             if not os.path.exists(image_name):
@@ -382,8 +393,8 @@ elif JOB_GROUP == 'make_plots':
             else:
                 make_vha = False
             if make_vha:
-                plot_vha = subp_vha.ValidHourAverage(logger, job_output_dir,
-                                                     job_output_dir,
+                plot_vha = subp_vha.ValidHourAverage(logger, job_DATA_dir,
+                                                     job_work_images_dir,
                                                      model_info_dict,
                                                      date_info_dict,
                                                      plot_info_dict,
@@ -411,7 +422,7 @@ elif JOB_GROUP == 'make_plots':
                 plot_info_dict['fcst_var_level'] = fcst_var_level_list[l]
                 plot_info_dict['obs_var_level'] = obs_var_level_list[l]
                 image_name = plot_specs.get_savefig_name(
-                    os.path.join(job_output_dir, 'images'),
+                    job_work_images_dir,
                     plot_info_dict, date_info_dict
                 )
                 if init_hr in init_hrs:
@@ -431,8 +442,8 @@ elif JOB_GROUP == 'make_plots':
                 else:
                      make_ta = False
                 if make_ta:
-                    plot_ta = subp_ta.ThresholdAverage(logger, job_output_dir,
-                                                       job_output_dir,
+                    plot_ta = subp_ta.ThresholdAverage(logger, job_DATA_dir,
+                                                       job_work_images_dir,
                                                        model_info_dict,
                                                        date_info_dict,
                                                        plot_info_dict,
@@ -456,7 +467,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_thresh'] = lbd_info[1][1][2]
             plot_info_dict['interp_points'] = str(lbd_info[2])
             image_name = plot_specs.get_savefig_name(
-                os.path.join(job_output_dir, 'images'),
+                job_work_images_dir,
                 plot_info_dict, date_info_dict
             )
             if not os.path.exists(image_name):
@@ -473,8 +484,9 @@ elif JOB_GROUP == 'make_plots':
             else:
                 make_lbd = False
             if make_lbd:
-                plot_lbd = subp_lbd.LeadByDate(logger, job_output_dir,
-                                               job_output_dir, model_info_dict,
+                plot_lbd = subp_lbd.LeadByDate(logger, job_DATA_dir,
+                                               job_work_images_dir, 
+                                               model_info_dict,
                                                date_info_dict, plot_info_dict,
                                                met_info_dict, logo_dir)
                 plot_lbd.make_lead_by_date()
@@ -502,7 +514,7 @@ elif JOB_GROUP == 'make_plots':
                 plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
                 plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
                 image_name = plot_specs.get_savefig_name(
-                    os.path.join(job_output_dir, 'images'),
+                    job_work_images_dir,
                     plot_info_dict, date_info_dict
                 )
                 if init_hr in init_hrs:
@@ -518,8 +530,8 @@ elif JOB_GROUP == 'make_plots':
                 del plot_info_dict['fcst_var_level']
                 del plot_info_dict['obs_var_level']
                 if make_sbl:
-                    plot_sbl = subp_sbl.StatByLevel(logger, job_output_dir,
-                                                    job_output_dir,
+                    plot_sbl = subp_sbl.StatByLevel(logger, job_DATA_dir,
+                                                    job_work_images_dir,
                                                     model_info_dict,
                                                     date_info_dict,
                                                     plot_info_dict,
@@ -552,7 +564,7 @@ elif JOB_GROUP == 'make_plots':
                 plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
                 plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
                 image_name = plot_specs.get_savefig_name(
-                    os.path.join(job_output_dir, 'images'),
+                    job_work_images_dir,
                     plot_info_dict, date_info_dict
                 )
                 if not os.path.exists(image_name):
@@ -570,8 +582,8 @@ elif JOB_GROUP == 'make_plots':
                 del plot_info_dict['fcst_var_level']
                 del plot_info_dict['obs_var_level']
                 if make_lbl:
-                    plot_lbl = subp_lbl.LeadByLevel(logger, job_output_dir,
-                                                    job_output_dir,
+                    plot_lbl = subp_lbl.LeadByLevel(logger, job_DATA_dir,
+                                                    job_work_images_dir,
                                                     model_info_dict,
                                                     date_info_dict,
                                                     plot_info_dict,
@@ -599,7 +611,7 @@ elif JOB_GROUP == 'make_plots':
                 plot_info_dict['fcst_var_level'] = fcst_var_level_list[l]
                 plot_info_dict['obs_var_level'] = obs_var_level_list[l]
                 image_name = plot_specs.get_savefig_name(
-                    os.path.join(job_output_dir, 'images'),
+                    job_work_images_dir,
                     plot_info_dict, date_info_dict
                 )
                 if init_hr in init_hrs:
@@ -610,8 +622,8 @@ elif JOB_GROUP == 'make_plots':
                 else:
                     make_pd = False
                 if make_pd:
-                    plot_pd = subp_pd.PerformanceDiagram(logger, job_output_dir,
-                                                         job_output_dir,
+                    plot_pd = subp_pd.PerformanceDiagram(logger, job_DATA_dir,
+                                                         job_work_images_dir,
                                                          model_info_dict,
                                                          date_info_dict,
                                                          plot_info_dict,
@@ -624,21 +636,25 @@ elif JOB_GROUP == 'make_plots':
 # Create tar file of plots and move to main image directory
 elif JOB_GROUP == 'tar_images':
     logger.info("Tar'ing up images")
-    job_output_image_dir = os.path.join(job_output_dir, 'images')
+    job_input_image_dir = os.path.join(
+        DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+        RUN+'.'+end_date, VERIF_TYPE,
+        job_name.replace('/','_'), 'images'
+    )
     cwd = os.getcwd()
-    if len(glob.glob(job_output_image_dir+'/*')) != 0:
-        os.chdir(job_output_image_dir)
-        tar_file = os.path.join(VERIF_TYPE_image_dir,
+    if len(glob.glob(job_input_image_dir+'/*')) != 0:
+        os.chdir(job_input_image_dir)
+        tar_file = os.path.join(VERIF_TYPE_tar_dir,
                                 job_name.replace('/','_')+'.tar')
         if os.path.exists(tar_file):
             os.remove(tar_file)
-        logger.debug(f"Making tar file {tar_file} from {job_output_image_dir}")
+        logger.debug(f"Making tar file {tar_file} from {job_input_image_dir}")
         sub_util.run_shell_command(
             ['tar', '-cvf', tar_file, '*']
         )
         os.chdir(cwd)
     else:
-        logger.warning(f"No images generated in {job_output_image_dir}")
+        logger.warning(f"No images generated in {job_input_image_dir}")
 
 
 print("END: "+os.path.basename(__file__))

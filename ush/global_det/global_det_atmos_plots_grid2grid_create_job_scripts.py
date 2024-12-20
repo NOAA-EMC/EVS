@@ -22,6 +22,7 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
@@ -656,45 +657,22 @@ if JOB_GROUP == 'make_plots':
 ################################################
 #### tar_images jobs
 ################################################
+if SENDCOM == 'YES':
+    search_dir = os.path.join(COMOUT, f"{VERIF_CASE}_VERIF_TYPE",
+                              f"last{NDAYS}days")
+else:
+    search_dir = os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
+                              f"{RUN}.{end_date}", f"{VERIF_CASE}_VERIF_TYPE",
+                              f"last{NDAYS}days")
 tar_images_jobs_dict = {
     'flux': {},
-    'means': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_means",
-                                        f"last{NDAYS}days")
-    },
+    'means': {'search_base_dir': search_dir},
     'ozone': {},
-    'precip': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_precip",
-                                        f"last{NDAYS}days")
-    },
-    'pres_levs': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_pres_levs",
-                                        f"last{NDAYS}days")
-    },
-    'sea_ice': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_sea_ice",
-                                        f"last{NDAYS}days")
-    },
-    'snow': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_snow",
-                                        f"last{NDAYS}days")
-    },
-    'sst': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_sst",
-                                        f"last{NDAYS}days")
-    },
+    'precip': {'search_base_dir': search_dir},
+    'pres_levs': {'search_base_dir': search_dir},
+    'sea_ice': {'search_base_dir': search_dir},
+    'snow': {'search_base_dir': search_dir},
+    'sst': {'search_base_dir': search_dir},
 }
 if JOB_GROUP == 'tar_images':
     JOB_GROUP_dict = tar_images_jobs_dict
@@ -783,7 +761,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
         elif JOB_GROUP == 'tar_images':
             JOB_GROUP_verif_type_job_product_loops = []
             for root, dirs, files in os.walk(
-                verif_type_plot_jobs_dict['search_base_dir']
+                verif_type_plot_jobs_dict['search_base_dir'].replace(
+                    'VERIF_TYPE', verif_type
+                )
             ):
                 if not dirs \
                         and root not in JOB_GROUP_verif_type_job_product_loops:
@@ -829,16 +809,27 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job_env_dict['valid_hr_start']
                     )
                     job_env_dict['valid_hr_inc'] = '24'
-                DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
-                    DATA, COMOUT, JOB_GROUP, job_env_dict
-                )
-                job_env_dict['DATAjob'] = DATAjob
-                job_env_dict['COMOUTjob'] = COMOUTjob
-                for output_dir in [job_env_dict['DATAjob'],
-                                   job_env_dict['COMOUTjob']]:
-                    gda_util.make_dir(output_dir)
-                # Create job file
+                # Set up output directories
                 njobs+=1
+                job_env_dict['job_id'] = 'job'+str(njobs)
+                job_work_dir, job_DATA_dir, job_COMOUT_dir = (
+                    gda_util.get_plot_job_dirs(DATA, COMOUT, JOB_GROUP,
+                                               job_env_dict)
+                )
+                job_env_dict['job_work_dir'] = job_work_dir
+                job_env_dict['job_DATA_dir'] = job_DATA_dir
+                job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
+                if SENDCOM == 'YES':
+                    gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                else:
+                    gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                # Check plot files
+                plot_files_exist = gda_util.check_plot_files(job_env_dict)
+                if plot_files_exist:
+                    write_job_cmds = False
+                else:
+                    write_job_cmds = True
+                # Create job file
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
                                         'job'+str(njobs))
                 print("Creating job script: "+job_file)
@@ -848,16 +839,17 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Write environment variables
-                job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
                     if name not in dont_write_env_var_list:
                         job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
-                job.write(
-                    gda_util.python_command('global_det_atmos_plots.py',[])
-                    +'\n'
-                )
-                job.write('export err=$?; err_chk'+'\n')
+                if write_job_cmds:
+                    gda_util.make_dir(job_env_dict['job_work_dir'])
+                    job.write(
+                        gda_util.python_command('global_det_atmos_plots.py',[])
+                        +'\n'
+                    )
+                    job.write('export err=$?; err_chk'+'\n')
                 job.close()
             elif JOB_GROUP == 'make_plots':
                 job_env_dict['event_equalization'] = os.environ[
@@ -962,25 +954,36 @@ for verif_type in VERIF_CASE_STEP_type_list:
                              ['fcst_var_dict']['levels']\
                              .index(plot_loop_info[2])]
                         )
-                    DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
-                        DATA, COMOUT, JOB_GROUP, job_env_dict
-                    )
-                    job_env_dict['DATAjob'] = DATAjob
-                    job_env_dict['COMOUTjob'] = COMOUTjob
-                    for output_dir in [job_env_dict['DATAjob'],
-                                       job_env_dict['COMOUTjob']]:
-                        gda_util.make_dir(output_dir)
-                    run_global_det_atmos_plots = ['global_det_atmos_plots.py']
+                    run_global_det_atmos_plots = ['plots']
                     if evs_run_mode == 'production' and \
                             verif_type in ['pres_levs', 'sfc'] and \
                             job_env_dict['plot'] in \
                             ['lead_average', 'lead_by_level', 'lead_by_date']:
-                        run_global_det_atmos_plots.append(
-                            'global_det_atmos_plots_production_tof240.py'
-                        )
+                        run_global_det_atmos_plots.append('plots_tof240')
                     for run_global_det_atmos_plot in run_global_det_atmos_plots:
-                        # Create job file
+                        # Set up output directories
                         njobs+=1
+                        job_env_dict['job_id'] = 'job'+str(njobs)
+                        job_work_dir, job_DATA_dir, job_COMOUT_dir = (
+                            gda_util.get_plot_job_dirs(DATA, COMOUT, JOB_GROUP,
+                                                       job_env_dict)
+                        )
+                        job_env_dict['job_work_dir'] = job_work_dir
+                        job_env_dict['job_DATA_dir'] = job_DATA_dir
+                        job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
+                        if SENDCOM == 'YES':
+                            gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                        else:
+                            gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                        # Check plot files
+                        plot_files_exist = gda_util.check_plot_files(
+                            job_env_dict
+                        )
+                        if plot_files_exist:
+                             write_job_cmds = False
+                        else:
+                             write_job_cmds = True
+                        # Create job file
                         job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                 'job'+str(njobs))
                         print("Creating job script: "+job_file)
@@ -995,21 +998,59 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             if name not in dont_write_env_var_list:
                                 job.write('export '+name+'="'+value+'"\n')
                         job.write('\n')
-                        job.write(
-                            gda_util.python_command(run_global_det_atmos_plot,
-                                                    [])+'\n'
-                        )
-                        job.write('export err=$?; err_chk'+'\n')
+                        if run_global_det_atmos_plot == 'plots_tof240':
+                            fhrs_tof240 = []
+                            for fhr in job_env_dict['fhr_list'].split(', '):
+                                if int(fhr) <= 240:
+                                    fhrs_tof240.append(str(fhr))
+                            job.write(
+                                'export fhr_list="'
+                                +', '.join(fhrs_tof240)+'"\n'
+                            )
+                        if write_job_cmds:
+                            gda_util.make_dir(job_env_dict['job_work_dir'])
+                            job.write(
+                                gda_util.python_command('global_det_atmos_plots.py',
+                                                        [])+'\n'
+                            )
+                            job.write('export err=$?; err_chk'+'\n')
                         job.close()
             elif JOB_GROUP == 'tar_images':
-                job_env_dict['DATAjob'] = loop_info
-                job_env_dict['COMOUTjob'] = loop_info.replace(
-                    os.path.join(DATA,f"{VERIF_CASE}_{STEP}", 'plot_output',
-                                 f"{RUN}.{end_date}"),
-                    COMOUT
-                )
-                # Create job file
+                # Set up output directories
                 njobs+=1
+                job_env_dict['job_id'] = 'job'+str(njobs)
+                if SENDCOM == 'YES':
+                   job_env_dict['job_COMOUT_dir'] = loop_info
+                   job_env_dict['job_DATA_dir'] = loop_info.replace(
+                       COMOUT,
+                       os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                    'plot_output', f"{RUN}.{end_date}")
+                   )
+                else:
+                   job_env_dict['job_DATA_dir'] = loop_info
+                   job_env_dict['job_COMOUT_dir'] = loop_info.replace(
+                       os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
+                                    f"{RUN}.{end_date}"),
+                       COMOUT
+                   )
+                job_env_dict['job_work_dir'] = (
+                    job_env_dict['job_DATA_dir'].replace(
+                        f"{RUN}.{end_date}",
+                        f"job_work_dir/{job_env_dict['JOB_GROUP']}/"
+                        +f"{job_env_dict['job_id']}/{RUN}.{end_date}"
+                    )
+                )
+                if SENDCOM == 'YES':
+                    gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                else:
+                    gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                # Check plot files
+                plot_files_exist = gda_util.check_plot_files(job_env_dict)
+                if plot_files_exist:
+                    write_job_cmds = False
+                else:
+                    write_job_cmds = True
+                # Create job files
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)
                 job = open(job_file, 'w')
@@ -1018,16 +1059,18 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Write environment variables
-                job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
                     if name not in dont_write_env_var_list:
                         job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
-                job.write(
-                    gda_util.python_command('global_det_atmos_plots.py', [])
-                    +'\n'
-                )
-                job.write('export err=$?; err_chk'+'\n')
+                if write_job_cmds:
+                    gda_util.make_dir(job_env_dict['job_work_dir'])
+                    job.write(
+                        gda_util.python_command('global_det_atmos_plots.py',
+                                                [])
+                        +'\n'
+                    )
+                    job.write('export err=$?; err_chk'+'\n')
                 job.close()
 
 # If running USE_CFP, create POE scripts

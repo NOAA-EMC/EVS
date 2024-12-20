@@ -279,10 +279,11 @@ if VERIF_CASE == 'precip':
                     + f'-c {MET_PLUS_CONF}/'
                     + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
                 )
-                job_cmd_list.append(
+                job_cmd_list_iterative.append(
                     f'#python -c '
                     + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                     + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + f'njob=\\\"{njob}\\\", '
                     + 'verif_case=\\\"${VERIF_CASE}\\\", '
                     + 'verif_type=\\\"${VERIF_TYPE}\\\", '
                     + 'vx_mask=\\\"${NEST}\\\", '
@@ -308,10 +309,11 @@ if VERIF_CASE == 'precip':
                         + f'-c {MET_PLUS_CONF}/'
                         + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
                     )
-                    job_cmd_list.append(
+                    job_cmd_list_iterative.append(
                         f'#python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                        + f'njob=\\\"{njob}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
                         + 'vx_mask=\\\"${NEST}\\\", '
@@ -337,10 +339,11 @@ if VERIF_CASE == 'precip':
                         + f'-c {MET_PLUS_CONF}/'
                         + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
                     )
-                    job_cmd_list.append(
+                    job_cmd_list_iterative.append(
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                        + f'njob=\\\"{njob}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
                         + 'vx_mask=\\\"${NEST}\\\", '
@@ -374,6 +377,7 @@ if VERIF_CASE == 'precip':
                     f'#python -c '
                     + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                     + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + f'njob=\\\"{njob}\\\", '
                     + 'verif_case=\\\"${VERIF_CASE}\\\", '
                     + 'verif_type=\\\"${VERIF_TYPE}\\\", '
                     + 'met_tool=\\\"grid_stat\\\", '
@@ -403,6 +407,7 @@ if VERIF_CASE == 'precip':
                         f'#python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                        + f'njob=\\\"{njob}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
                         + 'met_tool=\\\"grid_stat\\\", '
@@ -432,6 +437,7 @@ if VERIF_CASE == 'precip':
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                        + f'njob=\\\"{njob}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
                         + 'met_tool=\\\"grid_stat\\\", '
@@ -466,6 +472,7 @@ if VERIF_CASE == 'precip':
                     f'#python -c '
                     + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                     + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + f'njob=\\\"{njob}\\\", '
                     + 'verif_case=\\\"${VERIF_CASE}\\\", '
                     + 'verif_type=\\\"${VERIF_TYPE}\\\", '
                     + 'met_tool=\\\"stat_analysis\\\", '
@@ -491,6 +498,7 @@ if VERIF_CASE == 'precip':
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                        + f'njob=\\\"{njob}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
                         + 'met_tool=\\\"stat_analysis\\\", '
@@ -523,6 +531,7 @@ if VERIF_CASE == 'precip':
                         f'#python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                        + f'njob=\\\"{njob}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
                         + 'met_tool=\\\"stat_analysis\\\", '
@@ -555,6 +564,7 @@ if VERIF_CASE == 'precip':
                     f'#python -c '
                     + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                     + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + f'njob=\\\"{njob}\\\", '
                     + 'verif_case=\\\"${VERIF_CASE}\\\", '
                     + 'met_tool=\\\"stat_analysis\\\", '
                     + 'vdate=\\\"${VDATE}\\\", '
@@ -580,6 +590,7 @@ if VERIF_CASE == 'precip':
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                        + f'njob=\\\"{njob}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'met_tool=\\\"stat_analysis\\\", '
                         + 'vdate=\\\"${VDATE}\\\", '
@@ -612,6 +623,7 @@ if VERIF_CASE == 'precip':
                         f'#python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                        + f'njob=\\\"{njob}\\\", '
                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
                         + 'met_tool=\\\"stat_analysis\\\", '
                         + 'vdate=\\\"${VDATE}\\\", '
@@ -630,7 +642,7 @@ if VERIF_CASE == 'precip':
                         + f"\"job{njob}\", job_type=\"{job_type}\")'"
                     )
         elif job_type == 'gather3':
-            if glob.glob(os.path.join(COMOUTsmall,'*stat')):
+            if glob.glob(os.path.join(COMOUTsmall,'gather_small','*stat')):
                 job_cmd_list.append(
                     f'{metplus_launcher} -c {machine_conf} '
                     + f'-c {MET_PLUS_CONF}/'
