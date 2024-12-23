@@ -7,6 +7,7 @@ set -x
 #
 
 
+cd $DATA/scripts
 
 export regrid='NONE'
 
@@ -27,7 +28,7 @@ for verify in $verifys   ; do
     echo  "export verify=$verify" >> run_gather_${verify}.sh 
 
     echo  "export vbeg=00" >> run_gather_${verify}.sh
-    echo  "export vend=23" >> run_gather_${verify}.sh
+    echo  "export vend=00" >> run_gather_${verify}.sh
     echo  "export valid_increment=3600" >>  run_gather_${verify}.sh
 
     echo  "export OBTYPE=PREPBUFR" >>  run_gather_${verify}.sh
@@ -44,13 +45,13 @@ for verify in $verifys   ; do
 
   chmod +x run_gather_${verify}.sh
 
-  echo "${DATA}/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
+  echo "${DATA}/scripts/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
 
 
 done 
 
 chmod 775 run_gather_all_poe.sh
 
- ${DATA}/run_gather_all_poe.sh
+ ${DATA}/scripts/run_gather_all_poe.sh
  export err=$?; err_chk
 

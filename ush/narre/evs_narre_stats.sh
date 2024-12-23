@@ -12,27 +12,21 @@ export vday=$VDATE
 
 echo COMOUTsmall=$COMOUTsmall
 
-#**********************************************
-# Build POE script to collect sub-jobs
-# *********************************************
->run_all_narre_poe.sh
-
-
 #************************************************************
 #Get prepbufr data
 # 1. First check if has prepbugr data saved from previous run 
 # 2. if yes, then copy them for restart
 #    otherwise run evs_get_prepbufr.sh
 #************************************************************
-if [ ! -d $COMOUTsmall/prepbufr.${VDATE} ] ; then 
- $USHevs/narre/evs_get_prepbufr.sh prepbufr
- export err=$?; err_chk
-else
- #Restart: copy saved stat files from previous runs
- cp -r $COMOUTsmall/prepbufr.${VDATE} $WORK/.
-fi
+$USHevs/narre/evs_get_prepbufr.sh prepbufr 
 
 obsv='prepbufr'
+
+#**********************************************
+# Build POE script to collect sub-jobs
+#*********************************************
+cd $DATA/scripts
+>run_all_narre_poe.sh
 
 #******************************************************************
 # Check if all stats sub-tasks are completed in the previous runs
@@ -135,7 +129,7 @@ for prod in mean  ; do
        echo ">$COMOUTsmall/run_narre_${model}.${dom}.${valid}.${fhr}.completed" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
 
        chmod +x run_narre_${model}.${dom}.${valid}.${fhr}.sh
-       echo "${DATA}/run_narre_${model}.${dom}.${valid}.${fhr}.sh" >> run_all_narre_poe.sh
+       echo "${DATA}/scripts/run_narre_${model}.${dom}.${valid}.${fhr}.sh" >> run_all_narre_poe.sh
 
        fi
 
@@ -154,10 +148,10 @@ done #end of prod loop
 # ***************************************************************************
 chmod 775 run_all_narre_poe.sh
 if [ $run_mpi = yes ] ; then
-  mpiexec  -n 8 -ppn 8 --cpu-bind verbose,core cfp  ${DATA}/run_all_narre_poe.sh
+  mpiexec  -n 8 -ppn 8 --cpu-bind verbose,core cfp  ${DATA}/scripts/run_all_narre_poe.sh
   export err=$?; err_chk
 else
-   ${DATA}/run_all_narre_poe.sh
+   ${DATA}/scripts/run_all_narre_poe.sh
    export err=$?; err_chk
 fi
 
