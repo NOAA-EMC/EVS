@@ -12,20 +12,17 @@
 ##################################################################################
 set -x 
 
-cd $DATA
+mkdir -p $DATA/scripts
+cd $DATA/scripts
 
-export prune_dir=$DATA/data
-export save_dir=$DATA/out
+export machine=${machine:-"WCOSS2"}
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/NARRE_verif_plotting_job.out
-mkdir -p $prune_dir
-mkdir -p $save_dir
 mkdir -p $output_base_dir
-mkdir -p $DATA/logs
 
-if [ ! -d  $COMOUT/restart/$last_days ] ; then
-  mkdir -p $COMOUT/restart/$last_days
-fi
+restart=$COMOUT/restart/$last_days/narre_plots
+if [ ! -d  $restart ] ; then
+  mkdir -p $restart 
+fi 
 
 export eval_period='TEST'
 
@@ -60,9 +57,6 @@ VX_MASK_LIST="G130 G242"
 export fcst_valid_hour="0,3,6,9,12,15,18,21"
 export fcst_lead="1,2,3,4,5,6,7,8,9,10,11,12"
 
-export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-mkdir -p ${plot_dir}
-
 #*****************************************
 # Build a POE file to collect sub-jobs
 # **************************************** 
@@ -89,8 +83,17 @@ for grid in $VX_MASK_LIST ; do
 
   #**********************************************************************************************
   # Check if this sub-job has been completed in the previous run for restart
-   if [ ! -e $COMOUT/restart/$last_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed ] ; then
+   if [ ! -e $restart/run_narre_${grid}.${score_type}.${var}.${line_type}.completed ] ; then
   #************************************************************************************************
+    echo "#!/bin/ksh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+    save_dir=$DATA/plots/run_narre_${grid}.${score_type}.${var}.${line_type}
+    plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
+    mkdir -p $plot_dir
+    mkdir -p $save_dir/data 
+
+    echo "export save_dir=$save_dir" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+    echo "export log_metplus=$save_dir/log_${grid}.${score_type}.${var}.${line_type}.out" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+    echo "export prune_dir=$save_dir/data" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
 
     if [ $grid = G130 ] ; then
       echo "export mask=buk_conus" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
@@ -174,19 +177,16 @@ for grid in $VX_MASK_LIST ; do
 
      chmod +x run_py.${var}_${line_type}.${score_type}.${grid}.sh
 
-     echo "${DATA}/run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "${DATA}/scripts/run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
  
      #For restart
-     echo "cp ${plot_dir}/${score_type}_regional_${grd}_valid_*${vname}_*.png  $COMOUT/restart/$last_days/." >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "[[ \$? = 0 ]] && >$COMOUT/restart/$last_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     
+     echo "if [ -s ${plot_dir}/${score_type}_regional_${grd}_valid_*${vname}_*.png ] ; then" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "  cp -v ${plot_dir}/${score_type}_regional_${grd}_valid_*${vname}_*.png $restart" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "  >$restart/run_narre_${grid}.${score_type}.${var}.${line_type}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "fi " >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+
      chmod +x run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "${DATA}/run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
-
-    else
-
-      #For restart
-      cp $COMOUT/restart/$last_days/${score_type}_regional_${grd}_*${vname}_*.png ${plot_dir}/.
+     echo "${DATA}/scripts/run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
 
     fi      
 
@@ -204,10 +204,10 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 8 -ppn 8 --cpu-bind verbose,core cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 4 -ppn 4 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_poe.sh
    export err=$?; err_chk
 else
-  ${DATA}/run_all_poe.sh
+  ${DATA}/scripts/run_all_poe.sh
   export err=$?; err_chk
 fi
 
@@ -215,7 +215,7 @@ fi
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $plot_dir
+cd $restart
 
 for grid in g130 g242 ; do 
   if [ $grid = g130 ] ; then
@@ -233,13 +233,24 @@ for grid in g130 g242 ; do
 	  thrsh=_lt152lt305lt914lt1524lt3048
     fi	  
     if [ -s performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png ] ; then
-      cp  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${last_days}days.perfdiag_valid_all_times.${domain}.png
+      mv  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${last_days}days.perfdiag_valid_all_times.${domain}.png
     fi 
   done
 done
 
-if [ -s *.png ] ; then
- tar -cvf evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar *.png
+if [ -s evs*.png ] ; then
+ tar -cvf evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar evs*.png
+fi
+
+# Cat the plotting log files
+log_dir="$DATA/plots"
+if [ -s $log_dir/*/log*.out ]; then
+  log_files=`ls $log_dir/*/log*.out`
+  for log_file in $log_files ; do
+    echo "Start: $log_file"
+    cat  "$log_file" 
+    echo "End: $log_file"
+  done
 fi
 
 if [ $SENDCOM = YES ] && [ -s evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar ] ; then

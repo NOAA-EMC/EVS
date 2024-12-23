@@ -8,6 +8,7 @@ set -x
 
 export WORK=$DATA
 cd $WORK
+mkdir -p $WORK/scripts
 
 export run_mpi=${run_mpi:-'yes'}
 export stats=${stats:-'yes'}

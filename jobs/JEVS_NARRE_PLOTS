@@ -24,8 +24,6 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . $DATA/PDY
 
-mkdir -p $DATA/logs
-
 export VDATE=${VDATE:-$PDYm1}
 
 export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
