@@ -57,7 +57,8 @@ for MODL in $MODELS ; do
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/StatAnlysis_fcstHREF_obsAnalysis_GatherByDay.conf " >> run_gather_${verify}_${MODL}.sh
    fi
 
-    echo "[[ $SENDCOM = YES  && -s ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat ]] && cp -v ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${modl}.${verify}.v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
+    echo "if [[ $SENDCOM = YES  && -s ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat ]]; then cp -v ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${modl}.${verify}.v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
+    echo "else  echo ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat empty; fi" >> run_gather_${verify}_${MODL}.sh
 
     chmod +x run_gather_${verify}_${MODL}.sh
  
