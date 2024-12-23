@@ -84,7 +84,6 @@ export tc_num=${stormNumber}
 export tropcyc_model_type="regional"
 python ${USHevs}/${COMPONENT}/plot_tropcyc_lead_average.py
 
-#/lfs/h2/emc/ptmp/jiayi.peng/metTC/wp02/plot/WP_2022_MALAKAS/images
 nimgs=$(ls ${STORMroot}/plot/${tc_name}/images/* |wc -l)
 if [ $nimgs -ne 0 ]; then
   cd ${STORMroot}/plot/${tc_name}/images
