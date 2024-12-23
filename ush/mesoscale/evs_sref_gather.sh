@@ -31,7 +31,7 @@ cd $WORK/scripts
     echo  "export verify=$verify" >> run_gather_${verify}.sh 
 
     echo  "export vbeg=03" >> run_gather_${verify}.sh
-    echo  "export vend=21" >> run_gather_${verify}.sh
+    echo  "export vend=03" >> run_gather_${verify}.sh
     echo  "export valid_increment=21600" >>  run_gather_${verify}.sh
 
     echo  "export model=$modnam" >> run_gather_${verify}.sh
