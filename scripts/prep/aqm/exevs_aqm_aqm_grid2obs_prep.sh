@@ -52,6 +52,10 @@ mkdir -p ${PREP_SAVE_DIR}
 export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1
 
+flag_send_message=NO
+email_msg=${DATA}/mailmsg
+if [ -e ${email_msg} ]; then /bin/rm -f ${email_msg}; fi
+
 ## Pre-Processed EPA AIRNOW ASCII input file to METPlus NetCDF input for PointStat
 ##
 ## Hourly AirNOW observation
@@ -82,21 +86,17 @@ while [ ${ic} -le ${endvhr} ]; do
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
-                export subject="NO AIRNOW ASCII Hourly Data for EVS ${COMPONENT}"
-                echo "DEBUG : There is no valid record to be processed for ${checkfile}" >> mailmsg
-                echo "File in question is ${checkfile}" >> mailmsg
-                echo "Job ID: $jobid" >> mailmsg
-                cat mailmsg | mail -s "$subject" $MAILTO 
+                echo "DEBUG : There is no valid record to be processed for ${checkfile}" >> ${email_msg}
+                echo "File in question is ${checkfile}" >> ${email_msg}
+                echo "==============" >> ${email_msg}
             fi
             echo "DEBUG : There is no valid record to be processed for ${checkfile}"
         fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
-            export subject="AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}"
-            echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}" > mailmsg
-            echo "Missing file is ${checkfile}" >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $MAILTO 
+            echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}" >> ${email_msg}
+            echo "Missing file is ${checkfile}" >> ${email_msg}
+            echo "==============" >> ${email_msg}
         fi
 
         echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
@@ -126,21 +126,17 @@ if [ -s ${checkfile} ]; then
         fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
-            export subject="NO AIRNOW ASCII Daily Data for EVS ${COMPONENT}"
-            echo "DEBUG : There is no valid record to be processed for ${checkfile}" >> mailmsg
-            echo "File in question is ${checkfile}" >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $MAILTO 
+            echo "DEBUG : There is no valid record to be processed for ${checkfile}" >> ${email_msg}
+            echo "File in question is ${checkfile}" >> ${email_msg}
+            echo "==============" >> ${email_msg}
         fi
         echo "DEBUG : There is no valid record to be processed for ${checkfile}"
     fi
 else
     if [ ${SENDMAIL} = "YES" ]; then
-        export subject="AIRNOW ASCII Daily Data Missing for EVS ${COMPONENT}"
-        echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}" > mailmsg
-        echo "Missing file is ${checkfile}" >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $MAILTO 
+        echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}" >> ${email_msg}
+        echo "Missing file is ${checkfile}" >> ${email_msg}
+        echo "==============" >> ${email_msg}
     fi
 
     echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}"
@@ -181,11 +177,9 @@ for hour in 06 12; do
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z" > mailmsg
-                    echo "Missing file is ${ozmax8_file}" >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $MAILTO
+                    echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z" >> ${email_msg}
+                    echo "Missing file is ${ozmax8_file}" >> ${email_msg}
+                    echo "==============" >> ${email_msg}
                 fi
         
                 echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z"
@@ -207,11 +201,9 @@ for hour in 06 12; do
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z" > mailmsg
-                    echo "Missing file is ${ozmax8_file}" >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $MAILTO
+                    echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z" >> ${email_msg}
+                    echo "Missing file is ${ozmax8_file}" >> ${email_msg}
+                    echo "==============" >> ${email_msg}
                 fi
         
                 echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z"
@@ -220,5 +212,9 @@ for hour in 06 12; do
         fi
     done
 done
-
+if [ "${flag_send_message}" == "YES" ]; then
+  export subject="AIRNOW ASCII Data Missing for EVS ${COMPONENT}"
+  echo "Job ID: $jobid" >> ${email_msg}
+  cat ${email_msg} | mail -s "$subject" $MAILTO 
+fi
 exit

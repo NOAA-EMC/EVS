@@ -27,7 +27,8 @@ export config=${PARMevs}/evs_config/${COMPONENT}/config.evs.aqm.prod
 source ${config}
 
 flag_send_message=NO
-if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
+email_msg=${DATA}/mailmsg
+if [ -e ${email_msg} ]; then /bin/rm -f ${email_msg}; fi
 
 check_restart=$(echo ${restart_mode} | tr a-z A-Z)    ## set RESTART option
 #######################################################################
@@ -266,8 +267,8 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "WARNING :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> mailmsg
-                    echo "==============" >> mailmsg
+                    echo "WARNING :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> ${email_msg}
+                    echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
                 fi
@@ -276,8 +277,8 @@ if [ "${num_mdl_grid}" != "0" ]; then
               fi
             else
               if [ "${SENDMAIL}" = "YES" ]; then
-                echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${VDATE} ${vldhr}" >> mailmsg
-                echo "==============" >> mailmsg
+                echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${VDATE} ${vldhr}" >> ${email_msg}
+                echo "==============" >> ${email_msg}
                 flag_send_message=YES
               fi
             fi
@@ -334,8 +335,8 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "WARNING :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> mailmsg
-                    echo "==============" >> mailmsg
+                    echo "WARNING :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> ${email_msg}
+                    echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
                 fi
@@ -344,8 +345,8 @@ if [ "${num_mdl_grid}" != "0" ]; then
               fi
             else
               if [ "${SENDMAIL}" = "YES" ]; then
-                echo "DEBUG :: Can not find ${idir} for ${VDATE} ${vldhr}" >> mailmsg
-                echo "==============" >> mailmsg
+                echo "DEBUG :: Can not find ${idir} for ${VDATE} ${vldhr}" >> ${email_msg}
+                echo "==============" >> ${email_msg}
                 flag_send_message=YES
               fi
             fi
@@ -428,8 +429,8 @@ if [ "${num_mdl_grid}" != "0" ]; then
   done  # ObsType
 else
     if [ "${SENDMAIL}" = "YES" ]; then
-      echo "WARNING: No ${MODELNAME} FCST ${VARID} grib2 was avaiable as POINT2GRID template valid ${VDATE}" > mailmsg
-      echo "==============" >> mailmsg
+      echo "WARNING: No ${MODELNAME} FCST ${VARID} grib2 was avaiable as POINT2GRID template valid ${VDATE}" > ${email_msg}
+      echo "==============" >> ${email_msg}
       flag_send_message=YES
     fi
 
@@ -438,8 +439,8 @@ fi
 
 if [ "${flag_send_message}" == "YES" ]; then
   export subject="${MODELNAME} ${AOD_SCAN} PROCESSING ISSUES for EVS ${COMPONENT}"
-  echo "Job ID: $jobid" >> mailmsg
-  cat mailmsg | mail -s "$subject" $MAILTO 
+  echo "Job ID: $jobid" >> ${email_msg}
+  cat ${email_msg} | mail -s "$subject" $MAILTO 
 fi
 exit
 
