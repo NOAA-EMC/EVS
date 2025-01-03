@@ -13,8 +13,6 @@
 # BEFORE YOU BEGIN: Make sure to set up verif_plotting if you haven't already.  To set up, 
 #                   clone the Github repository:
 #
-#                   $ git clone https://github.com/MarcelCaron-NOAA/verif_plotting 
-#
 #                   or, if on the NOAA WCOSS supercomputer, choose any directory that will house 
 #                   verif_plotting.  As an example, we'll call that directory PY_PLOT_DIR.  Then on 
 #                   the command line:
