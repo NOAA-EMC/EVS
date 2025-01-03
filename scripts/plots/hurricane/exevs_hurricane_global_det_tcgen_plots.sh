@@ -40,7 +40,6 @@ export OUTPUT=${DATA}/${basin}_${model}
 if [ ! -d ${OUTPUT} ]; then mkdir -p ${OUTPUT}; fi
 
 #--- plot the Hits/False Alarms Distribution
-#  /lfs/h2/emc/ptmp/jiayi.peng/com/evs/1.0/hurricane_global_det/tcgen/stats
 cd ${OUTPUT}
 cp ${USHevs}/hurricane/plots/hits_${basin}.py .
 cp ${COMINstats}/tc_gen_${YEAR}_genmpr_${basin}_${model}.txt tc_gen_${YEAR}_genmpr.txt 

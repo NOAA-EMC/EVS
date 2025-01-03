@@ -61,7 +61,8 @@ MET_MPR_column_list = [
     'VX_MASK', 'INTERP_MTHD', 'INTERP_PNTS', 'FCST_THRESH', 'OBS_THRESH',
     'COV_THRESH', 'ALPHA', 'LINE_TYPE', 'TOTAL', 'INDEX', 'OBS_SID',
     'OBS_LAT', 'OBS_LON', 'OBS_LVL', 'OBS_ELV', 'FCST', 'OBS', 'OBS_QC',
-    'CLIMO_MEAN', 'CLIMO_STDEV', 'CLIMO_CDF'
+    'OBS_CLIMO_MEAN', 'OBS_CLIMO_STDEV', 'OBS_CLIMO_CDF',
+    'FCST_CLIMO_MEAN', 'FCST_CLIMO_STDEV'
 ]
 
 # Create fcst and obs anomaly data
@@ -148,17 +149,21 @@ while valid_date_dt <= ENDDATE_dt:
             fcst_var_level = np.array(
                 input_file_var_level_df['FCST'].values, dtype=float
             )
+            fcst_climo_mean_var_level = np.array(
+                input_file_var_level_df['FCST_CLIMO_MEAN'].values, dtype=float
+            )
+            fcst_anom_var_level = fcst_var_level - fcst_climo_mean_var_level
             obs_var_level = np.array(
                 input_file_var_level_df['OBS'].values, dtype=float
             )
-            climo_mean_var_level = np.array(
-                input_file_var_level_df['CLIMO_MEAN'].values, dtype=float
+            obs_climo_mean_var_level = np.array(
+                input_file_var_level_df['OBS_CLIMO_MEAN'].values, dtype=float
             )
-            fcst_anom_var_level = fcst_var_level - climo_mean_var_level
-            obs_anom_var_level = obs_var_level - climo_mean_var_level
+            obs_anom_var_level = obs_var_level - obs_climo_mean_var_level
             output_file_df = pd.DataFrame.copy(input_file_var_level_df,
                                                deep=True)
-            output_file_df['CLIMO_MEAN'] = 'NA'
+            output_file_df['FCST_CLIMO_MEAN'] = 'NA'
+            output_file_df['OBS_CLIMO_MEAN'] = 'NA'
             output_file_df['FCST'] = fcst_anom_var_level
             output_file_df['OBS'] = obs_anom_var_level
             output_file_df['FCST_VAR'] = f"{var1_fcst_name}_ANOM"
