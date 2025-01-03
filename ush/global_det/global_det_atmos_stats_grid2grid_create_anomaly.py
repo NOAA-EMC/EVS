@@ -117,14 +117,25 @@ while valid_date_dt <= ENDDATE_dt:
             input_file_data = netcdf.Dataset(input_file)
             input_file_data_var_list = list(input_file_data.variables.keys())
             climo_var_level = 'climo_var_hold'
-            for input_var in input_file_data_var_list:
-                if 'CLIMO_MEAN_'+var_level in input_var:
-                    climo_var_level = input_var
-            if climo_var_level in input_file_data_var_list:
-                make_anomaly_output_file = True
+            have_var = all(
+                f"{x}_{var_level}_FULL" \
+                in input_file_data_var_list for x in ['FCST', 'OBS']
+            )
+            have_climo = all(
+                f"{x}_CLIMO_MEAN_{var_level}_FULL" \
+                in input_file_data_var_list for x in ['FCST', 'OBS']
+            )
+            if have_var and have_climo:
+                 make_anomaly_output_file = True
             else:
-                print(f"NOTE: Cannot make anomaly file {output_file} - "
-                      +f"{input_file} does not contain CLIMO_MEAN_{var_level}")
+                if not have_var:
+                    print(f"NOTE: Cannot make anomaly file {output_file} - "
+                          +f"{input_file} does not contain "
+                          +f"[FCST][OBS]_{var_level}_FULL")
+                if not have_climo:
+                    print(f"NOTE: Cannot make anomaly file {output_file} - "
+                          +f"{input_file} does not contain "
+                          +f"[FCST][OBS]_CLIMO_MEAN_{var_level}_FULL")
                 make_anomaly_output_file = False
             input_file_data.close()
         else:
@@ -170,42 +181,35 @@ while valid_date_dt <= ENDDATE_dt:
                     input_file_data.variables[input_var_name][:]
                 )
             for data_name in ['FCST', 'OBS']:
-                input_var_level = 'input_var_hold'
-                for input_var in input_file_data_var_list:
-                    if data_name+'_'+var_level in input_var:
-                        input_var_level = input_var
-                if input_var_level in input_file_data_var_list:
-                    write_data_name_var = output_file_data.createVariable(
-                        data_name+'_'+output_var_level,
-                        input_file_data.variables[input_var_level].datatype,
-                        input_file_data.variables[input_var_level].dimensions
-                    )
-                    for k in \
-                            input_file_data.variables[input_var_level]\
-                            .ncattrs():
-                        if k == 'name':
-                            write_data_name_var.setncatts(
-                                {k: data_name+'_'+output_var_level}
-                            )
-                        elif k == 'long_name':
-                            write_data_name_var.setncatts(
-                                {k: input_file_data.variables[input_var_level]\
-                                 .getncattr(k).replace(' at', ' Anomaly at')}
-                            )
-                        else:
-                            write_data_name_var.setncatts(
-                                {k: input_file_data.variables[input_var_level]\
-                                 .getncattr(k)}
-                            )
-                        write_data_name_var[:] = (
-                            input_file_data.variables[input_var_level][:]
-                            -
-                            input_file_data.variables[climo_var_level][:]
+                input_var_level = f"{data_name}_{var_level}_FULL"
+                climo_var_level = f"{data_name}_CLIMO_MEAN_{var_level}_FULL"
+                write_data_name_var = output_file_data.createVariable(
+                    data_name+'_'+output_var_level,
+                    input_file_data.variables[input_var_level].datatype,
+                    input_file_data.variables[input_var_level].dimensions
+                )
+                for k in \
+                        input_file_data.variables[input_var_level]\
+                        .ncattrs():
+                    if k == 'name':
+                        write_data_name_var.setncatts(
+                            {k: data_name+'_'+output_var_level}
                         )
-                else:
-                    print(f"NOTE: No {data_name} anomaly data for "
-                          +f"{output_file} - {input_file} does not "
-                          +f"contain {data_name}_{var_level}")
+                    elif k == 'long_name':
+                        write_data_name_var.setncatts(
+                            {k: input_file_data.variables[input_var_level]\
+                             .getncattr(k).replace(' at', ' Anomaly at')}
+                        )
+                    else:
+                        write_data_name_var.setncatts(
+                            {k: input_file_data.variables[input_var_level]\
+                             .getncattr(k)}
+                        )
+                    write_data_name_var[:] = (
+                        input_file_data.variables[input_var_level][:]
+                        -
+                        input_file_data.variables[climo_var_level][:]
+                    )
             output_file_data.close()
             input_file_data.close()
             if gda_util.check_file_exists_size(output_file):
