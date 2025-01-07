@@ -12,12 +12,7 @@ set -x
 export machine=${machine:-"WCOSS2"}
 export WORK=$DATA
 cd $WORK
-
-#*************************************
-#check input data are available:
-#*************************************
-source $USHevs/$COMPONENT/evs_check_href_files.sh 
-export err=$?; err_chk
+mkdir -p $WORK/scripts
 
 #lvl = profile or sfc or both
 export lvl='both'
@@ -34,6 +29,21 @@ export gather=${gather:-'yes'}
 export verify=$VERIF_CASE
 export run_mpi=${run_mpi:-'yes'}
 
+#*************************************
+#check input data are available:
+#*************************************
+source $USHevs/$COMPONENT/evs_check_href_files.sh
+export err=$?; err_chk
+if [ -e $DATA/verif_all.no ] ; then
+ export prepare='no'
+ export verif_system='no'
+ export verif_profile='no'
+ export verif_product='no'
+ export gather='no'
+ echo "Either prepbufr or HREF forecast files do not exist, skip grid2obs verification!"
+fi
+
+
 export COMHREF=$COMINhref
 export PREPBUFR=$COMINobsproc
 
@@ -46,7 +56,6 @@ export vday=$VDATE
 
 #  domain = conus or alaska or all
 export domain="all"
-#export domain="HI"
 
 export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
@@ -87,43 +96,43 @@ fi
 #*****************************************
 # Build a POE script to collect sub-jobs
 #****************************************
->run_href_all_grid2obs_poe
+>$DATA/scripts/run_href_all_grid2obs_poe
 
 #system: 10 jobs (8 on CONUS, 2 on Alaska)
 if [ $verif_system = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_system.sh 
   export err=$?; err_chk
-  cat ${DATA}/run_all_href_system_poe.sh >> run_href_all_grid2obs_poe
+  cat ${DATA}/scripts/run_all_href_system_poe.sh >> $DATA/scripts/run_href_all_grid2obs_poe
 fi
 
 #profile: total 10 jobs (4 for conus and 2 for alaska)
 if [ $verif_profile = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_profile.sh $domain
   export err=$?; err_chk
-  cat ${DATA}/run_all_href_profile_poe.sh >> run_href_all_grid2obs_poe 
+  cat ${DATA}/scripts/run_all_href_profile_poe.sh >> $DATA/scripts/run_href_all_grid2obs_poe 
 fi 
 
 #Product: 16 jobs
 if [ $verif_product = yes ] ; then
   $USHevs/cam/evs_href_grid2obs_product.sh
   export err=$?; err_chk
-  cat ${DATA}/run_all_href_product_poe.sh >> run_href_all_grid2obs_poe
+  cat ${DATA}/scripts/run_all_href_product_poe.sh >> $DATA/scripts/run_href_all_grid2obs_poe
 fi
 
 
 #totall: 36 jobs for all (both conus and alaska, profile, system and product)
-chmod 775 run_href_all_grid2obs_poe
+chmod 775 $DATA/scripts/run_href_all_grid2obs_poe
 
 
 #*************************************************
 # Run the POE script to generate small stat files
 #*************************************************
-if [ -s run_href_all_grid2obs_poe ] ; then
+if [ -s $DATA/scripts/run_href_all_grid2obs_poe ] ; then
  if [ $run_mpi = yes ] ; then
-    mpiexec -np 72 -ppn 72 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
+    mpiexec -np 72 -ppn 72 --cpu-bind verbose,depth cfp  ${DATA}/scripts/run_href_all_grid2obs_poe
     export err=$?; err_chk
  else
-    ${DATA}/run_href_all_grid2obs_poe
+    ${DATA}/scripts/run_href_all_grid2obs_poe
     export err=$?; err_chk
  fi
 fi

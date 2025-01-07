@@ -1,25 +1,21 @@
-#PBS -N jevs_cam_href_grid2obs_ctc_past90days_plots
+#PBS -N jevs_cam_href_grid2obs_ctc_last90days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=10:ncpus=82:mem=100GB
+#PBS -l place=vscatter,select=6:ncpus=85:mem=30GB
 #PBS -l debug=true
 
 set -x
 
 export OMP_NUM_THREADS=1
 
+export NET=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-
 source $HOMEevs/versions/run.ver
 
-
-
 export envir=prod
-
-export NET=evs
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
@@ -37,7 +33,7 @@ export SENDMAIL=YES
 export SENDDBN=NO
 
 export vhr=00
-export past_days=90
+export last_days=90
 
 export run_mpi=yes
 

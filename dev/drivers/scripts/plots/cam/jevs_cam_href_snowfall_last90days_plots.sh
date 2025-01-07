@@ -1,31 +1,26 @@
-#PBS -N jevs_cam_href_precip_past31days_plots
+#PBS -N jevs_cam_href_snowfall_last90days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=4:ncpus=78:mem=100GB
+#PBS -l place=vscatter,select=1:ncpus=30:mem=10GB
 #PBS -l debug=true
 
 set -x
 
 export OMP_NUM_THREADS=1
 
+export NET=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-
 source $HOMEevs/versions/run.ver
 
-
-
 export envir=prod
-
-export NET=evs
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=precip
+export VERIF_CASE=snowfall
 export MODELNAME=href
-
 
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -37,7 +32,7 @@ export SENDMAIL=YES
 export SENDDBN=NO
 
 export vhr=00
-export past_days=31
+export last_days=90
 
 export run_mpi=yes
 

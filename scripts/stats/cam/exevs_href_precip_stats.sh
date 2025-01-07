@@ -18,6 +18,7 @@ export err=$?; err_chk
 
 export WORK=$DATA
 cd $WORK
+mkdir -p $WORK/scripts
 
 export run_mpi=${run_mpi:-'yes'}
 export verif_precip=${verif_precip:-'yes'}
@@ -70,33 +71,33 @@ fi
 #***************************************
 # Build a POE script to collect sub-jobs
 # **************************************
-> run_all_precip_poe.sh
+>$DATA/scripts/run_all_precip_poe.sh
 
 # Build sub-jobs for precip
 if [ $verif_precip = yes ] ; then
  $USHevs/cam/evs_href_precip.sh
  export err=$?; err_chk
- cat ${DATA}/run_all_href_precip_poe.sh >> run_all_precip_poe.sh
+ cat ${DATA}/scripts/run_all_href_precip_poe.sh >> $DATA/scripts/run_all_precip_poe.sh
 fi
 
 # Build sub-jobs for snowfall
 if [ $verif_snowfall = yes ] ; then
  $USHevs/cam/evs_href_snowfall.sh
  export err=$?; err_chk
- cat ${DATA}/run_all_href_snowfall_poe.sh >> run_all_precip_poe.sh
+ cat ${DATA}/scripts/run_all_href_snowfall_poe.sh >> $DATA/scripts/run_all_precip_poe.sh
 fi
 
 #*************************************************
 # Run the POE script to generate small stat files
 #*************************************************
-if [ -s ${DATA}/run_all_precip_poe.sh ]  ; then
-  chmod 775 run_all_precip_poe.sh
+if [ -s ${DATA}/scripts/run_all_precip_poe.sh ]  ; then
+  chmod 775 ${DATA}/scripts/run_all_precip_poe.sh
 
   if [ $run_mpi = yes ] ; then
-    mpiexec  -n 44 -ppn 44 --cpu-bind core --depth=2 cfp ${DATA}/run_all_precip_poe.sh
+    mpiexec  -n 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_precip_poe.sh
     export err=$?; err_chk
   else
-   ${DATA}/run_all_precip_poe.sh
+   ${DATA}/scripts/run_all_precip_poe.sh
     export err=$?; err_chk
   fi
 

@@ -7,19 +7,14 @@
 #******************************************************************************
 set -x 
 
-cd $DATA
+mkdir -p $DATA/scripts
+cd $DATA/scripts
 
 export machine=${machine:-"WCOSS2"}
-export prune_dir=$DATA/data
-export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job
-mkdir -p $prune_dir
-mkdir -p $save_dir
 mkdir -p $output_base_dir
-mkdir -p $DATA/logs
 
-restart=$COMOUT/restart/$past_days/href_cape_plots
+restart=$COMOUT/restart/$last_days/href_cape_plots
 if [ ! -d  $restart ] ; then
   mkdir -p $restart
 fi  
@@ -34,7 +29,7 @@ model_list='HREF_MEAN'
 models='HREF_MEAN'
 
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
     hrs=$((n*24))
     first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
     n=$((n+1))
@@ -44,26 +39,16 @@ export init_beg=$first_day
 export valid_beg=$first_day
 
 #*************************************************************
-# Virtual link the href's stat data files of past 31/90 days
+# Virtual link the href's stat data files of last 31/90 days
 #*************************************************************
 n=0
-while [ $n -le $past_days ] ; do
-  #hrs=`expr $n \* 24`
+while [ $n -le $last_days ] ; do
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/cam/evs_get_href_stat_file_link_plots.sh $day HREF_MEAN
   n=$((n+1))
 done 
-
-																  
-export fcst_init_hour="0,6,12,18"
-
-export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-#For restart:
-if [ ! -d $plot_dir ] ; then
-  mkdir -p $plot_dir
-fi
 
 export fcst_init_hour="0,6,12,18"
 init_time='init00z_06z_12z_18z'
@@ -171,6 +156,15 @@ for valid_time in 00 12 ; do
         echo "#!/bin/ksh" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
         verif_type=conus_sfc
 
+	save_dir=$DATA/plots/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}
+        plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
+        mkdir -p $plot_dir
+	mkdir -p $save_dir/data
+     
+	echo "export save_dir=$save_dir" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+        echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	echo "export prune_dir=$save_dir/data" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+
 	if [ $score_type = lead_average ] ; then
            echo "export PLOT_TYPE=lead_average_valid" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
         else		
@@ -207,36 +201,34 @@ for valid_time in 00 12 ; do
 	 if [ $score_type = lead_average ] ; then
            thresh_fcst=">=${threshold}"
            thresh_obs=$thresh_fcst
+	   tail=ge${thresh}
          elif [ $score_type = threshold_average ] ; then
            thresh_fcst=${threshold}
            thresh_obs=$thresh_fcst
+	   tail=f${lead}
          else
            thresh_fcst=' '
            thresh_obs=' '
+	   tail='other'
          fi
 
          sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g"  -e "s!thresh_obs!$thresh_obs!g"   -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$valid_time!g" -e "s!fcst_lead!$fcst_lead!g"  -e "s!interp_pnts!$interp_pnts!g" $USHevs/cam/evs_href_plots_config.sh > run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
          chmod +x  run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-         echo "${DATA}/run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+         echo "${DATA}/scripts/run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-	#Save for restart
+	#Save for restart and tar files 
 	 echo "for domain in $subregions ; do " >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-	 echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_*.png ] ; then " >>run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-     	 echo "     cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_*.png $restart" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "  plot=${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "  if [ -s \$plot ] ; then " >>run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+     	 echo "     cp -v \$plot $restart" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 	 echo "     >$restart/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-	 echo " fi" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "  fi" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
          echo "done" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
          chmod +x  run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh 
-         echo "${DATA}/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_all_poe.sh
-
-       else
-         #Restart from png files of previous runs
-	 for domain in $subregions ; do
-           cp $restart/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_*.png ${plot_dir}/.
-	 done
+         echo "${DATA}/scripts/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_all_poe.sh
        fi
 
      done #end of FCST_LEVEL_value
@@ -261,17 +253,17 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 840 -ppn 84 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 765 -ppn 85 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
 else
-  ${DATA}/run_all_poe.sh
+  ${DATA}/scripts/run_all_poe.sh
 fi
 export err=$?; err_chk
 
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $plot_dir
- 	
+cd $restart
+
 for score_type in lead_average threshold_average; do
 
  for valid in 00z 12z ; do
@@ -315,12 +307,12 @@ for score_type in lead_average threshold_average; do
    
           for thresh in ge250 ge500 ge1000 ge2000 ; do
 	   if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png ] ; then
-             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png evs.href.${stat}.${var}_${level}.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png evs.href.${stat}.${var}_${level}.${thresh}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
            fi
           done
       else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png ] ; then   
-           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png  evs.href.${stat}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_lead}.${new_domain}.png
+           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png  evs.href.${stat}.${var}_${level}.last${last_days}days.${scoretype}_valid${valid}_${new_lead}.${new_domain}.png
 
      	  fi
        fi
@@ -332,32 +324,27 @@ for score_type in lead_average threshold_average; do
  done   #valid 
 done    #score_type
 
-if [ -s *.png ] ; then
- tar -cvf evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar *.png
+if [ -s evs*.png ] ; then
+ tar -cvf evs.plots.href.grid2obs.cape.last${last_days}days.v${VDATE}.tar evs*.png
 fi
 
 # Cat the plotting log files
-log_dir="$DATA/logs"
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-            if [ -f "$log_file" ]; then
-                echo "Start: $log_file"
-                cat "$log_file"
-                echo "End: $log_file"
-            fi
-        done
-    fi
+log_dir="$DATA/plots"
+if [ -s $log_dir/*/log*.out ]; then
+  log_files=`ls $log_dir/*/log*.out`
+  for log_file in $log_files ; do
+   echo "Start: $log_file"
+   cat  "$log_file" 
+   echo "End: $log_file"
+  done
 fi
 
-if [ $SENDCOM = YES ] && [ -s evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar ] ; then
- cp -v evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.href.grid2obs.cape.last${last_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.href.grid2obs.cape.last${last_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
- $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar
+ $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.grid2obs.cape.last${last_days}days.v${VDATE}.tar
 fi
 
 

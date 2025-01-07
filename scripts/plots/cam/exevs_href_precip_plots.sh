@@ -7,19 +7,14 @@
 #******************************************************************************
 set -x 
 
-cd $DATA
+mkdir -p $DATA/scripts
+cd $DATA/scripts
 
 export machine=${machine:-"WCOSS2"}
-export prune_dir=$DATA/data
-export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job
-mkdir -p $prune_dir
-mkdir -p $save_dir
 mkdir -p $output_base_dir
-mkdir -p $DATA/logs
 
-restart=$COMOUT/restart/$past_days/href_precip_plots
+restart=$COMOUT/restart/$last_days/href_precip_plots
 if [ ! -d  $restart ] ; then
   mkdir -p $restart
 fi     
@@ -37,7 +32,7 @@ models='HREF_MEAN,  HREF_AVRG, HREF_LPMM, HREF_PMMN'
 VX_MASK_LISTs='CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Alaska'
 
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
     hrs=$((n*24))
     first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
     n=$((n+1))
@@ -47,10 +42,10 @@ export init_beg=$first_day
 export valid_beg=$first_day
 
 #*************************************************************
-# Virtual link the href's stat data files of past 31/90 days
+# Virtual link the href's stat data files of last 31/90 days
 #*************************************************************
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
   #hrs=`expr $n \* 24`
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
@@ -59,12 +54,6 @@ while [ $n -le $past_days ] ; do
   n=$((n+1))
 done 
 
-
-export plot_dir=$DATA/out/precip/${valid_beg}-${valid_end}
-#For restart:
-if [ ! -d $plot_dir ] ; then
-  mkdir -p $plot_dir
-fi
 
 verif_case=precip
 verif_type=ccpa
@@ -149,7 +138,16 @@ for stats in ets_fbias ratio_pod_csi fss ; do
       #***********************************************************************************************************************************
         
         echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
-        echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+        save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}
+	plot_dir=$save_dir/precip/${valid_beg}-${valid_end}
+	mkdir -p $plot_dir
+	mkdir -p $save_dir/data
+
+	echo "export save_dir=$save_dir" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+	echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+	echo "export prune_dir=$save_dir/data" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+
+	echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
         echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
         echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
         echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
@@ -194,7 +192,7 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
-         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+         echo "${DATA}/scripts/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
 	 #threshold:   ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png
 	 #performance: ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png 
@@ -205,11 +203,8 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh 
-         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh" >> run_all_poe.sh
+         echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh" >> run_all_poe.sh
 
-       else
-	 #Restart from existing png files of previous run
-         cp  $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png ${plot_dir}/.
        fi 
 
        done # end of fcst_valid_hour
@@ -233,9 +228,9 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 312 -ppn 78 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 304 -ppn 76 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
 else
-  ${DATA}/run_all_poe.sh
+  ${DATA}/scripts/run_all_poe.sh
 fi
 export err=$?; err_chk
 
@@ -244,7 +239,7 @@ export err=$?; err_chk
 # Change plot file names to meet the EVS standard
 #**************************************************
 
-cd $plot_dir
+cd $restart
 
 for stats in ets fbias fss ; do
   score_type='threshold_average' 
@@ -288,7 +283,7 @@ for stats in ets fbias fss ; do
  
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png ] ; then
         ls ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png
-        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}h.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}h.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
       fi
     done
   done
@@ -327,39 +322,35 @@ for var in apcp_01 apcp_03 apcp_24 ; do
      fi
 
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png ] ; then
-       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
       fi
 
     done
   done
 done
 
-
-tar -cvf evs.plots.href.precip.past${past_days}days.v${VDATE}.tar *.png
+if [ -s evs*.png ] ; then
+  tar -cvf evs.plots.href.precip.last${last_days}days.v${VDATE}.tar evs*.png
+fi
 
 # Cat the plotting log files
-log_dir="$DATA/logs"
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-            if [ -f "$log_file" ]; then
-                echo "Start: $log_file"
-                cat "$log_file"
-                echo "End: $log_file"
-            fi
-        done
-    fi
+log_dir="$DATA/plots"
+if [ -s $log_dir/*/log*.out ]; then
+  log_files=`ls $log_dir/*/log*.out`
+  for log_file in $log_files ; do
+     echo "Start: $log_file"
+     cat  "$log_file"
+     echo "End: $log_file"
+  done
 fi
 
 
-if [ $SENDCOM = YES ] && [ -s evs.plots.href.precip.past${past_days}days.v${VDATE}.tar ] ; then
- cp -v evs.plots.href.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.href.precip.last${last_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.href.precip.last${last_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.precip.past${past_days}days.v${VDATE}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.precip.last${last_days}days.v${VDATE}.tar
 fi
 
 

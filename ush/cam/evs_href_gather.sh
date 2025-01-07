@@ -36,6 +36,7 @@ for MODL in $MODELS ; do
 #************************************************
 # Build sub-jobs
 #***********************************************
+cd $DATA/scripts
 >run_gather_${verify}_${MODL}.sh
 
     echo  "export output_base=${WORK}/gather" >> run_gather_${verify}_${MODL}.sh 
@@ -43,7 +44,7 @@ for MODL in $MODELS ; do
 
 
     echo  "export vbeg=00" >> run_gather_${verify}_${MODL}.sh
-    echo  "export vend=23" >> run_gather_${verify}_${MODL}.sh
+    echo  "export vend=00" >> run_gather_${verify}_${MODL}.sh
     echo  "export valid_increment=3600" >>  run_gather_${verify}_${MODL}.sh
     echo  "export model=$modnam" >> run_gather_${verify}_${MODL}.sh
     echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${verify}_${MODL}.sh
@@ -53,16 +54,17 @@ for MODL in $MODELS ; do
 
     if [ $verify = grid2obs ] || [ $verify = spcoutlook ] ; then 
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstHREF_obsPREPBUFR_GatherByDay.conf " >> run_gather_${verify}_${MODL}.sh
+      echo  "export err=$?; err_chk" >>  run_gather_${verify}_${MODL}.sh
     elif [ $verify = precip ] ; then
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/StatAnlysis_fcstHREF_obsAnalysis_GatherByDay.conf " >> run_gather_${verify}_${MODL}.sh
-   fi
+      echo  "export err=$?; err_chk" >>  run_gather_${verify}_${MODL}.sh
+    fi
 
     echo "if [[ $SENDCOM = YES  && -s ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat ]]; then cp -v ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${modl}.${verify}.v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
     echo "else  echo ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat empty; fi" >> run_gather_${verify}_${MODL}.sh
-
     chmod +x run_gather_${verify}_${MODL}.sh
  
-    echo "${DATA}/run_gather_${verify}_${MODL}.sh" >> run_gather_all_poe.sh    
+    echo "${DATA}/scripts/run_gather_${verify}_${MODL}.sh" >> run_gather_all_poe.sh    
    
 done
 
@@ -72,9 +74,9 @@ chmod 775 run_gather_all_poe.sh
 #  Run the POE script
 #*****************************
 if [ $run_mpi = yes ] ; then
-  mpiexec -np 3 -ppn 3 --cpu-bind verbose,depth cfp ${DATA}/run_gather_all_poe.sh
+  mpiexec -np 3 -ppn 3 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_gather_all_poe.sh
   export err=$?; err_chk
 else
-  ${DATA}/run_gather_all_poe.sh
+  ${DATA}/scripts/run_gather_all_poe.sh
   export err=$?; err_chk
 fi

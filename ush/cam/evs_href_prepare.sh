@@ -190,7 +190,7 @@ if [ "$data" = "ccpa24h" ] ; then
 	     echo "Missing file is ${COMCCPA}/ccpa.${prevday}/18/ccpa.t18z.06h.hrap.conus.gb2\n" >> $DATA/job${data}${domain}_missing_24hrccpa_list
       fi
       if [ -s $ccpa24/ccpa1 ] && [ -s $ccpa24/ccpa2 ] && [ -s $ccpa24/ccpa3 ] && [ -s $ccpa24/ccpa4 ] ; then
-         ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
+         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
          export err=$?; err_chk
          mkdir -p ${COMOUTfinal}/precip_mean24
          cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
@@ -367,20 +367,31 @@ if [ "$data" = "prepbufr" ] ; then
             export vend=${vhr}
             export verif_grid=$grid
 
-            if [ "$lvl" = "sfc" ] ; then
+	    >$WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr
+	    split_by_subset $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00
+            for subset in ADPUPA ADPSFC SFCSHP MSONET ; do
+	     if [ -s ${WORK}/${subset} ] ; then
+	       cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr
+	     fi
+	    done
+            export bufrpath=$WORK
+
+	    if [ -s $WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr ] ; then
+             if [ "$lvl" = "sfc" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href.conf
                export err=$?; err_chk
-            elif [ "$lvl" = "profile" ] ; then
+             elif [ "$lvl" = "profile" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href_profile.conf
                export err=$?; err_chk
-            elif [ "$lvl" = "both" ] ; then
+             elif [ "$lvl" = "both" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href.conf
                export err=$?; err_chk
                if [ "$vhr" = "00" ] || [ "$vhr" = "12" ] ; then
                   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href_profile.conf
-	              export err=$?; err_chk
+	          export err=$?; err_chk
                fi
-            fi
+             fi
+	    fi 
          done
       done
 
@@ -406,8 +417,12 @@ if [ "$data" = "prepbufr" ] ; then
  else
     #restart: copy restart files to the working directory
     [[ ! -d $WORK/prepbufr.${vday} ]] && mkdir -p $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G227*.nc $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G198*.nc $WORK/prepbufr.${vday}
+    if [ -s $COMOUTrestart/prepare/prepbufr.${VDATE}/*G227*.nc ] ; then
+     cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G227*.nc $WORK/prepbufr.${vday}
+    fi
+    if [ -s $COMOUTrestart/prepare/prepbufr.${VDATE}/*G198*.nc ] ; then
+     cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G198*.nc $WORK/prepbufr.${vday}
+    fi
  fi
 
 fi
@@ -442,11 +457,17 @@ if [ "$data" = "gfs_prepbufr" ] ; then
 
 	    >$WORK/prepbufr.$vday/gdas.t${vhr}z.${grid}.prepbufr
 	    split_by_subset $COMINobsproc/gdas.${vday}/${vhr}/atmos/gdas.t${vhr}z.prepbufr
-	    cat $WORK/ADPUPA $WORK/ADPSFC >> $WORK/prepbufr.$vday/gdas.t${vhr}z.${grid}.prepbufr
+	    for subset in ADPUPA ADPSFC SFCSHP MSONET ; do
+	     if [ -s ${WORK}/${subset} ] ; then 
+	      cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/gdas.t${vhr}z.${grid}.prepbufr
+	     fi
+	    done
 	    export bufrpath=$WORK
 
-            ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGDAS_Prepbufr_href_profile.conf
-            export err=$?; err_chk
+	    if [ -s $WORK/prepbufr.$vday/gdas.t${vhr}z.${grid}.prepbufr ] ; then
+              ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGDAS_Prepbufr_href_profile.conf
+              export err=$?; err_chk
+	    fi
          done
          if [ -s ${WORK}/pb2nc/prepbufr_nc/*${grid}.nc ] ; then
             cp ${WORK}/pb2nc/prepbufr_nc/*${grid}.nc $WORK/prepbufr.$vday 
@@ -454,7 +475,7 @@ if [ "$data" = "gfs_prepbufr" ] ; then
       done
 
       #For restart
-      if [ $? = 0 ] ; then
+      if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
         cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare/prepbufr.${vday}
         >$COMOUTrestart/prepare/gfs_prepbufr.completed
       fi

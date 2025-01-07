@@ -12,6 +12,7 @@ set -x
 export machine=${machine:-"WCOSS2"}
 export WORK=$DATA
 cd $WORK
+mkdir -p $WORK/scripts
 
 #*********************************
 #check input data are available:
@@ -73,26 +74,26 @@ fi
 #****************************************
 # Build a POE script to collect sub-jobs
 # ***************************************
->run_href_all_grid2obs_poe
+>$DATA/scripts/run_href_all_grid2obs_poe
 
 #Spc_outlook: 2 job
 if [ $verif_spcoutlook = yes ] ; then
   $USHevs/cam/evs_href_spcoutlook.sh
   export err=$?; err_chk
-  cat ${DATA}/run_all_href_spcoutlook_poe.sh >> run_href_all_grid2obs_poe
+  cat ${DATA}/scripts/run_all_href_spcoutlook_poe.sh >> $DATA/scripts/run_href_all_grid2obs_poe
 fi
 
-chmod 775 run_href_all_grid2obs_poe
 
 #****************************************
 # Run POE script to get small stat files
 # ***************************************
-if [ -s run_href_all_grid2obs_poe ] ; then
+if [ -s $DATA/scripts/run_href_all_grid2obs_poe ] ; then
+ chmod 775 $DATA/scripts/run_href_all_grid2obs_poe
  if [ $run_mpi = yes ] ; then
-    mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
+    mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/scripts/run_href_all_grid2obs_poe
     export err=$?; err_chk
  else
-    ${DATA}/run_href_all_grid2obs_poe
+    ${DATA}/scripts/run_href_all_grid2obs_poe
     export err=$?; err_chk
  fi
 fi

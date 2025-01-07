@@ -1,29 +1,25 @@
-#PBS -N jevs_cam_href_snowfall_past90days_plots
+#PBS -N jevs_cam_href_spcoutlook_last90days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=1:ncpus=30:mem=100GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter,select=1:ncpus=6:mem=5GB
 #PBS -l debug=true
 
 set -x
 
 export OMP_NUM_THREADS=1
 
+export NET=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-
 source $HOMEevs/versions/run.ver
 
-
-
 export envir=prod
-
-export NET=evs
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=snowfall
+export VERIF_CASE=spcoutlook
 export MODELNAME=href
 
 module reset
@@ -36,11 +32,12 @@ export SENDMAIL=YES
 export SENDDBN=NO
 
 export vhr=00
-export past_days=90
+export last_days=90
 
-export run_mpi=yes
+export run_mpi=no
+export valid_time=both
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
