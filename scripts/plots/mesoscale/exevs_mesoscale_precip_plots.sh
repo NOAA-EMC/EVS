@@ -94,7 +94,7 @@ done
   find ${DATA}/${VERIF_CASE}/out/* -type f \( -name "*.png" -o -name "*.gif" \) -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##' -T -
 
 if [ $SENDCOM = YES ]; then
-    cpreq -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
+    cp -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
 fi
 
 if [ $SENDDBN = YES ]; then
