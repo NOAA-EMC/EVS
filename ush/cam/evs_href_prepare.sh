@@ -372,8 +372,10 @@ if [ "$data" = "prepbufr" ] ; then
             for subset in ADPUPA ADPSFC SFCSHP MSONET ; do
 	     if [ -s ${WORK}/${subset} ] ; then
 	       cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr
+	       rm -f ${WORK}/${subset}
 	     fi
 	    done
+
             export bufrpath=$WORK
 
 	    if [ -s $WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr ] ; then
@@ -460,6 +462,7 @@ if [ "$data" = "gfs_prepbufr" ] ; then
 	    for subset in ADPUPA ADPSFC SFCSHP MSONET ; do
 	     if [ -s ${WORK}/${subset} ] ; then 
 	      cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/gdas.t${vhr}z.${grid}.prepbufr
+	      rm -f ${WORK}/${subset}
 	     fi
 	    done
 	    export bufrpath=$WORK
