@@ -193,8 +193,9 @@ if [ "$data" = "ccpa24h" ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
          export err=$?; err_chk
          mkdir -p ${COMOUTfinal}/precip_mean24
-         cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
-       
+	 if [ -s ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ] ; then
+           cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
+         fi 
 	 #For restart:
 	 [[ ! -e $COMOUTrestart/prepare/ccpa.${vday} ]] && mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
 	 if [ -s $WORK/ccpa.${vday}/*24h*.nc ] ; then
