@@ -405,6 +405,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             raise TypeError(e)
         sub_dirs.append(os.path.join(
             'METplus_output',
+            'workdirs',
+            'reformat',
+            f'job{njob}',
             verif_type, 
             vx_mask, 
             met_tool, 
@@ -421,6 +424,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             raise TypeError(e)
         sub_dirs.append(os.path.join(
             'METplus_output',
+            'workdirs',
+            'reformat',
+            f'job{njob}',
             verif_type,
             met_tool,
             f'{vx_mask}.{vdate}',
@@ -503,6 +509,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             raise TypeError(e)
         sub_dirs.append(os.path.join(
             'METplus_output',
+            'workdirs',
+            'reformat',
+            f'job{njob}',
             verif_type,
             vx_mask,
             met_tool,
@@ -547,6 +556,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 ihour = idt.strftime('%H')
                 sub_dirs.append(os.path.join(
                     'METplus_output',
+                    'workdirs',
+                    'reformat',
+                    f'job{njob}',
                     verif_type,
                     met_tool,
                 ))
@@ -564,6 +576,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             raise TypeError(e)
         sub_dirs.append(os.path.join(
             'METplus_output',
+            'workdirs',
+            'generate',
+            f'job{njob}',
             verif_type,
             met_tool,
             f'{model}.{vdate}'
@@ -584,6 +599,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             raise TypeError(e)
         sub_dirs.append(os.path.join(
             'METplus_output',
+            'workdirs',
+            'generate'
+            f'job{njob}',
             verif_type,
             met_tool,
             f'{model}.{vdate}'
@@ -605,6 +623,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 raise TypeError(e)
             sub_dirs.append(os.path.join(
                 'METplus_output',
+                'workdirs',
+                'gather',
+                f'job{njob}',
                 'gather_small',
                 met_tool,
                 f'{model}.{vdate}'
@@ -624,6 +645,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 raise TypeError(e)
             sub_dirs.append(os.path.join(
                 'METplus_output',
+                'workdirs',
+                'gather2',
+                f'job{njob}',
                 met_tool,
                 f'{model}.{vdate}'
             ))

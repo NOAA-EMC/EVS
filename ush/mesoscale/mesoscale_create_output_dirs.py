@@ -246,7 +246,7 @@ elif STEP == 'stats':
                 DATA, VERIF_CASE, 'METplus_output', 'gather_small'
             )
             COMOUT_restart_base_dir = os.path.join(
-                RESTART_DIR, 'METplus_output'
+                RESTART_DIR, 'METplus_output', 'gather_small'
             )
         if job_type == 'gather2':
             working_output_base_dir = os.path.join(
