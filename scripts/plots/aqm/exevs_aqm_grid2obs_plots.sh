@@ -61,7 +61,7 @@ for aqmtyp in ozone pm25 ozmax8 pmave; do
             cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
             sedfile=evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
             if [ -s ${EVSINaqm}.${DAY}/${cpfile} ]; then
-                cpreq ${EVSINaqm}.${DAY}/${cpfile} ${STATDIR}
+                cp -v ${EVSINaqm}.${DAY}/${cpfile} ${STATDIR}
                 sed "s/${model1}/${aqmtyp}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
             else
                 echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${EVSINaqm}.${DAY}/${cpfile}"
@@ -139,7 +139,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                     export err=$?; err_chk
                 else
                     echo "RESTART - ${var} ${figtype} ${region} plot exists; copying over to plot directory"
-                    cpreq ${cpfile} ${PLOTDIR}
+                    cp -v ${cpfile} ${PLOTDIR}
                 fi
   
                 cpfile=${PLOTDIR}/${figfile}
@@ -198,7 +198,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                     export err=$?; err_chk
                 else
                     echo "RESTART - plot exists; copying over to plot directory"
-                    cpreq ${cpfile} ${PLOTDIR}
+                    cp -v ${cpfile} ${PLOTDIR}
                 fi
 
                 cpfile=${PLOTDIR}/${figfile}
@@ -302,7 +302,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
                 export err=$?; err_chk
             else
                 echo "RESTART - plot exists; copying over to plot directory"
-                cpreq ${cpfile} ${PLOTDIR_headline}
+                cp -v ${cpfile} ${PLOTDIR_headline}
             fi
   
             cpfile=${PLOTDIR_headline}/${figfile}
