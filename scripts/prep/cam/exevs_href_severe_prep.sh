@@ -177,7 +177,7 @@ i=1
       # Copy the member files to working directory if they exist
       if [ -s $fcst_file ]; then
          echo "File found for member $i. Copying to working directory."
-         cpreq -v $fcst_file ${MODEL_INPUT_DIR}
+         cp -v $fcst_file ${MODEL_INPUT_DIR}
          nfiles=$((nfiles+1))
       else
          echo "Forecast file $fcst_file not found for member $i." >> missing_file_list
@@ -210,7 +210,7 @@ i=1
       if [ $SENDCOM = YES ]; then
          mkdir -p $COMOUT/${modsys}.${IDATE}
          for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
-            cpreq -v $FILE $COMOUT/${modsys}.${IDATE}
+            cp -v $FILE $COMOUT/${modsys}.${IDATE}
          done
       fi
 
