@@ -49,7 +49,7 @@ theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
   EVSINstats=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
   if [[ -s ${EVSINstats}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]]; then
-      cpreq -v ${EVSINstats}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+      cp -v ${EVSINstats}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
   else
       echo "WARNING: DOES NOT EXIST ${EVSINstats}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat"
   fi

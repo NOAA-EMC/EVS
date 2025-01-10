@@ -45,7 +45,7 @@ if [ $modnam = gfsanl ]; then
         cat mailmsg | mail -s "$subject" $MAILTO
       fi
     else
-      cpreq -v $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl $WORK/gfsanl.t${ihour}z.grid3.f000.grib2
+      cp -v $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl $WORK/gfsanl.t${ihour}z.grid3.f000.grib2
     fi
     if [ ! -s $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 ]; then
       echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 is not available"
@@ -467,7 +467,7 @@ if [ $modnam = ccpa ] ; then
             source_ccpa_file=${COMIN}/$STEP/${COMPONENT}/atmos.${vday_1}/gefs/ccpa.t18z.grid3.06h.f00.grib2
         fi
         if [ -s $source_ccpa_file ]; then
-            cpreq -v $source_ccpa_file ${WORK}/ccpa24/ccpa${nccpa_file}
+            cp -v $source_ccpa_file ${WORK}/ccpa24/ccpa${nccpa_file}
         else
             echo "WARNING: $source_ccpa_file is not available"
             if [ $SENDMAIL = YES ]; then
@@ -702,7 +702,7 @@ if [ $modnam = nohrsc24h ] ; then
   for ihour in 00 12 ; do
     snowfall=$DCOMINnohrsc/${vday}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${vday}${ihour}_grid184.grb2
     if [ -s $snowfall ] ; then
-      cpreq -v $snowfall $WORK/nohrsc.t${ihour}z.grid184.grb2
+      cp -v $snowfall $WORK/nohrsc.t${ihour}z.grid184.grb2
       if [ $SENDCOM="YES" ] ; then
           if [ -s $WORK/nohrsc.t${ihour}z.grid184.grb2 ]; then
               cp -v $WORK/nohrsc.t${ihour}z.grid184.grb2 $COMOUTgefs/nohrsc.t${ihour}z.grid184.grb2
