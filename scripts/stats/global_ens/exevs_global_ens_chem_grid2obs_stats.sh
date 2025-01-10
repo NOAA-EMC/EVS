@@ -169,7 +169,7 @@ for ObsType in ${grid2obs_list}; do
     if [ "${vhr}" == "21" ]; then
       stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
-        cpreq ${COMOUTsmall}/*${OutputId}* ${finalstat}
+        cp -v ${COMOUTsmall}/*${OutputId}* ${finalstat}
         cd ${finalstat}
         run_metplus.py ${stat_analysis_conf_file} ${config_common}
         export err=$?; err_chk
