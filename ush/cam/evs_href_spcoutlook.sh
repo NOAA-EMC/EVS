@@ -2,7 +2,10 @@
 #************************************************************************************
 #  Purpose: Generate href spcoutlook job's  poe and sub-jobs files
 #           and system (ecnt line type)
-#  Last update: 10/30/2024, by Binbin Zhou Lynker@EMC/NCEP
+#
+#  Last update: 
+#       01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
+#       10/30/2024, by Binbin Zhou Lynker@EMC/NCEP
 #***********************************************************************************
 set -x 
 

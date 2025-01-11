@@ -3,6 +3,7 @@
 # Purpose: setup environment, paths, and run the href spcoutlook plotting python 
 #          script
 # Last updated: 
+#               01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
 #               07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP
 #               05/30/2025, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
@@ -15,9 +16,13 @@ export machine=${machine:-"WCOSS2"}
 export output_base_dir=$DATA/stat_archive
 mkdir -p $output_base_dir
 
-restart=$COMOUT/restart/$last_days/href_spcoutlook_plots
-if [ ! -d  $restart ] ; then
+all_plots=$DATA/plots/all_plots
+mkdir -p $all_plots
+if [ $SENDCOM = YES ] ; then
+ restart=$COMOUT/restart/$last_days/href_spcoutlook_plots
+ if [ ! -d  $restart ] ; then
   mkdir -p $restart
+ fi
 fi
 
 export eval_period='TEST'
@@ -173,12 +178,18 @@ for stats in csi_fbias ratio_pod_csi ; do
 
 	 #Save for restart and tar files
          echo "if [ -s ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo " if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
 	 echo "  cp -v ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 	 echo "  >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo " cp -v ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
          echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+
+        else 
+          cp -v ${restart}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png $all_plots
 
        fi
 
@@ -210,7 +221,7 @@ export err=$?; err_chk
 # Change plot file names to meet the EVS standard
 #**************************************************
 
-cd $restart
+cd $all_plots
 
 for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrgl day2_slgt day2_tstm day2_enh day2_mdt day2_high day3_mrgl day3_slgt day3_tstm day3_enh day3_mdt day3_high ; do
  for var in cape mlcape ; do

@@ -2,6 +2,7 @@
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href ctc plotting python script
 # Last updated: 
+#               01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
 #               07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP
 #               05/30/2024, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
@@ -14,10 +15,14 @@ export machine=${machine:-"WCOSS2"}
 export output_base_dir=$DATA/stat_archive
 mkdir -p $output_base_dir
 
-restart=$COMOUT/restart/$last_days/href_ctc_plots
-if [ ! -d  $restart ] ; then
-  mkdir -p $restart
-fi
+all_plots=$DATA/plots/all_plots
+mkdir -p $all_plots 
+if [ $SENDCOM = YES ] ; then
+ restart=$COMOUT/restart/$last_days/href_ctc_plots
+ if [ ! -d  $restart ] ; then
+   mkdir -p $restart
+ fi
+fi 
 
 export eval_period='TEST'
 
@@ -259,14 +264,23 @@ for stats in $stats_list ; do
 	 #Save for restart
          echo "for domain in $subregions ; do " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "   if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "    cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "    >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "   fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "   cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "  fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "done" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
          echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_all_poe.sh
 
+      else
+         for domain in $subregions ; do
+           if [ -s $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ] ; then
+             cp -v $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $all_plots
+           fi
+         done	   
       fi
 
      done #end of FCST_LEVEL_value
@@ -299,7 +313,7 @@ export err=$?; err_chk
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $restart
+cd $all_plots
 
 for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
 

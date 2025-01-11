@@ -4,6 +4,7 @@
 #           including 4 mean (mean, pmmn, lpmm and average), probability (prob, eas)
 #           and system (ecnt line type)
 #  Last update: 
+#      01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
 #      10/30/2024, by Binbin Zhou Lynker@EMC/NCEP
 #***********************************************************************************
 set -x 

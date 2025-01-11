@@ -2,6 +2,7 @@
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href cape plotting python script
 # Last updated:
+#              01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
 #              07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP 
 #              05/30/2024, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
@@ -14,10 +15,14 @@ export machine=${machine:-"WCOSS2"}
 export output_base_dir=$DATA/stat_archive
 mkdir -p $output_base_dir
 
-restart=$COMOUT/restart/$last_days/href_precip_plots
-if [ ! -d  $restart ] ; then
+all_plots=$DATA/plots/all_plots
+mkdir -p $all_plots
+if [ $SENDCOM = YES ] ; then
+ restart=$COMOUT/restart/$last_days/href_precip_plots
+ if [ ! -d  $restart ] ; then
   mkdir -p $restart
-fi     
+ fi     
+fi
 
 export eval_period='TEST'
 
@@ -198,13 +203,20 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 	 #performance: ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png 
 	 #Save for restart
 	 echo "if [ -s ${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+	 echo " if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 	 echo "  cp -v ${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 	 echo "  >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+         echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+	 echo " cp -v ${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh 
          echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh" >> run_all_poe.sh
 
+       else
+	if [ -s $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png ] ; then
+	  cp -v $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png $all_plots
+	fi
        fi 
 
        done # end of fcst_valid_hour
@@ -239,7 +251,7 @@ export err=$?; err_chk
 # Change plot file names to meet the EVS standard
 #**************************************************
 
-cd $restart
+cd $all_plots
 
 for stats in ets fbias fss ; do
   score_type='threshold_average' 

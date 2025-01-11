@@ -3,6 +3,7 @@
 # Purpose:   Setup some paths and run href precip stat ush scripts
 #
 # Last updated 
+#             01/10/2025: Add MPMD:  by  Binbin Zhou, Lynker@EMC/NCEP
 #             06/25/2024: Add restart, Binbin Zhou, Lynker@EMC/NCEP
 #             10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 ###################################################################

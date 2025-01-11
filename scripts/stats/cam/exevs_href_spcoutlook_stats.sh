@@ -3,6 +3,7 @@
 # Purpose:   Setup some paths and run href spcoutlook job
 # 
 # Last updated 
+#       01/10/2025: Add MPMD:  by  Binbin Zhou, Lynker@EMC/NCEP
 #       05/04/2024: add restart, Binbin Zhou, Lynker@EMC/NCEP
 #       10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 ##############################################################
@@ -60,7 +61,6 @@ export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
 [[ ! -d $COMOUTrestart/prepare/prepbufr.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/prepbufr.${vday}
 [[ ! -d $COMOUTrestart/spcoutlook ]] &&  mkdir -p $COMOUTrestart/spcoutlook
-
 
 
 #*********************************

@@ -3,6 +3,7 @@
 # Purpose:   Setup some paths and run href grid2obs stat ush scripts
 # 
 # Last updated 
+#              01/10/2025: Add MPMD:  by  Binbin Zhou, Lynker@EMC/NCEP
 #              06/25/2024: add restart: by  Binbin Zhou, Lynker@EMC/NCEP
 #              10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 #####################################################################
@@ -65,7 +66,6 @@ export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart/profile ]] &&  mkdir -p $COMOUTrestart/profile
 [[ ! -d $COMOUTrestart/product ]] &&  mkdir -p $COMOUTrestart/product
 
-
 #***************************************
 # Prepare the prepbufr data
 # **************************************
@@ -98,21 +98,18 @@ fi
 #****************************************
 >$DATA/scripts/run_href_all_grid2obs_poe
 
-#system: 10 jobs (8 on CONUS, 2 on Alaska)
 if [ $verif_system = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_system.sh 
   export err=$?; err_chk
   cat ${DATA}/scripts/run_all_href_system_poe.sh >> $DATA/scripts/run_href_all_grid2obs_poe
 fi
 
-#profile: total 10 jobs (4 for conus and 2 for alaska)
 if [ $verif_profile = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_profile.sh $domain
   export err=$?; err_chk
   cat ${DATA}/scripts/run_all_href_profile_poe.sh >> $DATA/scripts/run_href_all_grid2obs_poe 
 fi 
 
-#Product: 16 jobs
 if [ $verif_product = yes ] ; then
   $USHevs/cam/evs_href_grid2obs_product.sh
   export err=$?; err_chk
@@ -120,7 +117,7 @@ if [ $verif_product = yes ] ; then
 fi
 
 
-#totall: 36 jobs for all (both conus and alaska, profile, system and product)
+#totall: 72 jobs for all (both conus and alaska, profile, system and product)
 chmod 775 $DATA/scripts/run_href_all_grid2obs_poe
 
 

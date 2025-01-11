@@ -2,6 +2,7 @@
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href cape plotting python script
 # Last updated: 
+#               01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
 #               07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP
 #               05/30/2023, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
@@ -14,10 +15,15 @@ export machine=${machine:-"WCOSS2"}
 export output_base_dir=$DATA/stat_archive
 mkdir -p $output_base_dir
 
-restart=$COMOUT/restart/$last_days/href_cape_plots
-if [ ! -d  $restart ] ; then
+all_plots=$DATA/plots/all_plots
+mkdir -p $all_plots
+if [ $SENDCOM = YES ] ; then
+ restart=$COMOUT/restart/$last_days/href_cape_plots
+ if [ ! -d  $restart ] ; then
   mkdir -p $restart
-fi  
+ fi
+fi
+
 export eval_period='TEST'
 
 export interp_pnts=''
@@ -143,6 +149,20 @@ for valid_time in 00 12 ; do
 
         level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
 
+        if [ $score_type = lead_average ] ; then
+          thresh_fcst=">=${threshold}"
+          thresh_obs=$thresh_fcst
+          tail=ge${thresh}
+        elif [ $score_type = threshold_average ] ; then
+          thresh_fcst=${threshold}
+          thresh_obs=$thresh_fcst
+          tail=f${lead}
+        else
+          thresh_fcst=' '
+          thresh_obs=' '
+          tail='other'
+        fi
+
 	 #*********************
 	 # Build sub-jobs
 	 #*********************
@@ -197,21 +217,6 @@ for valid_time in 00 12 ; do
          echo "export interp=BILIN" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
          echo "export score_py=$score_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-
-	 if [ $score_type = lead_average ] ; then
-           thresh_fcst=">=${threshold}"
-           thresh_obs=$thresh_fcst
-	   tail=ge${thresh}
-         elif [ $score_type = threshold_average ] ; then
-           thresh_fcst=${threshold}
-           thresh_obs=$thresh_fcst
-	   tail=f${lead}
-         else
-           thresh_fcst=' '
-           thresh_obs=' '
-	   tail='other'
-         fi
-
          sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g"  -e "s!thresh_obs!$thresh_obs!g"   -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$valid_time!g" -e "s!fcst_lead!$fcst_lead!g"  -e "s!interp_pnts!$interp_pnts!g" $USHevs/cam/evs_href_plots_config.sh > run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
          chmod +x  run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
@@ -221,14 +226,24 @@ for valid_time in 00 12 ; do
 	#Save for restart and tar files 
 	 echo "for domain in $subregions ; do " >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 	 echo "  plot=${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-	 echo "  if [ -s \$plot ] ; then " >>run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "  if [ -s \$plot ] ; then " >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "    if [ $SENDCOM = YES ] ; then" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh 
      	 echo "     cp -v \$plot $restart" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 	 echo "     >$restart/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+         echo "    fi" >>run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "    cp -v \$plot $all_plots" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 	 echo "  fi" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
          echo "done" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
          chmod +x  run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh 
          echo "${DATA}/scripts/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_all_poe.sh
+
+       else
+	 for domain in $subregions ; do 
+	   if [ -s ${restart}/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png ] ; then
+             cp -v ${restart}/${score_type}_regional_${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png $all_plots
+	   fi 
+         done	 
        fi
 
      done #end of FCST_LEVEL_value
@@ -262,7 +277,7 @@ export err=$?; err_chk
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $restart
+cd $all_plots
 
 for score_type in lead_average threshold_average; do
 

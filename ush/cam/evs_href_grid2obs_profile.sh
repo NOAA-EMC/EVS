@@ -1,7 +1,10 @@
 #!/bin/ksh
 #*************************************************************************
 #  Purpose: Generate href grid2obs profile poe and sub-jobs files
-#  Last update: 10/30/2024, by Binbin Zhou Lynker@EMC/NCEP
+#
+#  Last update:
+#     01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP 
+#     10/30/2024, by Binbin Zhou Lynker@EMC/NCEP
 #*************************************************************************
 set -x 
 
