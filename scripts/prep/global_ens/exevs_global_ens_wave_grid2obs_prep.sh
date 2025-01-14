@@ -62,7 +62,7 @@ for ihour in ${inithours} ; do
 	fi
     else
         if [ ! -s ${COMOUTgefs}/${newname} ]; then
-            cpreq -v ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
+            cp -v ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
             if [ $SENDCOM = YES ]; then
                 if [ -s $DATA/gefs_wave_grib2/${newname} ]; then 
                     cp -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/${newname}
@@ -91,7 +91,7 @@ for ihour in 00 06 12 18 ; do
         cat mailmsg | mail -s "$subject" $MAILTO
       fi
   else
-      cpreq -v ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
+      cp -v ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
       chmod 640 ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
       chgrp rstprod ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
   fi
