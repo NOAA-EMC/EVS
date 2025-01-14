@@ -180,7 +180,7 @@ for outtyp in awpozcon pm25; do
       mkdir -p ${COMOUTfinal}
       stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
-        cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+        cp -v ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
         cd ${finalstat}
         run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
@@ -290,7 +290,7 @@ if [ ${vhr} = 11 ]; then
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
     if [ ${stat_file_count} -ne 0 ]; then
-      cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+      cp -v ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
       run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
       export err=$?; err_chk
       if [ ${SENDCOM} = "YES" ]; then
@@ -383,7 +383,7 @@ if [ ${vhr} = 04 ]; then
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
     if [ ${stat_file_count} -ne 0 ]; then
-      cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+      cp -v ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
       run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
       export err=$?; err_chk
       if [ ${SENDCOM} = "YES" ]; then
