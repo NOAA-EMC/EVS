@@ -134,6 +134,7 @@ for stats in csi_fbias ratio_pod_csi ; do
         verif_type=conus_sfc
 
 	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	echo "set -x" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
         save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}
 	plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
 	mkdir -p $plot_dir
@@ -176,13 +177,15 @@ for stats in csi_fbias ratio_pod_csi ; do
 
 	 echo "${DATA}/scripts/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
-	 #Save for restart and tar files
          echo "if [ -s ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-         echo " if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-	 echo "  cp -v ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-	 echo "  >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-	 echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-	 echo " cp -v ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "  cp -v ${plot_dir}/${score_type}_regional_*_${valid_rst}_${var_rst}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "  >$all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        
+	 #Copy files to restart directory
+	 echo "  if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "    cp -v $all_plots/${score_type}_regional_*_${valid_rst}_${var_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh       
+	 echo "    cp -v $all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.completed $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	 echo "  fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
@@ -217,10 +220,10 @@ else
 fi
 export err=$?; err_chk
 
+
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-
 cd $all_plots
 
 for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrgl day2_slgt day2_tstm day2_enh day2_mdt day2_high day3_mrgl day3_slgt day3_tstm day3_enh day3_mdt day3_high ; do

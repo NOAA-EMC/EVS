@@ -56,6 +56,8 @@ for prod in mean prob ; do
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
+       echo  "#!/bin/ksh" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo  "set -x" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh       
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh     
        echo  "export regrid=G227" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
@@ -112,10 +114,11 @@ for prod in mean prob ; do
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export err=\$?; err_chk" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh 
 
-       echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
-
+       echo  "if [ $SENDCOM = YES ] ; then " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo  " for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        #Mark this CONUS task is completed
-       echo "[[ \$? = 0 ]] && >$COMOUTrestart/product/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo " [[ \$? = 0 ]] && >$COMOUTrestart/product/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "fi" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
        chmod +x run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "${DATA}/scripts/run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh" >> run_all_href_product_poe.sh
@@ -154,6 +157,8 @@ for prod in mean prob ; do
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
+       dcho  "#!/bin/ksh" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh	      
+       dcho  "set -x" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh	      
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export regrid=NONE" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
@@ -189,10 +194,11 @@ for prod in mean prob ; do
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export err=\$?; err_chk" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        
-       echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
-
+       echo  "if [ $SENDCOM = YES ] ; then " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh 
+       echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat ; do if [ -f \"\$FILEn\" ] ; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        #Mark this Alaska task is completed
        echo "[[ \$? = 0 ]] && >$COMOUTrestart/product/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "fi" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
        chmod +x run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "${DATA}/scripts/run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh" >> run_all_href_product_poe.sh

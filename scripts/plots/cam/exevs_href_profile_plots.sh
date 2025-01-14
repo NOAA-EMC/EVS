@@ -148,6 +148,7 @@ fi
       #***********************************************************************************************************************************
 
 	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	echo "set -x" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
         save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}
 	plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
@@ -215,11 +216,13 @@ fi
          #Save for restart and tar files
 	 echo "for domain in conus alaska hawaii prico ; do" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
          echo " if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-         echo "  if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh 
-	 echo "   cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "   >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "  fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "  cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "   cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "   >$all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         #Copy files to restart directory"
+	 echo "   if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "      cp -v $all_plots/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "      cp -v $all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "   fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	 echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
          echo "done" >>run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
@@ -254,7 +257,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 60 -depth 1 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
+   mpiexec -np 60 -ppn 60  --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
 else
   ${DATA}/scripts/run_all_poe.sh
 fi

@@ -130,6 +130,8 @@ for prod in mean ; do
      ########################################################################
      if [ ! -e  $COMOUTrestart/spcoutlook/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed ] ; then
 
+       echo  "#!/bin/ksh" >>  run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh	     
+       echo  "set -x" >>  run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh	     
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh     
        echo  "export regrid=G227" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
@@ -164,7 +166,9 @@ for prod in mean ; do
        echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
        #Mark this task is completed
-       echo "[[ \$? = 0 ]] && >$COMOUTrestart/spcoutlook/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "if [ $SENDCOM = YES ] ; then" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo " [[ \$? = 0 ]] && >$COMOUTrestart/spcoutlook/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "fi" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
        chmod +x run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo "${DATA}/scripts/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh" >> run_all_href_spcoutlook_poe.sh

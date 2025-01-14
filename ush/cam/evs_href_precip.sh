@@ -177,7 +177,8 @@ for obsvtype in ccpa mrms ; do
 		     mbrs=10
 		  fi
 
-
+                echo  "#!/bin/ksh" >>run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                echo  "set -x" >>run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
  	        echo  "export mbrs=$mbrs" >>run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                
                 if [ $acc = 24h ] ; then
@@ -490,7 +491,9 @@ for obsvtype in ccpa mrms ; do
                 fi
 
 	        #Mark the completion of this sub-task for restart:
-                echo "[[ \$? = 0 ]] && >$COMOUTrestart/${prod}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
+		echo "if [ $SENDCOM = YES ] ; then" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
+                echo " [[ \$? = 0 ]] && >$COMOUTrestart/${prod}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
+                echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 
                 chmod +x run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                 echo "${DATA}/scripts/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh" >> run_all_href_precip_poe.sh

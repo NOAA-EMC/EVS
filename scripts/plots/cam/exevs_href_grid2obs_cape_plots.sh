@@ -174,6 +174,7 @@ for valid_time in 00 12 ; do
       #***********************************************************************************************************************************
 
         echo "#!/bin/ksh" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+        echo "set -x" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
         verif_type=conus_sfc
 
 	save_dir=$DATA/plots/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}
@@ -227,13 +228,16 @@ for valid_time in 00 12 ; do
 	 echo "for domain in $subregions ; do " >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 	 echo "  plot=${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 	 echo "  if [ -s \$plot ] ; then " >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-	 echo "    if [ $SENDCOM = YES ] ; then" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh 
-     	 echo "     cp -v \$plot $restart" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-	 echo "     >$restart/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-         echo "    fi" >>run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-	 echo "    cp -v \$plot $all_plots" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-	 echo "  fi" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-         echo "done" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+     	 echo "     cp -v \$plot $all_plots" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "     >$all_plots/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+
+	#Copy files to restart directory
+	 echo "    if [ $SENDCOM = YES ] ; then" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "     cp -v $all_plots/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png $restart" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "     cp -v $all_plots/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed $restart" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "    fi" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+         echo "  fi" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "done" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
          chmod +x  run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh 
          echo "${DATA}/scripts/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_all_poe.sh

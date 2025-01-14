@@ -142,6 +142,7 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
       #***********************************************************************************************************************************
      
 	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
+	echo "set -x" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
         verif_type=conus_sfc
 
         save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}
@@ -193,11 +194,13 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
 
          #Save for restart and tar files
 	 echo "if [ -s ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-         echo " if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-	 echo "   cp -v ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-	 echo " >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
-         echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo " cp -v ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo " >$all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
+         #Copy files to restart directory
+	 echo " if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "  cp -v $all_plots/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "  cp -v $all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
+	 echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
@@ -232,7 +235,6 @@ else
   ${DATA}/scripts/run_all_poe.sh
 fi
 export err=$?; err_chk
-
 
 #**************************************************
 # Change plot file names to meet the EVS standard

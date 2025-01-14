@@ -200,6 +200,7 @@ for stats in $stats_list ; do
 
         verif_type=conus_sfc
 	echo "#!/bin/ksh" >>  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	echo "set -x" >>  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
        
 	save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}
 	plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
@@ -264,13 +265,17 @@ for stats in $stats_list ; do
 	 #Save for restart
          echo "for domain in $subregions ; do " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "    cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "    >$all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+
+	 #Copy files to restart directory
 	 echo "   if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-	 echo "    cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-	 echo "    >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "     cp -v $all_plots/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "     cp -v $all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "   fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-	 echo "   cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "  fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "done" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
          echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_all_poe.sh

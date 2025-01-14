@@ -84,6 +84,9 @@ for obsv in 6h 24h  ; do
                 fi
               fi
 
+
+	    echo "#!/bin/ksh" >> run_href_snow${obsv}.${fhr}.${vhr}.sh  
+	    echo "set -x" >> run_href_snow${obsv}.${fhr}.${vhr}.sh  
             echo "export mbrs=$mbrs" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo "export regrid=G212" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             
@@ -137,7 +140,9 @@ for obsv in 6h 24h  ; do
             echo "for FILEn in \$output_base/stat/\${MODEL}/grid_stat_\${MODEL}${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 
             #Mark this task is completed for restart 
-	    echo "[[ \$? = 0 ]] && >$COMOUTrestart/snow/run_href_snow${obsv}.${fhr}.${vhr}.completed" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+	    echo "if [ $SENDCOM = YES ] ; then" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+	    echo " [[ \$? = 0 ]] && >$COMOUTrestart/snow/run_href_snow${obsv}.${fhr}.${vhr}.completed" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+            echo "fi" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 
 	    chmod +x run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo "${DATA}/scripts/run_href_snow${obsv}.${fhr}.${vhr}.sh" >> run_all_href_snowfall_poe.sh

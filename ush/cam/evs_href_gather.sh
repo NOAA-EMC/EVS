@@ -38,7 +38,8 @@ for MODL in $MODELS ; do
 #***********************************************
 cd $DATA/scripts
 >run_gather_${verify}_${MODL}.sh
-
+    
+    echo  "set -x" >> run_gather_${verify}_${MODL}.sh
     echo  "export output_base=${WORK}/gather" >> run_gather_${verify}_${MODL}.sh 
     echo  "export verify=$verify" >> run_gather_${verify}_${MODL}.sh 
 
