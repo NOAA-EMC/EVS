@@ -68,24 +68,14 @@ stormName=$(sed "s/ //g" <<< $VARIABLE2)
 echo "Name_${stormName}_Name"
 echo "${stormBasin}, ${stormNumber}, ${stormYear}, ${stormName}"
 
-### NOTE TO USERS ###
-# UKM runs from 2024 are still being processed  #
-# The code will break if this model is included #
-# To run with UKM: 
-# comment out lines 85 and 86 #
-# uncomment lines 87 and 88   #
-
 #---Storm Plots 
 export LOGOroot=${FIXevs}/logos
 export PLOTDATA=${STORMroot}
 #export RUN="tropcyc"
 export img_quality="low"
-
 export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
-export model_tmp_atcf_name_list="MD01,MD02,MD03"
-export model_plot_name_list="GEFS,EENS,CENS"
-#export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
-#export model_plot_name_list="GEFS,EENS,CENS,UKMN"
+export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
+export model_plot_name_list="GEFS,EENS,CENS,UKMN"
 export plot_CI_bars="NO"
 export under="_"
 export tc_name=${stbasin}${under}${stormYear}${under}${stormName}
@@ -143,24 +133,14 @@ elif [ ${stormBasin} = "wp" ]; then
   cp $metTCcomout/tc_stat/tc_stat_basin.out $metTCcomout/tc_stat/tc_stat.out
 fi
 
-### NOTE TO USERS ###
-# UKM runs from 2024 are still being processed  #
-# The code will break if this model is included #
-# To run with UKM: 
-# comment out lines 161 and 162 #
-# uncomment lines 163 and 164   #
-
 #--- Basin-Storms Plots 
 export LOGOroot=${FIXevs}/logos
 export PLOTDATA=${metTCcomout}
 #export RUN="tropcyc"
 export img_quality="low"
-
 export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
-export model_tmp_atcf_name_list="MD01,MD02,MD03"
-export model_plot_name_list="GEFS,EENS,CENS"
-#export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
-#export model_plot_name_list="GEFS,EENS,CENS,UKMN"
+export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
+export model_plot_name_list="GEFS,EENS,CENS,UKMN"
 export plot_CI_bars="NO"
 export stormNameB=Basin
 export tc_name=${stbasin}${under}${stormYear}${under}${stormNameB}
