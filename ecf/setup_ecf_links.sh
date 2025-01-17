@@ -135,4 +135,12 @@ link_master_to_cyc "jevs_analyses_rtma_precip_stats_vhr" "$cyc"
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_analyses_ccpa_precip_stats_vhr" "$cyc"
 
+# GLOBAL-ENS CHEM files
+cd $ECF_DIR/scripts/stats/global_ens
+echo "Linking GLOBAL_ENS - CHEM stats ..."
+cyc=$(seq 0 3 23)
+link_master_to_cyc "jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr" "$cyc"
+cyc=$(seq 0 3 23)
+link_master_to_cyc "jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr" "$cyc"
+
 echo "Done."
