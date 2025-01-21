@@ -73,7 +73,6 @@ export LOGOroot=${FIXevs}/logos
 export PLOTDATA=${STORMroot}
 #export RUN="tropcyc"
 export img_quality="low"
-
 export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
 export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
 export model_plot_name_list="GEFS,EENS,CENS,UKMN"
@@ -139,7 +138,6 @@ export LOGOroot=${FIXevs}/logos
 export PLOTDATA=${metTCcomout}
 #export RUN="tropcyc"
 export img_quality="low"
-
 export fhr_list="0,12,24,36,48,60,72,84,96,108,120,132,144,156,168"
 export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
 export model_plot_name_list="GEFS,EENS,CENS,UKMN"

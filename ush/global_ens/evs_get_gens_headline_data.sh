@@ -74,7 +74,7 @@ done
 
 for hhh in 024 048 072 096  120 144 168 192 216 240 264 288 312 336 360 384 ; do
    if [ -s $EVSINgefs/gfs.t00z.grid3.f${hhh}.grib2 ]; then
-     cpreq -v $EVSINgefs/gfs.t00z.grid3.f${hhh}.grib2 $WORK/gfs.t00z.grid3.f${hhh}.grib2
+     cp -v $EVSINgefs/gfs.t00z.grid3.f${hhh}.grib2 $WORK/gfs.t00z.grid3.f${hhh}.grib2
      if [ $SENDCOM="YES" ] ; then
          if [ -s $WORK/gfs.t00z.grid3.f${hhh}.grib2 ]; then
              cp -v $WORK/gfs.t00z.grid3.f${hhh}.grib2 $COMOUTgefs/gfs.t00z.grid3.f${hhh}.grib2
