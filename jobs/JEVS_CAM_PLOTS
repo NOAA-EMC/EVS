@@ -28,6 +28,15 @@ cd $DATA
 # Determine Job Output Name on System
 ####################################
 
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-cam}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-cam}
 
 ####################################
 # Set EVS directories
