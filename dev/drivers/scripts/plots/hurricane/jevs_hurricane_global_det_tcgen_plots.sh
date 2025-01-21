@@ -1,17 +1,14 @@
 #PBS -S /bin/bash
 #PBS -N jevs_hurricane_global_det_tcgen_plots
 #PBS -j oe
-#PBS -A ENSTRACK-DEV
+#PBS -A VERF-DEV
 #PBS -q dev
-#PBS -l select=1:ncpus=2:mem=4GB
+#PBS -l select=1:ncpus=1:mem=4GB
 ##PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l walltime=00:30:00
 #PBS -l debug=true
 
 set -x
-
-#%include <head.h>
-#%include <envir-p1.h>
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source ${HOMEevs}/versions/run.ver
@@ -44,19 +41,11 @@ export COMINstats=/lfs/h2/emc/vpppg/noscrub/$USER/evs/${evs_ver_2d}/stats/${COMP
 #Define the directories of your NOAA/NWS logos
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
-export DATAROOT=/lfs/h2/emc/stmp/$USER
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export KEEPDATA=YES
 
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_HURRICANE_PLOTS
-
-%include <tail.h>
-%manual
-######################################################################
-# Purpose: This job will generate the grid2obs statistics for the HRRR
-#          model and generate stat files.
-######################################################################
-%end
 

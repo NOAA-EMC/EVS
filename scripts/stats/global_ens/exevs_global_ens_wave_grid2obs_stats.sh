@@ -91,11 +91,11 @@ for vhour in ${validhours} ; do
         DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhour2}0000V.stat
         COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhour2}0000V.stat
         if [[ -s $COMOUTstatfilename ]]; then
-            cpreq -v $COMOUTstatfilename $DATAstatfilename
+            cp -v $COMOUTstatfilename $DATAstatfilename
         else
             if [[ ! -s $DATAgdasncfilename ]]; then
                 if [[ -s $EVSgdasncfilename ]]; then
-                    cpreq -v $EVSgdasncfilename $DATAgdasncfilename
+                    cp -v $EVSgdasncfilename $DATAgdasncfilename
                 else
                     echo "WARNING: DOES NOT EXIST $EVSgdasncfilename"
                 fi
@@ -103,7 +103,7 @@ for vhour in ${validhours} ; do
             if [[ -s $DATAgdasncfilename ]]; then
                 if [[ ! -s $DATAmodelfilename ]]; then
                     if [[ -s $EVSmodelfilename ]]; then
-                        cpreq -v $EVSmodelfilename $DATAmodelfilename
+                        cp -v $EVSmodelfilename $DATAmodelfilename
                     else
                         echo "WARNING: DOES NOT EXIST $EVSmodelfilename"
                     fi
