@@ -28,6 +28,7 @@ for obsvtype in ccpa mrms ; do
 
   for prod in mean pmmn avrg lpmm prob eas system ; do
 
+	  
       if [ $prod = system ] ; then
         acum="03h 24h"
       else
@@ -39,6 +40,12 @@ for obsvtype in ccpa mrms ; do
       obsv=$obsvtype$acc
 
          PROD=`echo $prod | tr '[a-z]' '[A-Z]'`
+
+	 if [ $prod = system ] ; then
+           export MODEL=HREF
+         else
+           export MODEL=HREF_${PROD}
+         fi
 
          #************************************
          # Build sub-jobs
@@ -120,7 +127,7 @@ for obsvtype in ccpa mrms ; do
 	       
              #########################################################################################
              # Restart check: 
-	     #       check if this  sub-task has been completed in the precious run
+	     #       check if this  sub-task has been completed in the previous run
              #       if not, do this sub-task, and mark it is completed after it is done
              #       if yes, skip this task
              #########################################################################################
@@ -218,14 +225,13 @@ for obsvtype in ccpa mrms ; do
                 if [ $prod = system ] ; then
                   echo "export MODEL=HREF" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   echo  "export model=HREF" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                  export MODEL=HREF
                 else
                   echo "export MODEL=HREF_${PROD}" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   echo  "export model=HREF_${PROD}" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	          export MODEL=HREF_${PROD}
                 fi
  
                 mkdir -p  ${COMOUTsmall}/${MODEL}
+                mkdir -p  ${all_stats}/${MODEL}
                 echo  "export output_base=$WORK/precip/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                 echo  "export obsv=${obsv}" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                 echo  "export obsvpath=$WORK" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
@@ -484,22 +490,33 @@ for obsvtype in ccpa mrms ; do
                   fi
 
                 fi
-                if [ $prod = system ] ; then
-                  echo "for FILEn in \$output_base/stat/${MODEL}/ensemble_stat_${MODEL}_*_${obsv}_FHR0${fhr}_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/${MODEL}; fi; done" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                else    
-                  echo "for FILEn in \$output_base/stat/${MODEL}/grid_stat_${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/${MODEL}; fi; done" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                fi
+          
+		#Mark job is completed
+	        echo "if [ -s \$output_base/stat/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ] ; then" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		echo "  cp \$output_base/stat/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat $all_stats/${MODEL}" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+	        echo "  >$all_stats/${MODEL}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 
-	        #Mark the completion of this sub-task for restart:
+
+	        #Copy files to COMOUT:
 		echo "if [ $SENDCOM = YES ] ; then" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
-                echo " [[ \$? = 0 ]] && >$COMOUTrestart/${prod}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
-                echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                echo " if [ -s $all_stats/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ] ; then" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+	        echo "	 cp $all_stats/${MODEL}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed $COMOUTrestart/${prod}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
+                echo "   cp $all_stats/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat $COMOUTsmall/${MODEL}" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		echo " fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 
                 chmod +x run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                 echo "${DATA}/scripts/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh" >> run_all_href_precip_poe.sh
          
                fi #end if check input files
-
+	      
+             else
+	       #Copy restart stat files to working directory   
+	       [[ ! -d ${all_stats}/${MODEL} ]] && mkdir -p ${all_stats}/${MODEL}
+	       if [ -s $COMOUTsmall/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ] ; then
+	            cp $COMOUTsmall/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ${all_stats}/${MODEL}
+	       fi
 	     fi #end if check restart
 
             done #end of vhr

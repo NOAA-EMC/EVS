@@ -14,6 +14,8 @@ export machine=${machine:-"WCOSS2"}
 export WORK=$DATA
 cd $WORK
 mkdir -p $WORK/scripts
+export all_stats=$WORK/all_stats
+mkdir -p $all_stats
 
 #*********************************
 #check input data are available:
@@ -101,7 +103,7 @@ fi
 #*******************************************************************
 # Run gather job to combine small stat files to form a big stat file
 # ******************************************************************
-if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then
+if [ $gather = yes ] && [ -s $all_stats/*.stat ] ; then
   $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
   export err=$?; err_chk
 fi

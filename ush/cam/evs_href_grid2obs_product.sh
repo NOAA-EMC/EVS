@@ -42,7 +42,7 @@ for prod in mean prob ; do
      # **********************
      >run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
      ######################################################################################################
-     #Restart: check if this CONUS task has been completed in the precious run
+     #Restart: check if this CONUS task has been completed in the previous run
      # if not, run this task, and then mark its completion, 
      # otherwise, skip this task
      # ###################################################################################################  
@@ -114,16 +114,28 @@ for prod in mean prob ; do
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export err=\$?; err_chk" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh 
 
-       echo  "if [ $SENDCOM = YES ] ; then " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
-       echo  " for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo " if [ \$? = 0 ] ; then" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "  >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "  cp -v \$output_base/stat/\${MODEL}/*.stat $all_stats" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+
+       echo  " if [ $SENDCOM = YES ] ; then " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "    mkdir -p $COMOUTsmall/run_href_${model}.${dom}.${valid_run}.${fhr}.product" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo  "   cp -v \$output_base/stat/\${MODEL}/*.stat  $COMOUTsmall/run_href_${model}.${dom}.${valid_run}.${fhr}.product" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        #Mark this CONUS task is completed
-       echo " [[ \$? = 0 ]] && >$COMOUTrestart/product/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "    cp -v \$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed $COMOUTrestart/product" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "  fi" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "fi" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
        chmod +x run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "${DATA}/scripts/run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh" >> run_all_href_product_poe.sh
+
       fi
 
+     else
+       #Copy stat files from restart
+       if [ -s $COMOUTsmall/run_href_${model}.${dom}.${valid_run}.${fhr}.product/*.stat ] ; then
+	    cp $COMOUTsmall/run_href_${model}.${dom}.${valid_run}.${fhr}.product/*.stat $all_stats
+       fi
      fi 
 
      done # end of fhr
@@ -143,7 +155,7 @@ for prod in mean prob ; do
      >run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
      #######################################################################
      #Restart check: 
-     # check if this Alaska task has been completed in the precious run
+     # check if this Alaska task has been completed in the previous run
      # if not, run this task, and then mark its completion,
      # otherwise, skip this task
      ########################################################################
@@ -193,17 +205,27 @@ for prod in mean prob ; do
  
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export err=\$?; err_chk" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
-       
-       echo  "if [ $SENDCOM = YES ] ; then " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh 
-       echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat ; do if [ -f \"\$FILEn\" ] ; then cp -v \$FILEn $COMOUTsmall; fi; done" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
-       #Mark this Alaska task is completed
-       echo "[[ \$? = 0 ]] && >$COMOUTrestart/product/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+
+       echo " if [ \$? = 0 ] ; then" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "  >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "  cp \$output_base/stat/\${MODEL}/*.stat $all_stats" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "  if [ $SENDCOM = YES ] ; then " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "    mkdir -p $COMOUTsmall/run_href_${model}.${dom}.${valid_run}.${fhr}.product" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "    cp -v \$output_base/stat/\${MODEL}/*.stat  $COMOUTsmall/run_href_${model}.${dom}.${valid_run}.${fhr}.product" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "    cp -v \$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed $COMOUTrestart/product" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "  fi" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "fi" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
        chmod +x run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "${DATA}/scripts/run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh" >> run_all_href_product_poe.sh
 
       fi 
+
+     else
+       #Copy stat files from restart
+       if [ -s $COMOUTsmall/run_href_${model}.${dom}.${valid_run}.${fhr}.product/*.stat ] ; then
+	 cp $COMOUTsmall/run_href_${model}.${dom}.${valid_run}.${fhr}.product/*.stat $all_stats
+       fi
 
      fi #end if check restart
 

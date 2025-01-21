@@ -48,7 +48,7 @@ cd $DATA/scripts
     echo  "export vend=00" >> run_gather_${verify}_${MODL}.sh
     echo  "export valid_increment=3600" >>  run_gather_${verify}_${MODL}.sh
     echo  "export model=$modnam" >> run_gather_${verify}_${MODL}.sh
-    echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${verify}_${MODL}.sh
+    echo  "export stat_file_dir=${WORK}/all_stats" >> run_gather_${verify}_${MODL}.sh
     echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${verify}_${MODL}.sh
     echo  "export MODEL=${MODL}" >> run_gather_${verify}_${MODL}.sh
     echo  "export modl=$modl" >> run_gather_${verify}_${MODL}.sh

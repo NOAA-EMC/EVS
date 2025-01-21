@@ -7,7 +7,7 @@
 #       01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
 #       10/30/2024, by Binbin Zhou Lynker@EMC/NCEP
 #***********************************************************************************
-set -x 
+set -x
 
 #******************************************
 # Get prefix of $EVSINspcotlk 
@@ -124,7 +124,7 @@ for prod in mean ; do
 
      #######################################################################
      #Restart check:
-     # check if this task has been completed in the precious run
+     # check if this task has been completed in the previous run
      # if not, run this task, and then mark its completion,
      # otherwise, skip this task
      ########################################################################
@@ -163,16 +163,25 @@ for prod in mean ; do
 
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SPCoutlook.conf " >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
-
-       #Mark this task is completed
-       echo "if [ $SENDCOM = YES ] ; then" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
-       echo " [[ \$? = 0 ]] && >$COMOUTrestart/spcoutlook/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "if [ \$? = 0 ] ; then" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "  >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "  cp \$output_base/stat/\${MODEL}/*.stat $all_stats" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       #Copy  files to COMOUT directory
+       echo "  if [ $SENDCOM = YES ] ; then" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "    mkdir -p $COMOUTsmall/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "    cp -v \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "    cp -v \$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed $COMOUTrestart/spcoutlook" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "  fi" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo "fi" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
        chmod +x run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo "${DATA}/scripts/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh" >> run_all_href_spcoutlook_poe.sh
 
+      else
+	#Copy stat files for restart
+        if [ -s $COMOUTsmall/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook/*.stat ] ; then
+	  cp $COMOUTsmall/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook/*.stat $all_stats 
+	fi
       fi
 
      fi #end if check restart

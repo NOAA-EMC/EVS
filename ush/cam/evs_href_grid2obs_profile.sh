@@ -44,7 +44,7 @@ for dom in $domains ; do
         >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
       #########################################################################################
-      # Restart: check if this CONUS task has been completed in the precious run
+      # Restart: check if this CONUS task has been completed in the previous run
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task 
       #########################################################################################
@@ -118,41 +118,56 @@ for dom in $domains ; do
         #  3. if any one of the 3 exits, skip it. But for GenEnsProd, all of the nc files generated from previous run
         #            are copied back to the output_base/stat directory
         #################################################################################################################
-	
-	echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh	
-        echo "  for FILEn in \$output_base/stat/\${MODEL}/GenEnsProd*CONUS*.nc; do if [ -f \"\$FILEn\" ] && [ $SENDCOM = YES ] ; then cp -v \$FILEn $COMOUTrestart/profile; fi; done"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  cp $COMOUTrestart/profile/GenEnsProd*CONUS*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 	echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh 
 	echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  if [ \$? = 0 ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "    cp \$output_base/stat/\${MODEL}/ensemble_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "      mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "      cp \$output_base/stat/\${MODEL}/ensemble_stat*.stat $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "      cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "    fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "  fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo " cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/ensemble_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 	echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 	echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "  if [ \$? = 0 ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "    cp \$output_base/stat/\${MODEL}/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "    if [ $SENDCOM = YES  ; then" ] >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "      [[ ! -d $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile ]] && mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "      cp \$output_base/stat/\${MODEL}/point_stat*.stat $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "      cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "    fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "  fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo " cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 	echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	echo "if [ $SENDCOM = YES ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done" >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "[[ \$? = 0 ]] && >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	#Mark that all of the 3 METplus processes for this task have been  completed for next restart run:
-	echo "[[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "if [ $SENDCOM = YES ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo " cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.completed $COMOUTrestart/profile" >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
        chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
        echo "${DATA}/scripts/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
 
        fi
 
+      else
+	if [ -s $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/*.stat ] ; then 
+	  cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/*.stat $all_stats
+        fi	  
       fi
 
       done
@@ -170,7 +185,7 @@ for dom in $domains ; do
          >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
       #########################################################################################
-      # Restart: check if this Alaska task has been completed in the precious run
+      # Restart: check if this Alaska task has been completed in the previous run
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task
       #########################################################################################
@@ -237,41 +252,56 @@ for dom in $domains ; do
         #  3. if any one of the 3 exits, skip it. But for GenEnsProd, all of the nc files generated from previous run
         #            are copied back to the output_base/stat directory
         #################################################################################################################
-
-        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  for FILEn in \$output_base/stat/\${MODEL}/GenEnsProd*Alaska*.nc; do if [ -f \"\$FILEn\" ] && [ $SENDCOM = YES ] ; then cp -v \$FILEn $COMOUTrestart/profile; fi; done"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  cp $COMOUTrestart/profile/GenEnsProd*Alaska*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  if [ \$? = 0 ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    cp \$output_base/stat/\${MODEL}/ensemble_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/ensemble_stat*.stat $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo " cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/ensemble_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  if [ \$? = 0 ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    cp \$output_base/stat/\${MODEL}/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      [[ ! -d $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile ]] && mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/point_stat*.stat $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo " cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	echo "if [ $SENDCOM = YES ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "[[ \$? = 0 ]] && >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo "if [ $SENDCOM = YES ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo " cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.completed $COMOUTrestart/profile" >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        #Mark that all of the 3 METplus processes for this task have been  completed for next restart run:
-        echo "[[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo "${DATA}/scripts/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
 
+       fi
 
-	chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "${DATA}/scripts/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
-
-       fi 	
+      else
+        if [ -s $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/*.stat ] ; then
+          cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/*.stat $all_stats
+        fi
       fi
 
      done
@@ -289,7 +319,7 @@ for dom in $domains ; do
          >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
       #########################################################################################
-      # Restart: check if this Hawaii task has been completed in the precious run
+      # Restart: check if this Hawaii task has been completed in the previous run
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task
       #########################################################################################
@@ -351,40 +381,56 @@ for dom in $domains ; do
         #  3. if any one of the 3 exits, skip it. But for GenEnsProd, all of the nc files generated from previous run
         #            are copied back to the output_base/stat directory
         #################################################################################################################
-
-        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  for FILEn in \$output_base/stat/\${MODEL}/GenEnsProd*_HI_*.nc; do if [ -f \"\$FILEn\" ] && [ $SENDCOM = YES ] ; then cp -v \$FILEn $COMOUTrestart/profile; fi; done" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  cp $COMOUTrestart/profile/GenEnsProd*_HI_*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  if [ \$? = 0 ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    cp \$output_base/stat/\${MODEL}/ensemble_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/ensemble_stat*.stat $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo " cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/ensemble_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  if [ \$? = 0 ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    cp \$output_base/stat/\${MODEL}/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      [[ ! -d $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile ]] && mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/point_stat*.stat $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo " cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	echo "if [ $SENDCOM = YES ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "[[ \$? = 0 ]] && >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo "if [ $SENDCOM = YES ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo " cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.completed $COMOUTrestart/profile" >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        #Mark that all of the 3 METplus processes for this task have been  completed for next restart run:
-        echo "[[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo "${DATA}/scripts/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
 
-        chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "${DATA}/scripts/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
+       fi
 
-       fi	
+      else
+        if [ -s $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/*.stat ] ; then
+          cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/*.stat $all_stats
+        fi
       fi
 
       done
@@ -402,7 +448,7 @@ for dom in $domains ; do
          >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
       #########################################################################################
-      # Restart: check if this Puerto Rico task has been completed in the precious run
+      # Restart: check if this Puerto Rico task has been completed in the previous run
       #          if not, do this task, and mark it is completed after it is done
       #          otherwise, skip this task
       #########################################################################################
@@ -464,40 +510,40 @@ for dom in $domains ; do
         #  3. if any one of the 3 exits, skip it. But for GenEnsProd, all of the nc files generated from previous run
         #            are copied back to the output_base/stat directory
         #################################################################################################################
-
-        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  for FILEn in \$output_base/stat/\${MODEL}/GenEnsProd*_PR_*.nc; do if [ -f \"\$FILEn\" ] && [ $SENDCOM = YES ] ; then cp -v \$FILEn $COMOUTrestart/profile; fi; done" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.GenEnsProd.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  mkdir -p \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  cp $COMOUTrestart/profile/GenEnsProd*_PR_*.nc \$output_base/stat/\${MODEL}" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-
-        echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo "if [ ! -e $COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
-	echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "  [[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  if [ \$? = 0 ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    cp \$output_base/stat/\${MODEL}/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      [[ ! -d $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile ]] && mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/point_stat*.stat $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "      cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.PointStat.completed $COMOUTrestart/profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "    fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "  fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "else " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo " cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	echo  "if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "for FILEn in \$output_base/stat/\${MODEL}/*.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall; fi; done"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "[[ \$? = 0 ]] && >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-	#Mark that all of the 3 METplus processes for this task have been  completed for next restart run:
-        echo "[[ \$? = 0 ]] && >$COMOUTrestart/profile/run_href_${domain}.${valid_at}.${fhr}_profile.completed" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "if [ $SENDCOM = YES ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo " cp \$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_profile.completed $COMOUTrestart/profile" >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "${DATA}/scripts/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
-       
-       fi	
+       chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo "${DATA}/scripts/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
+
+       fi
+
+      else
+        if [ -s $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/*.stat ] ; then
+          cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_profile/*.stat $all_stats
+        fi
       fi
 
       done

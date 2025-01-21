@@ -20,6 +20,8 @@ export err=$?; err_chk
 export WORK=$DATA
 cd $WORK
 mkdir -p $WORK/scripts
+export all_stats=$WORK/all_stats
+mkdir -p $all_stats
 
 export run_mpi=${run_mpi:-'yes'}
 export verif_precip=${verif_precip:-'yes'}
@@ -108,7 +110,7 @@ fi
 #******************************************************************
 # Run gather job to combine the small stats to form a big stat file
 #******************************************************************
-if [ $gather = yes ] && [ -s $COMOUTsmall/*/*.stat ] ; then
+if [ $gather = yes ] && [ -s $all_stats/*/*.stat ] ; then
   $USHevs/cam/evs_href_gather.sh precip
   export err=$?; err_chk
 fi
