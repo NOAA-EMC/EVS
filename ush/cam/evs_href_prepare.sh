@@ -127,9 +127,12 @@ if [ "$data" = "ccpa01h03h" ] ; then
    #For restart
    [[ ! -e $COMOUTrestart/prepare/ccpa.${vday} ]] && mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
    if [ -s $ccpadir/*.grib2 ] ; then
+    >$ccpadir/pa01h03h.completed
+    if [ $SENDCOM = YES ] ; then
      cp $ccpadir/*01h*.grib2 $COMOUTrestart/prepare/ccpa.${vday}
      cp $ccpadir/*03h*.grib2 $COMOUTrestart/prepare/ccpa.${vday}
-     >$COMOUTrestart/prepare/ccpa01h03h.completed 
+     cp $ccpadir/pa01h03h.completed $COMOUTrestart/prepare 
+    fi 
    fi
 
    if [ "$missing_ccpa" -gt "0" ] ; then 
@@ -199,8 +202,11 @@ if [ "$data" = "ccpa24h" ] ; then
 	 #For restart:
 	 [[ ! -e $COMOUTrestart/prepare/ccpa.${vday} ]] && mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
 	 if [ -s $WORK/ccpa.${vday}/*24h*.nc ] ; then
+	   >$WORK/ccpa.${vday}/ccpa24h.completed
+	   if [ $SENDCOM = YES ] ; then 
 	    cp $WORK/ccpa.${vday}/*24h*.nc  $COMOUTrestart/prepare/ccpa.${vday}
-            >$COMOUTrestart/prepare/ccpa24h.completed
+            cp $WORK/ccpa.${vday}/ccpa24h.completed $COMOUTrestart/prepare
+	   fi
 	 fi
 
 
@@ -358,12 +364,12 @@ if [ "$data" = "prepbufr" ] ; then
    if [ "$lvl" = "profile" ] || [ "$VERIF_CASE" = "severe" ] ; then
       cycs="00 12"
    else
-      cycs="00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23"
+      cycs="00 03 06 09 12 15 18 21"
    fi
-   
-   if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] ; then
-      for grid in $grids ; do
-         for vhr in $cycs  ; do
+  
+   for vhr in $cycs  ; do
+     if [ -s $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00 ] ; then
+         for grid in $grids ; do
             export vbeg=${vhr}
             export vend=${vhr}
             export verif_grid=$grid
@@ -396,13 +402,15 @@ if [ "$data" = "prepbufr" ] ; then
              fi
 	    fi 
          done
-      done
 
       if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
          cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday}
 	 #Save restart files 
-	 cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare/prepbufr.${vday}
-	 >$COMOUTrestart/prepare/rap_prepbufr.completed
+	 >${WORK}/pb2nc/prepbufr_nc/rap_prepbufr.completed
+	 if [ $SENDCOM = YES ] ; then
+           cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare/prepbufr.${vday}
+	   cp ${WORK}/pb2nc/prepbufr_nc/rap_prepbufr.completed $COMOUTrestart/prepare
+	 fi
       fi
 
 
@@ -415,7 +423,8 @@ if [ "$data" = "prepbufr" ] ; then
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
       fi
-   fi
+    fi
+  done
 
  else
     #restart: copy restart files to the working directory
@@ -480,8 +489,11 @@ if [ "$data" = "gfs_prepbufr" ] ; then
 
       #For restart
       if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
-        cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare/prepbufr.${vday}
-        >$COMOUTrestart/prepare/gfs_prepbufr.completed
+	>${WORK}/pb2nc/prepbufr_nc/gfs_prepbufr.completed
+	if [ $SENDCOM = YES ] ; then
+         cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare/prepbufr.${vday}
+         cp ${WORK}/pb2nc/prepbufr_nc/gfs_prepbufr.completed $COMOUTrestart/prepare
+	fi
       fi
 
    else
@@ -565,8 +577,11 @@ if [ "$data" = "mrms" ] ; then
       if [ $? = 0 ] ; then
         [[ ! -d $COMOUTrestart/prepare/mrms.$vday ]] && mkdir -p $COMOUTrestart/prepare/mrms.$vday
         if [ -s $mrmsdir/*.nc ] ; then 
-	  cp $mrmsdir/*.nc $COMOUTrestart/prepare/mrms.$vday
-          >$COMOUTrestart/prepare/mrms.completed
+	  >$mrmsdir/mrms.completed
+	  if [ $SENDCOM = YES ] ; then
+	   cp $mrmsdir/*.nc $COMOUTrestart/prepare/mrms.$vday
+           cp $mrmsdir/mrms.completed $COMOUTrestart/prepare
+	  fi
 	fi 
       fi
 
