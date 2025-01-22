@@ -169,8 +169,8 @@ for prod in mean prob ; do
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
-       dcho  "#!/bin/ksh" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh	      
-       dcho  "set -x" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh	      
+       echo  "#!/bin/ksh" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh	      
+       echo  "set -x" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh	      
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export regrid=NONE" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
