@@ -36,6 +36,7 @@ MET_PATH = os.environ['MET_PATH']
 MET_CONFIG = os.environ['MET_CONFIG']
 DATA = os.environ['DATA']
 RESTART_DIR = os.environ['RESTART_DIR']
+COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
 
 VDATE = os.environ['VDATE']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
@@ -413,8 +414,12 @@ elif STEP == 'stats':
         job_cmd_list_iterative.append(
            "python -c "
            + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-           + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+           + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
            + f"\"job{njob}\", job_type=\"{job_type}\")'"
+        )
+        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+        cutil.run_shell_command(
+            ['cp', '-rpv', completed_job_path, RESTART_DIR]
         )
     if job_type == 'generate':
         if FCST_VAR2_NAME:
@@ -473,9 +478,13 @@ elif STEP == 'stats':
             job_cmd_list_iterative.append(
                "python -c "
                + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-               + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+               + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
                + f"\"job{njob}\", job_type=\"{job_type}\")'"
-           )
+            )
+            completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+            cutil.run_shell_command(
+              ['cp', '-rpv', completed_job_path, RESTART_DIR]
+            )
         else:
             if NEST == 'conusp':
                 if VAR_NAME == 'PTYPE':
@@ -627,8 +636,12 @@ elif STEP == 'stats':
                   job_cmd_list_iterative.append(
                        "python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-                       + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+                       + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                  )
+                  completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+                  cutil.run_shell_command(
+                       ['cp', '-rpv', completed_job_path, RESTART_DIR]
                   )
 
             else:
@@ -691,8 +704,12 @@ elif STEP == 'stats':
                    job_cmd_list_iterative.append(
                        "python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-                       + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+                       + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                   )
+                   completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+                   cutil.run_shell_command(
+                       ['cp', '-rpv', completed_job_path, RESTART_DIR]
                    )
     elif job_type == 'gather':
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
@@ -747,8 +764,12 @@ elif STEP == 'stats':
         job_cmd_list.append(
             "python -c "
             + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-            + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+            + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
             + f"\"job{njob}\", job_type=\"{job_type}\")'"
+        )
+        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+        cutil.run_shell_command(
+            ['cp', '-rpv', completed_job_path, RESTART_DIR]
         )
     elif job_type == 'gather2':
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
@@ -803,8 +824,12 @@ elif STEP == 'stats':
         job_cmd_list.append(
             "python -c "
             + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-            + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+            + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
             + f"\"job{njob}\", job_type=\"{job_type}\")'"
+        )
+        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+        cutil.run_shell_command(
+            ['cp', '-rpv', completed_job_path, RESTART_DIR]
         )
     elif job_type == 'gather3':
         job_cmd_list.append(
