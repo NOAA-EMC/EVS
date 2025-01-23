@@ -571,8 +571,97 @@ class PlotSpecs:
                           +end_date_dt.strftime('%d%b%Y')+' ')
         title_other_hr_list = []
         if date_type == 'VALID':
-            if "mean" in date_type_hr_list:
-                date_plot_name = (date_plot_name+', FHR:ALL, INIT:TBD')
+            for date_type_hr in date_type_hr_list:
+                for forecast_hour in forecast_hour_list:
+                    other_hr = gda_util.get_init_hour(
+                        int(date_type_hr.replace('Z', '')),
+                        int(forecast_hour)
+                    )
+                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
+                            and str(other_hr).zfill(2)+'Z' in other_hr_list:
+                        title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+            title_other_hr_list.sort()
+            date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
+                              +', init. hours: '
+                              +', '.join(title_other_hr_list))
+        elif date_type == 'INIT':
+            for date_type_hr in date_type_hr_list:
+                for forecast_hour in forecast_hour_list:
+                    other_hr = gda_util.get_valid_hour(
+                        int(date_type_hr.replace('Z', '')),
+                        int(forecast_hour)
+                    )
+                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
+                            and str(other_hr).zfill(2)+'Z' in other_hr_list:
+                        title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+                    title_other_hr_list.append(str(init_hr).zfill(2)+'Z')
+            title_other_hr_list.sort()
+            date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
+                              +', valid: '+', '.join(title_other_hr_list))
+        if plot_type not in ['lead_average', 'valid_hour_average',
+                             'lead_by_date', 'lead_by_level']:
+            forecast_day_list = []
+            for forecast_hour in forecast_hour_list:
+                forecast_day = int(forecast_hour)/24.
+                if int(forecast_hour) % 24 == 0:
+                    forecast_day_list.append(str(int(forecast_day)))
+                else:
+                    forecast_day_list.append(str(forecast_day))
+            if len(forecast_hour_list) == 1:
+                date_plot_name = (date_plot_name
+                                  +', Forecast Day '+forecast_day_list[0]+' '
+                                  +'(Hour '+forecast_hour_list[0]+')')
+            else:
+                date_plot_name = (date_plot_name
+                                  +'\nForecast Days '
+                                  +','.join(forecast_day_list)+' '
+                                  +'(Hours '+','.join(forecast_hour_list)+')')
+        return date_plot_name
+
+    def get_dates_plot_name_aqm(self, date_type, start_date, end_date,
+                            date_type_hr_list, other_hr_list,
+                            title_plot_hour_list, plot_type):
+        """! Get the full date information that will be displayed on the plot
+
+             Args:
+                 date_type          - type of dates
+                                      (string, VALID or INIT)
+                 start_date         - starting date and hour
+                                      (string, YYYYmmdd)
+                 end_date           - ending date and hour
+                                      (string, YYYYmmdd)
+                 date_type_hr_list  - list of hours for
+                                      date_type
+                 other_hr_list      - list of hours for
+                                      opposite of date_type
+                                      (strings)
+                 title_plot_hour_list - list of selected forecast/valid hour(s)
+                 plot_type          - type of plot (string)
+
+             Returns:
+                 date_plot_name - full date information that
+                                  will be displayed on the plot
+                                  (string)
+        """
+        date_plot_name = date_type.lower()+' '
+        start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
+        end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
+        date_plot_name = (date_plot_name
+                          +start_date_dt.strftime('%d%b%Y')+'-'
+                          +end_date_dt.strftime('%d%b%Y')+' ')
+        title_other_hr_list = []
+        if date_type == 'VALID':
+            if plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average' ]:
+                plot_hour_range=f"{title_plot_hour_list[0]}-{title_plot_hour_list[-1]}"
+                if plot_type in [ 'time_series_fhr_mean', 'valid_hour_average' ]:
+                    date_plot_name = (date_plot_name+', FHR:'+plot_hour_range+' hrs')
+                else:
+                    date_plot_name = (date_plot_name+', VHR:'+plot_hour_range+'Z')
+                title_other_list=other_hr_list[0]
+                if len(other_hr_list) > 1:
+                    for i_other_hr in range(1,len(other_hr_list)):
+                        title_other_list = ( title_other_lists + ", " +i_other_hr)
+                date_plot_name = (date_plot_name+', INIT:'+title_other_list)
             else:
                 for date_type_hr in date_type_hr_list:
                     for forecast_hour in forecast_hour_list:
@@ -622,13 +711,14 @@ class PlotSpecs:
                                   +'(Hours '+','.join(forecast_hour_list)+')')
         return date_plot_name
 
-    def get_plot_title(self, plot_info_dict, date_info_dict, units):
+    def get_plot_title_aqm(self, plot_info_dict, date_info_dict, units, selected_plot_hours ):
         """! Construct the title for the plot
 
              Args:
                  plot_info_dict  - plot information dictionary (strings)
                  date_info_dict  - date information dictionary (strings)
                  units           - variable units (string)
+                 selected_plot_hours - list of selected forecast/valid hour for title (string)
 
              Returns:
                  plot_title - full plot title that will be
@@ -645,16 +735,13 @@ class PlotSpecs:
             +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
         )
         if date_info_dict['date_type'] == 'VALID':
-            if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean' ]:
-                 date_type_hr_list = [ 'mean' ]
-            else:
-                date_type_hr_list = [
-                    str(hr).zfill(2)+'Z' \
-                    for hr in range(int(date_info_dict['valid_hr_start']),
-                                    int(date_info_dict['valid_hr_end'])
-                                    +int(date_info_dict['valid_hr_inc']),
-                                    int(date_info_dict['valid_hr_inc']))
-                ]
+            date_type_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['valid_hr_start']),
+                                int(date_info_dict['valid_hr_end'])
+                                +int(date_info_dict['valid_hr_inc']),
+                                int(date_info_dict['valid_hr_inc']))
+            ]
             other_hr_list = [
                 str(hr).zfill(2)+'Z' \
                 for hr in range(int(date_info_dict['init_hr_start']),
@@ -679,9 +766,11 @@ class PlotSpecs:
             ]
         if self.plot_type in ['time_series', 'stat_by_level',
                               'performance_diagram', 'threshold_average']:
-            fhr_for_title = [date_info_dict['forecast_hour']]
-        elif self.plot_type in ['time_series_fhr_mean', 'lead_average_vhr_mean' ]:
-            fhr_for_title = 'mean'
+            fhr_for_title = [date_info_dict['forecast_hours']]
+        elif self.plot_type in ['time_series_fhr_mean', 'valid_hour_average' ]:
+            fhr_for_title = selected_plot_hours
+        elif self.plot_type in [ 'lead_average_vhr_mean' ]:
+            vhr_for_title = selected_plot_hours
         else:
             fhr_for_title = date_info_dict['forecast_hours']
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
@@ -756,7 +845,169 @@ class PlotSpecs:
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
                           +plot_info_dict['interp_points'])
-        plot_title = (plot_title+'\n'
+        if self.plot_type in [ 'time_series_fhr_mean' ]:
+            plot_title = (plot_title+'\n'
+                      +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
+                                                date_info_dict['start_date'],
+                                                date_info_dict['end_date'],
+                                                date_type_hr_list, other_hr_list,
+                                                fhr_for_title, self.plot_type))
+        elif self.plot_type in [ 'lead_average_vhr_mean' ]:
+            plot_title = (plot_title+'\n'
+                      +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
+                                                date_info_dict['start_date'],
+                                                date_info_dict['end_date'],
+                                                date_type_hr_list, other_hr_list,
+                                                vhr_for_title, self.plot_type))
+        else:
+            plot_title = (plot_title+'\n'
+                      +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
+                                                date_info_dict['start_date'],
+                                                date_info_dict['end_date'],
+                                                date_type_hr_list, other_hr_list,
+                                                fhr_for_title, self.plot_type))
+        return plot_title
+
+    def get_plot_title(self, plot_info_dict, date_info_dict, units):
+        """! Construct the title for the plot
+
+             Args:
+                 plot_info_dict  - plot information dictionary (strings)
+                 date_info_dict  - date information dictionary (strings)
+                 units           - variable units (string)
+
+             Returns:
+                 plot_title - full plot title that will be
+                              displayed on the plot
+                              (string)
+        plot_title = (
+            self.get_stat_plot_name(plot_info_dict['stat'])+' - '
+            +plot_info_dict['grid']+'/'
+            +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
+        )
+        """
+        plot_title = (
+            self.get_stat_plot_name(plot_info_dict['stat'])+' - '
+            +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
+        )
+        if date_info_dict['date_type'] == 'VALID':
+            date_type_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['valid_hr_start']),
+                                int(date_info_dict['valid_hr_end'])
+                                +int(date_info_dict['valid_hr_inc']),
+                                int(date_info_dict['valid_hr_inc']))
+            ]
+            other_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['init_hr_start']),
+                                int(date_info_dict['init_hr_end'])
+                                +int(date_info_dict['init_hr_inc']),
+                                int(date_info_dict['init_hr_inc']))
+            ]
+        elif date_info_dict['date_type'] == 'INIT':
+            date_type_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['init_hr_start']),
+                                int(date_info_dict['init_hr_end'])
+                                +int(date_info_dict['init_hr_inc']),
+                                int(date_info_dict['init_hr_inc']))
+            ]
+            other_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['valid_hr_start']),
+                                int(date_info_dict['valid_hr_end'])
+                                +int(date_info_dict['valid_hr_inc']),
+                                int(date_info_dict['valid_hr_inc']))
+            ]
+        if self.plot_type in ['time_series', 'stat_by_level',
+                              'performance_diagram', 'threshold_average']:
+            fhr_for_title = [date_info_dict['forecast_hours']]
+        elif self.plot_type in ['time_series_fhr_mean', 'lead_average_vhr_mean' ]:
+            fhr_for_title = [date_info_dict['forecast_hours']]
+        else:
+            fhr_for_title = date_info_dict['forecast_hours']
+        if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
+            var_name_for_title = (plot_info_dict['fcst_var_name']
+                                  +'_'+plot_info_dict['interp_method'])
+        else:
+            var_name_for_title = plot_info_dict['fcst_var_name']
+        if self.plot_type in ['stat_by_level', 'lead_by_level']:
+            var_level_for_title = plot_info_dict['vert_profile']
+        else:
+            var_level_for_title = plot_info_dict['fcst_var_level']
+        if self.plot_type in ['performance_diagram', 'threshold_average']:
+            var_thresh_for_title = 'NA'
+        else:
+            var_thresh_for_title = plot_info_dict['fcst_var_thresh']
+        if plot_info_dict['fcst_var_name'] == 'CAPE' \
+                and plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME',
+                                               'FBAR_OBAR']:
+            var_thresh_for_title = 'NA'
+        plot_title = (plot_title
+                      +self.get_var_plot_name(var_name_for_title,
+                                              var_level_for_title))
+        if plot_info_dict['fcst_var_name'] == 'ICEEX_DAILYAVG' \
+                and units == '10^6_km^2':
+            units = 'x'+units.replace('_', ' ')
+        elif plot_info_dict['fcst_var_name'] \
+                in ['UGRD', 'VGRD', 'UGRD_VGRD', 'WNDSHR', 'GUST']:
+            units = 'kt'
+        elif plot_info_dict['fcst_var_name'] \
+                in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG', 'SST_DAILYAVG',
+                    'TSOIL'] \
+                and plot_info_dict['fcst_var_level'] in ['Z0', 'Z2', 'Z0.1-0']:
+            units = 'F'
+        elif plot_info_dict['fcst_var_name'] == 'AOTK':
+            units = 'unitless'
+        elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
+            units = '$\u03bcg/m^3$'
+        elif plot_info_dict['fcst_var_name'] == 'OZCON1' or plot_info_dict['fcst_var_name'] == 'OZMAX8':
+            units = 'ppbV'
+        plot_title = plot_title+' '+'('+units+')'
+        if var_thresh_for_title != 'NA':
+            if plot_info_dict['fcst_var_name'] == 'AOTK':
+                plot_title = plot_title+', '+var_thresh_for_title.replace("ge","$\u2265$")
+            elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
+                plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
+            elif plot_info_dict['fcst_var_name'] == 'OZCON1' or plot_info_dict['fcst_var_name'] == 'OZMAX8':
+                plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
+            else:
+                plot_title = plot_title+', '+var_thresh_for_title+' '+units
+            thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
+            if plot_info_dict['fcst_var_name'] == 'APCP':
+                thresh_in = round(thresh_value*0.0393701, 3)
+                plot_title = plot_title+' ('+str(thresh_in)+' in)'
+            elif plot_info_dict['fcst_var_name'] in ['SNOD_A24', 'WEASD_A24']:
+                thresh_in = round(thresh_value*39.3701,3)
+                plot_title = plot_title+' ('+str(thresh_in)+' in)'
+            elif plot_info_dict['fcst_var_name'] == 'DPT':
+                thresh_F = round((((thresh_value-273.15)*9)/5)+32)
+                plot_title = plot_title+' ('+str(thresh_F)+' F)'
+            elif plot_info_dict['fcst_var_name'] == 'HGT' \
+                    and plot_info_dict['fcst_var_level'] == 'CEILING':
+                thresh_kft = round(thresh_value/304.8,1)
+                if int(thresh_kft) == thresh_kft:
+                    thresh_kft = int(thresh_kft)
+                plot_title = plot_title+' ('+str(thresh_kft)+' kft)'
+            elif plot_info_dict['fcst_var_name'] == 'VIS':
+                thresh_mile = round(thresh_value * 0.000621371,1)
+                if int(thresh_mile) == thresh_mile:
+                    thresh_mile = int(thresh_mile)
+                plot_title = plot_title+' ('+str(thresh_mile)+' mile)'
+        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
+            plot_title = (plot_title+' '
+                          +'Neighborhood Points: '
+                          +plot_info_dict['interp_points'])
+        if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean' ]:
+            plot_title = (plot_title+'\n'
+                      +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
+                                                date_info_dict['start_date'],
+                                                date_info_dict['end_date'],
+                                                date_type_hr_list, other_hr_list,
+                                                fhr_for_title, self.plot_type))
+        else:
+            plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
                                                 date_info_dict['start_date'],
                                                 date_info_dict['end_date'],

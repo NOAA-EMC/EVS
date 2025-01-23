@@ -60,7 +60,7 @@ class LeadAverageVhrMean:
 
              Returns:
         """
-        self.logger.info("Plot Type: Lead Average")
+        self.logger.info("Plot Type: Lead Average with all vhr by FCSt Lead")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -77,6 +77,14 @@ class LeadAverageVhrMean:
         # Make dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
+        #    str(hr).zfill(2)+'Z' \
+        valid_hr_list = [
+            str(hr).zfill(2) \
+            for hr in range(int(self.date_info_dict['valid_hr_start']),
+                            int(self.date_info_dict['valid_hr_end'])
+                            +int(self.date_info_dict['valid_hr_inc']),
+                            int(self.date_info_dict['valid_hr_inc']))
+        ]
         fcst_units = []
         for forecast_hour in self.date_info_dict['forecast_hours']:
             self.logger.info(f"Building data for forecast hour {forecast_hour}")
@@ -233,7 +241,7 @@ class LeadAverageVhrMean:
                     #)
         # Set up plot
         self.logger.info(f"Setting up plot")
-        plot_specs_la = PlotSpecs(self.logger, 'lead_average')
+        plot_specs_la = PlotSpecs(self.logger, 'lead_average_vhr_mean')
         plot_specs_la.set_up_plot()
         n_xticks = 17
         if len(self.date_info_dict['forecast_hours']) <= n_xticks:
@@ -263,9 +271,9 @@ class LeadAverageVhrMean:
         elif len(fcst_units) == 0:
             self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
-        plot_title = plot_specs_la.get_plot_title(
+        plot_title = plot_specs_la.get_plot_title_aqm(
             self.plot_info_dict, self.date_info_dict,
-            fcst_units[0]
+            fcst_units[0], valid_hr_list
         )
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):

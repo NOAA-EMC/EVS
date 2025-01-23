@@ -85,9 +85,21 @@ class ValidHourAverage:
         )
         self.logger.info("Reading in model stat files "
                          +f"from {self.input_dir}")
+        selected_filter_init_hour=self.date_info_dict['init_hr_start']
+        perform_fcst_hour_filtering=True
+        ## selected_fcst_hours=[ str(ifhr) for ifhr in fhrs ]
+        test_fcst_hours=[ 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48 ]
+        selected_fcst_hours=[ str(ifhr) for ifhr in test_fcst_hours ]
+        self.logger.info(f"selected forecast hours = {selected_fcst_hours}")
+        flag_init_df=True
         for valid_hour in valid_hours:
             self.logger.debug(f"Building data for valid hour {valid_hour}")
-            for forecast_hour in self.date_info_dict['forecast_hours']:
+            ## for forecast_hour in self.date_info_dict['forecast_hours']:
+            for forecast_hour in test_fcst_hours:
+                check_init_date=gda_util.get_init_hour(valid_hour,forecast_hour)
+                if check_init_date != int(selected_filter_init_hour):
+                    self.logger.debug(f"Skip building data for forecast hour {forecast_hour} for init_hour = {check_init_date} not equal to {selected_filter_init_hour}")
+                    continue
                 self.logger.debug(f"Building data for forecast hour {forecast_hour}")
                 # Get dates to plot
                 self.logger.debug("Making valid and init date arrays")
@@ -155,9 +167,12 @@ class ValidHourAverage:
                     index=lambda s: s+'f'+str(forecast_hour).zfill(3),
                     level=1, inplace=True
                 )
-                if forecast_hour \
-                        == self.date_info_dict['forecast_hours'][0]:
+                ## if forecast_hour \
+                ##      == self.date_info_dict['forecast_hours'][0]:
+                ## if forecast_hour == test_fcst_hours[0]:
+                if flag_init_df:
                     all_forecast_hour_all_model_df = all_model_df
+                    flag_init_df=False
                 else:
                     all_forecast_hour_all_model_df = pd.concat(
                         [all_forecast_hour_all_model_df,all_model_df]
@@ -276,9 +291,9 @@ class ValidHourAverage:
         elif len(fcst_units) == 0:
             self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
-        plot_title = plot_specs_vha.get_plot_title(
+        plot_title = plot_specs_vha.get_plot_title_aqm(
             self.plot_info_dict, self.date_info_dict,
-            fcst_units[0]
+            fcst_units[0], selected_fcst_hours
         )
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):

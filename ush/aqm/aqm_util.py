@@ -2489,6 +2489,8 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
             else:
                 filtered_model_stat_file = output_filtered_model_stat_file
             if not os.path.exists(filtered_model_stat_file):
+                logger.info(f"Can not find Filtered {model_dict['name']} file = {filtered_model_stat_file}")
+                logger.info(f"Perform filtering procedures from condense file = {condensed_model_file}")
                 write_filtered_stat_file = True
                 read_filtered_stat_file = True
             else:
@@ -2589,16 +2591,29 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                      & (condensed_model_df['LINE_TYPE'] \
                         == line_type)
                 ]
+                filter_inithr_flag=False
+                filter_inithr_flag=True
                 if filter_inithr_flag:
+                    logger.debug(f"Filter df by init_hour of {filter_init_hour}")
                     fcst_lead_time=filtered_model_df['FCST_LEAD'].tolist()
+                    ## for i in range(0,11): 
+                    ##     logger.debug(f"fcst_lead_time {i} = {fcst_lead_time[i]}")
                     fcst_lead_values=[]
                     for strtime in fcst_lead_time:
                         lead_obj=int(strtime[0:2])
                         fcst_lead_values.append(lead_obj)
+                    ## for i in range(0,11): 
+                    ##     logger.debug(f"fcst_lead_values {i} = {fcst_lead_values[i]}")
                     fcst_valid_time=filtered_model_df['FCST_VALID_BEG'].tolist()
+                    ## for i in range(0,11): 
+                    ##     logger.debug(f"fcst_valid_time {i} = {fcst_valid_time[i]}")
+                    datetime_valid=[]
                     for strtime in fcst_valid_time:
                         dt_obj=datetime.datetime.strptime(strtime, "%Y%m%d_%H%M%S")
                         datetime_valid.append(dt_obj)
+                    ## for i in range(0,11): 
+                    ##     logger.debug(f"datetime_valid {i} = {datetime_valid[i]}")
+                    ##     logger.debug(f"datetime_valid.hour = {datetime_valid[i].hour}")
                     num_data=len(fcst_lead_values)
                     num_check=len(datetime_valid)
                     if num_data == num_check:
@@ -2606,9 +2621,17 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                         for i in range(0,num_data):
                             init_obj=get_init_hour( datetime_valid[i].hour, fcst_lead_values[i])
                             array_init_hour.append(init_obj)
+                        ## for i in range(0,11): 
+                        ##     logger.debug(f"array_init_hour {i} = {array_init_hour[i]}")
                     else:
-                        print(f"number of data are different fcst_lead {num_data} and valid_time {num_check}")
-                    remove_index=[ idx for idx in range(num_data) if array_init_hour[idx] != filtered_init_hour ]
+                        logger.debug(f"number of data are different fcst_lead {num_data} and valid_time {num_check}")
+                    ## for i in range(0,11): 
+                    ##     logger.debug(f"{fcst_lead_time[i]} {fcst_lead_values[i]} {fcst_valid_time[i]} {datetime_valid[i].hour} {array_init_hour[i]}")
+                    remove_index=[ idx for idx in range(num_data) if array_init_hour[idx] != int(filter_init_hour) ]
+                    ## len_ori_idx=len(array_init_hour)
+                    ## len_rm_idx=len(remove_index)
+                    ## logger.debug(f"number of data before removed is {len_ori_idx}")
+                    ## logger.debug(f"number of data removed is {len_rm_idx}")
                     filtered_model_df.drop(filtered_model_df.index[remove_index], inplace=True)
                 if filter_fhr_flag:
                     selected_forecast_hours=[ fhr.zfill(2)+'0000' for fhr in forecast_hours ]
@@ -2630,10 +2653,12 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                     filtered_model_stat_file, header=met_version_line_type_col_list,
                     index=None, sep=' ', mode='w'
                 )
+                logger.info(f"Write filtered {model_dict['name']} file "
+                            +f"at {filtered_model_stat_file}")
             else:
                 logger.debug(f"{condensed_model_file} does not exist")
             if os.path.exists(filtered_model_stat_file):
-                logger.info(f"Filtered {model_dict['name']} file "
+                logger.info(f"Found filtered {model_dict['name']} file "
                             +f"at {filtered_model_stat_file}")
             else:
                 logger.debug(f"Could not create {filtered_model_stat_file}")
