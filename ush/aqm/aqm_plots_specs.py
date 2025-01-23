@@ -84,7 +84,7 @@ class PlotSpecs:
             self.xtick_label_size = 15
             self.ytick_label_size = 15
         elif self.plot_type in ['lead_average', 'valid_hour_average',
-                                'lead_average_vhr_mean',
+                                'lead_average_vhr_mean', 'valid_hour_average_fhr_mean',
                                 'threshold_average',
                                 'long_term_time_series_diff']:
             self.fig_size = (16., 16.)
@@ -599,6 +599,7 @@ class PlotSpecs:
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
                               +', valid: '+', '.join(title_other_hr_list))
         if plot_type not in ['lead_average', 'valid_hour_average',
+                             'lead_average_vhr_mean', 'valid_hour_average_fhr_mean',
                              'lead_by_date', 'lead_by_level']:
             forecast_day_list = []
             for forecast_hour in forecast_hour_list:
@@ -651,9 +652,9 @@ class PlotSpecs:
                           +end_date_dt.strftime('%d%b%Y')+' ')
         title_other_hr_list = []
         if date_type == 'VALID':
-            if plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average' ]:
+            if plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean' ]:
                 plot_hour_range=f"{title_plot_hour_list[0]}-{title_plot_hour_list[-1]}"
-                if plot_type in [ 'time_series_fhr_mean', 'valid_hour_average' ]:
+                if plot_type in [ 'time_series_fhr_mean', 'valid_hour_average_fhr_mean' ]:
                     date_plot_name = (date_plot_name+', FHR:'+plot_hour_range+' hrs')
                 else:
                     date_plot_name = (date_plot_name+', VHR:'+plot_hour_range+'Z')
@@ -691,6 +692,7 @@ class PlotSpecs:
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
                               +', valid: '+', '.join(title_other_hr_list))
         if plot_type not in ['lead_average', 'valid_hour_average',
+                             'valid_hour_average_fhr_mean',
                              'time_series_fhr_mean', 'lead_average_vhr_mean',
                              'lead_by_date', 'lead_by_level']:
             forecast_day_list = []
@@ -767,7 +769,7 @@ class PlotSpecs:
         if self.plot_type in ['time_series', 'stat_by_level',
                               'performance_diagram', 'threshold_average']:
             fhr_for_title = [date_info_dict['forecast_hours']]
-        elif self.plot_type in ['time_series_fhr_mean', 'valid_hour_average' ]:
+        elif self.plot_type in ['time_series_fhr_mean', 'valid_hour_average_fhr_mean' ]:
             fhr_for_title = selected_plot_hours
         elif self.plot_type in [ 'lead_average_vhr_mean' ]:
             vhr_for_title = selected_plot_hours
@@ -845,20 +847,13 @@ class PlotSpecs:
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
                           +plot_info_dict['interp_points'])
-        if self.plot_type in [ 'time_series_fhr_mean' ]:
+        if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean' ]:
             plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
                                                 date_info_dict['start_date'],
                                                 date_info_dict['end_date'],
                                                 date_type_hr_list, other_hr_list,
                                                 fhr_for_title, self.plot_type))
-        elif self.plot_type in [ 'lead_average_vhr_mean' ]:
-            plot_title = (plot_title+'\n'
-                      +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
-                                                date_info_dict['start_date'],
-                                                date_info_dict['end_date'],
-                                                date_type_hr_list, other_hr_list,
-                                                vhr_for_title, self.plot_type))
         else:
             plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
@@ -880,14 +875,10 @@ class PlotSpecs:
                  plot_title - full plot title that will be
                               displayed on the plot
                               (string)
-        plot_title = (
-            self.get_stat_plot_name(plot_info_dict['stat'])+' - '
-            +plot_info_dict['grid']+'/'
-            +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
-        )
         """
         plot_title = (
             self.get_stat_plot_name(plot_info_dict['stat'])+' - '
+            +plot_info_dict['grid']+'/'
             +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
         )
         if date_info_dict['date_type'] == 'VALID':
@@ -999,20 +990,12 @@ class PlotSpecs:
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
                           +plot_info_dict['interp_points'])
-        if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean' ]:
-            plot_title = (plot_title+'\n'
-                      +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
-                                                date_info_dict['start_date'],
-                                                date_info_dict['end_date'],
-                                                date_type_hr_list, other_hr_list,
-                                                fhr_for_title, self.plot_type))
-        else:
-            plot_title = (plot_title+'\n'
+        plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
-                                                date_info_dict['start_date'],
-                                                date_info_dict['end_date'],
-                                                date_type_hr_list, other_hr_list,
-                                                fhr_for_title, self.plot_type))
+                                                    date_info_dict['start_date'],
+                                                    date_info_dict['end_date'],
+                                                    date_type_hr_list, other_hr_list,
+                                                    fhr_for_title, self.plot_type))
         return plot_title
 
     def get_savefig_name(self, image_dir, plot_info_dict, date_info_dict):
@@ -1088,6 +1071,8 @@ class PlotSpecs:
         elif self.plot_type == 'threshold_average':
             plot_type_savefig_name = 'threshmean'
         elif self.plot_type == 'valid_hour_average':
+            plot_type_savefig_name = 'vhrmean'
+        elif self.plot_type == 'valid_hour_average_fhr_mean':
             plot_type_savefig_name = 'vhrmean'
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')

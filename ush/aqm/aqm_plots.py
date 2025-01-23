@@ -637,6 +637,54 @@ elif JOB_GROUP == 'make_plots':
                     logger.info(f"Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
+    elif plot == 'valid_hour_average_fhr_mean':
+        import aqm_plots_valid_hour_average_fhr_mean as gdap_vhafm
+        for vhafm_info in list(var_info):
+            date_info_dict['valid_hr_start'] = valid_hr_start
+            date_info_dict['valid_hr_end'] = valid_hr_end
+            date_info_dict['valid_hr_inc'] = valid_hr_inc
+            date_info_dict['forecast_hours'] = fhrs
+            plot_info_dict['fcst_var_name'] = vhafm_info[0][0]
+            plot_info_dict['fcst_var_level'] = vhafm_info[0][1]
+            plot_info_dict['fcst_var_thresh'] = vhafm_info[0][2]
+            plot_info_dict['obs_var_name'] = vhafm_info[1][0]
+            plot_info_dict['obs_var_level'] = vhafm_info[1][1]
+            plot_info_dict['obs_var_thresh'] = vhafm_info[1][2]
+            DATAjob_image_name = plot_specs.get_savefig_name(
+                DATAjob, plot_info_dict, date_info_dict
+            )
+            COMOUTjob_image_name = (
+                DATAjob_image_name.replace(DATAjob, COMOUTjob)
+            )
+            if not os.path.exists(DATAjob_image_name) \
+                    and plot_info_dict['stat'] != 'FBAR_OBAR':
+                if date_info_dict['valid_hr_start'] \
+                        == date_info_dict['valid_hr_end']:
+                    logger.warning("No span of valid hours to plot, "
+                                   +"valid start hour is the same as "
+                                   +"valid end hour, skipping "
+                                   +"valid_hour_average plots")
+                    make_vhafm = False
+                else:
+                    make_vhafm = True
+            else:
+                make_vhafm = False
+            if os.path.exists(COMOUTjob_image_name):
+                logger.info(f"Copying {COMOUTjob_image_name} to "
+                            +f"{DATAjob_image_name}")
+                gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
+                make_vhafm = False
+            if make_vhafm:
+                plot_vhafm = gdap_vhafm.ValidHourAverageFhrMean(logger, DATAjob+'/..',
+                                                     DATAjob, model_info_dict,
+                                                     date_info_dict,
+                                                     plot_info_dict,
+                                                     met_info_dict, logo_dir)
+                plot_vhafm.make_valid_hour_average_fhr_mean()
+                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
+                    logger.info(f"Copying {DATAjob_image_name} to "
+                                +f"{COMOUTjob_image_name}")
+                    gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'threshold_average':
         import aqm_plots_threshold_average as gdap_ta
         for ta_info in list(itertools.product(valid_hrs, fhrs)):

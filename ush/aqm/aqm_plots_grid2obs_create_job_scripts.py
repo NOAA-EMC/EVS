@@ -415,7 +415,7 @@ for ozone_job in list(make_plots_jobs_dict['ozone'].keys()):
     )
 
     if ozone_job in ['OZONE']:
-        ozone_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
+        ozone_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     ## elif ozone_job in ['OZONE_Thresh']:
     ##     ozone_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
@@ -451,7 +451,7 @@ for pm25_job in list(make_plots_jobs_dict['pm25'].keys()):
     )
 
     if pm25_job in ['PM25']:
-        pm25_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
+        pm25_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     ## elif pm25_job in ['PM25_Thresh']:
     ##     pm25_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
@@ -487,7 +487,7 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8'].keys()):
     )
 
     if ozmax8_job in ['OZMAX8']:
-        ozmax8_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
+        ozmax8_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     elif ozmax8_job in ['OZMAX8_Thresh']:
         ozmax8_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
     else:
@@ -533,7 +533,7 @@ for pmave_job in list(make_plots_jobs_dict['pmave'].keys()):
     )
 
     if pmave_job in ['PMAVE']:
-        pmave_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
+        pmave_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     elif pmave_job in ['PMAVE_Thresh']:
         pmave_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
     else:
@@ -614,7 +614,7 @@ for aeronetaod_job in list(make_plots_jobs_dict['aeronetaod'].keys()):
     )
 
     if aeronetaod_job in ['AOD']:
-        aeronetaod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average']
+        aeronetaod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     elif aeronetaod_job in ['AOD_Thresh']:
         aeronetaod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
     else:
@@ -859,7 +859,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job_env_dict['vx_mask'] = loop_info[2]
                 job_env_dict['interp_method'] = loop_info[3].split('/')[0]
                 job_env_dict['interp_points'] = loop_info[3].split('/')[1]
-                if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average_vhr_mean' or job_env_dict['plot'] == 'time_series_fhr_mean':
+                if job_env_dict['plot'] in  [ 'valid_hour_average_fhr_mean',
+                                              'lead_average_vhr_mean',
+                                              'time_series_fhr_mean' ]:
                     plot_valid_hrs_loop = [valid_hrs]
                 else:
                     plot_valid_hrs_loop = valid_hrs
@@ -887,7 +889,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                       plot_fcst_threshs_loop,
                                       plot_fcst_levels_loop)
                 ):
-                    if job_env_dict['plot'] == 'valid_hour_average' or job_env_dict['plot'] == 'lead_average_vhr_mean' or job_env_dict['plot'] == 'time_series_fhr_mean':
+                    if job_env_dict['plot'] in  [ 'valid_hour_average_fhr_mean',
+                                              'lead_average_vhr_mean',
+                                              'time_series_fhr_mean' ]:
                         job_env_dict['valid_hr_start'] = str(
                             plot_loop_info[0][0]
                         ).zfill(2)
