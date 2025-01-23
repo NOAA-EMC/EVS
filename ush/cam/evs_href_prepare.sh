@@ -269,14 +269,16 @@ if [ "$data" = "apcp24h_conus" ] ; then
       if [ ! -s  $COMOUTrestart/prepare/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstHREF_APCP24h.conf
          export err=$?; err_chk
-         mv $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
-         if [ -s $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
-            cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/href.${fyyyymmdd}/precip_mean24
+	 if [ -s $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+             mv $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
+           if [ $SENDCOM = YES ] ; then
+	     [[ ! -d ${COMOUT}/href.${fyyyymmdd}/precip_mean24 ]] && mkdir -p ${COMOUT}/href.${fyyyymmdd}/precip_mean24
+	     [[ ! -d $COMOUTrestart/prepare/href.${fyyyymmdd} ]] && mkdir -p $COMOUTrestart/prepare/href.${fyyyymmdd}
+             cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/href.${fyyyymmdd}/precip_mean24
+	     #Save restart files
+	     cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/href.${fyyyymmdd}
+	   fi
          fi
-
-	 #Save restart files 
-	 [[ $? = 0 ]] && cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/href.${fyyyymmdd}
-
        else
          #Restart: copy restart files to the working directory
          cp  $COMOUTrestart/prepare/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}
@@ -325,11 +327,12 @@ if [ "$data" = "apcp24h_alaska" ] ; then
          export err=$?; err_chk
          if [ -s $output_base/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
             mv $output_base/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
+            #Save restart files
+	    if [ $SENDCOM = YES ] ; then
+	      [[ ! -d $COMOUTrestart/prepare/href.${fyyyymmdd} ]] && mkdir -p $COMOUTrestart/prepare/href.${fyyyymmdd}
+              cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $COMOUTrestart/prepare/href.${fyyyymmdd}
+	    fi
          fi
-
-         #Save restart files
-         [[ $? = 0 ]] && cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $COMOUTrestart/prepare/href.${fyyyymmdd}
-
        else
          #Restart: copy restart files to the working directory
 	 [[ ! -d $WORK/href.${fyyyymmdd} ]] && mkdir -p $WORK/href.${fyyyymmdd}
@@ -535,7 +538,7 @@ if [ "$data" = "mrms" ] ; then
          if [ "$accum" = "03" ] ; then
             cycs="00 03 06 09 12 15 18 21"
          elif [ "$accum" = "24" ] ; then
-            cycs="00 06 12  18"
+            cycs="12"
          elif [ "$accum" = "01" ] ; then
             cycs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
          fi
@@ -551,7 +554,7 @@ if [ "$data" = "mrms" ] ; then
             if [ -s $mrms03 ] ; then 
                cp $mrms03 $mrmsdir/.
                gunzip MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
-               export MET_GRIB_TABLES=$PARMevs/metplus_config/prep/$COMPONENT/precip/grib2_mrms_qpf.txt
+	       export MET_GRIB_TABLES=$PARMevs/metplus_config/prep/$COMPONENT/precip/grib2_mrms_qpf.txt
                export togrid=G216
                export grid=G216
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsMRMSqpf.conf

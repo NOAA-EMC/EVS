@@ -477,7 +477,8 @@ for obsvtype in ccpa mrms ; do
                   if [ $obsvtype = ccpa ] ; then
  	              echo  "export verif_poly='${maskpath}/Bukovsky_G212_CONUS.nc, ${maskpath}/Bukovsky_G212_CONUS_East.nc, ${maskpath}/Bukovsky_G212_CONUS_West.nc, ${maskpath}/Bukovsky_G212_CONUS_South.nc, ${maskpath}/Bukovsky_G212_CONUS_Central.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh	 
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsCCPA_G212.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	                 echo  "export verif_poly='${maskpath}/Bukovsky_G240_CONUS.nc, ${maskpath}/Bukovsky_G240_CONUS_East.nc, ${maskpath}/Bukovsky_G240_CONUS_West.nc, ${maskpath}/Bukovsky_G240_CONUS_South.nc, ${maskpath}/Bukovsky_G240_CONUS_Central.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
+		     echo  "export verif_poly='${maskpath}/Bukovsky_G240_CONUS.nc, ${maskpath}/Bukovsky_G240_CONUS_East.nc, ${maskpath}/Bukovsky_G240_CONUS_West.nc, ${maskpath}/Bukovsky_G240_CONUS_South.nc, ${maskpath}/Bukovsky_G240_CONUS_Central.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsCCPA_G240.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo "  export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else

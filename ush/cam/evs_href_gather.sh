@@ -40,7 +40,7 @@ cd $DATA/scripts
 >run_gather_${verify}_${MODL}.sh
     
     echo  "set -x" >> run_gather_${verify}_${MODL}.sh
-    echo  "export output_base=${WORK}/gather" >> run_gather_${verify}_${MODL}.sh 
+    echo  "export output_base=${WORK}/gather/run_gather_${verify}_${MODL}" >> run_gather_${verify}_${MODL}.sh 
     echo  "export verify=$verify" >> run_gather_${verify}_${MODL}.sh 
 
 
@@ -49,7 +49,7 @@ cd $DATA/scripts
     echo  "export valid_increment=3600" >>  run_gather_${verify}_${MODL}.sh
     echo  "export model=$modnam" >> run_gather_${verify}_${MODL}.sh
     echo  "export stat_file_dir=${WORK}/all_stats" >> run_gather_${verify}_${MODL}.sh
-    echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${verify}_${MODL}.sh
+    echo  "export gather_output_dir=\$output_base " >> run_gather_${verify}_${MODL}.sh
     echo  "export MODEL=${MODL}" >> run_gather_${verify}_${MODL}.sh
     echo  "export modl=$modl" >> run_gather_${verify}_${MODL}.sh
 
@@ -61,8 +61,8 @@ cd $DATA/scripts
       echo  "export err=$?; err_chk" >>  run_gather_${verify}_${MODL}.sh
     fi
 
-    echo "if [[ $SENDCOM = YES  && -s ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat ]]; then cp -v ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${modl}.${verify}.v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
-    echo "else  echo ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat empty; fi" >> run_gather_${verify}_${MODL}.sh
+    echo "if [[ $SENDCOM = YES  && -s \$output_base/${vday}/${MODL}_${verify}_${vday}.stat ]]; then cp -v \$output_base/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${modl}.${verify}.v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
+    echo "else  echo \$output_base/${vday}/${MODL}_${verify}_${vday}.stat empty; fi" >> run_gather_${verify}_${MODL}.sh
     chmod +x run_gather_${verify}_${MODL}.sh
  
     echo "${DATA}/scripts/run_gather_${verify}_${MODL}.sh" >> run_gather_all_poe.sh    
