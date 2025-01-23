@@ -265,8 +265,8 @@ class ValidHourAverageFhrMean:
                     #)
         # Set up plot
         self.logger.info(f"Setting up plot")
-        plot_specs_vha = PlotSpecs(self.logger, 'valid_hour_average')
-        plot_specs_vha.set_up_plot()
+        plot_specs_vhafm = PlotSpecs(self.logger, 'valid_hour_average_fhr_mean')
+        plot_specs_vhafm .set_up_plot()
         n_xticks = 8
         if len(valid_hours) < n_xticks:
             xtick_intvl = 1
@@ -278,7 +278,7 @@ class ValidHourAverageFhrMean:
             'ax2_stat_min': np.ma.masked_invalid(np.nan),
             'ax2_stat_max': np.ma.masked_invalid(np.nan)
         }
-        stat_plot_name = plot_specs_vha.get_stat_plot_name(
+        stat_plot_name = plot_specs_vhafm.get_stat_plot_name(
              self.plot_info_dict['stat']
         )
         fcst_units = np.unique(fcst_units)
@@ -289,7 +289,7 @@ class ValidHourAverageFhrMean:
         elif len(fcst_units) == 0:
             self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
-        plot_title = plot_specs_vha.get_plot_title_aqm(
+        plot_title = plot_specs_vhafm.get_plot_title_aqm(
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0], selected_fcst_hours
         )
@@ -300,9 +300,9 @@ class ValidHourAverageFhrMean:
                 plot_left_logo_path
             )
             left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
-                plot_specs_vha.get_logo_location(
-                    'left', plot_specs_vha.fig_size[0],
-                    plot_specs_vha.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_vhafm.get_logo_location(
+                    'left', plot_specs_vhafm.fig_size[0],
+                    plot_specs_vhafm.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
         else:
@@ -315,22 +315,22 @@ class ValidHourAverageFhrMean:
                 plot_right_logo_path
             )
             right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
-                plot_specs_vha.get_logo_location(
-                    'right', plot_specs_vha.fig_size[0],
-                    plot_specs_vha.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_vhafm.get_logo_location(
+                    'right', plot_specs_vhafm.fig_size[0],
+                    plot_specs_vhafm.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
         else:
             plot_right_logo = False
             self.logger.debug(f"{plot_right_logo_path} does not exist")
-        image_name = plot_specs_vha.get_savefig_name(
+        image_name = plot_specs_vhafm.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         # Make plot
         self.logger.info(f"Making plot")
         fig, (ax1, ax2) = plt.subplots(2,1,
-                                       figsize=(plot_specs_vha.fig_size[0],
-                                                plot_specs_vha.fig_size[1]),
+                                       figsize=(plot_specs_vhafm.fig_size[0],
+                                                plot_specs_vhafm.fig_size[1]),
                                        sharex=True)
         fig.suptitle(plot_title)
         ax1.grid(True)
@@ -363,7 +363,7 @@ class ValidHourAverageFhrMean:
                 right_logo_img_array, right_logo_xpixel_loc,
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
-        model_plot_settings_dict = plot_specs_vha.get_model_plot_settings()
+        model_plot_settings_dict = plot_specs_vhafm.get_model_plot_settings()
         model_idx_list = (
             valid_hours_avg_df.index.get_level_values(0).unique().tolist()
         )
@@ -618,11 +618,11 @@ class ValidHourAverageFhrMean:
             stat_min = stat_min_max_dict['ax1_stat_min']
             stat_max = stat_min_max_dict['ax1_stat_max']
             legend = ax1.legend(
-                bbox_to_anchor=(plot_specs_vha.legend_bbox[0],
-                                plot_specs_vha.legend_bbox[1]),
-                loc = plot_specs_vha.legend_loc,
-                ncol = plot_specs_vha.legend_ncol,
-                fontsize = plot_specs_vha.legend_font_size
+                bbox_to_anchor=(plot_specs_vhafm.legend_bbox[0],
+                                plot_specs_vhafm.legend_bbox[1]),
+                loc = plot_specs_vhafm.legend_loc,
+                ncol = plot_specs_vhafm.legend_ncol,
+                fontsize = plot_specs_vhafm.legend_font_size
             )
             plt.draw()
             inv = ax1.transData.inverted()
@@ -642,11 +642,11 @@ class ValidHourAverageFhrMean:
                     )
                     ax1.set_ylim([y_axis_min, y_axis_max])
                     legend = ax1.legend(
-                        bbox_to_anchor=(plot_specs_vha.legend_bbox[0],
-                                        plot_specs_vha.legend_bbox[1]),
-                        loc = plot_specs_vha.legend_loc,
-                        ncol = plot_specs_vha.legend_ncol,
-                        fontsize = plot_specs_vha.legend_font_size
+                        bbox_to_anchor=(plot_specs_vhafm.legend_bbox[0],
+                                        plot_specs_vhafm.legend_bbox[1]),
+                        loc = plot_specs_vhafm.legend_loc,
+                        ncol = plot_specs_vhafm.legend_ncol,
+                        fontsize = plot_specs_vhafm.legend_font_size
                     )
                     plt.draw()
                     inv = ax1.transData.inverted()

@@ -768,13 +768,13 @@ class PlotSpecs:
             ]
         if self.plot_type in ['time_series', 'stat_by_level',
                               'performance_diagram', 'threshold_average']:
-            fhr_for_title = [date_info_dict['forecast_hours']]
+            hr_info_for_title = [date_info_dict['forecast_hours']]
         elif self.plot_type in ['time_series_fhr_mean', 'valid_hour_average_fhr_mean' ]:
-            fhr_for_title = selected_plot_hours
+            hr_info_for_title = selected_plot_hours
         elif self.plot_type in [ 'lead_average_vhr_mean' ]:
-            vhr_for_title = selected_plot_hours
+            hr_info_for_title = selected_plot_hours
         else:
-            fhr_for_title = date_info_dict['forecast_hours']
+            hr_info_for_title = date_info_dict['forecast_hours']
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
             var_name_for_title = (plot_info_dict['fcst_var_name']
                                   +'_'+plot_info_dict['interp_method'])
@@ -848,19 +848,21 @@ class PlotSpecs:
                           +'Neighborhood Points: '
                           +plot_info_dict['interp_points'])
         if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean' ]:
+            self.logger.debug(f"pass {self.plot_type} to get_dates_plot_name_aqm")
             plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
                                                 date_info_dict['start_date'],
                                                 date_info_dict['end_date'],
                                                 date_type_hr_list, other_hr_list,
-                                                fhr_for_title, self.plot_type))
+                                                hr_info_for_title, self.plot_type))
         else:
+            self.logger.debug(f"pass {self.plot_type} to get_dates_plot_name")
             plot_title = (plot_title+'\n'
-                      +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
+                      +self.get_dates_plot_name(date_info_dict['date_type'],
                                                 date_info_dict['start_date'],
                                                 date_info_dict['end_date'],
                                                 date_type_hr_list, other_hr_list,
-                                                fhr_for_title, self.plot_type))
+                                                hr_info_for_title, self.plot_type))
         return plot_title
 
     def get_plot_title(self, plot_info_dict, date_info_dict, units):
