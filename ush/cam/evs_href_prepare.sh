@@ -195,9 +195,9 @@ if [ "$data" = "ccpa24h" ] ; then
       if [ -s $ccpa24/ccpa1 ] && [ -s $ccpa24/ccpa2 ] && [ -s $ccpa24/ccpa3 ] && [ -s $ccpa24/ccpa4 ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
          export err=$?; err_chk
-         mkdir -p ${COMOUTfinal}/precip_mean24
-	 if [ -s ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ] ; then
-           cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
+         mkdir -p ${COMOUTfinal}/precip_mean24/ccpa.${vday}
+	 if [ -s ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ] && [ $SENDCOM = YES ] ; then
+           cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24/ccpa.${vday}
          fi 
 	 #For restart:
 	 [[ ! -e $COMOUTrestart/prepare/ccpa.${vday} ]] && mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
@@ -272,9 +272,9 @@ if [ "$data" = "apcp24h_conus" ] ; then
 	 if [ -s $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
              mv $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
            if [ $SENDCOM = YES ] ; then
-	     [[ ! -d ${COMOUT}/href.${fyyyymmdd}/precip_mean24 ]] && mkdir -p ${COMOUT}/href.${fyyyymmdd}/precip_mean24
+	     [[ ! -d ${COMOUTfinal}/precip_mean24/href.${fyyyymmdd} ]] && mkdir -p ${COMOUTfinal}/precip_mean24/href.${fyyyymmdd}
 	     [[ ! -d $COMOUTrestart/prepare/href.${fyyyymmdd} ]] && mkdir -p $COMOUTrestart/prepare/href.${fyyyymmdd}
-             cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/href.${fyyyymmdd}/precip_mean24
+             cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUTfinal}/precip_mean24/href.${fyyyymmdd}
 	     #Save restart files
 	     cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/href.${fyyyymmdd}
 	   fi
