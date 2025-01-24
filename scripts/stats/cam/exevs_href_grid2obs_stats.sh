@@ -63,7 +63,6 @@ export domain="all"
 export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
 [[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
-[[ ! -d $COMOUTrestart/prepare/prepbufr.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/prepbufr.${vday}
 [[ ! -d $COMOUTrestart/system ]]  &&  mkdir -p $COMOUTrestart/system
 [[ ! -d $COMOUTrestart/profile ]] &&  mkdir -p $COMOUTrestart/profile
 [[ ! -d $COMOUTrestart/product ]] &&  mkdir -p $COMOUTrestart/product

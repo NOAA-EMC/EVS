@@ -49,8 +49,7 @@ export vday=$VDATE
 #Generate directories For restart files
 export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
-[[ ! -d $COMOUTrestart/prepare/ccpa.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
-[[ ! -d $COMOUTrestart/prepare/mrms.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/mrms.${vday}
+[[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
 [[ ! -d $COMOUTrestart/system ]]  &&  mkdir -p $COMOUTrestart/system
 [[ ! -d $COMOUTrestart/prob ]] &&  mkdir -p $COMOUTrestart/prob
 [[ ! -d $COMOUTrestart/eas ]] &&  mkdir -p $COMOUTrestart/eas

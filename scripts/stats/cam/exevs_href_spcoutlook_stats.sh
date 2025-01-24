@@ -61,7 +61,6 @@ export domain="all"
 export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
 [[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
-[[ ! -d $COMOUTrestart/prepare/prepbufr.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/prepbufr.${vday}
 [[ ! -d $COMOUTrestart/spcoutlook ]] &&  mkdir -p $COMOUTrestart/spcoutlook
 
 
