@@ -35,6 +35,7 @@ MET_PLUS_PATH = os.environ['MET_PLUS_PATH']
 MET_PATH = os.environ['MET_PATH']
 MET_CONFIG = os.environ['MET_CONFIG']
 DATA = os.environ['DATA']
+SENDCOM = os.environ['SENDCOM']
 RESTART_DIR = os.environ['RESTART_DIR']
 COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
 
@@ -185,6 +186,7 @@ job_env_vars_dict = {
     'MET_PLUS_CONF': MET_PLUS_CONF,
     'MET_PLUS_OUT': MET_PLUS_OUT,
     'MET_CONFIG_OVERRIDES': MET_CONFIG_OVERRIDES,
+    'SENDCOM': SENDCOM,
 }
 job_iterate_over_env_lists_dict = {}
 job_iterate_over_custom_lists_dict = {}
@@ -379,7 +381,8 @@ elif STEP == 'stats':
             + f'-c {MET_PLUS_CONF}/'
             + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
            )
-           job_cmd_list_iterative.append(
+           if SENDCOM == 'YES':
+            job_cmd_list_iterative.append(
               f'#python -c '
               + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
               + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -398,7 +401,8 @@ elif STEP == 'stats':
             + f'-c {MET_PLUS_CONF}/'
             + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
         )
-        job_cmd_list_iterative.append(
+        if SENDCOM == 'YES':
+          job_cmd_list_iterative.append(
             f'python -c '
             + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -410,7 +414,7 @@ elif STEP == 'stats':
             + 'vdate=\\\"${VDATE}\\\", '
             + 'vhour=\\\"${VHOUR}\\\"'
             + ')\"'
-        )
+          )
         job_cmd_list_iterative.append(
            "python -c "
            + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
@@ -419,7 +423,7 @@ elif STEP == 'stats':
         )
         completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
         job_cmd_list_iterative.append(
-           f"if [ -f {completed_job_path} ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+           f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
         )
     if job_type == 'generate':
         if FCST_VAR2_NAME:
@@ -432,8 +436,9 @@ elif STEP == 'stats':
                   + f'-c {MET_PLUS_CONF}/'
                   + f'PointStat_fcst{COMPONENT.upper()}_'
                   + f'obs{VERIF_TYPE.upper()}_{str(NEST).upper()}_VAR2.conf'
-                                                                                                                             )
-             job_cmd_list_iterative.append(
+             )
+             if SENDCOM == 'YES':
+                job_cmd_list_iterative.append(
                   f'#python -c '
                   + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                   + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -450,14 +455,15 @@ elif STEP == 'stats':
                   + 'model=\\\"${MODELNAME}\\\", '
                   + 'var_name=\\\"${VAR_NAME}\\\"'
                   + ')\"'
-            )
+                )
          else:
             job_cmd_list_iterative.append(
                 f'{metplus_launcher} -c {machine_conf} '
                 + f'-c {MET_PLUS_CONF}/'
                 + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}_VAR2.conf'
             )
-            job_cmd_list_iterative.append(
+            if SENDCOM == 'YES':
+              job_cmd_list_iterative.append(
                f'python -c '
                + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -474,7 +480,7 @@ elif STEP == 'stats':
                + 'model=\\\"${MODELNAME}\\\", '
                + 'var_name=\\\"${VAR_NAME}\\\"'
                + ')\"'
-            )
+              )
             job_cmd_list_iterative.append(
                "python -c "
                + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
@@ -483,7 +489,7 @@ elif STEP == 'stats':
             )
             completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
             job_cmd_list_iterative.append(
-               f"if [ -f {completed_job_path} ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+               f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
             )
         else:
             if NEST == 'conusp':
@@ -497,7 +503,8 @@ elif STEP == 'stats':
                         + f'-c {MET_PLUS_CONF}/'
                         + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    if SENDCOM == 'YES':
+                      job_cmd_list_iterative.append(
                         f'#python -c '
                         + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -514,13 +521,14 @@ elif STEP == 'stats':
                         + 'model=\\\"${MODELNAME}\\\", '
                         + f'njob=\\\"{njob}\\\"'
                         + ')\"'
-                    )
+                      )
                     job_cmd_list_iterative.append(
                         f'#python '
                         + f'{USHevs}/{COMPONENT}/'
                         + f'{COMPONENT}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
                     )
-                    job_cmd_list_iterative.append(
+                    if SENDCOM == 'YES':
+                      job_cmd_list_iterative.append(
                         f'#python -c '
                         + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -537,14 +545,15 @@ elif STEP == 'stats':
                         + 'model=\\\"${MODELNAME}\\\", '
                         + f'njob=\\\"{njob}\\\"'
                         + ')\"'
-                    )
+                      )
                     job_cmd_list_iterative.append(
                         f'#{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
                         + f'PointStat_fcst{COMPONENT.upper()}_'
                         + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    if SENDCOM == 'YES':
+                      job_cmd_list_iterative.append(
                         f'#python -c '
                         + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -561,14 +570,15 @@ elif STEP == 'stats':
                         + 'model=\\\"${MODELNAME}\\\", '
                         + 'var_name=\\\"${VAR_NAME}\\\"'
                         + ')\"'
-                   )
+                      )
                   else:
                    job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
                        + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
                    )
-                   job_cmd_list_iterative.append(
+                   if SENDCOM == 'YES':
+                    job_cmd_list_iterative.append(
                        f'python -c '
                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -585,13 +595,14 @@ elif STEP == 'stats':
                        + 'model=\\\"${MODELNAME}\\\", '
                        + f'njob=\\\"{njob}\\\"'
                        + ')\"'
-                  )
+                    )
                   job_cmd_list_iterative.append(
                        f'python '
                        + f'{USHevs}/{COMPONENT}/'
                        + f'{COMPONENT}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
                   )
-                  job_cmd_list_iterative.append(
+                  if SENDCOM == 'YES':
+                    job_cmd_list_iterative.append(
                        f'python -c '
                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -608,14 +619,15 @@ elif STEP == 'stats':
                        + 'model=\\\"${MODELNAME}\\\", '
                        + f'njob=\\\"{njob}\\\"'
                        + ')\"'
-                  )
+                    )
                   job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
                        + f'PointStat_fcst{COMPONENT.upper()}_'
                        + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
                   )
-                  job_cmd_list_iterative.append(
+                  if SENDCOM == 'YES':
+                    job_cmd_list_iterative.append(
                        f'python -c '
                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -632,7 +644,7 @@ elif STEP == 'stats':
                        + 'model=\\\"${MODELNAME}\\\", '
                        + 'var_name=\\\"${VAR_NAME}\\\"'
                        + ')\"'
-                  )
+                    )
                   job_cmd_list_iterative.append(
                        "python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
@@ -641,7 +653,7 @@ elif STEP == 'stats':
                   )
                   completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
                   job_cmd_list_iterative.append(
-                       f"if [ -f {completed_job_path} ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
                   )
 
             else:
@@ -658,7 +670,8 @@ elif STEP == 'stats':
                         + f'-c {MET_PLUS_CONF}/'
                         + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    if SENDCOM == 'YES':
+                      job_cmd_list_iterative.append(
                         f'#python -c '
                         + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -675,15 +688,16 @@ elif STEP == 'stats':
                         + 'model=\\\"${MODELNAME}\\\", '
                         + 'var_name=\\\"${VAR_NAME}\\\"'
                         + ')\"'
-                   )
+                      )
                   else:
                    job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
                        + f'PointStat_fcst{COMPONENT.upper()}_'
                        + f'obs{VERIF_TYPE.upper()}.conf'
-                                                                                                                                   )
-                   job_cmd_list_iterative.append(
+                   )
+                   if SENDCOM == 'YES':
+                     job_cmd_list_iterative.append(
                        f'python -c '
                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -700,7 +714,7 @@ elif STEP == 'stats':
                        + 'model=\\\"${MODELNAME}\\\", '
                        + 'var_name=\\\"${VAR_NAME}\\\"'
                        + ')\"'
-                   )
+                     )
                    job_cmd_list_iterative.append(
                        "python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
@@ -709,7 +723,7 @@ elif STEP == 'stats':
                    )
                    completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
                    job_cmd_list_iterative.append(
-                       f"if [ -f {completed_job_path} ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
                    )
     elif job_type == 'gather':
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
@@ -722,7 +736,8 @@ elif STEP == 'stats':
             + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
             + f'_GatherByDay.conf'
         )
-        job_cmd_list.append(
+        if SENDCOM == 'YES':
+          job_cmd_list.append(
             f'#python -c '
             + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -737,7 +752,7 @@ elif STEP == 'stats':
             + 'run=\\\"${RUN}\\\", '
             + f'job_type=\\\"{job_type}\\\"'
             + ')\"'
-        )
+          )
       else:
         job_cmd_list.append(
             f'{metplus_launcher} -c {machine_conf} '
@@ -745,7 +760,8 @@ elif STEP == 'stats':
             + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
             + f'_GatherByDay.conf'
         )
-        job_cmd_list.append(
+        if SENDCOM == 'YES':
+          job_cmd_list.append(
             f'python -c '
             + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -760,7 +776,7 @@ elif STEP == 'stats':
             + 'run=\\\"${RUN}\\\", '
             + f'job_type=\\\"{job_type}\\\"'
             + ')\"'
-        )
+          )
         job_cmd_list.append(
             "python -c "
             + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
@@ -769,7 +785,7 @@ elif STEP == 'stats':
         )
         completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
         job_cmd_list_iterative.append(
-            f"if [ -f {completed_job_path} ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
         )
     elif job_type == 'gather2':
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
@@ -782,7 +798,8 @@ elif STEP == 'stats':
             + f'StatAnalysis_fcst{COMPONENT.upper()}'
             + f'_GatherByCycle.conf'
         )
-        job_cmd_list.append(
+        if SENDCOM == 'YES':
+          job_cmd_list.append(
             f'#python -c '
             + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -797,7 +814,7 @@ elif STEP == 'stats':
             + 'vhr=\\\"${vhr}\\\", '
             + f'job_type=\\\"{job_type}\\\"'
             + ')\"'
-        )
+          )
       else:
         job_cmd_list.append(
             f'{metplus_launcher} -c {machine_conf} '
@@ -805,7 +822,8 @@ elif STEP == 'stats':
             + f'StatAnalysis_fcst{COMPONENT.upper()}'
             + f'_GatherByCycle.conf'
         )
-        job_cmd_list.append(
+        if SENDCOM == 'YES':
+          job_cmd_list.append(
             f'python -c '
             + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -820,7 +838,7 @@ elif STEP == 'stats':
             + 'vhr=\\\"${vhr}\\\", '
             + f'job_type=\\\"{job_type}\\\"'
             + ')\"'
-        )
+          )
         job_cmd_list.append(
             "python -c "
             + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
@@ -829,7 +847,7 @@ elif STEP == 'stats':
         )
         completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
         job_cmd_list.append(
-            f"if [ -f {completed_job_path} ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
         )
     elif job_type == 'gather3':
         job_cmd_list.append(
