@@ -148,8 +148,9 @@ if [ "$data" = "ccpa01h03h" ] ; then
   #copy from existing restart files: 
   else
    [[ ! -d $WORK/ccpa.${vday} ]] && mkdir -p $WORK/ccpa.${vday}
-    cp  $COMOUTrestart/prepare/ccpa01h.*.grib2 $WORK/ccpa.${vday}
-    cp  $COMOUTrestart/prepare/ccpa03h.*.grib2 $WORK/ccpa.${vday}
+   if [ -s $COMOUTrestart/prepare/ccpa.*.grib2 ] ; then
+    cp  $COMOUTrestart/prepare/ccpa*.*.grib2 $WORK/ccpa.${vday}
+   fi
   fi
   
 
