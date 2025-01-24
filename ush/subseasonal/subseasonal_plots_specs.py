@@ -694,7 +694,10 @@ class PlotSpecs:
                       +self.get_var_plot_name(var_name_for_title,
                                               var_level_for_title))
         plot_title = plot_title+' '+'('+units+')'
-        if var_thresh_for_title != 'NA':
+        if var_thresh_for_title != 'NA' \
+                and plot_info_dict['fcst_var_name'] not in ['SST_DAILYAVG',
+                                                            'SST_WEEKLYAVG',
+                                                            'SST_MONTHLYAVG']:
             plot_title = plot_title+', '+var_thresh_for_title+' '+units
             if plot_info_dict['fcst_var_name'] == 'APCP':
                 thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
@@ -742,10 +745,13 @@ class PlotSpecs:
                 thresh_symbol, thresh_letter = sub_util.format_thresh(
                     plot_info_dict['fcst_var_thresh']
                 )
-                metric_savefig_name = (
-                    metric_savefig_name+'_'
-                    +thresh_letter.replace('.','p')
-                )
+                if plot_info_dict['fcst_var_name'] not in ['SST_DAILYAVG',
+                                                           'SST_WEEKLYAVG',
+                                                           'SST_MONTHLYAVG']:
+                    metric_savefig_name = (
+                        metric_savefig_name+'_'
+                        +thresh_letter.replace('.','p')
+                    )
         parameter_savefig_name = plot_info_dict['fcst_var_name']
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
             parameter_savefig_name = (
