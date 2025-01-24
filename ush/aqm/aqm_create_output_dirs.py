@@ -23,10 +23,15 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
+# g2op_type_list= pm25, ozone, ....
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
+# export model_list="${modelid}_raw ${modelid}_bc"
 model_list = os.environ['model_list'].split(' ')
+# export model_evs_data_dir_list="${STATDIR} ${STATDIR}"
 model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
+# export start_date=${VDATE_START}
+# export end_date=${VDATE_END}
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 
@@ -39,12 +44,18 @@ data_base_dir = os.path.join(DATA, VERIF_CASE_STEP, 'data')
 data_dir_list = [data_base_dir]
 for model in model_list:
     data_dir_list.append(os.path.join(data_base_dir, model))
+
+if VERIF_CASE_STEP == 'grid2obs_plots':
+    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+        if VERIF_CASE_STEP_type == 'aeronetaod':
+            data_dir_list.append(os.path.join(data_base_dir, 'aeronetaod'))
+
 if VERIF_CASE_STEP == 'grid2grid_plots':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-        if VERIF_CASE_STEP_type == 'viirs':
-            data_dir_list.append(os.path.join(data_base_dir, 'viirs'))
-        elif VERIF_CASE_STEP_type == 'abi':
-            data_dir_list.append(os.path.join(data_base_dir, 'abi'))
+        if VERIF_CASE_STEP_type == 'abiaod':
+            data_dir_list.append(os.path.join(data_base_dir, 'abiaod'))
+        elif VERIF_CASE_STEP_type == 'viirsaod':
+            data_dir_list.append(os.path.join(data_base_dir, 'viirsaod'))
 
 # Create data directories
 for data_dir in data_dir_list:

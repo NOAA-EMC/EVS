@@ -28,6 +28,7 @@ RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
+## JOB_GROUP is in ( condense_stats filter_stats make_plots tar_images )
 JOB_GROUP = os.environ['JOB_GROUP']
 evs_run_mode = os.environ['evs_run_mode']
 machine = os.environ['machine']
@@ -696,7 +697,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
     verif_type_plot_jobs_dict = JOB_GROUP_dict[verif_type]
     for verif_type_job in list(verif_type_plot_jobs_dict.keys()):
         # Initialize job environment dictionary
-        job_env_dict = gda_util.initalize_job_env_dict(
+        job_env_dict = gda_util.initialize_job_env_dict(
             verif_type, JOB_GROUP,
             VERIF_CASE_STEP_abbrev_type, verif_type_job
         )
@@ -720,6 +721,12 @@ for verif_type in VERIF_CASE_STEP_type_list:
             valid_hrs = list(range(valid_hr_start,
                                    valid_hr_end+valid_hr_inc,
                                    valid_hr_inc))
+            fday_start = int(job_env_dict['fday_start'])
+            fday_end = int(job_env_dict['fday_end'])
+            fday_inc = int(job_env_dict['fday_inc'])
+            fdays = list(range(fday_start,
+                                   fday_end+fday_inc,
+                                   fday_inc))
             if 'Daily' in verif_type_job:
                 daily_fhr_list = []
                 for fhr in job_env_dict['fhr_list'].split(', '):
@@ -865,6 +872,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     plot_valid_hrs_loop = [valid_hrs]
                 else:
                     plot_valid_hrs_loop = valid_hrs
+                plot_fdays_loop = [fdays]
                 if job_env_dict['plot'] in ['threshold_average',
                                             'performance_diagram']:
                     plot_fcst_threshs_loop = [
@@ -884,111 +892,228 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         verif_type_plot_jobs_dict[verif_type_job]\
                         ['fcst_var_dict']['levels']
                     )
-                for plot_loop_info in list(
-                    itertools.product(plot_valid_hrs_loop,
-                                      plot_fcst_threshs_loop,
-                                      plot_fcst_levels_loop)
-                ):
-                    if job_env_dict['plot'] in  [ 'valid_hour_average_fhr_mean',
-                                              'lead_average_vhr_mean',
+                if job_env_dict['plot'] in  [ 'valid_hour_average_fhr_mean',
                                               'time_series_fhr_mean' ]:
-                        job_env_dict['valid_hr_start'] = str(
-                            plot_loop_info[0][0]
-                        ).zfill(2)
-                        job_env_dict['valid_hr_end'] = str(
-                            plot_loop_info[0][-1]
-                        ).zfill(2)
-                        job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-                    else:
-                        job_env_dict['valid_hr_start'] = str(
-                            plot_loop_info[0]
-                        ).zfill(2)
-                        job_env_dict['valid_hr_end'] = str(
-                            plot_loop_info[0]
-                        ).zfill(2)
-                        job_env_dict['valid_hr_inc'] = '24'
-                    if job_env_dict['plot'] in ['threshold_average',
-                                                'performance_diagram']:
-                        job_env_dict['fcst_var_thresh_list'] = ', '.join(
-                            plot_loop_info[1]
+                    for plot_loop_info in list(
+                        itertools.product(plot_valid_hrs_loop,
+                                          plot_fcst_threshs_loop,
+                                          plot_fcst_levels_loop,
+                                          plot_fdays_loop)
+                    ):
+                        if job_env_dict['plot'] in  [ 'valid_hour_average_fhr_mean',
+                                                      'time_series_fhr_mean' ]:
+                            job_env_dict['valid_hr_start'] = str(
+                                plot_loop_info[0][0]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_end'] = str(
+                                plot_loop_info[0][-1]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
+
+                            job_env_dict['fday_start'] = str(plot_loop_info[3][0])
+                            job_env_dict['fday_end'] = str(plot_loop_info[3][-1])
+                            job_env_dict['fday_inc'] = str(fday_inc)
+    
+                        else:
+                            job_env_dict['valid_hr_start'] = str(
+                                plot_loop_info[0]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_end'] = str(
+                                plot_loop_info[0]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_inc'] = '24'
+                        if job_env_dict['plot'] in ['threshold_average',
+                                                    'performance_diagram']:
+                            job_env_dict['fcst_var_thresh_list'] = ', '.join(
+                                    plot_loop_info[1]
+                            )
+                            job_env_dict['obs_var_thresh_list'] = ', '.join(
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['threshs']
+                            )
+                        else:
+                            job_env_dict['fcst_var_thresh_list'] = (
+                                plot_loop_info[1]
+                            )
+                            job_env_dict['obs_var_thresh_list'] = (
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['threshs']\
+                                [verif_type_plot_jobs_dict[verif_type_job]\
+                                 ['fcst_var_dict']['threshs']\
+                                 .index(plot_loop_info[1])]
+                            )
+                        if job_env_dict['plot'] in ['stat_by_level',
+                                                    'lead_by_level']:
+                            job_env_dict['vert_profile'] = plot_loop_info[2]
+                            job_env_dict['fcst_var_level_list'] = ', '.join(
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['fcst_var_dict']['levels']
+                            )
+                            job_env_dict['obs_var_level_list'] = ', '.join(
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['levels']
+                            )
+                        else:
+                            job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
+                            job_env_dict['obs_var_level_list'] = (
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['levels']\
+                                [verif_type_plot_jobs_dict[verif_type_job]\
+                                 ['fcst_var_dict']['levels']\
+                                 .index(plot_loop_info[2])]
+                            )
+                        DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
+                            DATA, COMOUT, JOB_GROUP, job_env_dict
                         )
-                        job_env_dict['obs_var_thresh_list'] = ', '.join(
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['obs_var_dict']['threshs']
+                        job_env_dict['DATAjob'] = DATAjob
+                        job_env_dict['COMOUTjob'] = COMOUTjob
+                        for output_dir in [job_env_dict['DATAjob'],
+                                           job_env_dict['COMOUTjob']]:
+                            gda_util.make_dir(output_dir)
+                        run_aqm_plots = ['aqm_plots.py']
+                        ##
+                        ##  AQM do not need separate plot to cover portion of the fhr list
+                        ##
+                        ## if evs_run_mode == 'production' and \
+                        ##         verif_type in ['ozone', 'pm25', 'ozmax', 'pmave'] and \
+                        ##         job_env_dict['plot'] in \
+                        ##         ['lead_average_vhr_mean', 'lead_by_level',
+                        ##          'lead_by_date']:
+                        ##     run_aqm_plots.append(
+                        ##         'aqm_plots_production_tof72.py'
+                        ##     )
+                        for run_aqm_plot in run_aqm_plots:
+                            # Create job file
+                            njobs+=1
+                            job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                                    'job'+str(njobs))
+                            print("Creating job script: "+job_file)
+                            job = open(job_file, 'w')
+                            job.write('#!/bin/bash\n')
+                            job.write('set -x\n')
+                            job.write('\n')
+                            # Set any environment variables for special cases
+                            # Write environment variables
+                            job_env_dict['job_id'] = 'job'+str(njobs)
+                            for name, value in job_env_dict.items():
+                                job.write('export '+name+'="'+value+'"\n')
+                            job.write('\n')
+                            job.write(
+                                gda_util.python_command(run_aqm_plot,
+                                                        [])+'\n'
+                            )
+                            job.write('export err=$?; err_chk'+'\n')
+                            job.close()
+                else:
+                    for plot_loop_info in list(
+                        itertools.product(plot_valid_hrs_loop,
+                                          plot_fcst_threshs_loop,
+                                          plot_fcst_levels_loop)
+                    ):
+                        if job_env_dict['plot'] in  [ 'lead_average_vhr_mean' ]:
+                            job_env_dict['valid_hr_start'] = str(
+                                plot_loop_info[0][0]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_end'] = str(
+                                plot_loop_info[0][-1]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
+    
+                        else:
+                            job_env_dict['valid_hr_start'] = str(
+                                plot_loop_info[0]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_end'] = str(
+                                plot_loop_info[0]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_inc'] = '24'
+
+                        job_env_dict['fday_start'] = str(fday_start)
+                        job_env_dict['fday_end'] = str(fday_end)
+                        job_env_dict['fday_inc'] = str(fday_inc)
+
+                        if job_env_dict['plot'] in ['threshold_average',
+                                                    'performance_diagram']:
+                            job_env_dict['fcst_var_thresh_list'] = ', '.join(
+                                    plot_loop_info[1]
+                            )
+                            job_env_dict['obs_var_thresh_list'] = ', '.join(
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['threshs']
+                            )
+                        else:
+                            job_env_dict['fcst_var_thresh_list'] = (
+                                plot_loop_info[1]
+                            )
+                            job_env_dict['obs_var_thresh_list'] = (
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['threshs']\
+                                [verif_type_plot_jobs_dict[verif_type_job]\
+                                 ['fcst_var_dict']['threshs']\
+                                 .index(plot_loop_info[1])]
+                            )
+                        if job_env_dict['plot'] in ['stat_by_level',
+                                                    'lead_by_level']:
+                            job_env_dict['vert_profile'] = plot_loop_info[2]
+                            job_env_dict['fcst_var_level_list'] = ', '.join(
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['fcst_var_dict']['levels']
+                            )
+                            job_env_dict['obs_var_level_list'] = ', '.join(
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['levels']
+                            )
+                        else:
+                            job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
+                            job_env_dict['obs_var_level_list'] = (
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['levels']\
+                                [verif_type_plot_jobs_dict[verif_type_job]\
+                                 ['fcst_var_dict']['levels']\
+                                 .index(plot_loop_info[2])]
+                            )
+                        DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
+                            DATA, COMOUT, JOB_GROUP, job_env_dict
                         )
-                    else:
-                        job_env_dict['fcst_var_thresh_list'] = (
-                            plot_loop_info[1]
-                        )
-                        job_env_dict['obs_var_thresh_list'] = (
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['obs_var_dict']['threshs']\
-                            [verif_type_plot_jobs_dict[verif_type_job]\
-                             ['fcst_var_dict']['threshs']\
-                             .index(plot_loop_info[1])]
-                        )
-                    if job_env_dict['plot'] in ['stat_by_level',
-                                                'lead_by_level']:
-                        job_env_dict['vert_profile'] = plot_loop_info[2]
-                        job_env_dict['fcst_var_level_list'] = ', '.join(
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['fcst_var_dict']['levels']
-                        )
-                        job_env_dict['obs_var_level_list'] = ', '.join(
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['obs_var_dict']['levels']
-                        )
-                    else:
-                        job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
-                        job_env_dict['obs_var_level_list'] = (
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['obs_var_dict']['levels']\
-                            [verif_type_plot_jobs_dict[verif_type_job]\
-                             ['fcst_var_dict']['levels']\
-                             .index(plot_loop_info[2])]
-                        )
-                    DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
-                        DATA, COMOUT, JOB_GROUP, job_env_dict
-                    )
-                    job_env_dict['DATAjob'] = DATAjob
-                    job_env_dict['COMOUTjob'] = COMOUTjob
-                    for output_dir in [job_env_dict['DATAjob'],
-                                       job_env_dict['COMOUTjob']]:
-                        gda_util.make_dir(output_dir)
-                    run_aqm_plots = ['aqm_plots.py']
-                    ##
-                    ##  AQM do not need separate plot to cover portion of the fhr list
-                    ##
-                    ## if evs_run_mode == 'production' and \
-                    ##         verif_type in ['ozone', 'pm25', 'ozmax', 'pmave'] and \
-                    ##         job_env_dict['plot'] in \
-                    ##         ['lead_average_vhr_mean', 'lead_by_level',
-                    ##          'lead_by_date']:
-                    ##     run_aqm_plots.append(
-                    ##         'aqm_plots_production_tof72.py'
-                    ##     )
-                    for run_aqm_plot in run_aqm_plots:
-                        # Create job file
-                        njobs+=1
-                        job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                                'job'+str(njobs))
-                        print("Creating job script: "+job_file)
-                        job = open(job_file, 'w')
-                        job.write('#!/bin/bash\n')
-                        job.write('set -x\n')
-                        job.write('\n')
-                        # Set any environment variables for special cases
-                        # Write environment variables
-                        job_env_dict['job_id'] = 'job'+str(njobs)
-                        for name, value in job_env_dict.items():
-                            job.write('export '+name+'="'+value+'"\n')
-                        job.write('\n')
-                        job.write(
-                            gda_util.python_command(run_aqm_plot,
-                                                    [])+'\n'
-                        )
-                        job.write('export err=$?; err_chk'+'\n')
-                        job.close()
+                        job_env_dict['DATAjob'] = DATAjob
+                        job_env_dict['COMOUTjob'] = COMOUTjob
+                        for output_dir in [job_env_dict['DATAjob'],
+                                           job_env_dict['COMOUTjob']]:
+                            gda_util.make_dir(output_dir)
+                        run_aqm_plots = ['aqm_plots.py']
+                        ##
+                        ##  AQM do not need separate plot to cover portion of the fhr list
+                        ##
+                        ## if evs_run_mode == 'production' and \
+                        ##         verif_type in ['ozone', 'pm25', 'ozmax', 'pmave'] and \
+                        ##         job_env_dict['plot'] in \
+                        ##         ['lead_average_vhr_mean', 'lead_by_level',
+                        ##          'lead_by_date']:
+                        ##     run_aqm_plots.append(
+                        ##         'aqm_plots_production_tof72.py'
+                        ##     )
+                        for run_aqm_plot in run_aqm_plots:
+                            # Create job file
+                            njobs+=1
+                            job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                                    'job'+str(njobs))
+                            print("Creating job script: "+job_file)
+                            job = open(job_file, 'w')
+                            job.write('#!/bin/bash\n')
+                            job.write('set -x\n')
+                            job.write('\n')
+                            # Set any environment variables for special cases
+                            # Write environment variables
+                            job_env_dict['job_id'] = 'job'+str(njobs)
+                            for name, value in job_env_dict.items():
+                                job.write('export '+name+'="'+value+'"\n')
+                            job.write('\n')
+                            job.write(
+                                gda_util.python_command(run_aqm_plot,
+                                                        [])+'\n'
+                            )
+                            job.write('export err=$?; err_chk'+'\n')
+                            job.close()
             elif JOB_GROUP == 'tar_images':
                 job_env_dict['DATAjob'] = loop_info
                 job_env_dict['COMOUTjob'] = loop_info.replace(

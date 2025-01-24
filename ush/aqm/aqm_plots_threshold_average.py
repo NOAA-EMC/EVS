@@ -31,7 +31,7 @@ class ThresholdAverage:
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
-        """! Initalize ThresholdAverage class
+        """! Initialize ThresholdAverage class
 
              Args:
                  logger          - logger object

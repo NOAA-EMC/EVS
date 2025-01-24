@@ -22,7 +22,6 @@ STEP = os.environ['STEP']
 DATA = os.environ['DATA']
 COMIN = os.environ['COMIN']
 model_list = os.environ['model_list'].split(' ')
-g2op_type_list = os.environ['g2op_type_list'].split(' ')
 model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 model_file_format_list = os.environ['model_file_format_list'].split(' ')
 start_date = os.environ['start_date']
@@ -60,8 +59,8 @@ if STEP == 'plots' :
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         model_evs_data_dir = model_evs_data_dir_list[model_idx]
-        for obsvar_idx in range(len(g2op_type_list)):
-            obsvar = g2op_type_list[obsvar_idx]
+        for obsvar_idx in range(len(VERIF_CASE_STEP_type_list)):
+            obsvar = VERIF_CASE_STEP_type_list[obsvar_idx]
             date_dt = start_date_dt
             while date_dt <= end_date_dt:
                 if date_type == 'VALID':
@@ -91,4 +90,6 @@ if STEP == 'plots' :
                                    dest_model_date_stat_file)
                 date_dt = date_dt + datetime.timedelta(days=1)
 
+else:
+    print(f"DEBUG :: current script is for plots step only")
 print("END: "+os.path.basename(__file__))

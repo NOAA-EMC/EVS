@@ -334,7 +334,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
 
          Returns:
              time_info - list of dictionaries with the valid,
-                         initalization, and forecast hour
+                         initialization, and forecast hour
                          pairings
     """
     valid_hr_zfill2_list = [hr.zfill(2) for hr in valid_hr_list]
@@ -1623,7 +1623,7 @@ def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
             break
         sleep_counter+=1
 
-def initalize_job_env_dict(verif_type, group,
+def initialize_job_env_dict(verif_type, group,
                            verif_case_step_abbrev_type, job):
     """! This initializes a dictionary of environment variables and their
          values to be set for the job pulling from environment variables
@@ -1761,6 +1761,24 @@ def initalize_job_env_dict(verif_type, group,
         else:
             verif_type_init_hr_inc = 24
         job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
+        if verif_case_step_abbrev_type+'_fday_list' in list(os.environ.keys()):
+            verif_type_fday_list = (
+                os.environ[verif_case_step_abbrev_type+'_fday_list']\
+                .split(' ')
+            )
+            job_env_dict['fday_start'] = (
+                verif_type_fday_list[0].zfill(1)
+            )
+            job_env_dict['fday_end'] = (
+                verif_type_fday_list[-1].zfill(1)
+            )
+            if len(verif_type_fday_list) > 1:
+                verif_type_fday_inc = np.min(
+                    np.diff(np.array(verif_type_fday_list, dtype=int))
+                )
+            else:
+                verif_type_fday_inc = 1
+            job_env_dict['fday_inc'] = str(verif_type_fday_inc)
     return job_env_dict
 
 def get_logger(log_file):
@@ -1805,7 +1823,7 @@ def get_plot_dates(logger, date_type, start_date, end_date,
              forecast_hour  - forecast hour (string)
          Returns:
              valid_dates - array of valid dates (datetime)
-             init_dates  - array of initalization dates (datetime)
+             init_dates  - array of initialization dates (datetime)
     """
     # Build date_type date array
     if date_type == 'VALID':

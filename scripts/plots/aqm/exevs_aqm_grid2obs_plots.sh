@@ -15,6 +15,7 @@
 
 set -x
 
+# set VERIF_CASE_STEP_abbrev prior to source ${config}
 export VERIF_CASE_STEP_abbrev="g2op"
 echo "RUN MODE:${evs_run_mode}"
 
