@@ -423,7 +423,7 @@ elif STEP == 'stats':
         )
         completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
         job_cmd_list_iterative.append(
-           f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+           f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
         )
     if job_type == 'generate':
         if FCST_VAR2_NAME:
@@ -489,7 +489,7 @@ elif STEP == 'stats':
             )
             completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
             job_cmd_list_iterative.append(
-               f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+               f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
             )
         else:
             if NEST == 'conusp':
@@ -649,7 +649,7 @@ elif STEP == 'stats':
                   )
                   completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
                   job_cmd_list_iterative.append(
-                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
                   )
 
             else:
@@ -719,7 +719,7 @@ elif STEP == 'stats':
                    )
                    completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
                    job_cmd_list_iterative.append(
-                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
                    )
     elif job_type == 'gather':
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
@@ -781,7 +781,7 @@ elif STEP == 'stats':
         )
         completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
         job_cmd_list_iterative.append(
-            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
         )
     elif job_type == 'gather2':
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
@@ -843,7 +843,7 @@ elif STEP == 'stats':
         )
         completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
         job_cmd_list.append(
-            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpv {completed_job_path} {RESTART_DIR}; fi"
+            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
         )
     elif job_type == 'gather3':
         job_cmd_list.append(
