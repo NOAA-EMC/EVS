@@ -148,7 +148,7 @@ if [ "$data" = "ccpa01h03h" ] ; then
   #copy from existing restart files: 
   else
    [[ ! -d $WORK/ccpa.${vday} ]] && mkdir -p $WORK/ccpa.${vday}
-   if [ -s $COMOUTrestart/prepare/ccpa.*.grib2 ] ; then
+   if [ -s $COMOUTrestart/prepare/ccpa*.*.grib2 ] ; then
     cp  $COMOUTrestart/prepare/ccpa*.*.grib2 $WORK/ccpa.${vday}
    fi
   fi
@@ -227,6 +227,12 @@ if [ "$data" = "ccpa24h" ] ; then
     if [ -s $COMOUTrestart/prepare/ccpa24h*.nc ] ; then
       cp  $COMOUTrestart/prepare/ccpa24h*.nc $WORK/ccpa.${vday}
     fi
+
+    #Copy precip_mean24 files from restart directory
+    [[ ! -d $COMOUTfinal/precip_mean24 ]] && mkdir $COMOUTfinal/precip_mean24
+    if [ -s $COMOUTrestart/prepare/ccpa24h.t12z.G240.nc ] ; then
+     cp $COMOUTrestart/prepare/ccpa24h.t12z.G240.nc $COMOUTfinal/precip_mean24
+    fi 
   fi
 
 
@@ -280,6 +286,10 @@ if [ "$data" = "apcp24h_conus" ] ; then
          #Restart: copy restart files to the working directory
 	 [[ ! -d $WORK/href.${fyyyymmdd} ]] && mkdir -p $WORK/href.${fyyyymmdd}
          cp  $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc
+	 [[ ! -d $COMOUTfinal/precip_mean24 ]] && mkdir $COMOUTfinal/precip_mean24
+         if [ -s $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+           cp $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTfinal/precip_mean24
+         fi
        fi
 
       done
