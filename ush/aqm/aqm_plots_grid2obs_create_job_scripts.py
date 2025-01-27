@@ -154,14 +154,16 @@ condense_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
 #### ozone
 for ozone_job in list(condense_stats_jobs_dict['ozone'].keys()):
     if ozone_job == 'OZONE':
-        ozone_job_line_types = ['SL1L2', 'CTC' ]
+        ## ozone_job_line_types = ['SL1L2', 'CTC' ]
+        ozone_job_line_types = ['SL1L2' ]
     else:
         ozone_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['ozone'][ozone_job]['line_types'] = ozone_job_line_types
 #### pm25
 for pm25_job in list(condense_stats_jobs_dict['pm25'].keys()):
     if pm25_job == 'PM25':
-        pm25_job_line_types = ['SL1L2', 'CTC' ]
+        ## pm25_job_line_types = ['SL1L2', 'CTC' ]
+        pm25_job_line_types = ['SL1L2']
     else:
         pm25_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['pm25'][pm25_job]['line_types'] = pm25_job_line_types
@@ -872,7 +874,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     plot_valid_hrs_loop = [valid_hrs]
                 else:
                     plot_valid_hrs_loop = valid_hrs
-                plot_fdays_loop = [fdays]
+                plot_fdays_loop = fdays
                 if job_env_dict['plot'] in ['threshold_average',
                                             'performance_diagram']:
                     plot_fcst_threshs_loop = [
@@ -910,8 +912,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             ).zfill(2)
                             job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
 
-                            job_env_dict['fday_start'] = str(plot_loop_info[3][0])
-                            job_env_dict['fday_end'] = str(plot_loop_info[3][-1])
+                            job_env_dict['fday_start'] = str(plot_loop_info[3])
+                            job_env_dict['fday_end'] = str(plot_loop_info[3])
                             job_env_dict['fday_inc'] = str(fday_inc)
     
                         else:
@@ -1028,9 +1030,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             ).zfill(2)
                             job_env_dict['valid_hr_inc'] = '24'
 
-                        job_env_dict['fday_start'] = str(fday_start)
-                        job_env_dict['fday_end'] = str(fday_end)
-                        job_env_dict['fday_inc'] = str(fday_inc)
+                        ## job_env_dict['fday_start'] = str(fday_start)
+                        ## job_env_dict['fday_end'] = str(fday_end)
+                        ## job_env_dict['fday_inc'] = str(fday_inc)
 
                         if job_env_dict['plot'] in ['threshold_average',
                                                     'performance_diagram']:
