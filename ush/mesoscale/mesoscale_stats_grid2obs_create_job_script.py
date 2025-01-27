@@ -519,7 +519,6 @@ elif STEP == 'stats':
                         + 'fhr_end=\\\"${FHR_END}\\\", '
                         + 'fhr_incr=\\\"${FHR_INCR}\\\", '
                         + 'model=\\\"${MODELNAME}\\\", '
-                        + f'njob=\\\"{njob}\\\"'
                         + ')\"'
                       )
                     job_cmd_list_iterative.append(
@@ -543,7 +542,6 @@ elif STEP == 'stats':
                         + 'fhr_end=\\\"${FHR_END}\\\", '
                         + 'fhr_incr=\\\"${FHR_INCR}\\\", '
                         + 'model=\\\"${MODELNAME}\\\", '
-                        + f'njob=\\\"{njob}\\\"'
                         + ')\"'
                       )
                     job_cmd_list_iterative.append(
@@ -593,7 +591,6 @@ elif STEP == 'stats':
                        + 'fhr_end=\\\"${FHR_END}\\\", '
                        + 'fhr_incr=\\\"${FHR_INCR}\\\", '
                        + 'model=\\\"${MODELNAME}\\\", '
-                       + f'njob=\\\"{njob}\\\"'
                        + ')\"'
                     )
                   job_cmd_list_iterative.append(
@@ -617,7 +614,6 @@ elif STEP == 'stats':
                        + 'fhr_end=\\\"${FHR_END}\\\", '
                        + 'fhr_incr=\\\"${FHR_INCR}\\\", '
                        + 'model=\\\"${MODELNAME}\\\", '
-                       + f'njob=\\\"{njob}\\\"'
                        + ')\"'
                     )
                   job_cmd_list_iterative.append(
