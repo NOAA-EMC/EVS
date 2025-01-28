@@ -1089,9 +1089,22 @@ class PlotSpecs:
                                           +str(valid_hr).zfill(2))
                 valid_hr+=int(date_info_dict['valid_hr_inc'])
             plot_type_savefig_name = plot_type_savefig_name+'Z'
-        if self.plot_type in ['lead_average_vhr_mean']:
+        if self.plot_type in ['time_series_fhr_mean']:
+            init_hr_savefig_name = f"init{date_info_dict['init_hr_start']}z"
+            fcst_day_savefig_name = f"day{date_info_dict['fday_start']}"
             plot_type_savefig_name = (
-                 plot_type_savefig_name+'_validmean'
+                 plot_type_savefig_name+'_'+fcst_day_savefig_name+'_'+init_hr_savefig_name
+            )
+        if self.plot_type in ['valid_hour_average_fhr_mean']:
+            init_hr_savefig_name = f"init{date_info_dict['init_hr_start']}z"
+            fcst_day_savefig_name = f"day{date_info_dict['fday_start']}"
+            plot_type_savefig_name = (
+                 plot_type_savefig_name+'_'+fcst_day_savefig_name+'_'+init_hr_savefig_name
+            )
+        if self.plot_type in ['lead_average_vhr_mean']:
+            init_hr_savefig_name = f"init{date_info_dict['init_hr_start']}z"
+            plot_type_savefig_name = (
+                 plot_type_savefig_name+'_'+init_hr_savefig_name
             )
         if self.plot_type in ['time_series',
                               'stat_by_level', 'performance_diagram',
@@ -1099,10 +1112,6 @@ class PlotSpecs:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+date_info_dict['forecast_hour'].zfill(3)
-            )
-        if self.plot_type in ['time_series_fhr_mean']:
-            plot_type_savefig_name = (
-                 plot_type_savefig_name+'_fmean'
             )
         elif self.plot_type == 'time_series_multifhr':
             plot_type_savefig_name = (

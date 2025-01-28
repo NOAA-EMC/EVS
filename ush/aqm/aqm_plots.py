@@ -92,6 +92,9 @@ elif JOB_GROUP == 'make_plots':
     init_hr_end = os.environ['init_hr_end']
     init_hr_inc = os.environ['init_hr_inc']
     fhr_list = os.environ['fhr_list']
+    fday_start = os.environ['fday_start']
+    fday_end = os.environ['fday_end']
+    fday_inc = os.environ['fday_inc']
     grid = os.environ['grid']
     event_equalization = os.environ['event_equalization']
     interp_method = os.environ['interp_method']
@@ -439,6 +442,9 @@ elif JOB_GROUP == 'make_plots':
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
+            date_info_dict['fday_start'] = fday_start
+            date_info_dict['fday_end'] = fday_end
+            date_info_dict['fday_inc'] = fday_inc
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = ts_info[0][0]
             plot_info_dict['fcst_var_level'] = ts_info[0][1]
@@ -550,6 +556,9 @@ elif JOB_GROUP == 'make_plots':
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
+            date_info_dict['fday_start'] = fday_start
+            date_info_dict['fday_end'] = fday_end
+            date_info_dict['fday_inc'] = fday_inc
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = la_info[0][0]
             plot_info_dict['fcst_var_level'] = la_info[0][1]
@@ -643,6 +652,9 @@ elif JOB_GROUP == 'make_plots':
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
+            date_info_dict['fday_start'] = fday_start
+            date_info_dict['fday_end'] = fday_end
+            date_info_dict['fday_inc'] = fday_inc
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = vhafm_info[0][0]
             plot_info_dict['fcst_var_level'] = vhafm_info[0][1]

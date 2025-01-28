@@ -663,7 +663,10 @@ def main():
         'init_hr_start': 'INIT_HR_START',
         'init_hr_end': 'INIT_HR_END',
         'init_hr_inc': 'INIT_HR_INC',
-        'forecast_hours': ['FORECAST_HOURS']
+        'forecast_hours': ['FORECAST_HOURS'],
+        'fday_start': 'FDAY_START',
+        'fday_end': 'FDAY_END',
+        'fday_inc': 'FDAY_INC',
     }
     PLOT_INFO_DICT = {
         'line_type': 'LINE_TYPE',

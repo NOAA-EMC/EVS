@@ -101,13 +101,20 @@ class TimeSeriesFhrMean:
                               +"program exit")
             sys.exit(99)
         # Read in data
+        ## selected_fcst_hours=[ str(ifhr) for ifhr in fhrs ]
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
         perform_init_hour_filtering=True
         selected_filter_init_hour=self.date_info_dict['init_hr_start']
         perform_fcst_hour_filtering=True
-        ## selected_fcst_hours=[ str(ifhr) for ifhr in fhrs ]
-        test_fcst_hours=[ 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48 ]
-        selected_fcst_hours=[ str(ifhr) for ifhr in test_fcst_hours ]
+        selected_fcst_day=self.date_info_dict['fday_start']
+        self.logger.info(f"Reading selected_fcst_day ={selected_fcst_day}")
+        if selected_fcst_day == "1":
+            plot_fcst_hours=[  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 10, 21, 22, 23, 24 ]
+        elif selected_fcst_day == "2":
+            plot_fcst_hours=[ 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48 ]
+        elif selected_fcst_day == "3":
+            plot_fcst_hours=[ 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72 ]
+        selected_fcst_hours=[ str(ifhr).zfill(2) for ifhr in plot_fcst_hours ]
         self.logger.info(f"selected forecast hours = {selected_fcst_hours}")
         all_model_df = gda_util.build_df_fhr_mean(
             'make_plots', self.logger, self.input_dir, self.output_dir,
@@ -237,6 +244,7 @@ class TimeSeriesFhrMean:
         else:
             plot_right_logo = False
             self.logger.debug(f"{plot_right_logo_path} does not exist")
+        self.logger.debug(f"DEBUG :; check fday_start = {self.date_info_dict['fday_start']}")
         image_name = plot_specs_ts.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
@@ -539,7 +547,10 @@ def main():
         'init_hr_start': 'INIT_HR_START',
         'init_hr_end': 'INIT_HR_END',
         'init_hr_inc': 'INIT_HR_INC',
-        'forecast_hours': 'FORECAST_HOUR'
+        'forecast_hours': 'FORECAST_HOUR',
+        'fday_start': 'FDAY_START',
+        'fday_end': 'FDAY_END',
+        'fday_inc': 'FDAY_INC',
     }
     PLOT_INFO_DICT = {
         'line_type': 'LINE_TYPE',
