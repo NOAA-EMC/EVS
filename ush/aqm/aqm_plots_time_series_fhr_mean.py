@@ -136,6 +136,7 @@ class TimeSeriesFhrMean:
             selected_fcst_hours,
             perform_init_hour_filtering,
             self.date_info_dict['init_hr_start']
+            self.date_info_dict['fday_start']
         )
         # Calculate statistic
         self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "

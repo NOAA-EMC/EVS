@@ -2455,6 +2455,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
 
              filter_inithr_flag     - status of filtering by init_hours (boolean)
              filter_init_hour       - selected init hour (string)
+             selected_fcst_day      - selected fsct day  (string)
 
          Returns:
              all_model_df                - dataframe of all the information
@@ -2462,6 +2463,10 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
     met_version_line_type_col_list = get_met_line_type_cols(
         logger, met_info_dict['root'], met_info_dict['version'], line_type
     )
+    if filter_inithr_flag:
+        filter_filename_add=f"fcstday{selected_fcst_day}_init{filter_init_hour}z"
+    else:
+        filter_filename_add=f"fcstday{selected_fcst_day}"
     for model_num in list(model_info_dict.keys()):
         model_num_name = (
             model_num+'/'+model_info_dict[model_num]['name']
@@ -2490,7 +2495,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                 +'linetype'+line_type+'_'
                 +'grid'+grid+'_'+'vxmask'+vx_mask+'_'
                 +'interp'+interp_method+interp_points+'_'
-                +date_type.lower()
+                +filter_filename_add.lower()_"_"+date_type.lower()
                 +dates[0].strftime('%Y%m%d%H%M%S')+'to'
                 +dates[-1].strftime('%Y%m%d%H%M%S')
             ).lower().replace('.','p').replace('-', '_')\
