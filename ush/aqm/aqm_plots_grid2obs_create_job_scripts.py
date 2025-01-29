@@ -37,6 +37,9 @@ nproc = os.environ['nproc']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 NDAYS = str(os.environ['NDAYS'])
+nrt_case_id=f"last{NDAYS}days"
+retro_case_id = str(os.environ['RETRO_CASE_ID'])
+dir_case_id = retro_case_id
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
@@ -645,43 +648,43 @@ tar_images_jobs_dict = {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_ozone",
-                                        f"last{NDAYS}days")
+                                        f"{dir_case_id}")
     },
     'pm25': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_pm25",
-                                        f"last{NDAYS}days")
+                                        f"{dir_case_id}")
     },
     'ozmax8': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_ozmax8",
-                                        f"last{NDAYS}days")
+                                        f"{dir_case_id}")
     },
     'pmave': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_pmave",
-                                        f"last{NDAYS}days")
+                                        f"{dir_case_id}")
     },
     'ozmax8_headline': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"headline.{end_date}",
                                         f"{VERIF_CASE}_ozmax8",
-                                        f"last{NDAYS}days")
+                                        f"{dir_case_id}")
     },
     'pmave_headline': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"headline.{end_date}",
                                         f"{VERIF_CASE}_pmave",
-                                        f"last{NDAYS}days")
+                                        f"{dir_case_id}")
     },
     'aeronetaod': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
                                         f"{VERIF_CASE}_aeronetaod",
-                                        f"last{NDAYS}days")
+                                        f"{dir_case_id}")
     }
 }
 if JOB_GROUP == 'tar_images':
@@ -706,6 +709,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['NDAYS'] = NDAYS
+        job_env_dict['retro_case_id'] = retro_case_id
         job_env_dict['date_type'] = 'VALID'
         """
         if JOB_GROUP in ['make_plots']:

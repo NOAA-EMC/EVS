@@ -41,6 +41,9 @@ start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 date_type = os.environ['date_type']
 NDAYS = os.environ['NDAYS']
+nrt_case_id=f"last{NDAYS}days"
+retro_case_id = os.environ['RETRO_CASE_ID']
+dir_case_id = retro_case_id
 plot_verbosity = os.environ['plot_verbosity']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 job_id = os.environ['job_id']
@@ -452,6 +455,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = ts_info[1][0]
             plot_info_dict['obs_var_level'] = ts_info[1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[1][2]
+            plot_info_dict['retro_case_id'] = retro_case_id
             ## does it take forecast_hour as a list?
             ## Ans : it take single valid_hr_start and single forecast_hour to cal init_hr
             ## init_hr = gda_util.get_init_hour(
@@ -566,6 +570,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = la_info[1][0]
             plot_info_dict['obs_var_level'] = la_info[1][1]
             plot_info_dict['obs_var_thresh'] = la_info[1][2]
+            plot_info_dict['retro_case_id'] = retro_case_id
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -662,6 +667,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = vhafm_info[1][0]
             plot_info_dict['obs_var_level'] = vhafm_info[1][1]
             plot_info_dict['obs_var_thresh'] = vhafm_info[1][2]
+            plot_info_dict['retro_case_id'] = retro_case_id
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -1021,7 +1027,7 @@ elif JOB_GROUP == 'tar_images':
           .replace(os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                 'plot_output', f"{RUN}.{end_date}",
                                 f"{VERIF_CASE}_{VERIF_TYPE}",
-                                f"last{NDAYS}days/"), '')\
+                                f"{dir_case_id}/"), '')\
           .replace('/', '_')+'.tar')
     )
     if not os.path.exists(tar_file):

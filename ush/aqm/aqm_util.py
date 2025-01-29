@@ -1678,6 +1678,7 @@ def initialize_job_env_dict(verif_type, group,
     job_env_dict['VERIF_TYPE'] = verif_type
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
+    job_env_dict['retro_case_id'] = os.environ['RETRO_CASE_ID']
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'filter_stats', 'make_plots']:
         if verif_case_step_abbrev_type+'_fhr_list' in list(os.environ.keys()):
@@ -2009,6 +2010,8 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     dir_verif_case = plot_job_env_dict['VERIF_CASE'].lower()
     dir_verif_type = plot_job_env_dict['VERIF_TYPE'].lower()
     dir_ndays = ('last'+plot_job_env_dict['NDAYS']+'days').lower()
+    dir_caseid = plot_job_env_dict['retro_case_id'].lower()
+    dir_case_id = dir_caseid
     dir_line_type = plot_job_env_dict['line_type'].lower()
     dir_parameter = plot_job_env_dict['fcst_var_name'].lower()
     #if plot_job_env_dict['fcst_var_name'] == 'HGT_DECOMP':
@@ -2034,7 +2037,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
             DATA_base_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
-            dir_ndays, dir_line_type,
+            dir_case_id, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region
         )
@@ -2044,7 +2047,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
             DATA_base_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
-            dir_ndays, dir_line_type,
+            dir_case_id, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region, dir_stat
         )
@@ -2422,7 +2425,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              obs_var_name, obs_var_level, obs_var_thresh, line_type,
              grid, vx_mask, interp_method, interp_points, date_type, dates,
              met_format_valid_dates,filter_fhr_flag,forecast_hours,
-                     filter_inithr_flag, filter_init_hour):
+                     filter_inithr_flag, filter_init_hour, selected_fcst_day ):
     """! Build the data frame for all model stats,
          Read the model's filtered file, and if doesn't exist
          filter the model file for need information and write file
@@ -2495,7 +2498,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                 +'linetype'+line_type+'_'
                 +'grid'+grid+'_'+'vxmask'+vx_mask+'_'
                 +'interp'+interp_method+interp_points+'_'
-                +filter_filename_add.lower()_"_"+date_type.lower()
+                +filter_filename_add.lower()+"_"+date_type.lower()
                 +dates[0].strftime('%Y%m%d%H%M%S')+'to'
                 +dates[-1].strftime('%Y%m%d%H%M%S')
             ).lower().replace('.','p').replace('-', '_')\

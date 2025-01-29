@@ -89,12 +89,14 @@ class ValidHourAverageFhrMean:
         selected_filter_init_hour=self.date_info_dict['init_hr_start']
         perform_fcst_hour_filtering=True
         selected_fcst_day=self.date_info_dict['fday_start']
-        if selected_fcst_day == "1":
-            plot_fcst_hours=[  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 10, 21, 22, 23, 24 ]
-        elif selected_fcst_day == "2":
-            plot_fcst_hours=[ 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48 ]
-        elif selected_fcst_day == "3":
-            plot_fcst_hours=[ 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72 ]
+
+        sel_fhr_start=(int(selected_fcst_day)-1)*24+1
+        sel_fhr_end=int(selected_fcst_day)*24
+        sel_fhr_inc=1
+
+        plot_fcst_hours= np.arange(
+            sel_fhr_start, sel_fhr_end+sel_fhr_inc, sel_fhr_inc
+        )
         selected_fcst_hours=[ str(ifhr).zfill(2) for ifhr in plot_fcst_hours ]
         self.logger.info(f"selected forecast hours = {selected_fcst_hours}")
         flag_init_df=True
@@ -706,6 +708,7 @@ def main():
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
         'obs_var_thresh': 'OBS_VAR_THRESH',
+        'retro_case_id': 'FIG_NAME_ID',
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',

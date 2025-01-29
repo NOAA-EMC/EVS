@@ -74,6 +74,9 @@ COMOUT_dir_list = []
 output_dir_list = []
 if STEP == 'plots':
     NDAYS = str(os.environ['NDAYS'])
+    nrt_case_id=f"last{NDAYS}days"
+    retro_case_id = os.environ['RETRO_CASE_ID']
+    dir_case_id = retro_case_id
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
@@ -97,11 +100,11 @@ if STEP == 'plots':
             os.path.join(working_output_base_dir,
                          RUN+'.'+end_date_dt.strftime('%Y%m%d'),
                          VERIF_CASE+'_'+VERIF_CASE_STEP_type,
-                         'last'+NDAYS+'days')
+                         dir_case_id)
         )
         COMOUT_dir_list.append(
             os.path.join(COMOUT, VERIF_CASE+'_'+VERIF_CASE_STEP_type,
-                         'last'+NDAYS+'days')
+                         dir_case_id)
         )
     ## old code
     ## add new code from ush/global_det/global_det_atmos_create_output_dirs.py

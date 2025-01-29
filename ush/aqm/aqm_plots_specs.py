@@ -1052,6 +1052,13 @@ class PlotSpecs:
         )
         ndays = int((end_date_dt - start_date_dt).total_seconds()/86400) + 1
         ndays_savefig_name = 'last'+str(ndays)+'days'
+
+        if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 
+                              'valid_hour_average_fhr_mean' ]:
+            caseid_savefig_name = plot_info_dict['retro_case_id']
+        else:
+            caseid_savefig_name = ndays_savefig_name
+
         if self.plot_type == 'time_series':
             plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'time_series_multifhr':
@@ -1181,7 +1188,7 @@ class PlotSpecs:
             +component_savefig_name+'.'
             +metric_savefig_name+'.'
             +parameter_savefig_name+'_'+level_savefig_name+'.'
-            +ndays_savefig_name+'.'
+            +caseid_savefig_name+'.'
             +plot_type_savefig_name+'.'
             +grid_savefig_name+'_'+region_savefig_name
             +'.png'
