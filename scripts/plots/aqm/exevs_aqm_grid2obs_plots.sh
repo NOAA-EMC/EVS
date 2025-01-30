@@ -130,15 +130,20 @@ done
 # Copy files to desired location
 if [ "${SENDCOM}" == "YES" ]; then
     # Make and copy tar file
+    if [ "${fig_gen_mode}" == "retro" ]; then
+        tar_file_label = ${fig_name_label}
+    else
+        tar_file_label = "last${NDAYS}days"
+    fi
     cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
     for VERIF_TYPE in ${g2op_type_list}; do
-        ## large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+        ## large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${tar_file_label}.v${end_date}.tar
 	## tar_file_count=$( find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null | wc -l )
 	## if [ ${tar_file_count} -ne 0 ]; then
 	##     tar -cvf ${large_tar_file} *.tar
 	## fi
 	# old code
-        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${tar_file_label}.v${end_date}.tar
         tar -cvf ${large_tar_file} ${VERIF_CASE}_${VERIF_TYPE}*.tar
 	# old code
         if [ -f ${large_tar_file} ]; then
@@ -153,6 +158,6 @@ if [ "${SENDCOM}" == "YES" ]; then
 fi
 
 if [ "${SENDDBN}" == "YES" ]; then
-    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${tar_file_label}.v${end_date}.tar
 fi
 exit

@@ -41,9 +41,12 @@ start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 date_type = os.environ['date_type']
 NDAYS = os.environ['NDAYS']
-nrt_case_id=f"last{NDAYS}days"
-retro_case_id = os.environ['RETRO_CASE_ID']
-dir_case_id = retro_case_id
+fig_name_label = os.environ['fig_name_label']
+fig_gen_mode = os.environ['fig_gen_mode']
+if fig_gen_mode.lower() == "retro":
+    dir_name_label = fig_name_label
+else:
+    dir_name_label=f"last{NDAYS}days"
 plot_verbosity = os.environ['plot_verbosity']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 job_id = os.environ['job_id']
@@ -404,6 +407,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = ts_info[2][1][0]
             plot_info_dict['obs_var_level'] = ts_info[2][1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[2][1][2]
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -455,7 +460,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = ts_info[1][0]
             plot_info_dict['obs_var_level'] = ts_info[1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[1][2]
-            plot_info_dict['retro_case_id'] = retro_case_id
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             ## does it take forecast_hour as a list?
             ## Ans : it take single valid_hr_start and single forecast_hour to cal init_hr
             ## init_hr = gda_util.get_init_hour(
@@ -522,6 +528,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = la_info[1][1][0]
             plot_info_dict['obs_var_level'] = la_info[1][1][1]
             plot_info_dict['obs_var_thresh'] = la_info[1][1][2]
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -570,7 +578,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = la_info[1][0]
             plot_info_dict['obs_var_level'] = la_info[1][1]
             plot_info_dict['obs_var_thresh'] = la_info[1][2]
-            plot_info_dict['retro_case_id'] = retro_case_id
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -616,6 +625,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = vha_info[1][0]
             plot_info_dict['obs_var_level'] = vha_info[1][1]
             plot_info_dict['obs_var_thresh'] = vha_info[1][2]
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -667,7 +678,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = vhafm_info[1][0]
             plot_info_dict['obs_var_level'] = vhafm_info[1][1]
             plot_info_dict['obs_var_thresh'] = vhafm_info[1][2]
-            plot_info_dict['retro_case_id'] = retro_case_id
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -715,6 +727,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -773,6 +787,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = lbd_info[1][1][0]
             plot_info_dict['obs_var_level'] = lbd_info[1][1][1]
             plot_info_dict['obs_var_thresh'] = lbd_info[1][1][2]
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             DATAjob_image_name = plot_specs.get_savefig_name(
                 DATAjob, plot_info_dict, date_info_dict
             )
@@ -819,6 +835,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['vert_profile'] = sbl_info[2]
             plot_info_dict['fcst_var_level'] = sbl_info[2]
             plot_info_dict['obs_var_level'] = sbl_info[2]
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -878,6 +896,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['vert_profile'] = lbl_info[1]
             plot_info_dict['fcst_var_level'] = lbl_info[1]
             plot_info_dict['obs_var_level'] = lbl_info[1]
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             for t in range(len(fcst_var_thresh_list)):
                 plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
                 plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
@@ -976,6 +996,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
+            plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['fig_gen_mode'] = fig_gen_mode
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -1027,7 +1049,7 @@ elif JOB_GROUP == 'tar_images':
           .replace(os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                 'plot_output', f"{RUN}.{end_date}",
                                 f"{VERIF_CASE}_{VERIF_TYPE}",
-                                f"{dir_case_id}/"), '')\
+                                f"{dir_name_label}/"), '')\
           .replace('/', '_')+'.tar')
     )
     if not os.path.exists(tar_file):

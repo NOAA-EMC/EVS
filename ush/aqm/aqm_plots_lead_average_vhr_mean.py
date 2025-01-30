@@ -244,12 +244,14 @@ class LeadAverageVhrMean:
         plot_specs_la = PlotSpecs(self.logger, 'lead_average_vhr_mean')
         plot_specs_la.set_up_plot()
         n_xticks = 17
+        ## original fcst_hr_interval=24
+        fcst_hr_interval=6
         if len(self.date_info_dict['forecast_hours']) <= n_xticks:
             xticks = self.date_info_dict['forecast_hours']
         else:
             xticks = []
             for fhr in self.date_info_dict['forecast_hours']:
-                if int(fhr) % 24 == 0:
+                if int(fhr) % fcst_hr_interval == 0:
                     xticks.append(fhr)
             if len(xticks) > n_xticks:
                 xtick_intvl = int(len(xticks)/n_xticks)
@@ -682,7 +684,8 @@ def main():
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
         'obs_var_thresh': 'OBS_VAR_THRESH',
-        'retro_case_id': 'FIG_NAME_ID',
+        'fig_name_label': 'FIG_NAME_LABEL',
+        'fig_gen_mode': 'FIG_GEN_MODE',
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',

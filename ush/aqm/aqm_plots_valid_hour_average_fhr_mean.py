@@ -274,7 +274,7 @@ class ValidHourAverageFhrMean:
         self.logger.info(f"Setting up plot")
         plot_specs_vhafm = PlotSpecs(self.logger, 'valid_hour_average_fhr_mean')
         plot_specs_vhafm .set_up_plot()
-        n_xticks = 8
+        n_xticks = 12
         if len(valid_hours) < n_xticks:
             xtick_intvl = 1
         else:
@@ -708,7 +708,8 @@ def main():
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
         'obs_var_thresh': 'OBS_VAR_THRESH',
-        'retro_case_id': 'FIG_NAME_ID',
+        'fig_name_label': 'FIG_NAME_LABEL',
+        'fig_gen_mode': 'FIG_GEN_MODE',
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',

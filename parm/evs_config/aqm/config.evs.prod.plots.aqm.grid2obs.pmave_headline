@@ -65,6 +65,8 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     export g2op_pmave_init_hr_list="12"
     export g2op_pmave_valid_hr_list="04"
     export g2op_pmave_fhr_list="40"
-    export RETRO_CASE_ID=$( echo ${start_date} | cut -c1-6 )
+    export fig_name_label=$( echo ${start_date} | cut -c1-6 )
+    ## retro or nrt/prod
+    export fig_gen_mode="retro"
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"

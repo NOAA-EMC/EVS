@@ -334,7 +334,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
 
          Returns:
              time_info - list of dictionaries with the valid,
-                         initialization, and forecast hour
+                         initalization, and forecast hour
                          pairings
     """
     valid_hr_zfill2_list = [hr.zfill(2) for hr in valid_hr_list]
@@ -1623,7 +1623,7 @@ def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
             break
         sleep_counter+=1
 
-def initialize_job_env_dict(verif_type, group,
+def initalize_job_env_dict(verif_type, group,
                            verif_case_step_abbrev_type, job):
     """! This initializes a dictionary of environment variables and their
          values to be set for the job pulling from environment variables
@@ -1678,8 +1678,6 @@ def initialize_job_env_dict(verif_type, group,
     job_env_dict['VERIF_TYPE'] = verif_type
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
-    job_env_dict['fig_name_label'] = os.environ['fig_name_label']
-    job_env_dict['fig_gen_mode'] = os.environ['fig_gen_mode']
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'filter_stats', 'make_plots']:
         if verif_case_step_abbrev_type+'_fhr_list' in list(os.environ.keys()):
@@ -1763,24 +1761,6 @@ def initialize_job_env_dict(verif_type, group,
         else:
             verif_type_init_hr_inc = 24
         job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
-        if verif_case_step_abbrev_type+'_fday_list' in list(os.environ.keys()):
-            verif_type_fday_list = (
-                os.environ[verif_case_step_abbrev_type+'_fday_list']\
-                .split(' ')
-            )
-            job_env_dict['fday_start'] = (
-                verif_type_fday_list[0].zfill(1)
-            )
-            job_env_dict['fday_end'] = (
-                verif_type_fday_list[-1].zfill(1)
-            )
-            if len(verif_type_fday_list) > 1:
-                verif_type_fday_inc = np.min(
-                    np.diff(np.array(verif_type_fday_list, dtype=int))
-                )
-            else:
-                verif_type_fday_inc = 1
-            job_env_dict['fday_inc'] = str(verif_type_fday_inc)
     return job_env_dict
 
 def get_logger(log_file):
@@ -1825,7 +1805,7 @@ def get_plot_dates(logger, date_type, start_date, end_date,
              forecast_hour  - forecast hour (string)
          Returns:
              valid_dates - array of valid dates (datetime)
-             init_dates  - array of initialization dates (datetime)
+             init_dates  - array of initalization dates (datetime)
     """
     # Build date_type date array
     if date_type == 'VALID':
@@ -2010,10 +1990,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     dir_step = plot_job_env_dict['STEP'].lower()
     dir_verif_case = plot_job_env_dict['VERIF_CASE'].lower()
     dir_verif_type = plot_job_env_dict['VERIF_TYPE'].lower()
-    if plot_job_env_dict['fig_gen_mode'].lower() == "retro":
-        dir_name_label = plot_job_env_dict['fig_name_label'].lower()
-    else:
-        dir_name_label=('last'+plot_job_env_dict['NDAYS']+'days').lower()
+    dir_ndays = ('last'+plot_job_env_dict['NDAYS']+'days').lower()
     dir_line_type = plot_job_env_dict['line_type'].lower()
     dir_parameter = plot_job_env_dict['fcst_var_name'].lower()
     #if plot_job_env_dict['fcst_var_name'] == 'HGT_DECOMP':
@@ -2039,7 +2016,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
             DATA_base_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
-            dir_name_label, dir_line_type,
+            dir_ndays, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region
         )
@@ -2049,7 +2026,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
             DATA_base_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
-            dir_name_label, dir_line_type,
+            dir_ndays, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region, dir_stat
         )
@@ -2427,7 +2404,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
              obs_var_name, obs_var_level, obs_var_thresh, line_type,
              grid, vx_mask, interp_method, interp_points, date_type, dates,
              met_format_valid_dates,filter_fhr_flag,forecast_hours,
-                     filter_inithr_flag, filter_init_hour, selected_fcst_day ):
+                     filter_inithr_flag, filter_init_hour):
     """! Build the data frame for all model stats,
          Read the model's filtered file, and if doesn't exist
          filter the model file for need information and write file
@@ -2460,7 +2437,6 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
 
              filter_inithr_flag     - status of filtering by init_hours (boolean)
              filter_init_hour       - selected init hour (string)
-             selected_fcst_day      - selected fsct day  (string)
 
          Returns:
              all_model_df                - dataframe of all the information
@@ -2468,10 +2444,6 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
     met_version_line_type_col_list = get_met_line_type_cols(
         logger, met_info_dict['root'], met_info_dict['version'], line_type
     )
-    if filter_inithr_flag:
-        filter_filename_label=f"fcstday{selected_fcst_day}_init{filter_init_hour}z"
-    else:
-        filter_filename_label=f"fcstday{selected_fcst_day}"
     for model_num in list(model_info_dict.keys()):
         model_num_name = (
             model_num+'/'+model_info_dict[model_num]['name']
@@ -2500,7 +2472,9 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                 +'linetype'+line_type+'_'
                 +'grid'+grid+'_'+'vxmask'+vx_mask+'_'
                 +'interp'+interp_method+interp_points+'_'
-                +filter_filename_label.lower()+"_"+date_type.lower()
+                +date_type.lower()
+                +dates[0].strftime('%Y%m%d%H%M%S')+'to'
+                +dates[-1].strftime('%Y%m%d%H%M%S')
             ).lower().replace('.','p').replace('-', '_')\
             .replace('&&', 'and').replace('||', 'or')\
             .replace('0,*,*', '').replace('*,*', '')+'.stat'
@@ -2515,8 +2489,6 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
             else:
                 filtered_model_stat_file = output_filtered_model_stat_file
             if not os.path.exists(filtered_model_stat_file):
-                logger.info(f"Can not find Filtered {model_dict['name']} file = {filtered_model_stat_file}")
-                logger.info(f"Perform filtering procedures from condense file = {condensed_model_file}")
                 write_filtered_stat_file = True
                 read_filtered_stat_file = True
             else:
@@ -2617,29 +2589,16 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                      & (condensed_model_df['LINE_TYPE'] \
                         == line_type)
                 ]
-                filter_inithr_flag=False
-                filter_inithr_flag=True
                 if filter_inithr_flag:
-                    logger.debug(f"Filter df by init_hour of {filter_init_hour}")
                     fcst_lead_time=filtered_model_df['FCST_LEAD'].tolist()
-                    ## for i in range(0,11): 
-                    ##     logger.debug(f"fcst_lead_time {i} = {fcst_lead_time[i]}")
                     fcst_lead_values=[]
                     for strtime in fcst_lead_time:
                         lead_obj=int(strtime[0:2])
                         fcst_lead_values.append(lead_obj)
-                    ## for i in range(0,11): 
-                    ##     logger.debug(f"fcst_lead_values {i} = {fcst_lead_values[i]}")
                     fcst_valid_time=filtered_model_df['FCST_VALID_BEG'].tolist()
-                    ## for i in range(0,11): 
-                    ##     logger.debug(f"fcst_valid_time {i} = {fcst_valid_time[i]}")
-                    datetime_valid=[]
                     for strtime in fcst_valid_time:
                         dt_obj=datetime.datetime.strptime(strtime, "%Y%m%d_%H%M%S")
                         datetime_valid.append(dt_obj)
-                    ## for i in range(0,11): 
-                    ##     logger.debug(f"datetime_valid {i} = {datetime_valid[i]}")
-                    ##     logger.debug(f"datetime_valid.hour = {datetime_valid[i].hour}")
                     num_data=len(fcst_lead_values)
                     num_check=len(datetime_valid)
                     if num_data == num_check:
@@ -2647,17 +2606,9 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                         for i in range(0,num_data):
                             init_obj=get_init_hour( datetime_valid[i].hour, fcst_lead_values[i])
                             array_init_hour.append(init_obj)
-                        ## for i in range(0,11): 
-                        ##     logger.debug(f"array_init_hour {i} = {array_init_hour[i]}")
                     else:
-                        logger.debug(f"number of data are different fcst_lead {num_data} and valid_time {num_check}")
-                    ## for i in range(0,11): 
-                    ##     logger.debug(f"{fcst_lead_time[i]} {fcst_lead_values[i]} {fcst_valid_time[i]} {datetime_valid[i].hour} {array_init_hour[i]}")
-                    remove_index=[ idx for idx in range(num_data) if array_init_hour[idx] != int(filter_init_hour) ]
-                    ## len_ori_idx=len(array_init_hour)
-                    ## len_rm_idx=len(remove_index)
-                    ## logger.debug(f"number of data before removed is {len_ori_idx}")
-                    ## logger.debug(f"number of data removed is {len_rm_idx}")
+                        print(f"number of data are different fcst_lead {num_data} and valid_time {num_check}")
+                    remove_index=[ idx for idx in range(num_data) if array_init_hour[idx] != filtered_init_hour ]
                     filtered_model_df.drop(filtered_model_df.index[remove_index], inplace=True)
                 if filter_fhr_flag:
                     selected_forecast_hours=[ fhr.zfill(2)+'0000' for fhr in forecast_hours ]
@@ -2679,12 +2630,10 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                     filtered_model_stat_file, header=met_version_line_type_col_list,
                     index=None, sep=' ', mode='w'
                 )
-                logger.info(f"Write filtered {model_dict['name']} file "
-                            +f"at {filtered_model_stat_file}")
             else:
                 logger.debug(f"{condensed_model_file} does not exist")
             if os.path.exists(filtered_model_stat_file):
-                logger.info(f"Found filtered {model_dict['name']} file "
+                logger.info(f"Filtered {model_dict['name']} file "
                             +f"at {filtered_model_stat_file}")
             else:
                 logger.debug(f"Could not create {filtered_model_stat_file}")

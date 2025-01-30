@@ -1051,13 +1051,10 @@ class PlotSpecs:
             date_info_dict['end_date'], '%Y%m%d'
         )
         ndays = int((end_date_dt - start_date_dt).total_seconds()/86400) + 1
-        ndays_savefig_name = 'last'+str(ndays)+'days'
-
-        if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 
-                              'valid_hour_average_fhr_mean' ]:
-            caseid_savefig_name = plot_info_dict['retro_case_id']
+        if plot_info_dict['fig_gen_mode'].lower() == "retro":
+            savefig_name_label = plot_info_dict['fig_name_label']
         else:
-            caseid_savefig_name = ndays_savefig_name
+            savefig_name_label=f"last{ndays}days"
 
         if self.plot_type == 'time_series':
             plot_type_savefig_name = 'timeseries'
@@ -1188,7 +1185,7 @@ class PlotSpecs:
             +component_savefig_name+'.'
             +metric_savefig_name+'.'
             +parameter_savefig_name+'_'+level_savefig_name+'.'
-            +caseid_savefig_name+'.'
+            +savefig_name_label+'.'
             +plot_type_savefig_name+'.'
             +grid_savefig_name+'_'+region_savefig_name
             +'.png'
