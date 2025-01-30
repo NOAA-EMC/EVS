@@ -593,13 +593,13 @@ elif STEP == 'stats':
                        + 'model=\\\"${MODELNAME}\\\", '
                        + ')\"'
                     )
-                  job_cmd_list_iterative.append(
+                   job_cmd_list_iterative.append(
                        f'python '
                        + f'{USHevs}/{COMPONENT}/'
                        + f'{COMPONENT}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
-                  )
-                  if SENDCOM == 'YES':
-                    job_cmd_list_iterative.append(
+                   )
+                   if SENDCOM == 'YES':
+                      job_cmd_list_iterative.append(
                        f'python -c '
                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -615,15 +615,15 @@ elif STEP == 'stats':
                        + 'fhr_incr=\\\"${FHR_INCR}\\\", '
                        + 'model=\\\"${MODELNAME}\\\", '
                        + ')\"'
-                    )
-                  job_cmd_list_iterative.append(
+                   )
+                   job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
                        + f'PointStat_fcst{COMPONENT.upper()}_'
                        + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
-                  )
-                  if SENDCOM == 'YES':
-                    job_cmd_list_iterative.append(
+                   )
+                   if SENDCOM == 'YES':
+                      job_cmd_list_iterative.append(
                        f'python -c '
                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -640,17 +640,17 @@ elif STEP == 'stats':
                        + 'model=\\\"${MODELNAME}\\\", '
                        + 'var_name=\\\"${VAR_NAME}\\\"'
                        + ')\"'
-                    )
-                  job_cmd_list_iterative.append(
+                      )
+                   job_cmd_list_iterative.append(
                        "python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
                        + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
-                  )
-                  completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
-                  job_cmd_list_iterative.append(
+                   )
+                   completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+                   job_cmd_list_iterative.append(
                      f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
-                  )
+                   )
 
             else:
                 pstat_file_exist = cutil.check_pstat_files(job_env_vars_dict)
