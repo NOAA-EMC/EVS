@@ -192,7 +192,7 @@ class TimeSeriesFhrMean:
         self.logger.info(f"Setting up plot")
         plot_specs_ts = PlotSpecs(self.logger, 'time_series_fhr_mean')
         plot_specs_ts.set_up_plot()
-        n_xticks = 5
+        n_xticks = 6
         if len(plot_dates) < n_xticks:
             xtick_intvl = 1
         else:

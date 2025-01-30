@@ -131,9 +131,9 @@ done
 if [ "${SENDCOM}" == "YES" ]; then
     # Make and copy tar file
     if [ "${fig_gen_mode}" == "retro" ]; then
-        tar_file_label = ${fig_name_label}
+        tar_file_label=${fig_name_label}
     else
-        tar_file_label = "last${NDAYS}days"
+        tar_file_label="last${NDAYS}days"
     fi
     cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
     for VERIF_TYPE in ${g2op_type_list}; do
