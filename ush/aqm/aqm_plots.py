@@ -47,6 +47,7 @@ if fig_gen_mode.lower() == "retro":
     dir_name_label = fig_name_label
 else:
     dir_name_label=f"last{NDAYS}days"
+restart_mode = os.environ['restart_mode']
 plot_verbosity = os.environ['plot_verbosity']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 job_id = os.environ['job_id']
@@ -251,8 +252,8 @@ if JOB_GROUP == 'condense_stats':
         )
         ## old code
         ## more work from 245 below; consult  ush/global_det/global_det_atmos_plots.py
-        if os.path.exists(COMOUTjob_condensed_model_stat_file):
-            logger.info(f"Copying {COMOUTjob_condensed_model_stat_file} to "
+        if restart_mode == "YES" and os.path.exists(COMOUTjob_condensed_model_stat_file):
+            logger.info(f"RESTART Copying {COMOUTjob_condensed_model_stat_file} to "
                         +f"{DATAjob_condensed_model_stat_file}")
             gda_util.copy_file(COMOUTjob_condensed_model_stat_file,
                                DATAjob_condensed_model_stat_file)
@@ -352,8 +353,8 @@ elif JOB_GROUP == 'filter_stats':
                 COMOUTjob_filter_stats_model_file = (
                     DATAjob_filter_stats_model_file.replace(DATAjob, COMOUTjob)
                 )
-                if os.path.exists(COMOUTjob_filter_stats_model_file):
-                    logger.info(f"Copying {COMOUTjob_filter_stats_model_file} "
+                if restart_mode == "YES" and os.path.exists(COMOUTjob_filter_stats_model_file):
+                    logger.info(f"RESTART Copying {COMOUTjob_filter_stats_model_file} "
                                 +f"to {DATAjob_filter_stats_model_file}")
                     gda_util.copy_file(COMOUTjob_filter_stats_model_file,
                                        DATAjob_filter_stats_model_file)
@@ -427,8 +428,8 @@ elif JOB_GROUP == 'make_plots':
                     and str(date_info_dict['forecast_hour']) not in \
                     [ '24', '48', '72']:
                 make_ts = False
-            if os.path.exists(COMOUTjob_image_name):
-                logger.info(f"Copying {COMOUTjob_image_name} to "
+            if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                             +f"{DATAjob_image_name}")
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_ts = False
@@ -498,9 +499,8 @@ elif JOB_GROUP == 'make_plots':
             ##         and str(date_info_dict['forecast_hour']) not in \
             ##         [ '24', '48', '72']:
             ##     make_ts = False
-            if os.path.exists(COMOUTjob_image_name):
-                logger.info(f"RESTART Copy :: {COMOUTjob_image_name}")
-                logger.info(f"Copying {COMOUTjob_image_name} to "
+            if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                             +f"{DATAjob_image_name}")
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_ts = False
@@ -547,8 +547,8 @@ elif JOB_GROUP == 'make_plots':
                     make_la = True
             else:
                 make_la = False
-            if os.path.exists(COMOUTjob_image_name):
-                logger.info(f"Copying {COMOUTjob_image_name} to "
+            if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                             +f"{DATAjob_image_name}")
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_la = False
@@ -559,7 +559,7 @@ elif JOB_GROUP == 'make_plots':
                                               logo_dir)
                 plot_la.make_lead_average()
                 if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
-                    logger.info(f"Copying {DATAjob_image_name} to "
+                    logger.info(f"RESTART Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'lead_average_vhr_mean':
@@ -597,8 +597,8 @@ elif JOB_GROUP == 'make_plots':
                     make_la = True
             else:
                 make_la = False
-            if os.path.exists(COMOUTjob_image_name):
-                logger.info(f"Copying {COMOUTjob_image_name} to "
+            if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                             +f"{DATAjob_image_name}")
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_la = False
@@ -646,8 +646,8 @@ elif JOB_GROUP == 'make_plots':
                     make_vha = True
             else:
                 make_vha = False
-            if os.path.exists(COMOUTjob_image_name):
-                logger.info(f"Copying {COMOUTjob_image_name} to "
+            if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                             +f"{DATAjob_image_name}")
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_vha = False
@@ -699,8 +699,8 @@ elif JOB_GROUP == 'make_plots':
                     make_vhafm = True
             else:
                 make_vhafm = False
-            if os.path.exists(COMOUTjob_image_name):
-                logger.info(f"Copying {COMOUTjob_image_name} to "
+            if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                             +f"{DATAjob_image_name}")
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_vhafm = False
@@ -754,8 +754,8 @@ elif JOB_GROUP == 'make_plots':
                         make_ta = True
                 else:
                      make_ta = False
-                if os.path.exists(COMOUTjob_image_name):
-                    logger.info(f"Copying {COMOUTjob_image_name} to "
+                if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                                 +f"{DATAjob_image_name}")
                     gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                     make_ta = False
@@ -806,8 +806,8 @@ elif JOB_GROUP == 'make_plots':
                     make_lbd = True
             else:
                 make_lbd = False
-            if os.path.exists(COMOUTjob_image_name):
-                logger.info(f"Copying {COMOUTjob_image_name} to "
+            if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                             +f"{DATAjob_image_name}")
                 gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                 make_lbd = False
@@ -858,8 +858,8 @@ elif JOB_GROUP == 'make_plots':
                     make_sbl = False
                 del plot_info_dict['fcst_var_level']
                 del plot_info_dict['obs_var_level']
-                if os.path.exists(COMOUTjob_image_name):
-                    logger.info(f"Copying {COMOUTjob_image_name} to "
+                if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                                 +f"{DATAjob_image_name}")
                     gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                     make_sbl = False
@@ -920,8 +920,8 @@ elif JOB_GROUP == 'make_plots':
                     make_lbl = False
                 del plot_info_dict['fcst_var_level']
                 del plot_info_dict['obs_var_level']
-                if os.path.exists(COMOUTjob_image_name):
-                    logger.info(f"Copying {COMOUTjob_image_name} to "
+                if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                                 +f"{DATAjob_image_name}")
                     gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                     make_lbl = False
@@ -1017,8 +1017,8 @@ elif JOB_GROUP == 'make_plots':
                     make_pd = True
                 else:
                     make_pd = False
-                if os.path.exists(COMOUTjob_image_name):
-                    logger.info(f"Copying {COMOUTjob_image_name} to "
+                if restart_mode == "YES" and os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"RESTART Copying {COMOUTjob_image_name} to "
                                 +f"{DATAjob_image_name}")
                     gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
                     make_pd = False

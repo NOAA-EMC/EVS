@@ -77,6 +77,7 @@ export COMOUTheadline=${COMOUTheadline:-$(compath.py -o ${NET}/${evs_ver}/${STEP
 mkdir -m 775 -p $COMOUT $COMOUTheadline
 
 export DATA_TYPE=${DATA_TYPE:-pm25}
+export restart_mode=${restart_mode:-YES}
 #######################################################################
 # Execute the script.
 #######################################################################

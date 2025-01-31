@@ -20,6 +20,7 @@ STEP = os.environ['STEP']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 config = os.environ['config']
 evs_run_mode = os.environ['evs_run_mode']
+restart_mode = os.environ['restart_mode']
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 
@@ -94,7 +95,7 @@ else:
 ]
 evs_aqm_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
-    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM'
+    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM', 'restart_mode'
 ]
 evs_aqm_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
 evs_aqm_settings_dict['RUN_GRID2GRID_PLOTS'] = [
@@ -205,6 +206,7 @@ for config_var in check_config_var_len_list:
 valid_config_var_values_dict = {
     'KEEPDATA': ['YES', 'NO'],
     'SENDCOM': ['YES', 'NO'],
+    'restart_mode': ['YES', 'NO'],
 }
 if STEP.upper() == 'PLOTS':
     valid_config_var_values_dict[

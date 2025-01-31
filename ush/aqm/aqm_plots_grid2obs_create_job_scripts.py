@@ -43,6 +43,7 @@ if fig_gen_mode.lower() == "retro":
     dir_name_label = fig_name_label
 else:
     dir_name_label=f"last{NDAYS}days"
+restart_mode = os.environ['restart_mode']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
@@ -204,7 +205,8 @@ for pmave_job in list(condense_stats_jobs_dict['pmave_headline'].keys()):
 #### aeronetaod
 for aeronetaod_job in list(condense_stats_jobs_dict['aeronetaod'].keys()):
     if aeronetaod_job == 'AOD':
-        aeronetaod_job_line_types = ['SL1L2', 'CTC' ]
+        ## aeronetaod_job_line_types = ['SL1L2', 'CTC' ]
+        aeronetaod_job_line_types = ['SL1L2']
     else:
         aeronetaod_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['aeronetaod'][aeronetaod_job]['line_types'] = aeronetaod_job_line_types
@@ -714,6 +716,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['NDAYS'] = NDAYS
         job_env_dict['fig_name_label'] = fig_name_label
         job_env_dict['fig_gen_mode'] = fig_gen_mode
+        job_env_dict['restart_mode'] = restart_mode
         job_env_dict['date_type'] = 'VALID'
         """
         if JOB_GROUP in ['make_plots']:
