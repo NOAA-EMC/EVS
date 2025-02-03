@@ -1279,8 +1279,9 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             stat_values_rmse = np.sqrt(
                ffbar_est_samp + oobar_est_samp - 2*fobar_est_samp
             )
+            # Replace 0 with NaN to avoid division by zero
+            obar_est_mean[np.abs(obar_est_mean)<1e-9]= np.nan
             stat_values = 100 * stat_values_rmse / obar_est_mean
-            stat_values = stat_values[stat_values<=500]  #get rid of infinite values
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
@@ -1581,8 +1582,9 @@ def calculate_stat(logger, model_data, stat):
          stat_values = (fy_oy + fn_on - C)/(total - C)
    elif stat == 'si':
        if line_type == 'SL1L2':
+           # Replace 0 with NaN to avoid dividing by zero
+           obar[np.abs(obar)<1e-9]=np.nan
            stat_values = 100*(np.sqrt(ffbar + oobar - 2*fobar))/obar
-           stat_values = stat_values[stat_values<=500]  #get rid of infinite values
    else:
       logger.error(stat+" is not a valid option")
       exit(1)

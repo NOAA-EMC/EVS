@@ -115,7 +115,7 @@ for wfo in ${WFO}; do
 	cd ${DATA}
 	chmod 775 ${DATA}/plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
 	if [ ${run_mpi} = 'yes' ] ; then
-		mpiexec -np 36 --cpu-bind verbose,core cfp plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
+		mpiexec -np 36 --cpu-bind verbose,depth cfp plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
 	else
 		echo "not running mpiexec"
 		sh plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
