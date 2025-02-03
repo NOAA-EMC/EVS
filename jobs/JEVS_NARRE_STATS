@@ -20,7 +20,6 @@ setpdy.sh
 
 export VDATE=${VDATE:-$PDYm1}
 
-
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
 # SENDECF  - Flag Events on ECF
@@ -32,6 +31,16 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO} 
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-narre}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-narre}
 
 export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}
 export COMINnarre=${COMINnarre:-$(compath.py  $envir/com/narre/$narre_ver)}
@@ -60,7 +69,6 @@ export jobid="${outid}.o${pid}"
 ####################################
 # Specify codes and scripts locaton
 ####################################
-
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh 
 export err=$?; err_chk

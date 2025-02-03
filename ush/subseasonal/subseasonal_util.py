@@ -4062,7 +4062,7 @@ def initialize_job_env_dict(verif_type, group,
         job_env_dict[env_var] = os.environ[env_var]
     if group in ['condense_stats', 'filter_stats', 'make_plots',
                  'tar_images']:
-        job_env_dict['plot_verbosity'] = ('INFO')
+        job_env_dict['plot_verbosity'] = ('DEBUG')
     job_env_dict['JOB_GROUP'] = group
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'condense_stats', 'filter_stats', 'make_plots',
@@ -4359,8 +4359,8 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
              grid, vx_mask, interp_method, interp_points, date_type, dates,
              met_format_valid_dates, fhr):
     """! Build the data frame for all model stats,
-         Read the model parse file, if doesn't exist
-         parse the model file for need information, and write file
+         Read the model's filtered file, if doesn't exist
+         filter the model file for need information and write file
 
          Args:
              logger                 - logger object
@@ -4484,7 +4484,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 obs_var_thresh_symbol = obs_var_thresh
                 obs_vat_thresh_letter = obs_var_thresh
             if os.path.exists(condensed_model_file):
-                logger.debug(f"Parsing file {condensed_model_file}")
+                logger.debug(f"Filtering file {condensed_model_file}")
                 condensed_model_df = pd.read_csv(
                     condensed_model_file, sep=" ", skiprows=1,
                     skipinitialspace=True, names=met_version_line_type_col_list,
@@ -4532,7 +4532,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                     index=None, sep=' ', mode='w'
                 )
             if os.path.exists(parsed_model_stat_file):
-                logger.debug(f"Parsed {model_dict['name']} file "
+                logger.debug(f"Filtered {model_dict['name']} file "
                              +f"at {parsed_model_stat_file}")
             else:
                 logger.debug(f"Could not create {parsed_model_stat_file}")
