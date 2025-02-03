@@ -53,8 +53,7 @@ for group in "${proc_list[@]}"; do
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/*
     nc=1
     if [ $USE_CFP = YES ]; then
-        ## group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/poe* |wc -l)
-        group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/poe* 2>/dev/null |wc -l)
+        group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/poe* 2>/dev/null | wc -l)
         while [ $nc -le ${group_ncount_poe} ]; do
             poe_script=${DATA}/${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/poe_jobs${nc}
             chmod 775 ${poe_script}
@@ -73,15 +72,29 @@ for group in "${proc_list[@]}"; do
             nc=$((nc+1))
         done
     else
-        group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/job* 2>/dev/null |wc -l)
+        group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/job* 2>/dev/null | wc -l)
         while [ ${nc} -le ${group_ncount_job} ]; do
             ${DATA}/${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/job${nc}
             export err=$?; err_chk
             nc=$((nc+1))
         done
     fi
-    ## copy ush/global_det/global_det_atmos_copy_job_dir_output.py to ush/global_ens/global_ens_chem_copy_job_dir_output.py
-    ## add section from scripts/plots/global_det/exevs_global_det_atmos_grid2grid_plots.sh
+    python $USHevs/global_det/global_det_atmos_copy_job_dir_output.py
+    export err=$?; err_chk
+    # Cat the plotting log files
+    if [ $JOB_GROUP = make_plots ]; then
+        log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/*/*/*/logs
+    else
+        log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/*/*/logs
+    fi
+    log_file_count=$(find $log_dir -type f 2>/dev/null |wc -l)
+    if [[ $log_file_count -ne 0 ]]; then
+        for log_file in $log_dir/*; do
+            echo "Start: $log_file"
+            cat $log_file
+            echo "End: $log_file"
+        done
+    fi
 done
 
 # Copy files to desired location
@@ -89,15 +102,11 @@ if [ "${SENDCOM}" == "YES" ]; then
     # Make and copy tar file
     cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
     for VERIF_TYPE in ${g2op_type_list}; do
-        ## large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
-	## tar_file_count=$( find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null | wc -l )
-	## if [ ${tar_file_count} -ne 0 ]; then
-	##     tar -cvf ${large_tar_file} *.tar
-	## fi
-	# old code
-        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
-        tar -cvf ${large_tar_file} ${VERIF_CASE}_${VERIF_TYPE}*.tar
-	# old code
+        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+        tar_file_count=$(find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null |wc -l)
+        if [[ $tar_file_count -ne 0 ]]; then
+            tar -cvf $large_tar_file *.tar
+        fi
         if [ -f ${large_tar_file} ]; then
            cp -v ${large_tar_file} ${COMOUT}/.
         fi

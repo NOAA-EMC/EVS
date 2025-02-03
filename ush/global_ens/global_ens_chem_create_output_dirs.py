@@ -59,57 +59,44 @@ if not os.path.exists(job_scripts_dir):
 
 # Build information of working and COMOUT output directories
 working_dir_list = []
-COMOUT_dir_list = []
 output_dir_list = []
 if STEP == 'plots':
     NDAYS = str(os.environ['NDAYS'])
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
-    ## new code  os.path.join(working_output_base_dir, 'job_work_dir')
     working_dir_list.append(
-        os.path.join(working_output_base_dir,
-                     RUN+'.'+end_date_dt.strftime('%Y%m%d'))
-    )
-    ## new code  os.path.join(working_output_base_dir, 'tar_files')
-    ## old code
-    working_dir_list.append(
-        os.path.join(working_output_base_dir,
-                     'logs')
+        os.path.join(working_output_base_dir, 'job_work_dir')
     )
     working_dir_list.append(
-        os.path.join(working_output_base_dir,
-                     'tar_files')
+        os.path.join(working_output_base_dir, 'tar_files')
     )
-    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+
+    if SENDCOM == 'NO':
         working_dir_list.append(
             os.path.join(working_output_base_dir,
-                         RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                         VERIF_CASE+'_'+VERIF_CASE_STEP_type,
-                         'last'+NDAYS+'days')
+            f"{RUN}.{end_date_dt:%Y%m%d}")
         )
-        COMOUT_dir_list.append(
-            os.path.join(COMOUT, VERIF_CASE+'_'+VERIF_CASE_STEP_type,
-                         'last'+NDAYS+'days')
-        )
-    ## old code
-    ## add new code from ush/global_det/global_det_atmos_create_output_dirs.py
+    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+        if SENDCOM == 'NO':
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
+                             f"{RUN}.{end_date_dt:%Y%m%d}",
+                             f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
+                             f"last{NDAYS}days")
+            )
+        if SENDCOM == 'YES':
+            output_dir_list.append(
+                os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
+                             f"last{NDAYS}days")
+            )
 
-## # Create working directories
-## for working_dir in working_dir_list:
-##     gda_util.make_dir(working_dir)
-## 
-## # Create output directories
-## for output_dir in output_dir_list:
-##     gda_util.make_dir(output_dir)
-## old code
-# Create working output directories
-for working_output_dir in working_dir_list:
-    gda_util.make_dir(working_output_dir)
+# Create working directories
+for working_dir in working_dir_list:
+    gda_util.make_dir(working_dir)
 
-# Create COMOUT output directories
-for COMOUT_dir in COMOUT_dir_list:
-    gda_util.make_dir(COMOUT_dir)
-## old code
+# Create output directories
+for output_dir in output_dir_list:
+    gda_util.make_dir(output_dir)
 
 print("END: "+os.path.basename(__file__))
