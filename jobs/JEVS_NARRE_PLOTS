@@ -7,8 +7,6 @@
 ###############################################################################
 set -x
 
-
-
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
@@ -27,6 +25,16 @@ setpdy.sh
 mkdir -p $DATA/logs
 
 export VDATE=${VDATE:-$PDYm1}
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-narre}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-narre}
 
 export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver)}/$STEP/$COMPONENT/$RUN.$VDATE
@@ -48,12 +56,9 @@ export ush_dir=$USHevs/narre/ush_narre_plot_py
 export outid="LL$job"
 export jobid="${outid}.o${pid}"
 
-
 ####################################
 # Specify codes and scripts locaton
 ####################################
-
-
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh 
 export err=$?; err_chk
@@ -64,4 +69,3 @@ if [ "$KEEPDATA" != "YES" ] ; then
 fi
 
 #date
-

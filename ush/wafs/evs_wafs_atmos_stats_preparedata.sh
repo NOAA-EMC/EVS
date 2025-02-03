@@ -25,24 +25,30 @@ for ff in $FHOURS ; do
     day=${past:0:8}
     ccfcst=${past:8:2}
 
+    yyyy=${past:0:4}
+    mm=${past:4:2}
+    dd=${past:6:2}
+
+    fff="$(printf "%03d" $(( 10#$ff )) )"
+
     mod=$(( 10#$ccfcst % 6 ))
     [ $mod -eq 3 ] && continue
 
     if [ $CENTER = "uk" ] ; then
 	if [ $RESOLUTION = "0P25" ] ; then
-	    sourcefile=$DCOMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${ccfcst}z_t${ff}.grib2
+	    sourcefile=$DCOMINuk/$day/wgrbbul/ukmet_wafs/egrr_wafshzds_unblended_ice_0p25_${yyyy}-${mm}-${dd}T${ccfcst}:00Z_t${fff}.grib2
 	fi
     elif [ $CENTER = "us" ] ; then
 	if [ $RESOLUTION = "0P25" ] ; then
-	    sourcefile=$COMINgfs/gfs.$day/$ccfcst/atmos/gfs.t${ccfcst}z.wafs_0p25_unblended.f${ff}.grib2
+	    sourcefile=$COMINwafs/wafs.$day/$ccfcst/grib2/0p25/WAFS_0p25_unblended_${day}${ccfcst}f${fff}.grib2
 	fi
     elif [ $CENTER = "blend" ] ; then
         if [ $RESOLUTION = "0P25" ] ; then
-	    sourcefile=$COMINgfs/gfs.$day/$ccfcst/atmos/WAFS_0p25_blended_${day}${ccfcst}f${ff}.grib2
+	    sourcefile=$COMINwafs/wafs.$day/$ccfcst/grib2/0p25/blending/WAFS_0p25_blended_${day}${ccfcst}f${fff}.grib2
 	fi
     elif [ $CENTER = "gfs" ] ; then
 	if [ $RESOLUTION = "1P25" ] ; then
-	    sourcefile=$COMINgfs/gfs.$day/$ccfcst/atmos/gfs.t${ccfcst}z.wafs_grb45f${ff}.grib2
+	    sourcefile=$COMINwafs/wafs.$day/$ccfcst/grib2/1p25/gfs.t${ccfcst}z.wafs_grb45f${fff}.grib2
 	fi
     fi
 
@@ -115,11 +121,11 @@ fi
 if [[ $OBSERVATION = "GCIP" ]] ; then
     ccdir=$(( 10#$cc / 6 * 6 ))
     ccdir="$(printf "%02d" $(( 10#$ccdir )) )"
-    sourcedir=$COMINgfs/gfs.$VDATE/$ccdir/atmos
-    sourcefile=$sourcedir/gfs.t${cc}z.gcip.f00.grib2
+    sourcedir=$COMINwafs/wafs.$VDATE/$ccdir
+    sourcefile=$sourcedir/gcip/wafs.t${cc}z.gcip.f000.grib2
 
     targetdir=$GRID_STAT_INPUT_BASE
-    targetfile=$GRID_STAT_INPUT_BASE/gfs.t${cc}z.gcip.f00.grib2
+    targetfile=$GRID_STAT_INPUT_BASE/wafs.t${cc}z.gcip.f000.grib2
 
     if [[ ! -f $targetfile ]] ; then
 	if [[ -f $sourcefile ]] ; then
@@ -153,14 +159,10 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
     fi
 
 elif [[ $OBSERVATION = "GFS" ]] ; then
-    sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
-    if [[ $icao2023 = yes ]] ; then
-	sourcefile=$sourcedir/gfs.t${cc}z.wafs.0p25.anl
-    else
-	sourcefile=$sourcedir/gfs.t${cc}z.pgrb2.0p25.anl
-    fi
+    sourcedir=$COMINwafs/wafs.$VDATE/$cc
+    sourcefile=$sourcedir/upp/wafs.t${cc}z.0p25.anl.grib2
 
-    targetfile=$GRID_STAT_INPUT_BASE/gfs.t${cc}z.wafs.0p25.anl
+    targetfile=$GRID_STAT_INPUT_BASE/wafs.t${cc}z.0p25.anl.grib2
 
     if [[ ! -f $targetfile ]] ; then
 	if [[ -f $sourcefile ]] ; then
