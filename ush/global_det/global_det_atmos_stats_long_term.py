@@ -225,7 +225,11 @@ def create_avg_time_range_stat_df(logger, time_range, model_info_dict,
             if np.isnan(model_forecst_day_avg) \
                     or np.ma.is_masked(model_forecst_day_avg) \
                     or model_time_range_stat_nvalues < nvalues_time_range_min:
-                model_forecst_day_avg = 'NA'
+                if var_name == 'APCP' and \
+                        model_time_range_stat_nvalues < nvalues_time_range_min:
+                    model_forecst_day_avg = model_forecst_day_avg
+                else:
+                    model_forecst_day_avg = 'NA'
             else:
                 model_forecst_day_avg = str(round(model_forecst_day_avg,3))
             time_range_stat_df.loc[model][forecast_day_header] = (
@@ -639,9 +643,14 @@ for avg_time_range in avg_time_range_list:
                 valid_hour = loop2_info[0]
                 var_thresh = loop2_info[1]
                 if 'in' in var_thresh:
-                    var_thresh_mm = str(
-                        float(var_thresh.replace('in', ''))*25.4
-                    )+'mm'
+                    if var_thresh == '3in':
+                        var_thresh_mm = str(
+                            round(float(var_thresh.replace('in', ''))*25.4,1)
+                        )+'mm'
+                    else:
+                        var_thresh_mm = str(
+                            float(var_thresh.replace('in', ''))*25.4
+                        )+'mm'
                 else:
                     var_thresh_mm = var_thresh
                 logger.info(f"Working on valid hour {valid_hour} "
