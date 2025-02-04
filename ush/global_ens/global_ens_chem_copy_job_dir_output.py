@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_copy_job_dir_output.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Orginal Author: Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This copies MPMD working directory output to common DATA directory
-Run By: scripts/stats/global_ens/exevs_global_ens_chem_grid2grid_stats.sh
+Run By: scripts/plots/global_ens/exevs_global_ens_chem_grid2obs.sh
 '''
 
 import os
@@ -25,26 +26,7 @@ if STEP == 'plots':
     NDAYS = os.environ['NDAYS']
 
 # Copy files to desired location
-if STEP == 'stats':
-    copy_from_job_to_DATA = True
-    if VERIF_CASE == 'wmo':
-        job_work_JOB_GROUP_dir = os.path.join(
-            DATA, 'job_work_dir', JOB_GROUP
-        )
-    else:
-        job_work_JOB_GROUP_dir = os.path.join(
-            DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
-            'job_work_dir', JOB_GROUP
-        )
-    if JOB_GROUP == 'gather_stats':
-        job_wildcard_dir = os.path.join(
-            job_work_JOB_GROUP_dir, 'job*', '*.*', '*'
-        )
-    else:
-        job_wildcard_dir = os.path.join(
-            job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*', VERIF_CASE, '*'
-        )
-elif STEP == 'plots':
+if STEP == 'plots':
     job_work_JOB_GROUP_dir = os.path.join(
         DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
         'job_work_dir', JOB_GROUP
@@ -88,17 +70,7 @@ if copy_from_job_to_DATA:
         output_file_end_path = output_file_JOB.partition(
             job_work_JOB_GROUP_dir+'/'
         )[2].partition('/')[2]
-        if STEP == 'stats':
-            if VERIF_CASE == 'wmo':
-                output_file_DATA = os.path.join(
-                    DATA, output_file_end_path
-                )
-            else:
-                output_file_DATA = os.path.join(
-                    DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
-                    output_file_end_path
-                )
-        elif STEP == 'plots':
+        if STEP == 'plots':
             if JOB_GROUP == 'tar_images':
                 output_file_DATA = os.path.join(
                     DATA, f"{VERIF_CASE}_{STEP}", 'plot_output', 'tar_files',
