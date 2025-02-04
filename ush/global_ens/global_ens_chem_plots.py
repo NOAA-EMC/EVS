@@ -331,6 +331,7 @@ elif JOB_GROUP == 'filter_stats':
                 job_DATA_filter_stats_model_file = (
                     job_work_filter_stats_model_file.replace(job_work_dir,
                                                              job_DATA_dir)
+                )
                 if SENDCOM == 'YES':
                     check_job_filter_stats_model_file = (
                         job_COMOUT_filter_stats_model_file
@@ -684,24 +685,25 @@ elif JOB_GROUP == 'make_plots':
             else:
                 check_job_image_name = job_DATA_image_name
                 job_input_dir = job_DATA_dir
-            if not os.path.exists(job_work_image_name) \
-                    and plot_info_dict['stat'] != 'FBAR_OBAR':
-                if len(date_info_dict['forecast_hours']) <= 1:
-                    logger.warning("No span of forecast hours to plot, "
-                                   +"given 1 forecast hour, skipping "
-                                   +"lead_by_date plots")
-                    make_lbd = False
+                if init_hr in init_hrs \
+                        and not os.path.exists(check_job_image_name) \
+                        and plot_info_dict['stat'] != 'FBAR_OBAR':
+                            make_sbl = True
                 else:
-                    make_lbd = True
-            else:
-                make_lbd = False
-            if make_lbd:
-                plot_lbd = gdap_lbd.LeadByDate(logger, job_input_dir+'/..',
-                                               job_work_dir, model_info_dict,
-                                               date_info_dict, plot_info_dict,
-                                               met_info_dict, logo_dir)
-                plot_lbd.make_lead_by_date()
-                if SENDCOM == 'YES' and os.path.exists(job_work_image_name):
+                    make_sbl = False
+                del plot_info_dict['fcst_var_level']
+                del plot_info_dict['obs_var_level']
+                if make_sbl:
+                    plot_sbl = gdap_sbl.StatByLevel(logger,
+                                                    job_input_dir+'/..',
+                                                    job_work_dir,
+                                                    model_info_dict,
+                                                    date_info_dict,
+                                                    plot_info_dict,
+                                                    met_info_dict, logo_dir)
+                    plot_sbl.make_stat_by_level()
+                if SENDCOM == 'YES' \
+                        and os.path.exists(job_work_image_name):
                     logger.info(f"Copying {job_work_image_name} to "
                                 +f"{job_COMOUT_image_name}")
                     gda_util.copy_file(job_work_image_name,
@@ -829,7 +831,6 @@ elif JOB_GROUP == 'make_plots':
             date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hour'] = str(pd_info[1])
             plot_info_dict['fcst_var_name'] = fcst_var_name
-            plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
