@@ -79,7 +79,7 @@ for group in "${proc_list[@]}"; do
             nc=$((nc+1))
         done
     fi
-    python $USHevs/global_det/global_det_atmos_copy_job_dir_output.py
+    python $USHevs/global_ens/global_ens_chem_copy_job_dir_output.py
     export err=$?; err_chk
     # Cat the plotting log files
     if [ $JOB_GROUP = make_plots ]; then
