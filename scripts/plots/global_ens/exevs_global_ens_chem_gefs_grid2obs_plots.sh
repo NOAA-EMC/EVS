@@ -102,7 +102,8 @@ if [ "${SENDCOM}" == "YES" ]; then
     # Make and copy tar file
     cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
     for VERIF_TYPE in ${g2op_type_list}; do
-        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+        tar_file_combine=${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${tar_file_combine}
         tar_file_count=$(find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null |wc -l)
         if [[ $tar_file_count -ne 0 ]]; then
             tar -cvf $large_tar_file *.tar
@@ -115,5 +116,5 @@ if [ "${SENDCOM}" == "YES" ]; then
 fi
 
 if [ "${SENDDBN}" == "YES" ]; then
-    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${tar_file_combine}
 fi
