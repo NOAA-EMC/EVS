@@ -2,7 +2,9 @@
 #**************************************************************************
 #  Purpose: Get required input forecast and validation data files
 #           for narre stat jobs
-#  Last update:  3/26/2024, add restart capability, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update:  02/5/2025, put the completed files in the working directory first,
+#                            then copy them to the COMOUTsmall/restart
+#                3/26/2024, add restart capability, by Binbin Zhou Lynker@EMC/NCEP
 #                10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
 #************************************************************************
 #
@@ -13,16 +15,16 @@ modnam=$1
 if [ $modnam = prepbufr ] ; then
 
  mkdir -p $WORK/prepbufr.$VDATE
- [[ ! -d $COMOUTsmall/prepbufr.${VDATE} ]] && mkdir -p $COMOUTsmall/prepbufr.${VDATE} 
  export output_base=${WORK}/pb2nc
 
  for vhr in 00  03  06  09  12  15  18   21  ; do
   if [ -s $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00 ] ; then 
-    if [ ! -e $COMOUTsmall/prepbufr.${VDATE}/prepbufr.t${vhr}z.completed ] ; then 
+    if [ ! -e $COMOUTsmall/prepbufr/prepbufr.t${vhr}z.completed ] ; then 
       split_by_subset $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00
       for subset in ADPSFC SFCSHP MSONET; do
         if [ -s ${WORK}/${subset} ]; then
           cat ${WORK}/${subset} >> $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00
+	  rm -f ${WORK}/${subset}
         fi
       done
       export bufrpath=$WORK/prepbufr.$VDATE
@@ -31,19 +33,24 @@ if [ $modnam = prepbufr ] ; then
         export vend=${vhr}
         export verif_grid=$grid
         if [ -s $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00 ] ; then
-         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.conf
-         export err=$?; err_chk
-         cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${VDATE}
-       fi
-     done
+          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.conf
+          export err=$?; err_chk
+        fi
+      done
        if [ -s ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc ] ; then
-         cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc $WORK/prepbufr.${VDATE}
-	 cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc $COMOUTsmall/prepbufr.${VDATE}
-	 >$COMOUTsmall/prepbufr.${VDATE}/prepbufr.t${vhr}z.completed  
+	 cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc $WORK/prepbufr.${VDATE}
+	 >${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.completed 
+	 if [ $SENDCOM = YES ] ; then
+	   [[ ! -d $COMOUTsmall/prepbufr ]] && mkdir -p $COMOUTsmall/prepbufr
+	   cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc $COMOUTsmall/prepbufr
+	   cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.completed $COMOUTsmall/prepbufr
+	 fi 
        fi
     else 
      #Get file from restart: 
-     cp $COMOUTsmall/prepbufr.${VDATE}/prepbufr.t${vhr}z.G*.nc $WORK/prepbufr.${VDATE}
+     if [ -s $COMOUTsmall/prepbufr/prepbufr.t${vhr}z.G*.nc ] ; then
+        cp $COMOUTsmall/prepbufr/prepbufr.t${vhr}z.G*.nc $WORK/prepbufr.${VDATE}
+     fi 
     fi
 
   else 

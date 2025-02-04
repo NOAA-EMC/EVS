@@ -2,7 +2,9 @@
 set -x 
 #**************************************************************************
 #  Purpose: To run the METplus-based stat generation jobs
-#  Last update: 3/26/2024, Add restart capability, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update: 
+#               01/27/2025, Add MPMD, by Binbin Zhou Lynker@EMC/NCEP
+#               3/26/2024, Add restart capability, by Binbin Zhou Lynker@EMC/NCEP
 #               10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
 #************************************************************************
 #
@@ -30,7 +32,7 @@ cd $DATA/scripts
 
 #******************************************************************
 # Check if all stats sub-tasks are completed in the previous runs
-if [ ! -s $COMOUTsmall/stats_completed ] ; then
+if [ ! -s $COMOUTsmall/stats.completed ] ; then
 #*****************************************************************
 
 #######for prod in mean prob sclr ; do
@@ -71,6 +73,8 @@ for prod in mean  ; do
        if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
        echo  "#!/bin/ksh">>run_narre_${model}.${dom}.${valid}.${fhr}.sh
+       echo  "set -x" >>run_narre_${model}.${dom}.${valid}.${fhr}.sh
+
        echo  "export range=$range" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
 
        echo  "export output_base=$WORK/grid2obs/${model}.${dom}.${valid}.${fhr}" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh 
@@ -122,16 +126,26 @@ for prod in mean  ; do
        echo "export err=$?; err_chk" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
 
        echo "if [ -s \$output_base/stat/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat ] ; then " >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
-       echo " cp \$output_base/stat/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
+       echo "  cp \$output_base/stat/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat $all_stats" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
+       echo "  >\$output_base/stat/run_narre_${model}.${dom}.${valid}.${fhr}.completed" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
+       echo "  if [ $SENDCOM = YES ] ; then" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
+       echo "    cp \$output_base/stat/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
+       echo "    cp \$output_base/stat/run_narre_${model}.${dom}.${valid}.${fhr}.completed $COMOUTsmall" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
+       echo "  fi" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh 
        echo "fi" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh 
-
-       #indicate sub-task is completed for restart 
-       echo ">$COMOUTsmall/run_narre_${model}.${dom}.${valid}.${fhr}.completed" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
 
        chmod +x run_narre_${model}.${dom}.${valid}.${fhr}.sh
        echo "${DATA}/scripts/run_narre_${model}.${dom}.${valid}.${fhr}.sh" >> run_all_narre_poe.sh
 
        fi
+
+      
+      else
+
+	#Copy file from the restart directory
+	if [ -s $COMOUTsmall/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat ] ; then
+	  cp $COMOUTsmall/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat $all_stats
+        fi
 
       fi # check restart for sub-task
 
@@ -155,8 +169,14 @@ else
    export err=$?; err_chk
 fi
 
->$COMOUTsmall/stats_completed
-echo "stats are completed" >> $COMOUTsmall/stats_completed
+>$COMOUTsmall/stats.completed
+echo "stats are completed" >> $COMOUTsmall/stats.completed
+
+else
+   #Copy all of the stat files to working directory 
+   if [ $COMOUTsmall/*.stat ] ; then
+    cp $COMOUTsmall/*.stat $all_stats
+   fi
 
 fi # check restart for all tasks
 
@@ -165,7 +185,7 @@ fi # check restart for all tasks
 #*****************************************************
 # Combine small stat files to a big stat file (final)
 #****************************************************
-if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then
+if [ $gather = yes ] && [ -s $all_stats/*.stat ] ; then
   $USHevs/narre/evs_narre_gather.sh
   export err=$?; err_chk
 fi

@@ -36,7 +36,7 @@ for verify in $verifys   ; do
 
     echo  "export model=$modnam" >> run_gather_${verify}.sh
     echo  "export MODEL=${MODEL}_MEAN" >> run_gather_${verify}.sh
-    echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${verify}.sh
+    echo  "export stat_file_dir=${WORK}/all_stats" >> run_gather_${verify}.sh
     echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${verify}.sh
 
     echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstNARRE_obsPREPBUFR_GatherByDay.conf " >> run_gather_${verify}.sh
