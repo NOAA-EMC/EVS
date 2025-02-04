@@ -992,7 +992,6 @@ elif JOB_GROUP == 'make_plots':
             ## date_info_dict['forecast_hours'] = fhrs
             ##
             plot_info_dict['fcst_var_name'] = fcst_var_name
-            plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
