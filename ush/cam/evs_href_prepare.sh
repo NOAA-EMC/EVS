@@ -538,11 +538,12 @@ if [ "$data" = "mrms" ] ; then
  # If no, do this task 
  # Otherwise, copy the mrms files from the restart directory
  ############################################################	
- if [ ! -e $COMOUTrestart/prepare/mrms.completed ] ; then      	
+ export accum
+ if [ -s $DCOMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-??0000.grib2.gz ] ; then 
+    [[ ! -d $COMOUTrestart/prepare ]] && mkdir -p $COMOUTrestart/prepare
 
-   export accum
-   if [ -s $DCOMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-??0000.grib2.gz ] ; then 
-      for accum in 01 03 24 ; do 	
+    for accum in 01 03 24 ; do
+
          if [ "$accum" = "03" ] ; then
             cycs="00 03 06 09 12 15 18 21"
          elif [ "$accum" = "24" ] ; then
@@ -555,7 +556,10 @@ if [ "$data" = "mrms" ] ; then
          export mrmsdir=$WORK/mrms.$vday
          mkdir -p $mrmsdir
          cd $mrmsdir
+
          for vhr in $cycs ; do
+
+	  if [ ! -s $COMOUTrestart/prepare/mrms${accum}h.t${vhr}z.G*.nc ] ; then 
             export vbeg=$vday$vhr
             export vend=$vday$vhr
             mrms03=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
@@ -577,24 +581,24 @@ if [ "$data" = "mrms" ] ; then
                export err=$?; err_chk
             else
                echo "WARNING: $mrms03 is missing"
-            fi    
-         done 
-         if [ -s ${output_base}/*.nc ] ; then
-            cp ${output_base}/*.nc $mrmsdir
-         fi
-      done
+            fi 
 
-      #Save for restart
-      if [ $? = 0 ] ; then
-        [[ ! -d $COMOUTrestart/prepare ]] && mkdir -p $COMOUTrestart/prepare
-        if [ -s $mrmsdir/*.nc ] ; then 
-	  >$mrmsdir/mrms.completed
-	  if [ $SENDCOM = YES ] ; then
-	   cp $mrmsdir/mrms*.nc $COMOUTrestart/prepare
-           cp $mrmsdir/mrms.completed $COMOUTrestart/prepare
-	  fi
-	fi 
-      fi
+	    if [ -s ${output_base}/mrms${accum}h.t${vhr}z.G*.nc ] ; then
+	     cp ${output_base}/mrms${accum}h.t${vhr}z.G*.nc $mrmsdir
+             #Save for restart
+	     if [ $SENDCOM = YES ] ; then
+	       cp ${output_base}/mrms${accum}h.t${vhr}z.G*.nc $COMOUTrestart/prepare
+	     fi
+	    fi
+
+          else
+	      #Copy mrms files to working directory
+	      cp $COMOUTrestart/prepare/mrms${accum}h.t${vhr}z.G*.nc $WORK/mrms.$vday
+          fi	      
+       
+         done 
+
+      done
 
    else
       echo "WARNING:  No MRMS data $DCOMINmrms/MultiSensor_QPE_*.grib2.gz available for EVS ${COMPONENT}"
@@ -606,13 +610,5 @@ if [ "$data" = "mrms" ] ; then
          cat mailmsg | mail -s "$subject" $MAILTO
       fi
    fi
-
-  else
-    #Restart: copy from the restart files
-    [[ ! -d $WORK/mrms.$vday ]] && mkdir -p $WORK/mrms.$vday
-    if [ -s  $COMOUTrestart/prepare/mrms*.nc ] ; then 
-      cp $COMOUTrestart/prepare/mrms*.nc $WORK/mrms.$vday  
-    fi
-  fi
 
 fi 
