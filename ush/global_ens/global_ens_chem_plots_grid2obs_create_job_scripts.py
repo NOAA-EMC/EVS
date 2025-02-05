@@ -283,9 +283,8 @@ else:
                               f"{RUN}.{end_date}", f"{VERIF_CASE}_VERIF_TYPE",
                               f"last{NDAYS}days")
 tar_images_jobs_dict = {
-    'pres_levs': {'search_base_dir': search_dir},
-    'ptype': {'search_base_dir': search_dir},
-    'sfc': {'search_base_dir': search_dir}
+    'aeronet': {'search_base_dir': search_dir},
+    'arinow': {'search_base_dir': search_dir},
 }
 if JOB_GROUP == 'tar_images':
     JOB_GROUP_dict = tar_images_jobs_dict
