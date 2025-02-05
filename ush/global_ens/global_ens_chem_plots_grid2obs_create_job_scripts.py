@@ -284,7 +284,7 @@ else:
                               f"last{NDAYS}days")
 tar_images_jobs_dict = {
     'aeronet': {'search_base_dir': search_dir},
-    'arinow': {'search_base_dir': search_dir},
+    'airnow': {'search_base_dir': search_dir}
 }
 if JOB_GROUP == 'tar_images':
     JOB_GROUP_dict = tar_images_jobs_dict
