@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_plots_grid2obs_create_job_scripts.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
           jobs scripts contain all the necessary environment variables
@@ -47,6 +48,14 @@ njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'plot_job_scripts', JOB_GROUP)
 gda_util.make_dir(JOB_GROUP_jobs_dir)
+
+# Set environment variables to not write to individual job scripts
+# as per request from NCO; these get set higher up in the job
+dont_write_env_var_list = [
+    'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
+    'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
+    'COMOUT', 'evs_run_mode', 'MET_ROOT', 'met_ver', 'NDAYS'
+]
 
 ################################################
 #### Base/Common Plotting Information
@@ -437,7 +446,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 # Write environment variables
                 job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
-                    job.write('export '+name+'="'+value+'"\n')
+                    if name not in dont_write_env_var_list:
+                        job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
                 if write_job_cmds:
                     gda_util.make_dir(job_env_dict['job_work_dir'])
@@ -588,7 +598,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         # Write environment variables
                         job_env_dict['job_id'] = 'job'+str(njobs)
                         for name, value in job_env_dict.items():
-                            job.write('export '+name+'="'+value+'"\n')
+                            if name not in dont_write_env_var_list:
+                                job.write('export '+name+'="'+value+'"\n')
                         job.write('\n')
                         if run_global_ens_chem_plot == 'plots_tof120':
                             fhrs_tof120 = []
@@ -642,7 +653,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 else:
                     write_job_cmds = True
                 # Create job files
-                njobs+=1
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)
                 job = open(job_file, 'w')
@@ -652,7 +662,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 # Set any environment variables for special cases
                 # Write environment variables
                 for name, value in job_env_dict.items():
-                    job.write('export '+name+'="'+value+'"\n')
+                    if name not in dont_write_env_var_list:
+                        job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
                 if write_job_cmds:
                     job.write(

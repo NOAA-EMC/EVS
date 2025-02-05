@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_util.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This contains many functions used across global_ens chem.
 '''
@@ -2234,7 +2235,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     elif job_group == 'make_plots':
         dir_stat = plot_job_env_dict['stat'].lower()
         job_work_dir = os.path.join(
-            job_work_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
+            DATA_base_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
             'job_work_dir', job_group, f"{plot_job_env_dict['job_id']}",
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
@@ -2500,20 +2501,6 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                 obs_var_thresh_symbol = obs_var_thresh
                 obs_vat_thresh_letter = obs_var_thresh
             if os.path.exists(condensed_model_file):
-                logger.info(f"Filtering file {condensed_model_file} for "
-                            +f"MODEL: {model_dict['name']}, DESC: {grid} "
-                            +f"FCST_LEAD: {fhr.zfill(2)}0000, "
-                            +f"FCST_VAR: {fcst_var_name}, "
-                            +f"FCST_LEV: {fcst_var_level}, "
-                            +f"OBS_VAR: {obs_var_name}, "
-                            +f"OBS_LEV: {obs_var_level}, "
-                            +f"OBTYPE: {model_dict['obs_name']}, "
-                            +f"VX_MASK: {vx_mask}, "
-                            +f"INTERP_MTHD: {interp_method}, "
-                            +f"INTERP_PNTS: {interp_points}, "
-                            +f"FCST_THRESH: {fcst_var_thresh_symbol}, "
-                            +f"OBS_THRESH: {obs_var_thresh_symbol}, "
-                            +f"LINE_TYPE: {line_type}")
                 condensed_model_df = pd.read_csv(
                     condensed_model_file, sep=" ", skiprows=1,
                     skipinitialspace=True, names=met_version_line_type_col_list,
@@ -2594,24 +2581,123 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                         ]
                     ).tolist()
                     if len(model_stat_file_df_valid_date_idx_list) == 0:
-                        logger.debug("No data matching valid date "
-                                     +f"{valid_date} in "
-                                     +f"{filtered_model_stat_file}")
                         continue
-                    elif len(model_stat_file_df_valid_date_idx_list) > 1:
-                        logger.debug(f"Multiple lines matching valid date "
-                                     +f"{valid_date} in "
-                                     +f"{filtered_model_stat_file} "
-                                     +f"using first one")
-                    else:
-                        logger.debug(f"One line matching valid date "
-                                     +f"{valid_date} in "
-                                     +f"{filtered_model_stat_file}")
                     model_num_df.loc[(model_num_name, valid_date)] = (
                         model_stat_file_df.loc\
                         [model_stat_file_df_valid_date_idx_list[0]]\
                         [:]
                     )
+                # Do conversions if needed
+                #### K to F
+                if fcst_var_name in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG',
+                                     'SST_DAILYAVG', 'TSOIL'] \
+                        and fcst_var_level in ['Z0', 'Z2', 'Z0.1-0'] \
+                        and line_type in ['SL1L2', 'SAL1L2']:
+                    coef = np.divide(9., 5.)
+                    if fcst_var_name == 'TMP_ANOM_DAILYAVG':
+                        const = 0
+                    elif line_type == 'SAL1L2':
+                        const = 0
+                    else:
+                        const = ((-273.15)*9./5.)+32.
+                    convert = True
+                    units_old = 'K'
+                    units_new = 'F'
+                #### m/s to knots
+                elif fcst_var_name in ['UGRD', 'VGRD', 'UGRD_VGRD',
+                                       'WNDSHR', 'GUST'] \
+                        and line_type in ['SL1L2', 'SAL1L2',
+                                          'VL1L2', 'VAL1L2']:
+                    coef = 1.94384449412
+                    const = 0
+                    convert = True
+                    units_old = 'm/s'
+                    units_new = 'kt'
+                else:
+                    convert = False
+                if convert:
+                    if line_type == 'SL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FBAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OBAR'
+                        ]
+                        col1_list = ['FBAR', 'OBAR']
+                        col2_list = ['FOBAR', 'FFBAR', 'OOBAR']
+                    elif line_type == 'SAL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FABAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OABAR'
+                        ]
+                        col1_list = ['FABAR', 'OABAR']
+                        col2_list = ['FOABAR', 'FFABAR', 'OOABAR']
+                    elif line_type == 'VL1L2':
+                        uf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UFBAR'
+                        ]
+                        vf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VFBAR'
+                        ]
+                        uo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UOBAR'
+                        ]
+                        vo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VOBAR'
+                        ]
+                        col1_list = ['UFBAR', 'VFBAR', 'UOBAR', 'VOBAR']
+                        col2_list = ['UVFOBAR', 'UVFFBAR', 'UVOOBAR']
+                    elif line_type == 'VAL1L2':
+                        uf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UFABAR'
+                        ]
+                        vf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VFABAR'
+                        ]
+                        uo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UOABAR'
+                        ]
+                        vo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VOABAR'
+                        ]
+                        col1_list = ['UFABAR', 'VFABAR', 'UOABAR', 'VOABAR']
+                        col2_list = ['UVFOABAR', 'UVFFABAR', 'UVOOABAR']
+                    for col in col1_list:
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef
+                             * model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col]) \
+                            + const
+                    for col in col2_list:
+                        if col in ['FOBAR', 'FOABAR']:
+                            const2 =  ((coef * const * fcst_avg_old)
+                                       + (coef * const * obs_avg_old))
+                        elif col in ['FFBAR', 'FFABAR']:
+                            const2 = 2 * (coef * const * fcst_avg_old)
+                        elif col in ['OOBAR', 'OOABAR']:
+                            const2 = 2 * (coef * const * obs_avg_old)
+                        elif col in ['UVFOBAR', 'UVFOABAR']:
+                            const2 = (coef * const \
+                                      * (uf_avg_old+vf_avg_old
+                                         +uo_avg_old+vo_avg_old))
+                        elif col in ['UVFFBAR', 'UVFFABAR']:
+                            const2 = 2 * (coef * const * \
+                                          (uf_avg_old+vf_avg_old))
+                        elif col in ['UVOOBAR', 'UVOOABAR']:
+                            const2 = 2 * (coef * const * \
+                                          (uo_avg_old+vo_avg_old))
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef**2
+                             *model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col]) \
+                             + const2 + const**2
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FCST_UNITS'
+                    ] = units_new
             else:
                 logger.debug(f"{filtered_model_stat_file} does not exist")
         if model_num == 'model1':
@@ -2890,6 +2976,12 @@ def calculate_stat(logger, data_df, line_type, stat):
        UVFOBAR = data_df.loc[:]['UVFOBAR']
        UVFFBAR = data_df.loc[:]['UVFFBAR']
        UVOOBAR = data_df.loc[:]['UVOOBAR']
+       F_SPEED_BAR = data_df.loc[:]['F_SPEED_BAR']
+       O_SPEED_BAR = data_df.loc[:]['O_SPEED_BAR']
+       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
+       DIR_ME = data_df.loc[:]['DIR_ME']
+       DIR_MAE = data_df.loc[:]['DIR_MAE']
+       DIR_MSE = data_df.loc[:]['DIR_MSE']
    elif line_type == 'VAL1L2':
        UFABAR = data_df.loc[:]['UFABAR']
        VFABAR = data_df.loc[:]['VFABAR']
@@ -2900,6 +2992,10 @@ def calculate_stat(logger, data_df, line_type, stat):
        UVOOABAR = data_df.loc[:]['UVOOABAR']
        FA_SPEED_BAR = data_df.loc[:]['FA_SPEED_BAR']
        OA_SPEED_BAR = data_df.loc[:]['OA_SPEED_BAR']
+       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
+       DIRA_ME = data_df.loc[:]['DIRA_ME']
+       DIRA_MAE = data_df.loc[:]['DIRA_MAE']
+       DIRA_MSE = data_df.loc[:]['DIRA_MSE']
    elif line_type == 'VCNT':
        FBAR = data_df.loc[:]['FBAR']
        OBAR = data_df.loc[:]['OBAR']
@@ -2927,6 +3023,19 @@ def calculate_stat(logger, data_df, line_type, stat):
        ANOM_CORR_UNCNTR = data_df.loc[:]['ANOM_CORR_UNCNTR']
        ANOM_CORR_UNCNTR_BCL = data_df.loc[:]['ANOM_CORR_UNCNTR_BCL']
        ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
+       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
+       DIR_ME = data_df.loc[:]['DIR_ME']
+       DIR_ME_BCL = data_df.loc[:]['DIR_ME_BCL']
+       DIR_ME_BCU = data_df.loc[:]['DIR_ME_BCU']
+       DIR_MAE = data_df.loc[:]['DIR_MAE']
+       DIR_MAE_BCL = data_df.loc[:]['DIR_MAE_BCL']
+       DIR_MAE_BCU = data_df.loc[:]['DIR_MAE_BCU']
+       DIR_MSE = data_df.loc[:]['DIR_MSE']
+       DIR_MSE_BCL = data_df.loc[:]['DIR_MSE_BCL']
+       DIR_MSE_BCU = data_df.loc[:]['DIR_MSE_BCU']
+       DIR_RMSE = data_df.loc[:]['DIR_RMSE']
+       DIR_RMSE_BCL = data_df.loc[:]['DIR_RMSE_BCL']
+       DIR_RMSE_BCU = data_df.loc[:]['DIR_RMSE_BCU']
    if stat == 'ACC': # Anomaly Correlation Coefficient
        if line_type == 'SAL1L2':
            radicand = (FFABAR - FABAR*FABAR)*(OOABAR - OABAR*OABAR)
