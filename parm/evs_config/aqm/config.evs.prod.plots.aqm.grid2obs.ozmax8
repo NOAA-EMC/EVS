@@ -66,8 +66,5 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     export g2op_ozmax8_valid_hr_list="11"
     ## export g2op_ozmax8_fhr_list="3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72"
     export g2op_ozmax8_fhr_list="5 23 29 47 53 71"
-    export fig_name_label=$( echo ${start_date} | cut -c1-6 )
-    ## retro or nrt/prod
-    export fig_gen_mode="retro"
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"

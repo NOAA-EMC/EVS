@@ -1679,7 +1679,6 @@ def initialize_job_env_dict(verif_type, group,
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
     job_env_dict['fig_name_label'] = os.environ['fig_name_label']
-    job_env_dict['fig_gen_mode'] = os.environ['fig_gen_mode']
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'filter_stats', 'make_plots']:
         if verif_case_step_abbrev_type+'_fhr_list' in list(os.environ.keys()):
@@ -2010,10 +2009,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     dir_step = plot_job_env_dict['STEP'].lower()
     dir_verif_case = plot_job_env_dict['VERIF_CASE'].lower()
     dir_verif_type = plot_job_env_dict['VERIF_TYPE'].lower()
-    if plot_job_env_dict['fig_gen_mode'].lower() == "retro":
-        dir_name_label = plot_job_env_dict['fig_name_label'].lower()
-    else:
-        dir_name_label=('last'+plot_job_env_dict['NDAYS']+'days').lower()
+    dir_name_label = plot_job_env_dict['fig_name_label'].lower()
     dir_line_type = plot_job_env_dict['line_type'].lower()
     dir_parameter = plot_job_env_dict['fcst_var_name'].lower()
     #if plot_job_env_dict['fcst_var_name'] == 'HGT_DECOMP':
@@ -2302,6 +2298,7 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                 obs_var_thresh_symbol = obs_var_thresh
                 obs_vat_thresh_letter = obs_var_thresh
             if os.path.exists(condensed_model_file):
+                ## global_det remove this logger.info
                 logger.info(f"Filtering file {condensed_model_file} for "
                             +f"MODEL: {model_dict['name']}, DESC: {grid} "
                             +f"FCST_LEAD: {fhr.zfill(2)}0000, "
@@ -2396,10 +2393,12 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                         ]
                     ).tolist()
                     if len(model_stat_file_df_valid_date_idx_list) == 0:
+                        ## global_det remove this logger.debug
                         logger.debug("No data matching valid date "
                                      +f"{valid_date} in "
                                      +f"{filtered_model_stat_file}")
                         continue
+                    ## global_det remove this section - START
                     elif len(model_stat_file_df_valid_date_idx_list) > 1:
                         logger.debug(f"Multiple lines matching valid date "
                                      +f"{valid_date} in "
@@ -2409,11 +2408,123 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                         logger.debug(f"One line matching valid date "
                                      +f"{valid_date} in "
                                      +f"{filtered_model_stat_file}")
+                    ## global_det remove this section - END
                     model_num_df.loc[(model_num_name, valid_date)] = (
                         model_stat_file_df.loc\
                         [model_stat_file_df_valid_date_idx_list[0]]\
                         [:]
                     )
+                # Do conversions if needed
+                #### K to F
+                if fcst_var_name in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG',
+                                     'SST_DAILYAVG', 'TSOIL'] \
+                        and fcst_var_level in ['Z0', 'Z2', 'Z0.1-0'] \
+                        and line_type in ['SL1L2', 'SAL1L2']:
+                    coef = np.divide(9., 5.)
+                    if fcst_var_name == 'TMP_ANOM_DAILYAVG':
+                        const = 0
+                    elif line_type == 'SAL1L2':
+                        const = 0
+                    else:
+                        const = ((-273.15)*9./5.)+32.
+                    convert = True
+                    units_old = 'K'
+                    units_new = 'F'
+                #### m/s to knots
+                elif fcst_var_name in ['UGRD', 'VGRD', 'UGRD_VGRD',
+                                       'WNDSHR', 'GUST'] \
+                        and line_type in ['SL1L2', 'SAL1L2',
+                                          'VL1L2', 'VAL1L2']:
+                    coef = 1.94384449412
+                    const = 0
+                    convert = True
+                    units_old = 'm/s'
+                    units_new = 'kt'
+                else:
+                    convert = False
+                if convert:
+                    if line_type == 'SL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FBAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OBAR'
+                        ]
+                        col1_list = ['FBAR', 'OBAR']
+                        col2_list = ['FOBAR', 'FFBAR', 'OOBAR']
+                    elif line_type == 'SAL1L2':
+                        fcst_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'FABAR'
+                        ]
+                        obs_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'OABAR'
+                        ]
+                        col1_list = ['FABAR', 'OABAR']
+                        col2_list = ['FOABAR', 'FFABAR', 'OOABAR']
+                    elif line_type == 'VL1L2':
+                        uf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UFBAR'
+                        ]
+                        vf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VFBAR'
+                        ]
+                        uo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UOBAR'
+                        ]
+                        vo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VOBAR'
+                        ]
+                        col1_list = ['UFBAR', 'VFBAR', 'UOBAR', 'VOBAR']
+                        col2_list = ['UVFOBAR', 'UVFFBAR', 'UVOOBAR']
+                    elif line_type == 'VAL1L2':
+                        uf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UFABAR'
+                        ]
+                        vf_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VFABAR'
+                        ]
+                        uo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'UOABAR'
+                        ]
+                        vo_avg_old = model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, 'VOABAR'
+                        ]
+                        col1_list = ['UFABAR', 'VFABAR', 'UOABAR', 'VOABAR']
+                        col2_list = ['UVFOABAR', 'UVFFABAR', 'UVOOABAR']
+                    for col in col1_list:
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef
+                             * model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col]) \
+                            + const
+                    for col in col2_list:
+                        if col in ['FOBAR', 'FOABAR']:
+                            const2 =  ((coef * const * fcst_avg_old)
+                                       + (coef * const * obs_avg_old))
+                        elif col in ['FFBAR', 'FFABAR']:
+                            const2 = 2 * (coef * const * fcst_avg_old)
+                        elif col in ['OOBAR', 'OOABAR']:
+                            const2 = 2 * (coef * const * obs_avg_old)
+                        elif col in ['UVFOBAR', 'UVFOABAR']:
+                            const2 = (coef * const \
+                                      * (uf_avg_old+vf_avg_old
+                                         +uo_avg_old+vo_avg_old))
+                        elif col in ['UVFFBAR', 'UVFFABAR']:
+                            const2 = 2 * (coef * const * \
+                                          (uf_avg_old+vf_avg_old))
+                        elif col in ['UVOOBAR', 'UVOOABAR']:
+                            const2 = 2 * (coef * const * \
+                                          (uo_avg_old+vo_avg_old))
+                        model_num_df.loc[
+                            model_num_df['FCST_UNITS'] == units_old, col
+                        ] = (coef**2
+                             *model_num_df.loc[model_num_df['FCST_UNITS'] \
+                                               == units_old, col]) \
+                             + const2 + const**2
+                    model_num_df.loc[
+                        model_num_df['FCST_UNITS'] == units_old, 'FCST_UNITS'
+                    ] = units_new
             else:
                 logger.debug(f"{filtered_model_stat_file} does not exist")
         if model_num == 'model1':
@@ -2574,6 +2685,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                 obs_var_thresh_symbol = obs_var_thresh
                 obs_vat_thresh_letter = obs_var_thresh
             if os.path.exists(condensed_model_file):
+                # global_det version remove this logger.info
                 logger.info(f"Filtering file {condensed_model_file} for "
                             +f"MODEL: {model_dict['name']}, DESC: {grid} "
                             +f"FCST_VAR: {fcst_var_name}, "

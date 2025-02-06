@@ -798,14 +798,6 @@ class PlotSpecs:
         if plot_info_dict['fcst_var_name'] == 'ICEEX_DAILYAVG' \
                 and units == '10^6_km^2':
             units = 'x'+units.replace('_', ' ')
-        elif plot_info_dict['fcst_var_name'] \
-                in ['UGRD', 'VGRD', 'UGRD_VGRD', 'WNDSHR', 'GUST']:
-            units = 'kt'
-        elif plot_info_dict['fcst_var_name'] \
-                in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG', 'SST_DAILYAVG',
-                    'TSOIL'] \
-                and plot_info_dict['fcst_var_level'] in ['Z0', 'Z2', 'Z0.1-0']:
-            units = 'F'
         elif plot_info_dict['fcst_var_name'] == 'AOTK':
             units = 'unitless'
         elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
@@ -1051,10 +1043,8 @@ class PlotSpecs:
             date_info_dict['end_date'], '%Y%m%d'
         )
         ndays = int((end_date_dt - start_date_dt).total_seconds()/86400) + 1
-        if plot_info_dict['fig_gen_mode'].lower() == "retro":
-            savefig_name_label = plot_info_dict['fig_name_label']
-        else:
-            savefig_name_label=f"last{ndays}days"
+
+        savefig_name_label = plot_info_dict['fig_name_label']
 
         if self.plot_type == 'time_series':
             plot_type_savefig_name = 'timeseries'

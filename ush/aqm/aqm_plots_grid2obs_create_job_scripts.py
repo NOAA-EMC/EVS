@@ -38,11 +38,7 @@ start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 NDAYS = str(os.environ['NDAYS'])
 fig_name_label = os.environ['fig_name_label']
-fig_gen_mode = os.environ['fig_gen_mode']
-if fig_gen_mode.lower() == "retro":
-    dir_name_label = fig_name_label
-else:
-    dir_name_label=f"last{NDAYS}days"
+dir_name_label = fig_name_label
 restart_mode = os.environ['restart_mode']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
@@ -54,6 +50,14 @@ njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'plot_job_scripts', JOB_GROUP)
 gda_util.make_dir(JOB_GROUP_jobs_dir)
+
+# Set environment variables to not write to individual job scripts
+# as per request from NCO; these get set higher up in the job
+dont_write_env_var_list = [
+    'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
+    'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
+    'COMOUT', 'evs_run_mode', 'MET_ROOT', 'met_ver', 'NDAYS'
+]
 
 ################################################
 #### Base/Common Plotting Information
@@ -715,7 +719,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['end_date'] = end_date
         job_env_dict['NDAYS'] = NDAYS
         job_env_dict['fig_name_label'] = fig_name_label
-        job_env_dict['fig_gen_mode'] = fig_gen_mode
         job_env_dict['restart_mode'] = restart_mode
         job_env_dict['date_type'] = 'VALID'
         """
@@ -856,7 +859,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 # Write environment variables
                 job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
-                    job.write('export '+name+'="'+value+'"\n')
+                    if name not in dont_write_env_var_list:
+                        job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
                 job.write(
                     gda_util.python_command('aqm_plots.py',[])
@@ -1009,7 +1013,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             # Write environment variables
                             job_env_dict['job_id'] = 'job'+str(njobs)
                             for name, value in job_env_dict.items():
-                                job.write('export '+name+'="'+value+'"\n')
+                                if name not in dont_write_env_var_list:
+                                    job.write('export '+name+'="'+value+'"\n')
                             job.write('\n')
                             job.write(
                                 gda_util.python_command(run_aqm_plot,
@@ -1119,7 +1124,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             # Write environment variables
                             job_env_dict['job_id'] = 'job'+str(njobs)
                             for name, value in job_env_dict.items():
-                                job.write('export '+name+'="'+value+'"\n')
+                                if name not in dont_write_env_var_list:
+                                    job.write('export '+name+'="'+value+'"\n')
                             job.write('\n')
                             job.write(
                                 gda_util.python_command(run_aqm_plot,
@@ -1146,7 +1152,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 # Write environment variables
                 job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
-                    job.write('export '+name+'="'+value+'"\n')
+                    if name not in dont_write_env_var_list:
+                        job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
                 job.write(
                     gda_util.python_command('aqm_plots.py', [])

@@ -24,6 +24,9 @@ echo "RUN MODE:${evs_run_mode}"
 ## export PRUNEDIR=${DATA}/prune    ## for headline
 ## mkdir -p ${PRUNEDIR}
 
+## Need temporary staging area for renaming and/or updating model
+## name id in the stats files
+## STATDIR is used in the environemnt setting in ${config} 
 export STATDIR=${DATA}/stats
 mkdir -p ${STATDIR}
 ## export PLOTDIR_headline=${DATA}/plots_headline
@@ -72,6 +75,18 @@ diff_days=$(expr ${diff_seconds} \/ 86400)
 total_days=$(expr ${diff_days} + 1)
 NDAYS=${NDAYS:-${total_days}}
 
+# Define the figure name id in near-real-time or restrospective runs
+if [ "${fig_gen_mode}" == "retro" ]; then
+    export vstart_month=$( echo ${VDATE_START} | cut -c1-6 )
+    export vend_month=$( echo ${VDATE_END} | cut -c1-6 )
+    if [ "${vstart_month}" == "${vend_month}" ]; then
+        export fig_name_label=$(vstart_month}
+    else
+        export fig_name_label="$(vstart_month}_$(vstart_end}"
+    fi
+else
+    export fig_name_label="last${NDAYS}days"
+fi
 # Check user's config settings
 python ${USHevs}/${COMPONENT}/${COMPONENT}_check_settings.py
 export err=$?; err_chk
@@ -130,20 +145,15 @@ done
 # Copy files to desired location
 if [ "${SENDCOM}" == "YES" ]; then
     # Make and copy tar file
-    if [ "${fig_gen_mode}" == "retro" ]; then
-        tar_file_label=${fig_name_label}
-    else
-        tar_file_label="last${NDAYS}days"
-    fi
     cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
     for VERIF_TYPE in ${g2op_type_list}; do
-        ## large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${tar_file_label}.v${end_date}.tar
+        ## large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${fig_name_label}.v${end_date}.tar
 	## tar_file_count=$( find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null | wc -l )
 	## if [ ${tar_file_count} -ne 0 ]; then
 	##     tar -cvf ${large_tar_file} *.tar
 	## fi
 	# old code
-        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${tar_file_label}.v${end_date}.tar
+        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${fig_name_label}.v${end_date}.tar
         tar -cvf ${large_tar_file} ${VERIF_CASE}_${VERIF_TYPE}*.tar
 	# old code
         if [ -f ${large_tar_file} ]; then
@@ -158,6 +168,6 @@ if [ "${SENDCOM}" == "YES" ]; then
 fi
 
 if [ "${SENDDBN}" == "YES" ]; then
-    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${tar_file_label}.v${end_date}.tar
+    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${fig_name_label}.v${end_date}.tar
 fi
 exit

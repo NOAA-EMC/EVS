@@ -75,11 +75,7 @@ output_dir_list = []
 if STEP == 'plots':
     NDAYS = str(os.environ['NDAYS'])
     fig_name_label = os.environ['fig_name_label']
-    fig_gen_mode = os.environ['fig_gen_mode']
-    if fig_gen_mode.lower() == "retro":
-        dir_name_label = fig_name_label
-    else:
-        dir_name_label=f"last{NDAYS}days"
+    dir_name_label = fig_name_label
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
