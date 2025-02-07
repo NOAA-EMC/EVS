@@ -49,23 +49,33 @@ export ObsType
 # for different models or types of solution defined in ${config}
 
 IFS=' ' read -ra mdl_list <<< "${model_list}"
-for mdl in "${mdl_list[@]}"; do
-    biasc=$( echo ${mdl} | awk -F"_" '{print $2}' )
+IFS=' ' read -ra mdl_idir_list <<< "${model_evs_stats_dir_list}"
+let num_mdl=${#mdl_list[@]}
+if [ ${num_mdl} -gt 10 ]; then
+    echo "number of model to be plotted can not exceed 10"
+    exit
+fi
+let imdl=0
+While [ ${imdl} -lt ${num_mdl} ]; do
+    biasc=$( echo ${mdl_list[${imdl}]} | awk -F"_" '{print $2}' )
+    idir=${mdl_idir_list[${imdl}]}
     NOW=${VDATE_START}
     while [ ${NOW} -le ${VDATE_END} ]; do
         cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ObsType}.v${NOW}.stat
         sedfile=evs.stats.${modelid}_${biasc}_${ObsType}.${RUN}.${VERIF_CASE}.v${NOW}.stat
-        if [ -s ${EVSINaqm}/${MODELNAME}.${NOW}/${cpfile} ]; then
-            cpreq ${EVSINaqm}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
+        if [ -s ${dir}/${MODELNAME}.${NOW}/${cpfile} ]; then
+            cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
             sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
         else
             echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${EVSINaqm}.${NOW}/${cpfile}"
         fi
-	cdate=${NOW}"00"
-	NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
+    cdate=${NOW}"00"
+    NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
     done
+    ((imdl++))
 done
 
+exit
 # Make directory
 mkdir -p ${VERIF_CASE}_${STEP}
 
@@ -150,16 +160,16 @@ if [ "${SENDCOM}" == "YES" ]; then
     cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
     for VERIF_TYPE in ${g2op_type_list}; do
         ## large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${fig_name_label}.v${end_date}.tar
-	## tar_file_count=$( find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null | wc -l )
-	## if [ ${tar_file_count} -ne 0 ]; then
-	##     tar -cvf ${large_tar_file} *.tar
-	## fi
-	# old code
+    ## tar_file_count=$( find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null | wc -l )
+    ## if [ ${tar_file_count} -ne 0 ]; then
+    ##     tar -cvf ${large_tar_file} *.tar
+    ## fi
+    # old code
         large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${fig_name_label}.v${end_date}.tar
         tar -cvf ${large_tar_file} ${VERIF_CASE}_${VERIF_TYPE}*.tar
-	# old code
+    # old code
         if [ -f ${large_tar_file} ]; then
-	    if [[ ${DATA_TYPE} == *"headline"* ]]; then
+            if [[ ${DATA_TYPE} == *"headline"* ]]; then
                 cp -v ${large_tar_file} ${COMOUTheadline}/.
             else
                 cp -v ${large_tar_file} ${COMOUT}/.

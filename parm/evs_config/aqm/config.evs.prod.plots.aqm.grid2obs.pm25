@@ -33,7 +33,8 @@ export RUN_GRID2OBS_PLOTS="YES"
 aqm_ver_id=$( echo ${aqm_ver} | awk -F"." '{print $1$2}' )
 modelid=${MODELNAME}${aqm_ver_id}
 export model_list="${modelid}_raw ${modelid}_bc"
-export model_evs_data_dir_list="${STATDIR} ${STATDIR}"
+export evs_stats_data_dir_list="${STATDIR} ${STATDIR}"
+export model_evs_stats_dir_list="${COMIN}/stats/${COMPONENT} ${COMIN}/stats/${COMPONENT}"
 export model_file_format_list="${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.awpozcon.f{lead?fmt=%3H}.793.grib2 ${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.awpozcon_bc.f{lead?fmt=%3H}.793.grib2"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
