@@ -95,14 +95,14 @@ fi
    if [ $score_type = lead_average ] ; then
      export fcst_leads="6,12,18,24,30,36,42,48"
    else 
-     export fcst_leads="06 12 18 24 30 36 42 48"
+     export fcst_leads="6 12 18 24 30 36 42 48"
    fi
 
    for lead in $fcst_leads ; do 
 
     export fcst_lead=$lead
 
-    if [[ "$fcst_lead" == "06" ]] || [[ "$fcst_lead" == "18" ]] || [[ "$fcst_lead" == "30" ]] || [[ "$fcst_lead" == "42" ]] ; then
+    if [[ "$fcst_lead" == "6" ]] || [[ "$fcst_lead" == "18" ]] || [[ "$fcst_lead" == "30" ]] || [[ "$fcst_lead" == "42" ]] ; then
        VX_MASK_LIST="CONUS, Alaska, PRico"
     elif [[ "$fcst_lead" == "12" ]] || [[ "$fcst_lead" == "24" ]] || [[ "$fcst_lead" == "36" ]] || [[ "$fcst_lead" == "48" ]] ; then
        VX_MASK_LIST="CONUS, Hawaii"

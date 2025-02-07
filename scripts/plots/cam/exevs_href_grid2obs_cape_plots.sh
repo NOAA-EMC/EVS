@@ -78,10 +78,10 @@ for valid_time in 00 12 ; do
  
     if [ $score_type = lead_average ] ; then   
        thresholds="250  500 1000 2000"
-       fcst_leads="06,12,18,24,30,36,42,48"
+       fcst_leads="6,12,18,24,30,36,42,48"
     elif [ $score_type = threshold_average ] ; then
        thresholds=">=250,>=500,>=1000,>=2000"
-       fcst_leads="06 12 18 24 30 36 42 48"
+       fcst_leads="6 12 18 24 30 36 42 48"
     fi 
 
    for threshold in $thresholds ; do 
