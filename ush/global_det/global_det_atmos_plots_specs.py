@@ -683,29 +683,13 @@ class PlotSpecs:
                 and units == '10^6_km^2':
             units = 'x'+units.replace('_', ' ')
         plot_title = plot_title+' '+'('+units+')'
-        if var_thresh_for_title != 'NA':
+        if var_thresh_for_title != 'NA'\
+               and plot_info_dict['fcst_var_name'] not in ['SST_DAILYAVG']:
             plot_title = plot_title+', '+var_thresh_for_title+' '+units
-            thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
             if plot_info_dict['fcst_var_name'] == 'APCP':
+                thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
                 thresh_in = round(thresh_value*0.0393701, 3)
                 plot_title = plot_title+' ('+str(thresh_in)+' in)'
-            elif plot_info_dict['fcst_var_name'] in ['SNOD_A24', 'WEASD_A24']:
-                thresh_in = round(thresh_value*39.3701,3)
-                plot_title = plot_title+' ('+str(thresh_in)+' in)'
-            elif plot_info_dict['fcst_var_name'] == 'DPT':
-                thresh_F = round((((thresh_value-273.15)*9)/5)+32)
-                plot_title = plot_title+' ('+str(thresh_F)+' F)'
-            elif plot_info_dict['fcst_var_name'] == 'HGT' \
-                    and plot_info_dict['fcst_var_level'] == 'CEILING':
-                thresh_kft = round(thresh_value/304.8,1)
-                if int(thresh_kft) == thresh_kft:
-                    thresh_kft = int(thresh_kft)
-                plot_title = plot_title+' ('+str(thresh_kft)+' kft)'
-            elif plot_info_dict['fcst_var_name'] == 'VIS':
-                thresh_mile = round(thresh_value * 0.000621371,1)
-                if int(thresh_mile) == thresh_mile:
-                    thresh_mile = int(thresh_mile)
-                plot_title = plot_title+' ('+str(thresh_mile)+' mile)'
         if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
@@ -747,9 +731,10 @@ class PlotSpecs:
                 thresh_symbol, thresh_letter = gda_util.format_thresh(
                     plot_info_dict['fcst_var_thresh']
                 )
-                metric_savefig_name = (
-                    metric_savefig_name+'_'
-                    +thresh_letter.replace('.','p')
+                if plot_info_dict['fcst_var_name'] not in ['SST_DAILYAVG']:
+                   metric_savefig_name = (
+                       metric_savefig_name+'_'
+                       +thresh_letter.replace('.','p')
                 )
         parameter_savefig_name = plot_info_dict['fcst_var_name']
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
