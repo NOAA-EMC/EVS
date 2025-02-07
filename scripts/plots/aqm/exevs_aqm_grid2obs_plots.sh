@@ -76,7 +76,9 @@ total_days=$(expr ${diff_days} + 1)
 NDAYS=${NDAYS:-${total_days}}
 
 # Define the figure name id in near-real-time or restrospective runs
-if [ "${fig_gen_mode}" == "retro" ]; then
+if [ "${fig_gen_mode}" == "ops" ]; then
+    export fig_name_label="last${NDAYS}days"
+else
     export vstart_month=$( echo ${VDATE_START} | cut -c1-6 )
     export vend_month=$( echo ${VDATE_END} | cut -c1-6 )
     if [ "${vstart_month}" == "${vend_month}" ]; then
@@ -84,8 +86,6 @@ if [ "${fig_gen_mode}" == "retro" ]; then
     else
         export fig_name_label="$(vstart_month}_$(vstart_end}"
     fi
-else
-    export fig_name_label="last${NDAYS}days"
 fi
 # Check user's config settings
 python ${USHevs}/${COMPONENT}/${COMPONENT}_check_settings.py
