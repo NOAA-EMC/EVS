@@ -56,18 +56,20 @@ if [ ${num_mdl} -gt 10 ]; then
     exit
 fi
 let imdl=0
-While [ ${imdl} -lt ${num_mdl} ]; do
+while [ ${imdl} -lt ${num_mdl} ]; do
     biasc=$( echo ${mdl_list[${imdl}]} | awk -F"_" '{print $2}' )
     idir=${mdl_idir_list[${imdl}]}
     NOW=${VDATE_START}
+    echo ${COMIN}/stats/${COMPONENT}
+    echo ${idir}
     while [ ${NOW} -le ${VDATE_END} ]; do
         cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ObsType}.v${NOW}.stat
         sedfile=evs.stats.${modelid}_${biasc}_${ObsType}.${RUN}.${VERIF_CASE}.v${NOW}.stat
-        if [ -s ${dir}/${MODELNAME}.${NOW}/${cpfile} ]; then
+        if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
             cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
             sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
         else
-            echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${EVSINaqm}.${NOW}/${cpfile}"
+            echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${cpfile}"
         fi
     cdate=${NOW}"00"
     NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
@@ -75,7 +77,6 @@ While [ ${imdl} -lt ${num_mdl} ]; do
     ((imdl++))
 done
 
-exit
 # Make directory
 mkdir -p ${VERIF_CASE}_${STEP}
 
