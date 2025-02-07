@@ -46,9 +46,11 @@ ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
 export ObsType
 
 # Bring in all stats files, and change into display name
-# for different models or types of solution.
+# for different models or types of solution defined in ${config}
 
-for biasc in raw bc; do
+IFS=' ' read -ra mdl_list <<< "${model_list}"
+for mdl in "${mdl_list[@]}"; do
+    biasc=$( echo ${mdl} | awk -F"_" '{print $2}' )
     NOW=${VDATE_START}
     while [ ${NOW} -le ${VDATE_END} ]; do
         cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ObsType}.v${NOW}.stat
@@ -75,16 +77,16 @@ diff_days=$(expr ${diff_seconds} \/ 86400)
 total_days=$(expr ${diff_days} + 1)
 NDAYS=${NDAYS:-${total_days}}
 
-# Define the figure name id in near-real-time or restrospective runs
+# Define the figure name id
 if [ "${fig_gen_mode}" == "ops" ]; then
     export fig_name_label="last${NDAYS}days"
 else
     export vstart_month=$( echo ${VDATE_START} | cut -c1-6 )
     export vend_month=$( echo ${VDATE_END} | cut -c1-6 )
     if [ "${vstart_month}" == "${vend_month}" ]; then
-        export fig_name_label=$(vstart_month}
+        export fig_name_label=${vstart_month}
     else
-        export fig_name_label="$(vstart_month}_$(vstart_end}"
+        export fig_name_label="${vstart_month}_${vend_month}"
     fi
 fi
 # Check user's config settings
