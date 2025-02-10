@@ -61,6 +61,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 reformat_data_obs_jobs_dict = {
     'temp': {},
     'pres_lvls': {},
+    'precip': {},
     'seaice': {},
     'sst': {},
 }
@@ -86,6 +87,7 @@ reformat_data_gefs_jobs_dict = {
                                            []
                                        )]},
     },
+    'precip': {},
     'temp': {},
     'seaice': {},
     'sst': {},
@@ -112,6 +114,7 @@ reformat_data_cfs_jobs_dict = {
                                            []
                                        )]},
     },
+    'precip': {},
     'temp': {},
     'seaice': {},
     'sst': {},
@@ -136,6 +139,7 @@ reformat_data_model_jobs_dict = {
                                     )]},
     },
     'pres_lvls': {},
+    'precip': {},
     'seaice': {
         'Concentration': {'env': {'var1_name': 'ICEC',
                                   'var1_levels': 'Z0'},

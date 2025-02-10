@@ -43,6 +43,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             data_dir_list.append(os.path.join(data_base_dir, 'ecmwf'))
         elif VCS_type == 'pres_lvls':
             data_dir_list.append(os.path.join(data_base_dir, 'gfs'))
+        elif VCS_type == 'precip':
+            data_dir_list.append(os.path.join(data_base_dir, 'ccpa'))
         elif VCS_type == 'sst':
             data_dir_list.append(os.path.join(data_base_dir, 'ghrsst_ospo'))
         elif VCS_type == 'seaice':
