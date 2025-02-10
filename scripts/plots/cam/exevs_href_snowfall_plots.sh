@@ -264,8 +264,23 @@ for stats in ets fbias fss ; do
 
    for valid in $valids ; do   
     for domain in conus conus_east conus_west conus_south conus_central  ; do
+        
+     if [ $domain = alaska ] ; then
+         new_domain=$domain
+     elif [ $domain = conus ] ; then
+	 new_domain=buk_conus
+     elif [ $domain = conus_east ] ; then
+   	 new_domain=buk_conus_e
+     elif [ $domain = conus_west ] ; then
+   	 new_domain=buk_conus_w
+     elif [ $domain = conus_south ] ; then
+	 new_domain=buk_conus_s
+     elif [ $domain = conus_central ] ; then
+         new_domain=buk_conus_c
+     fi
+
      if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png ] ; then
-       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}_${level}.last${last_days}days.${scoretype}_valid${valid}.buk_${domain}.png
+       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}_${level}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
      fi
     done
    done

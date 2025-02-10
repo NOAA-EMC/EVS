@@ -324,14 +324,55 @@ cd $all_plots
 
 for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
 
- for domain in conus conus_east conus_west conus_south conus_central alaska  appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
+ for domain in conus conus_east conus_west conus_south conus_central alaska  appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
- if [ $domain = alaska ] ; then
-    new_domain=$domain
- else
-    new_domain=buk_${domain}
- fi
-
+     if [ $domain = alaska ] ; then
+         new_domain=$domain
+     elif [ $domain = conus ] ; then
+	 new_domain=buk_conus
+     elif [ $domain = conus_east ] ; then
+   	 new_domain=buk_conus_e
+     elif [ $domain = conus_west ] ; then
+   	 new_domain=buk_conus_w
+     elif [ $domain = conus_south ] ; then
+	 new_domain=buk_conus_s
+     elif [ $domain = conus_central ] ; then
+         new_domain=buk_conus_c
+     elif [ $domain = appalachia ] ; then
+	 new_domain=buk_apl
+     elif [ $domain = cplains  ] ; then
+         new_domain=buk_cpl_
+     elif [ $domain = deepsouth  ] ; then	
+         new_domain=buk_ds
+     elif [ $domain = greatbasin ] ; then
+         new_domain=buk_grb	     
+     elif [ $domain = greatlakes ] ; then
+         new_domain=buk_grlk	     
+     elif [ $domain = mezquital ] ; then
+         new_domain=buk_mez	     
+     elif [ $domain = midatlantic ] ; then
+         new_domain=buk_matl	     
+     elif [ $domain = northatlantic ] ; then
+         new_domain=buk_ne	     
+     elif [ $domain = nrockies ] ; then
+         new_domain=buk_nrk	     
+     elif [ $domain = pacificnw ] ; then
+         new_domain=buk_npw	     
+     elif [ $domain = pacificsw ] ; then
+         new_domain=buk_psw	     
+     elif [ $domain = prairie ] ; then
+         new_domain=buk_pra	     
+     elif [ $domain = southeast ] ; then
+         new_domain=buk_se	     
+     elif [ $domain = southwest ] ; then
+         new_domain=buk_sw	     
+     elif [ $domain = splains ] ; then
+         new_domain=bukspl	     
+     elif [ $domain = nplains ] ; then
+	 new_domain=buk_npl
+     elif [ $domain = srockies ] ; then
+         new_domain=buk_srk	     
+     fi
  for var in vis hgtcldceil tcdc cape mlcape; do
   if [ $var = vis ] ; then
     var_new=$var
@@ -385,14 +426,55 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
 
   for stat in $stats ; do
 
-    for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
+    for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
      if [ $domain = alaska ] ; then
          new_domain=$domain
-     else
-         new_domain=buk_${domain}
+     elif [ $domain = conus ] ; then
+	 new_domain=buk_conus
+     elif [ $domain = conus_east ] ; then
+   	 new_domain=buk_conus_e
+     elif [ $domain = conus_west ] ; then
+   	 new_domain=buk_conus_w
+     elif [ $domain = conus_south ] ; then
+	 new_domain=buk_conus_s
+     elif [ $domain = conus_central ] ; then
+         new_domain=buk_conus_c
+     elif [ $domain = appalachia ] ; then
+	 new_domain=buk_apl
+     elif [ $domain = cplains  ] ; then
+         new_domain=buk_cpl_
+     elif [ $domain = deepsouth  ] ; then	
+         new_domain=buk_ds
+     elif [ $domain = greatbasin ] ; then
+         new_domain=buk_grb	     
+     elif [ $domain = greatlakes ] ; then
+         new_domain=buk_grlk	     
+     elif [ $domain = mezquital ] ; then
+         new_domain=buk_mez	     
+     elif [ $domain = midatlantic ] ; then
+         new_domain=buk_matl	     
+     elif [ $domain = northatlantic ] ; then
+         new_domain=buk_ne	     
+     elif [ $domain = nrockies ] ; then
+         new_domain=buk_nrk	     
+     elif [ $domain = pacificnw ] ; then
+         new_domain=buk_npw	     
+     elif [ $domain = pacificsw ] ; then
+         new_domain=buk_psw	     
+     elif [ $domain = prairie ] ; then
+         new_domain=buk_pra	     
+     elif [ $domain = southeast ] ; then
+         new_domain=buk_se	     
+     elif [ $domain = southwest ] ; then
+         new_domain=buk_sw	     
+     elif [ $domain = splains ] ; then
+         new_domain=bukspl	     
+     elif [ $domain = nplains ] ; then
+	 new_domain=buk_npl
+     elif [ $domain = srockies ] ; then
+         new_domain=buk_srk	     
      fi
-    
      if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png ] ; then
          mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
      fi

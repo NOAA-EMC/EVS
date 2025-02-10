@@ -248,15 +248,55 @@ for stats in  rmse_spread ; do
   scoretype=fhrmean
   vars='prmsl tmp dpt ugrd vgrd rh wind gust mslet hpbl'
 
-   for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
+   for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
-    if [ $domain = alaska ] ; then
-        new_domain=$domain
-    else
-        new_domain=buk_${domain}
-    fi
-
-
+     if [ $domain = alaska ] ; then
+         new_domain=$domain
+     elif [ $domain = conus ] ; then
+	 new_domain=buk_conus
+     elif [ $domain = conus_east ] ; then
+   	 new_domain=buk_conus_e
+     elif [ $domain = conus_west ] ; then
+   	 new_domain=buk_conus_w
+     elif [ $domain = conus_south ] ; then
+	 new_domain=buk_conus_s
+     elif [ $domain = conus_central ] ; then
+         new_domain=buk_conus_c
+     elif [ $domain = appalachia ] ; then
+	 new_domain=buk_apl
+     elif [ $domain = cplains  ] ; then
+         new_domain=buk_cpl_
+     elif [ $domain = deepsouth  ] ; then	
+         new_domain=buk_ds
+     elif [ $domain = greatbasin ] ; then
+         new_domain=buk_grb	     
+     elif [ $domain = greatlakes ] ; then
+         new_domain=buk_grlk	     
+     elif [ $domain = mezquital ] ; then
+         new_domain=buk_mez	     
+     elif [ $domain = midatlantic ] ; then
+         new_domain=buk_matl	     
+     elif [ $domain = northatlantic ] ; then
+         new_domain=buk_ne	     
+     elif [ $domain = nrockies ] ; then
+         new_domain=buk_nrk	     
+     elif [ $domain = pacificnw ] ; then
+         new_domain=buk_npw	     
+     elif [ $domain = pacificsw ] ; then
+         new_domain=buk_psw	     
+     elif [ $domain = prairie ] ; then
+         new_domain=buk_pra	     
+     elif [ $domain = southeast ] ; then
+         new_domain=buk_se	     
+     elif [ $domain = southwest ] ; then
+         new_domain=buk_sw	     
+     elif [ $domain = splains ] ; then
+         new_domain=bukspl	     
+     elif [ $domain = nplains ] ; then
+	 new_domain=buk_npl
+     elif [ $domain = srockies ] ; then
+         new_domain=buk_srk	     
+     fi
     for var in $vars ; do
 
       if [ $var = mslet ] ; then

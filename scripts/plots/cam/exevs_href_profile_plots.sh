@@ -277,7 +277,7 @@ for valid in 00z 12z ; do
   if [ $stats = rmse_spread ] ; then
    score_types='stat_by_level'
    vars='hgt rh tmp ugrd vgrd'
-   leads='f6 f12 f18 f24 f30 f36 f42 f48'
+   leads='6 12 18 24 30 36 42 48'
   else
    score_types='lead_average'
    vars='700mb_wind_ens_freq_ge15.4 700mb_wind_ens_freq_ge20.58 850mb_tmp_ens_freq_lt273.15 850mb_wind_ens_freq_ge15.4 850mb_wind_ens_freq_ge20.58'
@@ -326,10 +326,10 @@ for valid in 00z 12z ; do
       fi	
 
       for lead in $leads ; do
-        if [ $lead = f6 ] ; then
-           new_lead=f06
+        if [ $lead = 6 ] ; then
+           new_lead=006
         else
-          new_lead=$lead
+          new_lead=0$lead
         fi
 
        if [ ${score_type} = lead_average ] ; then
@@ -344,8 +344,8 @@ for valid in 00z 12z ; do
           fi 
 	 fi
        else
-	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png ] ; then
-   	     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var_new}.last${last_days}days.${scoretype}_valid${valid}_${new_lead}.${new_domain}.png
+	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_f${lead}.png ] ; then
+   	     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_f${lead}.png  evs.href.${stats}.${var_new}.last${last_days}days.${scoretype}_valid${valid}_f${new_lead}.${new_domain}.png
           fi 
        fi
       done #lead

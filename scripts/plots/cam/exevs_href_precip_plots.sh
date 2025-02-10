@@ -327,9 +327,17 @@ for var in apcp_01 apcp_03 apcp_24 ; do
     for valid in $valids ; do
 
      if [ $domain = alaska ] ; then
-          new_domain=$domain
-     else
-         new_domain=buk_${domain}
+         new_domain=$domain
+     elif [ $domain = conus ] ; then
+	 new_domain=buk_conus
+     elif [ $domain = conus_east ] ; then
+   	 new_domain=buk_conus_e
+     elif [ $domain = conus_west ] ; then
+   	 new_domain=buk_conus_w
+     elif [ $domain = conus_south ] ; then
+	 new_domain=buk_conus_s
+     elif [ $domain = conus_central ] ; then
+         new_domain=buk_conus_c
      fi
 
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png ] ; then
