@@ -37,8 +37,7 @@ grid2obs_list="${DATA_TYPE}"
 export init_cyc="00 06 12 18"
 
 flag_send_message=NO
-email_msg=${DATA}/mailmsg
-if [ -e ${email_msg} ]; then /bin/rm -f ${email_msg}; fi
+if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
 
 for ObsType in ${grid2obs_list}; do
     export ObsType
@@ -73,9 +72,9 @@ for ObsType in ${grid2obs_list}; do
         else
           echo "WARNING: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
           if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "WARNING: No pre-processed ${OBSTYPE} Level 1.5 was available for ${VDATE} " >> ${email_msg}
-            echo "Missing file is ${check_file}" >> ${email_msg}
-            echo "==============" >> ${email_msg}
+            echo "WARNING: No pre-processed ${OBSTYPE} Level 1.5 was available for ${VDATE} " >> mailmsg
+            echo "Missing file is ${check_file}" >> mailmsg
+            echo "==============" >> mailmsg
             flag_send_message=YES
           fi
         fi
@@ -94,9 +93,9 @@ for ObsType in ${grid2obs_list}; do
         else
           echo "WARNING: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
           if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "WARNING: No ${OBSTYPE} ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" >> ${email_msg}
-            echo "Missing file is ${check_file}" >> ${email_msg}
-            echo "==============" >> ${email_msg}
+            echo "WARNING: No ${OBSTYPE} ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" >> mailmsg
+            echo "Missing file is ${check_file}" >> mailmsg
+            echo "==============" >> mailmsg
             flag_send_message=YES
           fi
         fi
@@ -126,9 +125,9 @@ for ObsType in ${grid2obs_list}; do
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
             if [ "${SENDMAIL}" == "YES" ]; then
-              echo "WARNING: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z" >> ${email_msg}
-              echo "Missing file is ${fcst_file}" >> ${email_msg}
-              echo "==============" >> ${email_msg}
+              echo "WARNING: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z" > mailmsg
+              echo "Missing file is ${fcst_file}" >> mailmsg
+              echo "==============" >> mailmsg
               flag_send_message=YES
             fi
 
@@ -187,7 +186,7 @@ for ObsType in ${grid2obs_list}; do
 done
 if [ "${flag_send_message}" == "YES" ]; then
     export subject="${OBSTYPE} Obs or ${CMODEL} Fcst files Missing for EVS ${COMPONENT} ${RUN} ${VERIF_CASE}"
-    echo "Job ID: ${jobid}" >> ${email_msg}
-    cat ${email_msg} | mail -s "${subject}" ${MAILTO}
+    echo "Job ID: ${jobid}" >> mailmsg
+    cat mailmsg | mail -s "${subject}" ${MAILTO}
 fi 
 exit
