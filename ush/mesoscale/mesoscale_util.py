@@ -372,6 +372,360 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                                           filled_file_format_chunk)
     return filled_file_format
 
+def get_completed_jobs(completed_jobs_file):
+    completed_jobs = set()
+    if os.path.exists(completed_jobs_file):
+         with open(completed_jobs_file, 'r') as f:
+             completed_jobs = set(f.read().splitlines())
+    return completed_jobs
+
+def mark_job_completed(completed_jobs_file, job_name, job_type=""):
+    with open(completed_jobs_file, 'a') as f:
+          if job_type:
+              f.write(job_type + "_" + job_name + "\n")
+          else:
+              f.write(job_name + "\n")
+
+def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 
+                         run=None, step=None, model=None, vdate=None, vhr=None, 
+                         verif_case=None, verif_type=None, vx_mask=None, 
+                         job_type=None, var_name=None, vhour=None, 
+                         fhr_start=None, fhr_end=None, fhr_incr=None, 
+                         njob=None, acc=None, nbrhd=None):
+    sub_dirs_in = []
+    sub_dirs_out = []
+    copy_files = []
+    if met_tool == "ascii2nc":
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'reformat',
+            f'job{njob}',
+            verif_type, 
+            vx_mask, 
+            met_tool, 
+        ))
+        sub_dirs_out.append(os.path.join(
+            'METplus_output',
+            verif_type, 
+            vx_mask, 
+            met_tool, 
+        ))
+        copy_files.append(f'{verif_type}.{vdate}{vhour}.nc')
+    elif met_tool == 'genvxmask':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour, fhr_start, fhr_end, fhr_incr
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'reformat',
+            f'job{njob}',
+            verif_type,
+            met_tool,
+            f'{vx_mask}.{vdate}',
+        ))
+        sub_dirs_out.append(os.path.join(
+           'METplus_output',
+           verif_type,
+           met_tool,
+           f'{vx_mask}.{vdate}',
+        ))
+        for fhr in np.arange(int(fhr_start), int(fhr_end) + int(fhr_incr), int(fhr_incr)):
+            copy_files.append(f'{vx_mask}_t{vhour}z_f{str(fhr).zfill(2)}.nc')
+    elif met_tool == 'grid_stat':
+        if verif_case == "snowfall":
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, met_tool, 
+                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name, 
+                acc, nbrhd
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            sub_dirs.append(os.path.join(
+                'METplus_output',
+                verif_type,
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            for fhr in np.arange(int(fhr_start), int(fhr_end) + int(fhr_incr), int(fhr_incr)):
+                copy_files.append(
+                    f'{met_tool}_{model}_{var_name}*{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
+                    + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
+                )
+        else:
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, met_tool, 
+                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc, nbrhd
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            sub_dirs.append(os.path.join(
+                'METplus_output',
+                verif_type,
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            for fhr in np.arange(int(fhr_start), int(fhr_end) + int(fhr_incr), int(fhr_incr)):
+                copy_files.append(
+                    f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
+                    + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
+                )
+    elif met_tool == 'merged_ptype':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour, fhr_start, fhr_end, fhr_incr, model, njob
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs_in.append(os.path.join(
+            'data',
+            model,
+            met_tool,
+        ))
+        sub_dirs_out.append(os.path.join(
+            'data',
+            model,
+            met_tool,
+        ))
+        for fhr in np.arange(int(fhr_start), int(fhr_end) + int(fhr_incr), int(fhr_incr)):
+            vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
+            idt = vdt - td(hours=int(fhr))
+            idate = idt.strftime('%Y%m%d')
+            ihour = idt.strftime('%H')
+            copy_files.append(
+                f'{met_tool}_{verif_type}_{vx_mask}_job{njob}_'
+                + f'init{idate}{ihour}_fhr{str(fhr).zfill(2)}.nc'
+            )
+    elif met_tool == 'pb2nc':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'reformat',
+            f'job{njob}',
+            verif_type,
+            vx_mask,
+            met_tool,
+        ))
+        sub_dirs_out.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            vx_mask,
+            met_tool,
+        ))
+        copy_files.append(f'prepbufr.*.{vdate}{vhour}.nc')
+    elif met_tool == 'pcp_combine':
+        if verif_case == "snowfall":
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name, acc
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            for fhr in np.arange(int(fhr_start), int(fhr_end) + int(fhr_incr), int(fhr_incr)):
+                vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
+                idt = vdt - td(hours=int(fhr))
+                idate = idt.strftime('%Y%m%d')
+                ihour = idt.strftime('%H')
+                sub_dirs.append(os.path.join(
+                    'METplus_output',
+                    verif_type,
+                    met_tool,
+                ))
+                copy_files.append(
+                    f'{model}.{var_name}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                )
+        else:
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            for fhr in np.arange(int(fhr_start), int(fhr_end) + int(fhr_incr), int(fhr_incr)):
+                vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
+                idt = vdt - td(hours=int(fhr))
+                idate = idt.strftime('%Y%m%d')
+                ihour = idt.strftime('%H')
+                sub_dirs_in.append(os.path.join(
+                    'METplus_output',
+                    'workdirs',
+                    'reformat',
+                    f'job{njob}',
+                    verif_type,
+                    met_tool,
+                ))
+                sub_dirs_out.append(os.path.join(
+                    'METplus_output',
+                    verif_type,
+                    met_tool,
+                ))
+                copy_files.append(
+                    f'{model}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                )
+    elif met_tool == 'point_stat':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'generate',
+            f'job{njob}',
+            verif_type,
+            met_tool,
+            f'{model}.{vdate}'
+        ))
+        sub_dirs_out.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            met_tool,
+            f'{model}.{vdate}'
+        ))
+        for fhr in np.arange(int(fhr_start), int(fhr_end) + int(fhr_incr), int(fhr_incr)):
+            copy_files.append(
+                f'{met_tool}_{model}_{vx_mask}_{var_name}_OBS*_{str(fhr).zfill(2)}0000L_{vdate}_'
+                + f'{vhour}0000V.stat'
+            )
+    elif met_tool == 'regrid_data_plane':
+        check_if_none = [
+            data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+            vdate, vhour, fhr_start, fhr_end, fhr_incr, model, njob
+        ]
+        if any([var is None for var in check_if_none]):
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" {met_tool} METplus output to COMOUT directory.")
+            raise TypeError(e)
+        sub_dirs_in.append(os.path.join(
+            'METplus_output',
+            'workdirs',
+            'generate'
+            f'job{njob}',
+            verif_type,
+            met_tool,
+            f'{model}.{vdate}'
+        ))
+        sub_dirs_out.append(os.path.join(
+           'METplus_output',
+           verif_type,
+           met_tool,
+           f'{model}.{vdate}'
+        ))
+        for fhr in np.arange(int(fhr_start), int(fhr_end) + int(fhr_incr), int(fhr_incr)):
+            copy_files.append(
+                f'{met_tool}_{model}_t{vhour}z_{verif_type}_{vx_mask}_job{njob}_'
+                + f'fhr{str(fhr).zfill(2)}.nc'
+            )
+    elif met_tool == 'stat_analysis':
+        if job_type == 'gather':
+            check_if_none = [
+                data_dir, restart_dir, verif_case, verif_type, met_tool, vdate, 
+                net, step, model, run 
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            sub_dirs_in.append(os.path.join(
+                'METplus_output',
+                'workdirs',
+                'gather',
+                f'job{njob}',
+                'gather_small',
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            sub_dirs_out.append(os.path.join(
+                'METplus_output',
+                'gather_small',
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            copy_files.append(
+                f'{net}.{step}.{model}.{run}.{verif_case}.{verif_type}'
+                + f'.v{vdate}.stat'
+            )
+        elif job_type == 'gather2':
+            check_if_none = [
+                data_dir, restart_dir, verif_case, met_tool, vdate, net, step, 
+                model, run, vhr
+            ]
+            if any([var is None for var in check_if_none]):
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" {met_tool} METplus output to COMOUT directory.")
+                raise TypeError(e)
+            sub_dirs_in.append(os.path.join(
+                'METplus_output',
+                'workdirs',
+                'gather2',
+                f'job{njob}',
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            sub_dirs_out.append(os.path.join(
+               'METplus_output',
+               met_tool,
+               f'{model}.{vdate}'
+            ))
+            copy_files.append(
+                f'{net}.{step}.{model}.{run}.{verif_case}.v{vdate}.c{vhr}z.stat'
+            )
+    for s, sub_dir_out in enumerate(sub_dirs_out):
+        for copy_file in copy_files:
+            origin_path = os.path.join(
+                data_dir, verif_case, sub_dirs_in[s], copy_file
+            )
+            dest_path = os.path.join(restart_dir, sub_dir_out)
+            if not glob.glob(origin_path):
+                continue
+            if not os.path.exists(dest_path):
+                print(f"FATAL ERROR: Could not copy METplus output to COMOUT directory"
+                      + f" {dest_path} because the path does not already exist.")
+                continue
+            if len(glob.glob(origin_path)) == len(glob.glob(os.path.join(dest_path, copy_file))):
+                print(f"Not copying restart files to restart_directory"
+                      + f" {dest_path} because they already exist.")
+            else:
+                run_shell_command(
+                    ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
+                )
+
 def initalize_job_env_dict():
     """! This initializes a dictionary of environment variables and their
          values to be set for the job pulling from environment variables
@@ -386,8 +740,8 @@ def initalize_job_env_dict():
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
         'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'evs_run_mode',
         'COMROOT', 'COMIN', 'COMOUT', 'COMOUTsmall', 'COMOUTfinal', 'EVSIN',
-        'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS',
-        'MET_ROOT', 
+        'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS', 
+        'MET_ROOT',
         'MET_TMP_DIR', 'MODELNAME', 'JOB_GROUP'
     ]
     job_env_dict = {}
@@ -827,19 +1181,6 @@ def snowfall_check_model_input_output_files(job_dict):
     return (all_input_file_exist, input_files_list, \
             all_COMOUT_file_exist, COMOUT_files_list,
             DATA_files_list)
-
-
-def get_completed_jobs(completed_jobs_file):
-    completed_jobs = set()
-    if os.path.exists(completed_jobs_file):
-        with open(completed_jobs_file, 'r') as f:
-            completed_jobs = set(f.read().splitlines())
-    return completed_jobs
-
-def mark_job_completed(completed_jobs_file, job_name):
-    with open(completed_jobs_file, 'a') as f:
-        f.write(job_name + "\n")
-
 # Construct a file name given a template
 def fname_constructor(template_str, IDATE="YYYYmmdd", IHOUR="HH",
                       VDATE="YYYYmmdd", VHOUR="HH", VDATEHOUR="YYYYmmddHH",
@@ -947,3 +1288,383 @@ def preprocess_prepbufr(indir, fname, workdir, outdir, subsets):
             )
         os.chdir(wd)
 
+# Create a list of ccpa file paths
+def get_ccpa_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdates.... - (datetime object) List of datetimes used to fill templates
+        obs_acc... - (str) precip accumulation interval of ccpa files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     ccpa files in hours
+        nest...... - (str) domain used to find ccpa files
+        paths..... - (list of str) list of paths to append the prepbufr paths to 
+                     Default is empty.
+    '''
+    ccpa_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if int(target_acc) == 1:
+            if int(obs_acc) == 1:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 3:
+            if int(obs_acc) == 1:
+                offsets = [0, 1, 2]
+            elif int(obs_acc) == 3:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 24:
+            if int(obs_acc) == 1:
+                offsets = [
+                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+                    11, 12, 13, 14, 15, 16, 17, 18 , 19, 20, 
+                    21, 22, 23
+                ]
+            elif int(obs_acc) == 3:
+                offsets = [0, 3, 6, 9, 12, 15, 18, 21]
+            elif int(obs_acc) == 24:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        else:
+            raise ValueError(f"target_acc is not valid: \"{target_acc}\"")
+        for offset in offsets:
+            use_vdate = vdate - td(hours=int(offset))
+            use_vd = use_vdate.strftime('%Y%m%d')
+            use_vh = use_vdate.strftime('%H')
+            template = os.path.join(
+                indir, 
+                'ccpa.{VDATE}',
+                'ccpa.t{VHOUR}z.' + f'{obs_acc}h.hrap.{nest}.gb2'
+            )
+            ccpa_paths.append(fname_constructor(
+                template, VDATE=use_vd, VHOUR=use_vh
+            ))
+    return np.concatenate((paths, np.unique(ccpa_paths)))
+
+# Create a list of mrms file paths
+def get_mrms_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdates.... - (datetime object) List of datetimes used to fill templates
+        obs_acc... - (str) precip accumulation interval of mrms files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     mrms files in hours
+        nest...... - (str) domain used to find mrms files
+        paths..... - (list of str) list of paths to append the prepbufr paths to 
+                     Default is empty.
+    '''
+    mrms_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if int(target_acc) == 1:
+            if int(obs_acc) == 1:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 3:
+            if int(obs_acc) == 1:
+                offsets = [0, 1, 2]
+            elif int(obs_acc) == 3:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 24:
+            if int(obs_acc) == 1:
+                offsets = [
+                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+                    11, 12, 13, 14, 15, 16, 17, 18 , 19, 20, 
+                    21, 22, 23
+                ]
+            elif int(obs_acc) == 3:
+                offsets = [0, 3, 6, 9, 12, 15, 18, 21]
+            elif int(obs_acc) == 24:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        else:
+            raise ValueError(f"target_acc is not valid: \"{target_acc}\"")
+        for offset in offsets:
+            use_vdate = vdate - td(hours=int(offset))
+            use_vd = use_vdate.strftime('%Y%m%d')
+            use_vh = use_vdate.strftime('%H')
+            template = os.path.join(
+                indir, 
+                'mrms.{VDATE}',
+                'mrms.t{VHOUR}z.' + f'{obs_acc}h.{nest}.gb2'
+            )
+            mrms_paths.append(fname_constructor(
+                template, VDATE=use_vd, VHOUR=use_vh
+            ))
+    return np.concatenate((paths, np.unique(mrms_paths)))
+
+# Create a list of nohrsc file paths
+def get_nohrsc_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
+    '''
+        indir..... - (str) Input directory for nohrsc file data
+        vdates.... - (datetime object) List of datetimes used to fill templates
+        obs_acc... - (str) snow accumulation interval of nohrsc files in hours
+        target_acc - (str) target snow accumulation interval of combined
+                     nohrsc files in hours
+        nest...... - (str) domain used to find nohrsc files
+        paths..... - (list of str) list of paths to append the nohrsc paths to 
+                     Default is empty.
+    '''
+    nohrsc_paths = []
+    for v, vdate in enumerate(vdates):
+        vh = vdate.strftime('%H')
+        vd = vdate.strftime('%Y%m%d')
+        if int(target_acc) == 6:
+            if int(obs_acc) == 6:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        elif int(target_acc) == 24:
+            if int(obs_acc) == 6:
+                offsets = [0, 6, 12, 18]
+            elif int(obs_acc) == 24:
+                offsets = [0]
+            else:
+                raise ValueError(f"obs_acc is not valid: \"{obs_acc}\"")
+        else:
+            raise ValueError(f"target_acc is not valid: \"{target_acc}\"")
+        for offset in offsets:
+            use_vdate = vdate - td(hours=int(offset))
+            use_vd = use_vdate.strftime('%Y%m%d')
+            use_vh = use_vdate.strftime('%H')
+            template = os.path.join(
+                indir, 
+                '{VDATE}', 'wgrbbul', 'nohrsc_snowfall',
+                f'sfav2_CONUS_{int(obs_acc)}h_' + '{VDATE}{VHOUR}_grid184.grb2'
+            )
+            nohrsc_paths.append(fname_constructor(
+                template, VDATE=use_vd, VHOUR=use_vh
+            ))
+    return np.concatenate((paths, np.unique(nohrsc_paths)))
+
+# Return a list of missing ccpa files needed to create "target_acc"
+def check_ccpa_files(indir, vdate, obs_acc, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        obs_acc... - (str) precip accumulation interval of ccpa files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     ccpa files in hours
+        nest...... - (str) domain used to find ccpa files
+    '''
+    paths = get_ccpa_qpe_templates(indir, [vdate], obs_acc, target_acc, nest)
+    return [path for path in paths if not os.path.exists(path)]
+
+# Return a list of missing mrms files needed to create "target_acc"
+def check_mrms_files(indir, vdate, obs_acc, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        obs_acc... - (str) precip accumulation interval of mrms files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     mrms files in hours
+        nest...... - (str) domain used to find mrms files
+    '''
+    paths = get_mrms_qpe_templates(indir, [vdate], obs_acc, target_acc, nest)
+    return [path for path in paths if not os.path.exists(path)]
+
+# Return a list of missing nohrsc files needed to create "target_acc"
+def check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        obs_acc... - (str) precip accumulation interval of nohrsc files in hours
+        target_acc - (str) target precip accumulation interval of combined
+                     nohrsc files in hours
+        nest...... - (str) domain used to find nohrsc files
+    '''
+    paths = get_nohrsc_qpe_templates(indir, [vdate], obs_acc, target_acc, nest)
+    return [path for path in paths if not os.path.exists(path)]
+
+# Return the obs accumulation interval needed to create target_acc, based on
+# available ccpa files
+def get_ccpa_accums(indir, vdate, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        target_acc - (str) target precip accumulation interval of combined
+                     ccpa files in hours
+        nest...... - (str) domain used to find ccpa files
+    '''
+    if int(target_acc) == 1:
+        # check 1-h obs
+        obs_acc = "01"
+        missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_ccpa:
+            return None
+        else:
+            return obs_acc
+    elif int(target_acc) == 3:
+        # check 3-h obs
+        obs_acc = "03"
+        missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_ccpa:
+            # check 1-h obs
+            obs_acc = "01"
+            missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_ccpa:
+                return None
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    elif int(target_acc) == 24:
+
+        # check 24-h obs
+        obs_acc = "24"
+        missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_ccpa:
+            # check 3-h obs
+            obs_acc = "03"
+            missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_ccpa:
+                # check 1-h obs
+                obs_acc = "01"
+                missing_ccpa = check_ccpa_files(indir, vdate, obs_acc, target_acc, nest)
+                if missing_ccpa:
+                    return None
+                else:
+                    return obs_acc
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    else:
+        raise ValueError(f"Invalid target_acc: \"{target_acc}\"")
+
+# Return the obs accumulation interval needed to create target_acc, based on
+# available mrms files
+def get_mrms_accums(indir, vdate, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        target_acc - (str) target precip accumulation interval of combined
+                     mrms files in hours
+        nest...... - (str) domain used to find mrms files
+    '''
+    if int(target_acc) == 1:
+        # check 1-h obs
+        obs_acc = "01"
+        missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_mrms:
+            return None
+        else:
+            return obs_acc
+    elif int(target_acc) == 3:
+        # check 3-h obs
+        obs_acc = "03"
+        missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_mrms:
+            # check 1-h obs
+            obs_acc = "01"
+            missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_mrms:
+                return None
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    elif int(target_acc) == 24:
+
+        # check 24-h obs
+        obs_acc = "24"
+        missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_mrms:
+            # check 3-h obs
+            obs_acc = "03"
+            missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_mrms:
+                # check 1-h obs
+                obs_acc = "01"
+                missing_mrms = check_mrms_files(indir, vdate, obs_acc, target_acc, nest)
+                if missing_mrms:
+                    return None
+                else:
+                    return obs_acc
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    else:
+        raise ValueError(f"Invalid target_acc: \"{target_acc}\"")
+
+# Return the obs accumulation interval needed to create target_acc, based on
+# available nohrsc files
+def get_nohrsc_accums(indir, vdate, target_acc, nest):
+    '''
+        indir..... - (str) Input directory for prepbufr file data
+        vdate..... - (datetime object) datetime used to fill templates
+        target_acc - (str) target precip accumulation interval of combined
+                     nohrsc files in hours
+        nest...... - (str) domain used to find nohrsc files
+    '''
+    if int(target_acc) == 6:
+        # check 6-h obs
+        obs_acc = "06"
+        missing_nohrsc = check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_nohrsc:
+            return None
+        else:
+            return obs_acc
+    elif int(target_acc) == 24:
+        # check 24-h obs
+        obs_acc = "24"
+        missing_nohrsc = check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest)
+        if missing_nohrsc:
+            # check 6-h obs
+            obs_acc = "06"
+            missing_nohrsc = check_nohrsc_files(indir, vdate, obs_acc, target_acc, nest)
+            if missing_nohrsc:
+                return None
+            else:
+                return obs_acc
+        else:
+            return obs_acc
+    else:
+        raise ValueError(f"Invalid target_acc: \"{target_acc}\"")
+
+# Return the obs accumulation interval needed to create target_acc, based on
+# available input files
+def get_obs_accums(indir, vdate, target_acc, nest, obsname, job_type='reformat'):
+    '''
+        indir..... - (str) Input directory for obs file data
+        vdate..... - (datetime object) datetime used to fill templates
+        target_acc - (str) target precip accumulation interval of combined
+                     obs files in hours
+        nest...... - (str) domain used to find obs files
+        obsname... - (str) name of input file dataset
+    '''
+    if obsname == "mrms":
+        return get_mrms_accums(indir, vdate, target_acc, nest)
+    elif obsname == "ccpa":
+        return get_ccpa_accums(indir, vdate, target_acc, nest)
+    elif obsname == "nohrsc":
+        return get_nohrsc_accums(indir, vdate, target_acc, nest)
+    else:
+        raise ValueError(f"Invalid obsname: \"{obsname}\"")
+
+# Return availability of obs needed for job
+def get_obs_avail(indir, vdate, nest, obsname):
+    '''
+        indir..... - (str) Input directory for obs file data
+        vdate..... - (datetime object) datetime used to fill templates
+        nest...... - (str) domain used to find obs files
+        obsname... - (str) name of input file dataset
+    '''
+    if obsname in ["raob", "metar"]:
+        paths = get_prepbufr_templates(indir, [vdate], obsname=obsname, already_preprocessed=True)
+        if paths.size > 0:
+            return all([os.path.exists(fname) for fname in paths])
+        else:
+            return False
+    else:
+        raise ValueError(f"Invalid obsname: \"{obsname}\"")
