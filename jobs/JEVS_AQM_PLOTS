@@ -78,7 +78,7 @@ mkdir -m 775 -p $COMOUT $COMOUTheadline
 
 export DATA_TYPE=${DATA_TYPE:-pm25}
 export restart_mode=${restart_mode:-YES}
-export fig_gen_mode=${fig_gen_mode:-ops}
+export fig_name_label=${fig_name_label:-last${NDAYS}days}
 #######################################################################
 # Execute the script.
 #######################################################################

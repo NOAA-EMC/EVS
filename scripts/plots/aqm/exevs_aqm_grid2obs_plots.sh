@@ -86,20 +86,12 @@ end_date_seconds=$(date +%s -d ${end_date})
 diff_seconds=$(expr ${end_date_seconds} - ${start_date_seconds})
 diff_days=$(expr ${diff_seconds} \/ 86400)
 total_days=$(expr ${diff_days} + 1)
-NDAYS=${NDAYS:-${total_days}}
-
-# Define the figure name id
-if [ "${fig_gen_mode}" == "ops" ]; then
-    export fig_name_label="last${NDAYS}days"
-else
-    export vstart_month=$( echo ${VDATE_START} | cut -c1-6 )
-    export vend_month=$( echo ${VDATE_END} | cut -c1-6 )
-    if [ "${vstart_month}" == "${vend_month}" ]; then
-        export fig_name_label=${vstart_month}
-    else
-        export fig_name_label="${vstart_month}_${vend_month}"
-    fi
+## NDAYS=${NDAYS:-${total_days}}
+if [ "${NDAYS}" != ${total_days}" ]; then
+	echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation"
+	exit
 fi
+
 # Check user's config settings
 python ${USHevs}/${COMPONENT}/${COMPONENT}_check_settings.py
 export err=$?; err_chk
