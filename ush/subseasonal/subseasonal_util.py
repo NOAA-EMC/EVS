@@ -3976,6 +3976,9 @@ def get_obs_valid_hrs(obs):
         'BUFR': {'valid_hr_start': 00,
                  'valid_hr_end': 00,
                  'valid_hr_inc': 12},
+        'CCPA': {'valid_hr_start': 12,
+                 'valid_hr_end': 12,
+                 'valid_hr_inc': 24},
     }
     if obs in list(obs_valid_hr_dict.keys()):
         valid_hr_start = obs_valid_hr_dict[obs]['valid_hr_start']
