@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_create_output_dirs.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This creates the base directories and their subdirectories.
 Run By: scripts/plots/global_ens/exevs_global_ens_chem_grid2obs_plots.sh
@@ -14,6 +15,7 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 evs_ver = os.environ['evs_ver']
+SENDCOM = os.environ['SENDCOM']
 COMOUT = os.environ['COMOUT']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
@@ -25,6 +27,7 @@ VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 model_list = os.environ['model_list'].split(' ')
+model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 
@@ -57,42 +60,44 @@ if not os.path.exists(job_scripts_dir):
 
 # Build information of working and COMOUT output directories
 working_dir_list = []
-COMOUT_dir_list = []
+output_dir_list = []
 if STEP == 'plots':
     NDAYS = str(os.environ['NDAYS'])
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
     working_dir_list.append(
-        os.path.join(working_output_base_dir,
-                     RUN+'.'+end_date_dt.strftime('%Y%m%d'))
+        os.path.join(working_output_base_dir, 'job_work_dir')
     )
     working_dir_list.append(
-        os.path.join(working_output_base_dir,
-                     'logs')
+        os.path.join(working_output_base_dir, 'tar_files')
     )
-    working_dir_list.append(
-        os.path.join(working_output_base_dir,
-                     'tar_files')
-    )
-    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+
+    if SENDCOM == 'NO':
         working_dir_list.append(
             os.path.join(working_output_base_dir,
-                         RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                         VERIF_CASE+'_'+VERIF_CASE_STEP_type,
-                         'last'+NDAYS+'days')
+            f"{RUN}.{end_date_dt:%Y%m%d}")
         )
-        COMOUT_dir_list.append(
-            os.path.join(COMOUT, VERIF_CASE+'_'+VERIF_CASE_STEP_type,
-                         'last'+NDAYS+'days')
-        )
+    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+        if SENDCOM == 'NO':
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
+                             f"{RUN}.{end_date_dt:%Y%m%d}",
+                             f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
+                             f"last{NDAYS}days")
+            )
+        if SENDCOM == 'YES':
+            output_dir_list.append(
+                os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
+                             f"last{NDAYS}days")
+            )
 
-# Create working output directories
-for working_output_dir in working_dir_list:
-    gda_util.make_dir(working_output_dir)
+# Create working directories
+for working_dir in working_dir_list:
+    gda_util.make_dir(working_dir)
 
-# Create COMOUT output directories
-for COMOUT_dir in COMOUT_dir_list:
-    gda_util.make_dir(COMOUT_dir)
+# Create output directories
+for output_dir in output_dir_list:
+    gda_util.make_dir(output_dir)
 
 print("END: "+os.path.basename(__file__))

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_get_data_files.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This gets the necessary data files for verification.
 Run By: scripts/plots/global_ens/exevs_global_ens_chem_grid2obs_plots.sh
@@ -75,7 +76,7 @@ if STEP == 'plots' :
                 else:
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
-                        'evs.stats.'+MODELNAME+'.'+RUN+'.'+VERIF_CASE+'_'
+                        'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'_'
                         +obstype+"_"+obsvar+"."+'v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
                 dest_model_date_stat_file = os.path.join(
