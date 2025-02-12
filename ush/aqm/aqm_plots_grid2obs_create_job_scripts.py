@@ -652,49 +652,21 @@ if JOB_GROUP == 'make_plots':
 ################################################
 #### tar_images jobs
 ################################################
+if SENDCOM == 'YES':
+    search_dir = os.path.join(COMOUT, f"{VERIF_CASE}_VERIF_TYPE",
+                              f"{dir_name_label}")
+else:
+    search_dir = os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
+                              f"{RUN}.{end_date}", f"{VERIF_CASE}_VERIF_TYPE",
+                              f"{dir_name_label}")
 tar_images_jobs_dict = {
-    'ozone': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_ozone",
-                                        f"{dir_name_label}")
-    },
-    'pm25': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_pm25",
-                                        f"{dir_name_label}")
-    },
-    'ozmax8': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_ozmax8",
-                                        f"{dir_name_label}")
-    },
-    'pmave': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_pmave",
-                                        f"{dir_name_label}")
-    },
-    'ozmax8_headline': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"headline.{end_date}",
-                                        f"{VERIF_CASE}_ozmax8",
-                                        f"{dir_name_label}")
-    },
-    'pmave_headline': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"headline.{end_date}",
-                                        f"{VERIF_CASE}_pmave",
-                                        f"{dir_name_label}")
-    },
-    'aeronetaod': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_aeronetaod",
-                                        f"{dir_name_label}")
-    }
+    'ozone': {'search_base_dir': search_dir},
+    'pm25': {'search_base_dir': search_dir},
+    'ozmax8': {'search_base_dir': search_dir},
+    'pmave': {'search_base_dir': search_dir},
+    'ozmax8_headline': {'search_base_dir': search_dir},
+    'pmave_headline': {'search_base_dir': search_dir},
+    'aeronetaod': {'search_base_dir': search_dir}
 }
 if JOB_GROUP == 'tar_images':
     JOB_GROUP_dict = tar_images_jobs_dict
@@ -838,16 +810,27 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job_env_dict['valid_hr_start']
                     )
                     job_env_dict['valid_hr_inc'] = '24'
-                DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
-                    DATA, COMOUT, JOB_GROUP, job_env_dict
-                )
-                job_env_dict['DATAjob'] = DATAjob
-                job_env_dict['COMOUTjob'] = COMOUTjob
-                for output_dir in [job_env_dict['DATAjob'],
-                                   job_env_dict['COMOUTjob']]:
-                    gda_util.make_dir(output_dir)
-                # Create job file
+                # Set up output directories
                 njobs+=1
+                job_env_dict['job_id'] = 'job'+str(njobs)
+                job_work_dir, job_DATA_dir, job_COMOUT_dir = (
+                    gda_util.get_plot_job_dirs(DATA, COMOUT, JOB_GROUP,
+                                               job_env_dict)
+                )
+                job_env_dict['job_work_dir'] = job_work_dir
+                job_env_dict['job_DATA_dir'] = job_DATA_dir
+                job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
+                if SENDCOM == 'YES':
+                    gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                else:
+                    gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                # Check plot files
+                plot_files_exist = gda_util.check_plot_files(job_env_dict)
+                if plot_files_exist:
+                    write_job_cmds = False
+                else:
+                    write_job_cmds = True
+                # Create job file
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
                                         'job'+str(njobs))
                 print("Creating job script: "+job_file)
@@ -862,11 +845,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     if name not in dont_write_env_var_list:
                         job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
-                job.write(
-                    gda_util.python_command('aqm_plots.py',[])
-                    +'\n'
-                )
-                job.write('export err=$?; err_chk'+'\n')
+                if write_job_cmds:
+                    gda_util.make_dir(job_env_dict['job_work_dir'])
+                    job.write(
+                        gda_util.python_command('aqm_plots.py',[])
+                        +'\n'
+                    )
+                    job.write('export err=$?; err_chk'+'\n')
                 job.close()
             elif JOB_GROUP == 'make_plots':
                 job_env_dict['event_equalization'] = os.environ[
@@ -979,15 +964,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                  ['fcst_var_dict']['levels']\
                                  .index(plot_loop_info[2])]
                             )
-                        DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
-                            DATA, COMOUT, JOB_GROUP, job_env_dict
-                        )
-                        job_env_dict['DATAjob'] = DATAjob
-                        job_env_dict['COMOUTjob'] = COMOUTjob
-                        for output_dir in [job_env_dict['DATAjob'],
-                                           job_env_dict['COMOUTjob']]:
-                            gda_util.make_dir(output_dir)
-                        run_aqm_plots = ['aqm_plots.py']
+                        run_aqm_plots = ['plots']
                         ##
                         ##  AQM do not need separate plot to cover portion of the fhr list
                         ##
@@ -997,11 +974,32 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         ##         ['lead_average_vhr_mean', 'lead_by_level',
                         ##          'lead_by_date']:
                         ##     run_aqm_plots.append(
-                        ##         'aqm_plots_production_tof72.py'
+                        ##         'plots_tof72'
                         ##     )
                         for run_aqm_plot in run_aqm_plots:
-                            # Create job file
+                            # Set up output directories
                             njobs+=1
+                            job_env_dict['job_id'] = 'job'+str(njobs)
+                            job_work_dir, job_DATA_dir, job_COMOUT_dir = (
+                                gda_util.get_plot_job_dirs(DATA, COMOUT, JOB_GROUP,
+                                                           job_env_dict)
+                            )
+                            job_env_dict['job_work_dir'] = job_work_dir
+                            job_env_dict['job_DATA_dir'] = job_DATA_dir
+                            job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
+                            if SENDCOM == 'YES':
+                                gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                            else:
+                                gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                            # Check plot files
+                            plot_files_exist = gda_util.check_plot_files(
+                                job_env_dict
+                            )
+                            if plot_files_exist:
+                                 write_job_cmds = False
+                            else:
+                                 write_job_cmds = True
+                            # Create job file
                             job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                     'job'+str(njobs))
                             print("Creating job script: "+job_file)
@@ -1016,11 +1014,21 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                 if name not in dont_write_env_var_list:
                                     job.write('export '+name+'="'+value+'"\n')
                             job.write('\n')
-                            job.write(
-                                gda_util.python_command(run_aqm_plot,
-                                                        [])+'\n'
-                            )
-                            job.write('export err=$?; err_chk'+'\n')
+                            if run_global_ens_chem_plot == 'plots_tof72':
+                                fhrs_tof72= []
+                                for fhr in job_env_dict['fhr_list'].split(', '):
+                                    if int(fhr) <= 72:
+                                        fhrs_tof72.append(str(fhr))
+                                job.write(
+                                    'export fhr_list="'
+                                    +', '.join(fhrs_tof72)+'"\n'
+                                )
+                            if write_job_cmds:
+                                job.write(
+                                    gda_util.python_command('aqm_plots.py',
+                                                            [])+'\n'
+                                )
+                                job.write('export err=$?; err_chk'+'\n')
                             job.close()
                 else:
                     for plot_loop_info in list(
@@ -1090,29 +1098,42 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                  ['fcst_var_dict']['levels']\
                                  .index(plot_loop_info[2])]
                             )
-                        DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
-                            DATA, COMOUT, JOB_GROUP, job_env_dict
-                        )
-                        job_env_dict['DATAjob'] = DATAjob
-                        job_env_dict['COMOUTjob'] = COMOUTjob
-                        for output_dir in [job_env_dict['DATAjob'],
-                                           job_env_dict['COMOUTjob']]:
-                            gda_util.make_dir(output_dir)
-                        run_aqm_plots = ['aqm_plots.py']
+                        run_aqm_plots = ['plots']
                         ##
                         ##  AQM do not need separate plot to cover portion of the fhr list
                         ##
                         ## if evs_run_mode == 'production' and \
                         ##         verif_type in ['ozone', 'pm25', 'ozmax', 'pmave'] and \
                         ##         job_env_dict['plot'] in \
-                        ##         ['lead_average_vhr_mean', 'lead_by_level',
+                        ##         ['lead_average', 'lead_by_level',
                         ##          'lead_by_date']:
                         ##     run_aqm_plots.append(
-                        ##         'aqm_plots_production_tof72.py'
+                        ##         'plots_tof72'
                         ##     )
                         for run_aqm_plot in run_aqm_plots:
-                            # Create job file
+                            # Set up output directories
                             njobs+=1
+                            job_env_dict['job_id'] = 'job'+str(njobs)
+                            job_work_dir, job_DATA_dir, job_COMOUT_dir = (
+                                gda_util.get_plot_job_dirs(DATA, COMOUT, JOB_GROUP,
+                                                           job_env_dict)
+                            )
+                            job_env_dict['job_work_dir'] = job_work_dir
+                            job_env_dict['job_DATA_dir'] = job_DATA_dir
+                            job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
+                            if SENDCOM == 'YES':
+                                gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                            else:
+                                gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                            # Check plot files
+                            plot_files_exist = gda_util.check_plot_files(
+                                job_env_dict
+                            )
+                            if plot_files_exist:
+                                 write_job_cmds = False
+                            else:
+                                 write_job_cmds = True
+                            # Create job file
                             job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                     'job'+str(njobs))
                             print("Creating job script: "+job_file)
@@ -1127,21 +1148,58 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                 if name not in dont_write_env_var_list:
                                     job.write('export '+name+'="'+value+'"\n')
                             job.write('\n')
-                            job.write(
-                                gda_util.python_command(run_aqm_plot,
-                                                        [])+'\n'
-                            )
-                            job.write('export err=$?; err_chk'+'\n')
+                            if run_global_ens_chem_plot == 'plots_tof72':
+                                fhrs_tof72 = []
+                                for fhr in job_env_dict['fhr_list'].split(', '):
+                                    if int(fhr) <= 72:
+                                        fhrs_tof72.append(str(fhr))
+                                job.write(
+                                    'export fhr_list="'
+                                    +', '.join(fhrs_tof72)+'"\n'
+                                )
+                            if write_job_cmds:
+                                job.write(
+                                    gda_util.python_command('aqm_plots.py',
+                                                            [])+'\n'
+                                )
+                                job.write('export err=$?; err_chk'+'\n')
                             job.close()
             elif JOB_GROUP == 'tar_images':
-                job_env_dict['DATAjob'] = loop_info
-                job_env_dict['COMOUTjob'] = loop_info.replace(
-                    os.path.join(DATA,f"{VERIF_CASE}_{STEP}", 'plot_output',
-                                 f"{RUN}.{end_date}"),
-                    COMOUT
-                )
-                # Create job file
+                # Set up output directories
                 njobs+=1
+                job_env_dict['job_id'] = 'job'+str(njobs)
+                if SENDCOM == 'YES':
+                   job_env_dict['job_COMOUT_dir'] = loop_info
+                   job_env_dict['job_DATA_dir'] = loop_info.replace(
+                       COMOUT,
+                       os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                    'plot_output', f"{RUN}.{end_date}")
+                   )
+                else:
+                   job_env_dict['job_DATA_dir'] = loop_info
+                   job_env_dict['job_COMOUT_dir'] = loop_info.replace(
+                       os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
+                                    f"{RUN}.{end_date}"),
+                       COMOUT
+                   )
+                job_env_dict['job_work_dir'] = (
+                    job_env_dict['job_DATA_dir'].replace(
+                        f"{RUN}.{end_date}",
+                        f"job_work_dir/{job_env_dict['JOB_GROUP']}/"
+                        +f"{job_env_dict['job_id']}/{RUN}.{end_date}"
+                    )
+                )
+                if SENDCOM == 'YES':
+                    gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                else:
+                    gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                # Check plot files
+                plot_files_exist = gda_util.check_plot_files(job_env_dict)
+                if plot_files_exist:
+                    write_job_cmds = False
+                else:
+                    write_job_cmds = True
+                # Create job files
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)
                 job = open(job_file, 'w')
@@ -1155,11 +1213,12 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     if name not in dont_write_env_var_list:
                         job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
-                job.write(
-                    gda_util.python_command('aqm_plots.py', [])
-                    +'\n'
-                )
-                job.write('export err=$?; err_chk'+'\n')
+                if write_job_cmds:
+                    job.write(
+                        gda_util.python_command('aqm_plots.py', [])
+                        +'\n'
+                    )
+                    job.write('export err=$?; err_chk'+'\n')
                 job.close()
 
 # If running USE_CFP, create POE scripts

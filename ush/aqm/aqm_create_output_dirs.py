@@ -73,7 +73,6 @@ working_dir_list = []
 COMOUT_dir_list = []
 output_dir_list = []
 if STEP == 'plots':
-    NDAYS = str(os.environ['NDAYS'])
     fig_name_label = os.environ['fig_name_label']
     dir_name_label = fig_name_label
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
