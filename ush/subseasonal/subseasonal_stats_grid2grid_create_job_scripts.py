@@ -58,6 +58,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 assemble_data_obs_jobs_dict = {
     'temp': {},
     'pres_lvls': {},
+    'precip': {},
     'seaice': {},
     'sst': {},
 }
@@ -510,6 +511,7 @@ assemble_data_model_jobs_dict = {
                                                     )]
                                                )]},
     },
+    'precip': {},
     'seaice': {
         'WeeklyAvg_Concentration': {'env': {'var1_name': 'ICEC',
                                             'var1_levels': 'Z0',},
@@ -798,6 +800,7 @@ generate_stats_jobs_dict = {
                                                    +'Weeks3_4Avg.conf'
                                                )]},
     },
+    'precip': {},
     'seaice': {
         'WeeklyAvg_Concentration': {'env': {},
                                     'commands': [sub_util.metplus_command(
