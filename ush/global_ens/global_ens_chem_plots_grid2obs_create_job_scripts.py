@@ -38,6 +38,9 @@ nproc = os.environ['nproc']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 NDAYS = str(os.environ['NDAYS'])
+fig_name_label = os.environ['fig_name_label']
+dir_name_label = fig_name_label
+restart_mode = os.environ['restart_mode']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
@@ -277,11 +280,11 @@ if JOB_GROUP == 'make_plots':
 ################################################
 if SENDCOM == 'YES':
     search_dir = os.path.join(COMOUT, f"{VERIF_CASE}_VERIF_TYPE",
-                              f"last{NDAYS}days")
+                              f"{dir_name_label}")
 else:
     search_dir = os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
                               f"{RUN}.{end_date}", f"{VERIF_CASE}_VERIF_TYPE",
-                              f"last{NDAYS}days")
+                              f"{dir_name_label}")
 tar_images_jobs_dict = {
     'aeronet': {'search_base_dir': search_dir},
     'airnow': {'search_base_dir': search_dir}
@@ -308,6 +311,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['NDAYS'] = NDAYS
+        job_env_dict['fig_name_label'] = fig_name_label
+        job_env_dict['restart_mode'] = restart_mode
         job_env_dict['date_type'] = 'VALID'
         if JOB_GROUP in ['filter_stats', 'make_plots']:
             valid_hr_start = int(job_env_dict['valid_hr_start'])

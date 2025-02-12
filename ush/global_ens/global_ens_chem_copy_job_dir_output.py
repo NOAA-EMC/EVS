@@ -22,8 +22,7 @@ STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
 JOB_GROUP = os.environ['JOB_GROUP']
 evs_run_mode = os.environ['evs_run_mode']
-if STEP == 'plots':
-    NDAYS = os.environ['NDAYS']
+fig_name_label = os.environ['fig_name_label']
 
 # Copy files to desired location
 if STEP == 'plots':
@@ -34,22 +33,22 @@ if STEP == 'plots':
     if JOB_GROUP == 'condense_stats':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
-            f"last{NDAYS}days", '*', '*', '*', 'condensed_stats*'
+            fig_name_label, '*', '*', '*', 'condensed_stats*'
         )
     elif JOB_GROUP == 'filter_stats':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
-            f"last{NDAYS}days", '*', '*', '*', 'fcst*.stat'
+            fig_name_label, '*', '*', '*', 'fcst*.stat'
         )
     elif JOB_GROUP == 'make_plots':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
-            f"last{NDAYS}days", '*', '*', '*', '*', '*.png'
+            fig_name_label, '*', '*', '*', '*', '*.png'
         )
     elif JOB_GROUP == 'tar_images':
         job_wildcard_dir = os.path.join(
             job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
-            f"last{NDAYS}days", '*', '*', '*', '*', '*.tar'
+            fig_name_label, '*', '*', '*', '*', '*.tar'
         )
     if SENDCOM == 'YES' and JOB_GROUP != 'tar_images':
         copy_from_job_to_DATA = False
@@ -59,7 +58,7 @@ output_file_JOB_list = glob.glob(job_wildcard_dir)
 if STEP == 'plots' and JOB_GROUP == 'make_plots':
     job_wildcard_dir2 = os.path.join(
         job_work_JOB_GROUP_dir, 'job*', f"{RUN}.*", '*',
-        f"last{NDAYS}days", '*', '*', '*', '*', '*.gif'
+        fig_name_label, '*', '*', '*', '*', '*.gif'
     )
     output_file_JOB_list = (
         output_file_JOB_list

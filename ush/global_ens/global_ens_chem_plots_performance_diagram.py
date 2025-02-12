@@ -495,6 +495,7 @@ def main():
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
         'obs_var_threshs': ['OBS_VAR_THRESHS'],
+        'fig_name_label': 'FIG_NAME_LABEL',
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',

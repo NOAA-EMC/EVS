@@ -62,7 +62,8 @@ if not os.path.exists(job_scripts_dir):
 working_dir_list = []
 output_dir_list = []
 if STEP == 'plots':
-    NDAYS = str(os.environ['NDAYS'])
+    fig_name_label = os.environ['fig_name_label']
+    dir_name_label = fig_name_label
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
@@ -84,12 +85,12 @@ if STEP == 'plots':
                 os.path.join(working_output_base_dir,
                              f"{RUN}.{end_date_dt:%Y%m%d}",
                              f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
-                             f"last{NDAYS}days")
+                             dir_name_label)
             )
         if SENDCOM == 'YES':
             output_dir_list.append(
                 os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
-                             f"last{NDAYS}days")
+                             dir_name_label)
             )
 
 # Create working directories
