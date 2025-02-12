@@ -181,7 +181,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    fi
 	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_weekly_reformat_job_scripts.py
 	    export err=$?; err_chk
-	    export njobs=$((njobs+4)) 
+	    export njobs=$((njobs+5)) 
         done
 	WEEK4_LIST="Week4"
 	for WEEK in $WEEK4_LIST; do

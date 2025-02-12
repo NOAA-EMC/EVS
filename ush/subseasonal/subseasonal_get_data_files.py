@@ -273,11 +273,14 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                             if time_length == 'week5':
                                 if int(time['forecast_hour']) == 828:
                                     nf = 0
+                                    time['valid_time'] = (time['valid_time']
+                                                          -datetime.timedelta(hours=24))
                                     while nf <= 23:
                                         sub_util.get_model_file(
                                             (time['valid_time']
                                              -datetime.timedelta(hours=6*nf)),
-                                            time['init_time'],
+                                            (time['init_time']
+                                             -datetime.timedelta(hours=24)),
                                             str(int(time['forecast_hour'])-(6*nf)),
                                             model_file_format,
                                             model_fcst_dest_file_format
