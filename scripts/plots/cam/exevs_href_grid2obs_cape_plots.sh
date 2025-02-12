@@ -375,7 +375,7 @@ for score_type in lead_average threshold_average; do
           done
       else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_f${lead}.png ] ; then   
-           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_f${lead}.png  evs.href.${stat}.${var}_${level}.last${last_days}days.${scoretype}_valid${valid}_f${new_lead}.f${new_domain}.png
+           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_f${lead}.png  evs.href.${stat}.${var}_${level}.last${last_days}days.${scoretype}_valid${valid}_f${new_lead}.${new_domain}.png
 
      	  fi
        fi
