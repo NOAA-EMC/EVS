@@ -341,7 +341,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
      elif [ $domain = appalachia ] ; then
 	 new_domain=buk_apl
      elif [ $domain = cplains  ] ; then
-         new_domain=buk_cpl_
+         new_domain=buk_cpl
      elif [ $domain = deepsouth  ] ; then	
          new_domain=buk_ds
      elif [ $domain = greatbasin ] ; then
@@ -367,7 +367,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
      elif [ $domain = southwest ] ; then
          new_domain=buk_sw	     
      elif [ $domain = splains ] ; then
-         new_domain=bukspl	     
+         new_domain=buk_spl	     
      elif [ $domain = nplains ] ; then
 	 new_domain=buk_npl
      elif [ $domain = srockies ] ; then
@@ -443,7 +443,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
      elif [ $domain = appalachia ] ; then
 	 new_domain=buk_apl
      elif [ $domain = cplains  ] ; then
-         new_domain=buk_cpl_
+         new_domain=buk_cpl
      elif [ $domain = deepsouth  ] ; then	
          new_domain=buk_ds
      elif [ $domain = greatbasin ] ; then
@@ -469,7 +469,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
      elif [ $domain = southwest ] ; then
          new_domain=buk_sw	     
      elif [ $domain = splains ] ; then
-         new_domain=bukspl	     
+         new_domain=buk_spl	     
      elif [ $domain = nplains ] ; then
 	 new_domain=buk_npl
      elif [ $domain = srockies ] ; then

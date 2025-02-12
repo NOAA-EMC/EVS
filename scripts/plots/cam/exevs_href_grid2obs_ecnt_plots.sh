@@ -265,7 +265,7 @@ for stats in  rmse_spread ; do
      elif [ $domain = appalachia ] ; then
 	 new_domain=buk_apl
      elif [ $domain = cplains  ] ; then
-         new_domain=buk_cpl_
+         new_domain=buk_cpl
      elif [ $domain = deepsouth  ] ; then	
          new_domain=buk_ds
      elif [ $domain = greatbasin ] ; then
@@ -291,7 +291,7 @@ for stats in  rmse_spread ; do
      elif [ $domain = southwest ] ; then
          new_domain=buk_sw	     
      elif [ $domain = splains ] ; then
-         new_domain=bukspl	     
+         new_domain=buk_spl	     
      elif [ $domain = nplains ] ; then
 	 new_domain=buk_npl
      elif [ $domain = srockies ] ; then
