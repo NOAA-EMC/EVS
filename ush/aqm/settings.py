@@ -1139,9 +1139,9 @@ class Reference():
                                       'long_name': 'Southwest',
                                       'save_name': 'buk_sw',
                                   },
-                                  'GMC': {
-                                      'long_name': 'Gulf of Mexico Coast',
-                                      'save_name': 'GMC',
+                                  'GAC': {
+                                      'long_name': 'Gulf of America Coast',
+                                      'save_name': 'GAC',
                                   },
                                   'DeepSouth': {
                                       'long_name': 'Deep South',
@@ -1792,7 +1792,7 @@ class Reference():
                                         + ' sratio'),
                     'interp': 'NEAREST, NBRHD_CIRCLE, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'G130', 'APL', 'GMC', 'GRB', 'LMV', 'MDW', 'NEC', 
+                        'CONUS', 'G130', 'APL', 'GAC', 'GRB', 'LMV', 'MDW', 'NEC', 
                         'NMT', 'NPL', 'NWC', 'SEC', 'SMT', 'SPL', 'SWC', 
                         'SWD', 'DAY1_1200_TSTM', 'DAY2_1730_TSTM'
                     ],
@@ -1841,7 +1841,7 @@ class Reference():
                                         + ' sratio'),
                     'interp': 'NEAREST, NBRHD_CIRCLE, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'G130', 'APL', 'GMC', 'GRB', 'LMV', 'MDW', 'NEC', 
+                        'CONUS', 'G130', 'APL', 'GAC', 'GRB', 'LMV', 'MDW', 'NEC', 
                         'NMT', 'NPL', 'NWC', 'SEC', 'SMT', 'SPL', 'SWC', 
                         'SWD', 'DAY1_1200_TSTM', 'DAY2_1730_TSTM'
                     ],
@@ -2507,7 +2507,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK', 'CONUS_East', 'CONUS_West',
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK', 'CONUS_East', 'CONUS_West',
                         'CONUS_Central', 'CONUS_South', 'Alaska', 'Hawaii', 'PuertoRico',
                         'Guam'
                     ],
@@ -2639,7 +2639,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK', 'CONUS_East', 'CONUS_West',
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK', 'CONUS_East', 'CONUS_West',
                         'CONUS_Central', 'CONUS_South', 'Alaska', 'Hawaii', 'PuertoRico',
                         'Guam'
                     ],
@@ -2662,7 +2662,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK','CONUS_East', 'CONUS_West',
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK','CONUS_East', 'CONUS_West',
                         'CONUS_Central', 'CONUS_South', 'Alaska', 'Hawaii', 'PuertoRico',
                         'Guam'
                     ],
@@ -2755,7 +2755,7 @@ class Reference():
                      'vx_mask_list' : [
                          'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC',
                          'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB',
-                         'LMV', 'GMC', 'APL', 'NAK', 'SAK',
+                         'LMV', 'GAC', 'APL', 'NAK', 'SAK',
                          'CONUS_East', 'CONUS_West', 'CONUS_South', 'CONUS_Central', 'Appalachia',
                          'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital', 'MidAtlantic',
                          'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW', 'PacificSW',
@@ -2789,7 +2789,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK',
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK',
                         'CONUS_East', 'CONUS_West', 'CONUS_South', 'CONUS_Central', 'Appalachia',
                         'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital', 'MidAtlantic',
                         'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW', 'PacificSW',
@@ -3154,7 +3154,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
                         'CONUS_South', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
