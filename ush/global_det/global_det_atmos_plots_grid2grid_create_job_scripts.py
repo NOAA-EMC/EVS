@@ -464,8 +464,8 @@ for snow_job in list(filter_stats_jobs_dict['snow'].keys()):
 #### sst
 for sst_job in list(filter_stats_jobs_dict['sst'].keys()):
     filter_stats_jobs_dict['sst'][sst_job]['grid'] = 'G004'
-    filter_stats_jobs_dict['sst'][sst_job]['fcst_var_dict']['threshs'] = ['NA']
-    filter_stats_jobs_dict['sst'][sst_job]['obs_var_dict']['threshs'] = ['NA']
+    filter_stats_jobs_dict['sst'][sst_job]['fcst_var_dict']['threshs'] = ['ge271.15&&']
+    filter_stats_jobs_dict['sst'][sst_job]['obs_var_dict']['threshs'] = ['ge271.15']
     filter_stats_jobs_dict['sst'][sst_job]['interps'] = ['NEAREST/1']
 if JOB_GROUP == 'filter_stats':
     JOB_GROUP_dict = filter_stats_jobs_dict
