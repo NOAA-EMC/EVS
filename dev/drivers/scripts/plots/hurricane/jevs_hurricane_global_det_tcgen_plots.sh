@@ -33,7 +33,7 @@ module load prod_envir/${prod_envir_ver}
 source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
-export PDY=20231231
+export PDY=20241231
 
 #Define the directories of your TC genesis stats files
 export COMINstats=/lfs/h2/emc/vpppg/noscrub/$USER/evs/${evs_ver_2d}/stats/${COMPONENT}/${RUN}/${VERIF_CASE}

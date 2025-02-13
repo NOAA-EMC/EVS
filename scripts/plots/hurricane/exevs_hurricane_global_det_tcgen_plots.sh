@@ -41,7 +41,7 @@ if [ ! -d ${OUTPUT} ]; then mkdir -p ${OUTPUT}; fi
 
 #--- plot the Hits/False Alarms Distribution
 cd ${OUTPUT}
-cp ${USHevs}/hurricane/plots/hits_${basin}.py .
+cp ${USHevs}/${COMPONENT}/hits_${basin}.py .
 cp ${COMINstats}/tc_gen_${YEAR}_genmpr_${basin}_${model}.txt tc_gen_${YEAR}_genmpr.txt 
 grep "00    FYOY" tc_gen_${YEAR}_genmpr.txt > tc_gen_hits.txt
 export hitfile="tc_gen_hits.txt"
