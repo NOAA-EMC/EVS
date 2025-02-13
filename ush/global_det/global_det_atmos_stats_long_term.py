@@ -222,10 +222,41 @@ def create_avg_time_range_stat_df(logger, time_range, model_info_dict,
             model_forecst_day_avg = gda_util.calculate_average(
                 logger, avg_method, line_type, stat, calc_avg_df
             )
+            if line_type == 'NBRCNT' and stat == 'FSS':
+                stat_file = os.path.join(
+                    output_dir, f"fcstgfs_apcpa24{var_thresh}_obs24hrccpa_"
+                    +f"apcpa24{var_thresh}_linetypenbrcnt_grid{grid.lower()}_"
+                    +f"vxmask{vx_mask.lower()}_"
+                    +f"interpnbrhd_square{interp_points}_"
+                    +f"valid{valid_dates[0]:%Y%m%d%H}0000to"
+                    +f"{valid_dates[-1]:%Y%m%d%H}0000_"
+                    +f"fhr{str(forecast_hour).zfill(3)}.stat"
+                )
+                agg_stat_file = stat_file.replace('.stat', '_agg.stat')
+                if os.path.exists(stat_file):
+                    stat_analysis_cmd_list = [
+                        'stat_analysis', '-lookin', stat_file,
+                        '-job', 'aggregate', '-line_type', 'NBRCNT',
+                        '-out', agg_stat_file
+                    ]
+                    gda_util.run_shell_command(stat_analysis_cmd_list)
+                    if os.path.exists(agg_stat_file):
+                        agg_stat_df = pd.read_csv(
+                            agg_stat_file, delimiter=" ",
+                            skipinitialspace=True, skiprows=1
+                        )
+                        if len(agg_stat_df['FSS'].values) == 1:
+                            model_forecst_day_avg = (
+                                agg_stat_df['FSS'].values[0]
+                            )
             if np.isnan(model_forecst_day_avg) \
                     or np.ma.is_masked(model_forecst_day_avg) \
                     or model_time_range_stat_nvalues < nvalues_time_range_min:
-                model_forecst_day_avg = 'NA'
+                if var_name == 'APCP' and \
+                        model_time_range_stat_nvalues < nvalues_time_range_min:
+                    model_forecst_day_avg = model_forecst_day_avg
+                else:
+                    model_forecst_day_avg = 'NA'
             else:
                 model_forecst_day_avg = str(round(model_forecst_day_avg,3))
             time_range_stat_df.loc[model][forecast_day_header] = (
@@ -639,9 +670,14 @@ for avg_time_range in avg_time_range_list:
                 valid_hour = loop2_info[0]
                 var_thresh = loop2_info[1]
                 if 'in' in var_thresh:
-                    var_thresh_mm = str(
-                        float(var_thresh.replace('in', ''))*25.4
-                    )+'mm'
+                    if var_thresh == '3in':
+                        var_thresh_mm = str(
+                            round(float(var_thresh.replace('in', ''))*25.4,1)
+                        )+'mm'
+                    else:
+                        var_thresh_mm = str(
+                            float(var_thresh.replace('in', ''))*25.4
+                        )+'mm'
                 else:
                     var_thresh_mm = var_thresh
                 logger.info(f"Working on valid hour {valid_hour} "
