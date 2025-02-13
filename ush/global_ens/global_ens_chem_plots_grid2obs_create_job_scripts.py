@@ -540,32 +540,19 @@ for verif_type in VERIF_CASE_STEP_type_list:
                              ['fcst_var_dict']['threshs']\
                              .index(plot_loop_info[1])]
                         )
-                    if job_env_dict['plot'] in ['stat_by_level',
-                                                'lead_by_level']:
-                        job_env_dict['vert_profile'] = plot_loop_info[2]
-                        job_env_dict['fcst_var_level_list'] = ', '.join(
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['fcst_var_dict']['levels']
-                        )
-                        job_env_dict['obs_var_level_list'] = ', '.join(
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['obs_var_dict']['levels']
-                        )
-                    else:
-                        job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
-                        job_env_dict['obs_var_level_list'] = (
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['obs_var_dict']['levels']\
-                            [verif_type_plot_jobs_dict[verif_type_job]\
-                             ['fcst_var_dict']['levels']\
-                             .index(plot_loop_info[2])]
-                        )
+                    job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
+                    job_env_dict['obs_var_level_list'] = (
+                        verif_type_plot_jobs_dict[verif_type_job]\
+                        ['obs_var_dict']['levels']\
+                        [verif_type_plot_jobs_dict[verif_type_job]\
+                        ['fcst_var_dict']['levels']\
+                        .index(plot_loop_info[2])]
+                    )
                     run_global_ens_chem_plots = ['plots']
                     if evs_run_mode == 'production' and \
                             verif_type in ['aeronet', 'airnow'] and \
                             job_env_dict['plot'] in \
-                            ['lead_average', 'lead_by_level',
-                             'lead_by_date']:
+                            ['lead_average']:
                         run_global_ens_chem_plots.append('plots_tof120')
                     for run_global_ens_chem_plot in run_global_ens_chem_plots:
                         # Set up output directories

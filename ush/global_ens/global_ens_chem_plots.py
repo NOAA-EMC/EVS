@@ -396,11 +396,11 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = ts_info[2][1][0]
             plot_info_dict['obs_var_level'] = ts_info[2][1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[2][1][2]
+            plot_info_dict['fig_name_label'] = fig_name_label
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
             )
-            plot_info_dict['fig_name_label'] = fig_name_label
             job_work_image_name = plot_specs.get_savefig_name(
                 job_work_dir, plot_info_dict, date_info_dict
             )
@@ -417,7 +417,7 @@ elif JOB_GROUP == 'make_plots':
                 check_job_image_name = job_DATA_image_name
                 job_input_dir = job_DATA_dir
             if init_hr in init_hrs \
-                    and not os.path.exists(check_job_image_name):
+                    and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" ):
                 make_ts = True
             else:
                 make_ts = False
@@ -465,7 +465,7 @@ elif JOB_GROUP == 'make_plots':
             else:
                 check_job_image_name = job_DATA_image_name
                 job_input_dir = job_DATA_dir
-            if not os.path.exists(check_job_image_name) \
+            if ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
                     and plot_info_dict['stat'] != 'FBAR_OBAR':
                 if len(date_info_dict['forecast_hours']) <= 1:
                     logger.warning("No span of forecast hours to plot, "
@@ -516,7 +516,7 @@ elif JOB_GROUP == 'make_plots':
             else:
                 check_job_image_name = job_DATA_image_name
                 job_input_dir = job_DATA_dir
-            if not os.path.exists(check_job_image_name) \
+            if ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
                     and plot_info_dict['stat'] != 'FBAR_OBAR':
                 if date_info_dict['valid_hr_start'] \
                         == date_info_dict['valid_hr_end']:
@@ -579,7 +579,7 @@ elif JOB_GROUP == 'make_plots':
                     check_job_image_name = job_DATA_image_name
                     job_input_dir = job_DATA_dir
                 if init_hr in init_hrs \
-                        and not os.path.exists(check_job_image_name) \
+                        and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
                         and plot_info_dict['stat'] != 'FBAR_OBAR':
                     if len(plot_info_dict['fcst_var_threshs']) <= 1:
                         logger.warning("No span of thresholds to plot, "
@@ -641,7 +641,7 @@ elif JOB_GROUP == 'make_plots':
                     check_job_image_name = job_DATA_image_name
                     job_input_dir = job_DATA_dir
                 if init_hr in init_hrs \
-                        and not os.path.exists(check_job_image_name) \
+                        and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
                         and plot_info_dict['stat'] == 'PERFDIAG':
                     make_pd = True
                 else:
@@ -674,7 +674,7 @@ elif JOB_GROUP == 'tar_images':
           .replace(os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                 'plot_output', f"{RUN}.{end_date}",
                                 f"{VERIF_CASE}_{VERIF_TYPE}",
-                                f"last{NDAYS}days/"), '')\
+                                f"{dir_name_label}/"), '')\
           .replace('/', '_')+'.tar')
     )
     job_COMOUT_tar_file = job_work_tar_file.replace(

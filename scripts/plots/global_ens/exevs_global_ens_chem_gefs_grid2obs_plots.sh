@@ -31,10 +31,25 @@ export modelid=${MODELNAME}${gefs_ver_id}
 ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
 export ObsType
 
-if [ "${ObsType}" == "aeronet" ]; then
-    varid="aod"
-elif [ "${ObsType}" == "airnow" ]; then
-    varid="pm25"
+IFS=' ' read -ra obstype_list <<< "${VERIF_CASE_STEP_abbrev_list}_type_list"
+IFS=' ' read -ra obsvar_list <<< "${VERIF_CASE_STEP_abbrev_list}_obsvar_list"
+let num_obstype=${#obstype_list[@]}
+if [ ${num_obstype} -lt 1 ]; then
+    echo "ERROR :: number of variable to be plotted is zero"
+    exit(99)
+fi
+
+varid="undefined"
+let iobstype=0
+while [ ${iobstype} -lt ${num_obstype} ]; do
+    if [ "${ObsType}" == "${obstype_list[${iobstype}]}" ]; then
+        export varid=${obsvar_list[${iobstype}]}
+    ((iobstype++))
+done
+
+if [ "${varid}" == "undefined" ]; then
+    echo "ERROR :: can not find observation index for variable ${ObsType}"
+    exit(88)
 fi
 
 # Bring in all stats files, and change into display name
@@ -56,7 +71,7 @@ while [ ${imdl} -lt ${num_mdl} ]; do
     echo ${idir}
     while [ ${NOW} -le ${VDATE_END} ]; do
         infile=evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${varid}.v${NOW}.stat
-        outfile=evs.stats.${MODELNAME}_${mdl_id}_${ObsType}.${RUN}.${VERIF_CASE}.v${NOW}.stat
+        outfile=${mdl_id}_${ObsType}${varid}.v${NOW}.stat
         if [ -s ${idir}/${MODELNAME}.${NOW}/${infile} ]; then
             cpreq ${idir}/${MODELNAME}.${NOW}/${infile} ${STATDIR}/${outfile}
         else

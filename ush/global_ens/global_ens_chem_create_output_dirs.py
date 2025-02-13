@@ -40,12 +40,13 @@ data_base_dir = os.path.join(DATA, VERIF_CASE_STEP, 'data')
 data_dir_list = [data_base_dir]
 for model in model_list:
     data_dir_list.append(os.path.join(data_base_dir, model))
-if VERIF_CASE_STEP == 'grid2grid_plots':
-    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-        if VERIF_CASE_STEP_type == 'viirs':
-            data_dir_list.append(os.path.join(data_base_dir, 'viirs'))
-        elif VERIF_CASE_STEP_type == 'abi':
-            data_dir_list.append(os.path.join(data_base_dir, 'abi'))
+
+# if VERIF_CASE_STEP == 'grid2grid_plots':
+#     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+#         if VERIF_CASE_STEP_type == 'viirs':
+#             data_dir_list.append(os.path.join(data_base_dir, 'viirs'))
+#         elif VERIF_CASE_STEP_type == 'abi':
+#             data_dir_list.append(os.path.join(data_base_dir, 'abi'))
 
 # Create data directories
 for data_dir in data_dir_list:
@@ -55,6 +56,10 @@ for data_dir in data_dir_list:
 if STEP == 'plots':
    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                    'plot_job_scripts')
+else:
+    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
+                                   'unknown_job_scripts')
+
 if not os.path.exists(job_scripts_dir):
     gda_util.make_dir(job_scripts_dir)
 
