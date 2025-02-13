@@ -309,15 +309,20 @@ for valid in 00z 12z ; do
         end=eq0.10000.png
 
 	if [ $var = 700mb_wind_ens_freq_ge15.4 ] ; then
-	  var_new='windspeed.ge.30kt.p700'
+	  var_new=windspeed_p700
+	  thresh=ge30
 	elif [ $var = 700mb_wind_ens_freq_ge20.58 ] ; then
-	  var_new='windspeed.ge.40kt.p700'
+	  var_new=windspeed_p700
+          thresh=ge40
 	elif [ $var = 850mb_wind_ens_freq_ge15.4 ] ; then
-	  var_new='windspeed.ge.30kt.p850'
+	  var_new=windspeed_p850
+	  thresh=ge30
         elif [ $var = 850mb_wind_ens_freq_ge20.58 ] ; then
-          var_new='windspeed.ge.40kt.p850'	
+          var_new=windspeed_p850	
+	  thresh=ge40
         elif [ $var = 850mb_tmp_ens_freq_lt273.15 ] ; then
-	  var_new='tmp.lt.0C.p850'
+	  var_new=tmp_p850
+	  thresh=lt0
           end=bss_smpl.png
 	fi
       else
@@ -336,11 +341,11 @@ for valid in 00z 12z ; do
 
 	 if [ $var = 850mb_tmp_ens_freq_lt273.15 ] ; then 
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${end} ] ; then
-	       mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${end}  evs.href.${stats}.${var_new}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
+	       mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${end}  evs.href.${stats}_${thresh}.${var_new}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
 	  fi
          else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end} ] ; then
-             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end}  evs.href.${stats}.${var_new}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
+             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end}  evs.href.${stats}_${thresh}.${var_new}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
           fi 
 	 fi
        else

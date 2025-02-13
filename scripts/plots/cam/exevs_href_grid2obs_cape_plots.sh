@@ -370,7 +370,7 @@ for score_type in lead_average threshold_average; do
    
           for thresh in ge250 ge500 ge1000 ge2000 ; do
 	   if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png ] ; then
-             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png evs.href.${stat}.${var}_${level}.${thresh}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
+             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png evs.href.${stat}_${thresh}.${var}_${level}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
            fi
           done
       else
