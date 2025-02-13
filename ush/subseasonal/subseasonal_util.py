@@ -2041,7 +2041,8 @@ def check_days6_10_model_files(job_dict):
                 else:
                     fhr_key_input_files_exist_list.append(False)
             elif job_dict['JOB_GROUP'] == 'reformat_data' \
-                    and job_dict['job_name'] == 'GenEnsProd':
+                    and job_dict['job_name'] in ['GenEnsProd',
+                                                 'Precip']:
                 if os.path.exists(fhr_fileN):
                     fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
@@ -2305,7 +2306,8 @@ def check_weeks3_4_model_files(job_dict):
                 else:
                     fhr_key_input_files_exist_list.append(False)
             elif job_dict['JOB_GROUP'] == 'reformat_data' \
-                    and job_dict['job_name'] == 'GenEnsProd':
+                    and job_dict['job_name'] in ['GenEnsProd',
+                                                 'Precip']:
                 if os.path.exists(fhr_fileN):
                     fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
