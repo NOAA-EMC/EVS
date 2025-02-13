@@ -43,7 +43,7 @@ for period in ${periods} ; do
                 regions="GLOBAL"
             elif [ $obsname = "NDBC" ]; then
                 OBTYPE="NDBC_STANDARD"
-                regions="GLOBAL SEUS_CARB GOM NEUS_CAN WCOAST_AK HAWAII"
+                regions="GLOBAL SEUS_CARB GOA NEUS_CAN WCOAST_AK HAWAII"
             fi
             obtypel=`echo $OBTYPE | tr '[A-Z]' '[a-z]'`
             for region in $regions; do
