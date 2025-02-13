@@ -117,7 +117,6 @@ now = datetime.datetime.now()
 logo_dir = os.path.join(FIXevs, 'logos')
 VERIF_CASE_STEP_dir = os.path.join(DATA, f"{VERIF_CASE}_{STEP}")
 stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
-stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
 logging_dir = os.path.join(job_work_dir, 'logs')
 gda_util.make_dir(logging_dir)
 

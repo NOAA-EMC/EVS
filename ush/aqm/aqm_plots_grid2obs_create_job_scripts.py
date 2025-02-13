@@ -22,13 +22,13 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
-## JOB_GROUP is in ( condense_stats filter_stats make_plots tar_images )
 JOB_GROUP = os.environ['JOB_GROUP']
 evs_run_mode = os.environ['evs_run_mode']
 machine = os.environ['machine']
@@ -944,26 +944,14 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                  ['fcst_var_dict']['threshs']\
                                  .index(plot_loop_info[1])]
                             )
-                        if job_env_dict['plot'] in ['stat_by_level',
-                                                    'lead_by_level']:
-                            job_env_dict['vert_profile'] = plot_loop_info[2]
-                            job_env_dict['fcst_var_level_list'] = ', '.join(
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['fcst_var_dict']['levels']
-                            )
-                            job_env_dict['obs_var_level_list'] = ', '.join(
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['levels']
-                            )
-                        else:
-                            job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
-                            job_env_dict['obs_var_level_list'] = (
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['levels']\
-                                [verif_type_plot_jobs_dict[verif_type_job]\
-                                 ['fcst_var_dict']['levels']\
-                                 .index(plot_loop_info[2])]
-                            )
+                        job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
+                        job_env_dict['obs_var_level_list'] = (
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['obs_var_dict']['levels']\
+                            [verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['levels']\
+                            .index(plot_loop_info[2])]
+                        )
                         run_aqm_plots = ['plots']
                         ##
                         ##  AQM do not need separate plot to cover portion of the fhr list
@@ -1014,7 +1002,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                 if name not in dont_write_env_var_list:
                                     job.write('export '+name+'="'+value+'"\n')
                             job.write('\n')
-                            if run_global_ens_chem_plot == 'plots_tof72':
+                            if run_aqm_plot == 'plots_tof72':
                                 fhrs_tof72= []
                                 for fhr in job_env_dict['fhr_list'].split(', '):
                                     if int(fhr) <= 72:
@@ -1078,26 +1066,14 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                  ['fcst_var_dict']['threshs']\
                                  .index(plot_loop_info[1])]
                             )
-                        if job_env_dict['plot'] in ['stat_by_level',
-                                                    'lead_by_level']:
-                            job_env_dict['vert_profile'] = plot_loop_info[2]
-                            job_env_dict['fcst_var_level_list'] = ', '.join(
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['fcst_var_dict']['levels']
-                            )
-                            job_env_dict['obs_var_level_list'] = ', '.join(
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['levels']
-                            )
-                        else:
-                            job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
-                            job_env_dict['obs_var_level_list'] = (
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['levels']\
-                                [verif_type_plot_jobs_dict[verif_type_job]\
-                                 ['fcst_var_dict']['levels']\
-                                 .index(plot_loop_info[2])]
-                            )
+                        job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
+                        job_env_dict['obs_var_level_list'] = (
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['obs_var_dict']['levels']\
+                            [verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['levels']\
+                            .index(plot_loop_info[2])]
+                        )
                         run_aqm_plots = ['plots']
                         ##
                         ##  AQM do not need separate plot to cover portion of the fhr list
@@ -1148,7 +1124,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                 if name not in dont_write_env_var_list:
                                     job.write('export '+name+'="'+value+'"\n')
                             job.write('\n')
-                            if run_global_ens_chem_plot == 'plots_tof72':
+                            if run_aqm_plot == 'plots_tof72':
                                 fhrs_tof72 = []
                                 for fhr in job_env_dict['fhr_list'].split(', '):
                                     if int(fhr) <= 72:
@@ -1208,7 +1184,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Write environment variables
-                job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
                     if name not in dont_write_env_var_list:
                         job.write('export '+name+'="'+value+'"\n')

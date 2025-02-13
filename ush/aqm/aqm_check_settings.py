@@ -95,7 +95,8 @@ else:
 ]
 evs_aqm_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
-    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM', 'restart_mode'
+    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM',
+    'model_evs_stats_dir_list', 'restart_mode', 'fig_name_label'
 ]
 evs_aqm_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
 evs_aqm_settings_dict['RUN_GRID2GRID_PLOTS'] = [
@@ -109,13 +110,15 @@ evs_aqm_settings_dict['RUN_GRID2OBS_PLOTS'] = [
 
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_PLOTS': {
-        'abiaod': ['init_hr_list', 'valid_hr_list'],
-        'viirsaod': ['init_hr_list', 'valid_hr_list']
+        'abiaod': ['init_hr_list', 'valid_hr_list', 'fhr_list'],
+        'viirsaod': ['init_hr_list', 'valid_hr_list', 'fhr_list']
     },
     'RUN_GRID2OBS_PLOTS': {
-        'ozone': ['init_hr_list', 'valid_hr_list'],
-        'pm25': ['init_hr_list', 'valid_hr_list'],
-        'aeronetaod': ['init_hr_list', 'valid_hr_list']
+        'ozone': ['init_hr_list', 'valid_hr_list', 'fhr_list'],
+        'pm25': ['init_hr_list', 'valid_hr_list', 'fhr_list'],
+        'ozmax8': ['init_hr_list', 'valid_hr_list', 'fhr_list'],
+        'pmave': ['init_hr_list', 'valid_hr_list', 'fhr_list'],
+        'aeronetaod': ['init_hr_list', 'valid_hr_list', 'fhr_list']
     }
 }
 
@@ -170,6 +173,7 @@ for verif_type in verif_type_list:
 
 # Do check for list variables lengths
 check_config_var_len_list = ['model_evs_data_dir_list',
+                             'model_evs_stats_dir_list',
                              'model_file_format_list']
 if STEP.upper() == 'PLOTS':
     check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
@@ -182,6 +186,8 @@ verif_case_step_check_len_dict = {
     'RUN_GRID2OBS_PLOTS': {
         'ozone': [],
         'pm25': [],
+        'ozmax8': [],
+        'pmave': [],
         'aeronetaod': []
     },
 }
