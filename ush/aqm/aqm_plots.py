@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_plots.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This is the driver script for creating plots.
 Run By: individual plotting job scripts generated through
@@ -307,13 +308,9 @@ elif JOB_GROUP == 'filter_stats':
             else:
                 plot_dates = valid_dates
             for model_num in list(model_info_dict.keys()):
-                model_num_name = (
-                    model_num+'/'+model_info_dict[model_num]['name']
-                    +'/'+model_info_dict[model_num]['plot_name']
-                )
                 model_dict = model_info_dict[model_num]
-                DATAjob_filter_stats_model_file = os.path.join(
-                    DATAjob,
+                job_work_filter_stats_model_file = os.path.join(
+                    job_work_dir,
                     ('fcst'+model_dict['name']+'_'
                      +plot_info_dict['fcst_var_name']
                      +plot_info_dict['fcst_var_level']
@@ -356,7 +353,7 @@ elif JOB_GROUP == 'filter_stats':
                     job_input_dir = job_DATA_dir
                 if not os.path.exists(check_job_filter_stats_model_file) or restart_mode != "YES":
                     all_model_df = gda_util.build_df(
-                        JOB_GROUP, logger, DATAjob, DATAjob,
+                        JOB_GROUP, logger, job_input_dir, job_work_dir,
                         model_info_dict, met_info_dict,
                         plot_info_dict['fcst_var_name'],
                         plot_info_dict['fcst_var_level'],
@@ -465,13 +462,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_level'] = ts_info[1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[1][2]
             plot_info_dict['fig_name_label'] = fig_name_label
-            ## does it take forecast_hour as a list?
-            ## Ans : it take single valid_hr_start and single forecast_hour to cal init_hr
-            ## init_hr = gda_util.get_init_hour(
-            ##     int(date_info_dict['valid_hr_start']),
-            ##     int(date_info_dict['forecast_hour'])
-            ## )
-            ## logger.info(f"init_hr = {init_hr}")
             init_in_init_hrs=False
             for ifhr in fhrs:
                 init_hr = gda_util.get_init_hour(
@@ -752,7 +742,6 @@ elif JOB_GROUP == 'make_plots':
             for l in range(len(fcst_var_level_list)):
                 plot_info_dict['fcst_var_level'] = fcst_var_level_list[l]
                 plot_info_dict['obs_var_level'] = obs_var_level_list[l]
-                plot_info_dict['fig_name_label'] = fig_name_label
                 job_work_image_name = plot_specs.get_savefig_name(
                     job_work_dir, plot_info_dict, date_info_dict
                 )
@@ -885,7 +874,7 @@ elif JOB_GROUP == 'make_plots':
                     check_job_image_name = job_DATA_image_name
                     job_input_dir = job_DATA_dir
                 if init_hr in init_hrs \
-                        and not os.path.exists(check_job_image_name) \
+                        and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
                         and plot_info_dict['stat'] != 'FBAR_OBAR':
                             make_sbl = True
                 else:
@@ -946,7 +935,7 @@ elif JOB_GROUP == 'make_plots':
                 else:
                     check_job_image_name = job_DATA_image_name
                     job_input_dir = job_DATA_dir
-                if not os.path.exists(check_job_image_name) \
+                if ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
                         and plot_info_dict['stat'] != 'FBAR_OBAR':
                     if len(date_info_dict['forecast_hours']) <= 1:
                         logger.warning("No span of forecast hours to plot, "
@@ -1025,20 +1014,16 @@ elif JOB_GROUP == 'make_plots':
                                                  met_info_dict, logo_dir)
             plot_psm.make_precip_spatial_map()
     elif plot == 'performance_diagram':
+        ## performance diagram is for daily values with threshold list
+        ## for day 1 day 2 day 3 FCST, each init should only have one
+        ## fcst hr for one valid hour, e.g., 04Z for OMAVE and 11Z for OZMAX8
+        ## It can use original global_det_setting as one fcst hr for one valid hr
         import aqm_plots_performance_diagram as gdap_pd
-        ## how to handle the dict for all valid hours all fcst hours?  remove the loops of pd_info?
-        ## as well delete nested-in space
         for pd_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(pd_info[0])
             date_info_dict['valid_hr_end'] = str(pd_info[0])
-            date_info_dict['valid_hr_inc'] = '1'
+            date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hour'] = str(pd_info[1])
-            ## how to handle the dict for all valid hours all fcst hours?  as below?
-            ## date_info_dict['valid_hr_start'] = valid_hr_start
-            ## date_info_dict['valid_hr_end'] = valid_hr_end
-            ## date_info_dict['valid_hr_inc'] = valid_hr_inc
-            ## date_info_dict['forecast_hours'] = fhrs
-            ##
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
@@ -1067,7 +1052,7 @@ elif JOB_GROUP == 'make_plots':
                     check_job_image_name = job_DATA_image_name
                     job_input_dir = job_DATA_dir
                 if init_hr in init_hrs \
-                        and not os.path.exists(check_job_image_name) \
+                        and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
                         and plot_info_dict['stat'] == 'PERFDIAG':
                     make_pd = True
                 else:
@@ -1100,7 +1085,7 @@ elif JOB_GROUP == 'tar_images':
           .replace(os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                 'plot_output', f"{RUN}.{end_date}",
                                 f"{VERIF_CASE}_{VERIF_TYPE}",
-                                f"last{NDAYS}days/"), '')\
+                                f"{dir_name_label}/"), '')\
           .replace('/', '_')+'.tar')
     )
     job_COMOUT_tar_file = job_work_tar_file.replace(

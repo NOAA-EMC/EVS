@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_plots_specs.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script defines plotting related settings.
 '''
@@ -599,8 +600,7 @@ class PlotSpecs:
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
                               +', valid: '+', '.join(title_other_hr_list))
         if plot_type not in ['lead_average', 'valid_hour_average',
-                             'lead_average_vhr_mean', 'valid_hour_average_fhr_mean',
-                             'lead_by_date', 'lead_by_level']:
+                             'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']:
             forecast_day_list = []
             for forecast_hour in forecast_hour_list:
                 forecast_day = int(forecast_hour)/24.
@@ -693,8 +693,7 @@ class PlotSpecs:
                               +', valid: '+', '.join(title_other_hr_list))
         if plot_type not in ['lead_average', 'valid_hour_average',
                              'valid_hour_average_fhr_mean',
-                             'time_series_fhr_mean', 'lead_average_vhr_mean',
-                             'lead_by_date', 'lead_by_level']:
+                             'time_series_fhr_mean', 'lead_average_vhr_mean']:
             forecast_day_list = []
             for forecast_hour in forecast_hour_list:
                 forecast_day = int(forecast_hour)/24.
@@ -726,11 +725,6 @@ class PlotSpecs:
                  plot_title - full plot title that will be
                               displayed on the plot
                               (string)
-        plot_title = (
-            self.get_stat_plot_name(plot_info_dict['stat'])+' - '
-            +plot_info_dict['grid']+'/'
-            +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
-        )
         """
         plot_title = (
             self.get_stat_plot_name(plot_info_dict['stat'])+' - '
@@ -766,12 +760,11 @@ class PlotSpecs:
                                 +int(date_info_dict['valid_hr_inc']),
                                 int(date_info_dict['valid_hr_inc']))
             ]
-        if self.plot_type in ['time_series', 'stat_by_level',
+        if self.plot_type in ['time_series', 
                               'performance_diagram', 'threshold_average']:
             hr_info_for_title = [date_info_dict['forecast_hours']]
-        elif self.plot_type in ['time_series_fhr_mean', 'valid_hour_average_fhr_mean' ]:
-            hr_info_for_title = selected_plot_hours
-        elif self.plot_type in [ 'lead_average_vhr_mean' ]:
+        elif self.plot_type in ['time_series_fhr_mean', 'valid_hour_average_fhr_mean',
+                                'lead_average_vhr_mean' ]:
             hr_info_for_title = selected_plot_hours
         else:
             hr_info_for_title = date_info_dict['forecast_hours']
@@ -780,10 +773,7 @@ class PlotSpecs:
                                   +'_'+plot_info_dict['interp_method'])
         else:
             var_name_for_title = plot_info_dict['fcst_var_name']
-        if self.plot_type in ['stat_by_level', 'lead_by_level']:
-            var_level_for_title = plot_info_dict['vert_profile']
-        else:
-            var_level_for_title = plot_info_dict['fcst_var_level']
+        var_level_for_title = plot_info_dict['fcst_var_level']
         if self.plot_type in ['performance_diagram', 'threshold_average']:
             var_thresh_for_title = 'NA'
         else:
@@ -905,10 +895,8 @@ class PlotSpecs:
                                 +int(date_info_dict['valid_hr_inc']),
                                 int(date_info_dict['valid_hr_inc']))
             ]
-        if self.plot_type in ['time_series', 'stat_by_level',
+        if self.plot_type in ['time_series',
                               'performance_diagram', 'threshold_average']:
-            fhr_for_title = [date_info_dict['forecast_hours']]
-        elif self.plot_type in ['time_series_fhr_mean', 'lead_average_vhr_mean' ]:
             fhr_for_title = [date_info_dict['forecast_hours']]
         else:
             fhr_for_title = date_info_dict['forecast_hours']
@@ -917,10 +905,7 @@ class PlotSpecs:
                                   +'_'+plot_info_dict['interp_method'])
         else:
             var_name_for_title = plot_info_dict['fcst_var_name']
-        if self.plot_type in ['stat_by_level', 'lead_by_level']:
-            var_level_for_title = plot_info_dict['vert_profile']
-        else:
-            var_level_for_title = plot_info_dict['fcst_var_level']
+        var_level_for_title = plot_info_dict['fcst_var_level']
         if self.plot_type in ['performance_diagram', 'threshold_average']:
             var_thresh_for_title = 'NA'
         else:
@@ -935,14 +920,6 @@ class PlotSpecs:
         if plot_info_dict['fcst_var_name'] == 'ICEEX_DAILYAVG' \
                 and units == '10^6_km^2':
             units = 'x'+units.replace('_', ' ')
-        elif plot_info_dict['fcst_var_name'] \
-                in ['UGRD', 'VGRD', 'UGRD_VGRD', 'WNDSHR', 'GUST']:
-            units = 'kt'
-        elif plot_info_dict['fcst_var_name'] \
-                in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG', 'SST_DAILYAVG',
-                    'TSOIL'] \
-                and plot_info_dict['fcst_var_level'] in ['Z0', 'Z2', 'Z0.1-0']:
-            units = 'F'
         elif plot_info_dict['fcst_var_name'] == 'AOTK':
             units = 'unitless'
         elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
@@ -1056,14 +1033,8 @@ class PlotSpecs:
             plot_type_savefig_name = 'fhrmean'
         elif self.plot_type == 'lead_average_vhr_mean':
             plot_type_savefig_name = 'fhrmean'
-        elif self.plot_type == 'lead_by_date':
-            plot_type_savefig_name = 'leaddate'
-        elif self.plot_type == 'lead_by_level':
-            plot_type_savefig_name = 'vertprof_fhrmean'
         elif self.plot_type == 'performance_diagram':
             plot_type_savefig_name = 'perfdiag'
-        elif self.plot_type == 'stat_by_level':
-            plot_type_savefig_name = 'vertprof'
         elif self.plot_type == 'threshold_average':
             plot_type_savefig_name = 'threshmean'
         elif self.plot_type == 'valid_hour_average':
@@ -1073,8 +1044,7 @@ class PlotSpecs:
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')
         if self.plot_type in ['time_series', 'time_series_multifhr',
-                              'lead_average', 'stat_by_level', 'lead_by_level',
-                              'lead_by_date', 'performance_diagram',
+                              'lead_average', 'performance_diagram',
                               'threshold_average']:
             plot_type_savefig_name = plot_type_savefig_name+'_valid'
             valid_hr = int(date_info_dict['valid_hr_start'])
@@ -1100,8 +1070,7 @@ class PlotSpecs:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'+init_hr_savefig_name
             )
-        if self.plot_type in ['time_series',
-                              'stat_by_level', 'performance_diagram',
+        if self.plot_type in ['time_series', 'performance_diagram',
                               'threshold_average']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
@@ -1113,8 +1082,7 @@ class PlotSpecs:
                  +''.join(['f'+f.zfill(3) for \
                             f in date_info_dict['forecast_hours']])
             )
-        elif self.plot_type in ['lead_average', 'lead_by_level',
-                                'lead_by_date']:
+        elif self.plot_type in ['lead_average']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)

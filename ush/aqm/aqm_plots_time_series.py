@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_plots_time_series.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a time series plot.
           (x-axis: dates; y-axis: statistics value)

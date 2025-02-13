@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_plots_production_tof72.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This is the driver script for creating plots.
           It is only used in production to generate plots to

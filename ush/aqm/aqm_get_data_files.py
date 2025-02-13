@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_get_data_files.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This gets the necessary data files for verification.
 Run By: scripts/plots/aqm/exevs_aqm_grid2obs_plots.sh

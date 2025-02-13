@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_plots_threshold_average.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a threshold average plot.
           (x-axis: threshold value; y-axis: statistics value)
