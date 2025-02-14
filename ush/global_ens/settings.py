@@ -831,6 +831,7 @@ class Reference():
         to this dictionary.  Add keys and values, not forgetting to include
         a comma at the end of any new lines.
         '''
+<<<<<<< HEAD
         self.domain_translator = {'NHX': {
                                       'long_name': 'Northern Hemisphere 20N-80N',
                                       'save_name': 'NHX',
@@ -1192,6 +1193,79 @@ class Reference():
                                       'save_name': 'SEA_ICE_FREE_POLAR',
                                   },
         }
+=======
+        self.domain_translator = {'NHX': 'Northern Hemisphere 20N-80N',
+                                  'SHX': 'Southern Hemisphere 20S-80S',
+                                  'TRO': 'Tropics 20S-20N',
+                                  'PNA': 'Pacific North America',
+                                  'N60': '60N-90N',
+                                  'S60': '60S-90S',
+                                  'North_Pacific': 'Northern Pacific Ocean',
+                                  'NPO': 'Northern Pacific Ocean',
+                                  'South_Pacific': 'Southern Pacific Ocean',
+                                  'SPO': 'Southern Pacific Ocean',
+                                  'Equatorial_Pacific': 'Equatorial Pacific Ocean',
+                                  'North_Atlantic': 'Northern Atlantic Ocean',
+                                  'NAO': 'Northern Atlantic Ocean',
+                                  'South_Atlantic': 'Southern Atlantic Ocean',
+                                  'SAO': 'Southern Atlantic Ocean',
+                                  'Equatorial_Atlantic': 'Equatorial Atlantic Ocean',
+                                  'Indian': 'Indian Ocean',
+                                  'Southern': 'Southern Ocean',
+                                  'Mediterranean': 'Mediterranean Sea',
+                                  'NH': 'Northern Hemisphere 20N-90N',
+                                  'SH': 'Southern Hemisphere 20S-90S',
+                                  'AR2': 'AR2',
+                                  'ASIA': 'Asia',
+                                  'AUNZ': 'Australia and New Zealand',
+                                  'NAMR': 'North America',
+                                  'NHM': 'Northern Hemisphere',
+                                  'NPCF': 'North Pacific Ocean',
+                                  'SHM': 'Southern Hemisphere',
+                                  'TRP': 'TRP',
+                                  'G002': 'Global',
+                                  'G003': 'Global',
+                                  'Global': 'Global',
+                                  'FULL': 'Global, 0p25',
+                                  'G130': 'CONUS - NCEP Grid 130',
+                                  'G211': 'CONUS - NCEP Grid 211',
+                                  'G221': 'CONUS - NCEP Grid 221',
+                                  'G236': 'CONUS - NCEP Grid 236',
+                                  'G223': 'CONUS - NCEP Grid 223',
+                                  'CONUS': 'CONUS',
+                                  'POLAR': 'Polar 60-90 N/S',
+                                  'ARCTIC': 'Arctic',
+                                  'Arctic': 'Arctic Ocean',
+                                  'Antarctic': 'Antarctic Ocean',
+                                  'EAST': 'Eastern US',
+                                  'CONUS_East': 'Eastern US',
+                                  'WEST': 'Western US',
+                                  'CONUS_West': 'Western US',
+                                  'CONUS_Central': 'Central US',
+                                  'CONUS_South': 'Southern US',
+                                  'NWC': 'Northwest Coast',
+                                  'SWC': 'Southwest Coast',
+                                  'NMT': 'Northern Mountain Region',
+                                  'GRB': 'Great Basin',
+                                  'SMT': 'Southern Mountain Region',
+                                  'SWD': 'Southwest Desert',
+                                  'NPL': 'Northern Plains',
+                                  'SPL': 'Southern Plains',
+                                  'MDW': 'Midwest',
+                                  'LMV': 'Lower Mississippi Valley',
+                                  'APL': 'Appalachians',
+                                  'NEC': 'Northeast Coast',
+                                  'SEC': 'Southeast Coast',
+                                  'GAC': 'Gulf of America Coast',
+                                  'Alaska': 'Alaska',
+                                  'NAK': 'Northern Alaska',
+                                  'SAK': 'Southern Alaska',
+                                  'SEA_ICE': 'Global - Sea Ice',
+                                  'SEA_ICE_FREE': 'Global - Sea Ice Free',
+                                  'SEA_ICE_POLAR': 'Polar - Sea Ice',
+                                  'SEA_ICE_FREE_POLAR': ('Polar - Sea Ice'
+                                                         + ' Free')}
+>>>>>>> develop
         self.linetype_cols = {'FHO':['TOTAL','F_RATE','H_RATE','O_RATE'],
                               'CTC':['TOTAL','FY_OY','FY_ON','FN_OY','FN_ON'],
                               'CTS':['TOTAL','BASER','BASER_NCL','BASER_NCU',
@@ -2507,9 +2581,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GAC', 'APL', 'NAK', 'SAK', 'CONUS_East', 'CONUS_West',
-                        'CONUS_Central', 'CONUS_South', 'Alaska', 'Hawaii', 'PuertoRico',
-                        'Guam'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'TMP2m': {'fcst_var_names': ['TMP'],
@@ -2639,9 +2711,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GAC', 'APL', 'NAK', 'SAK', 'CONUS_East', 'CONUS_West',
-                        'CONUS_Central', 'CONUS_South', 'Alaska', 'Hawaii', 'PuertoRico',
-                        'Guam'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'UGRD_VGRD10m': {'fcst_var_names': ['UGRD_VGRD'],
@@ -2662,9 +2732,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GAC', 'APL', 'NAK', 'SAK','CONUS_East', 'CONUS_West',
-                        'CONUS_Central', 'CONUS_South', 'Alaska', 'Hawaii', 'PuertoRico',
-                        'Guam'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                          'RH2m': {'fcst_var_names': ['RH'],
@@ -2789,11 +2857,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GAC', 'APL', 'NAK', 'SAK',
-                        'CONUS_East', 'CONUS_West', 'CONUS_South', 'CONUS_Central', 'Appalachia',
-                        'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital', 'MidAtlantic',
-                        'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW', 'PacificSW',
-                        'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'OZCON1': {'fcst_var_names': ['OZCON1'],
@@ -3019,7 +3083,9 @@ class Reference():
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
-                        'CONUS_South', 
+                        'CONUS_South', 'Alaska', 'G130', 'G214', 'WEST', 'EAST', 
+                        'MDW', 'NPL', 'SPL', 'NEC', 'SEC', 'NWC', 'SWC', 'NMT', 
+                        'SMT', 'SWD', 'GRB', 'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
@@ -3155,6 +3221,7 @@ class Reference():
                         'CONUS_South', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
                         'LMV', 'GAC', 'APL', 'NAK', 'SAK'
+<<<<<<< HEAD
                     ],
                     'var_dict': {
                         'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
@@ -3388,6 +3455,8 @@ class Reference():
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
                         'Alaska'
+=======
+>>>>>>> develop
                     ],
                     'var_dict': {
                         'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
