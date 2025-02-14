@@ -138,7 +138,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
 
          Returns:
              time_info - list of dictionaries with the valid,
-                         initalization, and forecast hour
+                         initialization, and forecast hour
                          pairings
     """
     valid_hr_zfill2_list = [hr.zfill(2) for hr in valid_hr_list]
@@ -751,7 +751,7 @@ def check_plot_files(job_dict):
     return plot_files_exist
 
 
-def initalize_job_env_dict(verif_type, group,
+def initialize_job_env_dict(verif_type, group,
                            verif_case_step_abbrev_type, job):
     """! This initializes a dictionary of environment variables and their
          values to be set for the job pulling from environment variables
@@ -796,6 +796,7 @@ def initalize_job_env_dict(verif_type, group,
     job_env_dict['VERIF_TYPE'] = verif_type
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
+    job_env_dict['fig_name_label'] = os.environ['fig_name_label']
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'filter_stats', 'make_plots']:
         if verif_case_step_abbrev_type+'_fhr_list' in list(os.environ.keys()):
@@ -923,7 +924,7 @@ def get_plot_dates(logger, date_type, start_date, end_date,
              forecast_hour  - forecast hour (string)
          Returns:
              valid_dates - array of valid dates (datetime)
-             init_dates  - array of initalization dates (datetime)
+             init_dates  - array of initialization dates (datetime)
     """
     # Build date_type date array
     if date_type == 'VALID':
@@ -1110,7 +1111,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     dir_step = plot_job_env_dict['STEP'].lower()
     dir_verif_case = plot_job_env_dict['VERIF_CASE'].lower()
     dir_verif_type = plot_job_env_dict['VERIF_TYPE'].lower()
-    dir_ndays = ('last'+plot_job_env_dict['NDAYS']+'days').lower()
+    dir_name_label = plot_job_env_dict['fig_name_label'].lower()
     dir_line_type = plot_job_env_dict['line_type'].lower()
     dir_parameter = plot_job_env_dict['fcst_var_name'].lower()
     if job_group == 'make_plots':
@@ -1131,7 +1132,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
             'job_work_dir', job_group, f"{plot_job_env_dict['job_id']}",
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
-            dir_ndays, dir_line_type,
+            dir_name_label, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region
         )
@@ -1142,7 +1143,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
             'job_work_dir', job_group, f"{plot_job_env_dict['job_id']}",
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
-            dir_ndays, dir_line_type,
+            dir_name_label, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region, dir_stat
         )
