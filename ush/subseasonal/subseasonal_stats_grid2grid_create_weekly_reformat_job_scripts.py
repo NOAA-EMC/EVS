@@ -90,10 +90,15 @@ reformat_data_gefs_jobs_dict = {
     },
     'precip': {
         'Precip': {'env': {'var1_name': 'APCP',
-                           'var1_levels': 'A06'},
+                           'var1_levels': 'A06',
+                           'accum': '168'},
                    'commands': [sub_util.metplus_command(
                                     'GenEnsProd_fcstSUBSEASONAL_'
                                     +'WeeklyNetCDF.conf'
+                                ),
+                                sub_util.metplus_command(
+                                    'PCPCombine_fcstSUBSEASONAL_'
+                                    +'Weeklyprecip.conf'
                                 )]},
     },
     'temp': {},
@@ -124,10 +129,15 @@ reformat_data_cfs_jobs_dict = {
     },
     'precip': {
         'Precip': {'env': {'var1_name': 'APCP',
-                           'var1_levels': 'A06'},
+                           'var1_levels': 'A06',
+                           'accum': '168'},
                    'commands': [sub_util.metplus_command(
                                     'GenEnsProd_fcstCFS_'
                                     +'WeeklyNetCDF.conf'
+                                ),
+                                sub_util.metplus_command(
+                                    'PCPCombine_fcstSUBSEASONAL_'
+                                    +'Weeklyprecip.conf'
                                 )]},
     },
     'temp': {},
