@@ -1141,7 +1141,7 @@ class Reference():
                                   },
                                   'GAC': {
                                       'long_name': 'Gulf of America Coast',
-                                      'save_name': 'GMA',
+                                      'save_name': 'GAC',
                                   },
                                   'DeepSouth': {
                                       'long_name': 'Deep South',
