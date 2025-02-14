@@ -826,7 +826,7 @@ class Reference():
                                   'APL': 'Appalachians',
                                   'NEC': 'Northeast Coast',
                                   'SEC': 'Southeast Coast',
-                                  'GMC': 'Gulf of Mexico Coast',
+                                  'GAC': 'Gulf of America Coast',
                                   'Alaska': 'Alaska',
                                   'NAK': 'Northern Alaska',
                                   'SAK': 'Southern Alaska',
@@ -1435,7 +1435,7 @@ class Reference():
                                         + ' sratio'),
                     'interp': 'NEAREST, NBRHD_CIRCLE, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'G130', 'APL', 'GMC', 'GRB', 'LMV', 'MDW', 'NEC', 
+                        'CONUS', 'G130', 'APL', 'GAC', 'GRB', 'LMV', 'MDW', 'NEC', 
                         'NMT', 'NPL', 'NWC', 'SEC', 'SMT', 'SPL', 'SWC', 
                         'SWD', 'DAY1_1200_TSTM', 'DAY2_1730_TSTM'
                     ],
@@ -1484,7 +1484,7 @@ class Reference():
                                         + ' sratio'),
                     'interp': 'NEAREST, NBRHD_CIRCLE, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'G130', 'APL', 'GMC', 'GRB', 'LMV', 'MDW', 'NEC', 
+                        'CONUS', 'G130', 'APL', 'GAC', 'GRB', 'LMV', 'MDW', 'NEC', 
                         'NMT', 'NPL', 'NWC', 'SEC', 'SMT', 'SPL', 'SWC', 
                         'SWD', 'DAY1_1200_TSTM', 'DAY2_1730_TSTM'
                     ],
@@ -1646,7 +1646,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'TMP2m': {'fcst_var_names': ['TMP'],
@@ -1767,7 +1767,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'UGRD_VGRD10m': {'fcst_var_names': ['UGRD_VGRD'],
@@ -1788,7 +1788,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                          'RH2m': {'fcst_var_names': ['RH'],
@@ -1872,7 +1872,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'OZCON1': {'fcst_var_names': ['OZCON1'],
@@ -2074,7 +2074,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
                         'CONUS_South', 'Alaska', 'G130', 'G214', 'WEST', 'EAST', 
                         'MDW', 'NPL', 'SPL', 'NEC', 'SEC', 'NWC', 'SWC', 'NMT', 
-                        'SMT', 'SWD', 'GRB', 'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'SMT', 'SWD', 'GRB', 'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
@@ -2123,7 +2123,7 @@ class Reference():
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
                         'CONUS_South', 'Alaska', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
                         'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
@@ -2304,7 +2304,7 @@ class Reference():
                 'SL1L2': {
                     'plot_stats_list': ('me, esd, rmse, bcrmse, pcor, si, fbar, obar'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL','GOM','GLOBAL'],
+                    'vx_mask_list' : ['FULL','GOA','GLOBAL'],
                     'var_dict': {
                         'HTSGW': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
@@ -2375,7 +2375,7 @@ class Reference():
                     'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL','GLOBAL','GOM'],
+                    'vx_mask_list' : ['FULL','GLOBAL','GOA'],
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
@@ -2472,7 +2472,7 @@ class Reference():
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL','GLOBAL','GOM'],
+                    'vx_mask_list' : ['FULL','GLOBAL','GOA'],
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
