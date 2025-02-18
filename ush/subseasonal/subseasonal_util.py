@@ -1462,6 +1462,11 @@ def check_weekly_model_files(job_dict):
         job_dict['DATE']+job_dict['valid_hr_start'],
         '%Y%m%d%H'
     )
+    if job_dict['VERIF_TYPE'] == 'precip' and job_dict['WEEK'] == 'Week5':
+        valid_date_dt = datetime.datetime.strptime(
+            job_dict['PEDATE']+job_dict['valid_hr_start'],
+            '%Y%m%d%H'
+        )
     init_date_dt = datetime.datetime.strptime(
         job_dict['CORRECT_INIT_DATE']+job_dict['init_hr_start'],
         '%Y%m%d%H'
@@ -1511,11 +1516,23 @@ def check_weekly_model_files(job_dict):
                                 job_dict['job_num_work_dir'],
                                 job_dict['RUN']+'.'+job_dict['DATE'],
                                 job_dict['MODEL'], job_dict['VERIF_CASE'],
-                                'gen_ens_prod_'+job_dict['VERIF_TYPE']+'_'
-                                +'Precip_FHR{lead?fmt=%3H}'
-                                +'_{valid?fmt=%Y%m%d}'
-                                +'_{valid?fmt=%H}0000V_ens.nc'
+                                'weekly_pcp_combine_'
+                                +job_dict['VERIF_TYPE']+'_'
+                                +'Precip_init{init?fmt=%Y%m%d%H}'
+                                +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
+                                +'to{valid?fmt=%Y%m%d%H}.nc'
                             )
+                            if job_dict['WEEK'] == 'Week5':
+                                output_JOB_file_format = os.path.join(
+                                    job_dict['job_num_work_dir'],
+                                    job_dict['RUN']+'.'+job_dict['DATE'],
+                                    job_dict['MODEL'], job_dict['VERIF_CASE'],
+                                    'weekly_pcp_combine_'
+                                    +job_dict['VERIF_TYPE']+'_'
+                                    +'Precip_init{init?fmt=%Y%m%d%H}'
+                                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-144}'
+                                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                                )
                         else:
                             output_JOB_file_format = os.path.join(
                                 job_dict['job_num_work_dir'],

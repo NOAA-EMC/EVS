@@ -90,8 +90,7 @@ reformat_data_gefs_jobs_dict = {
     },
     'precip': {
         'Precip': {'env': {'var1_name': 'APCP',
-                           'var1_levels': 'A06',
-                           'accum': '168'},
+                           'var1_levels': 'A06'},
                    'commands': [sub_util.metplus_command(
                                     'GenEnsProd_fcstSUBSEASONAL_'
                                     +'WeeklyNetCDF.conf'
@@ -129,8 +128,7 @@ reformat_data_cfs_jobs_dict = {
     },
     'precip': {
         'Precip': {'env': {'var1_name': 'APCP',
-                           'var1_levels': 'A06',
-                           'accum': '168'},
+                           'var1_levels': 'A06'},
                    'commands': [sub_util.metplus_command(
                                     'GenEnsProd_fcstCFS_'
                                     +'WeeklyNetCDF.conf'
@@ -261,9 +259,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 sdate_dt = date_dt - datetime.timedelta(days=7)
                 job_env_dict['WEEKLYSTART'] = sdate_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
-                if verif_type == 'precip' and WEEK == 'Week5':
-                    pedate_dt = date_dt - datetime.timedelta(days=1)
-                    job_env_dict['Week5DATE'] = pedate_dt.strftime('%Y%m%d')
+                if verif_type == 'precip':
+                    job_env_dict['PEDATE'] = date_dt.strftime('%Y%m%d')
+                    job_env_dict['accum'] = '168'
+                    if WEEK == 'Week5':
+                        pedate_dt = date_dt - datetime.timedelta(days=1)
+                        job_env_dict['PEDATE'] = pedate_dt.strftime('%Y%m%d')
+                        job_env_dict['accum'] = '144'
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
                 for model_idx in range(len(model_list)):
