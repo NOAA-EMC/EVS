@@ -87,8 +87,8 @@ diff_seconds=$(expr ${end_date_seconds} - ${start_date_seconds})
 diff_days=$(expr ${diff_seconds} \/ 86400)
 total_days=$(expr ${diff_days} + 1)
 if [ "${NDAYS}" != ${total_days}" ]; then
-	echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation"
-	exit
+    echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation"
+    exit
 fi
 
 # Check user's config settings

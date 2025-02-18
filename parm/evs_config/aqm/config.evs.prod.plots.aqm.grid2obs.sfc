@@ -31,9 +31,8 @@ export RUN_GRID2OBS_PLOTS="YES"
 #model_evs_data_dir_list:    base path to "evs_data" directory
 #model_file_format_list:     file format of model files
 export model_list="aqmv708_raw aqmv708_bc"
-export model_evs_data_dir_list="${COMIN}/stats/${COMPONENT}/aqm ${COMIN}/stats/${COMPONENT}/aqm"
-export model_evs_data_dir_list="${STATDIR}"
-export model_evs_stats_dir_list="${COMIN}/stats/${COMPONENT}"
+export model_evs_data_dir_list="${STATDIR} ${STATDIR}"
+export model_evs_stats_dir_list="${COMIN}/stats/${COMPONENT} ${COMIN}/stats/${COMPONENT}"
 export model_file_format_list="${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.awpozcon.f{lead?fmt=%3H}.793.grib2 ${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.awpozcon_bc.f{lead?fmt=%3H}.793.grib2"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
