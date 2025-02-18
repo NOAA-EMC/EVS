@@ -72,7 +72,7 @@ while [ ${imdl} -lt ${num_mdl} ]; do
     echo ${idir}
     while [ ${NOW} -le ${VDATE_END} ]; do
         infile=evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${varid}.v${NOW}.stat
-        outfile=${mdl_id}_${ObsType}${varid}.v${NOW}.stat
+        outfile=${MODELNAME}${mdl_id}.${ObsType}${varid}.v${NOW}.stat
         if [ -s ${idir}/${MODELNAME}.${NOW}/${infile} ]; then
             cpreq ${idir}/${MODELNAME}.${NOW}/${infile} ${STATDIR}/${outfile}
         else

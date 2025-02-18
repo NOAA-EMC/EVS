@@ -304,7 +304,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
     verif_type_plot_jobs_dict = JOB_GROUP_dict[verif_type]
     for verif_type_job in list(verif_type_plot_jobs_dict.keys()):
         # Initialize job environment dictionary
-        job_env_dict = gda_util.initalize_job_env_dict(
+        job_env_dict = gda_util.initialize_job_env_dict(
             verif_type, JOB_GROUP,
             VERIF_CASE_STEP_abbrev_type, verif_type_job
         )

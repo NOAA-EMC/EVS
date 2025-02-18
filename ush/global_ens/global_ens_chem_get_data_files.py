@@ -32,6 +32,8 @@ end_date = os.environ['end_date']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
+VERIF_CASE_STEP_obsvar_list = (os.environ[VERIF_CASE_STEP_abbrev+'_obsvar_list'] \
+                             .split(' '))
 USER = os.environ['USER']
 evs_run_mode = os.environ['evs_run_mode']
 
