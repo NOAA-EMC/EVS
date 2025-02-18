@@ -8,7 +8,7 @@ Run By: scripts/stats/global_det/exevs_global_det_atmos_grid2grid_stats.sh
 
 import os
 import glob
-import global_det_atmos_util as gda_util
+import mesoscale_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
 

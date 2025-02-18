@@ -806,7 +806,7 @@ def precip_check_obs_input_output_files(job_dict):
             n = 1
             while n <= nccpa_files:
                 nccpa_file = os.path.join(
-                    job_dict['DATA'], 'data', 'ccpa', 
+                    job_dict['DATA'], job_dict['VERIF_CASE'], 'data', 'ccpa', 
                     f"ccpa.accum{job_dict['ccpa_file_accum'].zfill(2)}hr.v"
                     +(valid_date_dt
                       -td(hours=(n-1)
@@ -913,7 +913,7 @@ def precip_check_model_input_output_files(job_dict):
                         str(int(job_dict['fcst_hour'])
                             - int(job_dict['accum']))]:
                 input_files_list.append(
-                    os.path.join(job_dict['DATA'], 'data',
+                    os.path.join(job_dict['DATA'], job_dict['VERIF_CASE'], 'data',
                                  job_dict['MODELNAME'],
                                  f"{job_dict['MODELNAME']}."
                                  +f"{job_dict['area']}."
@@ -925,7 +925,7 @@ def precip_check_model_input_output_files(job_dict):
             n = 1 
             while n <= naccum_files:
                 naccum_file = os.path.join(
-                    job_dict['DATA'], 'data', job_dict['MODELNAME'],
+                    job_dict['DATA'], job_dict['VERIF_CASE'], 'data', job_dict['MODELNAME'],
                     f"{job_dict['MODELNAME']}.{job_dict['area']}."
                     +f"init{init_date_dt:%Y%m%d%H}.f"
                     +str(int(job_dict['fcst_hour'])
@@ -946,6 +946,7 @@ def precip_check_model_input_output_files(job_dict):
         )
     input_files_exist_list = []
     for input_file in input_files_list:
+        print(input_file, check_file(input_file))
         if check_file(input_file):
             input_files_exist_list.append(True)
         else:
@@ -971,7 +972,7 @@ def precip_check_model_input_output_files(job_dict):
                          file_name)
         )
         DATA_files_list.append(
-            os.path.join(job_dict['DATA'],
+            os.path.join(job_dict['job_num_work_dir'],
                          f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
                          job_dict['MODELNAME'], job_dict['VERIF_CASE'],
                          file_name)
@@ -987,13 +988,14 @@ def precip_check_model_input_output_files(job_dict):
                          file_name)
         )
         DATA_files_list.append(
-            os.path.join(job_dict['DATA'],
+            os.path.join(job_dict['job_num_work_dir'],
                          f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
                          job_dict['MODELNAME'], job_dict['VERIF_CASE'],
                          file_name)
         )
     COMOUT_files_exist_list = []
     for COMOUT_file in COMOUT_files_list:
+        print(COMOUT_file, check_file(COMOUT_file))
         if check_file(COMOUT_file):
             COMOUT_files_exist_list.append(True)
         else:

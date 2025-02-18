@@ -28,6 +28,7 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
+VERIF_CASE = os.environ['VERIF_CASE']
 USER = os.environ['USER']
 jobid = os.environ['jobid']
 SENDMAIL = os.environ['SENDMAIL']
@@ -47,7 +48,7 @@ for VHOUR in VHOUR_LIST:
         accum_start_dt = accum_end_dt - datetime.timedelta(hours=int(accum))
         valid_dt = accum_end_dt
         # MODEL
-        DATAmodel = os.path.join(DATA, 'data', MODELNAME)
+        DATAmodel = os.path.join(DATA, VERIF_CASE, 'data', MODELNAME)
         if not os.path.exists(DATAmodel):
             os.makedirs(DATAmodel)
             print(f"Making directory {DATAmodel}")
