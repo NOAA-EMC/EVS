@@ -78,7 +78,7 @@ while [ ${imdl} -lt ${num_mdl} ]; do
         else
             echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${infile}"
         fi
-        date=${NOW}"00"
+        cdate=${NOW}"00"
         NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
     done
     ((imdl++))
@@ -93,9 +93,9 @@ end_date_seconds=$(date +%s -d ${end_date})
 diff_seconds=$(expr ${end_date_seconds} - ${start_date_seconds})
 diff_days=$(expr ${diff_seconds} \/ 86400)
 total_days=$(expr ${diff_days} + 1)
-if [ "${NDAYS}" != ${total_days}" ]; then
-	echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation"
-	exit
+if [ "${NDAYS}" != "${total_days}" ]; then
+    echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation"
+    exit
 fi
 
 # Check user's config settings
