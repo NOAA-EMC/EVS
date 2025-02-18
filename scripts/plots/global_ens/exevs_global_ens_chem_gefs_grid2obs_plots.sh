@@ -25,18 +25,18 @@ export err=$?; err_chk
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
-gefs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1$2}' )
+gefs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1}' )
 export modelid=${MODELNAME}${gefs_ver_id}
 
 ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
 export ObsType
 
-IFS=' ' read -ra obstype_list <<< "${VERIF_CASE_STEP_abbrev_list}_type_list"
-IFS=' ' read -ra obsvar_list <<< "${VERIF_CASE_STEP_abbrev_list}_obsvar_list"
+IFS=' ' read -ra obstype_list <<< "${g2op_type_list}"
+IFS=' ' read -ra obsvar_list <<< "${g2op_obsvar_list}"
 let num_obstype=${#obstype_list[@]}
 if [ ${num_obstype} -lt 1 ]; then
     echo "ERROR :: number of variable to be plotted is zero"
-    exit(99)
+    exit
 fi
 
 varid="undefined"
@@ -44,12 +44,13 @@ let iobstype=0
 while [ ${iobstype} -lt ${num_obstype} ]; do
     if [ "${ObsType}" == "${obstype_list[${iobstype}]}" ]; then
         export varid=${obsvar_list[${iobstype}]}
+    fi
     ((iobstype++))
 done
 
 if [ "${varid}" == "undefined" ]; then
     echo "ERROR :: can not find observation index for variable ${ObsType}"
-    exit(88)
+    exit
 fi
 
 # Bring in all stats files, and change into display name
@@ -77,8 +78,8 @@ while [ ${imdl} -lt ${num_mdl} ]; do
         else
             echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${infile}"
         fi
-    cdate=${NOW}"00"
-    NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
+        date=${NOW}"00"
+        NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
     done
     ((imdl++))
 done
