@@ -264,6 +264,14 @@ for stats in ets fbias fss ; do
       valids="12z"
     fi 
 
+    if [ $var = apcp_01 ] ; then
+      new_var=apcp_a01
+    elif [ $var = apcp_03 ] ; then
+       new_var=apcp_a03
+    elif [ $var = apcp_24 ] ; then
+       new_var=apcp_a24
+    fi 
+
     level=${var:5:2}h
     if [ $stats = fss ] ; then 
        if [ $var = apcp_01 ] ; then
@@ -294,7 +302,7 @@ for stats in ets fbias fss ; do
  
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png ] ; then
         ls ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png
-        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}h.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
+        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${new_var}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
       fi
     done
   done
@@ -317,10 +325,13 @@ for var in apcp_01 apcp_03 apcp_24 ; do
     level=${var:5:2}h
     if [ $var = apcp_01 ] ; then
         lead=f1_to_f24__ge0.254ge2.54ge6.35ge12.7ge25.4
+	new_var=apcp_a01
     elif [ $var = apcp_03 ] ; then
         lead=f3_to_f48__ge2.54ge6.35ge12.7ge25.4ge50.8
+	new_var=apcp_a03
     elif [ $var = apcp_24 ] ; then
         lead=f24-30-36-42-48__ge12.7ge25.4ge50.8ge76.2
+	new_var=apcp_a24
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central alaska  ; do
@@ -341,7 +352,7 @@ for var in apcp_01 apcp_03 apcp_24 ; do
      fi
 
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png ] ; then
-       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
+       mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${new_var}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
       fi
 
     done
@@ -371,18 +382,4 @@ fi
 if [ $SENDDBN = YES ] ; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.precip.last${last_days}days.v${VDATE}.tar
 fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
