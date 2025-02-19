@@ -262,10 +262,17 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 if verif_type == 'precip':
                     job_env_dict['PEDATE'] = date_dt.strftime('%Y%m%d')
                     job_env_dict['accum'] = '168'
-                    if WEEK == 'Week5':
+                    if WEEK == 'Week1':
+                        job_env_dict['pcp_fhr'] = '180'
+                    elif WEEK == 'Week2':
+                        job_env_dict['pcp_fhr'] = '348'
+                    elif WEEK == 'Week3':
+                        job_env_dict['pcp_fhr'] = '516'
+                    elif WEEK == 'Week5':
                         pedate_dt = date_dt - datetime.timedelta(days=1)
                         job_env_dict['PEDATE'] = pedate_dt.strftime('%Y%m%d')
                         job_env_dict['accum'] = '144'
+                        job_env_dict['pcp_fhr'] = '828'
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
                 for model_idx in range(len(model_list)):
