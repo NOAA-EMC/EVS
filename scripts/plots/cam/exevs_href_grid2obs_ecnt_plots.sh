@@ -306,9 +306,9 @@ for stats in  rmse_spread ; do
       fi
 
       if [ $var = tmp ] || [ $var = dpt ] || [ $var = rh ]; then
-	 level='2m'
+	 level='z2'
       elif [ $var = ugrd ] || [ $var = vgrd ] || [ $var = wind ] ; then
-	 level='10m'
+	 level='z10'
       elif [ $var = mslet ] || [ $var = gust ] || [ $var = hpbl ] ; then
 	 level='l0'
       fi
