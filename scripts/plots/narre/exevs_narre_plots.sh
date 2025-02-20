@@ -60,7 +60,6 @@ done
 
 VX_MASK_LIST="G130 G242"
 
-#export fcst_init_hour="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
 export fcst_valid_hour="0 3 6 9 12 15 18 21"
 export fcst_lead="1,2,3,4,5,6,7,8,9,10,11,12"
 
@@ -94,6 +93,9 @@ for grid in $VX_MASK_LIST ; do
   fi
 
   for valid in $fcst_valid_hour ; do
+
+   typeset -Z2 vhh
+   vhh=${valid}	  
 
   #**********************************************************************************************
   # Check if this sub-job has been completed in the previous run for restart
@@ -182,12 +184,12 @@ for grid in $VX_MASK_LIST ; do
 
      echo "${DATA}/scripts/run_py.${var}_${line_type}.${score_type}.${grid}.${valid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
  
-     echo "if [ -s ${plot_dir}/${score_type}_regional_${grd}_valid_${valid}z_${vname}_*.png ] ; then" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
-     echo "  cp -v ${plot_dir}/${score_type}_regional_${grd}_valid_${valid}z_${vname}_*.png $all_plots" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
-     echo "  >$all_plots/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "if [ -s ${plot_dir}/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png ] ; then" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "  cp -v ${plot_dir}/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png $all_plots" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "  >${plot_dir}/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      echo "  if [ $SENDCOM = YES ] ; then" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
-     echo "    cp $all_plots/${score_type}_regional_${grd}_valid_${valid}z_${vname}_*.png $restart" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
-     echo "    cp $all_plots/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed $restart" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "    cp $all_plots/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png $restart" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "    cp ${plot_dir}/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed $restart" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      echo "  fi " >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      echo "fi " >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
 
@@ -196,8 +198,8 @@ for grid in $VX_MASK_LIST ; do
 
     else
       #Copy stat files from restart to working directory
-      if [ -s $restart/${score_type}_regional_${grd}_valid_${valid}z_${vname}_*.png ] ; then
-	cp $restart/${score_type}_regional_${grd}_valid_${valid}z_${vname}_*.png $all_plots
+      if [ -s $restart/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png ] ; then
+	cp $restart/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png $all_plots
       fi
     fi      
 
