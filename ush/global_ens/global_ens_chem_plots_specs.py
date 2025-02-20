@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: global_ens_chem_plots_specs.py
+Original Author: : Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script defines plotting related settings.
 '''
@@ -688,14 +689,6 @@ class PlotSpecs:
         if plot_info_dict['fcst_var_name'] == 'ICEEX_DAILYAVG' \
                 and units == '10^6_km^2':
             units = 'x'+units.replace('_', ' ')
-        elif plot_info_dict['fcst_var_name'] \
-                in ['UGRD', 'VGRD', 'UGRD_VGRD', 'WNDSHR', 'GUST']:
-            units = 'kt'
-        elif plot_info_dict['fcst_var_name'] \
-                in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG', 'SST_DAILYAVG',
-                    'TSOIL'] \
-                and plot_info_dict['fcst_var_level'] in ['Z0', 'Z2', 'Z0.1-0']:
-            units = 'F'
         elif plot_info_dict['fcst_var_name'] == 'AOTK':
             units = 'unitless'
         elif plot_info_dict['fcst_var_name'] == 'PMTF':
@@ -864,7 +857,7 @@ class PlotSpecs:
             'GLOBAL': 'glb',
             'GreatBasin': 'buk_grb',
             'GreatLakes': 'buk_grlk',
-            'Mezqutial': 'buk_mez',
+            'Mezquital': 'buk_mez',
             'MidAtlantic': 'buk_matl',
             'N60N90': 'n60',
             'NAMERICA': 'namer',
