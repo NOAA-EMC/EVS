@@ -111,12 +111,12 @@ evs_global_ens_chem_settings_dict['RUN_GRID2OBS_PLOTS'] = [
 
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_PLOTS': {
-        'abi': ['init_hr_list', 'valid_hr_list', 'fhr_list'],
-        'viirs': ['init_hr_list', 'valid_hr_list', 'fhr_list']
+        'abi': ['init_hr_list', 'valid_hr_list'],
+        'viirs': ['init_hr_list', 'valid_hr_list']
     },
     'RUN_GRID2OBS_PLOTS': {
-        'aeronet': ['init_hr_list', 'valid_hr_list', 'fhr_list'],
-        'airnow': ['init_hr_list', 'valid_hr_list', 'fhr_list']
+        'aeronet': ['init_hr_list', 'valid_hr_list'],
+        'airnow': ['init_hr_list', 'valid_hr_list']
     }
 }
 

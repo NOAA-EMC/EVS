@@ -41,6 +41,7 @@ date_type = os.environ['date_type']
 NDAYS = os.environ['NDAYS']
 fig_name_label = os.environ['fig_name_label']
 dir_name_label = fig_name_label
+restart_mode = os.environ['restart_mode']
 plot_verbosity = os.environ['plot_verbosity']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 job_id = os.environ['job_id']
@@ -239,7 +240,7 @@ if JOB_GROUP == 'condense_stats':
             check_job_condensed_model_stat_file = (
                 job_DATA_condensed_model_stat_file
             )
-        if not os.path.exists(check_job_condensed_model_stat_file):
+        if not os.path.exists(check_job_condensed_model_stat_file) or restart_mode != "YES":
             gda_util.condense_model_stat_files(
                 logger, stat_base_dir, job_work_dir, model, obs_name, vx_mask,
                 fcst_var_name, fcst_var_level, obs_var_name, obs_var_level,
@@ -345,7 +346,7 @@ elif JOB_GROUP == 'filter_stats':
                         job_DATA_filter_stats_model_file
                     )
                     job_input_dir = job_DATA_dir
-                if not os.path.exists(check_job_filter_stats_model_file):
+                if not os.path.exists(check_job_filter_stats_model_file) or restart_mode != "YES":
                     all_model_df = gda_util.build_df(
                         JOB_GROUP, logger, job_input_dir, job_work_dir,
                         model_info_dict, met_info_dict,
@@ -465,7 +466,7 @@ elif JOB_GROUP == 'make_plots':
             else:
                 check_job_image_name = job_DATA_image_name
                 job_input_dir = job_DATA_dir
-            if ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
+            if ( not os.path.exists(check_job_image_name) or restart_mode != "YES" ) \
                     and plot_info_dict['stat'] != 'FBAR_OBAR':
                 if len(date_info_dict['forecast_hours']) <= 1:
                     logger.warning("No span of forecast hours to plot, "
@@ -516,7 +517,7 @@ elif JOB_GROUP == 'make_plots':
             else:
                 check_job_image_name = job_DATA_image_name
                 job_input_dir = job_DATA_dir
-            if ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
+            if ( not os.path.exists(check_job_image_name) or restart_mode != "YES" ) \
                     and plot_info_dict['stat'] != 'FBAR_OBAR':
                 if date_info_dict['valid_hr_start'] \
                         == date_info_dict['valid_hr_end']:
@@ -579,7 +580,7 @@ elif JOB_GROUP == 'make_plots':
                     check_job_image_name = job_DATA_image_name
                     job_input_dir = job_DATA_dir
                 if init_hr in init_hrs \
-                        and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
+                        and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" ) \
                         and plot_info_dict['stat'] != 'FBAR_OBAR':
                     if len(plot_info_dict['fcst_var_threshs']) <= 1:
                         logger.warning("No span of thresholds to plot, "
@@ -641,7 +642,7 @@ elif JOB_GROUP == 'make_plots':
                     check_job_image_name = job_DATA_image_name
                     job_input_dir = job_DATA_dir
                 if init_hr in init_hrs \
-                        and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" )\
+                        and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" ) \
                         and plot_info_dict['stat'] == 'PERFDIAG':
                     make_pd = True
                 else:

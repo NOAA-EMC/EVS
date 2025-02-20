@@ -54,7 +54,7 @@ for data_dir in data_dir_list:
 
 # Create job script base directory
 if STEP == 'plots':
-   job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
+    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                    'plot_job_scripts')
 else:
     job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,

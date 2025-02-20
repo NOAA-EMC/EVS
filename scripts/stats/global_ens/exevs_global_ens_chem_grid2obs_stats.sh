@@ -24,7 +24,7 @@ mkdir -p ${finalstat}
 
 export CMODEL=`echo ${MODELNAME} | tr a-z A-Z`  # define config variable
 vmodel=`echo ${gefs_ver} | awk -F"." '{print $1}'`
-export VMODEL=${MODELNAME}${vmodel}
+export VMODEL=${CMODEL}
 
 export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}}
 export config_common=${PARMevs}/metplus_config/machine.conf

@@ -15,7 +15,7 @@ import global_ens_chem_util as gda_util
 
 class PlotSpecs:
     def __init__(self, logger, plot_type):
-        """! Initalize PlotSpecs class
+        """! Initialize PlotSpecs class
 
              Args:
                  logger    - logger object

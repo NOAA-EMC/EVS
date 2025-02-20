@@ -65,18 +65,18 @@ if [ ${num_mdl} -gt 10 ]; then
 fi
 let imdl=0
 while [ ${imdl} -lt ${num_mdl} ]; do
+    mdl=${mdl_list[${imdl}]}
     mdl_id=$( echo ${mdl_list[${imdl}]} | awk -F${MODELNAME} '{print $2}' )
     idir=${mdl_idir_list[${imdl}]}
     NOW=${VDATE_START}
-    echo ${COMIN}/stats/${COMPONENT}
-    echo ${idir}
     while [ ${NOW} -le ${VDATE_END} ]; do
-        infile=evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${varid}.v${NOW}.stat
-        outfile=${MODELNAME}${mdl_id}.${ObsType}${varid}.v${NOW}.stat
-        if [ -s ${idir}/${MODELNAME}.${NOW}/${infile} ]; then
-            cpreq ${idir}/${MODELNAME}.${NOW}/${infile} ${STATDIR}/${outfile}
+        cpfile=evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${varid}.v${NOW}.stat
+        sedfile=${mdl}.${ObsType}${varid}.v${NOW}.stat
+        if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
+            cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
+            sed "s/${model1}/${mdl}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
         else
-            echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${infile}"
+            echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${cpfile}"
         fi
         cdate=${NOW}"00"
         NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
