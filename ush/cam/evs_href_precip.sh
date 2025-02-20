@@ -495,14 +495,14 @@ for obsvtype in ccpa mrms ; do
 		#Mark job is completed
 	        echo "if [ -s \$output_base/stat/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ] ; then" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 		echo "  cp \$output_base/stat/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat $all_stats/${MODEL}" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-	        echo "  >$all_stats/${MODEL}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+	        echo "  >\$output_base/stat/${MODEL}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 		echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 
 
 	        #Copy files to COMOUT:
 		echo "if [ $SENDCOM = YES ] ; then" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
                 echo " if [ -s $all_stats/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ] ; then" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-	        echo "	 cp $all_stats/${MODEL}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed $COMOUTrestart/${prod}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
+	        echo "	 cp \$output_base/stat/${MODEL}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed $COMOUTrestart/${prod}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh 
                 echo "   cp $all_stats/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat $COMOUTsmall/${MODEL}" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 		echo " fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 		echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh

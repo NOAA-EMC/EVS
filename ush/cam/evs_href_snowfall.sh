@@ -138,13 +138,13 @@ for obsv in 6h 24h  ; do
 
 	    #Mark job is completed
             echo "for FILEn in \$output_base/stat/\${MODEL}/*_stat_\${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $all_stats/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-            echo " [[ \$? = 0 ]] && >$all_stats/HREF_SNOW/run_href_snow${obsv}.${fhr}.${vhr}.completed" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+            echo " [[ \$? = 0 ]] && >\$output_base/stat/HREF_SNOW/run_href_snow${obsv}.${fhr}.${vhr}.completed" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 
             #Send restart files to COMOUT 
 	    echo "if [ $SENDCOM = YES ] && [ \$? = 0 ] ; then" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 	    echo " if [ -s $all_stats/HREF_SNOW/*_stat_\${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ] ; then"  >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 	    echo "   cp $all_stats/HREF_SNOW/*_stat_\${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat $COMOUTsmall/HREF_SNOW" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-	    echo "   cp $all_stats/HREF_SNOW/run_href_snow${obsv}.${fhr}.${vhr}.completed $COMOUTrestart/snow" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+	    echo "   cp \$output_base/stat/HREF_SNOW/run_href_snow${obsv}.${fhr}.${vhr}.completed $COMOUTrestart/snow" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo " fi" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo "fi" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 
