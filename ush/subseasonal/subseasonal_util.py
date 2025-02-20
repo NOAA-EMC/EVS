@@ -1947,10 +1947,11 @@ def check_days6_10_model_files(job_dict):
                                 job_dict['job_num_work_dir'],
                                 job_dict['RUN']+'.'+job_dict['DATE'],
                                 job_dict['MODEL'], job_dict['VERIF_CASE'],
-                                'gen_ens_prod_'+job_dict['VERIF_TYPE']+'_'
-                                +'Precip_FHR{lead?fmt=%3H}'
-                                +'_{valid?fmt=%Y%m%d}'
-                                +'_{valid?fmt=%H}0000V_ens.nc'
+                                'days6_10_pcp_combine_'
+                                +job_dict['VERIF_TYPE']+'_'
+                                +'Precip_init{init?fmt=%Y%m%d%H}'
+                                +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
+                                +'to{valid?fmt=%Y%m%d%H}.nc'
                             )
                         else:
                             output_JOB_file_format = os.path.join(
@@ -2212,10 +2213,11 @@ def check_weeks3_4_model_files(job_dict):
                                 job_dict['job_num_work_dir'],
                                 job_dict['RUN']+'.'+job_dict['DATE'],
                                 job_dict['MODEL'], job_dict['VERIF_CASE'],
-                                'gen_ens_prod_'+job_dict['VERIF_TYPE']+'_'
-                                +'Precip_FHR{lead?fmt=%3H}'
-                                +'_{valid?fmt=%Y%m%d}'
-                                +'_{valid?fmt=%H}0000V_ens.nc'
+                                'weeks3_4_pcp_combine_'
+                                +job_dict['VERIF_TYPE']+'_'
+                                +'Precip_init{init?fmt=%Y%m%d%H}'
+                                +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
+                                +'to{valid?fmt=%Y%m%d%H}.nc'
                             )
                         else:
                             output_JOB_file_format = os.path.join(

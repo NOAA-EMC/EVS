@@ -190,13 +190,14 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    if [ "${WEEK}" = "Week4" ]; then
 		export CORRECT_INIT_DATE=$PDYm30
 		export CORRECT_LEAD_SEQ=504,516,528,540,552,564,576,588,600,612,624,636,648,660,672
+		export PRECIP_LEAD_SEQ=522,528,534,540,546,552,558,564,570,576,582,588,594,600,606,612,618,624,630,636,642,648,654,660,666,672,678,684
 	    fi
 	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_week4_reformat_job_scripts.py
 	    export err=$?; err_chk
 	done
 	MONTHLY_LIST="Month1"
 	for MONTH in $MONTHLY_LIST; do
-	    export njobs=57
+	    export njobs=58
 	    export MONTH=$MONTH
 	    if [ "${MONTH}" = "Month1" ]; then
 		export CORRECT_INIT_DATE=$PDYm32
@@ -207,7 +208,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
         done
 	DAYS6_10_LIST="Days6_10"
 	for DAYS in $DAYS6_10_LIST; do
-	    export njobs=59
+	    export njobs=60
 	    export DAYS=$DAYS
 	    if [ "${DAYS}" = "Days6_10" ]; then
 		export CORRECT_INIT_DATE=$PDYm12
@@ -219,7 +220,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	done
 	WEEKS3_4_LIST="Weeks3_4"
 	for WEEKS in $WEEKS3_4_LIST; do
-	    export njobs=62
+	    export njobs=63
 	    export WEEKS=$WEEKS
 	    if [ "${WEEKS}" = "Weeks3_4" ]; then
 		export CORRECT_INIT_DATE=$PDYm30

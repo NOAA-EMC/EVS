@@ -94,6 +94,10 @@ reformat_data_gefs_jobs_dict = {
                    'commands': [sub_util.metplus_command(
                                     'GenEnsProd_fcstSUBSEASONAL_'
                                     +'Days6_10NetCDF.conf'
+                                ),
+                                sub_util.metplus_command(
+                                    'PCPCombine_fcstSUBSEASONAL_'
+                                    +'Days6_10precip.conf'
                                 )]},
     },
     'temp': {},
@@ -128,6 +132,10 @@ reformat_data_cfs_jobs_dict = {
                    'commands': [sub_util.metplus_command(
                                     'GenEnsProd_fcstCFS_'
                                     +'Days6_10NetCDF.conf'
+                                ),
+                                sub_util.metplus_command(
+                                    'PCPCombine_fcstSUBSEASONAL_'
+                                    +'Days6_10precip.conf'
                                 )]},
     },
     'temp': {},
@@ -229,6 +237,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 sdate_dt = date_dt - datetime.timedelta(days=5)
                 job_env_dict['D6_10START'] = sdate_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
+                if verif_type == 'precip':
+                    job_env_dict['accum'] = '120'
+                    job_env_dict['pcp_fhr'] = '252'
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
                 for model_idx in range(len(model_list)):
