@@ -201,7 +201,7 @@ for VHOUR in VHOUR_LIST:
                                         mailmsg.close()
                                         os.chmod(mail_COMINmodel_file, 0o755)
         # OBS: Get CCPA files -- CONUS
-        DATAccpa = os.path.join(DATA, 'data', 'ccpa')
+        DATAccpa = os.path.join(DATA, VERIF_CASE, 'data', 'ccpa')
         if not os.path.exists(DATAccpa):
             os.makedirs(DATAccpa)
             print(f"Making directory {DATAccpa}")
@@ -296,7 +296,7 @@ for VHOUR in VHOUR_LIST:
                         mailmsg.close()
                         os.chmod(mail_EVSINccpa_file, 0o755)
         # OBS: Get MRMSE files -- Alaska
-        DATAmrms = os.path.join(DATA, 'data', 'mrms')
+        DATAmrms = os.path.join(DATA, VERIF_CASE, 'data', 'mrms')
         if not os.path.exists(DATAmrms):
             os.makedirs(DATAmrms)
             print(f"Making directory {DATAmrms}")

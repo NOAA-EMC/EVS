@@ -8,7 +8,7 @@ Run By: scripts/stats/global_det/exevs_global_det_atmos_grid2grid_stats.sh
 
 import os
 import glob
-import mesoscale_util as gda_util
+import mesoscale_util as m_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
@@ -33,7 +33,7 @@ if STEP == 'stats':
         )
     else:
         job_work_JOB_GROUP_dir = os.path.join(
-            DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+            DATA, f"{VERIF_CASE}", 'METplus_output',
             'job_work_dir', JOB_GROUP
         )
     if JOB_GROUP == 'gather_stats':
@@ -95,7 +95,7 @@ if copy_from_job_to_DATA:
                 )
             else:
                 output_file_DATA = os.path.join(
-                    DATA, f"{VERIF_CASE}_{STEP}", 'METplus_output',
+                    DATA,
                     output_file_end_path
                 )
         elif STEP == 'plots':
@@ -110,7 +110,7 @@ if copy_from_job_to_DATA:
                     output_file_end_path
                 )
         if not os.path.exists(output_file_DATA):
-            gda_util.copy_file(output_file_JOB, output_file_DATA)
+            m_util.copy_file(output_file_JOB, output_file_DATA)
         else:
             print(f"WARNING: {output_file_DATA} exists")
 else:

@@ -15,6 +15,7 @@ from datetime import datetime, timedelta as td
 import numpy as np
 import glob
 import subprocess
+import shutil
 from collections.abc import Iterable
 
 def flatten(xs):
@@ -385,6 +386,46 @@ def mark_job_completed(completed_jobs_file, job_name, job_type=""):
               f.write(job_type + "_" + job_name + "\n")
           else:
               f.write(job_name + "\n")
+              
+def copy_file(source_file, dest_file):
+    """! This copies a file from one location to another
+                
+         Args:
+             source_file - source file path (string)
+             dest_file   - destination file path (string)
+
+         Returns:
+    """  
+    if check_file_exists_size(source_file):
+        print("Copying "+source_file+" to "+dest_file)
+        shutil.copy(source_file, dest_file)
+        
+def check_file_exists_size(file_name):
+    """! Checks to see if file exists and has size greater than 0
+
+          Args:       
+              file_name - file path (string)
+                                      
+          Returns:
+              file_good - boolean
+                        - True: file exists,file size >0
+                        - False: file doesn't exist
+                                 OR file size = 0
+    """
+    if '/com/' in file_name or '/dcom/' in file_name:
+        alert_word = 'WARNING'
+    else:
+        alert_word = 'NOTE'                       
+    if os.path.exists(file_name):
+        if os.path.getsize(file_name) > 0:
+            file_good = True
+        else:
+            print(f"{alert_word}: {file_name} empty, 0 sized")
+            file_good = False
+    else:
+        print(f"{alert_word}: {file_name} does not exist")
+        file_good = False
+    return file_good
 
 def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 
                          run=None, step=None, model=None, vdate=None, vhr=None, 
@@ -827,7 +868,7 @@ def precip_check_obs_input_output_files(job_dict):
             )
         elif job_dict['obs'] == 'mrms':
             input_files_list.append(
-                os.path.join(job_dict['DATA'], 'data', job_dict['obs'],
+                os.path.join(job_dict['DATA'], job_dict['VERIF_CASE'], 'data', job_dict['obs'],
                              f"{job_dict['area']}_MultiSensor_QPE_"
                              +f"{job_dict['accum']}H_Pass2_00.00_"
                              +f"{valid_date_dt:%Y%m%d}-"
