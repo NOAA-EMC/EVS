@@ -3359,6 +3359,11 @@ def check_weekly_truth_files(job_dict):
         job_dict['DATE']+job_dict['valid_hr_start'],
         '%Y%m%d%H'
     )
+    if job_dict['VERIF_TYPE'] == 'precip' and job_dict['WEEK'] == 'Week5':
+        valid_date_dt = datetime.datetime.strptime(
+            job_dict['PEDATE']+job_dict['valid_hr_start'],
+            '%Y%m%d%H'
+        )
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
@@ -3396,6 +3401,33 @@ def check_weekly_truth_files(job_dict):
                     )
                     truth_input_file_list.append(truth_file)
                     nf+=1
+            elif job_dict['VERIF_TYPE'] == 'precip':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ccpa',
+                    '24hrCCPA.{valid?fmt=%Y%m%d%H}.nc'
+                )
+                if job_dict['WEEK'] == 'Week5':
+                    nf = 0
+                    while nf <= 5:
+                        truth_file = format_filler(
+                            truth_file_format,
+                            (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                            (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                            ['anl'], {}
+                        )
+                        truth_input_file_list.append(truth_file)
+                        nf+=1
+                else:
+                    nf = 0
+                    while nf <= 6:
+                        truth_file = format_filler(
+                            truth_file_format,
+                            (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                            (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                            ['anl'], {}
+                        )
+                        truth_input_file_list.append(truth_file)
+                        nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'prepbufr':
                 prepbufr_file_format = os.path.join(
@@ -3483,11 +3515,25 @@ def check_weekly_truth_files(job_dict):
                 truth_input_files_exist_list.append(True)
             else:
                 truth_input_files_exist_list.append(False)
-        if any(x == True for x in truth_input_files_exist_list) \
-                and truth_input_files_exist_list.count(True) >= 12:
-            truth_files_exist = True
+        if job_dict['VERIF_TYPE'] == 'precip':
+            if job_dict['WEEK'] == 'Week5':
+                if any(x == True for x in truth_input_files_exist_list) \
+                        and truth_input_files_exist_list.count(True) >= 5:
+                    truth_files_exist = True
+                else:
+                    truth_files_exist = False
+            else:
+                if any(x == True for x in truth_input_files_exist_list) \
+                        and truth_input_files_exist_list.count(True) >= 6:
+                    truth_files_exist = True
+                else:
+                    truth_files_exist = False
         else:
-            truth_files_exist = False
+            if any(x == True for x in truth_input_files_exist_list) \
+                    and truth_input_files_exist_list.count(True) >= 12:
+                truth_files_exist = True
+            else:
+                truth_files_exist = False
     return truth_files_exist, truth_copy_output_list
 
 def check_days6_10_truth_files(job_dict):
@@ -3543,6 +3589,21 @@ def check_days6_10_truth_files(job_dict):
                     )
                     truth_input_file_list.append(truth_file)
                     nf+=1
+            elif job_dict['VERIF_TYPE'] == 'precip':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ccpa',
+                    '24hrCCPA.{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 4:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                        ['anl'], {}
+                    )
+                    truth_input_file_list.append(truth_file)
+                    nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'prepbufr':
                 prepbufr_file_format = os.path.join(
@@ -3630,11 +3691,18 @@ def check_days6_10_truth_files(job_dict):
                 truth_input_files_exist_list.append(True)
             else:
                 truth_input_files_exist_list.append(False)
-        if any(x == True for x in truth_input_files_exist_list) \
-                and truth_input_files_exist_list.count(True) >= 9:
-            truth_files_exist = True
+        if job_dict['VERIF_TYPE'] == 'precip':
+            if any(x == True for x in truth_input_files_exist_list) \
+                    and truth_input_files_exist_list.count(True) >= 4:
+                truth_files_exist = True
+            else:
+                truth_files_exist = False
         else:
-            truth_files_exist = False
+            if any(x == True for x in truth_input_files_exist_list) \
+                    and truth_input_files_exist_list.count(True) >= 9:
+                truth_files_exist = True
+            else:
+                truth_files_exist = False
     return truth_files_exist, truth_copy_output_list
 
 def check_weeks3_4_truth_files(job_dict):
@@ -3687,6 +3755,21 @@ def check_weeks3_4_truth_files(job_dict):
                         truth_file_format,
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_input_file_list.append(truth_file)
+                    nf+=1
+            elif job_dict['VERIF_TYPE'] == 'precip':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ccpa',
+                    '24hrCCPA.{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 13:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=24*nf)),
                         ['anl'], {}
                     )
                     truth_input_file_list.append(truth_file)
@@ -3808,11 +3891,18 @@ def check_weeks3_4_truth_files(job_dict):
             else:
                 truth_files_exist = False
         else:
-            if any(x == True for x in truth_input_files_exist_list) \
-                    and truth_input_files_exist_list.count(True) >= 23:
-                truth_files_exist = True
+            if job_dict['VERIF_TYPE'] == 'precip':
+                if any(x == True for x in truth_input_files_exist_list) \
+                        and truth_input_files_exist_list.count(True) >= 11:
+                    truth_files_exist = True
+                else:
+                    truth_files_exist = False
             else:
-                truth_files_exist = False
+                if any(x == True for x in truth_input_files_exist_list) \
+                        and truth_input_files_exist_list.count(True) >= 23:
+                    truth_files_exist = True
+                else:
+                    truth_files_exist = False
     return truth_files_exist, truth_copy_output_list
 
 def check_truth_files(job_dict):

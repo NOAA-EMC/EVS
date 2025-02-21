@@ -97,7 +97,7 @@ reformat_data_gefs_jobs_dict = {
                                 ),
                                 sub_util.metplus_command(
                                     'PCPCombine_fcstSUBSEASONAL_'
-                                    +'Weeklyprecip.conf'
+                                    +'obsCCPA_Weeklyprecip.conf'
                                 )]},
     },
     'temp': {},
@@ -135,7 +135,7 @@ reformat_data_cfs_jobs_dict = {
                                 ),
                                 sub_util.metplus_command(
                                     'PCPCombine_fcstSUBSEASONAL_'
-                                    +'Weeklyprecip.conf'
+                                    +'obsCCPA_Weeklyprecip.conf'
                                 )]},
     },
     'temp': {},
