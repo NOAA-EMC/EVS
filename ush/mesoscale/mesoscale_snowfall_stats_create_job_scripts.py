@@ -437,6 +437,13 @@ if JOB_GROUP == 'assemble_data':
                                 job_env_dict['fcst_hour'].zfill(1)+'H'
                             )
                             # Check for expected job input and output files
+                            njob+=1
+                            job_env_dict['job_num'] = str(njob)
+                            job_env_dict['job_num_work_dir'] = os.path.join(
+                               DATA, f"{VERIF_CASE}", 'METplus_output',
+                               'job_work_dir', JOB_GROUP,
+                               f"job{job_env_dict['job_num']}"
+                            )
                             (job_all_model_input_file_exist,
                              job_model_input_files_list,
                              job_all_model_COMOUT_file_exist,
@@ -456,13 +463,6 @@ if JOB_GROUP == 'assemble_data':
                                     job_model_input_file
                                 )
                             # Create job file
-                            njob+=1
-                            job_env_dict['job_num'] = str(njob)
-                            job_env_dict['job_num_work_dir'] = os.path.join(
-                                DATA, f"{VERIF_CASE}", 'METplus_output',
-                                'job_work_dir', JOB_GROUP,
-                                f"job{job_env_dict['job_num']}"
-                            )
                             job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                     'job'+str(njob))
                             print("Creating job script: "+job_file)
@@ -615,6 +615,8 @@ elif JOB_GROUP == 'generate_stats':
                     job_env_dict['OBS'] = job_env_dict['obs'].upper()
                     if job_env_dict['OBS'] == job_env_dict['grid']:
                         job_env_dict['grid'] = 'OBS'
+                    if job_env_dict['snow_var'] not in MODEL_SNOWFALL_VARS:
+                        continue
                     for fhr in fhrs:
                         init_dt = date_dt - datetime.timedelta(hours=fhr)
                         if f"{init_dt:%H}" in CYC_LIST:
