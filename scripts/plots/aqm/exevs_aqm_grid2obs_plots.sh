@@ -47,6 +47,12 @@ export ObsType
 
 # Bring in all stats files, and change into display name
 # for different models or types of solution defined in ${config}
+IFS=' ' read -ra obstype_list <<< "${g2op_type_list}"
+let num_obstype=${#obstype_list[@]}
+if [ ${num_obstype} -lt 1 ]; then
+    echo "ERROR :: number of variable to be plotted is zero"
+    exit
+fi
 
 IFS=' ' read -ra mdl_list <<< "${model_list}"
 IFS=' ' read -ra mdl_idir_list <<< "${model_evs_stats_dir_list}"
@@ -63,16 +69,18 @@ while [ ${imdl} -lt ${num_mdl} ]; do
     echo ${COMIN}/stats/${COMPONENT}
     echo ${idir}
     while [ ${NOW} -le ${VDATE_END} ]; do
-        cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ObsType}.v${NOW}.stat
-        sedfile=${modelid}_${biasc}_${ObsType}.v${NOW}.stat
-        if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
-            cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
-            sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
-        else
-            echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${cpfile}"
-        fi
-    cdate=${NOW}"00"
-    NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
+        for ivar in "${obstype_list[@]}"; do
+            cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ivar}.v${NOW}.stat
+            sedfile=${modelid}_${biasc}_${ivar}.v${NOW}.stat
+            if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
+                cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
+                sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
+            else
+                echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${cpfile}"
+            fi
+        done
+        cdate=${NOW}"00"
+        NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
     done
     ((imdl++))
 done
@@ -86,7 +94,7 @@ end_date_seconds=$(date +%s -d ${end_date})
 diff_seconds=$(expr ${end_date_seconds} - ${start_date_seconds})
 diff_days=$(expr ${diff_seconds} \/ 86400)
 total_days=$(expr ${diff_days} + 1)
-if [ "${NDAYS}" != ${total_days}" ]; then
+if [ "${NDAYS}" != "${total_days}" ]; then
     echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation"
     exit
 fi

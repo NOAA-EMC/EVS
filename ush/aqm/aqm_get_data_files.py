@@ -69,7 +69,7 @@ if STEP == 'plots' :
                 if date_type == 'VALID':
                     if evs_run_mode == 'production':
                         source_model_date_stat_file = os.path.join(
-                            model_evs_data_dir, model+'_'+obstype+"."
+                            model_evs_data_dir, model+'_'+obstype+'.'
                             +'v'+date_dt.strftime('%Y%m%d')+'.stat'
                         )
                     else:
@@ -80,7 +80,7 @@ if STEP == 'plots' :
                         )
                     dest_model_date_stat_file = os.path.join(
                         VERIF_CASE_STEP_data_dir, model,
-                        model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
+                        model+'_'+obstype+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
                 if not os.path.exists(dest_model_date_stat_file):
                     if gda_util.check_file_exists_size(

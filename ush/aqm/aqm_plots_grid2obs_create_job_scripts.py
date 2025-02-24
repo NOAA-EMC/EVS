@@ -765,7 +765,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
         elif JOB_GROUP == 'tar_images':
             JOB_GROUP_verif_type_job_product_loops = []
             for root, dirs, files in os.walk(
-                verif_type_plot_jobs_dict['search_base_dir']
+                verif_type_plot_jobs_dict['search_base_dir'].replace(
+                    'VERIF_TYPE', verif_type
+                    )    
             ):
                 if not dirs \
                         and root not in JOB_GROUP_verif_type_job_product_loops:
@@ -887,14 +889,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         verif_type_plot_jobs_dict[verif_type_job]\
                         ['fcst_var_dict']['threshs']
                     )
-                if job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
-                    plot_fcst_levels_loop = ['all', 'trop', 'strat',
-                                             'ltrop', 'utrop']
-                else:
-                    plot_fcst_levels_loop = (
-                        verif_type_plot_jobs_dict[verif_type_job]\
-                        ['fcst_var_dict']['levels']
-                    )
+                plot_fcst_levels_loop = (
+                    verif_type_plot_jobs_dict[verif_type_job]\
+                    ['fcst_var_dict']['levels']
+                )
                 if job_env_dict['plot'] in  [ 'valid_hour_average_fhr_mean',
                                               'time_series_fhr_mean' ]:
                     for plot_loop_info in list(
