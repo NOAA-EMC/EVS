@@ -987,7 +987,6 @@ def precip_check_model_input_output_files(job_dict):
         )
     input_files_exist_list = []
     for input_file in input_files_list:
-        print(input_file, check_file(input_file))
         if check_file(input_file):
             input_files_exist_list.append(True)
         else:
@@ -1036,7 +1035,6 @@ def precip_check_model_input_output_files(job_dict):
         )
     COMOUT_files_exist_list = []
     for COMOUT_file in COMOUT_files_list:
-        print(COMOUT_file, check_file(COMOUT_file))
         if check_file(COMOUT_file):
             COMOUT_files_exist_list.append(True)
         else:
@@ -1078,7 +1076,7 @@ def snowfall_check_obs_input_output_files(job_dict):
     if job_dict['JOB_GROUP'] == 'generate_stats':
         if job_dict['obs'] == 'nohrsc':
             input_files_list.append(
-                os.path.join(job_dict['DATA'], 'data', 'nohrsc',
+                os.path.join(job_dict['DATA'], job_dict['VERIF_CASE'], 'data', 'nohrsc',
                              f"nohrsc.accum{job_dict['accum']}hr."
                              +f"v{valid_date_dt:%Y%m%d%H}")
             )
@@ -1145,7 +1143,7 @@ def snowfall_check_model_input_output_files(job_dict):
                         str(int(job_dict['fcst_hour'])
                             - int(job_dict['accum']))]:
                 input_files_list.append(
-                    os.path.join(job_dict['DATA'], 'data',
+                    os.path.join(job_dict['DATA'], job_dict['VERIF_CASE'], 'data',
                                  job_dict['MODELNAME'],
                                  f"{job_dict['MODELNAME']}."
                                  +f"init{init_date_dt:%Y%m%d%H}."
@@ -1189,7 +1187,7 @@ def snowfall_check_model_input_output_files(job_dict):
                          file_name)
         )
         DATA_files_list.append(
-            os.path.join(job_dict['DATA'],
+            os.path.join(job_dict['job_num_work_dir'],
                          f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
                          job_dict['MODELNAME'], job_dict['VERIF_CASE'],
                          file_name)
@@ -1205,7 +1203,7 @@ def snowfall_check_model_input_output_files(job_dict):
                          file_name)
         )
         DATA_files_list.append(
-            os.path.join(job_dict['DATA'],
+            os.path.join(job_dict['job_num_work_dir'],
                          f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
                          job_dict['MODELNAME'], job_dict['VERIF_CASE'],
                          file_name)
