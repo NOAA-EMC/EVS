@@ -288,7 +288,7 @@ for valid in 00z 12z ; do
  for score_type in $score_types  ; do
   
   if [ $score_type = stat_by_level ] ; then
-     scoretype='profile'
+     scoretype='vertprof'
   elif [ $score_type = lead_average ] ; then
      scoretype='fhrmean'
   fi
@@ -327,7 +327,7 @@ for valid in 00z 12z ; do
 	fi
       else
         level=''
-	var_new=$var
+	var_new=${var}_all
       fi	
 
       for lead in $leads ; do
