@@ -491,14 +491,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         verif_type_plot_jobs_dict[verif_type_job]\
                         ['fcst_var_dict']['threshs']
                     )
-                if job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
-                    plot_fcst_levels_loop = ['all', 'trop', 'strat',
-                                             'ltrop', 'utrop']
-                else:
-                    plot_fcst_levels_loop = (
-                        verif_type_plot_jobs_dict[verif_type_job]\
-                        ['fcst_var_dict']['levels']
-                    )
+                plot_fcst_levels_loop = (
+                    verif_type_plot_jobs_dict[verif_type_job]\
+                    ['fcst_var_dict']['levels']
+                )
                 for plot_loop_info in list(
                     itertools.product(plot_valid_hrs_loop,
                                       plot_fcst_threshs_loop,
