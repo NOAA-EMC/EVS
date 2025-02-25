@@ -900,7 +900,7 @@ def precip_check_obs_input_output_files(job_dict):
                              file_name)
             )
             DATA_files_list.append(
-                os.path.join(job_dict['DATA'],
+                os.path.join(job_dict['job_num_work_dir'],
                              f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
                              job_dict['MODELNAME'], job_dict['VERIF_CASE'],
                              file_name)
