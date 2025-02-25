@@ -741,7 +741,6 @@ elif JOB_GROUP == 'gather_stats':
             print(f"WARNING: No files matching {check_DATE_stat_dir}/*.stat")
         # Write job commands
         if write_job_cmds:
-            ####m_util.make_dir(job_env_dict['job_num_work_dir'])
             for cmd in gather_stats_jobs_dict['commands']:
                 job.write(cmd+'\n')
         job.close()
