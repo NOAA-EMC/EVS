@@ -432,12 +432,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                 else:
                     gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                # Check plot files
-                plot_files_exist = gda_util.check_plot_files(job_env_dict)
-                if plot_files_exist:
-                    write_job_cmds = False
-                else:
-                    write_job_cmds = True
+                write_job_cmds = True
+                if restart_mode == 'YES':    # Check plot files
+                    plot_files_exist = gda_util.check_plot_files(
+                        job_env_dict
+                    )
+                    if plot_files_exist:
+                        write_job_cmds = False
                 # Create job file
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
                                         'job'+str(njobs))
@@ -565,14 +566,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                         else:
                             gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                        # Check plot files
-                        plot_files_exist = gda_util.check_plot_files(
-                            job_env_dict
-                        )
-                        if plot_files_exist:
-                             write_job_cmds = False
-                        else:
-                             write_job_cmds = True
+                        write_job_cmds = True
+                        if restart_mode == 'YES':    # Check plot files
+                            plot_files_exist = gda_util.check_plot_files(
+                                job_env_dict
+                            )
+                            if plot_files_exist:
+                                write_job_cmds = False
                         # Create job file
                         job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                 'job'+str(njobs))
@@ -633,12 +633,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                 else:
                     gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                # Check plot files
-                plot_files_exist = gda_util.check_plot_files(job_env_dict)
-                if plot_files_exist:
-                    write_job_cmds = False
-                else:
-                    write_job_cmds = True
+                write_job_cmds = True
+                if restart_mode == 'YES':    # Check plot files
+                    plot_files_exist = gda_util.check_plot_files(
+                        job_env_dict
+                    )
+                    if plot_files_exist:
+                        write_job_cmds = False
                 # Create job files
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)
