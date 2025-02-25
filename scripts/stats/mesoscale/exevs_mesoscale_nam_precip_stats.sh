@@ -80,9 +80,6 @@ for group in $JOB_GROUP_list; do
             nc=$((nc+1))
         done
     fi
-#    echo "Copy job dir output"
-#    python $USHevs/mesoscale/mesoscale_copy_job_dir_output.py
-#    export err=$?; err_chk
     if [ $JOB_GROUP = gather_stats ]; then
        echo "Copy job dir output"
        python $USHevs/mesoscale/mesoscale_copy_job_dir_output.py
