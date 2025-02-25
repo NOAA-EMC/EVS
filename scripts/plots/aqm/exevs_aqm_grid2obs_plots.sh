@@ -42,11 +42,10 @@ export model1
 aqm_ver_id=$( echo ${aqm_ver} | awk -F"." '{print $1$2}' )
 export modelid=${MODELNAME}${aqm_ver_id}
 
-ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
-export ObsType
-
+#
 # Bring in all stats files, and change into display name
 # for different models or types of solution defined in ${config}
+#
 IFS=' ' read -ra obstype_list <<< "${g2op_type_list}"
 let num_obstype=${#obstype_list[@]}
 if [ ${num_obstype} -lt 1 ]; then
@@ -112,7 +111,6 @@ python ${USHevs}/${COMPONENT}/${COMPONENT}_get_data_files.py
 export err=$?; err_chk
 
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
-## for group in condense_stats filter_stats make_plots tar_images; do
 declare -a proc_list=( condense_stats filter_stats make_plots tar_images )
 for group in "${proc_list[@]}"; do
     export JOB_GROUP=${group}
@@ -148,20 +146,20 @@ for group in "${proc_list[@]}"; do
             nc=$((nc+1))
         done
     fi
-    python $USHevs/aqm/aqm_copy_job_dir_output.py
+    python ${USHevs}/aqm/aqm_copy_job_dir_output.py
     export err=$?; err_chk
     # Cat the plotting log files
-    if [ $JOB_GROUP = make_plots ]; then
+    if [ "${JOB_GROUP}" = "make_plots" ] || [ "${JOB_GROUP}" = "tar_images" ]; then
         log_dir=${DATA}/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/*/*/*/logs
     else
         log_dir=${DATA}/${VERIF_CASE}_${STEP}/plot_output/job_work_dir/${JOB_GROUP}/job*/*/*/*/*/*/*/logs
     fi
-    log_file_count=$(find $log_dir -type f 2>/dev/null |wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        for log_file in $log_dir/*; do
-            echo "Start: $log_file"
-            cat $log_file
-            echo "End: $log_file"
+    log_file_count=$(find ${log_dir} -type f 2>/dev/null |wc -l)
+    if [[ ${log_file_count} -ne 0 ]]; then
+        for log_file in ${log_dir}/*; do
+            echo "Start: ${log_file}"
+            cat ${log_file}
+            echo "End: ${log_file}"
         done
     fi
 done
@@ -173,9 +171,9 @@ if [ "${SENDCOM}" == "YES" ]; then
     for VERIF_TYPE in ${g2op_type_list}; do
         tar_file_combine=${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${fig_name_label}.v${end_date}.tar
         large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${tar_file_combine}
-        tar_file_count=$(find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null |wc -l)
+        tar_file_count=$(find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files ${VERIF_CASE}_${VERIF_TYPE}*.tar 2>/dev/null | wc -l)
         if [ ${tar_file_count} -ne 0 ]; then
-            tar -cvf ${large_tar_file} *.tar
+            tar -cvf ${large_tar_file} ${VERIF_CASE}_${VERIF_TYPE}*.tar
         fi
         if [ -f ${large_tar_file} ]; then
             if [[ ${DATA_TYPE} == *"headline"* ]]; then

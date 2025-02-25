@@ -216,7 +216,6 @@ class TimeSeriesFhrMean:
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0], selected_fcst_hours
         )
-        self.logger.debug(f"current plot title = {plot_title}")
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
             plot_left_logo = True

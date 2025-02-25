@@ -492,7 +492,7 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8'].keys()):
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
         make_plots_jobs_dict['ozmax8'][ozmax8_job+'_FBAR_OBAR']['plots'] = [
-            'time_series_fhr_mean'
+            'time_series'
         ]
     elif ozmax8_job in ['OZMAX8_Thresh']:
         ozmax8_job_line_type_stats = ['CTC/CSI']
@@ -503,9 +503,9 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8'].keys()):
     )
 
     if ozmax8_job in ['OZMAX8']:
-        ozmax8_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
+        ozmax8_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
     elif ozmax8_job in ['OZMAX8_Thresh']:
-        ozmax8_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
+        ozmax8_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
         ozmax8_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['ozmax8'][ozmax8_job]['plots'] = ozmax8_job_plots
@@ -538,7 +538,7 @@ for pmave_job in list(make_plots_jobs_dict['pmave'].keys()):
             'PacificSW', 'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
         ]
         make_plots_jobs_dict['pmave'][pmave_job+'_FBAR_OBAR']['plots'] = [
-            'time_series_fhr_mean'
+            'time_series'
         ]
     elif pmave_job in ['PMAVE_Thresh']:
         pmave_job_line_type_stats = ['CTC/CSI']
@@ -549,9 +549,9 @@ for pmave_job in list(make_plots_jobs_dict['pmave'].keys()):
     )
 
     if pmave_job in ['PMAVE']:
-        pmave_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
+        pmave_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
     elif pmave_job in ['PMAVE_Thresh']:
-        pmave_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
+        pmave_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
         pmave_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['pmave'][pmave_job]['plots'] = pmave_job_plots
@@ -578,9 +578,9 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8_headline'].keys()):
     )
 
     if ozmax8_job in ['OZMAX8_Thresh']:
-        ozmax8_job_plots = ['time_series_fhr_mean']
-    else:
         ozmax8_job_plots = ['time_series']
+    else:
+        ozmax8_job_plots = ['time_series_fhr_mean']
     make_plots_jobs_dict['ozmax8_headline'][ozmax8_job]['plots'] = ozmax8_job_plots
 
 #### pmave
@@ -595,9 +595,9 @@ for pmave_job in list(make_plots_jobs_dict['pmave_headline'].keys()):
     )
 
     if pmave_job in ['PMAVE_Thresh']:
-        pmave_job_plots = ['time_series_fhr_mean']
-    else:
         pmave_job_plots = ['time_series']
+    else:
+        pmave_job_plots = ['time_series_fhr_mean']
     make_plots_jobs_dict['pmave_headline'][pmave_job]['plots'] = pmave_job_plots
 
 #### aeronetaod
@@ -827,12 +827,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                 else:
                     gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                # Check plot files
-                plot_files_exist = gda_util.check_plot_files(job_env_dict)
-                if plot_files_exist:
-                    write_job_cmds = False
-                else:
-                    write_job_cmds = True
+                write_job_cmds = True
+                if restart_mode == 'YES':    # Check plot files
+                    plot_files_exist = gda_util.check_plot_files(
+                        job_env_dict
+                    )
+                    if plot_files_exist:
+                        write_job_cmds = False
                 # Create job file
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
                                         'job'+str(njobs))
@@ -978,14 +979,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                 gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                             else:
                                 gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                            # Check plot files
-                            plot_files_exist = gda_util.check_plot_files(
-                                job_env_dict
-                            )
-                            if plot_files_exist:
-                                 write_job_cmds = False
-                            else:
-                                 write_job_cmds = True
+                            write_job_cmds = True
+                            if restart_mode == 'YES':    # Check plot files
+                                plot_files_exist = gda_util.check_plot_files(
+                                    job_env_dict
+                                )
+                                if plot_files_exist:
+                                    write_job_cmds = False
                             # Create job file
                             job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                     'job'+str(njobs))
@@ -1100,14 +1100,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                 gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                             else:
                                 gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                            # Check plot files
-                            plot_files_exist = gda_util.check_plot_files(
-                                job_env_dict
-                            )
-                            if plot_files_exist:
-                                 write_job_cmds = False
-                            else:
-                                 write_job_cmds = True
+                            write_job_cmds = True
+                            if restart_mode == 'YES':    # Check plot files
+                                plot_files_exist = gda_util.check_plot_files(
+                                    job_env_dict
+                                )
+                                if plot_files_exist:
+                                    write_job_cmds = False
                             # Create job file
                             job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                     'job'+str(njobs))
@@ -1168,12 +1167,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                 else:
                     gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                # Check plot files
-                plot_files_exist = gda_util.check_plot_files(job_env_dict)
-                if plot_files_exist:
-                    write_job_cmds = False
-                else:
-                    write_job_cmds = True
+                write_job_cmds = True
+                if restart_mode == 'YES':    # Check plot files
+                    plot_files_exist = gda_util.check_plot_files(
+                        job_env_dict
+                    )
+                    if plot_files_exist:
+                        write_job_cmds = False
                 # Create job files
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)

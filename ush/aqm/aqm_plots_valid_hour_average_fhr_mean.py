@@ -106,7 +106,7 @@ class ValidHourAverageFhrMean:
             for forecast_hour in plot_fcst_hours:
                 check_init_date=gda_util.get_init_hour(valid_hour,forecast_hour)
                 if check_init_date != int(selected_filter_init_hour):
-                    self.logger.debug(f"Skip building data for forecast hour {forecast_hour} for init_hour = {check_init_date} not equal to {selected_filter_init_hour}")
+                    ## self.logger.debug(f"Skip building data for forecast hour {forecast_hour} for init_hour = {check_init_date} not equal to {selected_filter_init_hour}")
                     continue
                 self.logger.debug(f"Building data for forecast hour {forecast_hour}")
                 # Get dates to plot

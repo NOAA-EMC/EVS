@@ -76,7 +76,7 @@ export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/$
 export COMOUTheadline=${COMOUTheadline:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/headline.${VDATE_END})}
 mkdir -m 775 -p $COMOUT $COMOUTheadline
 
-export DATA_TYPE=${DATA_TYPE:-pm25}
+export DATA_TYPE=${DATA_TYPE:-hourly}
 export restart_mode=${restart_mode:-YES}
 export fig_name_label=${fig_name_label:-last${NDAYS}days}
 #######################################################################
