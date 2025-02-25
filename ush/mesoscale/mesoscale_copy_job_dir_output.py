@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 '''
-Name: global_det_atmos_copy_job_dir_output.py
+Name: mesoscale_atmos_copy_job_dir_output.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This copies MPMD working directory output to common DATA directory
-Run By: scripts/stats/global_det/exevs_global_det_atmos_grid2grid_stats.sh
+Run By: scripts/stats/mesoscale/exevs_nam_mesoscale_precip_stats.sh
 '''
 
 import os
