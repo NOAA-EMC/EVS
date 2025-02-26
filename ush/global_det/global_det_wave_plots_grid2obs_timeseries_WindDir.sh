@@ -3,6 +3,7 @@
 # Name of Script: global_det_wave_timeseries.sh
 # Developers: Deanna Spindler / Deanna.Spindler@noaa.gov
 #             Mallory Row / Mallory.Row@noaa.gov
+#             Qi Shi / Qi.Shi@noaa.gov
 # Purpose of Script: This script generates the job scripts to create
 #                    time series plots.
 # Run By: scripts/plots/global_det/exevs_global_det_wave_grid2obs_plots.sh
