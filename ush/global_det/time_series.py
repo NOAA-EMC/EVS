@@ -853,7 +853,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     metrics_using_var_units = [
         'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
         'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR',
+        'DIR_ME','DIR_MSE','DIR_MAE'
     ]
     if metric2_name is not None:
         metric1_string, metric2_string = metric_long_names
@@ -869,7 +870,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         metric1_string = metric_long_names[0]
         if str(metric1_name).upper() in metrics_using_var_units:
             if units:
-                ylabel = f'{var_long_name} ({units})'
+                print_varname = df['FCST_VAR'].tolist()[0]
+                if print_varname == 'UGRD_VGRD':
+                   ylabel = f'{var_long_name} (degree)'
+                else:    
+                   ylabel = f'{var_long_name} ({units})'
             else:
                 ylabel = f'{var_long_name} (unitless)'
         else:
@@ -1013,7 +1018,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                       + f' unitless)')
     else:
         if units:
-            title2 = f'{level_string} {var_long_name} ({units})'
+            print_varname = df['FCST_VAR'].tolist()[0]
+            if print_varname == 'UGRD_VGRD':
+               title2 = f'{level_string} {var_long_name} (degree)'
+            else:
+               title2 = f'{level_string} {var_long_name} ({units})'
         else:
             title2 = f'{level_string} {var_long_name} (unitless)'
     if obtype == 'SFCSHP':

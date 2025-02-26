@@ -719,7 +719,7 @@ class Reference():
                                     'DPT': 'Dewpoint Temperature',
                                     'UGRD': 'Zonal Wind Speed',
                                     'VGRD': 'Meridional Wind Speed',
-                                    'UGRD_VGRD': 'Vector Wind Speed',
+                                    'UGRD_VGRD': 'Wind Direction',
                                     'GUST': 'Wind Gust',
                                     'CAPE': ('Convective Available Potential'
                                              + ' Energy'),
@@ -761,6 +761,7 @@ class Reference():
                                     'WVPER': 'Mean Period of Wind Waves',
                                     'SWELL': 'Significant Height of Swell Waves',
                                     'SWPER': 'Mean Period of Swell Waves',
+                                    'UGRD_VGRD10m': 'Surface Vector Wind Speed',
                                     'REFC': 'Composite Reflectivity',
                                     'REFD': 'Above Ground Level Reflectivity',
                                     'RETOP': 'Echo Top Height'}
@@ -2582,9 +2583,26 @@ class Reference():
                                     'obs_var_thresholds': '>33.0, >49.4',
                                     'obs_var_options': '',
                                     'plot_group':'sfc_wave'},
-                            }
-                       }
-                  },
+                          }
+                       },
+                'VL1L2': {
+                        'plot_stats_list': ('dir_me, dir_mae, dir_mse,dir_rmse'),
+                        'interp': 'NEAREST',
+                        'vx_mask_list' : ['GLOBAL'],
+                        'var_dict': {
+                        'UGRD_VGRD': {'fcst_var_names': ['UGRD_VGRD'],
+                                         'fcst_var_levels': ['L0'],
+                                         'fcst_var_thresholds': '',
+                                         'fcst_var_options': '',
+                                         'obs_var_names': ['UGRD_VGRD'],
+                                         'obs_var_levels': ['Z10'],
+                                         'obs_var_thresholds': '',
+                                         'obs_var_options': '',
+                                         'plot_group':'sfc_wave'}
+                        }
+                     }
+
+                  }
             }
 
     class formulas():
