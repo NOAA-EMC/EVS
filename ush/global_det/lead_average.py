@@ -861,7 +861,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         if str(metric1_name).upper() in metrics_using_var_units:
             if units:
                 print_varname = df['FCST_VAR'].tolist()[0]
-                if print_varname == 'UGRD_VGRD' and str(metric1_name).upper() in ['DIR_ME','DIR_RMSE','DIR_MAE']:
+                if str(metric1_name).upper() in ['DIR_ME','DIR_RMSE','DIR_MAE']:
                    ylabel = 'Wind Direction (degree)'
                 else:    
                    ylabel = f'{var_long_name} ({units})'
@@ -1014,7 +1014,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         if units:
             print_varname = df['FCST_VAR'].tolist()[0]
-            if print_varname == 'UGRD_VGRD' and str(metric1_name).upper() in ['DIR_ME','DIR_RMSE','DIR_MAE']:
+            if str(metric1_name).upper() in ['DIR_ME','DIR_RMSE','DIR_MAE']:
                title2 = f'{level_string} Wind Direction (degree)'
             else:
                title2 = f'{level_string} {var_long_name} ({units})'
