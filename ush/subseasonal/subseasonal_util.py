@@ -2433,6 +2433,12 @@ def check_model_files(job_dict):
         job_dict['DATE']+job_dict['valid_hr_start'],
         '%Y%m%d%H'
     )
+    if job_dict['VERIF_TYPE'] == 'precip' \
+            and job_dict['job_name'] == 'Week5_Precip':
+        valid_date_dt = datetime.datetime.strptime(
+            job_dict['PEDATE']+job_dict['valid_hr_start'],
+            '%Y%m%d%H'
+        )
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
@@ -2441,6 +2447,8 @@ def check_model_files(job_dict):
     fhr_min = int(job_dict['fhr_start'])
     fhr_max = int(job_dict['fhr_end'])
     fhr_inc = 24
+    if job_dict['VERIF_TYPE'] == 'precip':
+        fhr_inc = 12
     fhr = fhr_min
     fhr_list = []
     fhr_check_input_dict = {}
@@ -2915,6 +2923,28 @@ def check_model_files(job_dict):
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
                     )
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Weekly_Precip':
+                    input_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'], 'weekly_pcp_combine_'
+                        +job_dict['VERIF_TYPE']+'_Precip'
+                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Week5_Precip':
+                    input_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'], 'weekly_pcp_combine_'
+                        +job_dict['VERIF_TYPE']+'_Precip'
+                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-144}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
                 elif job_dict['VERIF_TYPE'] in ['pres_lvls', 'temp'] \
                         and job_dict['job_name'] in ['Days6_10Avg_GeoHeightAnom',
                                                      'Days6_10Avg_GeoHeight',
@@ -2929,6 +2959,17 @@ def check_model_files(job_dict):
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
                     )
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Days6_10_Precip':
+                    input_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'], 'days6_10_pcp_combine_'
+                        +job_dict['VERIF_TYPE']+'_Precip'
+                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
                 elif job_dict['VERIF_TYPE'] in ['pres_lvls', 'temp'] \
                         and job_dict['job_name'] in ['Weeks3_4Avg_GeoHeightAnom',
                                                      'Weeks3_4Avg_GeoHeight',
@@ -2939,6 +2980,17 @@ def check_model_files(job_dict):
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'weeks3_4_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
+                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Weeks3_4_Precip':
+                    input_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'], 'weeks3_4_pcp_combine_'
+                        +job_dict['VERIF_TYPE']+'_Precip'
                         +'_init{init?fmt=%Y%m%d%H}_'
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
@@ -3919,6 +3971,12 @@ def check_truth_files(job_dict):
         job_dict['DATE']+job_dict['valid_hr_start'],
         '%Y%m%d%H'
     )
+    if job_dict['VERIF_TYPE'] == 'precip' \
+            and job_dict['job_name'] == 'Week5_Precip':
+        valid_date_dt = datetime.datetime.strptime(
+            job_dict['PEDATE']+job_dict['valid_hr_start'],
+            '%Y%m%d%H'
+        )
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
@@ -4013,6 +4071,18 @@ def check_truth_files(job_dict):
                     ['anl'], {}
                 )
                 truth_file_list.append(osi_saf_file)
+            elif job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == 'Weekly_Precip':
+                ccpa_file_format =
+            elif job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == 'Week5_Precip':
+                ccpa_file_format =
+            elif job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == 'Days6_10_Precip':
+                ccpa_file_format =
+            elif job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == 'Weeks3_4_Precip':
+                ccpa_file_format =
             elif job_dict['VERIF_TYPE'] == 'seaice' \
                     and job_dict['job_name'] == 'MonthlyAvg_Concentration':
                 osi_saf_file_format = os.path.join(
