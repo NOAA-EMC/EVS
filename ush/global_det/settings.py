@@ -719,7 +719,7 @@ class Reference():
                                     'DPT': 'Dewpoint Temperature',
                                     'UGRD': 'Zonal Wind Speed',
                                     'VGRD': 'Meridional Wind Speed',
-                                    'UGRD_VGRD': 'Wind Direction',
+                                    'UGRD_VGRD': 'Vector Wind Speed',
                                     'GUST': 'Wind Gust',
                                     'CAPE': ('Convective Available Potential'
                                              + ' Energy'),
@@ -761,7 +761,6 @@ class Reference():
                                     'WVPER': 'Mean Period of Wind Waves',
                                     'SWELL': 'Significant Height of Swell Waves',
                                     'SWPER': 'Mean Period of Swell Waves',
-                                    'UGRD_VGRD10m': 'Surface Vector Wind Speed',
                                     'REFC': 'Composite Reflectivity',
                                     'REFD': 'Above Ground Level Reflectivity',
                                     'RETOP': 'Echo Top Height'}

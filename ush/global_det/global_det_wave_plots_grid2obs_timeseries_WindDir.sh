@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: global_det_wave_timeseries.sh
+# Name of Script: global_det_wave_timeseries_WindDir.sh
 # Developers: Deanna Spindler / Deanna.Spindler@noaa.gov
 #             Mallory Row / Mallory.Row@noaa.gov
 #             Qi Shi / Qi.Shi@noaa.gov

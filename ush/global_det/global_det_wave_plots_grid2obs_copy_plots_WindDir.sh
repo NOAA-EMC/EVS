@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: global_det_wave_copy_plots.sh
+# Name of Script: global_det_wave_copy_plots_WindDir.sh
 # Developers: Mallory Row / Mallory.Row@noaa.gov
 #             Qi Shi / Qi.Shi@noaa.gov
 # Purpose of Script: This script generates the job scripts to create
