@@ -694,13 +694,13 @@ def get_stat_plot_name(logger, stat):
    elif stat == 'p90':
       stat_plot_name = '90th Percentile'
    elif stat == 'dir_me':
-      stat_plot_name = 'Mean Wind Direction Difference'
+      stat_plot_name = 'Mean Error (Bias)'
    elif stat == 'dir_mae':
-      stat_plot_name = 'Mean Absolute Wind Direction Difference'
+      stat_plot_name = 'Mean Absolute Error'
    elif stat == 'dir_mse':
-      stat_plot_name = 'Mean Squared Wind Direction Difference'
+      stat_plot_name = 'Mean Squared Error'
    elif stat == 'dir_rmse':
-      stat_plot_name = 'Root Mean Square Wind Direction Difference'
+      stat_plot_name = 'Root Mean Square Error'
    else:
       logger.error(stat+" is not a valid option")
       exit(1)

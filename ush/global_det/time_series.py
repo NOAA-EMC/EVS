@@ -871,7 +871,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         metric1_string = metric_long_names[0]
         if str(metric1_name).upper() in metrics_using_var_units:
             if units:
-                print_varname = df['FCST_VAR'].tolist()[0]
                 if str(metric1_name).upper() in ['DIR_ME','DIR_RMSE','DIR_MAE']:
                    ylabel = 'Wind Direction (degree)'
                 else:    
@@ -1019,7 +1018,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                       + f' unitless)')
     else:
         if units:
-            print_varname = df['FCST_VAR'].tolist()[0]
             if str(metric1_name).upper() in ['DIR_ME','DIR_RMSE','DIR_MAE']:
                title2 = f'{level_string} Wind Direction (degree)'
             else:
