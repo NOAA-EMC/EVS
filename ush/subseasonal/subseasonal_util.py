@@ -3054,6 +3054,32 @@ def check_model_files(job_dict):
                             'init_date': init_date_dt,
                             'forecast_hour': str(fhr)
                         }
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Weekly_Precip':
+                    if str(fhr) in ['180', '348', '516', '684']:
+                        fhr_check_input_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                        fhr_check_output_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Week5_Precip':
+                    if fhr == 828:
+                        fhr_check_input_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                        fhr_check_output_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
                 elif job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
                         and job_dict['job_name'] in ['MonthlyAvg_Concentration',
                                                      'MonthlyAvg_SST']:
@@ -3084,12 +3110,38 @@ def check_model_files(job_dict):
                             'init_date': init_date_dt,
                             'forecast_hour': str(fhr)
                         }
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Days6_10_Precip':
+                    if fhr == 252:
+                        fhr_check_input_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                        fhr_check_output_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
                 elif job_dict['VERIF_TYPE'] in ['pres_lvls', 'temp'] \
                         and job_dict['job_name'] in ['Weeks3_4Avg_GeoHeightAnom',
                                                      'Weeks3_4Avg_GeoHeight',
                                                      'Weeks3_4Avg_TempAnom2m',
                                                      'Weeks3_4Avg_Temp2m']:
                     if fhr == 672:
+                        fhr_check_input_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                        fhr_check_output_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Weeks3_4_Precip':
+                    if fhr == 684:
                         fhr_check_input_dict[str(fhr)]['file1'] = {
                             'valid_date': valid_date_dt,
                             'init_date': init_date_dt,
@@ -3980,6 +4032,7 @@ def check_truth_files(job_dict):
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
+    model = job_dict['MODEL']
     truth_file_list = []
     if job_dict['JOB_GROUP'] == 'reformat_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
@@ -4073,16 +4126,72 @@ def check_truth_files(job_dict):
                 truth_file_list.append(osi_saf_file)
             elif job_dict['VERIF_TYPE'] == 'precip' \
                     and job_dict['job_name'] == 'Weekly_Precip':
-                ccpa_file_format =
+                ccpa_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+job_dict['DATE'],
+                    model, job_dict['VERIF_CASE'], 'weekly_pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_CCPA'
+                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
+                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ccpa_file = format_filler(
+                    ccpa_file_format,
+                    valid_date_dt,
+                    valid_date_dt,
+                    ['anl'], {}
+                )
+                truth_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'precip' \
                     and job_dict['job_name'] == 'Week5_Precip':
-                ccpa_file_format =
+                ccpa_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+job_dict['DATE'],
+                    model, job_dict['VERIF_CASE'], 'weekly_pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_CCPA'
+                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-144}'
+                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ccpa_file = format_filler(
+                    ccpa_file_format,
+                    valid_date_dt,
+                    valid_date_dt,
+                    ['anl'], {}
+                )
+                truth_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'precip' \
                     and job_dict['job_name'] == 'Days6_10_Precip':
-                ccpa_file_format =
+                ccpa_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+job_dict['DATE'],
+                    model, job_dict['VERIF_CASE'], 'days6_10_pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_CCPA'
+                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
+                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ccpa_file = format_filler(
+                    ccpa_file_format,
+                    valid_date_dt,
+                    valid_date_dt,
+                    ['anl'], {}
+                )
+                truth_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'precip' \
                     and job_dict['job_name'] == 'Weeks3_4_Precip':
-                ccpa_file_format =
+                ccpa_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+job_dict['DATE'],
+                    model, job_dict['VERIF_CASE'], 'weeks3_4_pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_CCPA'
+                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
+                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ccpa_file = format_filler(
+                    ccpa_file_format,
+                    valid_date_dt,
+                    valid_date_dt,
+                    ['anl'], {}
+                )
+                truth_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'seaice' \
                     and job_dict['job_name'] == 'MonthlyAvg_Concentration':
                 osi_saf_file_format = os.path.join(
