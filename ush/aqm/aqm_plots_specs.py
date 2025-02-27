@@ -897,7 +897,7 @@ class PlotSpecs:
             ]
         if self.plot_type in ['time_series',
                               'performance_diagram', 'threshold_average']:
-            fhr_for_title = [date_info_dict['forecast_hours']]
+            fhr_for_title = [date_info_dict['forecast_hour']]
         else:
             fhr_for_title = date_info_dict['forecast_hours']
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':

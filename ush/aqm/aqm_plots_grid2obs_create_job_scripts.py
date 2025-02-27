@@ -503,7 +503,7 @@ for ozmax8_job in list(make_plots_jobs_dict['ozmax8'].keys()):
     )
 
     if ozmax8_job in ['OZMAX8']:
-        ozmax8_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
+        ozmax8_job_plots = ['time_series', 'lead_average']
     elif ozmax8_job in ['OZMAX8_Thresh']:
         ozmax8_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
@@ -549,7 +549,7 @@ for pmave_job in list(make_plots_jobs_dict['pmave'].keys()):
     )
 
     if pmave_job in ['PMAVE']:
-        pmave_job_plots = ['time_series', 'lead_average', 'valid_hour_average']
+        pmave_job_plots = ['time_series', 'lead_average']
     elif pmave_job in ['PMAVE_Thresh']:
         pmave_job_plots = ['time_series', 'lead_average', 'threshold_average']
     else:
