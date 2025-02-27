@@ -241,6 +241,8 @@ if JOB_GROUP == 'condense_stats':
                 job_DATA_condensed_model_stat_file
             )
         if not os.path.exists(check_job_condensed_model_stat_file) or restart_mode != "YES":
+            if os.path.exists(check_job_condensed_model_stat_file):
+                os.remove(check_job_condensed_model_stat_file)
             gda_util.condense_model_stat_files(
                 logger, stat_base_dir, job_work_dir, model, obs_name, vx_mask,
                 fcst_var_name, fcst_var_level, obs_var_name, obs_var_level,
@@ -347,6 +349,8 @@ elif JOB_GROUP == 'filter_stats':
                     )
                     job_input_dir = job_DATA_dir
                 if not os.path.exists(check_job_filter_stats_model_file) or restart_mode != "YES":
+                    if os.path.exists(check_job_filter_stats_model_file):
+                        os.remove(check_job_filter_stats_model_file)
                     all_model_df = gda_util.build_df(
                         JOB_GROUP, logger, job_input_dir, job_work_dir,
                         model_info_dict, met_info_dict,
@@ -691,7 +695,9 @@ elif JOB_GROUP == 'tar_images':
     else:
         check_job_tar_file = job_DATA_tar_file
         job_input_dir = job_DATA_dir
-    if not os.path.exists(check_job_tar_file):
+    if not os.path.exists(check_job_tar_file) or restart_mode != "YES":
+        if os.path.exists(check_job_tar_file):
+            os.remove(check_job_tar_file)
         if len(glob.glob(job_input_dir+'/*')) != 0:
             logger.debug(f"Making tar file {job_work_tar_file} "
                          +f"from {job_input_dir}")
