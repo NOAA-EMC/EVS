@@ -116,22 +116,38 @@ fi
 
        if [ $score_type = stat_by_level ] ; then
          FCST_LEVEL_values="P1000,P975,P950,P925,P900,P875,P850,P825,P800,P750,P700,P650,P600,P550,P500,P400,P300,P200"
-	 var_rst=${var}
        elif [ $score_type = lead_average ] ; then 
 	  if [ $VAR = TMP_lt0C ] ; then
 	     FCST_LEVEL_values="P850"
-	     var_rst=tmp_ens_freq_lt273.15
           elif [ $VAR = WIND_ge30kt ] ; then
              FCST_LEVEL_values="P850 P700"
-	     var_rst=wind_ens_freq_ge15.4
 	  elif [ $VAR = WIND_ge40kt ] ; then
              FCST_LEVEL_values="P850 P700"
-             var_rst=wind_ens_freq_ge20.58
 	  fi
        fi	  
      
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do  
 
+       if [ $score_type = lead_average ] ; then
+        p_mb=${FCST_LEVEL_value:1:4}mb
+       fi	
+
+       if [ $score_type = stat_by_level ] ; then
+	  var_rst=${var}
+	  lead_rst=_f${lead}
+       elif [ $score_type = lead_average ] ; then
+	if [ $VAR = TMP_lt0C ] ; then 
+	  var_rst=${p_mb}_tmp_ens_freq_lt273.15
+	  lead_rst=""
+        elif [ $VAR = WIND_ge30kt ] ; then 
+          var_rst=${p_mb}_wind_ens_freq_ge15.4
+	  lead_rst="_eq0.10000"
+        elif [ $VAR = WIND_ge40kt ] ; then
+          var_rst=${p_mb}_wind_ens_freq_ge20.58
+          lead_rst="_eq0.10000"	  
+        fi
+       fi
+ 	     
        OBS_LEVEL_value=$FCST_LEVEL_value
 
        level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
@@ -195,7 +211,6 @@ fi
 	   thresh_obs=' '
 	 elif [ $line_tp = pstd ] ; then
 	    if [ $VAR = TMP_lt0C ] ; then
-	       #thresh_fcst='==0.10000'
 	       thresh_fcst='==273.15'
 	       thresh_obs='<273.15'
              elif [ $VAR =  WIND_ge30kt ] ; then
@@ -215,12 +230,12 @@ fi
 
          #Save for restart and tar files
 	 echo "for domain in conus alaska hawaii prico ; do" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-         echo " if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "   cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo " if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${var_rst}_${stats_rst}${lead_rst}.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "   cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${var_rst}_${stats_rst}${lead_rst}.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	 echo "   >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
          #Copy files to restart directory"
 	 echo "   if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "      cp -v $all_plots/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "      cp -v $all_plots/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${var_rst}_${stats_rst}${lead_rst}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	 echo "   fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	 echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
          echo "done" >>run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
@@ -234,8 +249,8 @@ fi
 
        else
 	 for domain in conus alaska hawaii prico ; do
-          if [ -s $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png ] ; then
-	    cp -v $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var_rst}*_${stats_rst}*.png $all_plots
+          if [ -s $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${var_rst}_${stats_rst}${lead_rst}.png ] ; then
+	    cp -v $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${var_rst}_${stats_rst}${lead_rst}.png $all_plots
           fi
          done	  
        fi
