@@ -28,6 +28,7 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
+VERIF_CASE = os.environ['VERIF_CASE']
 USER = os.environ['USER']
 jobid = os.environ['jobid']
 SENDMAIL = os.environ['SENDMAIL']
@@ -45,7 +46,7 @@ for VHOUR in VHOUR_LIST:
         accum_start_dt = accum_end_dt - datetime.timedelta(hours=int(accum))
         valid_dt = accum_end_dt
         # MODEL
-        DATAmodel = os.path.join(DATA, 'data', MODELNAME)
+        DATAmodel = os.path.join(DATA, VERIF_CASE, 'data', MODELNAME)
         if not os.path.exists(DATAmodel):
             os.makedirs(DATAmodel)
             print(f"Making directory {DATAmodel}")
@@ -141,7 +142,7 @@ for VHOUR in VHOUR_LIST:
                                     mailmsg.close()
                                     os.chmod(mail_COMINmodel_file, 0o755)
         # OBS: Get NOHRSC
-        DATAnohrsc = os.path.join(DATA, 'data', 'nohrsc')
+        DATAnohrsc = os.path.join(DATA, VERIF_CASE, 'data', 'nohrsc')
         if not os.path.exists(DATAnohrsc):
             os.makedirs(DATAnohrsc)
             print(f"Making directory {DATAnohrsc}")
