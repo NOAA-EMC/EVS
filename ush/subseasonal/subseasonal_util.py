@@ -4470,6 +4470,10 @@ def initialize_job_env_dict(verif_type, group,
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('GFS')
                 )
+            elif verif_type == 'precip':
+                valid_hr_start, valid_hr_end, valid_hr_inc = (
+                    get_obs_valid_hrs('CCPA')
+                )
             elif verif_type == 'prepbufr':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('BUFR')
