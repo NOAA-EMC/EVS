@@ -1717,12 +1717,13 @@ def check_weekly_model_files(job_dict):
                             (fhr_fileN_JOB, fhr_fileN_COMOUT)
                         )
     if job_dict['VERIF_TYPE'] == 'precip':
-        if len(input_fhr_list) >= 22:
+        # Full set of files is required for PCPCombine
+        if len(input_fhr_list) == 28:
             model_files_exist = True
         else:
             model_files_exist = False
         if job_dict['WEEK'] == 'Week5':
-            if len(input_fhr_list) >= 19:
+            if len(input_fhr_list) == 24:
                 model_files_exist = True
             else:
                 model_files_exist = False
@@ -2135,7 +2136,8 @@ def check_days6_10_model_files(job_dict):
                             (fhr_fileN_JOB, fhr_fileN_COMOUT)
                         )
     if job_dict['VERIF_TYPE'] == 'precip':
-        if len(input_fhr_list) >= 16:
+        # Full set of files is required for PCPCombine
+        if len(input_fhr_list) == 20:
             model_files_exist = True
         else:
             model_files_exist = False
@@ -2401,7 +2403,8 @@ def check_weeks3_4_model_files(job_dict):
                             (fhr_fileN_JOB, fhr_fileN_COMOUT)
                         )
     if job_dict['VERIF_TYPE'] == 'precip':
-        if len(input_fhr_list) >= 44:
+        # Full set of files is required for PCPCombine
+        if len(input_fhr_list) == 56:
             model_files_exist = True
         else:
             model_files_exist = False
@@ -3620,18 +3623,12 @@ def check_weekly_truth_files(job_dict):
             else:
                 truth_input_files_exist_list.append(False)
         if job_dict['VERIF_TYPE'] == 'precip':
-            if job_dict['WEEK'] == 'Week5':
-                if any(x == True for x in truth_input_files_exist_list) \
-                        and truth_input_files_exist_list.count(True) >= 5:
-                    truth_files_exist = True
-                else:
-                    truth_files_exist = False
+            # Full set of files is required for PCPCombine
+            if all(x == True for x in truth_input_files_exist_list) \
+                    and len(truth_input_files_exist_list) > 0:
+                truth_files_exist = True
             else:
-                if any(x == True for x in truth_input_files_exist_list) \
-                        and truth_input_files_exist_list.count(True) >= 6:
-                    truth_files_exist = True
-                else:
-                    truth_files_exist = False
+                truth_files_exist = False
         else:
             if any(x == True for x in truth_input_files_exist_list) \
                     and truth_input_files_exist_list.count(True) >= 12:
@@ -3796,8 +3793,9 @@ def check_days6_10_truth_files(job_dict):
             else:
                 truth_input_files_exist_list.append(False)
         if job_dict['VERIF_TYPE'] == 'precip':
-            if any(x == True for x in truth_input_files_exist_list) \
-                    and truth_input_files_exist_list.count(True) >= 4:
+            # Full set of files is required for PCPCombine
+            if all(x == True for x in truth_input_files_exist_list) \
+                    and len(truth_input_files_exist_list) > 0:
                 truth_files_exist = True
             else:
                 truth_files_exist = False
@@ -3996,8 +3994,9 @@ def check_weeks3_4_truth_files(job_dict):
                 truth_files_exist = False
         else:
             if job_dict['VERIF_TYPE'] == 'precip':
-                if any(x == True for x in truth_input_files_exist_list) \
-                        and truth_input_files_exist_list.count(True) >= 11:
+                # Full set of files is required for PCPCombine
+                if all(x == True for x in truth_input_files_exist_list) \
+                        and len(truth_input_files_exist_list) > 0:
                     truth_files_exist = True
                 else:
                     truth_files_exist = False
