@@ -63,9 +63,10 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     export g2op_model_plot_name_list="${modelid}_raw ${modelid}_bc"
     export g2op_type_list="pmave"
     export g2op_event_equalization="YES"
+    ## export g2op_pmave_init_hr_list="06 12"
     export g2op_pmave_init_hr_list="06 12"
     export g2op_pmave_valid_hr_list="04"
-    export g2op_pmave_fhr_list="12 16 46 40 70 64"
+    export g2op_pmave_fhr_list="16 22 40 46 64 70"
     export g2op_pmave_fday_list="1 2 3"
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"
