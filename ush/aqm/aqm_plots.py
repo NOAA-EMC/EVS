@@ -394,6 +394,44 @@ elif JOB_GROUP == 'make_plots':
     met_info_dict = original_met_info_dict.copy()
     if plot == 'time_series':
         import aqm_plots_time_series as gdap_ts
+        current_var=var_info[0][0][0]
+        logger.info(f"CHECK :: Time Series plot_var = {current_var}")
+        if current_var == "OZMAX8":
+            if init_hr_start == "06":
+                if fday_start == "1":
+                    select_fcst_hour = "05"
+                elif fday_start == "2":
+                    select_fcst_hour = "29"
+                elif fday_start == "3":
+                    select_fcst_hour = "53"
+            elif init_hr_start == "12":
+                if fday_start == "1":
+                    select_fcst_hour = "23"
+                elif fday_start == "2":
+                    select_fcst_hour = "47"
+                elif fday_start == "3":
+                    select_fcst_hour = "71"
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
+            fhrs=[]
+            fhrs.append(int(select_fcst_hour))
+        if current_var == "PMAVE":
+            if init_hr_start == "06":
+                if fday_start == "1":
+                    select_fcst_hour = "22"
+                elif fday_start == "2":
+                    select_fcst_hour = "46"
+                elif fday_start == "3":
+                    select_fcst_hour = "70"
+            elif init_hr_start == "12":
+                if fday_start == "1":
+                    select_fcst_hour = "16"
+                elif fday_start == "2":
+                    select_fcst_hour = "40"
+                elif fday_start == "3":
+                    select_fcst_hour = "64"
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
+            fhrs.append(int(select_fcst_hour))
+
         for ts_info in \
                 list(itertools.product(valid_hrs, fhrs, var_info)):
             date_info_dict['valid_hr_start'] = str(ts_info[0])
