@@ -93,7 +93,7 @@ reformat_data_gefs_jobs_dict = {
                            'var1_levels': 'A06'},
                    'commands': [sub_util.metplus_command(
                                     'GenEnsProd_fcstSUBSEASONAL_'
-                                    +'Days6_10NetCDF.conf'
+                                    +'Days6_10precip.conf'
                                 ),
                                 sub_util.metplus_command(
                                     'PCPCombine_fcstSUBSEASONAL_'
@@ -131,7 +131,7 @@ reformat_data_cfs_jobs_dict = {
                            'var1_levels': 'A06'},
                    'commands': [sub_util.metplus_command(
                                     'GenEnsProd_fcstCFS_'
-                                    +'Days6_10NetCDF.conf'
+                                    +'Days6_10precip.conf'
                                 ),
                                 sub_util.metplus_command(
                                     'PCPCombine_fcstSUBSEASONAL_'
