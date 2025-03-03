@@ -50,7 +50,7 @@ while [ $n -le $past_days ] ; do
   n=$((n+1))
 done 
  
-export fcst_init_hours="0 12"
+export fcst_init_hour="0, 12"
 export fcst_valid_hours="0 12"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
