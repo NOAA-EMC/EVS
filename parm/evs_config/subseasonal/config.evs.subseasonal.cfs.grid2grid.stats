@@ -44,14 +44,16 @@ export metplus_version="$metplus_ver"
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
 if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
-    #g2gstats_type_list: list type of verifications to run for grid-to-grid: temp, pres_lvls, sst, seaice
+    #g2gstats_type_list: list type of verifications to run for grid-to-grid: temp, pres_lvls, precip, sst, seaice
     #
     #        temp:      2-m temperature (including anomaly) to compare to ECMWF 
     #        pres_lvls: pressure level variables to compare to GFS 
+    #        precip:    compare to CCPA
     #        sst:       compare to GHRSST OSPO 
     #        seaice:    compare to OSI-SAF
     #g2gstats_*_truth_name_list:   list of reference name for truth files
     #g2gstats_*_truth_file_format_list: list of truth files    
+    #g2gstats_precip_file_accum_list: list of precip accumulations in file: hours (HH) or continuous
     #g2gstats_*_inithour_list:          all forecast init hours to be included in verification: HH
     #g2gstats_*_vhr_list:               all valid hours to be included in verification: HH
     #g2gstats_*_fhr_min:                forecast hour to start verification HH[H]
@@ -59,7 +61,7 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     #g2gstats_*_fhr_inc:                    frequency to verify forecast hours at HH[H]
     #g2gstats_*_grid:                   NCEP grid to do verification on
     #g2gstats_*_gather_by:              how to group the verification data, VSDB, VALID, INIT
-    export g2gstats_type_list="sst seaice temp pres_lvls"
+    export g2gstats_type_list="sst seaice temp pres_lvls precip"
     export g2gstats_temp_truth_name_list="ecmwf_anl"
     export g2gstats_temp_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/ecmwf/ecmwf.{valid?fmt=%Y%m%d%H}.anl"
     export g2gstats_temp_inithour_list="00"
@@ -78,6 +80,16 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     export g2gstats_pres_lvls_fhr_inc=12
     export g2gstats_pres_lvls_grid="G003"
     export g2gstats_pres_lvls_gather_by="VALID"
+    export g2gstats_precip_truth_name_list="ccpa"
+    export g2gstats_precip_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/ccpa/pcp_combine_precip_accum24hr_24hrCCPA_{valid?fmt=%Y%m%d%H}.nc"
+    export g2gstats_precip_file_accum_list="06"
+    export g2gstats_precip_inithour_list="00"
+    export g2gstats_precip_vhr_list="18 00 06 12"
+    export g2gstats_precip_fhr_min="24"
+    export g2gstats_precip_fhr_max="828"
+    export g2gstats_precip_fhr_inc=6
+    export g2gstats_precip_grid="G003"
+    export g2gstats_precip_gather_by="VALID"
     export g2gstats_sst_truth_name_list="ghrsst_anl"
     export g2gstats_sst_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/ghrsst_ospo/ghrsst_ospo.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}.nc"
     export g2gstats_sst_inithour_list="00"
