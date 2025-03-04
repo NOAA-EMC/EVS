@@ -81,12 +81,15 @@ for group in $JOB_GROUP_list; do
         done
     fi
     if [ $JOB_GROUP = gather_stats ]; then
-        # Copy output files into the correct EVS COMOUT directory
-        if [ $SENDCOM = YES ]; then
-            if [ -s $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+       echo "Copy job dir output"
+       python $USHevs/mesoscale/mesoscale_copy_job_dir_output.py
+       export err=$?; err_chk
+       # Copy output files into the correct EVS COMOUT directory
+       if [ $SENDCOM = YES ]; then
+           if [ -s $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
                cp -v $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal/.
-	    fi
-        fi
+           fi
+       fi
     fi
 done
 

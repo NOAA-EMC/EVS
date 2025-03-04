@@ -58,6 +58,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 assemble_data_obs_jobs_dict = {
     'temp': {},
     'pres_lvls': {},
+    'precip': {},
     'seaice': {},
     'sst': {},
 }
@@ -510,6 +511,7 @@ assemble_data_model_jobs_dict = {
                                                     )]
                                                )]},
     },
+    'precip': {},
     'seaice': {
         'WeeklyAvg_Concentration': {'env': {'var1_name': 'ICEC',
                                             'var1_levels': 'Z0',},
@@ -798,6 +800,28 @@ generate_stats_jobs_dict = {
                                                    +'Weeks3_4Avg.conf'
                                                )]},
     },
+    'precip': {
+        'Weekly_Precip': {'env': {'var1_name': 'APCP_A168'},
+                          'commands': [sub_util.metplus_command(
+                                           'GridStat_fcstSUBSEASONAL_'
+                                           +'obsCCPA_WeeklyNbrhd.conf'
+                                       )]},
+        'Week5_Precip': {'env': {'var1_name': 'APCP_A144'},
+                         'commands': [sub_util.metplus_command(
+                                          'GridStat_fcstSUBSEASONAL_'
+                                          +'obsCCPA_Week5Nbrhd.conf'
+                                      )]},
+        'Days6_10_Precip': {'env': {'var1_name': 'APCP_A120'},
+                            'commands': [sub_util.metplus_command(
+                                             'GridStat_fcstSUBSEASONAL_'
+                                             +'obsCCPA_Days6_10Nbrhd.conf'
+                                         )]},
+        'Weeks3_4_Precip': {'env': {'var1_name': 'APCP_A336'},
+                            'commands': [sub_util.metplus_command(
+                                             'GridStat_fcstSUBSEASONAL_'
+                                             +'obsCCPA_Weeks3_4Nbrhd.conf'
+                                         )]},
+    },
     'seaice': {
         'WeeklyAvg_Concentration': {'env': {},
                                     'commands': [sub_util.metplus_command(
@@ -883,6 +907,9 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
                 ddate_dt = date_dt - datetime.timedelta(days=1)
+                if verif_type == 'precip' \
+                        and verif_type_job == 'Week5_Precip':
+                    job_env_dict['PEDATE'] = ddate_dt.strftime('%Y%m%d')
                 job_env_dict['DAILYSTART'] = ddate_dt.strftime('%Y%m%d')
                 wdate_dt = date_dt - datetime.timedelta(days=7)
                 job_env_dict['WEEKLYSTART'] = wdate_dt.strftime('%Y%m%d')

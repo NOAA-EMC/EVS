@@ -11,6 +11,7 @@
 # Developed:     Nov. 18, 2021 by Marcel Caron 
 # Modified:      Nov. 02, 2022 by Marcel Caron             
 #                Nov. 16, 2022 by L. Gwen Chen (lichuan.chen@noaa.gov)
+#                Feb. 26, 2025 by Qi Shi (qi.shi@noaa.gov)
 # Title:         Line plot of verification metric as a function of 
 #                lead time
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -842,7 +843,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     metrics_using_var_units = [
         'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
         'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR',
+        'DIR_ME','DIR_RMSE','DIR_MAE'
     ]
     if metric2_name is not None:
         metric1_string, metric2_string = metric_long_names
@@ -858,7 +860,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         metric1_string = metric_long_names[0]
         if str(metric1_name).upper() in metrics_using_var_units:
             if units:
-                ylabel = f'{var_long_name} ({units})'
+                if str(metric1_name).upper() in ['DIR_ME','DIR_RMSE','DIR_MAE']:
+                   ylabel = 'Wind Direction (degree)'
+                else:    
+                   ylabel = f'{var_long_name} ({units})'
             else:
                 ylabel = f'{var_long_name} (unitless)'
         else:
@@ -1007,7 +1012,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                       + f'unitless)')
     else:
         if units:
-            title2 = f'{level_string}{var_long_name} ({units})'
+            if str(metric1_name).upper() in ['DIR_ME','DIR_RMSE','DIR_MAE']:
+               title2 = f'{level_string} Wind Direction (degree)'
+            else:
+               title2 = f'{level_string} {var_long_name} ({units})'
         else:
             title2 = f'{level_string}{var_long_name} (unitless)'
     if obtype == 'SFCSHP':

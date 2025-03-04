@@ -165,34 +165,39 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    if [ "${WEEK}" = "Week1" ]; then
 		export CORRECT_INIT_DATE=$PDYm9
 		export CORRECT_LEAD_SEQ=0,12,24,36,48,60,72,84,96,108,120,132,144,156,168
+		export PRECIP_LEAD_SEQ=18,24,30,36,42,48,54,60,66,72,78,84,90,96,102,108,114,120,126,132,138,144,150,156,162,168,174,180
 	    elif [ "${WEEK}" = "Week2" ]; then
 		export CORRECT_INIT_DATE=$PDYm16
 		export CORRECT_LEAD_SEQ=168,180,192,204,216,228,240,252,264,276,288,300,312,324,336
+		export PRECIP_LEAD_SEQ=186,192,198,204,210,216,222,228,234,240,246,252,258,264,270,276,282,288,294,300,306,312,318,324,330,336,342,348
 	    elif [ "${WEEK}" = "Week3" ]; then
 		export CORRECT_INIT_DATE=$PDYm23
 		export CORRECT_LEAD_SEQ=336,348,360,372,384,396,408,420,432,444,456,468,480,492,504
+		export PRECIP_LEAD_SEQ=354,360,366,372,378,384,390,396,402,408,414,420,426,432,438,444,450,456,462,468,474,480,486,492,498,504,510,516
 	    elif [ "${WEEK}" = "Week5" ]; then
 		export CORRECT_INIT_DATE=$PDYm37
 		export CORRECT_LEAD_SEQ=672,684,696,708,720,732,744,756,768,780,792,804,816,828,840
+		export PRECIP_LEAD_SEQ=690,696,702,708,714,720,726,732,738,744,750,756,762,768,774,780,786,792,798,804,810,816,822,828
 	    fi
 	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_weekly_reformat_job_scripts.py
 	    export err=$?; err_chk
-	    export njobs=$((njobs+4)) 
+	    export njobs=$((njobs+5)) 
         done
 	WEEK4_LIST="Week4"
 	for WEEK in $WEEK4_LIST; do
-	    export njobs=51
+	    export njobs=55
 	    export WEEK=$WEEK
 	    if [ "${WEEK}" = "Week4" ]; then
 		export CORRECT_INIT_DATE=$PDYm30
 		export CORRECT_LEAD_SEQ=504,516,528,540,552,564,576,588,600,612,624,636,648,660,672
+		export PRECIP_LEAD_SEQ=522,528,534,540,546,552,558,564,570,576,582,588,594,600,606,612,618,624,630,636,642,648,654,660,666,672,678,684
 	    fi
 	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_week4_reformat_job_scripts.py
 	    export err=$?; err_chk
 	done
 	MONTHLY_LIST="Month1"
 	for MONTH in $MONTHLY_LIST; do
-	    export njobs=53
+	    export njobs=58
 	    export MONTH=$MONTH
 	    if [ "${MONTH}" = "Month1" ]; then
 		export CORRECT_INIT_DATE=$PDYm32
@@ -203,22 +208,24 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
         done
 	DAYS6_10_LIST="Days6_10"
 	for DAYS in $DAYS6_10_LIST; do
-	    export njobs=55
+	    export njobs=60
 	    export DAYS=$DAYS
 	    if [ "${DAYS}" = "Days6_10" ]; then
 		export CORRECT_INIT_DATE=$PDYm12
 		export CORRECT_LEAD_SEQ=120,132,144,156,168,180,192,204,216,228,240
+		export PRECIP_LEAD_SEQ=138,144,150,156,162,168,174,180,186,192,198,204,210,216,222,228,234,240,246,252
 	    fi
 	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_days6_10_reformat_job_scripts.py
 	    export err=$?; err_chk
 	done
 	WEEKS3_4_LIST="Weeks3_4"
 	for WEEKS in $WEEKS3_4_LIST; do
-	    export njobs=57
+	    export njobs=63
 	    export WEEKS=$WEEKS
 	    if [ "${WEEKS}" = "Weeks3_4" ]; then
 		export CORRECT_INIT_DATE=$PDYm30
 		export CORRECT_LEAD_SEQ=336,348,360,372,384,396,408,420,432,444,456,468,480,492,504,516,528,540,552,564,576,588,600,612,624,636,648,660,672
+		export PRECIP_LEAD_SEQ=354,360,366,372,378,384,390,396,402,408,414,420,426,432,438,444,450,456,462,468,474,480,486,492,498,504,510,516,522,528,534,540,546,552,558,564,570,576,582,588,594,600,606,612,618,624,630,636,642,648,654,660,666,672,678,684
 	    fi
 	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_weeks3_4_reformat_job_scripts.py
 	    export err=$?; err_chk
