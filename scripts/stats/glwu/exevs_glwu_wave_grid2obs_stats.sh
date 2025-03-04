@@ -4,7 +4,7 @@
 # Purpose of Script: To create stat files for GLWU forecasts verified with
 #    NDBC buoy data using MET/METplus.
 # Developer: Samira Ardani (samira.ardani@noaa.gov)
-#            Aded MPMD directories and updated the $DATA structure (03/2025).
+#            Added MPMD directories and updated the $DATA structure (03/2025).
 # Citation:  Deanna Spindler / Deanna.Spindler@noaa.gov (global_det, global_ens)
 #            Mallory Row / Mallory.Row@noaa.gov (global_det, global_ens)
 ###############################################################################
