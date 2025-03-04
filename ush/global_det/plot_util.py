@@ -693,6 +693,14 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Scatter Index'
    elif stat == 'p90':
       stat_plot_name = '90th Percentile'
+   elif stat == 'dir_me':
+      stat_plot_name = 'Mean Error (Bias)'
+   elif stat == 'dir_mae':
+      stat_plot_name = 'Mean Absolute Error'
+   elif stat == 'dir_mse':
+      stat_plot_name = 'Mean Squared Error'
+   elif stat == 'dir_rmse':
+      stat_plot_name = 'Root Mean Square Error'
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
@@ -1585,6 +1593,16 @@ def calculate_stat(logger, model_data, stat):
            # Replace 0 with NaN to avoid dividing by zero
            obar[np.abs(obar)<1e-9]=np.nan
            stat_values = 100*(np.sqrt(ffbar + oobar - 2*fobar))/obar
+   #adding wind direction verifications        
+   elif stat == 'dir_me':
+       stat_values = model_data.loc[:]['DIR_ME']
+   elif stat == 'dir_mae':     
+       stat_values = model_data.loc[:]['DIR_MAE']
+   elif stat == 'dir_mse':
+       stat_values =  model_data.loc[:]['DIR_MSE']
+   elif stat == 'dir_rmse':
+       dir_mse=model_data.loc[:]['DIR_MSE']
+       stat_values = np.sqrt(dir_mse)
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
