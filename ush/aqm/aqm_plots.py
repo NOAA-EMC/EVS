@@ -430,8 +430,14 @@ elif JOB_GROUP == 'make_plots':
                 elif fday_start == "3":
                     select_fcst_hour = "64"
             logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
+            fhrs=[]
             fhrs.append(int(select_fcst_hour))
 
+        logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} fhrs = {fhrs}")
+        date_info_dict['fday_start'] = fday_start
+        date_info_dict['fday_end'] = fday_end
+        date_info_dict['fday_inc'] = fday_inc
+        plot_info_dict['fig_name_label'] = fig_name_label
         for ts_info in \
                 list(itertools.product(valid_hrs, fhrs, var_info)):
             date_info_dict['valid_hr_start'] = str(ts_info[0])
@@ -444,7 +450,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = ts_info[2][1][0]
             plot_info_dict['obs_var_level'] = ts_info[2][1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[2][1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -469,10 +474,10 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = True
             else:
                 make_ts = False
-            if plot_info_dict['stat'] == 'FBAR_OBAR' \
-                    and str(date_info_dict['forecast_hour']) not in \
-                    [ '24', '48', '72' ]:
-                make_ts = False
+            ## if plot_info_dict['stat'] == 'FBAR_OBAR' \
+            ##         and str(date_info_dict['forecast_hour']) not in \
+            ##         [ '24', '48', '72' ]:
+            ##     make_ts = False
             if make_ts:
                 plot_ts = gdap_ts.TimeSeries(logger, job_input_dir+'/..',
                                              job_work_dir, model_info_dict,
@@ -488,14 +493,15 @@ elif JOB_GROUP == 'make_plots':
     elif plot == 'time_series_fhr_mean':
         import aqm_plots_time_series_fhr_mean as gdap_tsfm
         logger.info(f"aqm_plots.py process time_series_fhr_mean")
+        date_info_dict['fday_start'] = fday_start
+        date_info_dict['fday_end'] = fday_end
+        date_info_dict['fday_inc'] = fday_inc
+        plot_info_dict['fig_name_label'] = fig_name_label
         for ts_info in list(var_info):
             logger.info(f"aqm_plots.py {ts_info}")
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
-            date_info_dict['fday_start'] = fday_start
-            date_info_dict['fday_end'] = fday_end
-            date_info_dict['fday_inc'] = fday_inc
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = ts_info[0][0]
             plot_info_dict['fcst_var_level'] = ts_info[0][1]
@@ -503,7 +509,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = ts_info[1][0]
             plot_info_dict['obs_var_level'] = ts_info[1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
             init_in_init_hrs=False
             for ifhr in fhrs:
                 init_hr = gda_util.get_init_hour(
@@ -546,6 +551,25 @@ elif JOB_GROUP == 'make_plots':
                                        job_COMOUT_image_name)
     elif plot == 'lead_average':
         import aqm_plots_lead_average as gdap_la
+        current_var=var_info[0][0][0]
+        logger.info(f"CHECK :: {plot} plot_var = {current_var}")
+        if current_var == "OZMAX8":
+            if init_hr_start == "06":
+                fhrs=[ 5, 29, 53 ]
+            elif init_hr_start == "12":
+                fhrs=[ 23, 47, 71 ]
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
+        if current_var == "PMAVE":
+            if init_hr_start == "06":
+                fhrs=[ 22, 46, 70 ]
+            elif init_hr_start == "12":
+                fhrs=[ 16, 40, 64 ]
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
+
+        date_info_dict['fday_start'] = fday_start
+        date_info_dict['fday_end'] = fday_end
+        date_info_dict['fday_inc'] = fday_inc
+        plot_info_dict['fig_name_label'] = fig_name_label
         for la_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(la_info[0])
             date_info_dict['valid_hr_end'] = str(la_info[0])
@@ -557,7 +581,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = la_info[1][1][0]
             plot_info_dict['obs_var_level'] = la_info[1][1][1]
             plot_info_dict['obs_var_thresh'] = la_info[1][1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
             job_work_image_name = plot_specs.get_savefig_name(
                 job_work_dir, plot_info_dict, date_info_dict
             )
@@ -597,13 +620,14 @@ elif JOB_GROUP == 'make_plots':
                                        job_COMOUT_image_name)
     elif plot == 'lead_average_vhr_mean':
         import aqm_plots_lead_average_vhr_mean as gdap_lavm
+        date_info_dict['fday_start'] = fday_start
+        date_info_dict['fday_end'] = fday_end
+        date_info_dict['fday_inc'] = fday_inc
+        plot_info_dict['fig_name_label'] = fig_name_label
         for la_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
-            date_info_dict['fday_start'] = fday_start
-            date_info_dict['fday_end'] = fday_end
-            date_info_dict['fday_inc'] = fday_inc
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = la_info[0][0]
             plot_info_dict['fcst_var_level'] = la_info[0][1]
@@ -611,7 +635,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = la_info[1][0]
             plot_info_dict['obs_var_level'] = la_info[1][1]
             plot_info_dict['obs_var_thresh'] = la_info[1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
             job_work_image_name = plot_specs.get_savefig_name(
                 job_work_dir, plot_info_dict, date_info_dict
             )
@@ -651,6 +674,25 @@ elif JOB_GROUP == 'make_plots':
                                        job_COMOUT_image_name)
     elif plot == 'valid_hour_average':
         import aqm_plots_valid_hour_average as gdap_vha
+        current_var=var_info[0][0][0]
+        logger.info(f"CHECK :: {plot} plot_var = {current_var}")
+        if current_var == "OZMAX8":
+            if init_hr_start == "06":
+                fhrs=[ 5, 29, 53 ]
+            elif init_hr_start == "12":
+                fhrs=[ 23, 47, 71 ]
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
+        if current_var == "PMAVE":
+            if init_hr_start == "06":
+                fhrs=[ 22, 46, 70 ]
+            elif init_hr_start == "12":
+                fhrs=[ 16, 40, 64 ]
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
+
+        date_info_dict['fday_start'] = fday_start
+        date_info_dict['fday_end'] = fday_end
+        date_info_dict['fday_inc'] = fday_inc
+        plot_info_dict['fig_name_label'] = fig_name_label
         for vha_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
@@ -662,7 +704,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = vha_info[1][0]
             plot_info_dict['obs_var_level'] = vha_info[1][1]
             plot_info_dict['obs_var_thresh'] = vha_info[1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
             job_work_image_name = plot_specs.get_savefig_name(
                 job_work_dir, plot_info_dict, date_info_dict
             )
@@ -707,13 +748,14 @@ elif JOB_GROUP == 'make_plots':
                                        job_COMOUT_image_name)
     elif plot == 'valid_hour_average_fhr_mean':
         import aqm_plots_valid_hour_average_fhr_mean as gdap_vhafm
+        date_info_dict['fday_start'] = fday_start
+        date_info_dict['fday_end'] = fday_end
+        date_info_dict['fday_inc'] = fday_inc
+        plot_info_dict['fig_name_label'] = fig_name_label
         for vhafm_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
-            date_info_dict['fday_start'] = fday_start
-            date_info_dict['fday_end'] = fday_end
-            date_info_dict['fday_inc'] = fday_inc
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = vhafm_info[0][0]
             plot_info_dict['fcst_var_level'] = vhafm_info[0][1]
@@ -721,7 +763,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = vhafm_info[1][0]
             plot_info_dict['obs_var_level'] = vhafm_info[1][1]
             plot_info_dict['obs_var_thresh'] = vhafm_info[1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
             job_work_image_name = plot_specs.get_savefig_name(
                 job_work_dir, plot_info_dict, date_info_dict
             )
@@ -766,6 +807,49 @@ elif JOB_GROUP == 'make_plots':
                                        job_COMOUT_image_name)
     elif plot == 'threshold_average':
         import aqm_plots_threshold_average as gdap_ta
+        current_var=var_info[0][0][0]
+        logger.info(f"CHECK :: {plot} plot_var = {current_var}")
+        if current_var == "OZMAX8":
+            if init_hr_start == "06":
+                if fday_start == "1":
+                    select_fcst_hour = "05"
+                elif fday_start == "2":
+                    select_fcst_hour = "29"
+                elif fday_start == "3":
+                    select_fcst_hour = "53"
+            elif init_hr_start == "12":
+                if fday_start == "1":
+                    select_fcst_hour = "23"
+                elif fday_start == "2":
+                    select_fcst_hour = "47"
+                elif fday_start == "3":
+                    select_fcst_hour = "71"
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
+            fhrs=[]
+            fhrs.append(int(select_fcst_hour))
+        if current_var == "PMAVE":
+            if init_hr_start == "06":
+                if fday_start == "1":
+                    select_fcst_hour = "22"
+                elif fday_start == "2":
+                    select_fcst_hour = "46"
+                elif fday_start == "3":
+                    select_fcst_hour = "70"
+            elif init_hr_start == "12":
+                if fday_start == "1":
+                    select_fcst_hour = "16"
+                elif fday_start == "2":
+                    select_fcst_hour = "40"
+                elif fday_start == "3":
+                    select_fcst_hour = "64"
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
+            fhrs=[]
+            fhrs.append(int(select_fcst_hour))
+
+        date_info_dict['fday_start'] = fday_start
+        date_info_dict['fday_end'] = fday_end
+        date_info_dict['fday_inc'] = fday_inc
+        plot_info_dict['fig_name_label'] = fig_name_label
         for ta_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(ta_info[0])
             date_info_dict['valid_hr_end'] = str(ta_info[0])
@@ -776,7 +860,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
-            plot_info_dict['fig_name_label'] = fig_name_label
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -827,240 +910,55 @@ elif JOB_GROUP == 'make_plots':
                                     +f"{job_COMOUT_image_name}")
                         gda_util.copy_file(job_work_image_name,
                                            job_COMOUT_image_name)
-    elif plot == 'lead_by_date':
-        import aqm_plots_lead_by_date as gdap_lbd
-        for lbd_info in list(itertools.product(valid_hrs, var_info)):
-            date_info_dict['valid_hr_start'] = str(lbd_info[0])
-            date_info_dict['valid_hr_end'] = str(lbd_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
-            date_info_dict['forecast_hours'] = fhrs
-            plot_info_dict['fcst_var_name'] = lbd_info[1][0][0]
-            plot_info_dict['fcst_var_level'] = lbd_info[1][0][1]
-            plot_info_dict['fcst_var_thresh'] = lbd_info[1][0][2]
-            plot_info_dict['obs_var_name'] = lbd_info[1][1][0]
-            plot_info_dict['obs_var_level'] = lbd_info[1][1][1]
-            plot_info_dict['obs_var_thresh'] = lbd_info[1][1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
-            job_work_image_name = plot_specs.get_savefig_name(
-                job_work_dir, plot_info_dict, date_info_dict
-            )
-            job_COMOUT_image_name = job_work_image_name.replace(
-                job_work_dir, job_COMOUT_dir
-            )
-            job_DATA_image_name = job_work_image_name.replace(
-                job_work_dir, job_DATA_dir
-            )
-            if SENDCOM == 'YES':
-                check_job_image_name = job_COMOUT_image_name
-                job_input_dir = job_COMOUT_dir
-            else:
-                check_job_image_name = job_DATA_image_name
-                job_input_dir = job_DATA_dir
-            if ( not os.path.exists(job_work_image_name) or restart_mode != "YES" ) \
-                    and plot_info_dict['stat'] != 'FBAR_OBAR':
-                if len(date_info_dict['forecast_hours']) <= 1:
-                    logger.warning("No span of forecast hours to plot, "
-                                   +"given 1 forecast hour, skipping "
-                                   +"lead_by_date plots")
-                    make_lbd = False
-                else:
-                    make_lbd = True
-            else:
-                make_lbd = False
-            if make_lbd:
-                plot_lbd = gdap_lbd.LeadByDate(logger, job_input_dir+'/..',
-                                               job_work_dir, model_info_dict,
-                                               date_info_dict, plot_info_dict,
-                                               met_info_dict, logo_dir)
-                plot_lbd.make_lead_by_date()
-                if SENDCOM == 'YES' and os.path.exists(job_work_image_name):
-                    logger.info(f"Copying {job_work_image_name} to "
-                                +f"{job_COMOUT_image_name}")
-                    gda_util.copy_file(job_work_image_name,
-                                       job_COMOUT_image_name)
-    elif plot == 'stat_by_level':
-        import aqm_plots_stat_by_level as gdap_sbl
-        vert_profiles = [os.environ['vert_profile']]
-        for sbl_info in \
-                list(itertools.product(valid_hrs, fhrs, vert_profiles)):
-            date_info_dict['valid_hr_start'] = str(sbl_info[0])
-            date_info_dict['valid_hr_end'] = str(sbl_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
-            date_info_dict['forecast_hour'] = str(sbl_info[1])
-            plot_info_dict['fcst_var_name'] = fcst_var_name
-            plot_info_dict['obs_var_name'] = obs_var_name
-            plot_info_dict['vert_profile'] = sbl_info[2]
-            plot_info_dict['fcst_var_level'] = sbl_info[2]
-            plot_info_dict['obs_var_level'] = sbl_info[2]
-            plot_info_dict['fig_name_label'] = fig_name_label
-            init_hr = gda_util.get_init_hour(
-                int(date_info_dict['valid_hr_start']),
-                int(date_info_dict['forecast_hour'])
-            )
-            for t in range(len(fcst_var_thresh_list)):
-                plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
-                plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
-                job_work_image_name = plot_specs.get_savefig_name(
-                    job_work_dir, plot_info_dict, date_info_dict
-                )
-                job_COMOUT_image_name = job_work_image_name.replace(
-                    job_work_dir, job_COMOUT_dir
-                )
-                job_DATA_image_name = job_work_image_name.replace(
-                    job_work_dir, job_DATA_dir
-                )
-                if SENDCOM == 'YES':
-                    check_job_image_name = job_COMOUT_image_name
-                    job_input_dir = job_COMOUT_dir
-                else:
-                    check_job_image_name = job_DATA_image_name
-                    job_input_dir = job_DATA_dir
-                if init_hr in init_hrs \
-                        and ( not os.path.exists(check_job_image_name) or restart_mode != "YES" ) \
-                        and plot_info_dict['stat'] != 'FBAR_OBAR':
-                            make_sbl = True
-                else:
-                    make_sbl = False
-                del plot_info_dict['fcst_var_level']
-                del plot_info_dict['obs_var_level']
-                if make_sbl:
-                    plot_sbl = gdap_sbl.StatByLevel(logger,
-                                                    job_input_dir+'/..',
-                                                    job_work_dir,
-                                                    model_info_dict,
-                                                    date_info_dict,
-                                                    plot_info_dict,
-                                                    met_info_dict, logo_dir)
-                    plot_sbl.make_stat_by_level()
-                    if SENDCOM == 'YES' \
-                            and os.path.exists(job_work_image_name):
-                        logger.info(f"Copying {job_work_image_name} to "
-                                    +f"{job_COMOUT_image_name}")
-                        gda_util.copy_file(job_work_image_name,
-                                           job_COMOUT_image_name)
-    elif plot == 'lead_by_level':
-        import aqm_plots_lead_by_level as gdap_lbl
-        if evs_run_mode == 'production':
-            fhrs_lbl = []
-            for fhr in fhrs:
-                if fhr % 24 == 0:
-                    fhrs_lbl.append(fhr)
-        else:
-            fhrs_lbl = fhrs
-        vert_profiles = [os.environ['vert_profile']]
-        for lbl_info in list(itertools.product(valid_hrs, vert_profiles)):
-            date_info_dict['valid_hr_start'] = str(lbl_info[0])
-            date_info_dict['valid_hr_end'] = str(lbl_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
-            date_info_dict['forecast_hours'] = fhrs_lbl
-            plot_info_dict['fcst_var_name'] = fcst_var_name
-            plot_info_dict['obs_var_name'] = obs_var_name
-            plot_info_dict['vert_profile'] = lbl_info[1]
-            plot_info_dict['fcst_var_level'] = lbl_info[1]
-            plot_info_dict['obs_var_level'] = lbl_info[1]
-            plot_info_dict['fig_name_label'] = fig_name_label
-            for t in range(len(fcst_var_thresh_list)):
-                plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
-                plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
-                job_work_image_name = plot_specs.get_savefig_name(
-                    job_work_dir, plot_info_dict, date_info_dict
-                )
-                job_COMOUT_image_name = job_work_image_name.replace(
-                    job_work_dir, job_COMOUT_dir
-                )
-                job_DATA_image_name = job_work_image_name.replace(
-                    job_work_dir, job_DATA_dir
-                )
-                if SENDCOM == 'YES':
-                    check_job_image_name = job_COMOUT_image_name
-                    job_input_dir = job_COMOUT_dir
-                else:
-                    check_job_image_name = job_DATA_image_name
-                    job_input_dir = job_DATA_dir
-                if ( not os.path.exists(check_job_image_name) or restart_mode != "YES" ) \
-                        and plot_info_dict['stat'] != 'FBAR_OBAR':
-                    if len(date_info_dict['forecast_hours']) <= 1:
-                        logger.warning("No span of forecast hours to plot, "
-                                       +"given 1 forecast hour, skipping "
-                                       +"lead_by_level plots")
-                        make_lbl = False
-                    else:
-                        make_lbl = True
-                else:
-                    make_lbl = False
-                del plot_info_dict['fcst_var_level']
-                del plot_info_dict['obs_var_level']
-                if make_lbl:
-                    plot_lbl = gdap_lbl.LeadByLevel(logger,
-                                                    job_input_dir+'/..',
-                                                    job_work_dir,
-                                                    model_info_dict,
-                                                    date_info_dict,
-                                                    plot_info_dict,
-                                                    met_info_dict, logo_dir)
-                    plot_lbl.make_lead_by_level()
-                    if SENDCOM == 'YES' \
-                            and os.path.exists(job_work_image_name):
-                        logger.info(f"Copying {job_work_image_name} to "
-                                    +f"{job_COMOUT_image_name}")
-                        gda_util.copy_file(job_work_image_name,
-                                           job_COMOUT_image_name)
-    elif plot == 'nohrsc_spatial_map':
-        import aqm_plots_nohrsc_spatial_map as gdap_nsm
-        nohrsc_data_dir = os.path.join(VERIF_CASE_STEP_dir, 'data', 'nohrsc')
-        date_info_dict['valid_hr_start'] = str(valid_hrs[0])
-        date_info_dict['valid_hr_end'] = str(valid_hrs[0])
-        date_info_dict['valid_hr_inc'] = '24'
-        plot_info_dict['obs_var_name'] = obs_var_name
-        plot_info_dict['obs_var_level'] = obs_var_level_list[0]
-        if SENDCOM == 'YES':
-            job_final_output_dir = job_COMOUT_dir
-        else:
-            job_final_output_dir = job_DATA_dir
-        plot_nsm = gdap_nsm.NOHRSCSpatialMap(logger, nohrsc_data_dir,
-                                             job_work_dir,
-                                             job_final_output_dir,
-                                             date_info_dict, plot_info_dict,
-                                             logo_dir)
-        plot_nsm.make_nohrsc_spatial_map()
-    elif plot == 'precip_spatial_map':
-        model_info_dict['obs'] = {'name': 'ccpa',
-                                  'plot_name': 'ccpa',
-                                  'obs_name': '24hrCCPA'}
-        pcp_combine_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
-        import aqm_plots_precip_spatial_map as gdap_psm
-        for psm_info in \
-                list(itertools.product(valid_hrs, fhrs)):
-            date_info_dict['valid_hr_start'] = str(psm_info[0])
-            date_info_dict['valid_hr_end'] = str(psm_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
-            date_info_dict['forecast_hour'] = str(psm_info[1])
-            plot_info_dict['fcst_var_name'] = fcst_var_name
-            plot_info_dict['fcst_var_level'] = fcst_var_level_list[0]
-            plot_info_dict['fcst_var_thresh'] = 'NA'
-            plot_info_dict['obs_var_name'] = obs_var_name
-            plot_info_dict['obs_var_level'] = obs_var_level_list[0]
-            plot_info_dict['obs_var_thresh'] = 'NA'
-            plot_info_dict['interp_points'] = 'NA'
-            plot_info_dict['fig_name_label'] = fig_name_label
-            if SENDCOM == 'YES':
-                job_final_output_dir = job_COMOUT_dir
-            else:
-                job_final_output_dir = job_DATA_dir
-            plot_psm = gdap_psm.PrecipSpatialMap(logger, pcp_combine_base_dir,
-                                                 job_work_dir,
-                                                 job_final_output_dir,
-                                                 model_info_dict,
-                                                 date_info_dict,
-                                                 plot_info_dict,
-                                                 met_info_dict, logo_dir)
-            plot_psm.make_precip_spatial_map()
     elif plot == 'performance_diagram':
         ## performance diagram is for daily values with threshold list
         ## for day 1 day 2 day 3 FCST, each init should only have one
         ## fcst hr for one valid hour, e.g., 04Z for OMAVE and 11Z for OZMAX8
         ## It can use original global_det_setting as one fcst hr for one valid hr
         import aqm_plots_performance_diagram as gdap_pd
+        current_var=var_info[0][0][0]
+        logger.info(f"CHECK :: {plot} plot_var = {current_var}")
+        if current_var == "OZMAX8":
+            if init_hr_start == "06":
+                if fday_start == "1":
+                    select_fcst_hour = "05"
+                elif fday_start == "2":
+                    select_fcst_hour = "29"
+                elif fday_start == "3":
+                    select_fcst_hour = "53"
+            elif init_hr_start == "12":
+                if fday_start == "1":
+                    select_fcst_hour = "23"
+                elif fday_start == "2":
+                    select_fcst_hour = "47"
+                elif fday_start == "3":
+                    select_fcst_hour = "71"
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
+            fhrs=[]
+            fhrs.append(int(select_fcst_hour))
+        if current_var == "PMAVE":
+            if init_hr_start == "06":
+                if fday_start == "1":
+                    select_fcst_hour = "22"
+                elif fday_start == "2":
+                    select_fcst_hour = "46"
+                elif fday_start == "3":
+                    select_fcst_hour = "70"
+            elif init_hr_start == "12":
+                if fday_start == "1":
+                    select_fcst_hour = "16"
+                elif fday_start == "2":
+                    select_fcst_hour = "40"
+                elif fday_start == "3":
+                    select_fcst_hour = "64"
+            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
+            fhrs=[]
+            fhrs.append(int(select_fcst_hour))
+
+        date_info_dict['fday_start'] = fday_start
+        date_info_dict['fday_end'] = fday_end
+        date_info_dict['fday_inc'] = fday_inc
+        plot_info_dict['fig_name_label'] = fig_name_label
         for pd_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(pd_info[0])
             date_info_dict['valid_hr_end'] = str(pd_info[0])
@@ -1070,7 +968,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
-            plot_info_dict['fig_name_label'] = fig_name_label
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])

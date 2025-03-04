@@ -338,7 +338,7 @@ class ThresholdAverage:
                 convert_thresh_sign = thresh.replace("ge","$\u2265$")
                 convert_thresh_list.append(convert_thresh_sign)
             ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] == 'PMTF':
+        elif self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8' ]:
             convert_thresh_list = []
             for thresh in self.plot_info_dict['fcst_var_threshs']:
                 convert_thresh_sign = thresh.replace("gt","$\u003E$")
