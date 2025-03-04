@@ -600,8 +600,7 @@ class PlotSpecs:
             title_other_hr_list.sort()
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
                               +', valid: '+', '.join(title_other_hr_list))
-        if plot_type not in ['lead_average', 'valid_hour_average',
-                             'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']:
+        if plot_type not in ['lead_average', 'valid_hour_average' ]:
             forecast_day_list = []
             for forecast_hour in forecast_hour_list:
                 forecast_day = int(forecast_hour)/24.
@@ -619,7 +618,7 @@ class PlotSpecs:
                 date_plot_name = (date_plot_name
                                   +'\nForecast Days '
                                   +','.join(forecast_day_list)+' '
-                                  +'(FHRS='+','.join(forecast_hour_list)+')')
+                                  +'(FHRs='+','.join(forecast_hour_list)+')')
         return date_plot_name
 
     def get_dates_plot_name_aqm(self, date_type, start_date, end_date,
@@ -866,6 +865,9 @@ class PlotSpecs:
             ]
         if self.plot_type in ['time_series',
                               'performance_diagram', 'threshold_average']:
+            ## if plot_info_dict['fcst_var_name'] == 'OZMAX8' or plot_info_dict['fcst_var_name'] == 'PMAVE':
+            ##     fhr_for_title = date_info_dict['forecast_hour']
+            ## else:
             fhr_for_title = [date_info_dict['forecast_hour']]
         else:
             fhr_for_title = date_info_dict['forecast_hours']
@@ -978,50 +980,47 @@ class PlotSpecs:
             plot_type_savefig_name = 'vhrmean'
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')
+        ## if self.plot_type in ['time_series', 'time_series_multifhr',
+        ##                       'lead_average', 'performance_diagram',
+        ##                       'threshold_average']:
+        ##     plot_type_savefig_name = plot_type_savefig_name+'_valid'
+        ##     valid_hr = int(date_info_dict['valid_hr_start'])
+        ##     while valid_hr <= int(date_info_dict['valid_hr_end']):
+        ##         plot_type_savefig_name = (plot_type_savefig_name
+        ##                                   +str(valid_hr).zfill(2))
+        ##         valid_hr+=int(date_info_dict['valid_hr_inc'])
+        ##     plot_type_savefig_name = plot_type_savefig_name+'Z'
         if self.plot_type in ['time_series', 'time_series_multifhr',
-                              'lead_average', 'performance_diagram',
-                              'threshold_average']:
-            plot_type_savefig_name = plot_type_savefig_name+'_valid'
-            valid_hr = int(date_info_dict['valid_hr_start'])
-            while valid_hr <= int(date_info_dict['valid_hr_end']):
-                plot_type_savefig_name = (plot_type_savefig_name
-                                          +str(valid_hr).zfill(2))
-                valid_hr+=int(date_info_dict['valid_hr_inc'])
-            plot_type_savefig_name = plot_type_savefig_name+'Z'
-        if self.plot_type in ['time_series_fhr_mean']:
+                              'time_series_fhr_mean', 'performance_diagram',
+                              'valid_hour_average_fhr_mean',
+                              'threshold_average' ]:
             init_hr_savefig_name = f"init{date_info_dict['init_hr_start']}z"
             fcst_day_savefig_name = f"day{date_info_dict['fday_start']}"
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'+fcst_day_savefig_name+'_'+init_hr_savefig_name
             )
-        if self.plot_type in ['valid_hour_average_fhr_mean']:
-            init_hr_savefig_name = f"init{date_info_dict['init_hr_start']}z"
-            fcst_day_savefig_name = f"day{date_info_dict['fday_start']}"
-            plot_type_savefig_name = (
-                 plot_type_savefig_name+'_'+fcst_day_savefig_name+'_'+init_hr_savefig_name
-            )
-        if self.plot_type in ['lead_average_vhr_mean']:
+        if self.plot_type in [ 'lead_average', 'lead_average_vhr_mean']:
             init_hr_savefig_name = f"init{date_info_dict['init_hr_start']}z"
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'+init_hr_savefig_name
             )
-        if self.plot_type in ['time_series', 'performance_diagram',
-                              'threshold_average']:
-            plot_type_savefig_name = (
-                 plot_type_savefig_name+'_'
-                 +'f'+date_info_dict['forecast_hour'].zfill(3)
-            )
-        elif self.plot_type == 'time_series_multifhr':
+        ## if self.plot_type in ['time_series', 'performance_diagram',
+        ##                       'threshold_average']:
+        ##     plot_type_savefig_name = (
+        ##          plot_type_savefig_name+'_'
+        ##          +'f'+date_info_dict['forecast_hour'].zfill(3)
+        ##     )
+        if self.plot_type == 'time_series_multifhr':
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +''.join(['f'+f.zfill(3) for \
                             f in date_info_dict['forecast_hours']])
             )
-        elif self.plot_type in ['lead_average']:
-            plot_type_savefig_name = (
-                 plot_type_savefig_name+'_'
-                 +'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)
-            )
+        ## if self.plot_type in ['lead_average']:
+        ##     plot_type_savefig_name = (
+        ##          plot_type_savefig_name+'_'
+        ##          +'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)
+        ##     )
         grid_savefig_name = plot_info_dict['grid']
         region_savefig_dict = {
             'AFRICA': 'africa',
