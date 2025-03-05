@@ -152,25 +152,6 @@ for wfo in ${WFO}; do
 		done
 	done
 
-
-
-###########################
-## copy all the jobs files
-###########################
-for wfo in ${WFO}; do
-	for vhr in ${vhours} ; do
-		vhr2=$(printf "%02d" "${vhr}")
-		for lead in ${lead_hours} ; do
-			flead=$(printf "%03d" "${lead}")
-			flead2=$(printf "%02d" "${lead}")
-			job_stat_file=$DATA/job_work_dir/${wfo}/PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
-			DATAstatfilename=$DATA/all_stats/${wfo}/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
-			if [ -s $job_stat_file ]; then
-				cp -v $job_stat_file $DATAstatfilename
-			fi
-		done
-	done	
-done
                                                                                                                                                                                              #########################																					
 # Run the command file
 #########################                                                                                                                                                                        
@@ -186,6 +167,22 @@ done
     		fi
 	fi
 
+###########################
+## copy all the jobs files
+###########################
+
+	for vhr in ${vhours} ; do
+		vhr2=$(printf "%02d" "${vhr}")
+		for lead in ${lead_hours} ; do
+			flead=$(printf "%03d" "${lead}")
+			flead2=$(printf "%02d" "${lead}")
+			job_stat_file=$DATA/job_work_dir/${wfo}/PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+			DATAstatfilename=$DATA/all_stats/${wfo}/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+			if [ -s $job_stat_file ]; then
+				cp -v $job_stat_file $DATAstatfilename
+			fi
+		done
+	done	
 ##########################
 # Gather all the files
 #########################
@@ -195,7 +192,8 @@ done
 	   if [ "${nc}" != '0' ]; then
 		   echo " Found ${nc} ${DATA}/all_stats/${wfo}/*stat files for ${VDATE}"
 		   export job_work_dir=$DATA/job_work_dir/StatAnalysis_${VDATE}
-		   # Use StatAnalysis to gather the small stat files into one file
+		   mkdir -p $job_work_dir/${wfo}
+                   # Use StatAnalysis to gather the small stat files into one file
 		   run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNWPS_obs$OBSNAME.conf
 		   export err=$?; err_chk
 
