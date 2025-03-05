@@ -61,12 +61,14 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 reformat_data_obs_jobs_dict = {
     'temp': {},
     'pres_lvls': {},
+    'precip': {},
     'seaice': {},
     'sst': {},
 }
 reformat_data_model_jobs_dict = {
     'temp': {},
     'pres_lvls': {},
+    'precip': {},
     'seaice': {},
     'sst': {
         'SST': {'env': {'var1_name': 'TMP',
