@@ -35,6 +35,7 @@ end_date = os.environ['end_date']
 WEEK = os.environ['WEEK']
 CORRECT_INIT_DATE = os.environ['CORRECT_INIT_DATE']
 CORRECT_LEAD_SEQ = os.environ['CORRECT_LEAD_SEQ']
+PRECIP_LEAD_SEQ = os.environ['PRECIP_LEAD_SEQ']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
@@ -61,6 +62,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 reformat_data_obs_jobs_dict = {
     'temp': {},
     'pres_lvls': {},
+    'precip': {},
     'seaice': {},
     'sst': {},
 }
@@ -85,6 +87,18 @@ reformat_data_gefs_jobs_dict = {
                                            '_create_weekly_anomaly.py',
                                            []
                                        )]},
+    },
+    'precip': {
+        'Precip': {'env': {'var1_name': 'APCP',
+                           'var1_levels': 'A06'},
+                   'commands': [sub_util.metplus_command(
+                                    'GenEnsProd_fcstSUBSEASONAL_'
+                                    +'Weeklyprecip.conf'
+                                ),
+                                sub_util.metplus_command(
+                                    'PCPCombine_fcstSUBSEASONAL_'
+                                    +'obsCCPA_Weeklyprecip.conf'
+                                )]},
     },
     'temp': {},
     'seaice': {},
@@ -112,6 +126,18 @@ reformat_data_cfs_jobs_dict = {
                                            []
                                        )]},
     },
+    'precip': {
+        'Precip': {'env': {'var1_name': 'APCP',
+                           'var1_levels': 'A06'},
+                   'commands': [sub_util.metplus_command(
+                                    'GenEnsProd_fcstCFS_'
+                                    +'Weeklyprecip.conf'
+                                ),
+                                sub_util.metplus_command(
+                                    'PCPCombine_fcstSUBSEASONAL_'
+                                    +'obsCCPA_Weeklyprecip.conf'
+                                )]},
+    },
     'temp': {},
     'seaice': {},
     'sst': {},
@@ -136,6 +162,7 @@ reformat_data_model_jobs_dict = {
                                     )]},
     },
     'pres_lvls': {},
+    'precip': {},
     'seaice': {
         'Concentration': {'env': {'var1_name': 'ICEC',
                                   'var1_levels': 'Z0'},
@@ -174,7 +201,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
               +verif_type+" for job group "+JOB_GROUP)
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +verif_type)
-        if verif_type == 'pres_lvls':
+        if verif_type in ['pres_lvls', 'precip']:
             for model_idx in range(len(model_list)):
                 model = model_list[model_idx]
                 if model == 'gefs':
@@ -209,6 +236,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     job_env_dict['valid_hr_start'] = '00'
                     job_env_dict['valid_hr_end'] = '00'
                     job_env_dict['valid_hr_inc'] = '12'
+                elif verif_type == 'precip':
+                    job_env_dict['valid_hr_start'] = '12'
+                    job_env_dict['valid_hr_end'] = '12'
+                    job_env_dict['valid_hr_inc'] = '6'
             valid_start_date_dt = datetime.datetime.strptime(
                 start_date+job_env_dict['valid_hr_start'],
                 '%Y%m%d%H'
@@ -221,11 +252,27 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
             job_env_dict['WEEK'] = WEEK
             job_env_dict['CORRECT_INIT_DATE'] = CORRECT_INIT_DATE
             job_env_dict['CORRECT_LEAD_SEQ'] = CORRECT_LEAD_SEQ
+            if verif_type == 'precip':
+                job_env_dict['CORRECT_LEAD_SEQ'] = PRECIP_LEAD_SEQ
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
                 sdate_dt = date_dt - datetime.timedelta(days=7)
                 job_env_dict['WEEKLYSTART'] = sdate_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
+                if verif_type == 'precip':
+                    job_env_dict['PEDATE'] = date_dt.strftime('%Y%m%d')
+                    job_env_dict['accum'] = '168'
+                    if WEEK == 'Week1':
+                        job_env_dict['pcp_fhr'] = '180'
+                    elif WEEK == 'Week2':
+                        job_env_dict['pcp_fhr'] = '348'
+                    elif WEEK == 'Week3':
+                        job_env_dict['pcp_fhr'] = '516'
+                    elif WEEK == 'Week5':
+                        pedate_dt = date_dt - datetime.timedelta(days=1)
+                        job_env_dict['PEDATE'] = pedate_dt.strftime('%Y%m%d')
+                        job_env_dict['accum'] = '144'
+                        job_env_dict['pcp_fhr'] = '828'
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
                 for model_idx in range(len(model_list)):
@@ -266,9 +313,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         job_env_dict.pop('fhr_end')
                         job_env_dict.pop('fhr_inc')
                     if JOB_GROUP == 'reformat_data':
-                        if verif_type in ['temp', 'pres_lvls'] \
+                        if verif_type in ['temp', 'pres_lvls', 'precip'] \
                                 and verif_type_job in ['TempAnom2m',
-                                                       'GeoHeightAnom']:
+                                                       'GeoHeightAnom',
+                                                       'Precip']:
                             check_truth_files = True
                         else:
                             check_truth_files = False

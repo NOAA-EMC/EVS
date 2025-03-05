@@ -445,6 +445,13 @@ if JOB_GROUP == 'assemble_data':
                             job_env_dict['bucket_intvl'] = (
                                 str(bucket_intvl)+'H'
                             )
+                            njob+=1
+                            job_env_dict['job_num'] = str(njob)
+                            job_env_dict['job_num_work_dir'] = os.path.join(
+                                DATA, f"{VERIF_CASE}", 'METplus_output',
+                                'job_work_dir', JOB_GROUP,
+                                f"job{job_env_dict['job_num']}"
+                            )
                             # Check for expected job input and output files
                             (job_all_model_input_file_exist,
                              job_model_input_files_list,
@@ -456,8 +463,6 @@ if JOB_GROUP == 'assemble_data':
                                  )
                             )
                             # Create job file
-                            njob+=1
-                            job_env_dict['job_id'] = 'job'+str(njob)
                             job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                     'job'+str(njob))
                             print("Creating job script: "+job_file)
@@ -465,6 +470,10 @@ if JOB_GROUP == 'assemble_data':
                             job.write('#!/bin/bash\n')
                             job.write('set -x\n')
                             job.write('\n')
+                            # Create job working directory
+                            job_env_dict['MET_TMP_DIR'] = os.path.join(
+                                job_env_dict['job_num_work_dir'], 'tmp'
+                            )
                             # Write environment variables
                             for name, value in job_env_dict.items():
                                 job.write(f"export {name}='{value}'\n")
@@ -506,6 +515,13 @@ if JOB_GROUP == 'assemble_data':
                                         [accum_job]['env'].keys()):
                         job_env_dict[env_var] = (JOB_GROUP_accum_obs_jobs_dict\
                                                  [accum_job]['env'][env_var])
+                    njob+=1 
+                    job_env_dict['job_num'] = str(njob)
+                    job_env_dict['job_num_work_dir'] = os.path.join(
+                       DATA, f"{VERIF_CASE}", 'METplus_output',
+                       'job_work_dir', JOB_GROUP,
+                       f"job{job_env_dict['job_num']}"
+                    )
                     # Check for expected job input and output files
                     (job_all_obs_input_file_exist,
                      job_obs_input_files_list,
@@ -517,8 +533,6 @@ if JOB_GROUP == 'assemble_data':
                         )
                     )
                     # Create job file
-                    njob+=1
-                    job_env_dict['job_id'] = 'job'+str(njob)
                     job_file = os.path.join(JOB_GROUP_jobs_dir,
                                             'job'+str(njob))
                     print("Creating job script: "+job_file)
@@ -526,6 +540,10 @@ if JOB_GROUP == 'assemble_data':
                     job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
+                    # Create job working directory
+                    job_env_dict['MET_TMP_DIR'] = os.path.join(
+                       job_env_dict['job_num_work_dir'], 'tmp'
+                    )
                     # Write environment variables
                     for name, value in job_env_dict.items():
                         job.write(f"export {name}='{value}'\n")
@@ -606,6 +624,14 @@ elif JOB_GROUP == 'generate_stats':
                                                                 '15','21'] \
                                     and fhr > 21:
                                 continue
+                            njob+=1
+                            job_env_dict['job_num'] = str(njob)
+                            job_env_dict['job_num_work_dir'] = os.path.join(
+                               DATA, f"{VERIF_CASE}", 'METplus_output',
+                               'job_work_dir', JOB_GROUP,
+                               f"job{job_env_dict['job_num']}"
+                            )
+                                                       
                             # Check for expected job input and output files
                             (job_all_obs_input_file_exist,
                              job_obs_input_files_list,
@@ -626,8 +652,6 @@ elif JOB_GROUP == 'generate_stats':
                                  )
                             )
                             # Create job file
-                            njob+=1
-                            job_env_dict['job_id'] = 'job'+str(njob)
                             job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                     'job'+str(njob))
                             print("Creating job script: "+job_file)
@@ -635,6 +659,10 @@ elif JOB_GROUP == 'generate_stats':
                             job.write('#!/bin/bash\n')
                             job.write('set -x\n')
                             job.write('\n')
+                            # Create job working directory
+                            job_env_dict['MET_TMP_DIR'] = os.path.join(
+                                job_env_dict['job_num_work_dir'], 'tmp'
+                            )
                             # Write environment variables
                             for name, value in job_env_dict.items():
                                 job.write(f"export {name}='{value}'\n")
@@ -682,13 +710,22 @@ elif JOB_GROUP == 'gather_stats':
         job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
         # Create job file
         njob+=1
-        job_env_dict['job_id'] = 'job'+str(njob)
+        job_env_dict['job_num'] = str(njob)
         job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njob))
         print("Creating job script: "+job_file)
         job = open(job_file, 'w')
         job.write('#!/bin/bash\n')
         job.write('set -x\n')
         job.write('\n')
+        # Create job working directory
+        job_env_dict['job_num_work_dir'] = os.path.join(
+            DATA, f"{VERIF_CASE}", 'METplus_output',
+            'job_work_dir', JOB_GROUP,
+            f"job{job_env_dict['job_num']}"
+        )
+        job_env_dict['MET_TMP_DIR'] = os.path.join(
+            job_env_dict['job_num_work_dir'], 'tmp'
+        )
         # Write environment variables
         for name, value in job_env_dict.items():
             job.write(f"export {name}='{value}'\n")
