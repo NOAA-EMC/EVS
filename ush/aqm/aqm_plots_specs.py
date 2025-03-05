@@ -57,9 +57,7 @@ class PlotSpecs:
         self.fig_size=(16.,16.)
         if self.plot_type in ['time_series',
                               'time_series_multifhr',
-                              'time_series_fhr_mean',
-                              'long_term_time_series',
-                              'long_term_time_series_multifhr']:
+                              'time_series_fhr_mean']:
             self.fig_size = (16., 8.)
             self.fig_subplot_top = 0.87
             self.fig_subplot_bottom = 0.1
@@ -71,9 +69,7 @@ class PlotSpecs:
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
-            if self.plot_type in ['time_series_multifhr',
-                                  'long_term_time_series',
-                                  'long_term_time_series_multifhr']:
+            if self.plot_type in ['time_series_multifhr']:
                 self.fig_subplot_top = 0.85
         elif self.plot_type == 'histogram':
             self.fig_size = (16., 8.)
@@ -86,8 +82,7 @@ class PlotSpecs:
             self.ytick_label_size = 15
         elif self.plot_type in ['lead_average', 'valid_hour_average',
                                 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean',
-                                'threshold_average',
-                                'long_term_time_series_diff']:
+                                'threshold_average']:
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.05
@@ -97,56 +92,6 @@ class PlotSpecs:
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 5
             self.fig_title_size = 18
-            if self.plot_type == 'long_term_time_series_diff':
-                self.legend_font_size = 15
-        elif self.plot_type in ['lead_by_date',
-                                'long_term_annual_mean',
-                                'long_term_lead_by_date']:
-            self.fig_size = (16., 16.)
-            self.axis_title_pad = 5
-            self.axis_title_loc = 'left'
-            self.fig_subplot_top = 0.9
-            self.fig_subplot_bottom = 0.075
-            self.fig_subplot_right = 0.923
-            self.fig_subplot_left = 0.15
-            self.fig_title_size = 18
-            if self.plot_type == 'long_term_annual_mean':
-                self.fig_subplot_left = 0.1
-                self.fig_subplot_right = 0.9
-            if self.plot_type == 'long_term_lead_by_date':
-                self.fig_subplot_left = 0.1
-            if self.plot_type == 'lead_by_date':
-                self.ytick_major_pad = 5
-                self.fig_subplot_left = 0.1575
-        elif self.plot_type == 'stat_by_level':
-            self.fig_size = (16., 16.)
-            self.fig_subplot_top = 0.925
-            self.fig_subplot_bottom = 0.05
-            self.fig_subplot_right = 0.925
-            self.fig_subplot_left = 0.1
-            self.legend_frame_on = False
-            self.legend_bbox = (0.01, 0.995)
-            self.legend_ncol = 1
-            self.legend_font_size = 15
-            self.legend_loc = 'upper left'
-            self.fig_title_size = 18
-        elif self.plot_type == 'lead_by_level':
-            self.fig_size = (16., 16.)
-            self.axis_title_pad = 5
-            self.axis_title_loc = 'left'
-            self.fig_subplot_top = 0.95
-            self.fig_subplot_bottom = 0.025
-            self.fig_subplot_right = 0.95
-            self.fig_subplot_left = 0.1
-            self.fig_title_size = 18
-        elif self.plot_type in ['precip_spatial_map', 'nohrsc_spatial_map']:
-            self.fig_size = (8., 6.)
-            self.fig_title_size = 13
-            self.fig_subplot_right = 0.975
-            self.fig_subplot_left = 0.025
-            self.axis_label_size = 12
-            self.xtick_label_size = 12
-            self.axis_tick_size = 13
         elif self.plot_type == 'performance_diagram':
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
@@ -252,7 +197,7 @@ class PlotSpecs:
         var_name_level = var_name+'/'+var_level
         var_plot_name_dict = {
             'OZCON1/A1': 'Surface Layer Hourly Ozone Concentration',
-            'OZMAX8/A8': 'Daily Maximum 8-hour Average Ozone Concentration',
+            'OZMAX8/L1': 'Daily Maximum 8-hour Average Ozone Concentration',
             'PMTF/L0': 'Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
             'PMTF/L1': 'Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
             'PMAVE/A23': '24hr-Average Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
@@ -607,13 +552,17 @@ class PlotSpecs:
                 if int(forecast_hour) % 24 == 0:
                     forecast_day_list.append(str(int(forecast_day)))
                 else:
-                    if fcst_var in [ "PMAVE", "OZMAX8" ]:   ## round up
+                    if fcst_var in [ "PMAVE" ]:   ## round up
                         forecast_day = int(forecast_day) + 1
                     forecast_day_list.append(str(forecast_day))
             if len(forecast_hour_list) == 1:
-                date_plot_name = (date_plot_name
-                                  +', Forecast Day '+forecast_day_list[0]+' '
-                                  +'(FHR='+forecast_hour_list[0]+')')
+                if fcst_var in [ "PMAVE" , "OZMAX8" ]:   ## round up
+                    date_plot_name = (date_plot_name
+                                      +', Forecast Day '+forecast_day_list[0])
+                else:
+                    date_plot_name = (date_plot_name
+                                      +', Forecast Day '+forecast_day_list[0]+' '
+                                      +'(FHR='+forecast_hour_list[0]+')')
             else:
                 date_plot_name = (date_plot_name
                                   +'\nForecast Days '
@@ -865,9 +814,6 @@ class PlotSpecs:
             ]
         if self.plot_type in ['time_series',
                               'performance_diagram', 'threshold_average']:
-            ## if plot_info_dict['fcst_var_name'] == 'OZMAX8' or plot_info_dict['fcst_var_name'] == 'PMAVE':
-            ##     fhr_for_title = date_info_dict['forecast_hour']
-            ## else:
             fhr_for_title = [date_info_dict['forecast_hour']]
         else:
             fhr_for_title = date_info_dict['forecast_hours']
@@ -924,12 +870,6 @@ class PlotSpecs:
             metric_savefig_name = 'ctc'
         else:
             metric_savefig_name = plot_info_dict['stat']
-        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
-            nwidth = int(np.sqrt(float(plot_info_dict['interp_points'])))
-            metric_savefig_name = (
-                metric_savefig_name+'_'
-                +'width'+str(nwidth)
-            )
         if 'fcst_var_thresh' in list(plot_info_dict.keys()):
             if plot_info_dict['fcst_var_thresh'] != 'NA':
                 thresh_symbol, thresh_letter = gda_util.format_thresh(
@@ -940,12 +880,6 @@ class PlotSpecs:
                     +thresh_letter.replace('.','p')
                 )
         parameter_savefig_name = plot_info_dict['fcst_var_name']
-        if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
-            parameter_savefig_name = (
-                parameter_savefig_name+'_'
-                +plot_info_dict['interp_method'].replace('WV1_', '')\
-                .replace('-', '_')
-            )
         level_savefig_name = (
             plot_info_dict['fcst_var_level'].replace('-', '_')\
             .replace('.', 'p')
@@ -980,16 +914,6 @@ class PlotSpecs:
             plot_type_savefig_name = 'vhrmean'
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')
-        ## if self.plot_type in ['time_series', 'time_series_multifhr',
-        ##                       'lead_average', 'performance_diagram',
-        ##                       'threshold_average']:
-        ##     plot_type_savefig_name = plot_type_savefig_name+'_valid'
-        ##     valid_hr = int(date_info_dict['valid_hr_start'])
-        ##     while valid_hr <= int(date_info_dict['valid_hr_end']):
-        ##         plot_type_savefig_name = (plot_type_savefig_name
-        ##                                   +str(valid_hr).zfill(2))
-        ##         valid_hr+=int(date_info_dict['valid_hr_inc'])
-        ##     plot_type_savefig_name = plot_type_savefig_name+'Z'
         if self.plot_type in ['time_series', 'time_series_multifhr',
                               'time_series_fhr_mean', 'performance_diagram',
                               'valid_hour_average_fhr_mean',
@@ -1002,25 +926,14 @@ class PlotSpecs:
         if self.plot_type in [ 'lead_average', 'lead_average_vhr_mean']:
             init_hr_savefig_name = f"init{date_info_dict['init_hr_start']}z"
             plot_type_savefig_name = (
-                 plot_type_savefig_name+'_'+init_hr_savefig_name
+                 plot_type_savefig_name+'_dayna_'+init_hr_savefig_name
             )
-        ## if self.plot_type in ['time_series', 'performance_diagram',
-        ##                       'threshold_average']:
-        ##     plot_type_savefig_name = (
-        ##          plot_type_savefig_name+'_'
-        ##          +'f'+date_info_dict['forecast_hour'].zfill(3)
-        ##     )
         if self.plot_type == 'time_series_multifhr':
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +''.join(['f'+f.zfill(3) for \
                             f in date_info_dict['forecast_hours']])
             )
-        ## if self.plot_type in ['lead_average']:
-        ##     plot_type_savefig_name = (
-        ##          plot_type_savefig_name+'_'
-        ##          +'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)
-        ##     )
         grid_savefig_name = plot_info_dict['grid']
         region_savefig_dict = {
             'AFRICA': 'africa',
@@ -1082,11 +995,6 @@ class PlotSpecs:
             +grid_savefig_name+'_'+region_savefig_name
             +'.png'
         ).lower()
-        if plot_info_dict['fcst_var_name'] == 'CAPE':
-            savefig_name = (savefig_name.replace('_z0', '_l0')\
-                            .replace('_p90_0', '_l90'))
-            if plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME', 'FBAR_OBAR']:
-                savefig_name = savefig_name.replace('_gt0||', '')
         image_path = os.path.join(image_dir, savefig_name)
         return image_path
 

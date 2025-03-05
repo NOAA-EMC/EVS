@@ -61,13 +61,15 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
     #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2op_model_plot_name_list="raw bc"
-    export g2op_type_list="pm25"
+    export g2op_type_list="ozmax8 pmave"
     export g2op_event_equalization="YES"
-    ## export g2op_pm25_init_hr_list="06 12"
-    ## export g2op_pm25_init_hr_list="12"
-    export g2op_pm25_init_hr_list="06"
-    export g2op_pm25_valid_hr_list="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
-    export g2op_pm25_fhr_list="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72"
-    export g2op_pm25_fday_list="1 2 3"
+    export g2op_ozmax8_init_hr_list="06 12"
+    export g2op_ozmax8_valid_hr_list="11"
+    export g2op_ozmax8_fhr_list="23 29 47 53 71 77"
+    export g2op_ozmax8_fday_list="1 2 3"
+    export g2op_pmave_init_hr_list="06 12"
+    export g2op_pmave_valid_hr_list="04"
+    export g2op_pmave_fhr_list="16 22 40 46 64 70"
+    export g2op_pmave_fday_list="1 2 3"
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"

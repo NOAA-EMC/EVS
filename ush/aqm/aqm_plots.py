@@ -399,11 +399,11 @@ elif JOB_GROUP == 'make_plots':
         if current_var == "OZMAX8":
             if init_hr_start == "06":
                 if fday_start == "1":
-                    select_fcst_hour = "05"
-                elif fday_start == "2":
                     select_fcst_hour = "29"
-                elif fday_start == "3":
+                elif fday_start == "2":
                     select_fcst_hour = "53"
+                elif fday_start == "3":
+                    select_fcst_hour = "77"
             elif init_hr_start == "12":
                 if fday_start == "1":
                     select_fcst_hour = "23"
@@ -555,15 +555,15 @@ elif JOB_GROUP == 'make_plots':
         logger.info(f"CHECK :: {plot} plot_var = {current_var}")
         if current_var == "OZMAX8":
             if init_hr_start == "06":
-                fhrs=[ 5, 29, 53 ]
+                fhrs=[ 1, 29, 53, 77 ]
             elif init_hr_start == "12":
-                fhrs=[ 23, 47, 71 ]
+                fhrs=[ 1, 23, 47, 71, 77 ]
             logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
         if current_var == "PMAVE":
             if init_hr_start == "06":
-                fhrs=[ 22, 46, 70 ]
+                fhrs=[ 1, 22, 46, 70, 72 ]
             elif init_hr_start == "12":
-                fhrs=[ 16, 40, 64 ]
+                fhrs=[ 1, 16, 40, 64, 72 ]
             logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
 
         date_info_dict['fday_start'] = fday_start
@@ -812,11 +812,11 @@ elif JOB_GROUP == 'make_plots':
         if current_var == "OZMAX8":
             if init_hr_start == "06":
                 if fday_start == "1":
-                    select_fcst_hour = "05"
-                elif fday_start == "2":
                     select_fcst_hour = "29"
-                elif fday_start == "3":
+                elif fday_start == "2":
                     select_fcst_hour = "53"
+                elif fday_start == "3":
+                    select_fcst_hour = "77"
             elif init_hr_start == "12":
                 if fday_start == "1":
                     select_fcst_hour = "23"
@@ -921,11 +921,11 @@ elif JOB_GROUP == 'make_plots':
         if current_var == "OZMAX8":
             if init_hr_start == "06":
                 if fday_start == "1":
-                    select_fcst_hour = "05"
-                elif fday_start == "2":
                     select_fcst_hour = "29"
-                elif fday_start == "3":
+                elif fday_start == "2":
                     select_fcst_hour = "53"
+                elif fday_start == "3":
+                    select_fcst_hour = "77"
             elif init_hr_start == "12":
                 if fday_start == "1":
                     select_fcst_hour = "23"
