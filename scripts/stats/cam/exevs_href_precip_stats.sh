@@ -63,7 +63,7 @@ export COMOUTrestart=$COMOUTsmall/restart
 # Prepare CCPA data for validation
 #**********************************
 if [ $prepare = yes ] ; then
- for precip in ccpa01h03h ccpa24h apcp24h_conus  apcp24h_alaska mrms ; do
+ for precip in ccpa01h03h mrms ccpa24h apcp24h_conus apcp24h_alaska ; do
   $USHevs/cam/evs_href_prepare.sh  $precip
   export err=$?; err_chk
  done

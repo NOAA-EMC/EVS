@@ -457,9 +457,11 @@ for obsvtype in ccpa mrms ; do
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFprob_obsCCPA_G227.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 		     echo "  export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
- 	             echo  "export verif_poly='${maskpath}/Alaska_HREF.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFprob_obsMRMS_G255.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-		     echo "  export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo "if [ -s $WORK/${obsvtype}.${VDATE}/${obsv}.t${vhr}z.G255.nc ] ; then " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+ 	             echo " export verif_poly='${maskpath}/Alaska_HREF.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo " ${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFprob_obsMRMS_G255.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo " export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
  	          fi
  
                 elif [ $prod = system ] ; then
@@ -468,9 +470,11 @@ for obsvtype in ccpa mrms ; do
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/EnsembleStat_fcstHREF_obsCCPA_G227.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 		     echo "  export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
- 	             echo  "export verif_poly='${maskpath}/Alaska_HREF.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/EnsembleStat_fcstHREF_obsMRMS_G255.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-		     echo "  export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo "if [ -s $WORK/${obsvtype}.${VDATE}/${obsv}.t${vhr}z.G255.nc ] ; then " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+ 	             echo " export verif_poly='${maskpath}/Alaska_HREF.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo " ${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/EnsembleStat_fcstHREF_obsMRMS_G255.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo " export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
  	          fi
  
                 else
@@ -482,12 +486,16 @@ for obsvtype in ccpa mrms ; do
                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsCCPA_G240.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo "  export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
-                     echo  "export verif_poly='${maskpath}/Alaska_G216.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsMRMS_G216.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-		     echo "  export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	             echo  "export verif_poly='${maskpath}/Alaska_G091.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	             echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsMRMS_G91.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-		     echo "  export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo "if [ -s $WORK/${obsvtype}.${VDATE}/${obsv}.t${vhr}z.G216.nc ] ; then " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo " export verif_poly='${maskpath}/Alaska_G216.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo " ${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsMRMS_G216.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo "if [ -s $WORK/${obsvtype}.${VDATE}/${obsv}.t${vhr}z.G91.nc ] ; then " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo " export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+ 	             echo " export verif_poly='${maskpath}/Alaska_G091.nc' " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+ 	             echo " ${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstHREFmean_obsMRMS_G91.conf " >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo " export err=\$?; err_chk" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+		     echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   fi
 
                 fi
