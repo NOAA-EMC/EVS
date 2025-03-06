@@ -70,8 +70,12 @@ done
 ## time_series
 ${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_timeseries.sh
 export err=$?; err_chk
+${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_timeseries_WindDir.sh
+export err=$?; err_chk
 ## lead_averages
 ${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_leadaverages.sh
+export err=$?; err_chk
+${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_leadaverages_WindDir.sh
 export err=$?; err_chk
 chmod 775 $DATA/jobs/run_all_${RUN}_g2o_plots_poe.sh
 
@@ -110,6 +114,8 @@ fi
 # copy all the jobs files
 ####################
 ${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_copy_plots.sh
+export err=$?; err_chk
+${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_copy_plots_WindDir.sh
 export err=$?; err_chk
 
 #######################

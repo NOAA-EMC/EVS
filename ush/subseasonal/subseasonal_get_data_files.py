@@ -100,6 +100,19 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
             ]
             VERIF_CASE_STEP_type_valid_hr_list = GFS_valid_hr_list
+        elif VERIF_CASE_STEP_type == 'precip':
+            (CCPA_valid_hr_start, CCPA_valid_hr_end,
+             CCPA_valid_hr_inc) = sub_util.get_obs_valid_hrs(
+                 'CCPA'
+            )
+            CCPA_valid_hr_list = [
+                str(x).zfill(2) for x in range(
+                    CCPA_valid_hr_start,
+                    CCPA_valid_hr_end+CCPA_valid_hr_inc,
+                    CCPA_valid_hr_inc
+                )
+            ]
+            VERIF_CASE_STEP_type_valid_hr_list = CCPA_valid_hr_list
         else:
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         # Set initialization hours
@@ -207,6 +220,94 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                              -datetime.timedelta(hours=12*nf)),
                                             time['init_time'],
                                             str(int(time['forecast_hour'])-(12*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
+                        del model_file_format
+                        mbr = mbr+1
+                elif VERIF_CASE_STEP_type == 'precip':
+                    mbr = 1
+                    total = int(members)
+                    while mbr <= total:
+                        mb = str(mbr).zfill(2)
+                        if model == 'gefs':
+                            model_file_format = os.path.join(
+                                model_file_form+'.ens'+mb
+                                +'.t{init?fmt=%2H}z.pgrb2.0p50.'
+                                +'f{lead?fmt=%3H}'
+                            )
+                            model_fcst_dest_file_format = os.path.join(
+                                VERIF_CASE_STEP_model_dir,
+                                model+'.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
+                                +'f{lead?fmt=%3H}'
+                            )
+                        elif model == 'cfs':
+                            model_file_format = os.path.join(
+                                model_file_form+'.pgbf.ens'+mb
+                                +'.t{init?fmt=%2H}z.f{lead?fmt=%3H}'
+                            )
+                            model_fcst_dest_file_format = os.path.join(
+                                VERIF_CASE_STEP_model_dir,
+                                model+'.pgbf.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
+                                +'f{lead?fmt=%3H}'
+                            )
+                        for time_length in ['weekly', 'week5', 'days6_10',
+                                            'weeks3_4']:
+                            if time_length == 'weekly':
+                                if (time['forecast_hour']) in ['180',
+                                                               '348',
+                                                               '516',
+                                                               '684']:
+                                    nf = 0
+                                    while nf <= 27:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=6*nf)),
+                                            time['init_time'],
+                                            str(int(time['forecast_hour'])-(6*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
+                            if time_length == 'week5':
+                                if int(time['forecast_hour']) == 828:
+                                    nf = 0
+                                    time['valid_time'] = (time['valid_time']
+                                                          -datetime.timedelta(hours=24))
+                                    while nf <= 23:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=6*nf)),
+                                            (time['init_time']
+                                             -datetime.timedelta(hours=24)),
+                                            str(int(time['forecast_hour'])-(6*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
+                            if time_length == 'days6_10':
+                                if int(time['forecast_hour']) == 252:
+                                    nf = 0
+                                    while nf <= 19:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=6*nf)),
+                                            time['init_time'],
+                                            str(int(time['forecast_hour'])-(6*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
+                            if time_length == 'weeks3_4':
+                                if int(time['forecast_hour']) == 684:
+                                    nf = 0
+                                    while nf <= 55:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=6*nf)),
+                                            time['init_time'],
+                                            str(int(time['forecast_hour'])-(6*nf)),
                                             model_file_format,
                                             model_fcst_dest_file_format
                                         )
@@ -384,6 +485,34 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         -datetime.timedelta(hours=12*nf)),
                         pres_lvls_truth_file_format,
                         pres_lvls_dest_file_format
+                    )
+                    nf+=1
+            elif VERIF_CASE_STEP_type == 'precip':
+                # CCPA
+                precip_truth_file_format = os.path.join(
+                    COMIN+'.{valid?fmt=%Y%m%d}', 'ccpa',
+                    'pcp_combine_precip_'
+                    +'accum24hr_24hrCCPA_'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                VERIF_CASE_STEP_ccpa_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'ccpa'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_ccpa_dir):
+                    os.makedirs(VERIF_CASE_STEP_ccpa_dir)
+                precip_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_ccpa_dir,
+                    '24hrCCPA.{valid?fmt=%Y%m%d%H}.nc'
+                )
+                # Weeks 3-4 obs span covers weekly and Days 6-10 so only
+                # need to loop once to retrieve data
+                nf = 0
+                while nf <= 13:
+                    sub_util.get_truth_file(
+                        (VERIF_CASE_STEP_type_valid_time
+                        -datetime.timedelta(hours=24*nf)),
+                        precip_truth_file_format,
+                        precip_dest_file_format
                     )
                     nf+=1
             elif VERIF_CASE_STEP_type == 'temp':
