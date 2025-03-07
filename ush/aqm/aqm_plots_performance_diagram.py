@@ -360,6 +360,11 @@ class PerformanceDiagram:
                 t.replace("gt","$\u003E$")+" $\u03bcg/m^3$"
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
+        elif fcst_units[0] == "ppbV":
+            thresh_legend_labels = [
+                t.replace("gt","$\u003E$")+" ppbV"
+                for t in self.plot_info_dict['fcst_var_threshs']
+            ]
         else:
             thresh_legend_labels = [
                 f'{t} {fcst_units[0]}'

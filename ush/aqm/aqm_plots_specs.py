@@ -527,6 +527,7 @@ class PlotSpecs:
                     if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
                             and str(other_hr).zfill(2)+'Z' in other_hr_list:
                         title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+            title_init=other_hr_list[0]
             title_other_hr_list.sort()
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
                               +', init. hours: '
@@ -552,7 +553,12 @@ class PlotSpecs:
                 if int(forecast_hour) % 24 == 0:
                     forecast_day_list.append(str(int(forecast_day)))
                 else:
-                    if fcst_var in [ "PMAVE" ]:   ## round up
+                    if fcst_var in [ "OZMAX8" ]:  ## round up
+                        if title_init == "06Z":
+                            forecast_day = int(forecast_day)
+                        if title_init == "12Z":     ## round up
+                            forecast_day = int(forecast_day) + 1
+                    if fcst_var in [ "PMAVE" ]:  ## round up
                         forecast_day = int(forecast_day) + 1
                     forecast_day_list.append(str(forecast_day))
             if len(forecast_hour_list) == 1:
