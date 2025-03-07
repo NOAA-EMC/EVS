@@ -332,16 +332,10 @@ class ThresholdAverage:
                     f"{thresh[0:2]}{str(convert_thresh_K_to_F)}"
                 )
             ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] == 'AOTK':
+        elif self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK' ]:
             convert_thresh_list = []
             for thresh in self.plot_info_dict['fcst_var_threshs']:
-                convert_thresh_sign = thresh.replace("ge","$\u2265$")
-                convert_thresh_list.append(convert_thresh_sign)
-            ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8' ]:
-            convert_thresh_list = []
-            for thresh in self.plot_info_dict['fcst_var_threshs']:
-                convert_thresh_sign = thresh.replace("gt","$\u003E$")
+                convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
                 convert_thresh_list.append(convert_thresh_sign)
             ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
         else:
@@ -589,14 +583,14 @@ class ThresholdAverage:
             preset_y_axis_tick_min = ax.get_yticks()[0]
             preset_y_axis_tick_max = ax.get_yticks()[-1]
             preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]
-            if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+            if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
                 y_axis_tick_inc = 0.1
             else:
                 y_axis_tick_inc = preset_y_axis_tick_inc
             if np.ma.is_masked(stat_min):
                 y_axis_min = preset_y_axis_tick_min
             else:
-                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
                     y_axis_min = round(stat_min,1) - y_axis_tick_inc
                 else:
                     y_axis_min = preset_y_axis_tick_min
@@ -605,8 +599,9 @@ class ThresholdAverage:
             if np.ma.is_masked(stat_max):
                 y_axis_max = preset_y_axis_tick_max
             else:
-                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
                     y_axis_max = 1
+                    stat_check=self.plot_info_dict['stat']
                 else:
                     y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
                     while y_axis_max < stat_max:

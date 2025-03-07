@@ -352,17 +352,17 @@ class PerformanceDiagram:
             thresh_mark_dict[fcst_var_thresh] = fcst_var_thresh_marker_dict
         if fcst_units[0] == "Numeric":
             thresh_legend_labels = [
-                t.replace("ge","$\u2265$")
+                t.replace("gt","$\u003E$").replace("ge","$\u2265$")
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
         elif fcst_units[0] == "10^-6g/m^3":
             thresh_legend_labels = [
-                t.replace("gt","$\u003E$")+" $\u03bcg/m^3$"
+                t.replace("gt","$\u003E$").replace("ge","$\u2265$")+" $\u03bcg/m^3$"
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
         elif fcst_units[0] == "ppbV":
             thresh_legend_labels = [
-                t.replace("gt","$\u003E$")+" ppbV"
+                t.replace("gt","$\u003E$").replace("ge","$\u2265$")+" ppbV"
                 for t in self.plot_info_dict['fcst_var_threshs']
             ]
         else:

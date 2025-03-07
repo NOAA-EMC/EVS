@@ -486,7 +486,8 @@ class PlotSpecs:
 
     def get_dates_plot_name(self, date_type, start_date, end_date,
                             date_type_hr_list, other_hr_list,
-                            forecast_hour_list, plot_type, fcst_var):
+                            forecast_hour_list, plot_type, 
+                            init_for_title, fday_for_title, fcst_var):
         """! Get the full date information that will be displayed on the plot
 
              Args:
@@ -503,6 +504,8 @@ class PlotSpecs:
                                       (strings)
                  forecast_hour_list - list of forecast hour(s)
                  plot_type          - type of plot (string)
+                 init_for_title     - info of init hour
+                 fday_for_title     - info of forecast day
                  fcst_var           - plot variable index (string)
 
              Returns:
@@ -553,13 +556,8 @@ class PlotSpecs:
                 if int(forecast_hour) % 24 == 0:
                     forecast_day_list.append(str(int(forecast_day)))
                 else:
-                    if fcst_var in [ "OZMAX8" ]:  ## round up
-                        if title_init == "06Z":
-                            forecast_day = int(forecast_day)
-                        if title_init == "12Z":     ## round up
-                            forecast_day = int(forecast_day) + 1
-                    if fcst_var in [ "PMAVE" ]:  ## round up
-                        forecast_day = int(forecast_day) + 1
+                    if fcst_var in [ "OZMAX8" , "PMAVE" ]:  ## round up
+                        forecast_day = int(fday_for_title)
                     forecast_day_list.append(str(forecast_day))
             if len(forecast_hour_list) == 1:
                 if fcst_var in [ "PMAVE" , "OZMAX8" ]:   ## round up
@@ -610,16 +608,16 @@ class PlotSpecs:
         title_other_hr_list = []
         if date_type == 'VALID':
             if plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean' ]:
-                plot_hour_range=f"{title_plot_hour_list[0]}-{title_plot_hour_list[-1]}"
-                if plot_type in [ 'time_series_fhr_mean', 'valid_hour_average_fhr_mean' ]:
-                    date_plot_name = (date_plot_name+', FHR:'+plot_hour_range+' hrs')
-                else:
-                    date_plot_name = (date_plot_name+', VHR:'+plot_hour_range+'Z')
                 title_other_list=other_hr_list[0]
                 if len(other_hr_list) > 1:
                     for i_other_hr in range(1,len(other_hr_list)):
                         title_other_list = ( title_other_lists + ", " +i_other_hr)
-                date_plot_name = (date_plot_name+', INIT:'+title_other_list)
+                date_plot_name = (date_plot_name+', init. hours: '+title_other_list)
+                plot_hour_range=f"{title_plot_hour_list[0]}-{title_plot_hour_list[-1]}"
+                if plot_type in [ 'time_series_fhr_mean', 'valid_hour_average_fhr_mean' ]:
+                    date_plot_name = (date_plot_name+', fcst. hours:'+plot_hour_range+' hrs')
+                else:
+                    date_plot_name = (date_plot_name+', valid hours:'+plot_hour_range+'Z')
             else:
                 for date_type_hr in date_type_hr_list:
                     for forecast_hour in forecast_hour_list:
@@ -742,14 +740,11 @@ class PlotSpecs:
             units = 'ppbV'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
+            var_thresh_symbol = var_thresh_for_title.replace("gt","$\u003E$").replace("ge","$\u2265$")
             if plot_info_dict['fcst_var_name'] == 'AOTK':
-                plot_title = plot_title+', '+var_thresh_for_title.replace("ge","$\u2265$")
-            elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
-                plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
-            elif plot_info_dict['fcst_var_name'] == 'OZCON1' or plot_info_dict['fcst_var_name'] == 'OZMAX8':
-                plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
+                plot_title = plot_title+', '+var_thresh_symbol
             else:
-                plot_title = plot_title+', '+var_thresh_for_title+' '+units
+                plot_title = plot_title+', '+var_thresh_symbol+' '+units
             thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
         if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean' ]:
             self.logger.debug(f"pass {self.plot_type} to get_dates_plot_name_aqm")
@@ -823,6 +818,8 @@ class PlotSpecs:
             fhr_for_title = [date_info_dict['forecast_hour']]
         else:
             fhr_for_title = date_info_dict['forecast_hours']
+        init_for_title = date_info_dict['init_hr_start']
+        fday_for_title = date_info_dict['fday_start']
         var_name_for_title = plot_info_dict['fcst_var_name']
         var_level_for_title = plot_info_dict['fcst_var_level']
         if self.plot_type in ['performance_diagram', 'threshold_average']:
@@ -840,14 +837,11 @@ class PlotSpecs:
             units = 'ppbV'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
+            var_thresh_symbol = var_thresh_for_title.replace("gt","$\u003E$").replace("ge","$\u2265$")
             if plot_info_dict['fcst_var_name'] == 'AOTK':
-                plot_title = plot_title+', '+var_thresh_for_title.replace("ge","$\u2265$")
-            elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
-                plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
-            elif plot_info_dict['fcst_var_name'] == 'OZCON1' or plot_info_dict['fcst_var_name'] == 'OZMAX8':
-                plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
+                plot_title = plot_title+', '+var_thresh_symbol
             else:
-                plot_title = plot_title+', '+var_thresh_for_title+' '+units
+                plot_title = plot_title+', '+var_thresh_symbol+' '+units
             thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
         plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
@@ -855,6 +849,7 @@ class PlotSpecs:
                                                     date_info_dict['end_date'],
                                                     date_type_hr_list, other_hr_list,
                                                     fhr_for_title, self.plot_type,
+                                                    init_for_title, fday_for_title,
                                                     plot_info_dict['fcst_var_name']))
         return plot_title
 

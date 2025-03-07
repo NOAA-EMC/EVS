@@ -395,7 +395,6 @@ elif JOB_GROUP == 'make_plots':
     if plot == 'time_series':
         import aqm_plots_time_series as gdap_ts
         current_var=var_info[0][0][0]
-        logger.info(f"CHECK :: Time Series plot_var = {current_var}")
         if current_var == "OZMAX8":
             if init_hr_start == "06":
                 if fday_start == "1":
@@ -411,7 +410,6 @@ elif JOB_GROUP == 'make_plots':
                     select_fcst_hour = "47"
                 elif fday_start == "3":
                     select_fcst_hour = "71"
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
             fhrs=[]
             fhrs.append(int(select_fcst_hour))
         if current_var == "PMAVE":
@@ -429,11 +427,9 @@ elif JOB_GROUP == 'make_plots':
                     select_fcst_hour = "40"
                 elif fday_start == "3":
                     select_fcst_hour = "64"
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
             fhrs=[]
             fhrs.append(int(select_fcst_hour))
 
-        logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} fhrs = {fhrs}")
         date_info_dict['fday_start'] = fday_start
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
@@ -552,19 +548,16 @@ elif JOB_GROUP == 'make_plots':
     elif plot == 'lead_average':
         import aqm_plots_lead_average as gdap_la
         current_var=var_info[0][0][0]
-        logger.info(f"CHECK :: {plot} plot_var = {current_var}")
         if current_var == "OZMAX8":
             if init_hr_start == "06":
                 fhrs=[ 1, 29, 53, 77 ]
             elif init_hr_start == "12":
                 fhrs=[ 1, 23, 47, 71, 77 ]
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
         if current_var == "PMAVE":
             if init_hr_start == "06":
                 fhrs=[ 1, 22, 46, 70, 72 ]
             elif init_hr_start == "12":
                 fhrs=[ 1, 16, 40, 64, 72 ]
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
 
         date_info_dict['fday_start'] = fday_start
         date_info_dict['fday_end'] = fday_end
@@ -675,19 +668,16 @@ elif JOB_GROUP == 'make_plots':
     elif plot == 'valid_hour_average':
         import aqm_plots_valid_hour_average as gdap_vha
         current_var=var_info[0][0][0]
-        logger.info(f"CHECK :: {plot} plot_var = {current_var}")
         if current_var == "OZMAX8":
             if init_hr_start == "06":
                 fhrs=[ 5, 29, 53 ]
             elif init_hr_start == "12":
                 fhrs=[ 23, 47, 71 ]
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
         if current_var == "PMAVE":
             if init_hr_start == "06":
                 fhrs=[ 22, 46, 70 ]
             elif init_hr_start == "12":
                 fhrs=[ 16, 40, 64 ]
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {fhrs}")
 
         date_info_dict['fday_start'] = fday_start
         date_info_dict['fday_end'] = fday_end
@@ -808,7 +798,6 @@ elif JOB_GROUP == 'make_plots':
     elif plot == 'threshold_average':
         import aqm_plots_threshold_average as gdap_ta
         current_var=var_info[0][0][0]
-        logger.info(f"CHECK :: {plot} plot_var = {current_var}")
         if current_var == "OZMAX8":
             if init_hr_start == "06":
                 if fday_start == "1":
@@ -824,7 +813,6 @@ elif JOB_GROUP == 'make_plots':
                     select_fcst_hour = "47"
                 elif fday_start == "3":
                     select_fcst_hour = "71"
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
             fhrs=[]
             fhrs.append(int(select_fcst_hour))
         if current_var == "PMAVE":
@@ -842,7 +830,6 @@ elif JOB_GROUP == 'make_plots':
                     select_fcst_hour = "40"
                 elif fday_start == "3":
                     select_fcst_hour = "64"
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
             fhrs=[]
             fhrs.append(int(select_fcst_hour))
 
@@ -917,7 +904,6 @@ elif JOB_GROUP == 'make_plots':
         ## It can use original global_det_setting as one fcst hr for one valid hr
         import aqm_plots_performance_diagram as gdap_pd
         current_var=var_info[0][0][0]
-        logger.info(f"CHECK :: {plot} plot_var = {current_var}")
         if current_var == "OZMAX8":
             if init_hr_start == "06":
                 if fday_start == "1":
@@ -933,7 +919,6 @@ elif JOB_GROUP == 'make_plots':
                     select_fcst_hour = "47"
                 elif fday_start == "3":
                     select_fcst_hour = "71"
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
             fhrs=[]
             fhrs.append(int(select_fcst_hour))
         if current_var == "PMAVE":
@@ -951,7 +936,6 @@ elif JOB_GROUP == 'make_plots':
                     select_fcst_hour = "40"
                 elif fday_start == "3":
                     select_fcst_hour = "64"
-            logger.info(f"CHECK :: FDAY = {fday_start} INIT = {init_hr_start} FHRS = {select_fcst_hour}")
             fhrs=[]
             fhrs.append(int(select_fcst_hour))
 
