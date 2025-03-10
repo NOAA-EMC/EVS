@@ -589,14 +589,14 @@ class ThresholdAverage:
             preset_y_axis_tick_min = ax.get_yticks()[0]
             preset_y_axis_tick_max = ax.get_yticks()[-1]
             preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]
-            if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+            if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
                 y_axis_tick_inc = 0.1
             else:
                 y_axis_tick_inc = preset_y_axis_tick_inc
             if np.ma.is_masked(stat_min):
                 y_axis_min = preset_y_axis_tick_min
             else:
-                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
                     y_axis_min = round(stat_min,1) - y_axis_tick_inc
                 else:
                     y_axis_min = preset_y_axis_tick_min
@@ -605,7 +605,7 @@ class ThresholdAverage:
             if np.ma.is_masked(stat_max):
                 y_axis_max = preset_y_axis_tick_max
             else:
-                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
                     y_axis_max = 1
                 else:
                     y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
