@@ -76,9 +76,11 @@ else:
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
+pstart_date_dt = start_date_dt - datetime.timedelta(days=1)
+pstart_date = pstart_date_dt.strftime('%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
-pstart_date = start_date - (days=1)
-pend_date = end_date - (days=1)
+pend_date_dt = end_date_dt - datetime.timedelta(days=1)
+pend_date = pend_date_dt.strftime('%Y%m%d')
 now = datetime.datetime.now()
 
 # Set up directory paths
