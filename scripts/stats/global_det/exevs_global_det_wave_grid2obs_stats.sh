@@ -130,21 +130,21 @@ fi
 ####################
 # quick error check
 ####################
-nc=$(ls ${DATA}/ncfiles/gdas.SFCSHP.${VDATE}*.nc | wc -l | awk '{print $1}')
+nc=$(ls ${DATA}/ncfiles/gdas.SFCSHP.${VDATE}*.nc 2>/dev/null | wc -l | awk '{print $1}')
 echo " Found ${DATA}/ncfiles/gdas.SFCSHP.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} GDAS pb2nc files for valid date ${VDATE}"
 else
     echo "NOTE: No GDAS netcdf files for valid date ${VDATE} in ${DATA}/ncfiles"
 fi
-nc=$(ls ${DATA}/ncfiles/ndbc.${VDATE}*.nc | wc -l | awk '{print $1}')
+nc=$(ls ${DATA}/ncfiles/ndbc.${VDATE}*.nc 2>/dev/null | wc -l | awk '{print $1}')
 echo " Found ${DATA}/ncfiles/ndbc.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} NDBC ascii2nc files for valid date ${VDATE}"
 else
     echo "NOTE: No NDBC netcdf file for valid date ${VDATE} in ${DATA}/ncfiles"
 fi
-nc=$(ls ${DATA}/ncfiles/jason3.${VDATE}*.nc | wc -l | awk '{print $1}')
+nc=$(ls ${DATA}/ncfiles/jason3.${VDATE}*.nc 2>/dev/null | wc -l | awk '{print $1}')
 echo " Found ${DATA}/ncfiles/jason3.${VDATE}*.nc for ${VDATE}"
 if [ "${nc}" != '0' ]; then
     echo "Successfully found ${nc} JASON-3 pb2nc files for valid date ${VDATE}"
@@ -217,41 +217,49 @@ for valid_hour in ${valid_hours} ; do
                 elif [ $OBSNAME = JASON3 ]; then
                     tmp_OBSNAME_file=${DATA}/ncfiles/jason3.${VDATE}.nc
                 fi
-                job_work_dir=$DATA/job_work_dir/PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}
-                job_stat_file=$job_work_dir/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
-                all_stats_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
-                output_stat_file=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
-                if [[ -s $output_stat_file ]]; then
-                    cp -v $output_stat_file $all_stats_stat_file
+                if [ $OBSNAME = GDAS ]; then
+                    conf_list="Multifield WindDir"
                 else
-                    if [[ -s $tmp_OBSNAME_file ]]; then
-                        if [[ ! -d $job_work_dir ]]; then
-                            mkdir -p $job_work_dir
-                        fi
-                        echo "#!/bin/bash" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export valid_hour2=$valid_hour2" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export flead=${flead}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export MODNAM=${MODNAM}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export job_work_dir=${job_work_dir}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export MET_TMP_DIR=${job_work_dir}/tmp" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PointStat_fcstGLOBAL_DET_obs${OBSNAME}_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        if [ $SENDCOM = YES ]; then
-                            echo "if [ -f $job_stat_file ]; then cp -v $job_stat_file $output_stat_file; fi" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        fi
-                        chmod +x ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh
-                        echo "${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}.sh" >> $poe_script
-                    fi
+                    conf_list="Multifield"
                 fi
+                for conf in $conf_list; do
+                    job_work_dir=$DATA/job_work_dir/PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}
+                    job_stat_file=$job_work_dir/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${conf}_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
+                    all_stats_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${conf}_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
+                    output_stat_file=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${conf}_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
+                    if [[ -s $output_stat_file ]]; then
+                        cp -v $output_stat_file $all_stats_stat_file
+                    else
+                        if [[ -s $tmp_OBSNAME_file ]]; then
+                            if [[ ! -d $job_work_dir ]]; then
+                                mkdir -p $job_work_dir
+                            fi
+                            echo "#!/bin/bash" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "export valid_hour2=$valid_hour2" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "export flead=${flead}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "export MODNAM=${MODNAM}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "export job_work_dir=${job_work_dir}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "export MET_TMP_DIR=${job_work_dir}/tmp" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PointStat_fcstGLOBAL_DET_obs${OBSNAME}_climoERA5_Wave_${conf}.conf" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            if [ $SENDCOM = YES ]; then
+                                echo "if [ -f $job_stat_file ]; then cp -v $job_stat_file $output_stat_file; fi" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            fi
+                            chmod +x ${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh
+                            echo "${DATA}/jobs/run_PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}.sh" >> $poe_script
+                        fi
+                    fi
+                done
             done
         fi
     done
 done
-ncount_job=$(ls -l ${DATA}/jobs/run_PointStat*.sh |wc -l)
+
+ncount_job=$(ls -l ${DATA}/jobs/run_PointStat*.sh 2>/dev/null |wc -l)
 if [[ $ncount_job -gt 0 ]]; then
     if [ $USE_CFP = YES ]; then
         chmod 775 $poe_script
@@ -277,11 +285,18 @@ for valid_hour in ${valid_hours} ; do
         flead=$(printf "%03d" "${fhr}")
         flead2=$(printf "%02d" "${fhr}")
         for OBSNAME in GDAS NDBC JASON3; do
-            job_stat_file=$DATA/job_work_dir/PointStat_obs${OBSNAME}_valid${VDATE}${valid_hour2}_f${flead}/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
-            all_stats_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
-            if [ -s $job_stat_file ]; then
-                cp -v $job_stat_file $all_stats_stat_file
-            fi
+	    if [ $OBSNAME = GDAS ]; then
+                conf_list="Multifield WindDir"
+            else
+                conf_list="Multifield"
+            fi		
+	    for conf in $conf_list; do
+                job_stat_file=$DATA/job_work_dir/PointStat_obs${OBSNAME}_climoERA5_${conf}_valid${VDATE}${valid_hour2}_f${flead}/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${conf}_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
+                all_stats_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${conf}_${flead2}0000L_${VDATE}_${valid_hour2}0000V.stat
+                if [ -s $job_stat_file ]; then
+                   cp -v $job_stat_file $all_stats_stat_file
+                fi
+            done			
         done
     done
 done
@@ -289,7 +304,7 @@ done
 ####################
 # gather all the files
 ####################
-nc=$(ls ${DATA}/all_stats/*stat | wc -l | awk '{print $1}')
+nc=$(ls ${DATA}/all_stats/*stat 2>/dev/null | wc -l | awk '{print $1}')
 echo " Found ${nc} ${DATA}/all_stats/*stat files for valid date ${VDATE} "
 if [ "${nc}" != '0' ]; then
     echo "Small stat files found for valid date ${VDATE}"
