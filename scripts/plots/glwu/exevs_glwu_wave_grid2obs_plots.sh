@@ -53,6 +53,7 @@ echo '-----------------------------'
 
 mkdir -p ${DATA}/stats
 mkdir -p ${DATA}/wave
+mkdir -p ${DATA}/job_work_dir
 
 plot_start_date=${PDYm90}
 plot_end_date=${VDATE}
@@ -117,6 +118,15 @@ else
 	echo "not running mpiexec"
 	sh plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 fi
+
+
+
+
+####################
+# copy all the jobs files
+#####################
+${USHevs}/${COMPONENT}/glwu_wave_plots_copy_plots.sh
+export err=$?; err_chk
 
 #####################
 # Gather all the files 
@@ -187,7 +197,8 @@ msg="JOB $job HAS COMPLETED NORMALLY."
 
 cd ${DATA}
 mkdir -p ${DATA}/logs
-log_dir=$DATA/logs
+#log_dir=$DATA/logs
+log_dir=$DATA/job_work_dir/*/logs
 
 extns='out log'
 for extn in ${extns} ; do
