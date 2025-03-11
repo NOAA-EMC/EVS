@@ -60,11 +60,20 @@ if STEP == 'plots' :
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         model_evs_data_dir = model_evs_data_dir_list[model_idx]
-        ## note aqm output one file per observation type
-        ## note the soft line below will overwrite different obs_type files
+        #
+        ## the time stamp of aqm daily variable is valided at 11Z (ozmax8)
+        ## and 04z (pamve) of next days.  To get the valid-time at 04Z
+        ## and 11Z of date=VDATE_START for day1, day2, and day3 forecast,
+        ## the stat of three previous days from VDATE_START also need to
+        ## be linked
+        #
         for obs_idx in range(len(VERIF_CASE_STEP_type_list)):
             obstype = VERIF_CASE_STEP_type_list[obs_idx]
-            date_dt = start_date_dt
+            if obstype == 'ozmax8' or obstype == 'pmave':
+                date_dt = start_date_dt - 3 * datetime.timedelta(days=1)
+            else:
+                date_dt = start_date_dt
+            print(f"CHECK CHECK :: {obstype} var = {obstype} start={date_dt}")
             while date_dt <= end_date_dt:
                 if date_type == 'VALID':
                     if evs_run_mode == 'production':
