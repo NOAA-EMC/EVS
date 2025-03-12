@@ -1,13 +1,16 @@
 #!/bin/bash
 ################################################################################
 # Name of Script: exevs_nfcens_wave_grid2obs_stats.sh                           
-# Deanna Spindler / Deanna.Spindler@noaa.gov                                    
-# Mallory Row / Mallory.Row@noaa.gov
-# Samira Ardani / samira.ardani@noaa.gov
+# Cited to former developers: Deanna Spindler / Deanna.Spindler@noaa.gov                                    
+#                             Mallory Row / Mallory.Row@noaa.gov
+# 
+# Developer: Samira Ardani / samira.ardani@noaa.gov
 #
 # Purpose of Script: Run the grid2obs stats for any global wave model           
 #                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NWPS)    
-# 		    EVSv2: FNMOC anf GEFS were added to plot against NFCENS.	                                                                              
+# 		    EVSv2 added features: 
+# 		    1- FNMOC anf GEFS were added to plot against NFCENS (07/2024).	           
+# 		    2- Added MPMD directories and updated the $DATA structure (03/2025).                                                                   
 # Usage:                                                                        
 #  Parameters: None                                                             
 #  Input files:                                                                 
@@ -43,6 +46,7 @@ mkdir -p ${DATA}/jobs
 mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
+mkdir -p ${DATA}/job_work_dir
 
 vhours='0 12'
 
@@ -51,7 +55,7 @@ lead_hours='0 12 24 36 48 60 72
             168 180 192 204 216 228 240'
 
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
-
+export OBSNAME="GDAS"
 cd ${DATA}
 
 ############################################
@@ -78,14 +82,20 @@ for vhr in ${vhours} ; do
         EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/HTSGW_mean.${match_date}.t${match_fhr}z.f${flead}.grib2
         DATAmodelfilename=$DATA/gribs/HTSGW_mean.${match_date}.t${match_fhr}z.f${flead}.grib2
         DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+	job_work_dir_nfcens=$DATA/job_work_dir/PointStat_${MODNAM}_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}
+	job_stat_file_nfcens=$job_work_dir_nfcens/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
         COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
 	EVSINgefsfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODEL1NAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
 	DATAgefsfilename=$DATA/gribs/${MODEL1NAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
 	DATAgefsstatfilename=$DATA/all_stats/point_stat_fcst${MOD1NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+	job_work_dir_gefs=$DATA/job_work_dir/PointStat_${MOD1NAM}_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}
+	job_stat_file_gefs=$job_work_dir_gefs/point_stat_fcst${MOD1NAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
 	COMOUTgefsstatfilename=$COMOUTsmall/point_stat_fcst${MOD1NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
 	EVSINfnmocfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/wave_${match_date}${match_fhr}.f${flead}.grib2
 	DATAfnmocfilename=$DATA/gribs/wave_${match_date}${match_fhr}.f${flead}.grib2
 	DATAfnmocstatfilename=$DATA/all_stats/point_stat_fcst${MOD2NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+	job_work_dir_fnmoc=$DATA/job_work_dir/PointStat_${MOD2NAM}_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}
+	job_stat_file_fnmoc=$job_work_dir_fnmoc/point_stat_fcst${MOD2NAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
 	COMOUTfnmocstatfilename=$COMOUTsmall/point_stat_fcst${MOD2NAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
 
         ############################################################################################
@@ -114,11 +124,12 @@ for vhr in ${vhours} ; do
                     echo "export climo_level_str=${climo_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+		    echo "export job_work_dir_nfcens=${job_work_dir_nfcens}"  >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstNFCENS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
 		    export err=$?; err_chk
                     echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     if [ $SENDCOM = YES ]; then
-                        echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                        echo "if [ -f $job_stat_file_nfcens ]; then cp -v $job_stat_file_nfcens $COMOUTstatfilename; fi" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     fi
 
                     chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
@@ -155,11 +166,12 @@ for vhr in ${vhours} ; do
 
                     echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+		    echo "export job_work_dir_gefs=${job_work_dir_gefs}" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcst${MOD1NAM}_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
 		    export err=$?; err_chk
                     echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     if [ $SENDCOM = YES ]; then
-                        echo "cp -v $DATAgefsstatfilename $COMOUTgefsstatfilename" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                        echo "if [ -f $job_stat_file_gefs ]; then cp -v $job_stat_file_gefs $COMOUTgefsstatfilename; fi" >> ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     fi
 
                     chmod +x ${DATA}/jobs/run_${MODEL1NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
@@ -197,11 +209,12 @@ for vhr in ${vhours} ; do
 
                     echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+		    echo "export job_work_dir_fnmoc=${job_work_dir_fnmoc}" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcst${MOD2NAM}_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
 		    export err=$?; err_chk
                     echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     if [ $SENDCOM = YES ]; then
-                        echo "cp -v $DATAfnmocstatfilename $COMOUTfnmocstatfilename" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                        echo "if [ -f $job_stat_file_fnmoc ]; then cp -v $job_stat_file_fnmoc $COMOUTfnmocstatfilename; fi" >> ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     fi
 
                     chmod +x ${DATA}/jobs/run_${MODEL2NAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
@@ -229,6 +242,43 @@ for model in ${models}; do
     	fi
 	fi
 done
+
+
+############################################
+## Copy all the jobs file into one directory
+#############################################
+for vhr in ${vhours} ; do
+	vhr2=$(printf "%02d" "${vhr}")
+	for fhr in ${lead_hours} ; do
+		flead=$(printf "%03d" "${fhr}")
+		flead2=$(printf "%02d" "${fhr}")
+		for model in ${models}; do
+			if [ ${model} = nfcens ]; then
+			       job_stat_file=$DATA/job_work_dir/PointStat_${MODNAM}_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+			       all_stats_stat_file=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+			       if [ -s $job_stat_file ]; then
+				       cp -v $job_stat_file $all_stats_stat_file
+			       fi
+
+			elif [ ${model} = gefs ]; then
+				job_stat_file=$DATA/job_work_dir/PointStat_${MOD1NAM}_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}/point_stat_fcst${MOD1NAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+				all_stats_stat_file=$DATA/all_stats/point_stat_fcst${MOD1NAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+			       if [ -s $job_stat_file ]; then
+				       cp -v $job_stat_file $all_stats_stat_file
+			       fi
+
+			elif [ ${model} = fnmoc ]; then
+				job_stat_file=$DATA/job_work_dir/PointStat_${MOD2NAM}_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}/point_stat_fcst${MOD2NAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+				all_stats_stat_file=$DATA/all_stats/point_stat_fcst${MOD2NAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+			       if [ -s $job_stat_file ]; then
+				       cp -v $job_stat_file $all_stats_stat_file
+			       fi
+			fi
+			
+		done
+	done
+done
+
 #######################
 # Gather all the files 
 #######################
@@ -239,6 +289,8 @@ if [ $gather = yes ] ; then
   if [ "${nc}" != '0' ]; then
       echo " Found ${nc} ${DATA}/all_stats/*stat files for ${VDATE}"
       mkdir -p ${DATA}/stats
+      export job_work_dir=$DATA/job_work_dir/StatAnalysis_${VDATE}
+      
       # Use StatAnalysis to gather the small stat files into one file
       run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNFCENS_obsGDAS.conf
       export err=$?; err_chk
@@ -248,17 +300,18 @@ if [ $gather = yes ] ; then
       
       run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstFNMOC_obsGDAS.conf
       export err=$?; err_chk
+
       for model in ${models}; do
 	      if [ $SENDCOM = YES ]; then
-		      if [ -s ${DATA}/stats/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-			      cp -v ${DATA}/stats/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+		      if [ -s ${job_work_dir}/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+			      cp -v ${job_work_dir}/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
 		      else
-			      echo "WARNING: DOES NOT EXIST ${DATA}/stats/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+			      echo "WARNING: DOES NOT EXIST ${job_work_dir}/evs.stats.${model}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
 		      fi
 	      fi
       done
   else
-      echo "WARNING: NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
+      echo "NOTE: NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
   fi
 fi
 
