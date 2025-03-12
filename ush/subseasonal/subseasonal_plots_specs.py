@@ -245,6 +245,12 @@ class PlotSpecs:
         var_plot_name_dict = {
             'APCP/A24': '24 hour Accumulated Precipitation',
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
+            'APCP_WEEKLY/A168': 'Weekly Accumulated Precipitation',
+            'APCP_WEEKLY/A144': 'Week 5 Accumulated Precipitation',
+            'APCP_DAYS6_10/A120': ('Days 6-10 Accumulated '
+                                   +'Precipitation'),
+            'APCP_WEEKS3_4/A336': ('Weeks 3-4 Accumulated '
+                                   +'Precipitation'),
             'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
             'CFRZR/L0': 'Precipitation Type - Freezing Rain',
@@ -699,7 +705,9 @@ class PlotSpecs:
                                                             'SST_WEEKLYAVG',
                                                             'SST_MONTHLYAVG']:
             plot_title = plot_title+', '+var_thresh_for_title+' '+units
-            if plot_info_dict['fcst_var_name'] == 'APCP':
+            if plot_info_dict['fcst_var_name'] in ['APCP_WEEKLY',
+                                                   'APCP_DAYS6_10',
+                                                   'APCP_WEEKS3_4']:
                 thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
                 thresh_in = round(thresh_value*0.0393701, 3)
                 plot_title = plot_title+' ('+str(thresh_in)+' in)'
