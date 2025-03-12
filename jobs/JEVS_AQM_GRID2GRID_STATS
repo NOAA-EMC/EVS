@@ -76,6 +76,7 @@ else
     export DATA_TYPE=${DATA_TYPE:-abi}
     if [ "${DATA_TYPE}" == "abi" ]; then
         export DATA_TYPE=${DATA_TYPE:-abi}
+        export satellite_name=${satellite_name:-join}
         export AOD_SCAN_TYPE=${AOD_SCAN_TYPE:-AODC}
         export ADP_SCAN_TYPE=${ADP_SCAN_TYPE:-ADPC}
         export AOD_QC_NAME=${AOD_QC_NAME:-high}
@@ -89,7 +90,7 @@ fi
 # Execute the script.
 #######################################################################
 
-${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 
 
 msg="JOB ${job} HAS COMPLETED NORMALLY."

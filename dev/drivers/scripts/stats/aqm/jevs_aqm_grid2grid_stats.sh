@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
-#PBS -l place=shared,select=1:ncpus=1:mem=100GB:prepost=true
+#PBS -l walltime=00:30:00
+#PBS -l place=shared,select=1:ncpus=1:mem=100GB
 #PBS -l debug=true
 
 set -x
@@ -51,10 +51,6 @@ export SENDDBN=NO
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 
-export DATA_TYPE=abi
-export satellite_name=join
-export AOD_SCAN_TYPE=AODC
-export AOD_QC_NAME=high
 ########################################################################
 
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
