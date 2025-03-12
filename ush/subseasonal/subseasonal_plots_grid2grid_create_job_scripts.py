@@ -310,23 +310,23 @@ plot_jobs_dict = {
                                                   'CONUS_South'],
                                  'fcst_var_dict': {'name': 'APCP_WEEKLY',
                                                    'levels': 'A168',
-                                                   'threshs': ('ge25.4,'
-                                                               +'ge50.8,'
-                                                               +'ge76.2,'
-                                                               +'ge101.6,'
-                                                               +'ge127,'
-                                                               +'ge152.4,'
-                                                               +'ge203.2,'
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge101.6, '
+                                                               +'ge127, '
+                                                               +'ge152.4, '
+                                                               +'ge203.2, '
                                                                +'ge254')},
                                  'obs_var_dict': {'name': 'APCP_WEEKLY',
                                                   'levels': 'A168',
-                                                  'threshs': ('ge25.4,'
-                                                              +'ge50.8,'
-                                                              +'ge76.2,'
-                                                              +'ge101.6,'
-                                                              +'ge127,'
-                                                              +'ge152.4,'
-                                                              +'ge203.2,'
+                                                  'threshs': ('ge25.4, '
+                                                              +'ge50.8, '
+                                                              +'ge76.2, '
+                                                              +'ge101.6, '
+                                                              +'ge127, '
+                                                              +'ge152.4, '
+                                                              +'ge203.2, '
                                                               +'ge254')},
                                  'interp_dict': {'method': 'NEAREST',
                                                  'points': '1'},
@@ -343,23 +343,23 @@ plot_jobs_dict = {
                                                    'CONUS_South'],
                                   'fcst_var_dict': {'name': 'APCP_WEEKLY',
                                                     'levels': 'A168',
-                                                    'threshs': ('ge25.4,'
-                                                                +'ge50.8,'
-                                                                +'ge76.2,'
-                                                                +'ge101.6,'
-                                                                +'ge127,'
-                                                                +'ge152.4,'
-                                                                +'ge203.2,'
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge101.6, '
+                                                                +'ge127, '
+                                                                +'ge152.4, '
+                                                                +'ge203.2, '
                                                                 +'ge254')},
                                   'obs_var_dict': {'name': 'APCP_WEEKLY',
                                                    'levels': 'A168',
-                                                   'threshs': ('ge25.4,'
-                                                               +'ge50.8,'
-                                                               +'ge76.2,'
-                                                               +'ge101.6,'
-                                                               +'ge127,'
-                                                               +'ge152.4,'
-                                                               +'ge203.2,'
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge101.6, '
+                                                               +'ge127, '
+                                                               +'ge152.4, '
+                                                               +'ge203.2, '
                                                                +'ge254')},
                                   'interp_dict': {'method': 'NEAREST',
                                                   'points': '1'},
@@ -375,23 +375,23 @@ plot_jobs_dict = {
                                                  'CONUS_South'],
                                 'fcst_var_dict': {'name': 'APCP_WEEKLY',
                                                   'levels': 'A168',
-                                                  'threshs': ('ge25.4,'
-                                                              +'ge50.8,'
-                                                              +'ge76.2,'
-                                                              +'ge101.6,'
-                                                              +'ge127,'
-                                                              +'ge152.4,'
-                                                              +'ge203.2,'
+                                                  'threshs': ('ge25.4, '
+                                                              +'ge50.8, '
+                                                              +'ge76.2, '
+                                                              +'ge101.6, '
+                                                              +'ge127, '
+                                                              +'ge152.4, '
+                                                              +'ge203.2, '
                                                               +'ge254')},
                                 'obs_var_dict': {'name': 'APCP_WEEKLY',
                                                  'levels': 'A168',
-                                                 'threshs': ('ge25.4,'
-                                                             +'ge50.8,'
-                                                             +'ge76.2,'
-                                                             +'ge101.6,'
-                                                             +'ge127,'
-                                                             +'ge152.4,'
-                                                             +'ge203.2,'
+                                                 'threshs': ('ge25.4, '
+                                                             +'ge50.8, '
+                                                             +'ge76.2, '
+                                                             +'ge101.6, '
+                                                             +'ge127, '
+                                                             +'ge152.4, '
+                                                             +'ge203.2, '
                                                              +'ge254')},
                                 'interp_dict': {'method': 'NBRHD_SQUARE',
                                                 'points': ('1, 9, 25, '
@@ -428,23 +428,23 @@ plot_jobs_dict = {
                                                  'CONUS_South'],
                                 'fcst_var_dict': {'name': 'APCP_WEEKLY',
                                                   'levels': 'A144',
-                                                  'threshs': ('ge25.4,'
-                                                              +'ge50.8,'
-                                                              +'ge76.2,'
-                                                              +'ge101.6,'
-                                                              +'ge127,'
-                                                              +'ge152.4,'
-                                                              +'ge203.2,'
+                                                  'threshs': ('ge25.4, '
+                                                              +'ge50.8, '
+                                                              +'ge76.2, '
+                                                              +'ge101.6, '
+                                                              +'ge127, '
+                                                              +'ge152.4, '
+                                                              +'ge203.2, '
                                                               +'ge254')},
                                 'obs_var_dict': {'name': 'APCP_WEEKLY',
                                                  'levels': 'A144',
-                                                 'threshs': ('ge25.4,'
-                                                             +'ge50.8,'
-                                                             +'ge76.2,'
-                                                             +'ge101.6,'
-                                                             +'ge127,'
-                                                             +'ge152.4,'
-                                                             +'ge203.2,'
+                                                 'threshs': ('ge25.4, '
+                                                             +'ge50.8, '
+                                                             +'ge76.2, '
+                                                             +'ge101.6, '
+                                                             +'ge127, '
+                                                             +'ge152.4, '
+                                                             +'ge203.2, '
                                                              +'ge254')},
                                 'interp_dict': {'method': 'NEAREST',
                                                 'points': '1'},
@@ -461,23 +461,23 @@ plot_jobs_dict = {
                                                   'CONUS_South'],
                                  'fcst_var_dict': {'name': 'APCP_WEEKLY',
                                                    'levels': 'A144',
-                                                   'threshs': ('ge25.4,'
-                                                               +'ge50.8,'
-                                                               +'ge76.2,'
-                                                               +'ge101.6,'
-                                                               +'ge127,'
-                                                               +'ge152.4,'
-                                                               +'ge203.2,'
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge101.6, '
+                                                               +'ge127, '
+                                                               +'ge152.4, '
+                                                               +'ge203.2, '
                                                                +'ge254')},
                                  'obs_var_dict': {'name': 'APCP_WEEKLY',
                                                   'levels': 'A144',
-                                                  'threshs': ('ge25.4,'
-                                                              +'ge50.8,'
-                                                              +'ge76.2,'
-                                                              +'ge101.6,'
-                                                              +'ge127,'
-                                                              +'ge152.4,'
-                                                              +'ge203.2,'
+                                                  'threshs': ('ge25.4, '
+                                                              +'ge50.8, '
+                                                              +'ge76.2, '
+                                                              +'ge101.6, '
+                                                              +'ge127, '
+                                                              +'ge152.4, '
+                                                              +'ge203.2, '
                                                               +'ge254')},
                                  'interp_dict': {'method': 'NEAREST',
                                                  'points': '1'},
@@ -493,23 +493,23 @@ plot_jobs_dict = {
                                                 'CONUS_South'],
                                'fcst_var_dict': {'name': 'APCP_WEEKLY',
                                                  'levels': 'A144',
-                                                 'threshs': ('ge25.4,'
-                                                             +'ge50.8,'
-                                                             +'ge76.2,'
-                                                             +'ge101.6,'
-                                                             +'ge127,'
-                                                             +'ge152.4,'
-                                                             +'ge203.2,'
+                                                 'threshs': ('ge25.4, '
+                                                             +'ge50.8, '
+                                                             +'ge76.2, '
+                                                             +'ge101.6, '
+                                                             +'ge127, '
+                                                             +'ge152.4, '
+                                                             +'ge203.2, '
                                                              +'ge254')},
                                'obs_var_dict': {'name': 'APCP_WEEKLY',
                                                 'levels': 'A144',
-                                                'threshs': ('ge25.4,'
-                                                            +'ge50.8,'
-                                                            +'ge76.2,'
-                                                            +'ge101.6,'
-                                                            +'ge127,'
-                                                            +'ge152.4,'
-                                                            +'ge203.2,'
+                                                'threshs': ('ge25.4, '
+                                                            +'ge50.8, '
+                                                            +'ge76.2, '
+                                                            +'ge101.6, '
+                                                            +'ge127, '
+                                                            +'ge152.4, '
+                                                            +'ge203.2, '
                                                             +'ge254')},
                                'interp_dict': {'method': 'NBRHD_SQUARE',
                                                'points': ('1, 9, 25, '
@@ -547,23 +547,23 @@ plot_jobs_dict = {
                                                     'CONUS_South'],
                                    'fcst_var_dict': {'name': 'APCP_DAYS6_10',
                                                      'levels': 'A120',
-                                                     'threshs': ('ge25.4,'
-                                                                 +'ge50.8,'
-                                                                 +'ge76.2,'
-                                                                 +'ge101.6,'
-                                                                 +'ge127,'
-                                                                 +'ge152.4,'
-                                                                 +'ge203.2,'
+                                                     'threshs': ('ge25.4, '
+                                                                 +'ge50.8, '
+                                                                 +'ge76.2, '
+                                                                 +'ge101.6, '
+                                                                 +'ge127, '
+                                                                 +'ge152.4, '
+                                                                 +'ge203.2, '
                                                                  +'ge254')},
                                    'obs_var_dict': {'name': 'APCP_DAYS6_10',
                                                     'levels': 'A120',
-                                                    'threshs': ('ge25.4,'
-                                                                +'ge50.8,'
-                                                                +'ge76.2,'
-                                                                +'ge101.6,'
-                                                                +'ge127,'
-                                                                +'ge152.4,'
-                                                                +'ge203.2,'
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge101.6, '
+                                                                +'ge127, '
+                                                                +'ge152.4, '
+                                                                +'ge203.2, '
                                                                 +'ge254')},
                                    'interp_dict': {'method': 'NEAREST',
                                                    'points': '1'},
@@ -581,23 +581,23 @@ plot_jobs_dict = {
                                                      'CONUS_South'],
                                     'fcst_var_dict': {'name': 'APCP_DAYS6_10',
                                                       'levels': 'A120',
-                                                      'threshs': ('ge25.4,'
-                                                                  +'ge50.8,'
-                                                                  +'ge76.2,'
-                                                                  +'ge101.6,'
-                                                                  +'ge127,'
-                                                                  +'ge152.4,'
-                                                                  +'ge203.2,'
+                                                      'threshs': ('ge25.4, '
+                                                                  +'ge50.8, '
+                                                                  +'ge76.2, '
+                                                                  +'ge101.6, '
+                                                                  +'ge127, '
+                                                                  +'ge152.4, '
+                                                                  +'ge203.2, '
                                                                   +'ge254')},
                                     'obs_var_dict': {'name': 'APCP_DAYS6_10',
                                                      'levels': 'A120',
-                                                     'threshs': ('ge25.4,'
-                                                                 +'ge50.8,'
-                                                                 +'ge76.2,'
-                                                                 +'ge101.6,'
-                                                                 +'ge127,'
-                                                                 +'ge152.4,'
-                                                                 +'ge203.2,'
+                                                     'threshs': ('ge25.4, '
+                                                                 +'ge50.8, '
+                                                                 +'ge76.2, '
+                                                                 +'ge101.6, '
+                                                                 +'ge127, '
+                                                                 +'ge152.4, '
+                                                                 +'ge203.2, '
                                                                  +'ge254')},
                                     'interp_dict': {'method': 'NEAREST',
                                                     'points': '1'},
@@ -614,23 +614,23 @@ plot_jobs_dict = {
                                                    'CONUS_South'],
                                   'fcst_var_dict': {'name': 'APCP_DAYS6_10',
                                                     'levels': 'A120',
-                                                    'threshs': ('ge25.4,'
-                                                                +'ge50.8,'
-                                                                +'ge76.2,'
-                                                                +'ge101.6,'
-                                                                +'ge127,'
-                                                                +'ge152.4,'
-                                                                +'ge203.2,'
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge101.6, '
+                                                                +'ge127, '
+                                                                +'ge152.4, '
+                                                                +'ge203.2, '
                                                                 +'ge254')},
                                   'obs_var_dict': {'name': 'APCP_DAYS6_10',
                                                    'levels': 'A120',
-                                                   'threshs': ('ge25.4,'
-                                                               +'ge50.8,'
-                                                               +'ge76.2,'
-                                                               +'ge101.6,'
-                                                               +'ge127,'
-                                                               +'ge152.4,'
-                                                               +'ge203.2,'
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge101.6, '
+                                                               +'ge127, '
+                                                               +'ge152.4, '
+                                                               +'ge203.2, '
                                                                +'ge254')},
                                   'interp_dict': {'method': 'NBRHD_SQUARE',
                                                   'points': ('1, 9, 25, '
@@ -668,23 +668,23 @@ plot_jobs_dict = {
                                                     'CONUS_South'],
                                    'fcst_var_dict': {'name': 'APCP_WEEKS3_4',
                                                      'levels': 'A336',
-                                                     'threshs': ('ge25.4,'
-                                                                 +'ge50.8,'
-                                                                 +'ge76.2,'
-                                                                 +'ge127,'
-                                                                 +'ge254,'
-                                                                 +'ge381,'
-                                                                 +'ge508,'
+                                                     'threshs': ('ge25.4, '
+                                                                 +'ge50.8, '
+                                                                 +'ge76.2, '
+                                                                 +'ge127, '
+                                                                 +'ge254, '
+                                                                 +'ge381, '
+                                                                 +'ge508, '
                                                                  +'ge635')},
                                    'obs_var_dict': {'name': 'APCP_WEEKS3_4',
                                                     'levels': 'A336',
-                                                    'threshs': ('ge25.4,'
-                                                                +'ge50.8,'
-                                                                +'ge76.2,'
-                                                                +'ge127,'
-                                                                +'ge254,'
-                                                                +'ge381,'
-                                                                +'ge508,'
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge127, '
+                                                                +'ge254, '
+                                                                +'ge381, '
+                                                                +'ge508, '
                                                                 +'ge635')},
                                    'interp_dict': {'method': 'NEAREST',
                                                    'points': '1'},
@@ -702,23 +702,23 @@ plot_jobs_dict = {
                                                      'CONUS_South'],
                                     'fcst_var_dict': {'name': 'APCP_WEEKS3_4',
                                                       'levels': 'A336',
-                                                      'threshs': ('ge25.4,'
-                                                                  +'ge50.8,'
-                                                                  +'ge76.2,'
-                                                                  +'ge127,'
-                                                                  +'ge254,'
-                                                                  +'ge381,'
-                                                                  +'ge508,'
+                                                      'threshs': ('ge25.4, '
+                                                                  +'ge50.8, '
+                                                                  +'ge76.2, '
+                                                                  +'ge127, '
+                                                                  +'ge254, '
+                                                                  +'ge381, '
+                                                                  +'ge508, '
                                                                   +'ge635')},
                                     'obs_var_dict': {'name': 'APCP_WEEKS3_4',
                                                      'levels': 'A336',
-                                                     'threshs': ('ge25.4,'
-                                                                 +'ge50.8,'
-                                                                 +'ge76.2,'
-                                                                 +'ge127,'
-                                                                 +'ge254,'
-                                                                 +'ge381,'
-                                                                 +'ge508,'
+                                                     'threshs': ('ge25.4, '
+                                                                 +'ge50.8, '
+                                                                 +'ge76.2, '
+                                                                 +'ge127, '
+                                                                 +'ge254, '
+                                                                 +'ge381, '
+                                                                 +'ge508, '
                                                                  +'ge635')},
                                     'interp_dict': {'method': 'NEAREST',
                                                     'points': '1'},
@@ -735,23 +735,23 @@ plot_jobs_dict = {
                                                    'CONUS_South'],
                                   'fcst_var_dict': {'name': 'APCP_WEEKS3_4',
                                                     'levels': 'A336',
-                                                    'threshs': ('ge25.4,'
-                                                                +'ge50.8,'
-                                                                +'ge76.2,'
-                                                                +'ge127,'
-                                                                +'ge254,'
-                                                                +'ge381,'
-                                                                +'ge508,'
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge127, '
+                                                                +'ge254, '
+                                                                +'ge381, '
+                                                                +'ge508, '
                                                                 +'ge635')},
                                   'obs_var_dict': {'name': 'APCP_WEEKS3_4',
                                                    'levels': 'A336',
-                                                   'threshs': ('ge25.4,'
-                                                               +'ge50.8,'
-                                                               +'ge76.2,'
-                                                               +'ge127,'
-                                                               +'ge254,'
-                                                               +'ge381,'
-                                                               +'ge508,'
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge127, '
+                                                               +'ge254, '
+                                                               +'ge381, '
+                                                               +'ge508, '
                                                                +'ge635')},
                                   'interp_dict': {'method': 'NBRHD_SQUARE',
                                                   'points': ('1, 9, 25, '
