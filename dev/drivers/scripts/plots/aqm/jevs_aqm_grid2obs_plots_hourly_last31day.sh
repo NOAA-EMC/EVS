@@ -1,10 +1,10 @@
-#PBS -N jevs_aqm_grid2obs_plots
+#PBS -N evs_aqm_grid2obs_plots_hourly_last31day
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
-#PBS -l place=shared,select=1:ncpus=1:mem=20GB
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=275GB
 #PBS -l debug=true
 
 set -x
@@ -43,16 +43,21 @@ export modsys=aqm
 export mod_ver=${aqm_ver}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=YES
-export SENDMAIL=YES
-export SENDDBN=NO
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-#
+export KEEPDATA=YES
+export SENDMAIL=YES
+export SENDDBN=NO
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver_2d}
+
+export USE_CFP=YES
+export nproc=128    ## nproc must match with the ncpus allocation above
+
+export DATA_TYPE=hourly
+export NDAYS=31
 
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
 

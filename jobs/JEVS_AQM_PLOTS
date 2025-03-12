@@ -60,6 +60,8 @@ export USHevs=${USHevs:-${HOMEevs}/ush}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
 export machine=${machine:-WCOSS2}
+export USE_CFP=${USE_CFP:-YES}
+export nproc=${nproc:-128}
 export evs_run_mode=${evs_run_mode:-production}
 
 # Define COMIN/COMOUT variables:
