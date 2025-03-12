@@ -1,4 +1,4 @@
-#PBS -N jevs_aqm_prep_00
+#PBS -N jevs_aqm_grid2obs_prep_airnow
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -12,6 +12,7 @@ set -x
 cd $PBS_O_WORKDIR
 
 export model=evs
+export COMPONENT=aqm
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
@@ -32,7 +33,6 @@ export vhr=00
 echo $vhr
 export NET=evs
 export STEP=prep
-export COMPONENT=aqm
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=aqm
@@ -49,6 +49,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 #
 export KEEPDATA=YES
 export SENDMAIL=YES
+export SENDDBN=NO
 #
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
 

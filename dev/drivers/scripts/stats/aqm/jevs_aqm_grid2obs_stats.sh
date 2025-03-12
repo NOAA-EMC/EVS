@@ -12,6 +12,7 @@ set -x
 cd $PBS_O_WORKDIR
 
 export model=evs
+export COMPONENT=aqm
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
@@ -33,7 +34,6 @@ echo $vhr
 export envir=prod
 export NET=evs
 export STEP=stats
-export COMPONENT=aqm
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=aqm
@@ -41,10 +41,12 @@ export modsys=aqm
 export mod_ver=${aqm_ver}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=YES
-export SENDMAIL=YES
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
+
+export KEEPDATA=YES
+export SENDMAIL=YES
+export SENDDBN=NO
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
