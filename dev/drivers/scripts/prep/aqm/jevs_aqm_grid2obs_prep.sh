@@ -1,4 +1,4 @@
-#PBS -N jevs_aqm_grid2obs_prep_airnow
+#PBS -N jevs_aqm_grid2obs_prep
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
