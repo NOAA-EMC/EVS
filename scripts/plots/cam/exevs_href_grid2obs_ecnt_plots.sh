@@ -224,7 +224,6 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh 
          echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh" >> run_all_poe.sh
          
-=======
 	 echo "if [ -s ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo " cp -v ${plot_dir}/${score_type}_regional_*_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo " >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
@@ -238,7 +237,6 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
          echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_all_poe.sh
 
->>>>>>> c5bbdf87acf33fca6d884d74005718a8f852e078
        else
 	 for domain in $subregions ; do
            if [ -s $restart/${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png ] ; then
