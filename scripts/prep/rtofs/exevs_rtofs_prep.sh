@@ -32,7 +32,7 @@ filestypes_3dz_daily='3zsio 3ztio 3zuio 3zvio'
 for lead in ${leads}; do
     # glo_2ds files
     for filetype in ${filetypes_2ds}; do
-        input_rtofs_file=$COMINrtofs/$RUN.$INITDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
+        input_rtofs_file=$COMINrtofs/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
         tmp_rtofs_file=${DATA}/rtofs_glo_2ds_${lead}_${filetype}.nc
         output_rtofs_file=$COMOUTprep/$RUN.$INITDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
         if [ ! -s $output_rtofs_file ]; then
@@ -61,7 +61,7 @@ for lead in ${leads}; do
     done
     # glo_3dz daily files
     for filetype in ${filestypes_3dz_daily}; do
-        input_rtofs_file=$COMINrtofs/$RUN.$INITDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
+        input_rtofs_file=$COMINrtofs/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
         tmp_rtofs_file=${DATA}/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
         output_rtofs_file=$COMOUTprep/$RUN.$INITDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
         if [ ! -s $output_rtofs_file ]; then
