@@ -85,7 +85,7 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "WARNING: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
+          echo "DEBUG: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
           if [ "${SENDMAIL}" == "YES" ]; then 
             echo "WARNING: No pre-processed ${OBSTYPE} Level 1.5 was available for ${VDATE} " >> ${email_msg}
             echo "Missing file is ${check_file}" >> ${email_msg}
@@ -104,7 +104,7 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "WARNING: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
+          echo "DEBUG: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
           if [ "${SENDMAIL}" == "YES" ]; then 
             echo "WARNING: No ${OBSTYPE} ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" >> ${email_msg}
             echo "Missing file is ${check_file}" >> ${email_msg}
@@ -154,8 +154,8 @@ for ObsType in ${grid2obs_list}; do
               flag_send_message=YES
             fi
 
-            echo "WARNING: No ${CMODEL} ${ObsType} forecast was available for ${aday} t${acyc}z"
-            echo "WARNING: Missing file is ${fcst_file}"
+            echo "DEBUG: No ${CMODEL} ${ObsType} forecast was available for ${aday} t${acyc}z"
+            echo "DEBUG: Missing file is ${fcst_file}"
           fi 
         fi 
         ((ihr+=${inc}))
@@ -173,8 +173,8 @@ for ObsType in ${grid2obs_list}; do
         run_metplus.py ${point_stat_conf_file} ${config_common}
         export err=$?; err_chk
       else
-        echo "WARNING: NO ${CMODEL} ${ObsType} FORECAST OR OBS TO VERIFY"
-        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${num_obs_found}"
+        echo "DEBUG: NO ${CMODEL} ${ObsType} FORECAST OR OBS TO VERIFY"
+        echo "DEBUG: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${num_obs_found}"
       fi
       if [ "${SENDCOM}" == "YES" ]; then
         if [ -d ${RUNTIME_STATS}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
@@ -183,9 +183,6 @@ for ObsType in ${grid2obs_list}; do
             mkdir -p ${COMOUTsmall}
             cp -v ${RUNTIME_STATS}/${VDATE}.stat/*${OutputId}* ${COMOUTsmall}
           else
-            if [ "${check_restart}" == "YES" ]; then
-              echo "DEBUG: RESTART MODE is ${check_restart}"
-	    fi
             echo "DEBUG: NO stats file *${OutputId}* found in ${RUNTIME_STATS}/${VDATE}.stat"
           fi
         fi
