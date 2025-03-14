@@ -15,6 +15,9 @@
 # 2- $RUN was defined in all j-jobs. 
 # 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
 # 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
+# 03/2025: 
+# 1- $COMOUT name changes and the adjustment to other scripts in stats scripts, ush, parm, etc.
+# 2- Updated the ecf scripts names and adjustments in defs. 
 #############################################################################################
 
 set -x
