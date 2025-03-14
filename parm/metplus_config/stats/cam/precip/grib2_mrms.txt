@@ -1,4 +1,0 @@
-GRIB2
-209 0 0 0 161 1 6 37 "APCP_01" "1hr Accumulated precip" "mm"
-209 0 0 0 161 1 6 38 "APCP_03" "3hr Accumulated precip" "mm"
-209 0 0 0 161 1 6 41 "APCP_24" "24hr Accumulated precip" "mm"
