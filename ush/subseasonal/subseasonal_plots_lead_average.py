@@ -439,10 +439,9 @@ class LeadAverage:
                         masked_model_num_model1_diff_data.max()
                     )
             else:
-                self.logger.debug(f"{model_num} [{model_num_name},"
+                self.logger.debug(f"No points in {model_num} [{model_num_name},"
                                   +f"{model_num_plot_name}] difference from "
-                                  +f"model1 [{model1_name},{model1_plot_name}] "
-                                  +"has no points")
+                                  +self.model_info_dict['model1']['plot_name'])
             if model_num == 'model1':
                 ax2.plot(
                     forecast_hours_avg_df.columns.values.tolist(),
@@ -515,13 +514,6 @@ class LeadAverage:
                                 color = 'None',
                                 edgecolor=model_num_plot_settings_dict['color'],
                                 linewidth=1)
-                else:
-                    self.logger.debug(f"{model_num}: ["
-                                      +f"{model_num_name},"
-                                      +f"{model_num_plot_name}] difference "
-                                      +f"from model1 [{model1_name},"
-                                      +f"{model1_plot_name}] "
-                                      +"confidence intervals has no points")
         subplot_num = 1
         for ax in fig.get_axes():
             stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
