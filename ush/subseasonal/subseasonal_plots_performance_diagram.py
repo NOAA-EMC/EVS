@@ -419,6 +419,9 @@ class PerformanceDiagram:
                         s = thresh_mark_dict[fcst_var_thresh]['markersize']**2,
                         zorder=40
                     )
+            else:
+                self.logger.debug(f"{model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}] has no points")
         inv = ax.transData.inverted()
         legend_box = thresh_legend.get_frame().get_bbox()
         legend_box_inv = inv.transform([(legend_box.x0,legend_box.y0),
