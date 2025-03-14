@@ -2,19 +2,20 @@
 #************************************************************************************
 #  Purpose: Generate href snowfall poe and sub-jobs files
 #  Last update: 
-#     05/07/2024, add restart, Binbin Zhou Lynker@EMC/NCEP
-#     10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#     01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
+#     05/30/2024, by Binbin Zhou Lynker@EMC/NCEP
 #***********************************************************************************
 set -x 
 
 #*******************************************
 # Build POE script to collect sub-jobs 
 #******************************************
-export members=10
 export write_job_cards=yes
+cd $DATA/scripts
 >run_all_href_snowfall_poe.sh
 
 mkdir -p $COMOUTsmall/HREF_SNOW
+mkdir -p $all_stats/HREF_SNOW
 
 #NOHRSC data missing alert
 if [ ! -s $COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${VDATE}12_grid184.grb2 ] ; then 
@@ -55,40 +56,42 @@ for obsv in 6h 24h  ; do
           #       if not, do this sub-task, and mark it is completed after it is done
           #       if yes, skip this task
           #####################################################################################
-          if [ ! -e  $COMOUTrestart/snow/run_href_snow${obsv}.${fhr}.${vhr}.completed ] ; then
+         if [ ! -e  $COMOUTrestart/snow/run_href_snow${obsv}.${fhr}.${vhr}.completed ] ; then
 
-            ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
-            if [ "$ihr" -eq "00" ] || [ "$ihr" -eq "12" ] ; then
-                if [ "$fhr" -ge "45" ] ; then
-                    export nmem=7
-                    export members=7
-                elif [ "$fhr" -ge "39" ] ; then
-                    export nmem=8
-                    export members=8
-                else
-                    export nmem=10
-                    export members=10
-                fi
-            elif [ "$ihr" -eq "06" ] || [ "$ihr" -eq "18" ] ; then
-                if [ "$fhr" -ge "45" ] ; then
-                    export nmem=4
-                    export members=4
-                elif [ "$fhr" -ge "33" ] ; then
-                    export nmem=8
-                    export members=8
-                else
-                    export nmem=10
-                    export members=10
-                fi
-            else
-                export nmem=10
-                export members=10
-            fi
+	    ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
+	    iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
 
-            echo "export nmem=$nmem" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+	    input_fcst=$COMINhref/href.${iday}/verf_g2g/href.*.t${ihr}z.conus.f${fhr}
+            input_obsv=$DCOMINsnow/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_${obsv}_${VDATE}${vhr}_grid184.grb2
+
+	   if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
+
+            
+              if [ $ihr = 00 ] || [ $ihr = 12 ] ; then
+                if [ $fhr -ge 45 ] ; then
+                  mbrs=7
+                elif [ $fhr -eq 42 ] || [ $fhr -eq 39 ] ; then
+                  mbrs=8
+                else
+                  mbrs=10
+                fi
+              elif [ $ihr = 06 ] || [ $ihr = 18 ] ; then
+                if [ $fhr -ge 45 ] ; then
+                  mbrs=4
+                elif [ $fhr -le 42 ] && [ $fhr -ge 33 ] ; then
+                  mbrs=8
+                else
+                  mbrs=10
+                fi
+              fi
+
+
+	    echo "#!/bin/ksh" >> run_href_snow${obsv}.${fhr}.${vhr}.sh  
+	    echo "set -x" >> run_href_snow${obsv}.${fhr}.${vhr}.sh  
+            echo "export mbrs=$mbrs" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo "export regrid=G212" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             
-            echo  "export output_base=$WORK/precip/run_href_snow${obsv}" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+            echo  "export output_base=$WORK/precip/run_href_snow${obsv}.${fhr}.${vhr}" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             
             echo  "export obsv=${obsv}" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo  "export obsvpath=$COMSNOW" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
@@ -122,28 +125,38 @@ for obsv in 6h 24h  ; do
             echo  "export modeltail=''" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo  "export extradir='verf_g2g/'" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 
-
             echo  "export verif_grid='' " >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo  "export verif_poly='${maskpath}/Bukovsky_NOHRSC_CONUS.nc, ${maskpath}/Bukovsky_NOHRSC_CONUS_East.nc, ${maskpath}/Bukovsky_NOHRSC_CONUS_West.nc, ${maskpath}/Bukovsky_NOHRSC_CONUS_South.nc, ${maskpath}/Bukovsky_NOHRSC_CONUS_Central.nc' " >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-
             echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${SNOWFALL_CONF}/GenEnsProd_fcstHREF_obsNOHRSC.conf " >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-
+            echo  "  export err=\$?; err_chk" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${SNOWFALL_CONF}/EnsembleStat_fcstHREF_obsNOHRSC.conf " >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-
+            echo  "  export err=\$?; err_chk" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${SNOWFALL_CONF}/GridStat_fcstHREFmean_obsNOHRSC_G212.conf " >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-
+            echo  "  export err=\$?; err_chk" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
             echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${SNOWFALL_CONF}/GridStat_fcstHREFmean_obsNOHRSC_NOHRSCgrid.conf " >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+            echo  "  export err=\$?; err_chk" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 
-            echo "for FILEn in \$output_base/stat/\${MODEL}/ensemble_stat_\${MODEL}_*_${obsv}_FHR0${fhr}_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-            echo "for FILEn in \$output_base/stat/\${MODEL}/grid_stat_\${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-            echo "for FILEn in \$output_base/stat/\${MODEL}/grid_stat_\${MODEL}${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $COMOUTsmall/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+	    #Mark job is completed
+            echo "for FILEn in \$output_base/stat/\${MODEL}/*_stat_\${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $all_stats/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+            echo " [[ \$? = 0 ]] && >\$output_base/stat/HREF_SNOW/run_href_snow${obsv}.${fhr}.${vhr}.completed" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 
-            #Mark this task is completed for restart 
-	    echo "[[ \$? = 0 ]] && >$COMOUTrestart/snow/run_href_snow${obsv}.${fhr}.${vhr}.completed" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+            #Send restart files to COMOUT 
+	    echo "if [ $SENDCOM = YES ] && [ \$? = 0 ] ; then" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+	    echo " if [ -s $all_stats/HREF_SNOW/*_stat_\${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ] ; then"  >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+	    echo "   cp $all_stats/HREF_SNOW/*_stat_\${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat $COMOUTsmall/HREF_SNOW" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+	    echo "   cp \$output_base/stat/HREF_SNOW/run_href_snow${obsv}.${fhr}.${vhr}.completed $COMOUTrestart/snow" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+            echo " fi" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+            echo "fi" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 
 	    chmod +x run_href_snow${obsv}.${fhr}.${vhr}.sh
-            echo "${DATA}/run_href_snow${obsv}.${fhr}.${vhr}.sh" >> run_all_href_snowfall_poe.sh
+            echo "${DATA}/scripts/run_href_snow${obsv}.${fhr}.${vhr}.sh" >> run_all_href_snowfall_poe.sh
          
+	   fi   
+	  else
+	    if [ -s $COMOUTsmall/HREF_SNOW/*_stat_HREF_SNOW_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ] ; then
+	      [[ ! -d $all_stats/HREF_SNOW ]] && mkdir -p $all_stats/HREF_SNOW
+	      cp $COMOUTsmall/HREF_SNOW/*_stat_HREF_SNOW_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat $all_stats/HREF_SNOW
+            fi 	      
 	  fi #end if check restart
 
         done #end of vhr
