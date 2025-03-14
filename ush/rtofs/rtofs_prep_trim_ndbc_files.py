@@ -50,9 +50,9 @@ for ndbc_input_file in glob.glob(os.path.join(DCOMROOT,
     buoy_id = ndbc_input_file.rpartition('/')[2].partition('.')[0]
     if buoy_id not in buoy_with_loc_list:
         continue
-    ndbc_tmp_file = os.path.join(DATA, f"rtofs.{INITDATE_dt:%Y%m%d}",
+    ndbc_tmp_file = os.path.join(DATA, f"ocean.{INITDATE_dt:%Y%m%d}",
                                  OBTYPE, 'buoy', f"{buoy_id}.txt")
-    ndbc_output_file = os.path.join(COMOUTprep, f"rtofs.{INITDATE_dt:%Y%m%d}",
+    ndbc_output_file = os.path.join(COMOUTprep, f"ocean.{INITDATE_dt:%Y%m%d}",
                                     OBTYPE, 'buoy', f"{buoy_id}.txt")
     if not os.path.exists(ndbc_output_file):
         #print(f"Trimming {ndbc_input_file} for {INITDATE_dt:%Y%m%d}")
