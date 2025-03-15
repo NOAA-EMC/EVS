@@ -3,6 +3,7 @@
 # Purpose:   Setup some paths and run href spcoutlook job
 # 
 # Last updated 
+#       01/10/2025: Add MPMD:  by  Binbin Zhou, Lynker@EMC/NCEP
 #       05/04/2024: add restart, Binbin Zhou, Lynker@EMC/NCEP
 #       10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 ##############################################################
@@ -12,6 +13,9 @@ set -x
 export machine=${machine:-"WCOSS2"}
 export WORK=$DATA
 cd $WORK
+mkdir -p $WORK/scripts
+export all_stats=$WORK/all_stats
+mkdir -p $all_stats
 
 #*********************************
 #check input data are available:
@@ -57,9 +61,7 @@ export domain="all"
 export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
 [[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
-[[ ! -d $COMOUTrestart/prepare/prepbufr.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/prepbufr.${vday}
 [[ ! -d $COMOUTrestart/spcoutlook ]] &&  mkdir -p $COMOUTrestart/spcoutlook
-
 
 
 #*********************************
@@ -73,26 +75,26 @@ fi
 #****************************************
 # Build a POE script to collect sub-jobs
 # ***************************************
->run_href_all_grid2obs_poe
+>$DATA/scripts/run_href_all_grid2obs_poe
 
 #Spc_outlook: 2 job
 if [ $verif_spcoutlook = yes ] ; then
   $USHevs/cam/evs_href_spcoutlook.sh
   export err=$?; err_chk
-  cat ${DATA}/run_all_href_spcoutlook_poe.sh >> run_href_all_grid2obs_poe
+  cat ${DATA}/scripts/run_all_href_spcoutlook_poe.sh >> $DATA/scripts/run_href_all_grid2obs_poe
 fi
 
-chmod 775 run_href_all_grid2obs_poe
 
 #****************************************
 # Run POE script to get small stat files
 # ***************************************
-if [ -s run_href_all_grid2obs_poe ] ; then
+if [ -s $DATA/scripts/run_href_all_grid2obs_poe ] ; then
+ chmod 775 $DATA/scripts/run_href_all_grid2obs_poe
  if [ $run_mpi = yes ] ; then
-    mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
+    mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/scripts/run_href_all_grid2obs_poe
     export err=$?; err_chk
  else
-    ${DATA}/run_href_all_grid2obs_poe
+    ${DATA}/scripts/run_href_all_grid2obs_poe
     export err=$?; err_chk
  fi
 fi
@@ -100,7 +102,7 @@ fi
 #*******************************************************************
 # Run gather job to combine small stat files to form a big stat file
 # ******************************************************************
-if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then
+if [ $gather = yes ] && [ -s $all_stats/*.stat ] ; then
   $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
   export err=$?; err_chk
 fi
