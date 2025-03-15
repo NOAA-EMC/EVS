@@ -59,8 +59,8 @@ for model in $model_list ; do
  for fhr in 24 48 ; do
   past=`$NDATE -$fhr ${VDATE}12`	
   INITDATE=${past:0:8}
-  source=$EVSINapcp24mean/href.$INITDATE/precip_mean24
-  ln -sf $source/${model}.t12z.G227.24h.f${fhr}.nc  $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr0${fhr}.nc	
+  source=$EVSINapcp24mean/href.$VDATE/precip_mean24
+  ln -sf $source/${model}.$INITDATE.t12z.G227.24h.f${fhr}.nc  $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr0${fhr}.nc	
  done
 done
 
