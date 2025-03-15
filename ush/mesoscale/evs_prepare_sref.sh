@@ -46,12 +46,22 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
        mkdir $WORK/sref.${fday}
       fi
 
-      #Create for  restart
-      if [ ! -d $COMOUTrestart/sref.${fday} ] ; then
-        mkdir -p $COMOUTrestart/sref.${fday}
-      fi
-
+      #Create sref.* sub-directories for restart
       export modelpath=$WORK/sref.${fday}
+      if [ $fday = $PDYm2 ] ; then
+	restart_day=vday
+      elif [ $fday = $PDYm3 ] ; then
+	restart_day=past1
+      elif [ $fday = $PDYm4 ] ; then
+	restart_day=past2
+      elif [ $fday = $PDYm5 ] ; then
+	restart_day=past3
+      elif [ $fday = $PDYm6 ] ; then
+	restart_day=past4
+      elif [ $fday = $PDYm7 ] ; then
+	restart_day=past5
+      fi
+      [[ ! -d $COMOUTrestart/sref.${restart_day} ]] && mkdir -p $COMOUTrestart/sref.${restart_day}
 
       for base in arw nmb ; do
         for mb in ctl n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ; do
@@ -61,7 +71,7 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 	 #         if not existing, run metplus to get it
 	 #         if yes, copy it to the working directory (restart case)  
 	 ##################################################################################################
-	 if [ ! -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+	 if [ ! -s $COMOUTrestart/sref.${restart_day}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
 
            ############################################################################################
 	   # Note: for arw/f03 and f06 members, the APCP03 is duplicated. So grab the second one (#479:)
@@ -87,13 +97,13 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
               if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
 	        cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
 	        #save for restart:
-	        mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${fday}/.
+	        cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${restart_day}/.
 	      fi
 	   fi
 	 else
 	   #Restart:
-	   if [ -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
-	     cp $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}
+	   if [ -s $COMOUTrestart/sref.${restart_day}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+	     cp $COMOUTrestart/sref.${restart_day}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}
 	   fi
 	 fi
 
@@ -278,6 +288,8 @@ export output_base=${WORK}/pb2nc
      #*******************************************************************************
      >$WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
      split_by_subset ${COMINobsproc}/gdas.${vday}/$vhr/atmos/gdas.t${vhr}z.prepbufr
+     export err=$?; err_chk
+
      for subset in ADPSFC SFCSHP ADPUPA ; do
        if [ -s ${WORK}/${subset} ]; then
           cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr

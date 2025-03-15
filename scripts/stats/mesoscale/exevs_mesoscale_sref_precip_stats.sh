@@ -13,6 +13,8 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export WORK=$DATA
 cd $WORK
 mkdir -p $WORK/scripts
+export all_stats=$WORK/all_stats
+mkdir -p $WORK/all_stats
 
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}

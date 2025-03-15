@@ -13,6 +13,7 @@ export regrid='NONE'
 #*******************************************
 # Build POE script to collect sub-jobs
 # ******************************************
+cd $DATA/scripts
 >run_all_sref_g2o_poe.sh
 
 export model=sref
@@ -91,45 +92,77 @@ for  obsv in prepbufr ; do
        echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstSREF_obsPREPBUFR.conf " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "  export err=\$?; err_chk" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo " if [ -s \$output_base/stat/GenEnsProd_SREF_PREPBUFR*.nc ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "   cp \$output_base/stat/GenEnsProd_SREF_PREPBUFR*.nc $COMOUTrestart" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   cp \$output_base/stat/GenEnsProd_SREF_PREPBUFR*.nc $all_stats" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   [[ $SENDCOM = YES ]] && cp \$output_base/stat/GenEnsProd_SREF_PREPBUFR*.nc $COMOUTrestart" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   >\$output_base/stat/run_sref_g2o_genensprod_${domain}.${obsv}.${fhr}.${vhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   [[ $SENDCOM = YES ]] && cp \$output_base/stat/run_sref_g2o_genensprod_${domain}.${obsv}.${fhr}.${vhr}.completed $COMOUTrestart" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo " fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo " [[ \$? = 0 ]] &&  >$COMOUTrestart/run_sref_g2o_genensprod_${domain}.${obsv}.${fhr}.${vhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "else " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "  mkdir -p \$output_base/stat" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "  if [ -s $COMOUTrestart/GenEnsProd_SREF_PREPBUFR*.nc ] ; then"  >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "    cp $COMOUTrestart/GenEnsProd_SREF_PREPBUFR*.nc \$output_base/stat" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  if [ -s $COMOUTrestart/GenEnsProd*FHR${fhr}*${vhr}0000V_ens.nc ] ; then"  >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "    cp $COMOUTrestart/GenEnsProd*FHR${fhr}*${vhr}0000V_ens.nc \$output_base/stat" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "  fi" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "fi" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
 
        echo "if [ ! -e $COMOUTrestart/run_sref_g2o_ens_${domain}.${obsv}.${fhr}.${vhr}.completed ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstSREF_obsPREPBUFR.conf " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "   export err=\$?; err_chk" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "   [[ \$? = 0 ]] && >$COMOUTrestart/run_sref_g2o_ens_${domain}.${obsv}.${fhr}.${vhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstSREF_obsPREPBUFR.conf " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  export err=\$?; err_chk" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  if [ -s \$output_base/stat/ensemble_stat*.stat ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "     cp \$output_base/stat/ensemble_stat*.stat $all_stats" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/ensemble_stat*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "    >\$output_base/stat/run_sref_g2o_ens_${domain}.${obsv}.${fhr}.${vhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/run_sref_g2o_ens_${domain}.${obsv}.${fhr}.${vhr}.completed $COMOUTrestart" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "else " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  if [ -s $COMOUTsmall/ensemble_stat_SREF_PREPBUFR_CONUS_FHR${fhr}_*_${vhr}0000V.stat ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "    cp $COMOUTsmall/ensemble_stat_SREF_PREPBUFR_CONUS_FHR${fhr}_*_${vhr}0000V.stat $all_stats" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh 
+       echo "  fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
 
        echo "if [ ! -e $COMOUTrestart/run_sref_g2o_mean_${domain}.${obsv}.${fhr}.${vhr}.completed ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo " [[ -s \$output_base/stat/GenEnsProd_SREF_PREPBUFR_${domain}_FHR${fhr}_${VDATE}_${vhr}0000V_ens.nc ]] && ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_mean.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "  export err=\$?; err_chk" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "  [[ \$? = 0 ]] &&  >$COMOUTrestart/run_sref_g2o_mean_${domain}.${obsv}.${fhr}.${vhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  if [ -s \$output_base/stat/point_stat*mean*.stat ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   cp \$output_base/stat/point_stat*mean*.stat $all_stats" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   [[ $SENDCOM = YES ]] && cp \$output_base/stat/point_stat*mean*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "    >\$output_base/stat/run_sref_g2o_mean_${domain}.${obsv}.${fhr}.${vhr}.completed " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   [[ $SENDCOM = YES ]] && cp \$output_base/stat/run_sref_g2o_mean_${domain}.${obsv}.${fhr}.${vhr}.completed $COMOUTrestart" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "else " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  if [ -s $COMOUTsmall/point_stat*mean_FHR${fhr}_*_${vhr}0000V.stat ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "    cp $COMOUTsmall/point_stat*mean_FHR${fhr}_*_${vhr}0000V.stat $all_stats" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
 
        echo "if [ ! -e $COMOUTrestart/run_sref_g2o_prob_${domain}.${obsv}.${fhr}.${vhr}.completed ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "   [[ -s \$output_base/stat/GenEnsProd_SREF_PREPBUFR_${domain}_FHR${fhr}_${VDATE}_${vhr}0000V_ens.nc ]] &&  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_prob.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "   export err=\$?; err_chk" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "   [[ \$? = 0 ]] &&  >$COMOUTrestart/run_sref_g2o_prob_${domain}.${obsv}.${fhr}.${vhr}.completed" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  if [ -s \$output_base/stat/point_stat*prob*.stat ] ; then " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   cp \$output_base/stat/point_stat*prob*.stat $all_stats" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   [[ $SENDCOM = YES ]] && cp \$output_base/stat/point_stat*prob*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   >\$output_base/stat/run_sref_g2o_prob_${domain}.${obsv}.${fhr}.${vhr}.completed " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "   [[ $SENDCOM = YES ]] && cp \$output_base/stat/run_sref_g2o_prob_${domain}.${obsv}.${fhr}.${vhr}.completed $COMOUTrestart" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "else " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  if [ -s $COMOUTsmall/point_stat*prob_FHR${fhr}_*_${vhr}0000V.stat ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "    cp $COMOUTsmall/point_stat*prob_FHR${fhr}_*_${vhr}0000V.stat $all_stats" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "  fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
 
-       echo "if [ -s \$output_base/stat/*.stat ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo " cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
-       echo "fi" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh 
-
-       #Mark that all of the 4 METplus processes are completed for next restart run:       
-       echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.completed" >>run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       #Mark that all of the 4 METplus processes are completed for next restart run:   
+       echo "if [ -e $COMOUTrestart/run_sref_g2o_genensprod_${domain}.${obsv}.${fhr}.${vhr}.completed ] && [ -e $COMOUTrestart/run_sref_g2o_ens_${domain}.${obsv}.${fhr}.${vhr}.completed ] && [ -e $COMOUTrestart/run_sref_g2o_mean_${domain}.${obsv}.${fhr}.${vhr}.completed ] && [ -e $COMOUTrestart/run_sref_g2o_prob_${domain}.${obsv}.${fhr}.${vhr}.completed ] && [ $SENDCOM = YES ] ; then" >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh    
+       echo " >$COMOUTrestart/run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.completed" >>run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
+       echo "fi " >> run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
 
        chmod +x run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh
        echo "${DATA}/scripts/run_sref_g2o_${domain}.${obsv}.${fhr}.${vhr}.sh" >> run_all_sref_g2o_poe.sh
 
-      fi  
+      fi 
+    else
+      #Copy restart files
+      if [ -s  $COMOUTsmall/*${fhr}*${vhr}*.stat ] ; then
+        cp $COMOUTsmall/*${fhr}*${vhr}*.stat $all_stats
+      fi
     fi  # check restart for the sub-job
 
   done
@@ -139,18 +172,20 @@ done
 #***************************************************
 # Run POE script to get small stat files
 #*************************************************
-chmod 775 run_all_sref_g2o_poe.sh
-if [ $run_mpi = yes ] ; then
+if [ -s ${DATA}/scripts/run_all_sref_g2o_poe.sh ] ; then
+ chmod 775 run_all_sref_g2o_poe.sh
+ if [ $run_mpi = yes ] ; then
    mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_g2o_poe.sh
-else
+ else
    ${DATA}/scripts/run_all_sref_g2o_poe.sh
-fi 
-export err=$?; err_chk
+ fi 
+ export err=$?; err_chk
+fi
 
 #***********************************************
 # Gather small stat files to forma big stat file
 # **********************************************
-if [ $gather = yes ] && [ -s $COMOUTsmall/*.stat ] ; then 
+if [ $gather = yes ] && [ -s $all_stats/*.stat ] ; then 
   $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE
   export err=$?; err_chk
 fi
