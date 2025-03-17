@@ -86,7 +86,7 @@ while [ ${imdl} -lt ${num_mdl} ]; do
                 cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
                 sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
             else
-                echo "WARNING ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${cpfile}"
+                echo "DEBUG ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${cpfile}"
             fi
             cdate=${NOW}"00"
             NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
