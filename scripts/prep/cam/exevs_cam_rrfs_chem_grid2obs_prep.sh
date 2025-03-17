@@ -217,7 +217,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
         prep_rrfs=${COMOUTprep}/${mdl_cyc}
         if [ ! -d ${prep_rrfs} ]; then mkdir -p ${prep_rrfs}; fi
         let hour_now=1
-        let max_hour=60
+        let max_hour=84
         let total_num_file=${max_hour}
   
         if [ "${check_restart}" == "YES" ]; then   ## Check RRFS reduced grib2 files for RESTART ability

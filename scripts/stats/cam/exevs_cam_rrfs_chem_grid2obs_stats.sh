@@ -115,7 +115,7 @@ for ObsType in ${grid2obs_list}; do
         echo "DEBUG: index of hourly ${OBSTYPE} obs found = ${num_obs_found}"
     fi
 
-    fcstmax=60
+    fcstmax=84
     for mdl_cyc in ${init_cyc}; do
       export mdl_cyc    ## variable used in *.conf
 
