@@ -2,7 +2,7 @@
 #**************************************************************************
 #  Purpose: check the required input forecast and validation data files
 #           for href stat jobs
-#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update: 11/01/2024, by Binbin Zhou Lynker@EMC/NCEP
 #************************************************************************
 set -x
 
@@ -22,8 +22,16 @@ if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
    done
    echo "Missing prepbufr files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "WARNING: All of the preppbufr files are missing."
+      echo "WARNING: All of the RAP prepbufr files are missing for EVS ${COMPONENT}"
       export verif_all=no
+      >$DATA/verif_all.no
+      if [ "$SENDMAIL" = "YES" ] ; then
+	 export subject="RAP Prepbufr Data Missing for EVS ${COMPONENT}"
+	 echo "WARNING:  No RAP Prepbufr data available for ${vday}" > mailmsg
+	 echo "All of  $COMINobsproc/rap.${vday}/rap.txxz.prepbufr.tm00" files are missing >> mailmsg
+	 echo "Job ID: $jobid" >> mailmsg
+	 cat mailmsg | mail -s "$subject" $MAILTO
+       fi
    fi
 
 fi
@@ -60,8 +68,17 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing ccpa01h files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "WARNING: All of the ccpa files are missing"
+      echo "WARNING: All of the ccpa01h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
+      >$DATA/verif_precip.no
+      if [ "$SENDMAIL" = "YES" ] ; then
+	  export subject="CCPA_01h Data Missing for EVS ${COMPONENT}"
+	  echo "WARNING:  No CCPA_01h data available for ${vday}" > mailmsg
+	  echo "All of $COMINccpa/ccpa.${vday}/cycle/ccpa.txxz.01h.hrap.conus.gb2 are missing" >> mailmsg
+	  echo "Job ID: $jobid" >> mailmsg
+	  cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi                 
 
    missing=0
@@ -90,8 +107,17 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing ccpa03h files = " $missing
    if [ $missing -eq 8  ] ; then
-      echo "WARNING: All of the ccpa03h files are missing"
+      echo "WARNING: All of the ccpa03h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
+      >$DATA/verif_precip.no
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="CCPA_03h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No CCPA_03h data available for ${VDATE}" > mailmsg
+          echo "All of $COMINccpa/ccpa.${vday}/cycle/ccpa.txxz.03h.hrap.conus.gb2 are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 
    missing=0
@@ -112,8 +138,18 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing ccpa06h files = " $missing
    if [ $missing -ge 1  ] ; then
-      echo "WARNING: At least one of the ccpa06h files are missing"
+      echo "WARNING: At least one of the ccpa06h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
+      >$DATA/verif_precip.no
+
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="CCPA_06h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No CCPA_06h data available for ${vday}" > mailmsg
+          echo "All of $COMINccpa/ccpa.${vday}/cycle/ccpa.txxz.06h.hrap.conus.gb2 are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 
    accum=01
@@ -127,8 +163,18 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing mrms01h files = " $missing
    if [ $missing -eq 24  ] ; then
-      echo "WARNING: All of mrms01h files are missing"
+      echo "WARNING: All of mrms01h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
+      >$DATA/verif_precip.no
+
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="MRMS_01h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No MRMS_01h data available for ${vday}" > mailmsg
+          echo "All of $DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 
    accum=03
@@ -142,8 +188,18 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing mrms03h files = " $missing
    if [ $missing -eq 8  ] ; then
-      echo "WARNING: All of mrms03h files are missing"
+      echo "WARNING: All of mrms03h files are missing for EVS ${COMPONENT}"
       export verif_precip=no
+      >$DATA/verif_precip.no
+
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="MRMS_03h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No MRMS_03h data available for ${vday}" > mailmsg
+          echo "All of $DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 
    accum=24
@@ -157,140 +213,18 @@ if [ $VERIF_CASE = precip ] ; then
    done
    echo "Missing mrms24h files = " $missing
    if [ $missing -eq 4  ] ; then
-      echo "WARNING: All of the mrms24h files are missing"   
+      echo "WARNING: All of the mrms24h files are missing for EVS ${COMPONENT}"   
       export verif_precip=no
+      >$DATA/verif_precip.no
+
+      if [ "$SENDMAIL" = "YES" ] ; then
+          export subject="MRMS_24h Data Missing for EVS ${COMPONENT}"
+          echo "WARNING:  No MRMS_24h data available for ${vday}" > mailmsg
+          echo "All of $DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $MAILTO
+      fi
+
    fi
 fi
 
-echo "Checking HREF members files ..." 
-
-domain=conus 
-for obsv_cyc in 00 03 06 09 12 15 18 21 ; do 
-   for fhr in 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 ; do 
-      fcst_time=`$NDATE -$fhr ${vday}${obsv_cyc}`
-      fday=${fcst_time:0:8}
-      fcyc=${fcst_time:8:2}
-      if [ $fcyc = 00 ] || [ $fcyc = 06 ] || [ $fcyc = 12 ] || [ $fcyc = 18 ] ; then
-         href_mbrs=0
-         for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
-            if ! ([ "$mb" = "04" ] && (( fhr >= 45 ))) && \
-               ! ([ "$mb" = "06" ] && ([ "$fcyc" = "06" ] || [ "$fcyc" = "18" ]) && (( fhr >= 45 ))) && \
-               ! ( ([ "$mb" = "07" ] || [ "$mb" = "08" ]) && ([ "$fcyc" = "06" ] || [ "$fcyc" = "18" ]) && (( fhr >= 45 )) ) && \
-               ! ( ([ "$mb" = "09" ] || [ "$mb" = "10" ]) && ([ "$fcyc" = "00" ] || [ "$fcyc" = "12" ]) && (( fhr >= 39 )) ) && \
-               ! ( ([ "$mb" = "09" ] || [ "$mb" = "10" ]) && ([ "$fcyc" = "06" ] || [ "$fcyc" = "18" ]) && (( fhr >= 33 )) )
-            then
-               href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.conus.f${fhr}
-               if [ -s $href ] ; then
-                  href_mbrs=$((href_mbrs+1))
-               else
-                  echo "WARNING: $href is missing"
-               fi
-            fi        
-         done
-         if [ $href_mbrs -lt 4 ] ; then
-            echo "WARNING: HREF members = " $href_mbrs " which < 4"
-            export verif_precip=no
-            export verif_snowfall=no
-            export verif_all=no
-         fi
-      fi
-   done
-done
-
-echo "All HREF member files in CONUS are available. Continue checking ..."
-
-domain=ak
-href_mbrs=0
-for obsv_cyc in 00 03 06 09 12 15 18 21 ; do 
-   for fhr in 03 06 09 12 15 18 21 24 27 30 33 36 39 42 45 48 ; do 	
-      fcst_time=`$NDATE -$fhr ${vday}${obsv_cyc}`
-      fday=${fcst_time:0:8}
-      fcyc=${fcst_time:8:2}
-      if [ $fcyc = 06 ] ; then
-         href_mbrs=0
-         for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
-             if ! ([ "$mb" = "02" ] && (( fhr >= 45 ))) && \
-                ! (([ "$mb" = "07" ] || [ "$mb" = "08" ]) && (( fhr >= 39 ))) && \
-                ! ([ "$mb" = "09" ] || [ "$mb" = "10" ])
-             then
-                href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.ak.f${fhr}
-                if [ -s $href ] ; then
-                   href_mbrs=$((href_mbrs+1))
-                else
-                   echo "WARNING: $href is missing"
-                fi
-             fi        
-         done
-         if [ $href_mbrs -lt 4 ] ; then
-            echo "WARNING: HREF members = " $href_mbrs " which < 4"
-            export verif_precip=no
-            export verif_snowfall=no
-            export verif_all=no
-         fi
-      fi
-   done
-done
-
-echo "All HREF member files in Alaska are available. Continue checking ..." 
-
-domain=conus 
-for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23  ; do 
-    typeset -Z2 fhr
-    fhr=01
-    while [ $fhr -le 48 ] ; do 
-       fcst_time=`$NDATE -$fhr ${vday}${obsv_cyc}`
-       fday=${fcst_time:0:8}
-       fcyc=${fcst_time:8:2}
-       if [ $fcyc = 00 ] || [ $fcyc = 06 ] || [ $fcyc = 12 ] || [ $fcyc = 18 ] ; then
-          href_prod=0	      
-          for  prod in mean prob eas pmmn lpmm avrg ; do 
-             href=$COMINhref/href.${fday}/ensprod/href.t${fcyc}z.conus.${prod}.f${fhr}.grib2
-	         if [ -s $href ] ; then
-                href_prod=$((href_prod+1))
-	         else
-                echo "WARNING: $href is missing"		 
-             fi	    
-          done
-          if [ $href_prod -lt 4 ] ; then
-            echo "WARNING: HREF Products = " $href_prod " which < 4, some products are missing"
-            export verif_precip=no
-            export verif_snowfall=no
-            export verif_all=no
-          fi
-      fi
-      fhr=$((fhr+1))  
-   done
-done
-
-echo "All HREF ensemble products files in CONUS are available. Continue checking ..."
-
-domain=ak
-for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23  ; do 
-   typeset -Z2 fhr
-   fhr=01
-   while [ $fhr -le 48 ] ; do 
-      fcst_time=`$NDATE -$fhr ${vday}${obsv_cyc}`
-      fday=${fcst_time:0:8}
-      fcyc=${fcst_time:8:2}
-      if [ $fcyc = 06 ] ; then
-         href_prod=0	      
-         for  prod in mean prob eas pmmn lpmm avrg ; do 
-            href=$COMINhref/href.${fday}/ensprod/href.t${fcyc}z.ak.${prod}.f${fhr}.grib2
-            if [ -s $href ] ; then
-               href_prod=$((href_prod+1))
-            else
-               echo "WARNING: $href is missing"		 
-            fi	    
-         done
-         if [ $href_prod -lt 4 ] ; then
-            echo "WARNING: HREF Products = " $href_prod " which < 4, some products are missing"
-            export verif_precip=no
-            export verif_snowfall=no
-            export verif_all=no
-         fi
-      fi
-      fhr=$((fhr+1))  
-   done
-done
-echo "All HREF ensemble products files in Alaska are available."
-echo "File checks are complete."

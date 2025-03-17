@@ -125,11 +125,13 @@ if [ "$data" = "ccpa01h03h" ] ; then
    done
 
    #For restart
-   [[ ! -e $COMOUTrestart/prepare/ccpa.${vday} ]] && mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
    if [ -s $ccpadir/*.grib2 ] ; then
-     cp $ccpadir/*01h*.grib2 $COMOUTrestart/prepare/ccpa.${vday}
-     cp $ccpadir/*03h*.grib2 $COMOUTrestart/prepare/ccpa.${vday}
-     >$COMOUTrestart/prepare/ccpa01h03h.completed 
+    >$ccpadir/ccpa01h03h.completed
+    if [ $SENDCOM = YES ] ; then
+     cp $ccpadir/*01h*.grib2 $COMOUTrestart/prepare
+     cp $ccpadir/*03h*.grib2 $COMOUTrestart/prepare
+     cp $ccpadir/ccpa01h03h.completed $COMOUTrestart/prepare 
+    fi 
    fi
 
    if [ "$missing_ccpa" -gt "0" ] ; then 
@@ -146,8 +148,9 @@ if [ "$data" = "ccpa01h03h" ] ; then
   #copy from existing restart files: 
   else
    [[ ! -d $WORK/ccpa.${vday} ]] && mkdir -p $WORK/ccpa.${vday}
-    cp  $COMOUTrestart/prepare/ccpa.${vday}/ccpa01h.*.grib2 $WORK/ccpa.${vday}
-    cp  $COMOUTrestart/prepare/ccpa.${vday}/ccpa03h.*.grib2 $WORK/ccpa.${vday}
+   if [ -s $COMOUTrestart/prepare/ccpa*.*.grib2 ] ; then
+    cp  $COMOUTrestart/prepare/ccpa*.*.grib2 $WORK/ccpa.${vday}
+   fi
   fi
   
 
@@ -190,16 +193,19 @@ if [ "$data" = "ccpa24h" ] ; then
 	     echo "Missing file is ${COMCCPA}/ccpa.${prevday}/18/ccpa.t18z.06h.hrap.conus.gb2\n" >> $DATA/job${data}${domain}_missing_24hrccpa_list
       fi
       if [ -s $ccpa24/ccpa1 ] && [ -s $ccpa24/ccpa2 ] && [ -s $ccpa24/ccpa3 ] && [ -s $ccpa24/ccpa4 ] ; then
-         ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
+         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
          export err=$?; err_chk
-         mkdir -p ${COMOUTfinal}/precip_mean24
-         cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
-       
+         [[ ! -d ${COMOUTfinal}/precip_mean24 ]] && mkdir -p ${COMOUTfinal}/precip_mean24
+	 if [ -s ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ] && [ $SENDCOM = YES ] ; then
+           cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
+         fi 
 	 #For restart:
-	 [[ ! -e $COMOUTrestart/prepare/ccpa.${vday} ]] && mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
 	 if [ -s $WORK/ccpa.${vday}/*24h*.nc ] ; then
-	    cp $WORK/ccpa.${vday}/*24h*.nc  $COMOUTrestart/prepare/ccpa.${vday}
-            >$COMOUTrestart/prepare/ccpa24h.completed
+	   >$WORK/ccpa.${vday}/ccpa24h.completed
+	   if [ $SENDCOM = YES ] ; then 
+	    cp $WORK/ccpa.${vday}/*24h*.nc  $COMOUTrestart/prepare
+            cp $WORK/ccpa.${vday}/ccpa24h.completed $COMOUTrestart/prepare
+	   fi
 	 fi
 
 
@@ -218,7 +224,15 @@ if [ "$data" = "ccpa24h" ] ; then
   else
     #Copy from the existing restart files 	  
     [[ ! -d $WORK/ccpa.${vday} ]] && mkdir -p $WORK/ccpa.${vday}
-    cp  $COMOUTrestart/prepare/ccpa.${vday}/ccpa24h*.nc $WORK/ccpa.${vday}
+    if [ -s $COMOUTrestart/prepare/ccpa24h*.nc ] ; then
+      cp  $COMOUTrestart/prepare/ccpa24h*.nc $WORK/ccpa.${vday}
+    fi
+
+    #Copy precip_mean24 files from restart directory
+    [[ ! -d $COMOUTfinal/precip_mean24 ]] && mkdir $COMOUTfinal/precip_mean24
+    if [ -s $COMOUTrestart/prepare/ccpa24h.t12z.G240.nc ] ; then
+     cp $COMOUTrestart/prepare/ccpa24h.t12z.G240.nc $COMOUTfinal/precip_mean24
+    fi 
   fi
 
 
@@ -249,9 +263,6 @@ if [ "$data" = "apcp24h_conus" ] ; then
       export modelpath=${COMHREF}/href.${fyyyymmdd}/ensprod
       export prod 
 
-      #Create for restart
-      [[ ! -e $COMOUTrestart/prepare/href.${fyyyymmdd} ]] && mkdir -p $COMOUTrestart/prepare/href.${fyyyymmdd}
-
       for prod in mean avrg pmmn lpmm ; do
 
       #####################################################################################################################
@@ -259,20 +270,26 @@ if [ "$data" = "apcp24h_conus" ] ; then
       #    in the $COMOUTrestart directory, if not, run METplus to create it
       #    otherwise, copy it from the $COMOUTrestart directory
       ###################################################################################################################
-      if [ ! -s  $COMOUTrestart/prepare/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+      if [ ! -s  $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstHREF_APCP24h.conf
          export err=$?; err_chk
-         mv $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
-         if [ -s $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
-            cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/href.${fyyyymmdd}/precip_mean24
+	 if [ -s $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+             cp $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
+           if [ $SENDCOM = YES ] ; then
+	     [[ ! -d ${COMOUTfinal}/precip_mean24 ]] && mkdir -p ${COMOUTfinal}/precip_mean24
+             cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUTfinal}/precip_mean24/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
+	     #Save restart files
+	     cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
+	   fi
          fi
-
-	 #Save restart files 
-	 [[ $? = 0 ]] && cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/href.${fyyyymmdd}
-
        else
          #Restart: copy restart files to the working directory
-         cp  $COMOUTrestart/prepare/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}
+	 [[ ! -d $WORK/href.${fyyyymmdd} ]] && mkdir -p $WORK/href.${fyyyymmdd}
+         cp  $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc
+	 [[ ! -d $COMOUTfinal/precip_mean24 ]] && mkdir $COMOUTfinal/precip_mean24
+         if [ -s $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+           cp $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTfinal/precip_mean24
+         fi
        fi
 
       done
@@ -304,29 +321,26 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       export modelpath=${COMHREF}/href.${fyyyymmdd}/ensprod
       export prod
 
-      #Create for restart
-      [[ ! -e $COMOUTrestart/prepare/href.${fyyyymmdd} ]] && mkdir -p $COMOUTrestart/prepare/href.${fyyyymmdd}
-
       for prod in mean avrg pmmn lpmm ; do
       #################################################################################################
       # Restart: first check if href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists
       #    in the $COMOUTrestart directory, if not, run METplus to create it
       #    otherwise, copy it from the $COMOUTrestart directory
       ##################################################################################################
-      if [ ! -s  $COMOUTrestart/prepare/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
+      if [ ! -s  $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstHREF_APCP24h.conf
          export err=$?; err_chk
          if [ -s $output_base/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
             mv $output_base/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
+            #Save restart files
+	    if [ $SENDCOM = YES ] ; then
+              cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc
+	    fi
          fi
-
-         #Save restart files
-         [[ $? = 0 ]] && cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $COMOUTrestart/prepare/href.${fyyyymmdd}
-
        else
          #Restart: copy restart files to the working directory
 	 [[ ! -d $WORK/href.${fyyyymmdd} ]] && mkdir -p $WORK/href.${fyyyymmdd}
-         cp  $COMOUTrestart/prepare/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}
+         cp  $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc
        fi
       done
    done
@@ -357,38 +371,53 @@ if [ "$data" = "prepbufr" ] ; then
    if [ "$lvl" = "profile" ] || [ "$VERIF_CASE" = "severe" ] ; then
       cycs="00 12"
    else
-      cycs="00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23"
+      cycs="00 03 06 09 12 15 18 21"
    fi
-   
-   if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] ; then
-      for grid in $grids ; do
-         for vhr in $cycs  ; do
+  
+   for vhr in $cycs  ; do
+     if [ -s $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00 ] ; then
+         for grid in $grids ; do
             export vbeg=${vhr}
             export vend=${vhr}
             export verif_grid=$grid
 
-            if [ "$lvl" = "sfc" ] ; then
+	    >$WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr
+	    split_by_subset $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00
+            for subset in ADPUPA ADPSFC SFCSHP MSONET ; do
+	     if [ -s ${WORK}/${subset} ] ; then
+	       cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr
+	       rm -f ${WORK}/${subset}
+	     fi
+	    done
+
+            export bufrpath=$WORK
+
+	    if [ -s $WORK/prepbufr.$vday/rap.t${vhr}z.${grid}.prepbufr ] ; then
+             if [ "$lvl" = "sfc" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href.conf
                export err=$?; err_chk
-            elif [ "$lvl" = "profile" ] ; then
+             elif [ "$lvl" = "profile" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href_profile.conf
                export err=$?; err_chk
-            elif [ "$lvl" = "both" ] ; then
+             elif [ "$lvl" = "both" ] ; then
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href.conf
                export err=$?; err_chk
                if [ "$vhr" = "00" ] || [ "$vhr" = "12" ] ; then
                   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href_profile.conf
-	              export err=$?; err_chk
+	          export err=$?; err_chk
                fi
-            fi
+             fi
+	    fi 
          done
-      done
 
       if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
          cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday}
 	 #Save restart files 
-	 cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare/prepbufr.${vday}
-	 >$COMOUTrestart/prepare/rap_prepbufr.completed
+	 >${WORK}/pb2nc/prepbufr_nc/rap_prepbufr.completed
+	 if [ $SENDCOM = YES ] ; then
+           cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare
+	   cp ${WORK}/pb2nc/prepbufr_nc/rap_prepbufr.completed $COMOUTrestart/prepare
+	 fi
       fi
 
 
@@ -401,13 +430,18 @@ if [ "$data" = "prepbufr" ] ; then
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
       fi
-   fi
+    fi
+  done
 
  else
     #restart: copy restart files to the working directory
     [[ ! -d $WORK/prepbufr.${vday} ]] && mkdir -p $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G227*.nc $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G198*.nc $WORK/prepbufr.${vday}
+    if [ -s $COMOUTrestart/prepare/*G227*.nc ] ; then
+     cp $COMOUTrestart/prepare/*G227*.nc $WORK/prepbufr.${vday}
+    fi
+    if [ -s $COMOUTrestart/prepare/*G198*.nc ] ; then
+     cp $COMOUTrestart/prepare/*G198*.nc $WORK/prepbufr.${vday}
+    fi
  fi
 
 fi
@@ -442,11 +476,18 @@ if [ "$data" = "gfs_prepbufr" ] ; then
 
 	    >$WORK/prepbufr.$vday/gdas.t${vhr}z.${grid}.prepbufr
 	    split_by_subset $COMINobsproc/gdas.${vday}/${vhr}/atmos/gdas.t${vhr}z.prepbufr
-	    cat $WORK/ADPUPA $WORK/ADPSFC >> $WORK/prepbufr.$vday/gdas.t${vhr}z.${grid}.prepbufr
+	    for subset in ADPUPA ADPSFC SFCSHP MSONET ; do
+	     if [ -s ${WORK}/${subset} ] ; then 
+	      cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/gdas.t${vhr}z.${grid}.prepbufr
+	      rm -f ${WORK}/${subset}
+	     fi
+	    done
 	    export bufrpath=$WORK
 
-            ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGDAS_Prepbufr_href_profile.conf
-            export err=$?; err_chk
+	    if [ -s $WORK/prepbufr.$vday/gdas.t${vhr}z.${grid}.prepbufr ] ; then
+              ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGDAS_Prepbufr_href_profile.conf
+              export err=$?; err_chk
+	    fi
          done
          if [ -s ${WORK}/pb2nc/prepbufr_nc/*${grid}.nc ] ; then
             cp ${WORK}/pb2nc/prepbufr_nc/*${grid}.nc $WORK/prepbufr.$vday 
@@ -454,9 +495,12 @@ if [ "$data" = "gfs_prepbufr" ] ; then
       done
 
       #For restart
-      if [ $? = 0 ] ; then
-        cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare/prepbufr.${vday}
-        >$COMOUTrestart/prepare/gfs_prepbufr.completed
+      if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
+	>${WORK}/pb2nc/prepbufr_nc/gfs_prepbufr.completed
+	if [ $SENDCOM = YES ] ; then
+         cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare
+         cp ${WORK}/pb2nc/prepbufr_nc/gfs_prepbufr.completed $COMOUTrestart/prepare
+	fi
       fi
 
    else
@@ -473,8 +517,12 @@ if [ "$data" = "gfs_prepbufr" ] ; then
   else
     #Restart: copy files from restart files
     [[ ! -d $WORK/prepbufr.${vday} ]] && mkdir -p $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G200*.nc $WORK/prepbufr.${vday}
-    cp $COMOUTrestart/prepare/prepbufr.${VDATE}/*G139*.nc $WORK/prepbufr.${vday}
+    if [ -s $COMOUTrestart/prepare/*G200*.nc ] ; then
+     cp $COMOUTrestart/prepare/*G200*.nc $WORK/prepbufr.${vday}
+    fi
+    if [ -s $COMOUTrestart/prepare/*G139*.nc ] ; then
+     cp $COMOUTrestart/prepare/*G139*.nc $WORK/prepbufr.${vday}
+    fi 
   fi
 
 fi
@@ -490,15 +538,16 @@ if [ "$data" = "mrms" ] ; then
  # If no, do this task 
  # Otherwise, copy the mrms files from the restart directory
  ############################################################	
- if [ ! -e $COMOUTrestart/prepare/mrms.completed ] ; then      	
+ export accum
+ if [ -s $DCOMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-??0000.grib2.gz ] ; then 
+    [[ ! -d $COMOUTrestart/prepare ]] && mkdir -p $COMOUTrestart/prepare
 
-   export accum
-   if [ -s $DCOMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-??0000.grib2.gz ] ; then 
-      for accum in 01 03 24 ; do 	
+    for accum in 01 03 24 ; do
+
          if [ "$accum" = "03" ] ; then
             cycs="00 03 06 09 12 15 18 21"
          elif [ "$accum" = "24" ] ; then
-            cycs="00 06 12  18"
+            cycs="12"
          elif [ "$accum" = "01" ] ; then
             cycs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
          fi
@@ -507,14 +556,17 @@ if [ "$data" = "mrms" ] ; then
          export mrmsdir=$WORK/mrms.$vday
          mkdir -p $mrmsdir
          cd $mrmsdir
+
          for vhr in $cycs ; do
+
+	  if [ ! -s $COMOUTrestart/prepare/mrms${accum}h.t${vhr}z.G*.nc ] ; then 
             export vbeg=$vday$vhr
             export vend=$vday$vhr
             mrms03=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
             if [ -s $mrms03 ] ; then 
                cp $mrms03 $mrmsdir/.
                gunzip MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
-               export MET_GRIB_TABLES=$PARMevs/metplus_config/prep/$COMPONENT/precip/grib2_mrms_qpf.txt
+	       export MET_GRIB_TABLES=$PARMevs/metplus_config/prep/$COMPONENT/precip/grib2_mrms_qpf.txt
                export togrid=G216
                export grid=G216
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsMRMSqpf.conf
@@ -529,21 +581,24 @@ if [ "$data" = "mrms" ] ; then
                export err=$?; err_chk
             else
                echo "WARNING: $mrms03 is missing"
-            fi    
-         done 
-         if [ -s ${output_base}/*.nc ] ; then
-            cp ${output_base}/*.nc $mrmsdir
-         fi
-      done
+            fi 
 
-      #Save for restart
-      if [ $? = 0 ] ; then
-        [[ ! -d $COMOUTrestart/prepare/mrms.$vday ]] && mkdir -p $COMOUTrestart/prepare/mrms.$vday
-        if [ -s $mrmsdir/*.nc ] ; then 
-	  cp $mrmsdir/*.nc $COMOUTrestart/prepare/mrms.$vday
-          >$COMOUTrestart/prepare/mrms.completed
-	fi 
-      fi
+	    if [ -s ${output_base}/mrms${accum}h.t${vhr}z.G*.nc ] ; then
+	     cp ${output_base}/mrms${accum}h.t${vhr}z.G*.nc $mrmsdir
+             #Save for restart
+	     if [ $SENDCOM = YES ] ; then
+	       cp ${output_base}/mrms${accum}h.t${vhr}z.G*.nc $COMOUTrestart/prepare
+	     fi
+	    fi
+
+          else
+	      #Copy mrms files to working directory
+	      cp $COMOUTrestart/prepare/mrms${accum}h.t${vhr}z.G*.nc $WORK/mrms.$vday
+          fi	      
+       
+         done 
+
+      done
 
    else
       echo "WARNING:  No MRMS data $DCOMINmrms/MultiSensor_QPE_*.grib2.gz available for EVS ${COMPONENT}"
@@ -555,12 +610,5 @@ if [ "$data" = "mrms" ] ; then
          cat mailmsg | mail -s "$subject" $MAILTO
       fi
    fi
-
-  else
-    #Restart: copy from the restart files
-    [[ ! -d $WORK/mrms.$vday ]] && mkdir -p $WORK/mrms.$vday
-    cp $COMOUTrestart/prepare/mrms.$vday/*.nc $WORK/mrms.$vday  
-
-  fi
 
 fi 

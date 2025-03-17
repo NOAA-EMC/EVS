@@ -705,12 +705,12 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     ]
     xlim_min = np.floor(x_min/round_to_nearest)*round_to_nearest
     xlim_max = np.ceil(x_max/round_to_nearest)*round_to_nearest
-    if len(str(xlim_min)) > 5 and np.abs(xlim_min) < 1.:
+    if len(str(xlim_min)) > 5 and np.abs(xlim_min) < 1E5:
         xlim_min = float(
             np.format_float_scientific(xlim_min, unique=False, precision=3)
         )
     xticks = np.arange(xlim_min, xlim_max+round_to_nearest, round_to_nearest)
-    if any([len(str(xtick)) > 5 and np.abs(xtick) < 1. for xtick in xticks]):
+    if any([len(str(xtick)) > 5 and np.abs(xtick) < 1E5 for xtick in xticks]):
         xtick_labels = []
         for xtick in xticks:
             xtick_labels.append(float(np.format_float_scientific(
