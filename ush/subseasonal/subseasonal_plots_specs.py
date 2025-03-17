@@ -885,6 +885,19 @@ class PlotSpecs:
             +grid_savefig_name+'_'+region_savefig_name
             +'.png'
         )
+        if plot_info_dict['fcst_var_name'] in ['APCP_DAYS6_10',
+                                               'APCP_WEEKLY',
+                                               'APCP_WEEKS3_4']:
+            savefig_name = (
+                'evs.'
+                +component_savefig_name+'.'
+                +metric_savefig_name+'.'
+                +parameter_savefig_name+'.'
+                +ndays_savefig_name+'.'
+                +plot_type_savefig_name+'.'
+                +grid_savefig_name+'_'+region_savefig_name
+                +'.png'
+            )
         image_path = os.path.join(image_dir, savefig_name.lower())
         if plot_info_dict['fcst_var_name'] == 'CAPE':
             image_path = image_path.replace('_z0', '_l0').replace('_p90_0', '_l90')
