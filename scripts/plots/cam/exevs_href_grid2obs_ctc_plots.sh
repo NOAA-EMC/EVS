@@ -2,27 +2,27 @@
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the href ctc plotting python script
 # Last updated: 
+#               01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
 #               07/09/2024, add restart, by Binbin Zhou Lynker@EMC/NCEP
 #               05/30/2024, Binbin Zhou Lynker@EMC/NCEP
 #******************************************************************************
 set -x 
 
-cd $DATA
+mkdir -p $DATA/scripts
+cd $DATA/scripts
 
 export machine=${machine:-"WCOSS2"}
-export prune_dir=$DATA/data
-export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job
-mkdir -p $prune_dir
-mkdir -p $save_dir
 mkdir -p $output_base_dir
-mkdir -p $DATA/logs
 
-restart=$COMOUT/restart/$past_days/href_ctc_plots
-if [ ! -d  $restart ] ; then
-  mkdir -p $restart
-fi
+all_plots=$DATA/plots/all_plots
+mkdir -p $all_plots 
+if [ $SENDCOM = YES ] ; then
+ restart=$COMOUT/restart/$last_days/href_ctc_plots
+ if [ ! -d  $restart ] ; then
+   mkdir -p $restart
+ fi
+fi 
 
 export eval_period='TEST'
 
@@ -35,7 +35,7 @@ model_list='HREF_MEAN'
 models='HREF_MEAN'
 
 n=0
-while [ $n -le $past_days ] ; do
+while [ $n -le $last_days ] ; do
     hrs=$((n*24))
     first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
     n=$((n+1))
@@ -45,11 +45,10 @@ export init_beg=$first_day
 export valid_beg=$first_day
 
 #*************************************************************
-# Virtual link the href's stat data files of past 31/90 days
+# Virtual link the href's stat data files of last 31/90 days
 #*************************************************************
 n=0
-while [ $n -le $past_days ] ; do
-  #hrs=`expr $n \* 24`
+while [ $n -le $last_days ] ; do
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
@@ -57,15 +56,6 @@ while [ $n -le $past_days ] ; do
   export err=$?; err_chk
   n=$((n+1))
 done 
-
-																  
-export fcst_init_hour="0,6,12,18"
-
-export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-#For restart:
-if [ ! -d $plot_dir ] ; then
-  mkdir -p $plot_dir
-fi
 
 export fcst_init_hour="0,6,12,18"
 init_time='init00z_06z_12z_18z'
@@ -209,8 +199,17 @@ for stats in $stats_list ; do
        #***********************************************************************************************************************************
 
         verif_type=conus_sfc
-
 	echo "#!/bin/ksh" >>  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	echo "set -x" >>  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+       
+	save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}
+	plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
+	mkdir -p $plot_dir
+	mkdir -p $save_dir/data
+
+	echo "export save_dir=$save_dir" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+        echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	echo "export prune_dir=$save_dir/data" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
 	if [ $score_type = lead_average ] ; then
            echo "export PLOT_TYPE=lead_average_valid" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
@@ -261,24 +260,34 @@ for stats in $stats_list ; do
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
-         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+         echo "${DATA}/scripts/run_py.${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
 	 #Save for restart
          echo "for domain in $subregions ; do " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "  if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-	 echo "    cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
-	 echo "    >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "    cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "    >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+
+	 #Copy files to restart directory
+	 echo "   if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "     cp -v $all_plots/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+	 echo "   fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "  fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	 echo "done" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
+	 echo "if [ -e ${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+         echo "  [[ $SENDCOM = YES ]] && cp -v ${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.completed $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+         echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh 
-         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_all_poe.sh
+         echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh" >> run_all_poe.sh
 
       else
-	 #Restart from png files of previous runs
-	 for domain in $subregions ; do
-	   cp $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ${plot_dir}/.
-	 done
+         for domain in $subregions ; do
+           if [ -s $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png ] ; then
+             cp -v $restart/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_${new_var}_*.png $all_plots
+           fi
+         done	   
       fi
 
      done #end of FCST_LEVEL_value
@@ -302,27 +311,68 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 820 -ppn 82 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 510 -ppn 85 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
 else
-  ${DATA}/run_all_poe.sh
+  ${DATA}/scripts/run_all_poe.sh
 fi
 export err=$?; err_chk
 
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $plot_dir
+cd $all_plots
 
 for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
 
- for domain in conus conus_east conus_west conus_south conus_central alaska  appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
+ for domain in conus conus_east conus_west conus_south conus_central alaska  appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
- if [ $domain = alaska ] ; then
-    new_domain=$domain
- else
-    new_domain=buk_${domain}
- fi
-
+     if [ $domain = alaska ] ; then
+         new_domain=$domain
+     elif [ $domain = conus ] ; then
+	 new_domain=buk_conus
+     elif [ $domain = conus_east ] ; then
+   	 new_domain=buk_conus_e
+     elif [ $domain = conus_west ] ; then
+   	 new_domain=buk_conus_w
+     elif [ $domain = conus_south ] ; then
+	 new_domain=buk_conus_s
+     elif [ $domain = conus_central ] ; then
+         new_domain=buk_conus_c
+     elif [ $domain = appalachia ] ; then
+	 new_domain=buk_apl
+     elif [ $domain = cplains  ] ; then
+         new_domain=buk_cpl
+     elif [ $domain = deepsouth  ] ; then	
+         new_domain=buk_ds
+     elif [ $domain = greatbasin ] ; then
+         new_domain=buk_grb	     
+     elif [ $domain = greatlakes ] ; then
+         new_domain=buk_grlk	     
+     elif [ $domain = mezquital ] ; then
+         new_domain=buk_mez	     
+     elif [ $domain = midatlantic ] ; then
+         new_domain=buk_matl	     
+     elif [ $domain = northatlantic ] ; then
+         new_domain=buk_ne	     
+     elif [ $domain = nrockies ] ; then
+         new_domain=buk_nrk	     
+     elif [ $domain = pacificnw ] ; then
+         new_domain=buk_npw	     
+     elif [ $domain = pacificsw ] ; then
+         new_domain=buk_psw	     
+     elif [ $domain = prairie ] ; then
+         new_domain=buk_pra	     
+     elif [ $domain = southeast ] ; then
+         new_domain=buk_se	     
+     elif [ $domain = southwest ] ; then
+         new_domain=buk_sw	     
+     elif [ $domain = splains ] ; then
+         new_domain=buk_spl	     
+     elif [ $domain = nplains ] ; then
+	 new_domain=buk_npl
+     elif [ $domain = srockies ] ; then
+         new_domain=buk_srk	     
+     fi
  for var in vis hgtcldceil tcdc cape mlcape; do
   if [ $var = vis ] ; then
     var_new=$var
@@ -342,7 +392,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
   fi
 
   if [ -s performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png ] ; then
-    mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_valid_${valid}.${new_domain}.png
+    mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.href.ctc.${var_new}_${level}.last${last_days}days.perfdiag_valid${valid}.${new_domain}.png
   fi 
 
  done
@@ -376,16 +426,57 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
 
   for stat in $stats ; do
 
-    for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
+    for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
      if [ $domain = alaska ] ; then
          new_domain=$domain
-     else
-         new_domain=buk_${domain}
+     elif [ $domain = conus ] ; then
+	 new_domain=buk_conus
+     elif [ $domain = conus_east ] ; then
+   	 new_domain=buk_conus_e
+     elif [ $domain = conus_west ] ; then
+   	 new_domain=buk_conus_w
+     elif [ $domain = conus_south ] ; then
+	 new_domain=buk_conus_s
+     elif [ $domain = conus_central ] ; then
+         new_domain=buk_conus_c
+     elif [ $domain = appalachia ] ; then
+	 new_domain=buk_apl
+     elif [ $domain = cplains  ] ; then
+         new_domain=buk_cpl
+     elif [ $domain = deepsouth  ] ; then	
+         new_domain=buk_ds
+     elif [ $domain = greatbasin ] ; then
+         new_domain=buk_grb	     
+     elif [ $domain = greatlakes ] ; then
+         new_domain=buk_grlk	     
+     elif [ $domain = mezquital ] ; then
+         new_domain=buk_mez	     
+     elif [ $domain = midatlantic ] ; then
+         new_domain=buk_matl	     
+     elif [ $domain = northatlantic ] ; then
+         new_domain=buk_ne	     
+     elif [ $domain = nrockies ] ; then
+         new_domain=buk_nrk	     
+     elif [ $domain = pacificnw ] ; then
+         new_domain=buk_npw	     
+     elif [ $domain = pacificsw ] ; then
+         new_domain=buk_psw	     
+     elif [ $domain = prairie ] ; then
+         new_domain=buk_pra	     
+     elif [ $domain = southeast ] ; then
+         new_domain=buk_se	     
+     elif [ $domain = southwest ] ; then
+         new_domain=buk_sw	     
+     elif [ $domain = splains ] ; then
+         new_domain=buk_spl	     
+     elif [ $domain = nplains ] ; then
+	 new_domain=buk_npl
+     elif [ $domain = srockies ] ; then
+         new_domain=buk_srk	     
      fi
-    
      if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png ] ; then
-         mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+         mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
      fi
 
        done #domain
@@ -394,31 +485,28 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
  done    #score_type
 done
 
-tar -cvf evs.plots.href.grid2obs.ctc.past${past_days}days.v${VDATE}.tar *.png
+if [ -s evs*.png ] ; then
+ tar -cvf evs.plots.href.grid2obs.ctc.last${last_days}days.v${VDATE}.tar evs*.png
+fi 
 
 # Cat the plotting log files
-log_dir="$DATA/logs"
-if [ -d $log_dir ]; then
-    log_file_count=$(find $log_dir -type f | wc -l)
-    if [[ $log_file_count -ne 0 ]]; then
-        log_files=("$log_dir"/*)
-        for log_file in "${log_files[@]}"; do
-            if [ -f "$log_file" ]; then
-                echo "Start: $log_file"
-                cat "$log_file"
-                echo "End: $log_file"
-            fi
-        done
-    fi
+log_dir="$DATA/plots"
+if [ -s $log_dir/*/log*.out ]; then
+  log_files=`ls $log_dir/*/log*.out`
+  for log_file in $log_files ; do
+     echo "Start: $log_file"
+     cat  "$log_file"
+     echo "End: $log_file"
+  done
 fi
 
 
-if [ $SENDCOM = YES ] && [ -s evs.plots.href.grid2obs.ctc.past${past_days}days.v${VDATE}.tar ] ; then
- cp -v evs.plots.href.grid2obs.ctc.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+if [ $SENDCOM = YES ] && [ -s evs.plots.href.grid2obs.ctc.last${last_days}days.v${VDATE}.tar ] ; then
+ cp -v evs.plots.href.grid2obs.ctc.last${last_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.grid2obs.ctc.past${past_days}days.v${VDATE}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.grid2obs.ctc.last${last_days}days.v${VDATE}.tar
 fi
 
 
