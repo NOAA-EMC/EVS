@@ -267,13 +267,13 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "WARNING :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> ${email_msg}
+                    echo "DEBUG :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
                 fi
               else
-                echo "WARNING: can not find ${conf_dir}/${config_file}"
+                echo "DEBUG: can not find ${conf_dir}/${config_file}"
               fi
             else
               if [ "${SENDMAIL}" = "YES" ]; then
@@ -335,13 +335,13 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "WARNING :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> ${email_msg}
+                    echo "DEBUG :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
                 fi
               else
-                echo "WARNING: can not find ${conf_dir}/${config_file}"
+                echo "DEBUG: can not find ${conf_dir}/${config_file}"
               fi
             else
               if [ "${SENDMAIL}" = "YES" ]; then
@@ -429,12 +429,12 @@ if [ "${num_mdl_grid}" != "0" ]; then
   done  # ObsType
 else
     if [ "${SENDMAIL}" = "YES" ]; then
-      echo "WARNING: No ${MODELNAME} FCST ${VARID} grib2 was avaiable as POINT2GRID template valid ${VDATE}" > ${email_msg}
+      echo "DEBUG: No ${MODELNAME} FCST ${VARID} grib2 was avaiable as POINT2GRID template valid ${VDATE}" >> ${email_msg}
       echo "==============" >> ${email_msg}
       flag_send_message=YES
     fi
 
-    echo "WARNING: No ${MODELNAME} FCST ${VARID} grib2 was available as POINT2GRID template valid ${VDATE}"
+    echo "DEBUG: No ${MODELNAME} FCST ${VARID} grib2 was available as POINT2GRID template valid ${VDATE}"
 fi
 
 if [ "${flag_send_message}" == "YES" ]; then
