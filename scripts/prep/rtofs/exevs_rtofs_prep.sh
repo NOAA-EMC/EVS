@@ -15,6 +15,9 @@
 # 2- $RUN was defined in all j-jobs. 
 # 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
 # 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
+# 03/2025: 
+# 1- $COMOUT name changes and the adjustment to other scripts in stats scripts, ush, parm, etc.
+# 2- Updated the ecf scripts names and adjustments in defs. 
 #############################################################################################
 
 set -x
@@ -22,8 +25,8 @@ set -x
 ##########################
 # get latest RTOFS data
 ##########################
-if [ ! -d $COMOUTprep/rtofs.$INITDATE ]; then
-    mkdir -p $COMOUTprep/rtofs.$INITDATE
+if [ ! -d $COMOUTprep/$RUN.$INITDATE ]; then
+    mkdir -p $COMOUTprep/$RUN.$INITDATE
 fi
 # n024 is nowcast = f000 forecast
 leads='n024 f024 f048 f072 f096 f120 f144 f168 f192'
@@ -34,7 +37,7 @@ for lead in ${leads}; do
     for filetype in ${filetypes_2ds}; do
         input_rtofs_file=$COMINrtofs/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
         tmp_rtofs_file=${DATA}/rtofs_glo_2ds_${lead}_${filetype}.nc
-        output_rtofs_file=$COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
+        output_rtofs_file=$COMOUTprep/$RUN.$INITDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
         if [ ! -s $output_rtofs_file ]; then
             if [ -s $input_rtofs_file ]; then
                 cp -v $input_rtofs_file $tmp_rtofs_file
@@ -63,7 +66,7 @@ for lead in ${leads}; do
     for filetype in ${filestypes_3dz_daily}; do
         input_rtofs_file=$COMINrtofs/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
         tmp_rtofs_file=${DATA}/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
-        output_rtofs_file=$COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
+        output_rtofs_file=$COMOUTprep/$RUN.$INITDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
         if [ ! -s $output_rtofs_file ]; then
             if [ -s $input_rtofs_file ]; then
                 cp -v $input_rtofs_file $tmp_rtofs_file
@@ -101,15 +104,15 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
 		else
 			fhr=$(echo $lead | cut -c 2-4)
 		fi
-		if [ ! -d $COMOUTprep/rtofs.$INITDATE/$OBTYPE ]; then
-			mkdir -p $COMOUTprep/rtofs.$INITDATE/$OBTYPE
+		if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE ]; then
+			mkdir -p $COMOUTprep/$RUN.$INITDATE/$OBTYPE
         	fi
-        	mkdir -p $DATA/rtofs.$INITDATE/$OBTYPE
+        	mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
         	for ftype in prog diag ice; do
 			rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$OBTYPE.grid
-			rtofs_native_filename=$EVSINprep/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
-			tmp_rtofs_latlon_filename=$DATA/rtofs.$INITDATE/$OBTYPE/rtofs_glo_2ds_f${fhr}_${ftype}.$OBTYPE.nc
-			output_rtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$OBTYPE/rtofs_glo_2ds_f${fhr}_${ftype}.$OBTYPE.nc
+			rtofs_native_filename=$EVSINprep/$RUN.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
+			tmp_rtofs_latlon_filename=$DATA/$RUN.$INITDATE/$OBTYPE/rtofs_glo_2ds_f${fhr}_${ftype}.$OBTYPE.nc
+			output_rtofs_latlon_filename=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/rtofs_glo_2ds_f${fhr}_${ftype}.$OBTYPE.nc
 			if [ ! -s $output_rtofs_latlon_filename ]; then
                 		if [ -s $rtofs_native_filename ]; then
                     			cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
@@ -131,9 +134,9 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
         	if [ $OBTYPE = 'argo' ] ; then
 			for ftype in t s; do
                 		rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$OBTYPE.grid
-                		rtofs_native_filename=$EVSINprep/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
-                		tmp_rtofs_latlon_filename=$DATA/rtofs.$INITDATE/$OBTYPE/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$OBTYPE.nc
-                		output_rtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$OBTYPE/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$OBTYPE.nc
+                		rtofs_native_filename=$EVSINprep/$RUN.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
+                		tmp_rtofs_latlon_filename=$DATA/$RUN.$INITDATE/$OBTYPE/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$OBTYPE.nc
+                		output_rtofs_latlon_filename=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$OBTYPE.nc
                 		if [ ! -s $output_rtofs_latlon_filename ]; then
                     			if [ -s $rtofs_native_filename ]; then
                         			cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
@@ -162,15 +165,15 @@ done
 min_size=2404
 # convert OSI-SAF data into lat-lon grid
 export OBTYPE=osisaf
-if [ ! -d $COMOUTprep/rtofs.$INITDATE/$OBTYPE ]; then
-	mkdir -p $COMOUTprep/rtofs.$INITDATE/$OBTYPE
+if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE ]; then
+	mkdir -p $COMOUTprep/$RUN.$INITDATE/$OBTYPE
 fi
-mkdir -p $DATA/rtofs.$INITDATE/$OBTYPE
+mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
 for ftype in nh sh; do
 	osi_saf_grid_file=$FIXevs/cdo_grids/rtofs_$OBTYPE.grid
 	input_osisaf_file=$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
-	tmp_osisaf_file=$DATA/rtofs.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
-	output_osisaf_file=$COMOUTprep/rtofs.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
+	tmp_osisaf_file=$DATA/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
+	output_osisaf_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	if [ -s $input_osisaf_file ]; then
     		actual_size_osisaf=$(wc -c <"$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc")
     	fi
@@ -209,21 +212,21 @@ for ftype in nh sh; do
 done
 # convert NDBC *.txt files into a netcdf file using ASCII2NC
 export OBTYPE=ndbc
-if [ ! -d $COMOUTprep/rtofs.$INITDATE/$OBTYPE ]; then
-	mkdir -p $COMOUTprep/rtofs.$INITDATE/$OBTYPE
+if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE ]; then
+	mkdir -p $COMOUTprep/$RUN.$INITDATE/$OBTYPE
 fi
-if [ ! -d $COMOUTprep/rtofs.$INITDATE/$OBTYPE/buoy ]; then
-    	mkdir -p $COMOUTprep/rtofs.$INITDATE/$OBTYPE/buoy
+if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE/buoy ]; then
+    	mkdir -p $COMOUTprep/$RUN.$INITDATE/$OBTYPE/buoy
 fi
-mkdir -p $DATA/rtofs.$INITDATE/$OBTYPE
-mkdir -p $DATA/rtofs.$INITDATE/$OBTYPE/buoy
+mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
+mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE/buoy
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
 ndbc_txt_ncount=$(find $DCOMROOT/$INITDATE/validation_data/marine/buoy -type f -name "*.txt" |wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
 	python $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_trim_ndbc_files.py
     	export err=$?; err_chk
-    	tmp_ndbc_file=$DATA/rtofs.$INITDATE/$OBTYPE/ndbc.${INITDATE}.nc
-    	output_ndbc_file=$COMOUTprep/rtofs.$INITDATE/$OBTYPE/ndbc.${INITDATE}.nc
+    	tmp_ndbc_file=$DATA/$RUN.$INITDATE/$OBTYPE/ndbc.${INITDATE}.nc
+    	output_ndbc_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ndbc.${INITDATE}.nc
     	if [ ! -s $output_ndbc_file ]; then
         	run_metplus.py -c $PARMevs/metplus_config/machine.conf \
         	-c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsNDBC.conf
@@ -249,17 +252,17 @@ else
 fi
 # convert Argo basin files into a netcdf file using python embedding
 export OBTYPE=argo
-if [ ! -d $COMOUTprep/rtofs.$INITDATE/$OBTYPE ]; then
-	mkdir -p $COMOUTprep/rtofs.$INITDATE/$OBTYPE
+if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE ]; then
+	mkdir -p $COMOUTprep/$RUN.$INITDATE/$OBTYPE
 fi
-mkdir -p $DATA/rtofs.$INITDATE/$OBTYPE
+mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
 if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc ] && [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc ] && [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc ]; then
 	actual_size_argo_atlantic=$(wc -c <"$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc")
 	actual_size_argo_indian=$(wc -c <"$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc")
 	actual_size_argo_pacific=$(wc -c <"$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc")
 	if [ $actual_size_argo_atlantic -gt $min_size ] && [ $actual_size_argo_indian -gt $min_size ] && [ $actual_size_argo_pacific -gt $min_size ] ; then
-		tmp_argo_file=$DATA/rtofs.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
-		output_argo_file=$COMOUTprep/rtofs.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
+		tmp_argo_file=$DATA/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
+		output_argo_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
 		if [ ! -s $output_argo_file ]; then
 			run_metplus.py -c $PARMevs/metplus_config/machine.conf \
 			-c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsARGO.conf

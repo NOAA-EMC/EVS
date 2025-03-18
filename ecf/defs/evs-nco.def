@@ -468,7 +468,7 @@ suite evs_nco
             task jevs_rtofs_argo_grid2obs_last60days_plots
               trigger :TIME >= 0300 and :TIME < 0700
             task jevs_rtofs_ndbc_grid2obs_last60days_plots
-              trigger :TIME >= 0300 and :TIME < 0700 and ../../../../18/evs/stats/rtofs/jevs_rtofs_ndbc_stats == complete
+              trigger :TIME >= 0300 and :TIME < 0700 and ../../../../18/evs/stats/rtofs/jevs_rtofs_ndbc_grid2obs_stats == complete
             task jevs_rtofs_headline_grid2grid_last90days_plots
               trigger :TIME >= 0300 and :TIME < 0700
           endfamily
@@ -1710,19 +1710,19 @@ suite evs_nco
         family stats
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/stats'
           family rtofs
-            task jevs_rtofs_ndbc_stats
+            task jevs_rtofs_ndbc_grid2obs_stats
               trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
-            task jevs_rtofs_argo_stats
+            task jevs_rtofs_argo_grid2obs_stats
               trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
-            task jevs_rtofs_aviso_stats
+            task jevs_rtofs_aviso_grid2grid_stats
               trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
-            task jevs_rtofs_ghrsst_stats
+            task jevs_rtofs_ghrsst_grid2grid_stats
               trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
-            task jevs_rtofs_osisaf_stats
+            task jevs_rtofs_osisaf_grid2grid_stats
               trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
-            task jevs_rtofs_smap_stats
+            task jevs_rtofs_smap_grid2grid_stats
               trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
-            task jevs_rtofs_smos_stats
+            task jevs_rtofs_smos_grid2grid_stats
               trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
           endfamily
           family mesoscale
