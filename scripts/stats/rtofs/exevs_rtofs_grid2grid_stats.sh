@@ -12,7 +12,9 @@
 # 2- $RUN was defined in all j-jobs. 
 # 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
 # 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
-
+# 03/2025: 
+# 1- Appplied adjustments based on the changes for $COMOUT in prep scripts, 
+# 2- Updated the ecf scripts names and adjustments in defs.
 ###############################################################################
 
 set -x
@@ -54,14 +56,14 @@ if [ $OBTYPE = osisaf ]; then
 	export VARS="sic"
 	export OBTYPEupper=$(echo $OBTYPE | tr '[a-z]' '[A-Z]')
 	for hem in nh sh; do
-		EVSINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/ice_conc_${hem}_polstere-100_multi_${VDATE}1200.nc
+		EVSINicefilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/ice_conc_${hem}_polstere-100_multi_${VDATE}1200.nc
 		if [ -s $EVSINicefilename ] ; then
 			for fday in 0 1 2 3 4 5 6 7 8; do
 				fhr=$(($fday * 24))
 				fhr2=$(printf "%02d" "${fhr}")
 			        export fhr3=$(printf "%03d" "${fhr}")
 				match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-				COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_ice.$OBTYPE.nc
+				COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_ice.$OBTYPE.nc
 			        if [ -s $COMINrtofsfilename ] ; then
 					for vari in ${VARS}; do
 						export VAR=$vari
@@ -93,7 +95,7 @@ else
 
 	if [ $OBTYPE = smos ]; then
 		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc
-		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
+		COMINicefilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
 		export ftype="prog"
 		export VARS="sss"
 		export OBTYPEupper=$(echo $OBTYPE | tr '[a-z]' '[A-Z]')
@@ -101,7 +103,7 @@ else
 
 	elif [ $OBTYPE = smap ]; then
 		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc
-		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
+		COMINicefilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
 		export ftype="prog"
 		export VARS="sss"
 		export OBTYPEupper=$(echo $OBTYPE | tr '[a-z]' '[A-Z]')
@@ -109,7 +111,7 @@ else
 
 	elif [ $OBTYPE = ghrsst ]; then
 		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.nc
-		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
+		COMINicefilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
 		export ftype="prog"
 		export VARS="sst"
 		export OBTYPEupper=$(echo $OBTYPE | tr '[a-z]' '[A-Z]')
@@ -117,7 +119,7 @@ else
 
 	elif [ $OBTYPE = aviso ]; then
 		DCOMINrtofsfilename=$DCOMROOT/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc
-		COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
+		COMINicefilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
 		export ftype="diag"
 		export VARS="ssh"
 		export OBTYPEupper=$(echo $OBTYPE | tr '[a-z]' '[A-Z]')
@@ -133,7 +135,7 @@ else
         				fhr2=$(printf "%02d" "${fhr}")
         				export fhr3=$(printf "%03d" "${fhr}")
 					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-					COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_${ftype}.$OBTYPE.nc
+					COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_${ftype}.$OBTYPE.nc
 					if [ -s $COMINrtofsfilename ] ; then
           					for vari in ${VARS}; do
             						export VAR=$vari
