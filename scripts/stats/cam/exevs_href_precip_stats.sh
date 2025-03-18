@@ -3,6 +3,7 @@
 # Purpose:   Setup some paths and run href precip stat ush scripts
 #
 # Last updated 
+#             01/10/2025: Add MPMD:  by  Binbin Zhou, Lynker@EMC/NCEP
 #             06/25/2024: Add restart, Binbin Zhou, Lynker@EMC/NCEP
 #             10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 ###################################################################
@@ -18,6 +19,9 @@ export err=$?; err_chk
 
 export WORK=$DATA
 cd $WORK
+mkdir -p $WORK/scripts
+export all_stats=$WORK/all_stats
+mkdir -p $all_stats
 
 export run_mpi=${run_mpi:-'yes'}
 export verif_precip=${verif_precip:-'yes'}
@@ -45,8 +49,7 @@ export vday=$VDATE
 #Generate directories For restart files
 export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart ]] &&  mkdir -p $COMOUTrestart
-[[ ! -d $COMOUTrestart/prepare/ccpa.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/ccpa.${vday}
-[[ ! -d $COMOUTrestart/prepare/mrms.${vday} ]] &&  mkdir -p $COMOUTrestart/prepare/mrms.${vday}
+[[ ! -d $COMOUTrestart/prepare ]] &&  mkdir -p $COMOUTrestart/prepare
 [[ ! -d $COMOUTrestart/system ]]  &&  mkdir -p $COMOUTrestart/system
 [[ ! -d $COMOUTrestart/prob ]] &&  mkdir -p $COMOUTrestart/prob
 [[ ! -d $COMOUTrestart/eas ]] &&  mkdir -p $COMOUTrestart/eas
@@ -60,7 +63,7 @@ export COMOUTrestart=$COMOUTsmall/restart
 # Prepare CCPA data for validation
 #**********************************
 if [ $prepare = yes ] ; then
- for precip in ccpa01h03h ccpa24h apcp24h_conus  apcp24h_alaska mrms ; do
+ for precip in ccpa01h03h mrms ccpa24h apcp24h_conus apcp24h_alaska ; do
   $USHevs/cam/evs_href_prepare.sh  $precip
   export err=$?; err_chk
  done
@@ -70,33 +73,33 @@ fi
 #***************************************
 # Build a POE script to collect sub-jobs
 # **************************************
-> run_all_precip_poe.sh
+>$DATA/scripts/run_all_precip_poe.sh
 
 # Build sub-jobs for precip
 if [ $verif_precip = yes ] ; then
  $USHevs/cam/evs_href_precip.sh
  export err=$?; err_chk
- cat ${DATA}/run_all_href_precip_poe.sh >> run_all_precip_poe.sh
+ cat ${DATA}/scripts/run_all_href_precip_poe.sh >> $DATA/scripts/run_all_precip_poe.sh
 fi
 
 # Build sub-jobs for snowfall
 if [ $verif_snowfall = yes ] ; then
  $USHevs/cam/evs_href_snowfall.sh
  export err=$?; err_chk
- cat ${DATA}/run_all_href_snowfall_poe.sh >> run_all_precip_poe.sh
+ cat ${DATA}/scripts/run_all_href_snowfall_poe.sh >> $DATA/scripts/run_all_precip_poe.sh
 fi
 
 #*************************************************
 # Run the POE script to generate small stat files
 #*************************************************
-if [ -s ${DATA}/run_all_precip_poe.sh ]  ; then
-  chmod 775 run_all_precip_poe.sh
+if [ -s ${DATA}/scripts/run_all_precip_poe.sh ]  ; then
+  chmod 775 ${DATA}/scripts/run_all_precip_poe.sh
 
   if [ $run_mpi = yes ] ; then
-    mpiexec  -n 44 -ppn 44 --cpu-bind core --depth=2 cfp ${DATA}/run_all_precip_poe.sh
+    mpiexec  -n 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_precip_poe.sh
     export err=$?; err_chk
   else
-   ${DATA}/run_all_precip_poe.sh
+   ${DATA}/scripts/run_all_precip_poe.sh
     export err=$?; err_chk
   fi
 
@@ -106,7 +109,7 @@ fi
 #******************************************************************
 # Run gather job to combine the small stats to form a big stat file
 #******************************************************************
-if [ $gather = yes ] && [ -s $COMOUTsmall/*/*.stat ] ; then
+if [ $gather = yes ] && [ -s $all_stats/*/*.stat ] ; then
   $USHevs/cam/evs_href_gather.sh precip
   export err=$?; err_chk
 fi

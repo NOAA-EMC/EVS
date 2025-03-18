@@ -6,7 +6,6 @@ import datetime
 import sys
 import os
 import numpy as np
-import href_atmos_util as gda_util
 
 class PlotSpecs:
     def __init__(self, logger, plot_type):
@@ -123,7 +122,7 @@ class PlotSpecs:
             self.legend_font_size = 16
             self.fig_title_size = 18
         else:
-            self.logger.error(f"FATAL ERROR: {self.plot_type} NOT RECOGNIZED")
+            self.logger.error(f"{self.plot_type} NOT RECOGNIZED")
             sys.exit(1)
 
     def set_up_plot(self):
