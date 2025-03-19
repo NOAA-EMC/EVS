@@ -46,6 +46,16 @@ VCS_type_env_vars_dict = {
                         'g2gstats_pres_lvls_fhr_inc',
                         'g2gstats_pres_lvls_grid', 
                         'g2gstats_pres_lvls_gather_by',
+                        'g2gstats_precip_truth_name_list',
+                        'g2gstats_precip_truth_file_format_list',
+                        'g2gstats_precip_file_accum_list',
+                        'g2gstats_precip_inithour_list',
+                        'g2gstats_precip_vhr_list',
+                        'g2gstats_precip_fhr_min',
+                        'g2gstats_precip_fhr_max',
+                        'g2gstats_precip_fhr_inc',
+                        'g2gstats_precip_grid',
+                        'g2gstats_precip_gather_by',
                         'g2gstats_sst_truth_name_list',
                         'g2gstats_sst_truth_file_format_list',
                         'g2gstats_sst_inithour_list',
@@ -110,7 +120,7 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 
 # Do check for valid config options
 valid_VCS_type_opts_dict = {
-    'grid2grid_stats': ['temp', 'pres_lvls', 'sst', 'seaice'],
+    'grid2grid_stats': ['temp', 'pres_lvls', 'precip', 'sst', 'seaice'],
     'grid2obs_stats': ['prepbufr']
 }
 for VCS_type in VCS_type_list:
@@ -145,7 +155,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                                              'ecmwf_anl',
                                                              'umd_anl',
                                                              'ghrsst_anl',
-                                                             'osi_anl']
+                                                             'osi_anl',
+                                                             'ccpa']
         valid_config_var_values_dict[VCS_abbrev_type
                                      +'_gather_by'] = ['VALID', 'INIT', 
                                                        'VSDB']

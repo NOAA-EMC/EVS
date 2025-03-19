@@ -2,9 +2,12 @@
 #************************************************************************************
 #  Purpose: Generate href spcoutlook job's  poe and sub-jobs files
 #           and system (ecnt line type)
-#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#
+#  Last update: 
+#       01/10/2025, add MPMD, by Binbin Zhou Lynker@EMC/NCEP
+#       10/30/2024, by Binbin Zhou Lynker@EMC/NCEP
 #***********************************************************************************
-set -x 
+set -x
 
 #******************************************
 # Get prefix of $EVSINspcotlk 
@@ -87,6 +90,7 @@ cd $WORK
 #*******************************************
 # Build POE script to collect sub-jobs
 #******************************************
+cd $DATA/scripts
 >run_all_href_spcoutlook_poe.sh
 
 obsv='prepbufr'
@@ -99,14 +103,24 @@ for prod in mean ; do
 
  for dom in CONUS ; do
 
-   for valid in 0 12 ; do
+   for valid in 00 12 ; do
 
     export domain=$dom
+
+    for fhr in 06 12 18 24 30 36 42 48 ; do
+	
+     ihr=`$NDATE -$fhr $VDATE$valid|cut -c 9-10`
+     iday=`$NDATE -$fhr $VDATE$valid|cut -c 1-8`
+
+     input_fcst="$COMINhref/href.${iday}/ensprod/href.t${ihr}z.conus.${prod}.f${fhr}.grib2"
+     input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid}z.G227.nc"
+
+     if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
      #******************************
      # Build sub-jobs
      # *****************************
-     >run_href_${model}.${dom}.${valid}_spcoutlook.sh
+     >run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
      #######################################################################
      #Restart check:
@@ -114,50 +128,67 @@ for prod in mean ; do
      # if not, run this task, and then mark its completion,
      # otherwise, skip this task
      ########################################################################
-     if [ ! -e  $COMOUTrestart/spcoutlook/run_href_${model}.${dom}.${valid}_spcoutlook.completed ] ; then
+     if [ ! -e  $COMOUTrestart/spcoutlook/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed ] ; then
 
-       echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid}_spcoutlook.sh     
-       echo  "export regrid=G227" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "#!/bin/ksh" >>  run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh	     
+       echo  "set -x" >>  run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh	     
+       echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh     
+       echo  "export regrid=G227" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export output_base=${WORK}/grid2obs/run_href_${model}.${dom}.${valid}_spcoutlook" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export OBTYPE='PREPBUFR'" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export domain=CONUS" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export obsvgrid=G227" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export output_base=${WORK}/grid2obs/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export OBTYPE='PREPBUFR'" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export domain=CONUS" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export obsvgrid=G227" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export modelgrid=conus.${prod}" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export modelgrid=conus.${prod}" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export obsvhead=$obsv" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export obsvpath=$WORK" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export obsvhead=$obsv" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export obsvpath=$WORK" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export vbeg=$valid" >>run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export vend=$valid" >>run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export valid_increment=3600" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export lead='6,12,18,24,30,36,42,48'" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export MODEL=HREF_${PROD}" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export regrid=G227" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export modelhead=$model" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export modelpath=$COMHREF" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export modeltail='.grib2'" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo  "export extradir='ensprod/'" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export vbeg=$valid" >>run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export vend=$valid" >>run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export valid_increment=3600" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export lead=$fhr" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export MODEL=HREF_${PROD}" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export regrid=G227" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export modelhead=$model" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export modelpath=$COMHREF" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export modeltail='.grib2'" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export extradir='ensprod/'" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export verif_grid=''" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "export verif_grid=''" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo "export verif_poly='$spc_otlk_masks'" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       echo "export verif_poly='$spc_otlk_masks'" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SPCoutlook.conf " >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SPCoutlook.conf " >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "err=$?; err_chk" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "if [ \$? = 0 ] ; then" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "  >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "  cp \$output_base/stat/\${MODEL}/*.stat $all_stats" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       #Copy  files to COMOUT directory
+       echo "  if [ $SENDCOM = YES ] ; then" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "    mkdir -p $COMOUTsmall/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "    cp -v \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "    cp -v \$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed $COMOUTrestart/spcoutlook" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "  fi" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "fi" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+       chmod +x run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "${DATA}/scripts/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh" >> run_all_href_spcoutlook_poe.sh
 
-       #Mark this Alaska task is completed
-       echo "[[ \$? = 0 ]] && >$COMOUTrestart/spcoutlook/run_href_${model}.${dom}.${valid}_spcoutlook.completed" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
+      else
+	#Copy stat files for restart
+        if [ -s $COMOUTsmall/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook/*.stat ] ; then
+	  cp $COMOUTsmall/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook/*.stat $all_stats 
+	fi
+      fi
 
-       chmod +x run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo "${DATA}/run_href_${model}.${dom}.${valid}_spcoutlook.sh" >> run_all_href_spcoutlook_poe.sh
+     fi #end if check restart
 
-      fi #end if check restart
+    done #end of fhr
 
-    done # end of valid
+   done # end of valid
 
   done #end of dom loop
 

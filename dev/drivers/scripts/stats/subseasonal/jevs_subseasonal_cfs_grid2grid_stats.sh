@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=01:00:00
-#PBS -l place=vscatter,select=1:ncpus=59:ompthreads=1:mem=70GB
+#PBS -l place=vscatter,select=1:ncpus=66:ompthreads=1:mem=70GB
 #PBS -l debug=true
 
 set -x
@@ -28,14 +28,14 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export USER=$USER
 export envir=prod
-export KEEPDATA=YES
+export KEEPDATA=NO
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export ACCOUNT=VERF-DEV
 export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
 export PARTITION_BATCH=
-export nproc=59
+export nproc=66
 export USE_CFP=YES
 export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}

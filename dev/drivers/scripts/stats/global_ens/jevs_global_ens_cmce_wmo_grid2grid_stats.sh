@@ -33,7 +33,7 @@ source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export vhr=00
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
