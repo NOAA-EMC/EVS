@@ -54,6 +54,7 @@ echo '-----------------------------'
 mkdir -p ${DATA}/stats
 mkdir -p ${DATA}/wave
 mkdir -p ${DATA}/job_work_dir
+mkdir -p ${DATA}/images
 
 plot_start_date=${PDYm90}
 plot_end_date=${VDATE}
@@ -135,9 +136,11 @@ export err=$?; err_chk
 periods='LAST31DAYS LAST90DAYS'
 if [ $gather = yes ] ; then
 	echo "copying all images into one directory"
-	cp ${DATA}/wave/*png ${DATA}/ndbc_standard/  ## lead_average plots 
-	nc=$(ls ${DATA}/ndbc_standard/*.fhrmean_valid*.png | wc -l | awk '{print $1}')
-	echo "copied $nc lead_average plots"
+	#cp ${DATA}/wave/*png ${DATA}/ndbc_standard/  ## lead_average plots 
+	#nc=$(ls ${DATA}/ndbc_standard/*.fhrmean_valid*.png | wc -l | awk '{print $1}')
+	#echo "copied $nc lead_average plots"
+	nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
+	echo " Found ${nc} ${DATA}/images/*.png "
 	for period in ${periods} ; do
 		period_lower=$(echo ${period,,})
 		if [ ${period} = 'LAST31DAYS' ] ; then
@@ -147,8 +150,10 @@ if [ $gather = yes ] ; then
 		fi
 
 		# check to see if the plots are there
-    	    	nc=$(ls ${DATA}/ndbc_standard/*${period_lower}*.png | wc -l | awk '{print $1}')
-		echo " Found ${nc} ${DATA}/plots/*${period_lower}*.png files for ${VDATE} "
+    	    	#nc=$(ls ${DATA}/ndbc_standard/*${period_lower}*.png | wc -l | awk '{print $1}')
+		#echo " Found ${nc} ${DATA}/plots/*${period_lower}*.png files for ${VDATE} "
+		
+		
 		if [ "${nc}" != '0' ]
 		then
 			set -x
@@ -171,7 +176,8 @@ if [ $gather = yes ] ; then
 		# tar and copy them to the final destination
 
 		if [ "${nc}" > '0' ] ; then
-			cd ${DATA}/ndbc_standard
+			#cd ${DATA}/ndbc_standard
+			cd ${DATA}/images
 			tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*.png
 		fi
 
