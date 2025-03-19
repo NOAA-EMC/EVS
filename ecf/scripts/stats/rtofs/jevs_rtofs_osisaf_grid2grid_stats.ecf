@@ -1,4 +1,4 @@
-#PBS -N evs_rtofs_smap_stats
+#PBS -N evs_rtofs_osisaf_grid2grid_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -37,10 +37,10 @@ else
 fi
 export NET=evs
 export RUN=ocean
-export OBTYPE=smap
-export OBTYPEupper=SMAP
+export OBTYPE=osisaf
+export OBTYPEupper=OSISAF
+export VAR=sic
 export VERIF_CASE=grid2grid
-export VAR=sss
 
 ############################################################
 # Execute j-job
