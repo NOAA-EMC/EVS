@@ -13,6 +13,10 @@
 # 2- $RUN was defined in all j-jobs. 
 # 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
 # 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
+# 03/2025: 
+# 1- Appplied adjustments based on the changes for $COMOUT in prep scripts, 
+# 2- Updated the ecf scripts names and adjustments in defs.
+
 ###############################################################################
 
 set -x
@@ -49,8 +53,8 @@ fi
 if [ $OBTYPE = argo ]; then
 	export VARS="temp psal"
 	export OBTYPEupper=$(echo $OBTYPE | tr '[a-z]' '[A-Z]')
-	EVSINfilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/argo.$VDATE.nc
-	COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
+	EVSINfilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/argo.$VDATE.nc
+	COMINicefilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
 	
 	for levl in 0 50 125 200 400 700 1000 1400; do
 		export LVL=$levl
@@ -94,7 +98,7 @@ if [ $OBTYPE = argo ]; then
         				fhr2=$(printf "%02d" "${fhr}")
         				export fhr3=$(printf "%03d" "${fhr}")
 					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-					COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$OBTYPE.nc
+					COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$OBTYPE.nc
 					if [ -s $COMINrtofsfilename ] ; then
           					for vari in ${VARS}; do
             						export VAR=$vari
@@ -128,8 +132,8 @@ if [ $OBTYPE = argo ]; then
 elif [ $OBTYPE = ndbc ]; then
 	export VARS="sst"
 	export OBTYPEupper="NDBC_STANDARD"
-	EVSINfilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/ndbc.${VDATE}.nc
-	COMINicefilename=$COMIN/prep/$COMPONENT/rtofs.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
+	EVSINfilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/ndbc.${VDATE}.nc
+	COMINicefilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/rtofs_glo_2ds_f000_ice.$OBTYPE.nc
 	if [ -s $EVSINfilename ] ; then
 		if [ -s $COMINicefilename ] ; then
 			for fday in 0 1 2 3 4 5 6 7 8; do
@@ -137,7 +141,7 @@ elif [ $OBTYPE = ndbc ]; then
 				fhr2=$(printf "%02d" "${fhr}")
 				export fhr3=$(printf "%03d" "${fhr}")
 				match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-				COMINrtofsfilename=$COMIN/prep/$COMPONENT/rtofs.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_prog.$OBTYPE.nc
+				COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_prog.$OBTYPE.nc
 				if [ -s $COMINrtofsfilename ] ; then
 					for vari in ${VARS}; do
 						export VAR=$vari
