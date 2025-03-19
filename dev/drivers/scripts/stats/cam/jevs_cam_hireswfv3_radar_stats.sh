@@ -41,7 +41,6 @@ export vhr=${vhr:-${vhr}}
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
 export VERIF_CASE=radar
 export MODELNAME=hireswfv3
 export modsys=hiresw
