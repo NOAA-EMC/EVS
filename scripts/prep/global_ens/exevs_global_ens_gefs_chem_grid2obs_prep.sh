@@ -68,12 +68,12 @@ for OBTTYPE in ${obstype}; do
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
-                echo "DEBUG: No AEORNET Level 1.5 data was available for valid date ${INITDATE}" >> mailmsg
+                echo "DEBUG: No AERONET Level 1.5 data was available for valid date ${INITDATE}" >> mailmsg
                 echo "Missing file is ${checkfile}" >> mailmsg
                 echo "==============" >> mailmsg
                 flag_send_message=YES
             fi
-            echo "DEBUG: No AEORNET Level 1.5 data was available for valid date ${INITDATE}"
+            echo "DEBUG: No AERONET Level 1.5 data was available for valid date ${INITDATE}"
             echo "DEBUG: Missing file is ${checkfile}"
         fi
     elif [ "${OBTTYPE}" == "airnow" ]; then
@@ -209,7 +209,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
 done
 #
 if [ "${flag_send_message}" == "YES" ]; then
-    export subject="AEORNET Level 1.5 NC or AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}_${RUN}"
+    export subject="AERONET Level 1.5 NC or AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}_${RUN}"
     echo "Job ID: ${jobid}" >> mailmsg
     cat mailmsg | mail -s "${subject}" ${MAILTO}
 fi 
