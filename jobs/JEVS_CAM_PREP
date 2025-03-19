@@ -63,12 +63,17 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
+export vhr=${vhr:-00}
 export cycle=${cycle:-t${vhr}z}
 setpdy.sh 8
 . ./PDY
 
 if [ $VERIF_CASE = grid2obs ] ; then
-   export VDATE=${VDATE:-$PDYm1}
+   if [ "${RUN}" == "chem" ]; then
+       export INITDATE=${INITDATE:-${PDYm3}}
+   else
+      export VDATE=${VDATE:-$PDYm1}
+   fi
 
 elif [ $VERIF_CASE = precip ] ; then
    export VDATE=${VDATE:-$PDYm1}
@@ -98,15 +103,6 @@ fi
 
 
 ####################################
-# Define NET/RUN variables
-####################################
-export NET=${NET:-evs}
-export STEP=${STEP:-prep}
-export COMPONENT=${COMPONENT:-cam}
-export RUN=${RUN:-atmos}
-
-
-####################################
 # Define METplus variables
 ####################################
 export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}"
@@ -116,33 +112,53 @@ export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CAS
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver)}
-export COMINccpa=${COMINccpa:-$(compath.py ${envir}/com/ccpa/$ccpa_ver)}
-export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
-export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
-export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
-export COMINrrfs=${COMINrrfs:-$(compath.py ${envir}/com/rrfs/${rrfs_ver})}
-export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
-export DCOMINspc=${DCOMINspc:-$DCOMROOT}
 
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 
 mkdir -p $COMOUT
 
-export COMOUTmrms=${COMOUT}/mrms.${VDATE}
+export COMINrrfs=${COMINrrfs:-$(compath.py ${envir}/com/rrfs/${rrfs_ver})}
 
-if [ $VERIF_CASE = severe ] ; then
-   export COMOUTlsr=${COMOUT}/spc_lsr.${REP_DATE}
-   export COMOUTotlk=${COMOUT}/spc_otlk.${OTLK_DATE}
-elif [ $VERIF_CASE = grid2obs ] ; then
-   export mPINGToken=${mPINGToken:-9999}
+if [ "${RUN}" == "chem" ]; then
+    export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
+    export DCOMINaeronet=${DCOMINaeronet:-${DCOMROOT}}
+    export COMOUTprep=${COMOUTprep:-${COMOUT}/${RUN}.${INITDATE}/${MODELNAME}}
+   
+    mkdir -p ${COMOUTprep}
+   
+    # alternative choice is an option different from aqobs
+    export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+    export restart_mode=${restart_mode:-YES}
+   
+else
+    export COMINccpa=${COMINccpa:-$(compath.py ${envir}/com/ccpa/$ccpa_ver)}
+    export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
+    export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
+    export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
+    export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+    export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
+    export DCOMINspc=${DCOMINspc:-$DCOMROOT}
+
+    export COMOUTmrms=${COMOUT}/mrms.${VDATE}
+
+    if [ $VERIF_CASE = severe ] ; then
+       export COMOUTlsr=${COMOUT}/spc_lsr.${REP_DATE}
+       export COMOUTotlk=${COMOUT}/spc_otlk.${OTLK_DATE}
+    elif [ $VERIF_CASE = grid2obs ] ; then
+       export mPINGToken=${mPINGToken:-9999}
+    fi
+
 fi
 
 
 ####################################
 # Execute the script 
 ####################################
-$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+if [ "${RUN}" == "chem" ]; then
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}.sh
+else
+    $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+fi
 export err=$?; err_chk
 
 if [ "$KEEPDATA" != "YES" ]; then
