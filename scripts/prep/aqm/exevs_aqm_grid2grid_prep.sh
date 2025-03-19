@@ -47,7 +47,7 @@ export gridspec=793
 export CMODEL=$(echo ${MODELNAME} | tr a-z A-Z)
 echo ${CMODEL}
 
-export jday=$(date2jday.sh ${VDATE})        # need module load prod_util
+export jday=$(date2jday.sh ${INITDATE})        # need module load prod_util
 
 declare -a grid2grid_list=( ${DATA_TYPE} )
 num_obs=${#grid2grid_list[@]}
@@ -85,7 +85,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
   let endvhr=72
   while [ ${ic} -le ${endvhr} ]; do
     filehr=$(printf %3.3d ${ic})
-    checkfile=${COMINaqm}/${dirname}.${VDATE}/${mdl_cyc}/${MODELNAME}.t${mdl_cyc}z.cmaq.f${filehr}.${gridspec}.grib2
+    checkfile=${COMINaqm}/${dirname}.${INITDATE}/${mdl_cyc}/${MODELNAME}.t${mdl_cyc}z.cmaq.f${filehr}.${gridspec}.grib2
     if [ -s ${checkfile} ]; then
       export filein_mdl_grid=${checkfile}    # config variable
       num_mdl_grid=1
@@ -107,7 +107,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
     ## Keep processed GOES East/West L3 AOD in the same
     ## working directory for Join processesn that follows
     #
-    export RUNTIME_PREP_DIR=${DATA}/prepsave/${ObsType}_${AOD_QC_NAME}_${VDATE}
+    export RUNTIME_PREP_DIR=${DATA}/prepsave/${ObsType}_${AOD_QC_NAME}_${INITDATE}
     mkdir -p ${RUNTIME_PREP_DIR}
 
     for SatId in "${satellite_list[@]}"; do
@@ -132,7 +132,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
 	# Reset MET_TMP_DIR will generate warning message from 2024/11/18,
 	# thus a new method need to be produced for different mapping files
 	#
-        # export MET_TMP_DIR=${DATA}/GEOSTATIONARY_${SatId}_${Aod_Scan}_${MODELNAME}_${VDATE}
+        # export MET_TMP_DIR=${DATA}/GEOSTATIONARY_${SatId}_${Aod_Scan}_${MODELNAME}_${INITDATE}
         # if [ -d ${MET_TMP_DIR} ]; then /bin/rm -rf ${MET_TMP_DIR}; fi
         # mkdir -p ${MET_TMP_DIR}
 	#
@@ -149,13 +149,13 @@ if [ "${num_mdl_grid}" != "0" ]; then
         export out_file_prefix=${ObsType}_${AOD_SCAN}_${MODELNAME}_${SatId}
 
         if [ "${check_restart}" == "YES" ]; then   ## Check gridded L3 AOD files for RESTART ability
-          checkfile="${out_file_prefix}_${VDATE}_*_${AOD_QC_NAME}.nc"
+          checkfile="${out_file_prefix}_${INITDATE}_*_${AOD_QC_NAME}.nc"
           obs_file_count=$(find ${COMOUTproc} -name ${checkfile} | wc -l )
           if [ ${obs_file_count} -eq 0 ]; then
             let ic=0
           elif [ ${obs_file_count} -eq ${total_num_file} ]; then
             ## check corrupted ASCII2NC file
-            checkfile="${COMOUTproc}/${out_file_prefix}_${VDATE}_${endvhr}_${AOD_QC_NAME}.nc"
+            checkfile="${COMOUTproc}/${out_file_prefix}_${INITDATE}_${endvhr}_${AOD_QC_NAME}.nc"
             msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
             if [ ${msg} -eq 0 ]; then
               let ic=${endvhr}+1   ## skip current Aod_Scan Processing
@@ -182,7 +182,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
 	  export VHOUR=${vldhr}    # config variable
           flag_find_abi=no
           flag_reverse_find=no
-          idir=${DCOMINabi}/${VDATE}/goes_abi/GOES_${AOD_SCAN}
+          idir=${DCOMINabi}/${INITDATE}/goes_abi/GOES_${AOD_SCAN}
           if [ -d ${idir} ]; then
             checkfile="OR_${OBSTYPE}-L2-${AOD_SCAN}-M*_${SATID}_s${jday}${vldhr}*.nc"
             obs_file_count=$(find ${idir} -name ${checkfile} | wc -l )
@@ -215,11 +215,11 @@ if [ "${num_mdl_grid}" != "0" ]; then
               flag_reverse_find=yes
             fi
             if [ "${flag_reverse_find}" == "yes" ]; then
-              VDATEm1=$(${NDATE} -1 ${VDATE}${vldhr} | cut -c1-8)
-              vldhrm1=$(${NDATE} -1 ${VDATE}${vldhr} | cut -c9-10)
-              jdaym1=$(date2jday.sh ${VDATEm1})
+              INITDATEm1=$(${NDATE} -1 ${INITDATE}${vldhr} | cut -c1-8)
+              vldhrm1=$(${NDATE} -1 ${INITDATE}${vldhr} | cut -c9-10)
+              jdaym1=$(date2jday.sh ${INITDATEm1})
               echo "DEBUG ::  reverse search start; checking file for ${jdaym1}${vldhrm1}"
-              idirm1=${DCOMINabi}/${VDATEm1}/goes_abi/GOES_${AOD_SCAN}
+              idirm1=${DCOMINabi}/${INITDATEm1}/goes_abi/GOES_${AOD_SCAN}
               if [ -d ${idirm1} ]; then
                 checkfile="OR_${OBSTYPE}-L2-${AOD_SCAN}-M*_${SATID}_s${jdaym1}${vldhrm1}*.nc"
                 obs_file_count=$(find ${idirm1} -name ${checkfile} | wc -l )
@@ -247,10 +247,10 @@ if [ "${num_mdl_grid}" != "0" ]; then
                     flag_find_abi=yes
                   fi
                 else
-                  echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${VDATEm1} ${vldhrm1}"
+                  echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATEm1} ${vldhrm1}"
                 fi
               else
-                echo "DEBUG :: Can not find ${idirm1}, skip reverse search for hour ${VDATE} ${vldhr}"
+                echo "DEBUG :: Can not find ${idirm1}, skip reverse search for hour ${INITDATE} ${vldhr}"
               fi
             fi
             if [ "${flag_find_abi}" == "yes" ];then
@@ -262,12 +262,12 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   export err=$?; err_chk
 
                   if [ "${SENDCOM}" = "YES" ]; then
-                    cpfile=${RUNTIME_PREP_DIR}/${out_file_prefix}_${VDATE}_${VHOUR}_${AOD_QC_NAME}.nc
+                    cpfile=${RUNTIME_PREP_DIR}/${out_file_prefix}_${INITDATE}_${VHOUR}_${AOD_QC_NAME}.nc
                     if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "DEBUG :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> ${email_msg}
+                    echo "DEBUG :: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
@@ -277,18 +277,18 @@ if [ "${num_mdl_grid}" != "0" ]; then
               fi
             else
               if [ "${SENDMAIL}" = "YES" ]; then
-                echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${VDATE} ${vldhr}" >> ${email_msg}
+                echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATE} ${vldhr}" >> ${email_msg}
                 echo "==============" >> ${email_msg}
                 flag_send_message=YES
               fi
             fi
           else
             if [ "${vldhr}" == "00" ]; then
-              VDATEm1=$(${NDATE} -1 ${VDATE}${vldhr} | cut -c1-8)
-              vldhrm1=$(${NDATE} -1 ${VDATE}${vldhr} | cut -c9-10)
-              jdaym1=$(date2jday.sh ${VDATEm1})
+              INITDATEm1=$(${NDATE} -1 ${INITDATE}${vldhr} | cut -c1-8)
+              vldhrm1=$(${NDATE} -1 ${INITDATE}${vldhr} | cut -c9-10)
+              jdaym1=$(date2jday.sh ${INITDATEm1})
               echo "DEBUG ::  reverse search start; checking file for ${jdaym1}${vldhrm1}"
-              idirm1=${DCOMINabi}/${VDATEm1}/goes_abi/GOES_${AOD_SCAN}
+              idirm1=${DCOMINabi}/${INITDATEm1}/goes_abi/GOES_${AOD_SCAN}
               if [ -d ${idirm1} ]; then
                 checkfile="OR_${OBSTYPE}-L2-${AOD_SCAN}-M*_${SATID}_s${jdaym1}${vldhrm1}*.nc"
                 obs_file_count=$(find ${idirm1} -name ${checkfile} | wc -l )
@@ -316,10 +316,10 @@ if [ "${num_mdl_grid}" != "0" ]; then
                     flag_find_abi=yes
                   fi
                 else
-                  echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${VDATEm1} ${vldhrm1}"
+                  echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATEm1} ${vldhrm1}"
                 fi
               else
-                echo "DEBUG :: Can not find ${idirm1}, skip reverse search for hour ${VDATE} ${vldhr}"
+                echo "DEBUG :: Can not find ${idirm1}, skip reverse search for hour ${INITDATE} ${vldhr}"
               fi
             fi
             if [ "${flag_find_abi}" == "yes" ];then
@@ -330,12 +330,12 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   run_metplus.py ${conf_dir}/${config_file} ${config_common}
                   export err=$?; err_chk
                   if [ "${SENDCOM}" = "YES" ]; then
-                    cpfile=${RUNTIME_PREP_DIR}/${out_file_prefix}_${VDATE}_${VHOUR}_${AOD_QC_NAME}.nc
+                    cpfile=${RUNTIME_PREP_DIR}/${out_file_prefix}_${INITDATE}_${VHOUR}_${AOD_QC_NAME}.nc
                     if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "DEBUG :: Detected a corrupted input file ${filein_aod} for ${VDATE} ${vldhr}" >> ${email_msg}
+                    echo "DEBUG :: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
@@ -345,12 +345,12 @@ if [ "${num_mdl_grid}" != "0" ]; then
               fi
             else
               if [ "${SENDMAIL}" = "YES" ]; then
-                echo "DEBUG :: Can not find ${idir} for ${VDATE} ${vldhr}" >> ${email_msg}
+                echo "DEBUG :: Can not find ${idir} for ${INITDATE} ${vldhr}" >> ${email_msg}
                 echo "==============" >> ${email_msg}
                 flag_send_message=YES
               fi
             fi
-            echo "DEBUG :: Can not find ${idir} for ${VDATE} ${vldhr}, skip ro next valid hour"
+            echo "DEBUG :: Can not find ${idir} for ${INITDATE} ${vldhr}, skip ro next valid hour"
           fi  ## find idir
           ((ic++))
         done  # vldhr
@@ -361,8 +361,8 @@ if [ "${num_mdl_grid}" != "0" ]; then
     #
     for AOD_SCAN in "${goes_scan_list[@]}"; do
 
-      goes_east_aod_prefix=${ObsType}_${AOD_SCAN}_${MODELNAME}_${satellite_list[0]}_${VDATE}
-      goes_west_aod_prefix=${ObsType}_${AOD_SCAN}_${MODELNAME}_${satellite_list[1]}_${VDATE}
+      goes_east_aod_prefix=${ObsType}_${AOD_SCAN}_${MODELNAME}_${satellite_list[0]}_${INITDATE}
+      goes_west_aod_prefix=${ObsType}_${AOD_SCAN}_${MODELNAME}_${satellite_list[1]}_${INITDATE}
 
       let ic=0
       let endvhr=23
@@ -371,13 +371,13 @@ if [ "${num_mdl_grid}" != "0" ]; then
       join_file_prefix=${ObsType}_${AOD_SCAN}_${MODELNAME}_join
 
       if [ "${check_restart}" == "YES" ]; then   ## Check Join L3 AOD files for RESTART ability
-        checkfile="${join_file_prefix}_${VDATE}_*_${AOD_QC_NAME}.nc"
+        checkfile="${join_file_prefix}_${INITDATE}_*_${AOD_QC_NAME}.nc"
         join_file_count=$(find ${COMOUTproc} -name ${checkfile} | wc -l )
         if [ ${join_file_count} -eq 0 ]; then
           let ic=0
         elif [ ${join_file_count} -eq ${total_num_file} ]; then
           ## check corrupted integrated file
-          checkfile="${COMOUTproc}/${join_file_prefix}_${VDATE}_${endvhr}_${AOD_QC_NAME}.nc"
+          checkfile="${COMOUTproc}/${join_file_prefix}_${INITDATE}_${endvhr}_${AOD_QC_NAME}.nc"
           msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
           if [ ${msg} -eq 0 ]; then
             let ic=${endvhr}+1      ## skip current Aod_Scan Integration
@@ -409,7 +409,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
         fi
 
         join_script_name=${USHevs}/${COMPONENT}/integrate_goes_east_west_aod.py
-        export join_aod_file=${RUNTIME_PREP_DIR}/${ObsType}_${AOD_SCAN}_${MODELNAME}_join_${VDATE}_${vldhr}_${AOD_QC_NAME}.nc
+        export join_aod_file=${RUNTIME_PREP_DIR}/${ObsType}_${AOD_SCAN}_${MODELNAME}_join_${INITDATE}_${vldhr}_${AOD_QC_NAME}.nc
         if [ -s ${goes_east_aod_file} ] && [ -s ${goes_west_aod_file} ]; then
           python ${join_script_name} ${goes_east_aod_file} ${goes_west_aod_file} ${join_aod_file}
         elif [ -s ${goes_east_aod_file} ] && [ ! -s ${goes_west_aod_file} ]; then
@@ -417,7 +417,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
         elif [ ! -s ${goes_east_aod_file} ] && [ -s ${goes_west_aod_file} ]; then
           cp ${goes_west_aod_file} ${join_aod_file}
         else
-          echo "DEBUG ::  No GOES-East and GOES-West point2grid ABI L3 AOD files for ${VDATE} ${vldhr}"
+          echo "DEBUG ::  No GOES-East and GOES-West point2grid ABI L3 AOD files for ${INITDATE} ${vldhr}"
         fi
 
         if [ "${SENDCOM}" = "YES" ]; then
@@ -429,12 +429,12 @@ if [ "${num_mdl_grid}" != "0" ]; then
   done  # ObsType
 else
     if [ "${SENDMAIL}" = "YES" ]; then
-      echo "DEBUG: No ${MODELNAME} FCST ${VARID} grib2 was avaiable as POINT2GRID template valid ${VDATE}" >> ${email_msg}
+      echo "DEBUG: No ${MODELNAME} FCST ${VARID} grib2 was avaiable as POINT2GRID template valid ${INITDATE}" >> ${email_msg}
       echo "==============" >> ${email_msg}
       flag_send_message=YES
     fi
 
-    echo "DEBUG: No ${MODELNAME} FCST ${VARID} grib2 was available as POINT2GRID template valid ${VDATE}"
+    echo "DEBUG: No ${MODELNAME} FCST ${VARID} grib2 was available as POINT2GRID template valid ${INITDATE}"
 fi
 
 if [ "${flag_send_message}" == "YES" ]; then
