@@ -36,7 +36,7 @@ source $HOMEevs/dev/modulefiles/global_ens/global_ens_prep.sh
 ############################################################
 ## set some variables
 #############################################################
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDMAIL=YES
 export SENDDBN=NO
 
