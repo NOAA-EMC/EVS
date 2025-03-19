@@ -1,9 +1,9 @@
-#PBS -N evs_rtofs_osisaf_stats
+#PBS -N evs_rtofs_argo_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:10:00
+#PBS -l walltime=01:25:00
 #PBS -l place=exclhost,select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
@@ -37,10 +37,10 @@ else
 fi
 export NET=evs
 export RUN=ocean
-export OBTYPE=osisaf
-export OBTYPEupper=OSISAF
-export VAR=sic
-export VERIF_CASE=grid2grid
+export OBTYPE=argo
+export OBTYPEupper=ARGO
+export VERIF_CASE=grid2obs
+export VARS="temp psal"
 
 ############################################################
 # Execute j-job
@@ -49,7 +49,7 @@ $HOMEevs/jobs/JEVS_RTOFS_STATS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
-   exit
+   exit 
 fi
 
 %include <tail.h>

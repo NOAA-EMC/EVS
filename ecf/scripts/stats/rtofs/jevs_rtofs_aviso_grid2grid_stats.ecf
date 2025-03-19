@@ -1,4 +1,4 @@
-#PBS -N evs_rtofs_smos_stats
+#PBS -N evs_rtofs_aviso_grid2grid_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -37,10 +37,10 @@ else
 fi
 export NET=evs
 export RUN=ocean
-export OBTYPE=smos
-export OBTYPEupper=SMOS
-export VAR=sss
+export OBTYPE=aviso
+export OBTYPEupper=AVISO
 export VERIF_CASE=grid2grid
+export VAR=ssh
 
 ############################################################
 # Execute j-job
@@ -49,7 +49,7 @@ $HOMEevs/jobs/JEVS_RTOFS_STATS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
-   exit
+   exit 
 fi
 
 %include <tail.h>
