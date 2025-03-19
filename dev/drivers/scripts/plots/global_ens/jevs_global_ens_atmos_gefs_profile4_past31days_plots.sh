@@ -31,7 +31,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export envir=prod
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDDBN=YES
 
 export vhr=00

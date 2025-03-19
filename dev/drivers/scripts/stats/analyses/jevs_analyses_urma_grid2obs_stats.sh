@@ -37,7 +37,7 @@ export COMPONENT=analyses
 export RUN=atmos
 export VERIF_CASE=grid2obs
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDMAIL=YES
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh

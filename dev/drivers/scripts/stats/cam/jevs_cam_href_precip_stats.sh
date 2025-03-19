@@ -22,7 +22,7 @@ export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=precip
 export MODELNAME=href
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDMAIL=YES
 
 module reset

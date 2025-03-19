@@ -15,8 +15,8 @@ export machine=WCOSS2
 # ECF Settings
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=YES
-export SENDDBN=NO
+export KEEPDATA=NO
+export SENDDBN=YES
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_grid2obs_plots_last90days}
 export jobid=$job.${PBS_JOBID:-$$}

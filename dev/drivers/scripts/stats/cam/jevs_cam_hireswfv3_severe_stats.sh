@@ -38,7 +38,6 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=YES
 export VERIF_CASE=severe
 export MODELNAME=hireswfv3
 export modsys=hiresw
@@ -54,7 +53,7 @@ export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
 
 export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,andrew.benjamin@noaa.gov'}
 

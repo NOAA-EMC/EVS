@@ -47,7 +47,7 @@ export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
  
 ### developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
