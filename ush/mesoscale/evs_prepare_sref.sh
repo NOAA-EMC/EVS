@@ -272,13 +272,16 @@ fi
 if [ $modnam = prepbufr ] && [ ! -e $DATA/prepbufr.missing ] ; then
 
  mkdir -p $WORK/prepbufr.$vday
+ mkdir -p $OMOUTrestart/prepbufr.$vday
 
 export output_base=${WORK}/pb2nc
 
- if [ -s ${COMINobsproc}/gdas.${vday}/??/atmos/gdas.t??z.prepbufr ] ; then
+ for vhr in 00  06  12  18  ; do
 
-   for vhr in 00  06  12  18  ; do
+  if [ ! -s $COMOUTrestart/prepbufr.${vday}/prepbufr.t${vhr}z.grid212.nc ] ; then	
 
+    if [ -s ${COMINobsproc}/gdas.${vday}/${vhr}/atmos/gdas.t${vhr}z.prepbufr ] ; then
+   
      export vbeg=${vhr}
      export vend=${vhr}
 
@@ -294,32 +297,35 @@ export output_base=${WORK}/pb2nc
        if [ -s ${WORK}/${subset} ]; then
           cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
        fi
+       rm -f $subset 
      done
      export bufrpath=$WORK
      if [ -s $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf
        export err=$?; err_chk
-       if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
-         cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
+
+       if [ -s ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.grid212.nc ] ; then
+         cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.grid212.nc $WORK/prepbufr.${vday} 
+	 #Save for restart
+	 if [ $SENDCOM = YES ] ; then
+	   cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.grid212.nc $COMOUTrestart/prepbufr.${vday}
+         fi          		 
        fi
+
      fi
-   done
 
- else
-  echo "WARNING: Missing file is ${COMINobsproc}/gdas.${vday}/??/atmos/gdas.t??z.prepbufr"
-  if [ $SENDMAIL = YES ] ; then
-   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-   echo "WARNING:  No Prepbufr data available for ${VDATE}" > mailmsg
-   echo "Missing file is ${COMINobsproc}/gdas.${vday}/??/atmos/gdas.t??z.prepbufr"  >> mailmsg
-   echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $MAILTO 
-  fi
- fi
+    fi
 
-  #Save for restart
-  if [ -d $WORK/prepbufr.${vday} ] ; then
-    cp -r $WORK/prepbufr.${vday} $COMOUTrestart
-  fi
+   else
+
+     #Copy from restart
+     if [ -s $COMOUTrestart/prepbufr.${vday}/prepbufr.t${vhr}z.grid212.nc ] ; then
+      cp $COMOUTrestart/prepbufr.${vday}/prepbufr.t${vhr}z.grid212.nc $WORK/prepbufr.${vday}
+     fi 
+
+   fi
+
+ done
 
 fi 
 
