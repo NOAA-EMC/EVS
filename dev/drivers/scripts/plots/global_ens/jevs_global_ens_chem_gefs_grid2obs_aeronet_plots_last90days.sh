@@ -21,7 +21,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 ## Specify environment variables
 ############################################################
 export SENDCOM=YES
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDDBN=NO
 export job=${PBS_JOBNAME:-jevs_global_ens_chem_grid2obs_aeronet_plots_90days}
 export jobid=${job}.${PBS_JOBID:-$$}
