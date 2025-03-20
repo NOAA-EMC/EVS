@@ -97,7 +97,9 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
               if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
 	        cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
 	        #save for restart:
-	        cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${restart_day}/.
+		if [ $SENDCOM = YES ] ; then
+	          cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${restart_day}/.
+		fi
 	      fi
 	   fi
 	 else
@@ -146,11 +148,13 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
   export vhr='12'
   export modelpath=$output_base
 
-  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP24h.conf
-  export err=$?; err_chk
-  
+  if [ -s $modelpath/sref.t${vhr}z.pgrb212.mean.fhr24.grib2 ] && [ -s $modelpath/sref.t${vhr}z.pgrb212.mean.fhr48.grib2 ] && [ -s $modelpath/sref.t${vhr}z.pgrb212.mean.fhr72.grib2 ] ; then
+   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP24h.conf
+   export err=$?; err_chk
+  fi
+
   #Save for restart:
-  if [ -s $output_base/*24mean*.nc ] ; then
+  if [ -s $output_base/*24mean*.nc ] && [ $SENDCOM = YES ] ; then
     if [ ! -d ${COMOUTfinal}/apcp24mean ] ; then
         mkdir -p ${COMOUTfinal}/apcp24mean
     fi
@@ -180,9 +184,9 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
     export vbeg=$vday$vhr
     export vend=$vday$vhr
 
-    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
-    export err=$?; err_chk
-    if [ -s $COMINccpa/ccpa.${vday}/$vhr/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
+    if [ -s $COMINccpa/ccpa.${vday}/$vhr/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then 
+      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
+      export err=$?; err_chk
       cp $COMINccpa/ccpa.${vday}/$vhr/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
     fi
   done
@@ -195,9 +199,9 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
     export vbeg=$vday$vhr3
     export vend=$vday$vhr3
 
-    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
-    export err=$?; err_chk
     if [ -s $COMINccpa/ccpa.${vday}/$vhr3/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
+      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
+      export err=$?; err_chk
       cp $COMINccpa/ccpa.${vday}/$vhr3/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
     fi
   done
@@ -210,9 +214,9 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
       export vbeg=$next$vhr
       export vend=$next$vhr
 
-     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
-     export err=$?; err_chk
      if [ -s $COMINccpa/ccpa.${next}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
+       export err=$?; err_chk
        cp $COMINccpa/ccpa.${next}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
      fi
    done
@@ -235,30 +239,26 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
     export grid=grid212
     export ccpa06h=$ccpa06_G212
     export tail=nc
-
+   
+   if [ -s $ccpa06h/ccpa.t03z.grid212.f00.nc ] && [ -s $ccpa06h/ccpa.t09z.grid212.f00.nc ] && [ -s $ccpa06h/ccpa.t15z.grid212.f00.nc ] && [ -s $ccpa06h/ccpa.t21z.grid212.f00.nc ] ; then
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
     export err=$?; err_chk
+   fi
+    
     export ccpatype=GFRIB
     export grid=grid240
     export ccpa06h=$ccpa06_G240
     export tail=grib2
 
+   if [ -s $ccpa06h/ccpa.t03z.grid240.f00.grib2 ] && [ -s $ccpa06h/ccpa.t09z.grid240.f00.grib2 ] && [ -s $ccpa06h/ccpa.t15z.grid240.f00.grib2 ] && [ -s $ccpa06h/ccpa.t21z.grid240.f00.grib2 ] ; then
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
     export err=$?; err_chk
+   fi
 
- else
-  echo "WARNING: Missing file $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2"
-  if [ $SENDMAIL = YES ] ; then	 
-    export subject="CCPA Data Missing for EVS ${COMPONENT}"
-    echo "WARNING:  No CCPA data available for ${VDATE}" > mailmsg
-    echo "Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2"  >> mailmsg
-    echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $MAILTO  
-  fi
  fi
 
  #Save for restart
- if [ -d ${WORK}/ccpa.${vday} ] ; then
+ if [ -d ${WORK}/ccpa.${vday} ] && [ $SENDCOM = YES ] ; then
    cp -r ${WORK}/ccpa.${vday} $COMOUTrestart
  fi
 
