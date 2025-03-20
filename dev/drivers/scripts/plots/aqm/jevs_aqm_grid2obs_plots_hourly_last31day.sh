@@ -19,14 +19,14 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 # Load modules
 ############################################################
 
-source $HOMEevs/versions/run.ver
+source ${HOMEevs}/versions/run.ver
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/dev/modulefiles/aqm/aqm_plots.sh
+source ${HOMEevs}/dev/modulefiles/aqm/aqm_plots.sh
 
 ############################################################
 ## For dev testing
@@ -46,12 +46,12 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDMAIL=YES
 export SENDDBN=NO
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
-export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver_2d}
+export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}
 
 export USE_CFP=YES
 export nproc=128    ## nproc must match with the ncpus allocation above
@@ -68,7 +68,7 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/JEVS_AQM_PLOTS
+   ${HOMEevs}/jobs/JEVS_AQM_PLOTS
 
 fi
 
