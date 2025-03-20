@@ -14,21 +14,20 @@ cd $PBS_O_WORKDIR
 export model=evs
 export COMPONENT=aqm
 
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSAQMaod
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 ############################################################
 # Load modules
 ############################################################
 
-source $HOMEevs/versions/run.ver
+source ${HOMEevs}/versions/run.ver
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/dev/modulefiles/aqm/aqm_prep.sh
+source ${HOMEevs}/dev/modulefiles/aqm/aqm_prep.sh
 
 export vhr=00
 echo $vhr
@@ -45,7 +44,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDMAIL=YES
 export SENDDBN=NO
 
@@ -61,7 +60,7 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/JEVS_AQM_PREP
+   ${HOMEevs}/jobs/JEVS_AQM_PREP
 
 fi
 

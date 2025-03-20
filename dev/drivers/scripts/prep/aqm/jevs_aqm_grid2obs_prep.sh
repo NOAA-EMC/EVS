@@ -14,8 +14,7 @@ cd $PBS_O_WORKDIR
 export model=evs
 export COMPONENT=aqm
 
-## export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSAQMaod
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 
 ############################################################
