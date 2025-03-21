@@ -76,7 +76,11 @@ else:
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
+pstart_date_dt = start_date_dt - datetime.timedelta(days=1)
+pstart_date = pstart_date_dt.strftime('%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
+pend_date_dt = end_date_dt - datetime.timedelta(days=1)
+pend_date = pend_date_dt.strftime('%Y%m%d')
 now = datetime.datetime.now()
 
 # Set up directory paths
@@ -133,6 +137,15 @@ original_date_info_dict = {
     'init_hr_end': init_hr_end,
     'init_hr_inc': init_hr_inc,
 }
+if 'Week5_Precip' in job_name:
+    original_date_info_dict = {
+        'date_type': date_type,
+        'start_date': pstart_date,
+        'end_date': pend_date,
+        'init_hr_start': init_hr_start,
+        'init_hr_end': init_hr_end,
+        'init_hr_inc': init_hr_inc,
+    }
 valid_hrs = list(range(int(valid_hr_start),
                        int(valid_hr_end)+int(valid_hr_inc),
                        int(valid_hr_inc)))
