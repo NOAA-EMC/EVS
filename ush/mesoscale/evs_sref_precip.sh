@@ -25,24 +25,15 @@ for  obsv in ccpa ; do
   #***********************************************
   # Get prepbufr data files for validation
   #***********************************************
-  if [ ! -d $COMOUTrestart/ccpa.$vday ] ; then
     $USHevs/mesoscale/evs_prepare_sref.sh $obsv 
     export err=$?; err_chk
-  else
-    #restart from previously existing ccpa files
-    cp -r $COMOUTrestart/ccpa.$vday $WORK
-  fi
 
   if [ $obsv = ccpa ] ; then
-    #restart for sref_apcp06 is set within evs_prepare_sref.sh
     $USHevs/mesoscale/evs_prepare_sref.sh  sref_apcp06
     export err=$?; err_chk
 
-    #if ${COMOUTfinal}/apcp24mean exists, is will be used in the restart next time 
-    if [ ! -d ${COMOUTfinal}/apcp24mean ] ; then 
-      $USHevs/mesoscale/evs_prepare_sref.sh sref_apcp24_mean
-      export err=$?; err_chk
-    fi
+    $USHevs/mesoscale/evs_prepare_sref.sh sref_apcp24_mean
+    export err=$?; err_chk
   fi
 
   #*******************************************************
