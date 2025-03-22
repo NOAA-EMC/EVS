@@ -3,7 +3,7 @@
 #  Purpose: Get required input forecast and validation data files
 #           for sref stat jobs
 #  Last update: 
-#               21/03/2025, Fix restart, by Binbin Zhou Lynker@EMC/NCEP 
+#               21/03/2025, Update restart, by Binbin Zhou Lynker@EMC/NCEP 
 #               10/18/2024, resolved the duplicated APCP03 in arw/f03 and 06 members
 #               06/05/2024, add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               05/04/2024, (1) change gfs to gdas for prepbufr files

@@ -2,6 +2,7 @@
 #***********************************************************************************
 #  Purpose: Run sref's precip stat job
 #  Last update: 
+#               03/20/2025, Update restart and MPMD, Binbin Zhou Lynker@EMC/NCEP
 #               01/10/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
 ##************************************************************************
