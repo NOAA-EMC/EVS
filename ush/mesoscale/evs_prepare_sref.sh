@@ -358,7 +358,7 @@ fi
 if [ $modnam = prepbufr ] && [ ! -e $DATA/prepbufr.missing ] ; then
 
  mkdir -p $WORK/prepbufr.$vday
- mkdir -p $OMOUTrestart/prepbufr.$vday
+ mkdir -p $COMOUTrestart/prepbufr.$vday 
 
 export output_base=${WORK}/pb2nc
 
