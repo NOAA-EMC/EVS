@@ -58,7 +58,11 @@ for group in condense_stats filter_stats make_plots tar_images; do
 	    if [ $machine = WCOSS2 ]; then
 	        nselect=$(cat $PBS_NODEFILE | wc -l)
 	        nnp=$(($nselect * $nproc))
-	        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+		if [ $VERIF_TYPE = precip ]; then
+		    launcher="mpiexec -np $nproc -ppn $ncpu -depth 2 --cpu-bind verbose,depth cfp"
+		else
+	            launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+		fi
 	    elif [ $machine = HERA -o $machine = ORION ]; then
 	        export SLURM_KILL_BAD_EXIT=0
 	        launcher="srun --export=ALL --multi-prog"
