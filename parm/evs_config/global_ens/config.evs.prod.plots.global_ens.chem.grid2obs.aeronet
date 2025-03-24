@@ -30,7 +30,7 @@ export RUN_GRID2OBS_PLOTS="YES"
 #model_list:                 model names
 #model_evs_data_dir_list:    base path to "evs_data" directory
 #model_file_format_list:     file format of model files
-gefs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1$2}' )
+gefs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1}' )
 modelid=${MODELNAME}${gefs_ver_id}
 export model_list="${modelid}"
 export model_evs_data_dir_list="${STATDIR}"
