@@ -283,6 +283,448 @@ plot_jobs_dict = {
                                   'obs_name': 'gfs',
                                   'plots_list': 'time_series'},
     },
+    'precip': {
+        'Weekly_Precip': {'line_type_stat_list': ['SL1L2/RMSE',
+                                                  'SL1L2/ME'],
+                          'vx_mask_list': ['CONUS'],
+                          'fcst_var_dict': {'name': 'APCP_WEEKLY',
+                                            'levels': 'A168',
+                                            'threshs': 'NA'},
+                          'obs_var_dict': {'name': 'APCP_WEEKLY',
+                                           'levels': 'A168',
+                                           'threshs': 'NA'},
+                          'interp_dict': {'method': 'NEAREST',
+                                          'points': '1'},
+                          'fhr_start': '180',
+                          'fhr_end': '684',
+                          'fhr_inc': '168',
+                          'grid': 'G003',
+                          'obs_name': 'CCPA',
+                          'plots_list': 'time_series, lead_average'},
+        'Weekly_Precip_Thresh': {'line_type_stat_list': ['CTC/FBIAS',
+                                                         'CTC/ETS'],
+                                 'vx_mask_list': ['CONUS'],
+                                 'fcst_var_dict': {'name': 'APCP_WEEKLY',
+                                                   'levels': 'A168',
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge101.6, '
+                                                               +'ge127, '
+                                                               +'ge152.4, '
+                                                               +'ge203.2, '
+                                                               +'ge254')},
+                                 'obs_var_dict': {'name': 'APCP_WEEKLY',
+                                                  'levels': 'A168',
+                                                  'threshs': ('ge25.4, '
+                                                              +'ge50.8, '
+                                                              +'ge76.2, '
+                                                              +'ge101.6, '
+                                                              +'ge127, '
+                                                              +'ge152.4, '
+                                                              +'ge203.2, '
+                                                              +'ge254')},
+                                 'interp_dict': {'method': 'NEAREST',
+                                                 'points': '1'},
+                                 'fhr_start': '180',
+                                 'fhr_end': '684',
+                                 'fhr_inc': '168',
+                                 'grid': 'G003',
+                                 'obs_name': 'CCPA',
+                                 'plots_list': 'time_series, lead_average'},
+        'Weekly_Precip_PerfDia': {'line_type_stat_list': \
+                                      ['CTC/PERF_DIA'],
+                                  'vx_mask_list': ['CONUS'],
+                                  'fcst_var_dict': {'name': 'APCP_WEEKLY',
+                                                    'levels': 'A168',
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge101.6, '
+                                                                +'ge127, '
+                                                                +'ge152.4, '
+                                                                +'ge203.2, '
+                                                                +'ge254')},
+                                  'obs_var_dict': {'name': 'APCP_WEEKLY',
+                                                   'levels': 'A168',
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge101.6, '
+                                                               +'ge127, '
+                                                               +'ge152.4, '
+                                                               +'ge203.2, '
+                                                               +'ge254')},
+                                  'interp_dict': {'method': 'NEAREST',
+                                                  'points': '1'},
+                                  'fhr_start': '180',
+                                  'fhr_end': '684',
+                                  'fhr_inc': '168',
+                                  'grid': 'G003',
+                                  'obs_name': 'CCPA',
+                                  'plots_list': 'performance_diagram'},
+        'Weekly_Precip_Nbrhd': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                'vx_mask_list': ['CONUS'],
+                                'fcst_var_dict': {'name': 'APCP_WEEKLY',
+                                                  'levels': 'A168',
+                                                  'threshs': ('ge25.4, '
+                                                              +'ge50.8, '
+                                                              +'ge76.2, '
+                                                              +'ge101.6, '
+                                                              +'ge127, '
+                                                              +'ge152.4, '
+                                                              +'ge203.2, '
+                                                              +'ge254')},
+                                'obs_var_dict': {'name': 'APCP_WEEKLY',
+                                                 'levels': 'A168',
+                                                 'threshs': ('ge25.4, '
+                                                             +'ge50.8, '
+                                                             +'ge76.2, '
+                                                             +'ge101.6, '
+                                                             +'ge127, '
+                                                             +'ge152.4, '
+                                                             +'ge203.2, '
+                                                             +'ge254')},
+                                'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                'points': ('1, 9, 25, '
+                                                           +'49, 81, 121')},
+                                'fhr_start': '180',
+                                'fhr_end': '684',
+                                'fhr_inc': '168',
+                                'grid': 'G003',
+                                'obs_name': 'CCPA',
+                                'plots_list': 'time_series, lead_average'},
+        'Week5_Precip': {'line_type_stat_list': ['SL1L2/RMSE',
+                                                 'SL1L2/ME'],
+                         'vx_mask_list': ['CONUS'],
+                         'fcst_var_dict': {'name': 'APCP_WEEKLY',
+                                           'levels': 'A144',
+                                           'threshs': 'NA'},
+                         'obs_var_dict': {'name': 'APCP_WEEKLY',
+                                          'levels': 'A144',
+                                          'threshs': 'NA'},
+                         'interp_dict': {'method': 'NEAREST',
+                                         'points': '1'},
+                         'fhr_start': '828',
+                         'fhr_end': '828',
+                         'fhr_inc': '24',
+                         'grid': 'G003',
+                         'obs_name': 'CCPA',
+                         'plots_list': 'time_series'},
+        'Week5_Precip_Thresh': {'line_type_stat_list': ['CTC/FBIAS',
+                                                        'CTC/ETS'],
+                                'vx_mask_list': ['CONUS'],
+                                'fcst_var_dict': {'name': 'APCP_WEEKLY',
+                                                  'levels': 'A144',
+                                                  'threshs': ('ge25.4, '
+                                                              +'ge50.8, '
+                                                              +'ge76.2, '
+                                                              +'ge101.6, '
+                                                              +'ge127, '
+                                                              +'ge152.4, '
+                                                              +'ge203.2, '
+                                                              +'ge254')},
+                                'obs_var_dict': {'name': 'APCP_WEEKLY',
+                                                 'levels': 'A144',
+                                                 'threshs': ('ge25.4, '
+                                                             +'ge50.8, '
+                                                             +'ge76.2, '
+                                                             +'ge101.6, '
+                                                             +'ge127, '
+                                                             +'ge152.4, '
+                                                             +'ge203.2, '
+                                                             +'ge254')},
+                                'interp_dict': {'method': 'NEAREST',
+                                                'points': '1'},
+                                'fhr_start': '828',
+                                'fhr_end': '828',
+                                'fhr_inc': '24',
+                                'grid': 'G003',
+                                'obs_name': 'CCPA',
+                                'plots_list': 'time_series'},
+        'Week5_Precip_PerfDia': {'line_type_stat_list': \
+                                     ['CTC/PERF_DIA'],
+                                 'vx_mask_list': ['CONUS'],
+                                 'fcst_var_dict': {'name': 'APCP_WEEKLY',
+                                                   'levels': 'A144',
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge101.6, '
+                                                               +'ge127, '
+                                                               +'ge152.4, '
+                                                               +'ge203.2, '
+                                                               +'ge254')},
+                                 'obs_var_dict': {'name': 'APCP_WEEKLY',
+                                                  'levels': 'A144',
+                                                  'threshs': ('ge25.4, '
+                                                              +'ge50.8, '
+                                                              +'ge76.2, '
+                                                              +'ge101.6, '
+                                                              +'ge127, '
+                                                              +'ge152.4, '
+                                                              +'ge203.2, '
+                                                              +'ge254')},
+                                 'interp_dict': {'method': 'NEAREST',
+                                                 'points': '1'},
+                                 'fhr_start': '828',
+                                 'fhr_end': '828',
+                                 'fhr_inc': '24',
+                                 'grid': 'G003',
+                                 'obs_name': 'CCPA',
+                                 'plots_list': 'performance_diagram'},
+        'Week5_Precip_Nbrhd': {'line_type_stat_list': ['NBRCNT/FSS'],
+                               'vx_mask_list': ['CONUS'],
+                               'fcst_var_dict': {'name': 'APCP_WEEKLY',
+                                                 'levels': 'A144',
+                                                 'threshs': ('ge25.4, '
+                                                             +'ge50.8, '
+                                                             +'ge76.2, '
+                                                             +'ge101.6, '
+                                                             +'ge127, '
+                                                             +'ge152.4, '
+                                                             +'ge203.2, '
+                                                             +'ge254')},
+                               'obs_var_dict': {'name': 'APCP_WEEKLY',
+                                                'levels': 'A144',
+                                                'threshs': ('ge25.4, '
+                                                            +'ge50.8, '
+                                                            +'ge76.2, '
+                                                            +'ge101.6, '
+                                                            +'ge127, '
+                                                            +'ge152.4, '
+                                                            +'ge203.2, '
+                                                            +'ge254')},
+                               'interp_dict': {'method': 'NBRHD_SQUARE',
+                                               'points': ('1, 9, 25, '
+                                                          +'49, 81, 121')},
+                               'fhr_start': '828',
+                               'fhr_end': '828',
+                               'fhr_inc': '24',
+                               'grid': 'G003',
+                               'obs_name': 'CCPA',
+                               'plots_list': 'time_series'},
+        'Days6_10_Precip': {'line_type_stat_list': ['SL1L2/RMSE',
+                                                    'SL1L2/ME'],
+                            'vx_mask_list': ['CONUS'],
+                            'fcst_var_dict': {'name': 'APCP_DAYS6_10',
+                                              'levels': 'A120',
+                                              'threshs': 'NA'},
+                            'obs_var_dict': {'name': 'APCP_DAYS6_10',
+                                             'levels': 'A120',
+                                             'threshs': 'NA'},
+                            'interp_dict': {'method': 'NEAREST',
+                                            'points': '1'},
+                            'fhr_start': '252',
+                            'fhr_end': '252',
+                            'fhr_inc': '24',
+                            'grid': 'G003',
+                            'obs_name': 'CCPA',
+                            'plots_list': 'time_series'},
+        'Days6_10_Precip_Thresh': {'line_type_stat_list': ['CTC/FBIAS',
+                                                           'CTC/ETS'],
+                                   'vx_mask_list': ['CONUS'],
+                                   'fcst_var_dict': {'name': 'APCP_DAYS6_10',
+                                                     'levels': 'A120',
+                                                     'threshs': ('ge25.4, '
+                                                                 +'ge50.8, '
+                                                                 +'ge76.2, '
+                                                                 +'ge101.6, '
+                                                                 +'ge127, '
+                                                                 +'ge152.4, '
+                                                                 +'ge203.2, '
+                                                                 +'ge254')},
+                                   'obs_var_dict': {'name': 'APCP_DAYS6_10',
+                                                    'levels': 'A120',
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge101.6, '
+                                                                +'ge127, '
+                                                                +'ge152.4, '
+                                                                +'ge203.2, '
+                                                                +'ge254')},
+                                   'interp_dict': {'method': 'NEAREST',
+                                                   'points': '1'},
+                                   'fhr_start': '252',
+                                   'fhr_end': '252',
+                                   'fhr_inc': '24',
+                                   'grid': 'G003',
+                                   'obs_name': 'CCPA',
+                                   'plots_list': 'time_series'},
+        'Days6_10_Precip_PerfDia': {'line_type_stat_list': \
+                                        ['CTC/PERF_DIA'],
+                                    'vx_mask_list': ['CONUS'],
+                                    'fcst_var_dict': {'name': 'APCP_DAYS6_10',
+                                                      'levels': 'A120',
+                                                      'threshs': ('ge25.4, '
+                                                                  +'ge50.8, '
+                                                                  +'ge76.2, '
+                                                                  +'ge101.6, '
+                                                                  +'ge127, '
+                                                                  +'ge152.4, '
+                                                                  +'ge203.2, '
+                                                                  +'ge254')},
+                                    'obs_var_dict': {'name': 'APCP_DAYS6_10',
+                                                     'levels': 'A120',
+                                                     'threshs': ('ge25.4, '
+                                                                 +'ge50.8, '
+                                                                 +'ge76.2, '
+                                                                 +'ge101.6, '
+                                                                 +'ge127, '
+                                                                 +'ge152.4, '
+                                                                 +'ge203.2, '
+                                                                 +'ge254')},
+                                    'interp_dict': {'method': 'NEAREST',
+                                                    'points': '1'},
+                                    'fhr_start': '252',
+                                    'fhr_end': '252',
+                                    'fhr_inc': '24',
+                                    'grid': 'G003',
+                                    'obs_name': 'CCPA',
+                                    'plots_list': 'performance_diagram'},
+        'Days6_10_Precip_Nbrhd': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                  'vx_mask_list': ['CONUS'],
+                                  'fcst_var_dict': {'name': 'APCP_DAYS6_10',
+                                                    'levels': 'A120',
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge101.6, '
+                                                                +'ge127, '
+                                                                +'ge152.4, '
+                                                                +'ge203.2, '
+                                                                +'ge254')},
+                                  'obs_var_dict': {'name': 'APCP_DAYS6_10',
+                                                   'levels': 'A120',
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge101.6, '
+                                                               +'ge127, '
+                                                               +'ge152.4, '
+                                                               +'ge203.2, '
+                                                               +'ge254')},
+                                  'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                  'points': ('1, 9, 25, '
+                                                             +'49, 81, 121')},
+                                  'fhr_start': '252',
+                                  'fhr_end': '252',
+                                  'fhr_inc': '24',
+                                  'grid': 'G003',
+                                  'obs_name': 'CCPA',
+                                  'plots_list': 'time_series'},
+        'Weeks3_4_Precip': {'line_type_stat_list': ['SL1L2/RMSE',
+                                                    'SL1L2/ME'],
+                            'vx_mask_list': ['CONUS'],
+                            'fcst_var_dict': {'name': 'APCP_WEEKS3_4',
+                                              'levels': 'A336',
+                                              'threshs': 'NA'},
+                            'obs_var_dict': {'name': 'APCP_WEEKS3_4',
+                                             'levels': 'A336',
+                                             'threshs': 'NA'},
+                            'interp_dict': {'method': 'NEAREST',
+                                            'points': '1'},
+                            'fhr_start': '684',
+                            'fhr_end': '684',
+                            'fhr_inc': '24',
+                            'grid': 'G003',
+                            'obs_name': 'CCPA',
+                            'plots_list': 'time_series'},
+        'Weeks3_4_Precip_Thresh': {'line_type_stat_list': ['CTC/FBIAS',
+                                                           'CTC/ETS'],
+                                   'vx_mask_list': ['CONUS'],
+                                   'fcst_var_dict': {'name': 'APCP_WEEKS3_4',
+                                                     'levels': 'A336',
+                                                     'threshs': ('ge25.4, '
+                                                                 +'ge50.8, '
+                                                                 +'ge76.2, '
+                                                                 +'ge127, '
+                                                                 +'ge254, '
+                                                                 +'ge381, '
+                                                                 +'ge508, '
+                                                                 +'ge635')},
+                                   'obs_var_dict': {'name': 'APCP_WEEKS3_4',
+                                                    'levels': 'A336',
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge127, '
+                                                                +'ge254, '
+                                                                +'ge381, '
+                                                                +'ge508, '
+                                                                +'ge635')},
+                                   'interp_dict': {'method': 'NEAREST',
+                                                   'points': '1'},
+                                   'fhr_start': '684',
+                                   'fhr_end': '684',
+                                   'fhr_inc': '24',
+                                   'grid': 'G003',
+                                   'obs_name': 'CCPA',
+                                   'plots_list': 'time_series'},
+        'Weeks3_4_Precip_PerfDia': {'line_type_stat_list': \
+                                        ['CTC/PERF_DIA'],
+                                    'vx_mask_list': ['CONUS'],
+                                    'fcst_var_dict': {'name': 'APCP_WEEKS3_4',
+                                                      'levels': 'A336',
+                                                      'threshs': ('ge25.4, '
+                                                                  +'ge50.8, '
+                                                                  +'ge76.2, '
+                                                                  +'ge127, '
+                                                                  +'ge254, '
+                                                                  +'ge381, '
+                                                                  +'ge508, '
+                                                                  +'ge635')},
+                                    'obs_var_dict': {'name': 'APCP_WEEKS3_4',
+                                                     'levels': 'A336',
+                                                     'threshs': ('ge25.4, '
+                                                                 +'ge50.8, '
+                                                                 +'ge76.2, '
+                                                                 +'ge127, '
+                                                                 +'ge254, '
+                                                                 +'ge381, '
+                                                                 +'ge508, '
+                                                                 +'ge635')},
+                                    'interp_dict': {'method': 'NEAREST',
+                                                    'points': '1'},
+                                    'fhr_start': '684',
+                                    'fhr_end': '684',
+                                    'fhr_inc': '24',
+                                    'grid': 'G003',
+                                    'obs_name': 'CCPA',
+                                    'plots_list': 'performance_diagram'},
+        'Weeks3_4_Precip_Nbrhd': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                  'vx_mask_list': ['CONUS'],
+                                  'fcst_var_dict': {'name': 'APCP_WEEKS3_4',
+                                                    'levels': 'A336',
+                                                    'threshs': ('ge25.4, '
+                                                                +'ge50.8, '
+                                                                +'ge76.2, '
+                                                                +'ge127, '
+                                                                +'ge254, '
+                                                                +'ge381, '
+                                                                +'ge508, '
+                                                                +'ge635')},
+                                  'obs_var_dict': {'name': 'APCP_WEEKS3_4',
+                                                   'levels': 'A336',
+                                                   'threshs': ('ge25.4, '
+                                                               +'ge50.8, '
+                                                               +'ge76.2, '
+                                                               +'ge127, '
+                                                               +'ge254, '
+                                                               +'ge381, '
+                                                               +'ge508, '
+                                                               +'ge635')},
+                                  'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                  'points': ('1, 9, 25, '
+                                                             +'49, 81, 121')},
+                                  'fhr_start': '684',
+                                  'fhr_end': '684',
+                                  'fhr_inc': '24',
+                                  'grid': 'G003',
+                                  'obs_name': 'CCPA',
+                                  'plots_list': 'time_series'},
+    },
     'sea_ice': {
         'WeeklyAvg_Concentration': {'line_type_stat_list': ['SL1L2/RMSE',
                                                             'SL1L2/ME'],

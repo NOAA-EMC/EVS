@@ -61,7 +61,7 @@ export jobid=$job.$pid
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 $HOMEevs/jobs/JEVS_WAFS_PLOTS
 
