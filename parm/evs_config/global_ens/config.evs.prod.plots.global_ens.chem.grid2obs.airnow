@@ -30,7 +30,9 @@ export RUN_GRID2OBS_PLOTS="YES"
 #model_list:                 model names
 #model_evs_data_dir_list:    base path to "evs_data" directory
 #model_file_format_list:     file format of model files
-export model_list="gefsv12"
+gefs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1$2}' )
+modelid=${MODELNAME}${gefs_ver_id}
+export model_list="${modelid}"
 export model_evs_data_dir_list="${STATDIR}"
 export model_evs_stats_dir_list="${COMIN}/stats/${COMPONENT}"
 export model_file_format_list="${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t{init?fmt=%2H}z.a2d_0p25.f{lead?fmt=%3H}.grib2"
@@ -58,7 +60,7 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #    g2op_*_fhr_min: forecast hour to start verification: HH[H]
     #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
     #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
-    export g2op_model_plot_name_list="v12"
+    export g2op_model_plot_name_list="${gefs_ver_id}"
     export g2op_type_list="airnow"
     export g2op_obsvar_list="pm25"
     export g2op_event_equalization="YES"

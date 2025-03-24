@@ -64,8 +64,6 @@ if STEP == 'plots' :
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         model_evs_data_dir = model_evs_data_dir_list[model_idx]
-        ## note gefs-chem output one file per observation type
-        ## note the soft line below will overwrite different obs_type files
         for obs_idx in range(len(VERIF_CASE_STEP_type_list)):
             obstype = VERIF_CASE_STEP_type_list[obs_idx]
             obsvar  = VERIF_CASE_STEP_obsvar_list[obs_idx]
