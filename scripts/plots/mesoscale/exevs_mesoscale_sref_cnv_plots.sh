@@ -3,6 +3,7 @@
 # Purpose: setup environment, paths, and run the sref cnv (ceiling and visi) 
 #           plotting python script
 # Last updated: 
+#               03/20/2025, Update restart, Binbin Zhou Lynker@EMC/NCEP
 #               04/10/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               10/27/2023, Add comments,           Binbin Zhou Lynker@EMC/NCEP
 #

@@ -2,6 +2,7 @@
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the sref Td 2m plotting python script
 # Last updated: 
+#               03/20/2025, Update restart, Binbin Zhou Lynker@EMC/NCEP
 #               04/20/2024, Add restart, Binbin Zhou Lynker@EMC/NCEP
 #               10/27/2023, Binbin Zhou Lynker@EMC/NCEP
 ## ******************************************************************************

@@ -2,6 +2,7 @@
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the sref precip plotting python script
 # Last updated: 
+#                03/30/2025, Update restart, Binbin Zhou Lynker@EMC/NCEP
 #                04/10/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #                10/27/2023, Binbin Zhou Lynker@EMC/NCEP
 # ******************************************************************************

@@ -2,6 +2,7 @@
 #**********************************************************************************
 # Purpose: setup environment, paths, and run the sref cloud plotting python script
 # Last updated: 
+#               03/20/2025, Update restart, Binbin Zhou Lynker@EMC/NCEP
 #               04/10/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               10/27/2023, Add comments,           Binbin Zhou Lynker@EMC/NCEP
 #**********************************************************************************
@@ -83,7 +84,6 @@ for stat in  ets fbias; do
     valid_times="00 06 12 18"
     thresholds="10 20 30 40 50 60 70 80"
     export fcst_group=one_group
-    #export fcst_lead=" 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81, 84, 87
   elif [ $score_type = threshold_average ] ; then
     valid_times="00 06 12 18"
     thresholds=">=10,>=20,>=30,>=40,>=50,>=60,>=70,>=80,>=90"
@@ -225,8 +225,8 @@ for stat in  ets fbias; do
 	 echo "${DATA}/scripts/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_all_poe.sh
 
        else
-	 if [ ${score_type} = lead_average ] && [ -s $restart/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_${lead}.png ] ; then
-	  cp -v $restart/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_${lead}.png $all_plots
+	 if [ ${score_type} = lead_average ] && [ -s $restart/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_*${thresh}.png ] ; then
+	  cp -v $restart/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_*${thresh}.png $all_plots
 	 elif [ ${score_type} = threshold_average ] && [ -s $restart/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_${lead}.png ] ; then
           cp -v $restart/${score_type}_regional_conus_valid_${valid_time}z_tcdc_${stat}_${lead}.png $all_plots
 	 fi
@@ -249,7 +249,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 112 -ppn 112 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
+   mpiexec -np 40 -ppn 40 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
    export err=$?; err_chk
 else
    ${DATA}/scripts/run_all_poe.sh
