@@ -15,7 +15,7 @@ import global_ens_chem_util as gda_util
 
 class PlotSpecs:
     def __init__(self, logger, plot_type):
-        """! Initalize PlotSpecs class
+        """! Initialize PlotSpecs class
 
              Args:
                  logger    - logger object
@@ -116,35 +116,6 @@ class PlotSpecs:
             if self.plot_type == 'lead_by_date':
                 self.ytick_major_pad = 5
                 self.fig_subplot_left = 0.1575
-        elif self.plot_type == 'stat_by_level':
-            self.fig_size = (16., 16.)
-            self.fig_subplot_top = 0.925
-            self.fig_subplot_bottom = 0.05
-            self.fig_subplot_right = 0.925
-            self.fig_subplot_left = 0.1
-            self.legend_frame_on = False
-            self.legend_bbox = (0.01, 0.995)
-            self.legend_ncol = 1
-            self.legend_font_size = 15
-            self.legend_loc = 'upper left'
-            self.fig_title_size = 18
-        elif self.plot_type == 'lead_by_level':
-            self.fig_size = (16., 16.)
-            self.axis_title_pad = 5
-            self.axis_title_loc = 'left'
-            self.fig_subplot_top = 0.95
-            self.fig_subplot_bottom = 0.025
-            self.fig_subplot_right = 0.95
-            self.fig_subplot_left = 0.1
-            self.fig_title_size = 18
-        elif self.plot_type in ['precip_spatial_map', 'nohrsc_spatial_map']:
-            self.fig_size = (8., 6.)
-            self.fig_title_size = 13
-            self.fig_subplot_right = 0.975
-            self.fig_subplot_left = 0.025
-            self.axis_label_size = 12
-            self.xtick_label_size = 12
-            self.axis_tick_size = 13
         elif self.plot_type == 'performance_diagram':
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
@@ -593,8 +564,7 @@ class PlotSpecs:
             title_other_hr_list.sort()
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
                               +', valid: '+', '.join(title_other_hr_list))
-        if plot_type not in ['lead_average', 'valid_hour_average',
-                             'lead_by_date', 'lead_by_level']:
+        if plot_type not in ['lead_average', 'valid_hour_average']:
             forecast_day_list = []
             for forecast_hour in forecast_hour_list:
                 forecast_day = int(forecast_hour)/24.
@@ -661,7 +631,7 @@ class PlotSpecs:
                                 +int(date_info_dict['valid_hr_inc']),
                                 int(date_info_dict['valid_hr_inc']))
             ]
-        if self.plot_type in ['time_series', 'stat_by_level',
+        if self.plot_type in ['time_series',
                               'performance_diagram', 'threshold_average']:
             fhr_for_title = [date_info_dict['forecast_hour']]
         else:
@@ -671,10 +641,7 @@ class PlotSpecs:
                                   +'_'+plot_info_dict['interp_method'])
         else:
             var_name_for_title = plot_info_dict['fcst_var_name']
-        if self.plot_type in ['stat_by_level', 'lead_by_level']:
-            var_level_for_title = plot_info_dict['vert_profile']
-        else:
-            var_level_for_title = plot_info_dict['fcst_var_level']
+        var_level_for_title = plot_info_dict['fcst_var_level']
         if self.plot_type in ['performance_diagram', 'threshold_average']:
             var_thresh_for_title = 'NA'
         else:
@@ -786,20 +753,17 @@ class PlotSpecs:
         )
         ndays = int((end_date_dt - start_date_dt).total_seconds()/86400) + 1
         ndays_savefig_name = 'last'+str(ndays)+'days'
+
+        savefig_name_label = plot_info_dict['fig_name_label']
+
         if self.plot_type == 'time_series':
             plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'time_series_multifhr':
             plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'lead_average':
             plot_type_savefig_name = 'fhrmean'
-        elif self.plot_type == 'lead_by_date':
-            plot_type_savefig_name = 'leaddate'
-        elif self.plot_type == 'lead_by_level':
-            plot_type_savefig_name = 'vertprof_fhrmean'
         elif self.plot_type == 'performance_diagram':
             plot_type_savefig_name = 'perfdiag'
-        elif self.plot_type == 'stat_by_level':
-            plot_type_savefig_name = 'vertprof'
         elif self.plot_type == 'threshold_average':
             plot_type_savefig_name = 'threshmean'
         elif self.plot_type == 'valid_hour_average':
@@ -807,8 +771,7 @@ class PlotSpecs:
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')
         if self.plot_type in ['time_series', 'time_series_multifhr',
-                              'lead_average', 'stat_by_level', 'lead_by_level',
-                              'lead_by_date', 'performance_diagram',
+                              'lead_average', 'performance_diagram',
                               'threshold_average']:
             plot_type_savefig_name = plot_type_savefig_name+'_valid'
             valid_hr = int(date_info_dict['valid_hr_start'])
@@ -817,8 +780,7 @@ class PlotSpecs:
                                           +str(valid_hr).zfill(2))
                 valid_hr+=int(date_info_dict['valid_hr_inc'])
             plot_type_savefig_name = plot_type_savefig_name+'Z'
-        if self.plot_type in ['time_series',
-                              'stat_by_level', 'performance_diagram',
+        if self.plot_type in ['time_series', 'performance_diagram',
                               'threshold_average']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
@@ -830,8 +792,7 @@ class PlotSpecs:
                  +''.join(['f'+f.zfill(3) for \
                             f in date_info_dict['forecast_hours']])
             )
-        elif self.plot_type in ['lead_average', 'lead_by_level',
-                                'lead_by_date']:
+        elif self.plot_type in ['lead_average']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)
@@ -892,7 +853,7 @@ class PlotSpecs:
             +component_savefig_name+'.'
             +metric_savefig_name+'.'
             +parameter_savefig_name+'_'+level_savefig_name+'.'
-            +ndays_savefig_name+'.'
+            +savefig_name_label+'.'
             +plot_type_savefig_name+'.'
             +grid_savefig_name+'_'+region_savefig_name
             +'.png'

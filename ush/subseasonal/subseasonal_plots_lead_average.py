@@ -186,7 +186,8 @@ class LeadAverage:
                     self.logger, avg_method, self.plot_info_dict['line_type'],
                     self.plot_info_dict['stat'], calc_avg_df
                 )
-                if not np.isnan(model_idx_forecast_hour_avg):
+                if not np.isnan(model_idx_forecast_hour_avg) \
+                        and not np.ma.is_masked(model_idx_forecast_hour_avg):
                     forecast_hours_avg_df.loc[model_idx, forecast_hour] = (
                         model_idx_forecast_hour_avg
                     )
@@ -206,7 +207,7 @@ class LeadAverage:
                     ##F*SD/sqrt(N-1),
                     ##F=1.96 for infinite samples, F=2.0 for nsz=60,
                     ##F=2.042 for nsz=30, F=2.228 for nsz=10
-                    if nsamples > 0:
+                    if nsamples > 1:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
                         )
@@ -218,7 +219,7 @@ class LeadAverage:
                             ci = 2.042 * model_idx_model1_diff_mean_std_err
                         elif nsamples > 0 and nsamples < 20:
                             ci = 2.228 * model_idx_model1_diff_mean_std_err
-                    elif nsamples == 0:
+                    else:
                         ci = np.nan
                     forecast_hours_ci_df.loc[model_idx, forecast_hour] = ci
         # Set up plot
@@ -396,6 +397,9 @@ class LeadAverage:
                     stat_min_max_dict['ax1_stat_max'] = (
                         masked_model_num_data.max()
                     )
+            else:
+                self.logger.debug(f"{model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}] has no points")
             masked_model_num_model1_diff_data = np.ma.masked_invalid(
                 model_num_data - model1_masked_model_num_data
             )
@@ -434,6 +438,10 @@ class LeadAverage:
                     stat_min_max_dict['ax2_stat_max'] = (
                         masked_model_num_model1_diff_data.max()
                     )
+            else:
+                self.logger.debug(f"No points in {model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}] difference from "
+                                  +self.model_info_dict['model1']['plot_name'])
             if model_num == 'model1':
                 ax2.plot(
                     forecast_hours_avg_df.columns.values.tolist(),
