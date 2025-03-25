@@ -32,7 +32,7 @@ class ThresholdAverage:
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
-        """! Initalize ThresholdAverage class
+        """! Initialize ThresholdAverage class
 
              Args:
                  logger          - logger object
@@ -206,12 +206,6 @@ class ThresholdAverage:
                                 -np.ma.count_masked(model_idx_model1_diff))
                     model_idx_model1_diff_mean = np.mean(model_idx_model1_diff)
                     model_idx_model1_diff_std = np.std(model_idx_model1_diff)
-                    ##Null Hypothesis: mean(M1-M2)=0,
-                    ##M1-M2 follows normal distribution.
-                    ##plot the 5% conf interval of difference of means
-                    ##F*SD/sqrt(N-1),
-                    ##F=1.96 for infinite samples, F=2.0 for nsz=60,
-                    ##F=2.042 for nsz=30, F=2.228 for nsz=10
                     if nsamples > 1:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
@@ -227,23 +221,11 @@ class ThresholdAverage:
                     else:
                         ci = np.nan
                     threshs_ci_df.loc[model_idx, fcst_var_thresh] = ci
-                    #from scipy import stats
-                    #scipy_ci = stats.t.interval(
-                    #    alpha=0.95,
-                    #    df=len(np.ma.compressed(model_idx_model1_diff))-1,
-                    #    loc=0,
-                    #    scale=stats.sem(np.ma.compressed(model_idx_model1_diff))
-                    #)
         # Set up plot
         self.logger.info(f"Setting up plot")
         plot_specs_ta = PlotSpecs(self.logger, 'threshold_average')
         plot_specs_ta.set_up_plot()
         n_xticks = 7
-        #xticks = np.asarray(
-        #    [re.sub("[^0-9]", "", x) \
-        #    for x in self.plot_info_dict['fcst_var_threshs']],
-        #    dtype=float
-        #)
         xticks = np.arange(0, len(self.plot_info_dict['fcst_var_threshs']),
                            1)
         if len(xticks) < n_xticks:
@@ -414,11 +396,6 @@ class ThresholdAverage:
                          range(0,len(threshs_avg_df.columns.values.tolist()))],
                 dtype=float
             )
-            #thresh_values = np.asarray(
-            #    [re.sub("[^0-9]", "", x) \
-            #    for x in threshs_avg_df.columns.values.tolist()],
-            #    dtype=float
-            #)
             masked_thresh_values = np.ma.masked_where(
                 np.ma.getmask(masked_model_num_data),
                 thresh_values
@@ -589,14 +566,14 @@ class ThresholdAverage:
             preset_y_axis_tick_min = ax.get_yticks()[0]
             preset_y_axis_tick_max = ax.get_yticks()[-1]
             preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]
-            if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+            if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
                 y_axis_tick_inc = 0.1
             else:
                 y_axis_tick_inc = preset_y_axis_tick_inc
             if np.ma.is_masked(stat_min):
                 y_axis_min = preset_y_axis_tick_min
             else:
-                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
                     y_axis_min = round(stat_min,1) - y_axis_tick_inc
                 else:
                     y_axis_min = preset_y_axis_tick_min
@@ -605,7 +582,7 @@ class ThresholdAverage:
             if np.ma.is_masked(stat_max):
                 y_axis_max = preset_y_axis_tick_max
             else:
-                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
                     y_axis_max = 1
                 else:
                     y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
@@ -716,6 +693,7 @@ def main():
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
         'obs_var_threshs': ['OBS_VAR_THRESHS'],
+        'fig_name_label': 'FIG_NAME_LABEL',
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
