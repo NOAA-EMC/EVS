@@ -14,7 +14,6 @@ import datetime
 import glob
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
-#pd.plotting.register_matplotlib_converters()
 import numpy as np
 import matplotlib
 matplotlib.use('agg')
@@ -123,11 +122,6 @@ class LeadAverageVhrMean:
                                   +', '.join(format_valid_dates))
                 plot_dates = init_dates
             # Read in data
-            ## how to include all valid hours ??
-            ## from valid_dates, init_dates generated from gda_util.get_plot_dates  above??
-            ## then from  plot_dates = valid_dates ??  if one change the setting of 
-            ## valid_hr_start, valid_hr_end, valid_hr_inc to include all valid hours in
-            ## aqm_plots.py or aqm_plots_production_tof72.py
             all_model_df = gda_util.build_df(
                 'make_plots', self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
@@ -211,12 +205,6 @@ class LeadAverageVhrMean:
                                 -np.ma.count_masked(model_idx_model1_diff))
                     model_idx_model1_diff_mean = np.mean(model_idx_model1_diff)
                     model_idx_model1_diff_std = np.std(model_idx_model1_diff)
-                    ##Null Hypothesis: mean(M1-M2)=0,
-                    ##M1-M2 follows normal distribution.
-                    ##plot the 5% conf interval of difference of means
-                    ##F*SD/sqrt(N-1),
-                    ##F=1.96 for infinite samples, F=2.0 for nsz=60,
-                    ##F=2.042 for nsz=30, F=2.228 for nsz=10
                     if nsamples > 1:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
@@ -232,19 +220,11 @@ class LeadAverageVhrMean:
                     else:
                         ci = np.nan
                     forecast_hours_ci_df.loc[model_idx, forecast_hour] = ci
-                    #from scipy import stats
-                    #scipy_ci = stats.t.interval(
-                    #    alpha=0.95,
-                    #    df=len(np.ma.compressed(model_idx_model1_diff))-1,
-                    #    loc=0,
-                    #    scale=stats.sem(np.ma.compressed(model_idx_model1_diff))
-                    #)
         # Set up plot
         self.logger.info(f"Setting up plot")
         plot_specs_la = PlotSpecs(self.logger, 'lead_average_vhr_mean')
         plot_specs_la.set_up_plot()
         n_xticks = 17
-        ## original fcst_hr_interval=24
         fcst_hr_interval=6
         if len(self.date_info_dict['forecast_hours']) <= n_xticks:
             xticks = self.date_info_dict['forecast_hours']

@@ -14,7 +14,6 @@ import datetime
 import glob
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
-#pd.plotting.register_matplotlib_converters()
 import numpy as np
 import matplotlib
 matplotlib.use('agg')

@@ -15,7 +15,6 @@ import datetime
 import glob
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
-#pd.plotting.register_matplotlib_converters()
 import numpy as np
 import matplotlib
 matplotlib.use('agg')
@@ -206,12 +205,6 @@ class ThresholdAverage:
                                 -np.ma.count_masked(model_idx_model1_diff))
                     model_idx_model1_diff_mean = np.mean(model_idx_model1_diff)
                     model_idx_model1_diff_std = np.std(model_idx_model1_diff)
-                    ##Null Hypothesis: mean(M1-M2)=0,
-                    ##M1-M2 follows normal distribution.
-                    ##plot the 5% conf interval of difference of means
-                    ##F*SD/sqrt(N-1),
-                    ##F=1.96 for infinite samples, F=2.0 for nsz=60,
-                    ##F=2.042 for nsz=30, F=2.228 for nsz=10
                     if nsamples > 1:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
@@ -227,23 +220,11 @@ class ThresholdAverage:
                     else:
                         ci = np.nan
                     threshs_ci_df.loc[model_idx, fcst_var_thresh] = ci
-                    #from scipy import stats
-                    #scipy_ci = stats.t.interval(
-                    #    alpha=0.95,
-                    #    df=len(np.ma.compressed(model_idx_model1_diff))-1,
-                    #    loc=0,
-                    #    scale=stats.sem(np.ma.compressed(model_idx_model1_diff))
-                    #)
         # Set up plot
         self.logger.info(f"Setting up plot")
         plot_specs_ta = PlotSpecs(self.logger, 'threshold_average')
         plot_specs_ta.set_up_plot()
         n_xticks = 7
-        #xticks = np.asarray(
-        #    [re.sub("[^0-9]", "", x) \
-        #    for x in self.plot_info_dict['fcst_var_threshs']],
-        #    dtype=float
-        #)
         xticks = np.arange(0, len(self.plot_info_dict['fcst_var_threshs']),
                            1)
         if len(xticks) < n_xticks:
@@ -408,11 +389,6 @@ class ThresholdAverage:
                          range(0,len(threshs_avg_df.columns.values.tolist()))],
                 dtype=float
             )
-            #thresh_values = np.asarray(
-            #    [re.sub("[^0-9]", "", x) \
-            #    for x in threshs_avg_df.columns.values.tolist()],
-            #    dtype=float
-            #)
             masked_thresh_values = np.ma.masked_where(
                 np.ma.getmask(masked_model_num_data),
                 thresh_values

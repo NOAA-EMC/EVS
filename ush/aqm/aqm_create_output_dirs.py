@@ -24,7 +24,6 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
-# g2op_type_list= pm25, ozone, ....
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 model_list = os.environ['model_list'].split(' ')

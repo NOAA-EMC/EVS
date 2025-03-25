@@ -19,11 +19,6 @@ set -x
 export VERIF_CASE_STEP_abbrev="g2op"
 echo "RUN MODE:${evs_run_mode}"
 
-## export PLOTDIR=${DATA}/plots
-## export OUTDIR=${DATA}/out
-## export PRUNEDIR=${DATA}/prune    ## for headline
-## mkdir -p ${PRUNEDIR}
-
 ## Need temporary staging area for renaming and/or updating model
 ## name id in the stats files
 ## STATDIR is used in the environemnt setting in ${config} 
@@ -157,7 +152,7 @@ for group in "${proc_list[@]}"; do
             nc=$((nc+1))
         done
     fi
-    python ${USHevs}/aqm/aqm_copy_job_dir_output.py
+    python ${USHevs}/${COMPONENT}/${MODELNAME}_copy_job_dir_output.py
     export err=$?; err_chk
     # Cat the plotting log files
     if [ "${JOB_GROUP}" = "make_plots" ] || [ "${JOB_GROUP}" = "tar_images" ]; then

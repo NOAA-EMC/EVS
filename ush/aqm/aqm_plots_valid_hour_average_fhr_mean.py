@@ -15,7 +15,6 @@ import datetime
 import glob
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
-#pd.plotting.register_matplotlib_converters()
 import numpy as np
 import matplotlib
 matplotlib.use('agg')
@@ -102,11 +101,9 @@ class ValidHourAverageFhrMean:
         flag_init_df=True
         for valid_hour in valid_hours:
             self.logger.debug(f"Building data for valid hour {valid_hour}")
-            ## for forecast_hour in self.date_info_dict['forecast_hours']:
             for forecast_hour in plot_fcst_hours:
                 check_init_date=gda_util.get_init_hour(valid_hour,forecast_hour)
                 if check_init_date != int(selected_filter_init_hour):
-                    ## self.logger.debug(f"Skip building data for forecast hour {forecast_hour} for init_hour = {check_init_date} not equal to {selected_filter_init_hour}")
                     continue
                 self.logger.debug(f"Building data for forecast hour {forecast_hour}")
                 # Get dates to plot
@@ -242,12 +239,6 @@ class ValidHourAverageFhrMean:
                                 -np.ma.count_masked(model_idx_model1_diff))
                     model_idx_model1_diff_mean = np.mean(model_idx_model1_diff)
                     model_idx_model1_diff_std = np.std(model_idx_model1_diff)
-                    ##Null Hypothesis: mean(M1-M2)=0,
-                    ##M1-M2 follows normal distribution.
-                    ##plot the 5% conf interval of difference of means
-                    ##F*SD/sqrt(N-1),
-                    ##F=1.96 for infinite samples, F=2.0 for nsz=60,
-                    ##F=2.042 for nsz=30, F=2.228 for nsz=10
                     if nsamples > 1:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
@@ -263,13 +254,6 @@ class ValidHourAverageFhrMean:
                     else:
                         ci = np.nan
                     valid_hours_ci_df.loc[model_idx, valid_hour] = ci
-                    #from scipy import stats
-                    #scipy_ci = stats.t.interval(
-                    #    alpha=0.95,
-                    #    df=len(np.ma.compressed(model_idx_model1_diff))-1,
-                    #    loc=0,
-                    #    scale=stats.sem(np.ma.compressed(model_idx_model1_diff))
-                    #)
         # Set up plot
         self.logger.info(f"Setting up plot")
         plot_specs_vhafm = PlotSpecs(self.logger, 'valid_hour_average_fhr_mean')

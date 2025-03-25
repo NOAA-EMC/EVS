@@ -961,16 +961,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         )
                         run_aqm_plots = ['plots']
                         ##
-                        ##  AQM do not need separate plot to cover portion of the fhr list
-                        ##
-                        ## if evs_run_mode == 'production' and \
-                        ##         verif_type in ['ozone', 'pm25', 'ozmax', 'pmave'] and \
-                        ##         job_env_dict['plot'] in \
-                        ##         ['lead_average_vhr_mean', 'lead_by_level',
-                        ##          'lead_by_date']:
-                        ##     run_aqm_plots.append(
-                        ##         'plots_tof72'
-                        ##     )
                         for run_aqm_plot in run_aqm_plots:
                             # Set up output directories
                             njobs+=1
@@ -1198,16 +1188,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         )
                         run_aqm_plots = ['plots']
                         ##
-                        ##  AQM do not need separate plot to cover portion of the fhr list
-                        ##
-                        ## if evs_run_mode == 'production' and \
-                        ##         verif_type in ['ozone', 'pm25', 'ozmax', 'pmave'] and \
-                        ##         job_env_dict['plot'] in \
-                        ##         ['lead_average', 'lead_by_level',
-                        ##          'lead_by_date']:
-                        ##     run_aqm_plots.append(
-                        ##         'plots_tof72'
-                        ##     )
                         for run_aqm_plot in run_aqm_plots:
                             # Set up output directories
                             njobs+=1
