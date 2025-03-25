@@ -64,13 +64,13 @@ if STEP == 'plots' :
         ## the time stamp of aqm daily variable is valided at 11Z (ozmax8)
         ## and 04z (pamve) of next days.  To get the valid-time at 04Z
         ## and 11Z of date=VDATE_START for day1, day2, and day3 forecast,
-        ## the stat of three previous days from VDATE_START also need to
+        ## the stat of previous days from VDATE_START also need to
         ## be linked
         #
         for obs_idx in range(len(VERIF_CASE_STEP_type_list)):
             obstype = VERIF_CASE_STEP_type_list[obs_idx]
             if obstype == 'ozmax8' or obstype == 'pmave':
-                date_dt = start_date_dt - 3 * datetime.timedelta(days=1)
+                date_dt = start_date_dt - datetime.timedelta(days=1)
             else:
                 date_dt = start_date_dt
             print(f"CHECK CHECK :: {obstype} var = {obstype} start={date_dt}")
