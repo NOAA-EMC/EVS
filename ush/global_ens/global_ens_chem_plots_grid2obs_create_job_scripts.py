@@ -38,6 +38,9 @@ nproc = os.environ['nproc']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 NDAYS = str(os.environ['NDAYS'])
+fig_name_label = os.environ['fig_name_label']
+dir_name_label = fig_name_label
+restart_mode = os.environ['restart_mode']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
@@ -277,11 +280,11 @@ if JOB_GROUP == 'make_plots':
 ################################################
 if SENDCOM == 'YES':
     search_dir = os.path.join(COMOUT, f"{VERIF_CASE}_VERIF_TYPE",
-                              f"last{NDAYS}days")
+                              f"{dir_name_label}")
 else:
     search_dir = os.path.join(DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
                               f"{RUN}.{end_date}", f"{VERIF_CASE}_VERIF_TYPE",
-                              f"last{NDAYS}days")
+                              f"{dir_name_label}")
 tar_images_jobs_dict = {
     'aeronet': {'search_base_dir': search_dir},
     'airnow': {'search_base_dir': search_dir}
@@ -301,13 +304,15 @@ for verif_type in VERIF_CASE_STEP_type_list:
     verif_type_plot_jobs_dict = JOB_GROUP_dict[verif_type]
     for verif_type_job in list(verif_type_plot_jobs_dict.keys()):
         # Initialize job environment dictionary
-        job_env_dict = gda_util.initalize_job_env_dict(
+        job_env_dict = gda_util.initialize_job_env_dict(
             verif_type, JOB_GROUP,
             VERIF_CASE_STEP_abbrev_type, verif_type_job
         )
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['NDAYS'] = NDAYS
+        job_env_dict['fig_name_label'] = fig_name_label
+        job_env_dict['restart_mode'] = restart_mode
         job_env_dict['date_type'] = 'VALID'
         if JOB_GROUP in ['filter_stats', 'make_plots']:
             valid_hr_start = int(job_env_dict['valid_hr_start'])
@@ -427,12 +432,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                 else:
                     gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                # Check plot files
-                plot_files_exist = gda_util.check_plot_files(job_env_dict)
-                if plot_files_exist:
-                    write_job_cmds = False
-                else:
-                    write_job_cmds = True
+                write_job_cmds = True
+                if restart_mode == 'YES':    # Check plot files
+                    plot_files_exist = gda_util.check_plot_files(
+                        job_env_dict
+                    )
+                    if plot_files_exist:
+                        write_job_cmds = False
                 # Create job file
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
                                         'job'+str(njobs))
@@ -486,14 +492,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         verif_type_plot_jobs_dict[verif_type_job]\
                         ['fcst_var_dict']['threshs']
                     )
-                if job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
-                    plot_fcst_levels_loop = ['all', 'trop', 'strat',
-                                             'ltrop', 'utrop']
-                else:
-                    plot_fcst_levels_loop = (
-                        verif_type_plot_jobs_dict[verif_type_job]\
-                        ['fcst_var_dict']['levels']
-                    )
+                plot_fcst_levels_loop = (
+                    verif_type_plot_jobs_dict[verif_type_job]\
+                    ['fcst_var_dict']['levels']
+                )
                 for plot_loop_info in list(
                     itertools.product(plot_valid_hrs_loop,
                                       plot_fcst_threshs_loop,
@@ -535,32 +537,19 @@ for verif_type in VERIF_CASE_STEP_type_list:
                              ['fcst_var_dict']['threshs']\
                              .index(plot_loop_info[1])]
                         )
-                    if job_env_dict['plot'] in ['stat_by_level',
-                                                'lead_by_level']:
-                        job_env_dict['vert_profile'] = plot_loop_info[2]
-                        job_env_dict['fcst_var_level_list'] = ', '.join(
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['fcst_var_dict']['levels']
-                        )
-                        job_env_dict['obs_var_level_list'] = ', '.join(
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['obs_var_dict']['levels']
-                        )
-                    else:
-                        job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
-                        job_env_dict['obs_var_level_list'] = (
-                            verif_type_plot_jobs_dict[verif_type_job]\
-                            ['obs_var_dict']['levels']\
-                            [verif_type_plot_jobs_dict[verif_type_job]\
-                             ['fcst_var_dict']['levels']\
-                             .index(plot_loop_info[2])]
-                        )
+                    job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
+                    job_env_dict['obs_var_level_list'] = (
+                        verif_type_plot_jobs_dict[verif_type_job]\
+                        ['obs_var_dict']['levels']\
+                        [verif_type_plot_jobs_dict[verif_type_job]\
+                        ['fcst_var_dict']['levels']\
+                        .index(plot_loop_info[2])]
+                    )
                     run_global_ens_chem_plots = ['plots']
                     if evs_run_mode == 'production' and \
                             verif_type in ['aeronet', 'airnow'] and \
                             job_env_dict['plot'] in \
-                            ['lead_average', 'lead_by_level',
-                             'lead_by_date']:
+                            ['lead_average']:
                         run_global_ens_chem_plots.append('plots_tof120')
                     for run_global_ens_chem_plot in run_global_ens_chem_plots:
                         # Set up output directories
@@ -577,14 +566,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                         else:
                             gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                        # Check plot files
-                        plot_files_exist = gda_util.check_plot_files(
-                            job_env_dict
-                        )
-                        if plot_files_exist:
-                             write_job_cmds = False
-                        else:
-                             write_job_cmds = True
+                        write_job_cmds = True
+                        if restart_mode == 'YES':    # Check plot files
+                            plot_files_exist = gda_util.check_plot_files(
+                                job_env_dict
+                            )
+                            if plot_files_exist:
+                                write_job_cmds = False
                         # Create job file
                         job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                 'job'+str(njobs))
@@ -645,12 +633,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
                 else:
                     gda_util.make_dir(job_env_dict['job_DATA_dir'])
-                # Check plot files
-                plot_files_exist = gda_util.check_plot_files(job_env_dict)
-                if plot_files_exist:
-                    write_job_cmds = False
-                else:
-                    write_job_cmds = True
+                write_job_cmds = True
+                if restart_mode == 'YES':    # Check plot files
+                    plot_files_exist = gda_util.check_plot_files(
+                        job_env_dict
+                    )
+                    if plot_files_exist:
+                        write_job_cmds = False
                 # Create job files
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)

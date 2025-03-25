@@ -440,7 +440,7 @@ class TimeSeries:
                             stat_max = obar_masked_model_num_data.max()
                         obs_plotted = True
             else:
-                self.logger.warning(f"{model_num} - {model_num_name} "
+                self.logger.debug(f"{model_num} - {model_num_name} "
                                     +f"- {model_num_plot_name} has no points")
         preset_y_axis_tick_min = ax.get_yticks()[0]
         preset_y_axis_tick_max = ax.get_yticks()[-1]

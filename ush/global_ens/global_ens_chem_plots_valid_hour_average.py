@@ -31,7 +31,7 @@ class ValidHourAverage:
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
-        """! Initalize ValidHourAverage class
+        """! Initialize ValidHourAverage class
 
              Args:
                  logger          - logger object
@@ -685,6 +685,7 @@ def main():
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
         'obs_var_thresh': 'OBS_VAR_THRESH',
+        'fig_name_label': 'FIG_NAME_LABEL',
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',

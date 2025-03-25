@@ -24,7 +24,7 @@ mkdir -p ${finalstat}
 
 export CMODEL=`echo ${MODELNAME} | tr a-z A-Z`  # define config variable
 vmodel=`echo ${gefs_ver} | awk -F"." '{print $1}'`
-export VMODEL=${MODELNAME}${vmodel}
+export VMODEL=${CMODEL}
 
 export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}}
 export config_common=${PARMevs}/metplus_config/machine.conf
@@ -70,9 +70,9 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "WARNING: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
+          echo "DEBUG: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
           if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "WARNING: No pre-processed ${OBSTYPE} Level 1.5 was available for ${VDATE} " >> mailmsg
+            echo "DEBUG: No pre-processed ${OBSTYPE} Level 1.5 was available for ${VDATE} " >> mailmsg
             echo "Missing file is ${check_file}" >> mailmsg
             echo "==============" >> mailmsg
             flag_send_message=YES
@@ -91,9 +91,9 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "WARNING: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
+          echo "DEBUG: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
           if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "WARNING: No ${OBSTYPE} ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" >> mailmsg
+            echo "DEBUG: No ${OBSTYPE} ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" >> mailmsg
             echo "Missing file is ${check_file}" >> mailmsg
             echo "==============" >> mailmsg
             flag_send_message=YES
@@ -125,14 +125,14 @@ for ObsType in ${grid2obs_list}; do
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
             if [ "${SENDMAIL}" == "YES" ]; then
-              echo "WARNING: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z" > mailmsg
+              echo "DEBUG: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z" >> mailmsg
               echo "Missing file is ${fcst_file}" >> mailmsg
               echo "==============" >> mailmsg
               flag_send_message=YES
             fi
 
-            echo "WARNING: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z"
-            echo "WARNING: Missing file is ${fcst_file}"
+            echo "DEBUG: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z"
+            echo "DEBUG: Missing file is ${fcst_file}"
           fi 
         fi 
         ## ((ihr++))
@@ -153,8 +153,8 @@ for ObsType in ${grid2obs_list}; do
         run_metplus.py ${point_stat_conf_file} ${config_common}
         export err=$?; err_chk
       else
-        echo "WARNING: NO ${model1} ${obs_var} FORECAST OR OBS TO VERIFY"
-        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${num_obs_found}"
+        echo "DEBUG: NO ${model1} ${obs_var} FORECAST OR OBS TO VERIFY"
+        echo "DEBUG: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${num_obs_found}"
       fi
     done   ## hour loop
     if [ "${SENDCOM}" == "YES" ]; then
