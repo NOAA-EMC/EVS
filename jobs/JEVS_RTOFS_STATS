@@ -34,7 +34,7 @@ cd $DATA
 # Define NET/RUN variables
 ####################################
 export NET=${NET:-evs}
-export STEP=${STEP:-prep}
+export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-rtofs}
 export RUN=${RUN:-ocean}
 export OBTYPE=${OBTYPE:-argo}

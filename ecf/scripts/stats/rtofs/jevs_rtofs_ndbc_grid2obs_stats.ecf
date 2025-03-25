@@ -1,9 +1,9 @@
-#PBS -N evs_rtofs_aviso_stats
+#PBS -N evs_rtofs_ndbc_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:10:00
+#PBS -l walltime=05:20:00
 #PBS -l place=exclhost,select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
@@ -37,10 +37,11 @@ else
 fi
 export NET=evs
 export RUN=ocean
-export OBTYPE=aviso
-export OBTYPEupper=AVISO
-export VERIF_CASE=grid2grid
-export VAR=ssh
+export OBTYPE=ndbc
+export OBTYPEupper=NDBC_STANDARD
+export VERIF_CASE=grid2obs
+export VAR=sst
+export VDATE=$($NDATE -48 ${PDY}00| cut -c 1-8)
 
 ############################################################
 # Execute j-job
@@ -49,7 +50,7 @@ $HOMEevs/jobs/JEVS_RTOFS_STATS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
-   exit 
+   exit
 fi
 
 %include <tail.h>

@@ -14,7 +14,7 @@ export machine=WCOSS2
 # ECF Settings
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDDBN=NO
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_snowfall_plots}

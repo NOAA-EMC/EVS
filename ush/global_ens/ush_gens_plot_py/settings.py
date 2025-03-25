@@ -3655,7 +3655,7 @@ class Reference():
                 },
                 #added for ensemble Binbin Zhou
                 'PSTD': {
-                    'plot_stats_list': ('bs'),
+                    'plot_stats_list': ('bs, bss'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [ 
                         'CONUS', 'CONUS_East', 'CONUS_West',

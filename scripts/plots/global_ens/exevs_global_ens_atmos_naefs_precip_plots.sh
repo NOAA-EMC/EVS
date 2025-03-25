@@ -1,9 +1,10 @@
 #!/bin/ksh
-#*******************************************************************************
-# Purpose: setup environment, paths, and run the NAEFS precip verification 
+#******************************************************************************
+# Purpose: set up environment, paths, and run the NAEFS precip verification 
 #          score plotting python script
 #
-# Last updated: 11/17/2023, Binbin Zhou Lynker@EMC/NCEP 
+# Last updated: 03/18/2025 L. Gwen Chen (lichuan.chen@noaa.gov)
+#               11/17/2023, Binbin Zhou Lynker@EMC/NCEP 
 #******************************************************************************
 set -x 
 
@@ -18,7 +19,6 @@ mkdir -p $save_dir
 mkdir -p $output_base_dir
 mkdir -p $DATA/logs
 
-
 export eval_period='TEST'
 export init_end=$VDATE
 export valid_end=$VDATE
@@ -28,9 +28,9 @@ models='NAEFS, CMCE, GEFS'
 
 n=0
 while [ $n -le $past_days ] ; do
-    hrs=$((n*24))
-    first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
-    n=$((n+1))
+  hrs=$((n*24))
+  first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
+  n=$((n+1))
 done
 
 export init_beg=$first_day
@@ -41,7 +41,6 @@ export valid_beg=$first_day
 #*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
-  #hrs=`expr $n \* 24`
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
@@ -50,10 +49,8 @@ while [ $n -le $past_days ] ; do
   n=$((n+1))
 done 
 
-
-#VX_MASK_LIST="CONUS"
 VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central"
-																  
+
 export fcst_init_hour="0,12"
 export fcst_valid_hour="12"
 
@@ -65,32 +62,47 @@ verif_type=ccpa
 
 #*****************************************
 # Build a POE script to collect sub-tasks
-# ****************************************
+#*****************************************
 > run_all_poe.sh
 
-for stats in crps ets fbias fss bs ; do 
+for stats in crps me rmse ets fbias fss bs bss ; do 
   if [ $stats = ets ] ; then
     stat_list='ets'
     line_tp='ctc'
-    VARs='APCP24_gt1 APCP24_gt5  APCP24_gt10 APCP24_gt25 APCP24_gt50' 
+    VARs='APCP24_gt1 APCP24_gt5 APCP24_gt10 APCP24_gt25 APCP24_gt50' 
     threshes=''
   elif [ $stats = fbias ] ; then
     stat_list='fbias'
     line_tp='ctc'
-    VARs='APCP24_gt1 APCP24_gt5  APCP24_gt10 APCP24_gt25 APCP24_gt50'
+    VARs='APCP24_gt1 APCP24_gt5 APCP24_gt10 APCP24_gt25 APCP24_gt50'
     threshes=''
   elif [ $stats = fss ] ; then
     stat_list='fss'
     line_tp='nbrcnt'
-    VARs='APCP24_gt1 APCP24_gt5  APCP24_gt10 APCP24_gt25 APCP24_gt50'
+    VARs='APCP24_gt1 APCP24_gt5 APCP24_gt10 APCP24_gt25 APCP24_gt50'
     threshes=''
   elif [ $stats = bs ] ; then
     stat_list='bs'
     line_tp='pstd'
-    VARs='APCP24_gt1 APCP24_gt5  APCP24_gt10 APCP24_gt25 APCP24_gt50'
+    VARs='APCP24_gt1 APCP24_gt5 APCP24_gt10 APCP24_gt25 APCP24_gt50'
     threshes=''
-  elif [ $stats = crps  ] ; then
+  elif [ $stats = bss ] ; then
+    stat_list='bss'
+    line_tp='pstd'
+    VARs='APCP24_gt1 APCP24_gt5 APCP24_gt10 APCP24_gt25 APCP24_gt50'
+    threshes=''
+  elif [ $stats = crps ] ; then
     stat_list='crps'
+    line_tp='ecnt'
+    VARs='APCP_24'
+    threshes=''
+  elif [ $stats = me ] ; then
+    stat_list='me'
+    line_tp='ecnt'
+    VARs='APCP_24'
+    threshes=''
+  elif [ $stats = rmse ] ; then
+    stat_list='rmse'
     line_tp='ecnt'
     VARs='APCP_24'
     threshes=''
@@ -104,7 +116,7 @@ for stats in crps ets fbias fss bs ; do
    interp_pnts='1'
   fi 
 
- for score_type in lead_average ; do
+  for score_type in lead_average ; do
 
     export fcst_init_hour="0,12"
     export fcst_valid_hour="12"
@@ -112,113 +124,96 @@ for stats in crps ets fbias fss bs ; do
     init_time='init00z_12z'
     export fcst_leads="vs_lead" 
  
-  for lead in $fcst_leads ; do 
+    for lead in $fcst_leads ; do 
 
-    export fcst_lead="12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
+      export fcst_lead="12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180, 192, 204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
 
-    for VAR in  $VARs; do 
+      for VAR in $VARs; do 
+        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
+        FCST_LEVEL_values="A24"
 
-       var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
-	    
-       FCST_LEVEL_values="A24"
-
-       if [ $VAR = APCP24_gt1 ] ; then
+        if [ $VAR = APCP24_gt1 ] ; then
 	   threshes='>1'
-       elif [ $VAR = APCP24_gt5 ] ; then
+        elif [ $VAR = APCP24_gt5 ] ; then
            threshes='>5'	       
-       elif [ $VAR = APCP24_gt10 ] ; then
+        elif [ $VAR = APCP24_gt10 ] ; then
            threshes='>10'
-       elif [ $VAR = APCP24_gt25 ] ; then
+        elif [ $VAR = APCP24_gt25 ] ; then
            threshes='>25'
-       elif [ $VAR = APCP24_gt50 ] ; then
+        elif [ $VAR = APCP24_gt50 ] ; then
            threshes='>50'
-       fi
-
-
-     for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
-
-	OBS_LEVEL_value=$FCST_LEVEL_value
-
-        level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
-
-      for interp_pnt in $interp_pnts ; do
-
-         #***************************
-         # Build sub-task scripts
-         #***************************
-         > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh  
-
-        echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-
-        echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-
-        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-        echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-        echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-
-        echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-
-        echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-
-
-        if [ $score_type = valid_hour_average ] ; then
-          echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-        else
-          echo "export date_type=VALID" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
         fi
 
+        for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
+	  OBS_LEVEL_value=$FCST_LEVEL_value
+          level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
 
-         echo "export var_name=$VAR" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-         echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-         echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          for interp_pnt in $interp_pnts ; do
 
-         echo "export line_type=$line_tp" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
-         if [ $stats = fss ] ; then
+          #***************************
+          # Build sub-task scripts
+          #***************************
+          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh  
+
+          echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+
+          if [ $score_type = valid_hour_average ] ; then
+            echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          else
+            echo "export date_type=VALID" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          fi
+
+          echo "export var_name=$VAR" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "export line_type=$line_tp" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+
+          if [ $stats = fss ] ; then
             echo "export interp=NBRHD_SQUARE" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
             interp_pnt_config=$interp_pnt
-         else	   
+          else	   
 	    echo "export interp=NEAREST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
             interp_pnt_config=''
-	 fi
-         echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+	  fi
+
+          echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
      
-        if [ $line_tp = pstd ] ; then
+          if [ $line_tp = pstd ] ; then
             thresh_fcst='==0.10000'
             thresh_obs=$threshes
-        else
+          else
             thresh_fcst=$threshes
             thresh_obs=$threshes
-        fi
+          fi
 
-         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g" -e "s!thresh_obs!$thresh_obs!g"  -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$fcst_lead!g" -e "s!interp_pnts!$interp_pnt_config!g"  $USHevs/global_ens/evs_gens_atmos_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g" -e "s!thresh_fcst!$thresh_fcst!g" -e "s!thresh_obs!$thresh_obs!g" -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$fcst_lead!g" -e "s!interp_pnts!$interp_pnt_config!g"  $USHevs/global_ens/evs_gens_atmos_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
-         chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          chmod +x run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
-         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+          chmod +x run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh 
+          echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh" >> run_all_poe.sh
 
-
-         chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh 
-         echo " ${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh" >> run_all_poe.sh
-
-      done #end of interp_pnts
-
-     done #end of FCST_LEVEL_value
-
-    done #end of VAR
-
-  done #end of fcst_lead
-
- done #end of score_type
-
+          done #end of interp_pnts
+        done #end of FCST_LEVEL_value
+      done #end of VAR
+    done #end of fcst_lead
+  done #end of score_type
 done #end of stats 
 
 chmod +x run_all_poe.sh
 
-#***************************************************************************
+#**************************************************************************
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+  mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
   export err=$?; err_chk
@@ -227,9 +222,9 @@ fi
 # Cat the plotting log file
 log_file=$DATA/logs/GENS_verif_plotting_job.out
 if [ -s $log_file ]; then
-    echo "Start: $log_file"
-    cat $log_file
-    echo "End: $log_file"
+  echo "Start: $log_file"
+  cat $log_file
+  echo "End: $log_file"
 fi
 
 #**************************************************
@@ -249,32 +244,45 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
     elif [ $domain = conus_central ]; then
         evs_graphic_domain="buk_conus_c"
     fi
-    for stat in bs crps ets fbias fss ; do
+
+    for stat in bs bss crps me rmse ets fbias fss ; do
         if [ $stat = crps ]; then
             threshs="NA"
+	elif [ $stat = me ]; then
+	    threshs="NA"
+	elif [ $stat = rmse ]; then
+	    threshs="NA"
         else
             threshs="gt1 gt5 gt10 gt25 gt50"
         fi
+
         if [ $stat = fss ]; then
             nbrhds="1 3 5 7 9 11"
         else
             nbrhds="NA"
         fi
-        for thresh in $threshs; do
+
+	for thresh in $threshs; do
             if [ $thresh = NA ]; then
                 thresh_graphic=""
             else
                 thresh_graphic=$(echo "_${thresh}")
             fi
-            for nbrhd in $nbrhds; do
+
+	    for nbrhd in $nbrhds; do
                 if [ $nbrhd = NA ]; then
                     nbhrd_graphic=""
                 else
                     nbhrd_graphic=$(echo "_width${nbrhd}")
                 fi
-                if [ $stat = bs ]; then
+
+		if [ $stat = bs ]; then
                     if [ -f "lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs.png" ]; then
                         mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs.png evs.naefs.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
+                    fi
+		elif [ $stat = bss ]; then                    
+                    if [ -f "lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bss.png" ]; then
+                        mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bss.png evs.naefs.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
                     fi
                 else
                     if [ -f "lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png" ]; then

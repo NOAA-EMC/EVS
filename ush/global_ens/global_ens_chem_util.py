@@ -138,7 +138,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
 
          Returns:
              time_info - list of dictionaries with the valid,
-                         initalization, and forecast hour
+                         initialization, and forecast hour
                          pairings
     """
     valid_hr_zfill2_list = [hr.zfill(2) for hr in valid_hr_list]
@@ -521,21 +521,13 @@ def check_plot_files(job_dict):
         plot_files_exist = True
         if job_dict['plot'] == 'time_series':
             plot_info_list = list(itertools.product(valid_hrs, fhrs, var_info))
-        elif job_dict['plot'] in ['lead_average', 'lead_by_date']:
+        elif job_dict['plot'] in ['lead_average']:
             plot_info_list = list(itertools.product(valid_hrs, var_info))
         elif job_dict['plot'] == 'valid_hour_average':
             plot_info_list = list(itertools.product(var_info))
-        elif job_dict['plot'] in ['precip_spatial_map', 'performance_diagram',
-                                  'threshold_average', 'nohrsc_spatial_map']:
+        elif job_dict['plot'] in ['performance_diagram','threshold_average']:
             plot_info_list = list(itertools.product(valid_hrs, fhrs))
-        elif job_dict['plot'] == 'stat_by_level':
-            plot_info_list = list(itertools.product(valid_hrs, fhrs,
-                                                    [job_dict['vert_profile']]))
-        elif job_dict['plot'] == 'lead_by_level':
-            plot_info_list = list(itertools.product(valid_hrs,
-                                                    [job_dict['vert_profile']]))
-        if job_dict['plot'] in ['performance_diagram', 'stat_by_level',
-                                'lead_by_level', 'threshold_average']:
+        if job_dict['plot'] in ['performance_diagram', 'threshold_average']:
             fcst_var_thresh_list = (job_dict['fcst_var_thresh_list']\
                                     .split(', '))
             obs_var_thresh_list = (job_dict['obs_var_thresh_list']\
@@ -553,8 +545,7 @@ def check_plot_files(job_dict):
                 plot_dict['valid_hr_start'] = str(plot_info[0])
                 plot_dict['valid_hr_end'] = str(plot_info[0])
                 plot_dict['valid_hr_inc'] = '24'
-            if plot_dict['plot'] in ['time_series', 'precip_spatial_map',
-                                     'performance_diagram', 'stat_by_level',
+            if plot_dict['plot'] in ['time_series', 'performance_diagram',
                                      'threshold_average']:
                 plot_dict['forecast_hour'] = str(plot_info[1])
             else:
@@ -566,7 +557,7 @@ def check_plot_files(job_dict):
                 plot_dict['obs_var_name'] = plot_info[2][1][0]
                 plot_dict['obs_var_level'] = plot_info[2][1][1]
                 plot_dict['obs_var_thresh'] = plot_info[2][1][2]
-            elif plot_dict['plot'] in ['lead_average', 'lead_by_date']:
+            elif plot_dict['plot'] in ['lead_average']:
                 plot_dict['fcst_var_name'] = plot_info[1][0][0]
                 plot_dict['fcst_var_level'] = plot_info[1][0][1]
                 plot_dict['fcst_var_thresh'] = plot_info[1][0][2]
@@ -580,14 +571,8 @@ def check_plot_files(job_dict):
                 plot_dict['obs_var_name'] = plot_info[0][1][0]
                 plot_dict['obs_var_level'] = plot_info[0][1][1]
                 plot_dict['obs_var_thresh'] = plot_info[0][1][2]
-            elif plot_dict['plot'] == 'stat_by_level':
-                plot_dict['fcst_var_level'] = plot_info[2]
-                plot_dict['obs_var_level'] = plot_info[2]
-            elif plot_dict['plot'] == 'lead_by_level':
-                plot_dict['fcst_var_level'] = plot_info[1]
-                plot_dict['obs_var_level'] = plot_info[1]
             if plot_dict['plot'] in ['time_series', 'performance_diagram',
-                                     'stat_by_level', 'threshold_average']:
+                                     'threshold_average']:
                 init_hr = get_init_hour(
                     int(plot_dict['valid_hr_start']),
                     int(plot_dict['forecast_hour'])
@@ -606,7 +591,7 @@ def check_plot_files(job_dict):
                 plots_files_exist_check_list.append(
                     os.path.exists(plot_check)
                 )
-            elif plot_dict['plot'] in ['lead_average', 'lead_by_date']:
+            elif plot_dict['plot'] in ['lead_average']:
                 if plot_dict['stat'] != 'FBAR_OBAR' \
                         and len(fhrs) > 1:
                     plot_check = plot_specs.get_savefig_name(
@@ -642,63 +627,6 @@ def check_plot_files(job_dict):
                     plots_files_exist_check_list.append(
                         os.path.exists(plot_check)
                     )
-            elif plot_dict['plot'] == 'stat_by_level':
-                if init_hr not in init_hrs:
-                    continue
-                for t in range(len(fcst_var_thresh_list)):
-                    plot_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
-                    plot_dict['obs_var_thresh'] = obs_var_thresh_list[t]
-                    if plot_dict['stat'] != 'FBAR_OBAR':
-                        plot_check = plot_specs.get_savefig_name(
-                            plot_dict['job_COMOUT_dir'], plot_dict, plot_dict
-                        )
-                        plots_files_exist_check_list.append(
-                            os.path.exists(plot_check)
-                        )
-            elif plot_dict['plot'] == 'lead_by_level':
-                for t in range(len(fcst_var_thresh_list)):
-                    plot_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
-                    plot_dict['obs_var_thresh'] = obs_var_thresh_list[t]
-                    if plot_dict['stat'] != 'FBAR_OBAR' \
-                            and len(fhrs) > 1:
-                        plot_check = plot_specs.get_savefig_name(
-                            plot_dict['job_COMOUT_dir'], plot_dict, plot_dict
-                        )
-                        plots_files_exist_check_list.append(
-                            os.path.exists(plot_check)
-                        )
-            elif plot_dict['plot'] == 'nohrsc_spatial_map':
-                for img_type in ['png', 'gif']:
-                    plots_files_exist_check_list.append(os.path.join(
-                        plot_dict['job_COMOUT_dir'],
-                        f"nohrsc.v{plot_dict['end_date']}12.024h."
-                        +f"{plot_dict['vx_mask']}.{img_type}"
-                    ))
-            elif plot_dict['plot'] == 'precip_spatial_map':
-                psm_model_list = model_list
-                if int(plot_dict['forecast_hour']) > 72 \
-                        or plot_dict['vx_mask'] != 'conus':
-                    psm_model_list = ['gfs']
-                elif int(plot_dict['forecast_hour']) > 48 \
-                        and plot_dict['vx_mask'] == 'conus':
-                    psm_model_list.remove('cmc_regional')
-                if plot_dict['vx_mask'] == 'conus' \
-                        and int(plot_dict['forecast_hour']) == 24:
-                    for img_type in ['png', 'gif']:
-                        plots_files_exist_check_list.append(os.path.join(
-                            plot_dict['job_COMOUT_dir'],
-                            f"qpe.v{plot_dict['end_date']}12."
-                            +f"{str(plot_dict['forecast_hour']).zfill(3)}h."
-                            +f"{plot_dict['vx_mask']}.{img_type}"
-                        ))
-                for psm_model in psm_model_list:
-                    for img_type in ['png', 'gif']:
-                        plots_files_exist_check_list.append(os.path.join(
-                            plot_dict['job_COMOUT_dir'],
-                            f"{psm_model}.v{plot_dict['end_date']}12."
-                            +f"{str(plot_dict['forecast_hour']).zfill(3)}h."
-                            +f"{plot_dict['vx_mask']}.{img_type}"
-                        ))
             elif plot_dict['plot'] == 'performance_diagram':
                 if init_hr not in init_hrs \
                         or plot_dict['stat'] != 'PERFDIAG':
@@ -751,7 +679,7 @@ def check_plot_files(job_dict):
     return plot_files_exist
 
 
-def initalize_job_env_dict(verif_type, group,
+def initialize_job_env_dict(verif_type, group,
                            verif_case_step_abbrev_type, job):
     """! This initializes a dictionary of environment variables and their
          values to be set for the job pulling from environment variables
@@ -796,6 +724,7 @@ def initalize_job_env_dict(verif_type, group,
     job_env_dict['VERIF_TYPE'] = verif_type
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
+    job_env_dict['fig_name_label'] = os.environ['fig_name_label']
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'filter_stats', 'make_plots']:
         if verif_case_step_abbrev_type+'_fhr_list' in list(os.environ.keys()):
@@ -923,7 +852,7 @@ def get_plot_dates(logger, date_type, start_date, end_date,
              forecast_hour  - forecast hour (string)
          Returns:
              valid_dates - array of valid dates (datetime)
-             init_dates  - array of initalization dates (datetime)
+             init_dates  - array of initialization dates (datetime)
     """
     # Build date_type date array
     if date_type == 'VALID':
@@ -1110,7 +1039,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     dir_step = plot_job_env_dict['STEP'].lower()
     dir_verif_case = plot_job_env_dict['VERIF_CASE'].lower()
     dir_verif_type = plot_job_env_dict['VERIF_TYPE'].lower()
-    dir_ndays = ('last'+plot_job_env_dict['NDAYS']+'days').lower()
+    dir_name_label = plot_job_env_dict['fig_name_label'].lower()
     dir_line_type = plot_job_env_dict['line_type'].lower()
     dir_parameter = plot_job_env_dict['fcst_var_name'].lower()
     if job_group == 'make_plots':
@@ -1131,7 +1060,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
             'job_work_dir', job_group, f"{plot_job_env_dict['job_id']}",
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
-            dir_ndays, dir_line_type,
+            dir_name_label, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region
         )
@@ -1142,7 +1071,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
             'job_work_dir', job_group, f"{plot_job_env_dict['job_id']}",
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
             f"{dir_verif_case}_{dir_verif_type}",
-            dir_ndays, dir_line_type,
+            dir_name_label, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region, dir_stat
         )

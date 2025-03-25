@@ -18,7 +18,7 @@ source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDDBN=NO
 
 # specify environment variables
