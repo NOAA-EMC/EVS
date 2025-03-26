@@ -15,7 +15,6 @@ import datetime
 import glob
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
-#pd.plotting.register_matplotlib_converters()
 import numpy as np
 import matplotlib
 matplotlib.use('agg')
@@ -31,7 +30,7 @@ class PerformanceDiagram:
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
-        """! Initalize TimeSeries class
+        """! Initialize TimeSeries class
 
              Args:
                  logger          - logger object
@@ -495,6 +494,7 @@ def main():
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
         'obs_var_threshs': ['OBS_VAR_THRESHS'],
+        'fig_name_label': 'FIG_NAME_LABEL',
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
