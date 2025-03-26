@@ -321,7 +321,8 @@ class TimeSeriesFhrMean:
                     np.ma.getmask(obar_masked_model_num_data), plot_dates
                 )
             if model_num_npts != 0:
-                model_num_npts_label = model_num_npts / 24
+                model_num_npts_days = model_num_npts / 24
+                model_num_npts_label = format(round(model_num_npts_days,2),'.2f')
                 if self.plot_info_dict['line_type'] in ['CNT', 'GRAD',
                                                         'CTS', 'NBRCTS',
                                                         'NBRCNT', 'VCNT']:
@@ -375,7 +376,7 @@ class TimeSeriesFhrMean:
                     linewidth = model_num_plot_settings_dict['linewidth'],
                     markersize = model_num_plot_settings_dict['markersize'],
                     label = (model_num_plot_name+' '+model_num_avg_label+' '
-                             +str(model_num_npts_label)+' days'),
+                             +model_num_npts_label+' days'),
                     zorder = (len(list(self.model_info_dict.keys()))
                               - model_idx_list.index(model_idx) + 4)
                 )
@@ -387,7 +388,8 @@ class TimeSeriesFhrMean:
                     stat_max = masked_model_num_data.max()
                 if self.plot_info_dict['stat'] == 'FBAR_OBAR':
                     if not obs_plotted and obar_model_num_npts != 0:
-                        obar_model_num_npts_label = obar_model_num_npts / 24
+                        obar_model_num_npts_days  = obar_model_num_npts / 24
+                        obar_model_num_npts_label = format(round(obar_model_num_npts_days,2),'.2f')
                         self.logger.debug("Plotting observation mean from "
                                           +f"{model_num} [{model_num_name},"
                                           +f"{model_num_plot_name}]")
@@ -403,7 +405,7 @@ class TimeSeriesFhrMean:
                             linewidth = obs_plot_settings_dict['linewidth'],
                             markersize = obs_plot_settings_dict['markersize'],
                             label = ('obs '+obar_model_num_avg_label+' '
-                                     +str(obar_model_num_npts_label)+' days'),
+                                     +obar_model_num_npts_label+' days'),
                             zorder = 4
                         )
                         if obar_masked_model_num_data.min() < stat_min \
