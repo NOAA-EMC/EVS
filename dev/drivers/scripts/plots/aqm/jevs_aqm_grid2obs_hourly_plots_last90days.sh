@@ -1,4 +1,4 @@
-#PBS -N evs_aqm_grid2obs_plots_daily_last90day
+#PBS -N jevs_aqm_grid2obs_hourly_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -58,7 +58,7 @@ export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/$
 export USE_CFP=YES
 export nproc=128    ## nproc must match with the ncpus allocation above
 
-export DATA_TYPE=daily
+export DATA_TYPE=hourly
 export NDAYS=90
 
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
