@@ -144,7 +144,7 @@ fi
 #########################
 # copy all the jobs files
 #########################
-${USHevs}/${COMPONENT}/glwu_wave_plots_copy_plots.sh
+${USHevs}/${COMPONENT}/nfcens_wave_plots_copy_plots.sh
 export err=$?; err_chk
 
 #######################
@@ -211,20 +211,9 @@ fi
 #########################################
 
 cd ${DATA}
-mkdir -p ${DATA}/logs
 log_dir=$DATA/job_work_dir/*/logs
 
-extns='out log'
-for extn in ${extns} ; do
-	count=$(find ${DATA} -type f -name "*.${extn}"|wc -l)
-	if [ $count != 0 ] ; then
-		cp ${DATA}/*.${extn} ${log_dir}
-
-	fi
-done	
-
-
-log_file_count=$(find ${DATA} -type f -name "*.out" -o -name ".log" |wc -l)
+log_file_count=$(find $log_dir -type f -name "*.out" -o -name ".log" |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
 	for log_file in $log_dir/*; do
 		echo "Start: $log_file"

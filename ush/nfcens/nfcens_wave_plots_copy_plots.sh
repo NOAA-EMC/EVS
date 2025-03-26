@@ -15,7 +15,7 @@ set -x
 
 small_periods='last31days last90days'
 
-inithours='01 07 13 19'
+inithours='00 12'
 wave_vars='HTSGW'
 fhrs='000 024 048 072 096 120 144'
 stats_list='stats1 stats2 stats3 stats4 stats5'
@@ -59,7 +59,7 @@ for small_period in ${small_periods} ; do
 				esac
 
 				# Lead average plots
-				imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f144.${region}.png
+				imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f144.latlon_0p25_${region}.png
             			tmp_image=$DATA/images/$imagename
 				job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${stats}_lead_average_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
 				job_image=$job_work_dir/images/$imagename
@@ -72,7 +72,7 @@ for small_period in ${small_periods} ; do
 				fi
 				# Time series plots
 				for fhr in ${fhrs} ; do
-					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.timeseries_valid${vhr}z_f${fhr}.${region}.png
+					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.timeseries_valid${vhr}z_f${fhr}.latlon_0p25_${region}.png
             				tmp_image=$DATA/images/$imagename
 					job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${fhr}_${stats}_time_series_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
 					job_image=$job_work_dir/images/$imagename
