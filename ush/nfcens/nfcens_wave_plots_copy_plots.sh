@@ -17,7 +17,7 @@ small_periods='last31days last90days'
 
 inithours='00 12'
 wave_vars='HTSGW'
-fhrs='000 024 048 072 096 120 144'
+fhrs='000 024 048 072 096 120 144 168 192 216 240'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 region='glb'
 export region=${region}
@@ -59,7 +59,7 @@ for small_period in ${small_periods} ; do
 				esac
 
 				# Lead average plots
-				imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f144.latlon_0p25_${region}.png
+				imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f240.latlon_0p25_${region}.png
             			tmp_image=$DATA/images/$imagename
 				job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${stats}_lead_average_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
 				job_image=$job_work_dir/images/$imagename
