@@ -63,10 +63,12 @@ export COMOUTrestart=$COMOUTsmall/restart
 # Prepare CCPA data for validation
 #**********************************
 if [ $prepare = yes ] ; then
- for precip in ccpa01h03h mrms ccpa24h apcp24h_conus apcp24h_alaska ; do
-  $USHevs/cam/evs_href_prepare.sh  $precip
-  export err=$?; err_chk
- done
+ if [ $verif_precip = yes ] ; then
+   for precip in ccpa01h03h mrms ccpa24h apcp24h_conus apcp24h_alaska ; do
+    $USHevs/cam/evs_href_prepare.sh  $precip
+    export err=$?; err_chk
+   done
+ fi
 fi
 
 
@@ -89,6 +91,7 @@ if [ $verif_snowfall = yes ] ; then
  cat ${DATA}/scripts/run_all_href_snowfall_poe.sh >> $DATA/scripts/run_all_precip_poe.sh
 fi
 
+
 #*************************************************
 # Run the POE script to generate small stat files
 #*************************************************
@@ -96,7 +99,11 @@ if [ -s ${DATA}/scripts/run_all_precip_poe.sh ]  ; then
   chmod 775 ${DATA}/scripts/run_all_precip_poe.sh
 
   if [ $run_mpi = yes ] ; then
+   if [ $verif_precip = yes ] ; then
     mpiexec  -n 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_precip_poe.sh
+   elif [ $verif_snowfall = yes ] && [ $verif_precip = no ] ; then 
+    mpiexec  -n 21 -ppn 21 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_precip_poe.sh
+   fi
     export err=$?; err_chk
   else
    ${DATA}/scripts/run_all_precip_poe.sh

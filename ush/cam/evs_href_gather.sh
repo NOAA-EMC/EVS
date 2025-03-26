@@ -12,9 +12,9 @@ modnam=href
 verify=$1
 
 if [ $verify = precip ] ; then
- if [ "$verif_precip" = "no" ] ; then
+ if [ $verif_snowfall = yes ] && [ $verif_precip = no ] ; then
   MODELS='HREF_SNOW'
- elif [ "$verif_snowfall" = "no" ] ; then
+ elif [ $verif_precip = yes ] && [ $verif_snowfall = no ] ; then
   MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB HREF_EAS'
  else
   MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB HREF_EAS HREF_SNOW'
@@ -75,7 +75,13 @@ chmod 775 run_gather_all_poe.sh
 #  Run the POE script
 #*****************************
 if [ $run_mpi = yes ] ; then
-  mpiexec -np 3 -ppn 3 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_gather_all_poe.sh
+  if  [ $verif_snowfall = yes ] && [ $verif_precip = no ] ; then 
+    ${DATA}/scripts/run_gather_all_poe.sh
+  elif [ $verif_snowfall = no ] && [ $verif_precip = yes ] ; then 
+    mpiexec -np 7 -ppn 7 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_gather_all_poe.sh
+  else
+    mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_gather_all_poe.sh
+  fi  
   export err=$?; err_chk
 else
   ${DATA}/scripts/run_gather_all_poe.sh

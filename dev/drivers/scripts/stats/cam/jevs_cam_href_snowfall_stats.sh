@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_href_precip_stats
+#PBS -N jevs_cam_href_snowfall_stats
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=72:mem=100GB
+#PBS -l walltime=00:15:00
+#PBS -l place=vscatter,select=1:ncpus=21:mem=100GB
 #PBS -l debug=true
 
 set -x 
@@ -40,10 +40,10 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 
-export prepare=yes
+export prepare=no
 export run_mpi=yes
-export verif_precip=yes
-export verif_snowfall=no
+export verif_precip=no
+export verif_snowfall=yes
 
 export gather=yes
 

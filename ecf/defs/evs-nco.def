@@ -887,6 +887,8 @@ suite evs_nco
               time 07:30
             task jevs_cam_href_precip_stats
               time 08:30
+            task jevs_cam_href_snowfall_stats
+              time 09:00
             task jevs_cam_href_spcoutlook_stats
               trigger :TIME >= 0830 and ../../prep/cam/jevs_cam_severe_prep == complete
           endfamily
@@ -1625,9 +1627,9 @@ suite evs_nco
             task jevs_cam_href_grid2obs_ctc_last31days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
             task jevs_cam_href_snowfall_last90days_plots
-              trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_precip_stats == complete
+              trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_snowfall_stats == complete
             task jevs_cam_href_snowfall_last31days_plots
-              trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_precip_stats == complete
+              trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_snowfall_stats == complete
             task jevs_cam_href_profile_last90days_plots
               trigger :TIME >= 1230 and ../../../../06/evs/stats/cam/jevs_cam_href_grid2obs_stats == complete
             task jevs_cam_href_profile_last31days_plots
