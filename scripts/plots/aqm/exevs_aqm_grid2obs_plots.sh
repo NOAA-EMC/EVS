@@ -24,8 +24,6 @@ echo "RUN MODE:${evs_run_mode}"
 ## STATDIR is used in the environemnt setting in ${config} 
 export STATDIR=${DATA}/stats_staging
 mkdir -p ${STATDIR}
-## export PLOTDIR_headline=${DATA}/plots_headline
-## mkdir -p ${STATDIR} ${PLOTDIR_headline}
 
 # Source config
 source ${config}
