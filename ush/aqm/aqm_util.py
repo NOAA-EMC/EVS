@@ -2814,8 +2814,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
             else:
                 filtered_model_stat_file = output_filtered_model_stat_file
             if not os.path.exists(filtered_model_stat_file):
-                logger.info(f"Can not find Filtered {model_dict['name']} file = {filtered_model_stat_file}")
-                logger.info(f"Perform filtering procedures from condense file = {condensed_model_file}")
+                logger.info(f"Perform filtering procedures from condense file for selected fhr = {condensed_model_file}")
                 write_filtered_stat_file = True
                 read_filtered_stat_file = True
             else:
