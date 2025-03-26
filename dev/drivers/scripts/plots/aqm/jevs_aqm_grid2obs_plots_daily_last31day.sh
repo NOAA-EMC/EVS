@@ -53,7 +53,7 @@ export SENDDBN=NO
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 today=$(cut -c7-14 ${COMROOT}/date/t${vhr}z)
 export VDATE_END=$(finddate.sh ${today} d-4)
-export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END})
+export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END}
 
 export USE_CFP=YES
 export nproc=128    ## nproc must match with the ncpus allocation above
