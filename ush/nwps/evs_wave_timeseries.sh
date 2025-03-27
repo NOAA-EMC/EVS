@@ -36,6 +36,7 @@ for period in ${periods} ; do
 		for wvar in ${wave_vars} ; do
 			for stats in ${stats_list}; do
 				for fhr in ${fhrs} ; do
+					job_work_dir=${DATA}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}
 					echo "export VX_MASK_LIST=${MASK} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh	
 					echo "export VERIF_CASE=${VERIF_CASE} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 					echo "export RUN=${RUN} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
@@ -49,6 +50,8 @@ for period in ${periods} ; do
 					echo "export plot_end_date=${VDATE} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 					echo "export VHR=${vhr} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 					echo "export WFO=${wfo} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
+					echo "export job_work_dir=${job_work_dir}" >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
+
 					case ${stats} in
 					'stats1')
 					echo "export METRIC='me, rmse' " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
