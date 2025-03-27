@@ -25,7 +25,6 @@ ptype='lead_average'
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
-mkdir -p ${DATA}/sfcshp
 touch plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 # write the commands
@@ -38,6 +37,7 @@ for period in ${periods} ; do
   for vhr in ${inithours} ; do
     for wvar in ${wave_vars} ; do
       for stats in ${stats_list}; do
+	job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${stats}_${ptype}_${period}      
         echo "export VERIF_CASE=${VERIF_CASE} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export RUN=${RUN} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export USHevs=${USHevs}/${COMPONENT} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
@@ -49,6 +49,8 @@ for period in ${periods} ; do
         echo "export plot_start_date=${plot_start_date} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export plot_end_date=${VDATE} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export VHR=${vhr} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
+	echo "export job_work_dir=${job_work_dir}" >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
+
         case ${stats} in
           'stats1')
             echo "export METRIC='me, rmse' " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
