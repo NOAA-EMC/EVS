@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_grid2grid_temp_plots_90days
+#PBS -N jevs_subseasonal_grid2obs_prepbufr_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export job=${PBS_JOBNAME:-jevs_subseasonal_grid2grid_temp_plots_90days}
+export job=${PBS_JOBNAME:-jevs_subseasonal_grid2obs_prepbufr_plots_last90days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 source $HOMEevs/versions/run.ver
@@ -46,8 +46,8 @@ export STEP=plots
 export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME="gefs cfs"
-export VERIF_CASE=grid2grid
-export VERIF_TYPE=temp
+export VERIF_CASE=grid2obs
+export VERIF_TYPE=prepbufr
 export NDAYS=90
 export DAYS=91
 
@@ -62,6 +62,6 @@ $HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
 
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
-#          subseasonal grid-to-grid 2m temp statistical plots
+#          subseasonal grid-to-obs 2-m temperature statistical plots
 #          for the GEFS and CFS models for past 90 days.
 ######################################################################

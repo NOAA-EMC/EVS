@@ -1,10 +1,10 @@
-#PBS -N evs_subseasonal_grid2grid_sst_plots_31days
+#PBS -N evs_subseasonal_grid2grid_pres_lvls_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:10:00
-#PBS -l place=vscatter,select=1:ncpus=30:ompthreads=1:mem=35GB
+#PBS -l place=vscatter,select=1:ncpus=120:ompthreads=1:mem=35GB
 #PBS -l debug=true
 
 export model=evs
@@ -46,15 +46,15 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=30
+export nproc=120
 export USE_CFP=YES
 export NET=evs
 export RUN=atmos
 export MODELNAME="gefs cfs"
 export VERIF_CASE=grid2grid
-export VERIF_TYPE=sst
-export NDAYS=31
-export DAYS=32
+export VERIF_TYPE=pres_lvls
+export NDAYS=90
+export DAYS=91
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.${model}.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
 ############################################################
