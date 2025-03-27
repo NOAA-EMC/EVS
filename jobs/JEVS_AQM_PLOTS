@@ -23,8 +23,6 @@ export SENDMAIL=${SENDMAIL:-NO}
 date
 export PS4='$SECONDS + '
 
-export vhr=${vhr:-00}
-export cycle=${cycle:-t${vhr}z}
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
@@ -45,6 +43,8 @@ export MODELNAME=${MODELNAME:-aqm}
 export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY 
 
