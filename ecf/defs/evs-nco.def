@@ -495,8 +495,14 @@ suite evs_nco
               time 04:10
           endfamily
           family aqm
-            task jevs_aqm_plots
+            task jevs_aqm_grid2obs_daily_plots_last90days
+              time 00:15
+            task jevs_aqm_grid2obs_hourly_plots_last90days
+              time 00:25
+            task jevs_aqm_grid2obs_daily_plots_last31days
               time 00:30
+            task jevs_aqm_grid2obs_hourly_plots_last31days
+              time 00:35
           endfamily
           family analyses
             task jevs_analyses_grid2obs_plots

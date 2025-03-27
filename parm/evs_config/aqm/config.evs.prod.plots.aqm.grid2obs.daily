@@ -1,0 +1,75 @@
+#!/bin/bash
+##---------------------------------------------------------------------------
+##---------------------------------------------------------------------------
+## NCEP EMC Verification System (EVS) - GEFS Chemistry
+##
+## ORIGINAL AUTHOR: Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## CONTRIBUTORS: Ho-Chun Huang, ho-chun.huang@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## PURPOSE: Set up configurations to run EVS GEFS Chemistry standalone
+##---------------------------------------------------------------------------
+##--------------------------------------------------------------------------
+
+set -x
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+####################################################
+# WHAT METPLUS USE CASES TO RUN FOR GEFS CHEM
+####################################################
+## SET TO "YES" or "NO"
+## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
+export RUN_GRID2GRID_STATS="NO"
+export RUN_GRID2GRID_PLOTS="NO"
+export RUN_GRID2OBS_STATS="NO"
+export RUN_GRID2OBS_PLOTS="YES"
+
+####################################################
+# GENERAL SETTINGS APPLIED TO ALL USE CASES
+####################################################
+## INPUT DATA SETTINGS
+#model_list:                 model names
+#model_evs_data_dir_list:    base path to "evs_data" directory
+#model_file_format_list:     file format of model files
+aqm_ver_id=$( echo ${aqm_ver} | awk -F"." '{print $1$2}' )
+modelid=${MODELNAME}${aqm_ver_id}
+export model_list="${modelid}_raw ${modelid}_bc"
+export model_evs_data_dir_list="${STATDIR} ${STATDIR}"
+export model_evs_stats_dir_list="${COMIN}/stats/${COMPONENT} ${COMIN}/stats/${COMPONENT}"
+export model_file_format_list="${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.awpozcon.f{lead?fmt=%3H}.793.grib2 ${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.awpozcon_bc.f{lead?fmt=%3H}.793.grib2"
+## OUTPUT DATA SETTINGS
+#OUTPUTROOT: base output directory
+export OUTPUTROOT="${DATAROOT}"
+## DATE SETTINGS
+#start_date:       verification start date, format YYYYMMDD
+#end_date:         verification end date, format YYYYMMDD
+export start_date=${VDATE_START}
+export end_date=${VDATE_END}
+####################################################
+# SETTINGS FOR SPECIFIC USE CASES
+####################################################
+
+if [ $RUN_GRID2OBS_PLOTS = YES ]; then
+    #g2op_model_plot_name_list: list of models reference name on plots
+    #g2op_type_list: list type of verifications to run for grid-to-grid: pres_levs, ptype, sfc
+    #g2op_event_equalization: do event equalization (YES) or not (NO)
+    #g2op_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2op_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2op*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2op_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
+    export g2op_model_plot_name_list="raw bc"
+    export g2op_type_list="ozmax8 pmave"
+    export g2op_event_equalization="YES"
+    export g2op_ozmax8_init_hr_list="06 12"
+    export g2op_ozmax8_valid_hr_list="11"
+    export g2op_ozmax8_fhr_list="23 29 47 53 71 77"
+    export g2op_ozmax8_fday_list="1 2 3"
+    export g2op_pmave_init_hr_list="06 12"
+    export g2op_pmave_valid_hr_list="04"
+    export g2op_pmave_fhr_list="16 22 40 46 64 70"
+    export g2op_pmave_fday_list="1 2 3"
+fi
+echo "END: $(basename ${BASH_SOURCE[0]})"
