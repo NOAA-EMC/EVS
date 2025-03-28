@@ -19,6 +19,7 @@
 ##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
 ##   02/21/2024   Ho-Chun Huang  modify for AQMv7 verification
 ##   06/25/2024   Ho-Chun Huang  Remove concatenating log file sections
+##   03/28/2025   Ho-Chun Huang  delete config.evs.aqm.prod that is no longer needed
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
@@ -27,9 +28,6 @@
 #######################################################################
 #
 set -x
-
-export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
-source $config
 
 mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/stat

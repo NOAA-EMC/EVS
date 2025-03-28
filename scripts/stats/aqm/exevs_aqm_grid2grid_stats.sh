@@ -8,6 +8,7 @@
 ##   Change Logs:
 ##
 ##   04/30/2024   Ho-Chun Huang  modification for using GOES-16 AOD
+##   03/28/2025   Ho-Chun Huang  delete config.evs.aqm.prod that is no longer needed
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
@@ -16,9 +17,6 @@
 #######################################################################
 #
 set -x
-
-export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
-source $config
 
 mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/stat

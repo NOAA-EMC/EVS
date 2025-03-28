@@ -15,6 +15,7 @@
 ##   10/20/2024   Ho-Chun Huang  modify for combined GOES-EAST/WEST L3 AOD
 ##   10/31/2024   Ho-Chun Huang  Add RESTART ability
 ##   10/31/2024   Ho-Chun Huang  Add backward search for closest time of the hour
+##   03/28/2025   Ho-Chun Huang  delete config.evs.aqm.prod that is no longer needed
 ##
 ##
 #######################################################################
@@ -22,9 +23,6 @@
 set -x
 
 cd ${DATA}
-
-export config=${PARMevs}/evs_config/${COMPONENT}/config.evs.aqm.prod
-source ${config}
 
 flag_send_message=NO
 email_msg=${DATA}/mailmsg
