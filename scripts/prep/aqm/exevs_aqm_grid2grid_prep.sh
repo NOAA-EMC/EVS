@@ -23,9 +23,6 @@ set -x
 
 cd ${DATA}
 
-export config=${PARMevs}/evs_config/${COMPONENT}/config.evs.aqm.prod
-source ${config}
-
 flag_send_message=NO
 email_msg=${DATA}/mailmsg
 if [ -e ${email_msg} ]; then /bin/rm -f ${email_msg}; fi

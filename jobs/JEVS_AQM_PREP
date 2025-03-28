@@ -49,16 +49,12 @@ export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-export USHevs=${USHevs:-$HOMEevs/ush}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=${USHevs:-${HOMEevs}/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
-
-# Define COMIN/COMOUT variables:
-
-echo $COMPATH
 
 # Define COMIN/COMOUT variables:
 
@@ -72,23 +68,42 @@ echo ${COMPATH}
 export INITDATE=${INITDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 export COMOUTproc=${COMOUTproc:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}}
 mkdir -p ${COMOUT} ${COMOUTproc}
 
-# alternative choice is dan option different from aqons
-export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+run_scripts=YES
+if [ "${VERIF_CASE}" == "grid2obs" ]; then
+    # alternative choice is dan option different from aqons
+    export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+    export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
+    export DAILY_NCOL=${DAILY_NCOL:-13}
+else
+    export DATA_TYPE=${DATA_TYPE:-abi}
+    if [ "${DATA_TYPE}" == "abi" ]; then
+        export DCOMINabi=${DCOMINabi:-${DCOMROOT}}
+        export GOES_EAST=${GOES_EAST:-g16}
+        export GOES_WEST=${GOES_WEST:-g18}
+        export AOD_SCAN_TYPE=${AOD_SCAN_TYPE:-AODC}
+        export ADP_SCAN_TYPE=${ADP_SCAN_TYPE:-ADPC}
+        export AOD_QC_NAME=${AOD_QC_NAME:-high}
+        export restart_mode=${restart_mode:-YES}
+    else
+        echo "DEBUG :: DATA_TYPE == ${DATA_TYPE} is not defined, program exit"
+	run_scripts=NO
+    fi
+fi
 
-export DAILY_NCOL=${DAILY_NCOL:-13}
 
 #######################################################################
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-export err=$?; err_chk
+if [ "${run_scripts}" == "YES" ]; then
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
+    export err=$?; err_chk
+fi
 
 msg="JOB ${job} HAS COMPLETED NORMALLY."
 postmsg "${msg}"
