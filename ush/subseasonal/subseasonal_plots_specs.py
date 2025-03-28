@@ -548,7 +548,8 @@ class PlotSpecs:
 
     def get_dates_plot_name(self, date_type, start_date, end_date,
                             date_type_hr_list, other_hr_list, 
-                            forecast_hour_list, plot_type):
+                            forecast_hour_list, fcst_var_name,
+                            plot_type):
         """! Get the full date information that will be displayed on the plot
 
              Args:
@@ -565,6 +566,8 @@ class PlotSpecs:
                                       (strings)
                  forecast_hour_list - list of forecast hour(s),
                                       if not applicable is NA
+                 fcst_var_name      - forecast variable name
+                                      (string)
                  plot_type          - type of plot (string)
  
              Returns:
@@ -616,9 +619,36 @@ class PlotSpecs:
                 else:
                     forecast_day_list.append(str(forecast_day))
             if len(forecast_hour_list) == 1:
-                date_plot_name = (date_plot_name
-                                  +', Forecast Day '+forecast_day_list[0]+' '
-                                  +'(Hour '+forecast_hour_list[0]+')')
+                if 'DAYS6_10' in fcst_var_name:
+                    date_plot_name = (date_plot_name
+                                      +', Days 6-10 Forecast ')
+                elif 'WEEKLY' in fcst_var_name:
+                    if forecast_hour in ['168', '180']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 1 Forecast ')
+                    if forecast_hour in ['336', '348']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 2 Forecast ')
+                    if forecast_hour in ['504', '516']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 3 Forecast ')
+                    if forecast_hour in ['672', '684']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 4 Forecast ')
+                    if forecast_hour in ['828', '840']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 5 Forecast ')
+                elif 'WEEKS3_4' in fcst_var_name:
+                    date_plot_name = (date_plot_name
+                                      +', Weeks 3-4 Forecast ')
+                elif 'MONTHLY' in fcst_var_name:
+                    date_plot_name = (date_plot_name
+                                      +', Month 1 Forecast ')
+                else:
+                    date_plot_name = (date_plot_name
+                                      +', Forecast Day '
+                                      +forecast_day_list[0]+' '
+                                      +'(Hour '+forecast_hour_list[0]+')')
             else:
                 date_plot_name = (date_plot_name
                                   +'\nForecast Days '
@@ -721,6 +751,7 @@ class PlotSpecs:
                                                 date_info_dict['end_date'],
                                                 date_type_hr_list,
                                                 other_hr_list, fhr_for_title,
+                                                plot_info_dict['fcst_var_name'],
                                                 self.plot_type))
         return plot_title
 

@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_grid2obs_prepbufr_plots_31days
+#PBS -N jevs_subseasonal_grid2obs_prepbufr_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export job=${PBS_JOBNAME:-jevs_subseasonal_grid2obs_prepbufr_plots_31days}
+export job=${PBS_JOBNAME:-jevs_subseasonal_grid2obs_prepbufr_plots_last31days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 source $HOMEevs/versions/run.ver

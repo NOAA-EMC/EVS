@@ -1,10 +1,10 @@
-#PBS -N jevs_subseasonal_grid2grid_sea_ice_plots_90days
+#PBS -N jevs_subseasonal_grid2grid_precip_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A EVS-DEV
 #PBS -l walltime=00:10:00
-#PBS -l place=vscatter,select=1:ncpus=34:ompthreads=1:mem=35GB
+#PBS -l place=vscatter:exclhost,select=2:ncpus=100:mem=200GB
 #PBS -l debug=true
 
 set -x
@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export job=${PBS_JOBNAME:-jevs_subseasonal_grid2grid_sea_ice_plots_90days}
+export job=${PBS_JOBNAME:-jevs_subseasonal_grid2grid_precip_plots_last90days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 source $HOMEevs/versions/run.ver
@@ -27,16 +27,17 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 
 export USER=$USER
-export ACCOUNT=EVS-DEV
 export envir=prod
 export KEEPDATA=NO
-export SENDDBN=YES
+export SENDDBN=NO
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export ACCOUNT=EVS-DEV
 export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
 export PARTITION_BATCH=
-export nproc=34
+export nproc=200
+export ncpu=100
 export USE_CFP=YES
 export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}
@@ -47,7 +48,7 @@ export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME="gefs cfs"
 export VERIF_CASE=grid2grid
-export VERIF_TYPE=sea_ice
+export VERIF_TYPE=precip
 export NDAYS=90
 export DAYS=91
 
@@ -62,6 +63,6 @@ $HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
 
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
-#          subseasonal grid-to-grid sea ice statistical plots
+#          subseasonal grid-to-grid precipitation statistical plots
 #          for the GEFS and CFS models for past 90 days.
 ######################################################################
