@@ -49,12 +49,16 @@ export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=${EXECevs:-${HOMEevs}/exec}
-export FIXevs=${FIXevs:-${HOMEevs}/fix}
-export PARMevs=${PARMevs:-${HOMEevs}/parm}
-export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
-export USHevs=${USHevs:-${HOMEevs}/ush}
-export MASKS=${MASKS:-${FIXevs}/masks}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export MASKS=${MASKS:-$FIXevs/masks}
+
+# Define COMIN/COMOUT variables:
+
+echo $COMPATH
 
 # Define COMIN/COMOUT variables:
 
@@ -83,7 +87,7 @@ export DAILY_NCOL=${DAILY_NCOL:-13}
 # Execute the script.
 #######################################################################
 
-${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB ${job} HAS COMPLETED NORMALLY."
