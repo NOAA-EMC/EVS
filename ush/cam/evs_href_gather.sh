@@ -20,6 +20,8 @@ if [ $verify = precip ] ; then
   MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB HREF_EAS HREF_SNOW'
  fi
 elif [ $verify = grid2obs ] ; then
+ verif_snowfall=no
+ verif_precip=no
  MODELS='HREF HREF_MEAN HREF_PROB'
 elif [ $verify = spcoutlook ] ; then
  MODELS='HREF_MEAN'
