@@ -38,13 +38,14 @@ conf_dir=${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 config_file=Point2Grid_hourly_obs${OBSTYPE}.conf
 config_common=${PARMevs}/metplus_config/machine.conf
  
-export dirname=aqm
+export dirname=${MODELNAME}
 export gridspec=793
 
 export CMODEL=$(echo ${MODELNAME} | tr a-z A-Z)
 echo ${CMODEL}
 
-export jday=$(date2jday.sh ${INITDATE})        # need module load prod_util
+# date2jday in module prod_util
+export jday=$(date2jday.sh ${INITDATE}
 
 declare -a grid2grid_list=( ${DATA_TYPE} )
 num_obs=${#grid2grid_list[@]}
@@ -126,16 +127,6 @@ if [ "${num_mdl_grid}" != "0" ]; then
 	# switching satellite or Scan-modes or both, and the old file need
 	# to be removed manauelly.
 	#
-	# Reset MET_TMP_DIR will generate warning message from 2024/11/18,
-	# thus a new method need to be produced for different mapping files
-	#
-        # export MET_TMP_DIR=${DATA}/GEOSTATIONARY_${SatId}_${Aod_Scan}_${MODELNAME}_${INITDATE}
-        # if [ -d ${MET_TMP_DIR} ]; then /bin/rm -rf ${MET_TMP_DIR}; fi
-        # mkdir -p ${MET_TMP_DIR}
-	#
-	# TMP_DIR is defined in ${PARMevs}/metplus_config/machine.conf, i.e.,
-	#    TMP_DIR = {OUTPUT_BASE}/tmp
-	# OUTPUT_BASE is defined in Point2Grid_hourly_obs${OBSTYPE}.conf
 	num_mapping_file=$( find ${DATA}/tmp -name CONUS_2500_1500_56_-56* | wc -l )
         if [ ${num_mapping_file} -gt 0 ]; then /bin/rm -f ${DATA}/tmp/CONUS_2500_1500_56_-56*; fi 
 
@@ -156,20 +147,19 @@ if [ "${num_mdl_grid}" != "0" ]; then
             msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
             if [ ${msg} -eq 0 ]; then
               let ic=${endvhr}+1   ## skip current Aod_Scan Processing
-              echo "DEBUG :: RESTART Skip ASCII2NC Porcessing for ${ObsType} ${SatId} ${AOD_SCAN}"
+              echo "DEBUG: RESTART Skip ASCII2NC Porcessing for ${ObsType} ${SatId} ${AOD_SCAN}"
             else
               let ic=${endvhr}     ## file corrupted re-do the last hour ASCII2NC process
-              echo "DEBUG :: RESTART ASCII2NC from ${ObsType} ${SatId} ${AOD_SCAN} hour ${ic}"
+              echo "DEBUG: RESTART ASCII2NC from ${ObsType} ${SatId} ${AOD_SCAN} hour ${ic}"
             fi
           else
             let ic=${obs_file_count}-1
-            echo "DEBUG :: RESTART ASCII2NC from ${ObsType} ${SatId} ${AOD_SCAN} hour ${ic}"
+            echo "DEBUG: RESTART ASCII2NC from ${ObsType} ${SatId} ${AOD_SCAN} hour ${ic}"
           fi
         fi     ## Check gridded L3 AOD files for RESTART ability
 	#
-	## The cutoff time is linked to the usage of
-	## time_offset_warning and OBS_WINDOW_* currently
-	## set as +- 15 mins
+	## The cutoff time is linked to the usage of time_offset_warning and
+	## OBS_WINDOW_* currently set as +- 15 mins
 	#
 	let forward_search_cutoff_time=1500
 	let backward_search_cutoff_time=4500
@@ -201,21 +191,21 @@ if [ "${num_mdl_grid}" != "0" ]; then
               fi
               let scan_min_sec=${minsec}
               if [ ${scan_min_sec} -gt ${forward_search_cutoff_time} ]; then
-                echo "DEBUG :: NO valid aod file within time limit; start reverse search"
+                echo "DEBUG: NO valid aod file within time limit; start reverse search"
                 flag_reverse_find=yes
               else
-                echo "DEBUG :: Use ${filein_aod} for valid hour ${vldhr}"
+                echo "DEBUG: Use ${filein_aod} for valid hour ${vldhr}"
                 flag_find_abi=yes
               fi
             else
-              echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${vldhr} in forward search"
+              echo "DEBUG: NO available ${SATID} GOES_${AOD_SCAN} for hour ${vldhr} in forward search"
               flag_reverse_find=yes
             fi
             if [ "${flag_reverse_find}" == "yes" ]; then
               INITDATEm1=$(${NDATE} -1 ${INITDATE}${vldhr} | cut -c1-8)
               vldhrm1=$(${NDATE} -1 ${INITDATE}${vldhr} | cut -c9-10)
               jdaym1=$(date2jday.sh ${INITDATEm1})
-              echo "DEBUG ::  reverse search start; checking file for ${jdaym1}${vldhrm1}"
+              echo "DEBUG: reverse search start; checking file for ${jdaym1}${vldhrm1}"
               idirm1=${DCOMINabi}/${INITDATEm1}/goes_abi/GOES_${AOD_SCAN}
               if [ -d ${idirm1} ]; then
                 checkfile="OR_${OBSTYPE}-L2-${AOD_SCAN}-M*_${SATID}_s${jdaym1}${vldhrm1}*.nc"
@@ -238,16 +228,16 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                   let scan_min_sec=${minsec}
                   if [ ${scan_min_sec} -lt ${backward_search_cutoff_time} ]; then
-                    echo "DEBUG :: NO valid aod file within time limit in reverse search"
+                    echo "DEBUG: NO valid aod file within time limit in reverse search"
                   else
-                    echo "DEBUG :: Use ${filein_aod} for valid hour ${vldhr}"
+                    echo "DEBUG: Use ${filein_aod} for valid hour ${vldhr}"
                     flag_find_abi=yes
                   fi
                 else
-                  echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATEm1} ${vldhrm1}"
+                  echo "DEBUG: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATEm1} ${vldhrm1}"
                 fi
               else
-                echo "DEBUG :: Can not find ${idirm1}, skip reverse search for hour ${INITDATE} ${vldhr}"
+                echo "DEBUG: Can not find ${idirm1}, skip reverse search for hour ${INITDATE} ${vldhr}"
               fi
             fi
             if [ "${flag_find_abi}" == "yes" ];then
@@ -264,7 +254,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "DEBUG :: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
+                    echo "DEBUG: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
@@ -274,7 +264,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
               fi
             else
               if [ "${SENDMAIL}" = "YES" ]; then
-                echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATE} ${vldhr}" >> ${email_msg}
+                echo "DEBUG: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATE} ${vldhr}" >> ${email_msg}
                 echo "==============" >> ${email_msg}
                 flag_send_message=YES
               fi
@@ -284,7 +274,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
               INITDATEm1=$(${NDATE} -1 ${INITDATE}${vldhr} | cut -c1-8)
               vldhrm1=$(${NDATE} -1 ${INITDATE}${vldhr} | cut -c9-10)
               jdaym1=$(date2jday.sh ${INITDATEm1})
-              echo "DEBUG ::  reverse search start; checking file for ${jdaym1}${vldhrm1}"
+              echo "DEBUG: reverse search start; checking file for ${jdaym1}${vldhrm1}"
               idirm1=${DCOMINabi}/${INITDATEm1}/goes_abi/GOES_${AOD_SCAN}
               if [ -d ${idirm1} ]; then
                 checkfile="OR_${OBSTYPE}-L2-${AOD_SCAN}-M*_${SATID}_s${jdaym1}${vldhrm1}*.nc"
@@ -307,16 +297,16 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                   let scan_min_sec=${minsec}
                   if [ ${scan_min_sec} -lt ${backward_search_cutoff_time} ]; then
-                    echo "DEBUG :: NO valid aod file within time limit in reverse search"
+                    echo "DEBUG: NO valid aod file within time limit in reverse search"
                   else
-                    echo "DEBUG :: Use ${filein_aod} for valid hour ${vldhr}"
+                    echo "DEBUG: Use ${filein_aod} for valid hour ${vldhr}"
                     flag_find_abi=yes
                   fi
                 else
-                  echo "DEBUG :: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATEm1} ${vldhrm1}"
+                  echo "DEBUG: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATEm1} ${vldhrm1}"
                 fi
               else
-                echo "DEBUG :: Can not find ${idirm1}, skip reverse search for hour ${INITDATE} ${vldhr}"
+                echo "DEBUG: Can not find ${idirm1}, skip reverse search for hour ${INITDATE} ${vldhr}"
               fi
             fi
             if [ "${flag_find_abi}" == "yes" ];then
@@ -332,7 +322,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "DEBUG :: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
+                    echo "DEBUG: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
@@ -342,12 +332,12 @@ if [ "${num_mdl_grid}" != "0" ]; then
               fi
             else
               if [ "${SENDMAIL}" = "YES" ]; then
-                echo "DEBUG :: Can not find ${idir} for ${INITDATE} ${vldhr}" >> ${email_msg}
+                echo "DEBUG: Can not find ${idir} for ${INITDATE} ${vldhr}" >> ${email_msg}
                 echo "==============" >> ${email_msg}
                 flag_send_message=YES
               fi
             fi
-            echo "DEBUG :: Can not find ${idir} for ${INITDATE} ${vldhr}, skip ro next valid hour"
+            echo "DEBUG: Can not find ${idir} for ${INITDATE} ${vldhr}, skip ro next valid hour"
           fi  ## find idir
           ((ic++))
         done  # vldhr
@@ -378,14 +368,14 @@ if [ "${num_mdl_grid}" != "0" ]; then
           msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
           if [ ${msg} -eq 0 ]; then
             let ic=${endvhr}+1      ## skip current Aod_Scan Integration
-            echo "DEBUG :: RESTART Skip AOD integration for ${ObsType} ${AOD_SCAN}"
+            echo "DEBUG: RESTART Skip AOD integration for ${ObsType} ${AOD_SCAN}"
           else   ## file corrupted re-do the last hour of current Aod_Scan
             let ic=${endvhr}
-            echo "DEBUG :: RESTART AOD Integration from ${ObsType} ${AOD_SCAN} hour ${ic}"
+            echo "DEBUG: RESTART AOD Integration from ${ObsType} ${AOD_SCAN} hour ${ic}"
           fi
         else
           let ic=${join_file_count}-1
-          echo "DEBUG :: RESTART AOD integration from ${ObsType} ${AOD_SCAN} hour ${ic}"
+          echo "DEBUG: RESTART AOD integration from ${ObsType} ${AOD_SCAN} hour ${ic}"
         fi
       fi     ## Check Join L3 AOD files for RESTART ability
 
@@ -414,7 +404,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
         elif [ ! -s ${goes_east_aod_file} ] && [ -s ${goes_west_aod_file} ]; then
           cp ${goes_west_aod_file} ${join_aod_file}
         else
-          echo "DEBUG ::  No GOES-East and GOES-West point2grid ABI L3 AOD files for ${INITDATE} ${vldhr}"
+          echo "DEBUG: No GOES-East and GOES-West point2grid ABI L3 AOD files for ${INITDATE} ${vldhr}"
         fi
 
         if [ "${SENDCOM}" = "YES" ]; then
@@ -436,8 +426,8 @@ fi
 
 if [ "${flag_send_message}" == "YES" ]; then
   export subject="${MODELNAME} ${AOD_SCAN} PROCESSING ISSUES for EVS ${COMPONENT}"
-  echo "Job ID: $jobid" >> ${email_msg}
-  cat ${email_msg} | mail -s "$subject" $MAILTO 
+  echo "Job ID: ${jobid}" >> ${email_msg}
+  cat ${email_msg} | mail -s "${subject}" ${MAILTO}
 fi
 exit
 

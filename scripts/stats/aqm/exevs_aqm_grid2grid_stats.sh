@@ -7,7 +7,8 @@
 ##
 ##   Change Logs:
 ##
-##   04/30/2024   Ho-Chun Huang  modification for using GOES-16 AOD
+##   04/30/2024   Ho-Chun Huang  modification for using GOES-EAST and
+##                               GOES-WEST AOD
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
@@ -27,7 +28,7 @@ export conf_file_dir=${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE
 # Define INPUT OBS DATA TYPE for GridStat
 #######################################################################
 #
-export dirname=aqm
+export dirname=${MODELNAME}
 export gridspec=793
 export fcstmax=72
 #
@@ -102,14 +103,12 @@ for ObsType in "${grid2grid_list[@]}"; do
       else
         echo "DEBUG: Can not find pre-processed obs hourly input ${check_file}"
         if [ $SENDMAIL = "YES" ]; then 
-          export subject="AQM Hourly Observed Missing for EVS ${COMPONENT}"
           echo "DEBUG: No ${SatID} ${ObsType} ${VarId} was available for ${vld_date} ${vld_time}" >> ${email_msg}
-          echo "Missing file is ${check_file}" >> ${email_msg}
-          echo "Job ID: $jobid" >> ${email_msg}
-          cat ${email_msg} | mail -s "$subject" $MAILTO
+          echo "==============" >> ${email_msg}
+          flag_send_message=YES
         fi
       fi
-      echo "index of hourly obs found = ${obs_hourly_found}"
+      echo "DEBUG: index of hourly obs found = ${obs_hourly_found}"
 
       # Verification to be done both on raw output files and bias-corrected files
     
@@ -124,10 +123,8 @@ for ObsType in "${grid2grid_list[@]}"; do
         export bcout="_${biastyp}"
         export OutputId=${MODELNAME}_${biastyp}_${SatId}${Aod_Scan}            # config variable
         export StatFileId=${NET}.${STEP}.${MODELNAME}_${biastyp}.${RUN}.${VERIF_CASE}_${ObsType}_${SatId}${Aod_Scan} # config variable
-    
-        # check to see that model files exist, and list which forecast hours are to be used
         #
-        # AQMv7 does not output IC, i.e., f000.  Thus the forecast file will be chekced from f001 to f072
+        # check to see that model files exist, and list which forecast hours are to be used
         #
         for hour in ${vld_cyc}; do
           export hour
@@ -148,16 +145,14 @@ for ObsType in "${grid2grid_list[@]}"; do
             if [ ${acyc} = ${hour} ]; then
               fcst_file=${COMINaqm}/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.${FileinId}${bctag}.f${filehr}.${gridspec}.grib2
               if [ -s ${fcst_file} ]; then
-                echo "${fhr} found"
+                echo "DEBUG: ${fhr} fcst file found"
                 echo ${fhr} >> ${recorded_temp_list}
                 let "num_fcst_in_metplus=num_fcst_in_metplus+1"
               else
                 if [ $SENDMAIL = "YES" ]; then
-                  export subject="t${acyc}z ${FileinId}${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
                   echo "DEBUG: No AQM ${FileinId}${bctag} forecast was available for ${aday} t${acyc}z" >> ${email_msg}
-                  echo "Missing file is ${fcst_file}" >> ${email_msg}
-                  echo "Job ID: $jobid" >> ${email_msg}
-                  cat ${email_msg} | mail -s "$subject" $MAILTO
+                  echo "==============" >> ${email_msg}
+                  flag_send_message=YES
                 fi
 
                 echo "DEBUG: No AQM${bctag} ${SatId}${VarId} forecast was available for ${aday} t${acyc}z"
@@ -171,7 +166,7 @@ for ObsType in "${grid2grid_list[@]}"; do
           fi
           if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
           export num_fcst_in_metplus
-          echo "number of fcst lead in_metplus grid_stat for ${VarId}${bctag} == ${num_fcst_in_metplus}"
+          echo "DEBUG: number of fcst lead in_metplus grid_stat for ${VarId}${bctag} == ${num_fcst_in_metplus}"
     
           if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_hourly_found} -eq 1 ]; then
             export fcsthours=${fcsthours_list}
@@ -215,4 +210,9 @@ for ObsType in "${grid2grid_list[@]}"; do
   done  ## SatId loop
 done  ## ObsType loop
 
+if [ "${flag_send_message}" == "YES" ]; then
+  export subject="${MODELNAME} ${AOD_SCAN} PROCESSING ISSUES for EVS ${COMPONENT}"
+  echo "Job ID: ${jobid}" >> ${email_msg}
+  cat ${email_msg} | mail -s "${subject}" ${MAILTO}
+fi
 exit
