@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 '''
-Name: subseasonal_plots_specs.py
-Contact(s): Shannon Shields
+Name: aqm_plots_specs.py
+Original Author: Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script defines plotting related settings.
 '''
 import matplotlib
@@ -10,7 +11,7 @@ import datetime
 import sys
 import os
 import numpy as np
-import subseasonal_util as sub_util
+import aqm_util as gda_util
 
 class PlotSpecs:
     def __init__(self, logger, plot_type):
@@ -19,7 +20,7 @@ class PlotSpecs:
              Args:
                  logger    - logger object
                  plot_type - type of graphic being produced (string)
- 
+
              Returns:
         """
         self.plot_type = plot_type
@@ -56,8 +57,7 @@ class PlotSpecs:
         self.fig_size=(16.,16.)
         if self.plot_type in ['time_series',
                               'time_series_multifhr',
-                              'long_term_time_series',
-                              'long_term_time_series_multifhr']:
+                              'time_series_fhr_mean']:
             self.fig_size = (16., 8.)
             self.fig_subplot_top = 0.87
             self.fig_subplot_bottom = 0.1
@@ -69,9 +69,7 @@ class PlotSpecs:
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
-            if self.plot_type in ['time_series_multifhr',
-                                  'long_term_time_series',
-                                  'long_term_time_series_multifhr']:
+            if self.plot_type in ['time_series_multifhr']:
                 self.fig_subplot_top = 0.85
         elif self.plot_type == 'histogram':
             self.fig_size = (16., 8.)
@@ -83,8 +81,8 @@ class PlotSpecs:
             self.xtick_label_size = 15
             self.ytick_label_size = 15
         elif self.plot_type in ['lead_average', 'valid_hour_average',
-                                'threshold_average',
-                                'long_term_time_series_diff']:
+                                'lead_average_vhr_mean', 'valid_hour_average_fhr_mean',
+                                'threshold_average']:
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.05
@@ -94,53 +92,6 @@ class PlotSpecs:
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 5
             self.fig_title_size = 18
-            if self.plot_type == 'long_term_time_series_diff':
-                self.legend_font_size = 15
-        elif self.plot_type in ['lead_by_date',
-                                'long_term_annual_mean',
-                                'long_term_lead_by_date']:
-            self.fig_size = (16., 16.)
-            self.axis_title_pad = 5
-            self.axis_title_loc = 'left'
-            self.fig_subplot_top = 0.9
-            self.fig_subplot_bottom = 0.075
-            self.fig_subplot_right = 0.923
-            self.fig_subplot_left = 0.15
-            self.fig_title_size = 18
-            if self.plot_type == 'long_term_annual_mean':
-                self.fig_subplot_left = 0.1
-                self.fig_subplot_right = 0.9
-            if self.plot_type == 'long_term_lead_by_date':
-                self.fig_subplot_left = 0.1
-        elif self.plot_type == 'stat_by_level':
-            self.fig_size = (16., 16.)
-            self.fig_subplot_top = 0.925
-            self.fig_subplot_bottom = 0.05
-            self.fig_subplot_right = 0.925
-            self.fig_subplot_left = 0.1
-            self.legend_frame_on = False
-            self.legend_bbox = (0.01, 0.995)
-            self.legend_ncol = 1
-            self.legend_font_size = 15
-            self.legend_loc = 'upper left'
-            self.fig_title_size = 18
-        elif self.plot_type == 'lead_by_level':
-            self.fig_size = (16., 16.)
-            self.axis_title_pad = 5
-            self.axis_title_loc = 'left'
-            self.fig_subplot_top = 0.95
-            self.fig_subplot_bottom = 0.025
-            self.fig_subplot_right = 0.95
-            self.fig_subplot_left = 0.1
-            self.fig_title_size = 18
-        elif self.plot_type == 'precip_spatial_map':
-            self.fig_size = (8., 6.)
-            self.fig_title_size = 13
-            self.fig_subplot_right = 0.975
-            self.fig_subplot_left = 0.025
-            self.axis_label_size = 12
-            self.xtick_label_size = 12
-            self.axis_tick_size = 13
         elif self.plot_type == 'performance_diagram':
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
@@ -153,14 +104,14 @@ class PlotSpecs:
             self.legend_font_size = 16
             self.fig_title_size = 18
         else:
-            self.logger.error(f"FATAL ERROR, {self.plot_type} NOT RECOGNIZED")
+            self.logger.error(f"{self.plot_type} not recongized")
             sys.exit(1)
 
     def set_up_plot(self):
         """! Set up the matplotlib rcParams
 
              Args:
- 
+
              Returns:
         """
         plt.rcParams['font.weight'] = self.font_weight
@@ -196,7 +147,7 @@ class PlotSpecs:
 
              Args:
                  stat - abbreviated statistic name (string)
- 
+
              Returns:
                  stat_plot_name - full statistic name that
                                   will be displayed on the plot
@@ -205,6 +156,7 @@ class PlotSpecs:
         stat_plot_name_dict = {
             'ACC': 'Anomaly Correlation Coefficient',
             'BIAS': 'Bias (Mean Error)',
+            'CORR': 'Pearson Correlation Coefficient',
             'CSI': 'Critical Success Index',
             'ETS': 'Equitable Threat Score',
             'FBAR': 'Forecast Mean',
@@ -217,10 +169,11 @@ class PlotSpecs:
             'ME': 'Mean Error (Bias)',
             'OBAR': 'Observation Mean',
             'POD': 'Probability of Detection',
-            'PERF_DIA': 'Performance Diagram',
+            'PERFDIAG': 'Performance Diagram',
             'RMSE': 'Root Mean Square Error',
             'S1': 'S1 Score',
-            'SRATIO': 'Success Ratio (1-FAR)'
+            'SRATIO': 'Success Ratio (1-FAR)',
+            'STDEV_ERR': 'Standard Deviation of Error'
         }
         if stat in list(stat_plot_name_dict.keys()):
             stat_plot_name = stat_plot_name_dict[stat]
@@ -243,14 +196,14 @@ class PlotSpecs:
         """
         var_name_level = var_name+'/'+var_level
         var_plot_name_dict = {
+            'OZCON1/A1': 'Surface Layer Hourly Ozone Concentration',
+            'OZMAX8/L1': 'Daily Maximum 8-hour Average Ozone Concentration',
+            'PMTF/L0': 'Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
+            'PMTF/L1': 'Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
+            'PMAVE/A23': '24hr-Average Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
+            'AOTK/L0': 'Aerosol Optical Depth at 550nm',
             'APCP/A24': '24 hour Accumulated Precipitation',
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
-            'APCP_WEEKLY/A168': 'Weekly Accumulated Precipitation',
-            'APCP_WEEKLY/A144': 'Week 5 Accumulated Precipitation',
-            'APCP_DAYS6_10/A120': ('Days 6-10 Accumulated '
-                                   +'Precipitation'),
-            'APCP_WEEKS3_4/A336': ('Weeks 3-4 Accumulated '
-                                   +'Precipitation'),
             'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
             'CFRZR/L0': 'Precipitation Type - Freezing Rain',
@@ -283,18 +236,8 @@ class PlotSpecs:
             'HGT/P925': '925 hPa Geopotential Height',
             'HGT/P1000': '1000 hPa Geopotential Height',
             'HGT/TROPOPAUSE': 'Tropopause Geopotential Height',
-            'HGT_ANOM_WEEKLYAVG/P500': ('500 hPa Weekly Avg '
-                                        +'Geopotential Height Anomaly'),
-            'HGT_ANOM_DAYS6_10AVG/P500': ('500 hPa Days 6-10 Avg '
-                                          +'Geopotential Height Anomaly'),
-            'HGT_ANOM_WEEKS3_4AVG/P500': ('500 hPa Weeks 3-4 Avg '
-                                          +'Geopotential Height Anomaly'),
-            'HGT_WEEKLYAVG/P500': ('500 hPa Weekly Avg '
-                                   +'Geopotential Height'),
-            'HGT_DAYS6_10AVG/P500': ('500 hPa Days 6-10 Avg '
-                                     +'Geopotential Height'),
-            'HGT_WEEKS3_4AVG/P500': ('500 hPa Weeks 3-4 Avg '
-                                     +'Geopotential Height'),
+            'HGT_ANOM_DAILYAVG/P500': ('500 hPa Daily Avg '
+                                       +'Geopotential Height Anomaly'),
             'HGT_DECOMP_WV1_0-3/P500': ('500 hPa Geopotential Height: '
                                         +'Waves 0-3'),
             'HGT_DECOMP_WV1_0-20/P500': ('500 hPa Geopotential Height: '
@@ -302,10 +245,10 @@ class PlotSpecs:
             'HGT_DECOMP_WV1_4-9/P500': ('500 hPa Geopotential Height: '
                                         +'Waves 4-9'),
             'HGT_DECOMP_WV1_10-20/P500': ('500 hPa Geopotential Height: '
-                                          +'Waves 10-20'), 
+                                          +'Waves 10-20'),
             'HPBL/L0': 'Planetary Boundary Layer Height',
-            'ICEC_WEEKLYAVG/Z0': 'Weekly Avg Ice Concentration',
-            'ICEC_MONTHLYAVG/Z0': 'Monthly Avg Ice Concentration',
+            'ICEC_DAILYAVG/Z0': 'Daily Avg Ice Concentration',
+            'ICEEX_DAILYAVG/Z0': 'Daily Avg Ice Extent',
             'O3MR/all': 'Ozone Mixing Ratio - All Levels',
             'O3MR/trop': 'Ozone Mixing Ratio - Troposphere',
             'O3MR/ltrop': 'Ozone Mixing Ratio - Lower Troposphere',
@@ -371,8 +314,6 @@ class PlotSpecs:
             'SPFH/P1000': '1000 hPa Specific Humidity',
             'SPFH/Z2': '2 meter Specific Humidity',
             'SST_DAILYAVG/Z0': 'Daily Avg Sea Surface Temperature',
-            'SST_WEEKLYAVG/Z0': 'Weekly Avg Sea Surface Temperature',
-            'SST_MONTHLYAVG/Z0': 'Monthly Avg Sea Surface Temperature',
             'TCDC/TOTAL': 'Total Cloud Cover',
             'TMP/all': 'Temperature - All Levels',
             'TMP/trop': 'Temperature - Troposphere',
@@ -397,14 +338,8 @@ class PlotSpecs:
             'TMP/P925': '925 hPa Temperature',
             'TMP/P1000': '1000 hPa Temperature',
             'TMP/TROPOPAUSE': 'Tropopause Temperature',
-            'TMP_WEEKLYAVG/Z2': '2 meter Weekly Avg Temperature',
-            'TMP_DAYS6_10AVG/Z2': '2 meter Days 6-10 Avg Temperature',
-            'TMP_WEEKS3_4AVG/Z2': '2 meter Weeks 3-4 Avg Temperature',
-            'TMP_ANOM_WEEKLYAVG/Z2': '2 meter Weekly Avg Temperature Anomaly',
-            'TMP_ANOM_DAYS6_10AVG/Z2': ('2 meter Days 6-10 Avg Temperature ' 
-                                        +'Anomaly'),
-            'TMP_ANOM_WEEKS3_4AVG/Z2': ('2 meter Weeks 3-4 Avg Temperature '
-                                        +'Anomaly'),
+            'TMP/Z2': '2 meter Temperature',
+            'TMP_ANOM_DAILYAVG/Z2': '2 meter Daily Avg Temperature Anomaly',
             'TOZNE/L0': 'Total Ozone',
             'TSOIL/Z0.1-0': '0.1-0 meter Soil Temperature',
             'UGRD/all': 'U-Component of Wind - All Levels',
@@ -492,17 +427,19 @@ class PlotSpecs:
 
              Args:
                  vx_mask - abbreviated verification mask name (string)
- 
+
              Returns:
                  vx_mask_plot_name - full verification mask name that
                                      will be displayed on the plot
                                      (string)
         """
         vx_mask_plot_name_dict = {
+             'AFRICA': 'Africa',
              'Alaska': 'Alaska',
              'ANTARCTIC': 'Antarctic 50S-90S',
              'Appalachia': 'Appalachia',
              'ARCTIC': 'Arctic 50N-90N',
+             'ASIA': 'Asia',
              'ATL_MDR': 'Atlantic Main Development Region',
              'CONUS': 'CONUS',
              'CONUS_Central': 'CONUS - Central',
@@ -518,6 +455,7 @@ class PlotSpecs:
              'Mezquital': 'Mezquital',
              'MidAtlantic': 'Mid-Atlantic',
              'N60N90': '60N-90N',
+             'NAMERICA': 'North America',
              'NAO': 'Northern Atlantic Ocean',
              'NPO': 'Northern Pacific Ocean',
              'NHEM': 'Northern Hemisphere 20N-80N',
@@ -528,6 +466,7 @@ class PlotSpecs:
              'PacificSW': 'Pacific Southwest',
              'Prairie': 'Prairie',
              'S60S90': '60S-90S',
+             'SAMERICA': 'South America',
              'SAO': 'Southern Atlantic Ocean',
              'SPO': 'Southern Pacific Ocean',
              'SHEM': 'Southern Hemisphere 20S-80S',
@@ -536,7 +475,6 @@ class PlotSpecs:
              'SPlains': 'Southern Plains',
              'SRockies': 'Southern Rockies',
              'TROPICS': 'Tropics 20S-20N',
-             'Hawaii': 'Hawaii',
         }
         if vx_mask in list(vx_mask_plot_name_dict.keys()):
             vx_mask_plot_name = vx_mask_plot_name_dict[vx_mask]
@@ -547,29 +485,29 @@ class PlotSpecs:
         return vx_mask_plot_name
 
     def get_dates_plot_name(self, date_type, start_date, end_date,
-                            date_type_hr_list, other_hr_list, 
-                            forecast_hour_list, fcst_var_name,
-                            plot_type):
+                            date_type_hr_list, other_hr_list,
+                            forecast_hour_list, plot_type, 
+                            init_for_title, fday_for_title, fcst_var):
         """! Get the full date information that will be displayed on the plot
 
              Args:
                  date_type          - type of dates
                                       (string, VALID or INIT)
-                 start_date         - starting date 
+                 start_date         - starting date and hour
                                       (string, YYYYmmdd)
-                 end_date           - ending date
+                 end_date           - ending date and hour
                                       (string, YYYYmmdd)
                  date_type_hr_list  - list of hours for
                                       date_type
                  other_hr_list      - list of hours for
                                       opposite of date_type
                                       (strings)
-                 forecast_hour_list - list of forecast hour(s),
-                                      if not applicable is NA
-                 fcst_var_name      - forecast variable name
-                                      (string)
+                 forecast_hour_list - list of forecast hour(s)
                  plot_type          - type of plot (string)
- 
+                 init_for_title     - info of init hour
+                 fday_for_title     - info of forecast day
+                 fcst_var           - plot variable index (string)
+
              Returns:
                  date_plot_name - full date information that
                                   will be displayed on the plot
@@ -585,20 +523,119 @@ class PlotSpecs:
         if date_type == 'VALID':
             for date_type_hr in date_type_hr_list:
                 for forecast_hour in forecast_hour_list:
-                    other_hr = sub_util.get_init_hour(
+                    other_hr = gda_util.get_init_hour(
                         int(date_type_hr.replace('Z', '')),
                         int(forecast_hour)
                     )
                     if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
                             and str(other_hr).zfill(2)+'Z' in other_hr_list:
                         title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+            title_init=other_hr_list[0]
             title_other_hr_list.sort()
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
-                              +', inithours: '+', '.join(title_other_hr_list))
+                              +', init. hours: '
+                              +', '.join(title_other_hr_list))
         elif date_type == 'INIT':
             for date_type_hr in date_type_hr_list:
                 for forecast_hour in forecast_hour_list:
-                    other_hr = sub_util.get_valid_hour(
+                    other_hr = gda_util.get_valid_hour(
+                        int(date_type_hr.replace('Z', '')),
+                        int(forecast_hour)
+                    )
+                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
+                            and str(other_hr).zfill(2)+'Z' in other_hr_list:
+                        title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+                    title_other_hr_list.append(str(init_hr).zfill(2)+'Z')
+            title_other_hr_list.sort()
+            date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
+                              +', valid: '+', '.join(title_other_hr_list))
+        if plot_type not in ['lead_average', 'valid_hour_average' ]:
+            forecast_day_list = []
+            for forecast_hour in forecast_hour_list:
+                forecast_day = int(forecast_hour)/24.
+                if int(forecast_hour) % 24 == 0:
+                    forecast_day_list.append(str(int(forecast_day)))
+                else:
+                    if fcst_var in [ "OZMAX8" , "PMAVE" ]:  ## round up
+                        forecast_day = int(fday_for_title)
+                    forecast_day_list.append(str(forecast_day))
+            if len(forecast_hour_list) == 1:
+                if fcst_var in [ "PMAVE" , "OZMAX8" ]:   ## round up
+                    date_plot_name = (date_plot_name
+                                      +', Forecast Day '+forecast_day_list[0])
+                else:
+                    date_plot_name = (date_plot_name
+                                      +', Forecast Day '+forecast_day_list[0]+' '
+                                      +'(FHR='+forecast_hour_list[0]+')')
+            else:
+                date_plot_name = (date_plot_name
+                                  +'\nForecast Days '
+                                  +','.join(forecast_day_list)+' '
+                                  +'(FHRs='+','.join(forecast_hour_list)+')')
+        return date_plot_name
+
+    def get_dates_plot_name_aqm(self, date_type, start_date, end_date,
+                            date_type_hr_list, other_hr_list,
+                            title_plot_hour_list, plot_type):
+        """! Get the full date information that will be displayed on the plot
+
+             Args:
+                 date_type          - type of dates
+                                      (string, VALID or INIT)
+                 start_date         - starting date and hour
+                                      (string, YYYYmmdd)
+                 end_date           - ending date and hour
+                                      (string, YYYYmmdd)
+                 date_type_hr_list  - list of hours for
+                                      date_type
+                 other_hr_list      - list of hours for
+                                      opposite of date_type
+                                      (strings)
+                 title_plot_hour_list - list of selected forecast/valid hour(s)
+                 plot_type          - type of plot (string)
+
+             Returns:
+                 date_plot_name - full date information that
+                                  will be displayed on the plot
+                                  (string)
+        """
+        date_plot_name = date_type.lower()+' '
+        start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
+        end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
+        date_plot_name = (date_plot_name
+                          +start_date_dt.strftime('%d%b%Y')+'-'
+                          +end_date_dt.strftime('%d%b%Y')+' ')
+        title_other_hr_list = []
+        if date_type == 'VALID':
+            if plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean' ]:
+                title_other_list=other_hr_list[0]
+                if len(other_hr_list) > 1:
+                    for i_other_hr in range(1,len(other_hr_list)):
+                        title_other_list = ( title_other_lists + ", " +i_other_hr)
+                date_plot_name = (date_plot_name+', init. hours: '+title_other_list)
+                plot_hour_range=f"{title_plot_hour_list[0]}-{title_plot_hour_list[-1]}"
+                if plot_type in [ 'time_series_fhr_mean', 'valid_hour_average_fhr_mean' ]:
+                    date_plot_name = (date_plot_name+', fcst. hours:'+plot_hour_range+' hrs')
+                else:
+                    date_plot_name = (date_plot_name+', valid hours:'+plot_hour_range+'Z')
+            else:
+                for date_type_hr in date_type_hr_list:
+                    for forecast_hour in forecast_hour_list:
+                        other_hr = gda_util.get_init_hour(
+                            int(date_type_hr.replace('Z', '')),
+                            int(forecast_hour)
+                        )
+                        if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
+                                and str(other_hr).zfill(2)+'Z' in other_hr_list:
+                            title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+                title_other_hr_list.sort()
+                date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
+                                  +', init. hours: '
+                                  +', '.join(title_other_hr_list))
+        elif date_type == 'INIT':
+            for date_type_hr in date_type_hr_list:
+                for forecast_hour in forecast_hour_list:
+                    other_hr = gda_util.get_valid_hour(
                         int(date_type_hr.replace('Z', '')),
                         int(forecast_hour)
                     )
@@ -610,7 +647,8 @@ class PlotSpecs:
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
                               +', valid: '+', '.join(title_other_hr_list))
         if plot_type not in ['lead_average', 'valid_hour_average',
-                             'lead_by_date', 'lead_by_level']:
+                             'valid_hour_average_fhr_mean',
+                             'time_series_fhr_mean', 'lead_average_vhr_mean']:
             forecast_day_list = []
             for forecast_hour in forecast_hour_list:
                 forecast_day = int(forecast_hour)/24.
@@ -619,36 +657,9 @@ class PlotSpecs:
                 else:
                     forecast_day_list.append(str(forecast_day))
             if len(forecast_hour_list) == 1:
-                if 'DAYS6_10' in fcst_var_name:
-                    date_plot_name = (date_plot_name
-                                      +', Days 6-10 Forecast ')
-                elif 'WEEKLY' in fcst_var_name:
-                    if forecast_hour in ['168', '180']:
-                        date_plot_name = (date_plot_name
-                                          +', Week 1 Forecast ')
-                    if forecast_hour in ['336', '348']:
-                        date_plot_name = (date_plot_name
-                                          +', Week 2 Forecast ')
-                    if forecast_hour in ['504', '516']:
-                        date_plot_name = (date_plot_name
-                                          +', Week 3 Forecast ')
-                    if forecast_hour in ['672', '684']:
-                        date_plot_name = (date_plot_name
-                                          +', Week 4 Forecast ')
-                    if forecast_hour in ['828', '840']:
-                        date_plot_name = (date_plot_name
-                                          +', Week 5 Forecast ')
-                elif 'WEEKS3_4' in fcst_var_name:
-                    date_plot_name = (date_plot_name
-                                      +', Weeks 3-4 Forecast ')
-                elif 'MONTHLY' in fcst_var_name:
-                    date_plot_name = (date_plot_name
-                                      +', Month 1 Forecast ')
-                else:
-                    date_plot_name = (date_plot_name
-                                      +', Forecast Day '
-                                      +forecast_day_list[0]+' '
-                                      +'(Hour '+forecast_hour_list[0]+')')
+                date_plot_name = (date_plot_name
+                                  +', Forecast Day '+forecast_day_list[0]+' '
+                                  +'(Hour '+forecast_hour_list[0]+')')
             else:
                 date_plot_name = (date_plot_name
                                   +'\nForecast Days '
@@ -656,22 +667,22 @@ class PlotSpecs:
                                   +'(Hours '+','.join(forecast_hour_list)+')')
         return date_plot_name
 
-    def get_plot_title(self, plot_info_dict, date_info_dict, units):
+    def get_plot_title_aqm(self, plot_info_dict, date_info_dict, units, selected_plot_hours ):
         """! Construct the title for the plot
 
              Args:
                  plot_info_dict  - plot information dictionary (strings)
                  date_info_dict  - date information dictionary (strings)
                  units           - variable units (string)
- 
+                 selected_plot_hours - list of selected forecast/valid hour for title (string)
+
              Returns:
-                 plot_title - full plot title that will be 
+                 plot_title - full plot title that will be
                               displayed on the plot
                               (string)
         """
         plot_title = (
             self.get_stat_plot_name(plot_info_dict['stat'])+' - '
-            +plot_info_dict['grid']+'/'
             +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
         )
         if date_info_dict['date_type'] == 'VALID':
@@ -704,55 +715,142 @@ class PlotSpecs:
                                 +int(date_info_dict['valid_hr_inc']),
                                 int(date_info_dict['valid_hr_inc']))
             ]
-        if self.plot_type in ['time_series', 'stat_by_level',
+        if self.plot_type in ['time_series', 
                               'performance_diagram', 'threshold_average']:
-            fhr_for_title = [date_info_dict['forecast_hour']]
+            hr_info_for_title = [date_info_dict['forecast_hours']]
+        elif self.plot_type in ['time_series_fhr_mean', 'valid_hour_average_fhr_mean',
+                                'lead_average_vhr_mean' ]:
+            hr_info_for_title = selected_plot_hours
         else:
-            fhr_for_title = date_info_dict['forecast_hours']
-        if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
-            var_name_for_title = (plot_info_dict['fcst_var_name']
-                                  +'_'+plot_info_dict['interp_method'])
-        else:
-            var_name_for_title = plot_info_dict['fcst_var_name']
-        if self.plot_type in ['stat_by_level', 'lead_by_level']:
-            var_level_for_title = plot_info_dict['vert_profile']
-        else:
-            var_level_for_title = plot_info_dict['fcst_var_level']
+            hr_info_for_title = date_info_dict['forecast_hours']
+        var_name_for_title = plot_info_dict['fcst_var_name']
+        var_level_for_title = plot_info_dict['fcst_var_level']
         if self.plot_type in ['performance_diagram', 'threshold_average']:
             var_thresh_for_title = 'NA'
         else:
             var_thresh_for_title = plot_info_dict['fcst_var_thresh']
-        if plot_info_dict['fcst_var_name'] == 'CAPE' \
-                and plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME',
-                                               'FBAR_OBAR']:
-            var_thresh_for_title = 'NA'
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
                                               var_level_for_title))
+        if plot_info_dict['fcst_var_name'] == 'AOTK':
+            units = 'unitless'
+        elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
+            units = '$\u03bcg/m^3$'
+        elif plot_info_dict['fcst_var_name'] == 'OZCON1' or plot_info_dict['fcst_var_name'] == 'OZMAX8':
+            units = 'ppbV'
         plot_title = plot_title+' '+'('+units+')'
-        if var_thresh_for_title != 'NA' \
-                and plot_info_dict['fcst_var_name'] not in ['SST_DAILYAVG',
-                                                            'SST_WEEKLYAVG',
-                                                            'SST_MONTHLYAVG']:
-            plot_title = plot_title+', '+var_thresh_for_title+' '+units
-            if plot_info_dict['fcst_var_name'] in ['APCP_WEEKLY',
-                                                   'APCP_DAYS6_10',
-                                                   'APCP_WEEKS3_4']:
-                thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
-                thresh_in = round(thresh_value*0.0393701, 3)
-                plot_title = plot_title+' ('+str(thresh_in)+' in)'
-        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
-            plot_title = (plot_title+' '
-                          +'Neighborhood Points: '
-                          +plot_info_dict['interp_points'])
+        if var_thresh_for_title != 'NA':
+            var_thresh_symbol = var_thresh_for_title.replace("gt","$\u003E$").replace("ge","$\u2265$")
+            if plot_info_dict['fcst_var_name'] == 'AOTK':
+                plot_title = plot_title+', '+var_thresh_symbol
+            else:
+                plot_title = plot_title+', '+var_thresh_symbol+' '+units
+            thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
+        if self.plot_type in [ 'time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean' ]:
+            self.logger.debug(f"pass {self.plot_type} to get_dates_plot_name_aqm")
+            plot_title = (plot_title+'\n'
+                      +self.get_dates_plot_name_aqm(date_info_dict['date_type'],
+                                                date_info_dict['start_date'],
+                                                date_info_dict['end_date'],
+                                                date_type_hr_list, other_hr_list,
+                                                hr_info_for_title, self.plot_type))
+        else:
+            self.logger.debug(f"pass {self.plot_type} to get_dates_plot_name")
+            plot_title = (plot_title+'\n'
+                      +self.get_dates_plot_name(date_info_dict['date_type'],
+                                                date_info_dict['start_date'],
+                                                date_info_dict['end_date'],
+                                                date_type_hr_list, other_hr_list,
+                                                hr_info_for_title, self.plot_type,
+                                                plot_info_dict['fcst_var_name']))
+        return plot_title
+
+    def get_plot_title(self, plot_info_dict, date_info_dict, units):
+        """! Construct the title for the plot
+
+             Args:
+                 plot_info_dict  - plot information dictionary (strings)
+                 date_info_dict  - date information dictionary (strings)
+                 units           - variable units (string)
+
+             Returns:
+                 plot_title - full plot title that will be
+                              displayed on the plot
+                              (string)
+            +plot_info_dict['grid']+'/'
+        """
+        plot_title = (
+            self.get_stat_plot_name(plot_info_dict['stat'])+' - '
+            +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
+        )
+        if date_info_dict['date_type'] == 'VALID':
+            date_type_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['valid_hr_start']),
+                                int(date_info_dict['valid_hr_end'])
+                                +int(date_info_dict['valid_hr_inc']),
+                                int(date_info_dict['valid_hr_inc']))
+            ]
+            other_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['init_hr_start']),
+                                int(date_info_dict['init_hr_end'])
+                                +int(date_info_dict['init_hr_inc']),
+                                int(date_info_dict['init_hr_inc']))
+            ]
+        elif date_info_dict['date_type'] == 'INIT':
+            date_type_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['init_hr_start']),
+                                int(date_info_dict['init_hr_end'])
+                                +int(date_info_dict['init_hr_inc']),
+                                int(date_info_dict['init_hr_inc']))
+            ]
+            other_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['valid_hr_start']),
+                                int(date_info_dict['valid_hr_end'])
+                                +int(date_info_dict['valid_hr_inc']),
+                                int(date_info_dict['valid_hr_inc']))
+            ]
+        if self.plot_type in ['time_series',
+                              'performance_diagram', 'threshold_average']:
+            fhr_for_title = [date_info_dict['forecast_hour']]
+        else:
+            fhr_for_title = date_info_dict['forecast_hours']
+        init_for_title = date_info_dict['init_hr_start']
+        fday_for_title = date_info_dict['fday_start']
+        var_name_for_title = plot_info_dict['fcst_var_name']
+        var_level_for_title = plot_info_dict['fcst_var_level']
+        if self.plot_type in ['performance_diagram', 'threshold_average']:
+            var_thresh_for_title = 'NA'
+        else:
+            var_thresh_for_title = plot_info_dict['fcst_var_thresh']
+        plot_title = (plot_title
+                      +self.get_var_plot_name(var_name_for_title,
+                                              var_level_for_title))
+        if plot_info_dict['fcst_var_name'] == 'AOTK':
+            units = 'unitless'
+        elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
+            units = '$\u03bcg/m^3$'
+        elif plot_info_dict['fcst_var_name'] == 'OZCON1' or plot_info_dict['fcst_var_name'] == 'OZMAX8':
+            units = 'ppbV'
+        plot_title = plot_title+' '+'('+units+')'
+        if var_thresh_for_title != 'NA':
+            var_thresh_symbol = var_thresh_for_title.replace("gt","$\u003E$").replace("ge","$\u2265$")
+            if plot_info_dict['fcst_var_name'] == 'AOTK':
+                plot_title = plot_title+', '+var_thresh_symbol
+            else:
+                plot_title = plot_title+', '+var_thresh_symbol+' '+units
+            thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
         plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
-                                                date_info_dict['start_date'], 
-                                                date_info_dict['end_date'],
-                                                date_type_hr_list,
-                                                other_hr_list, fhr_for_title,
-                                                plot_info_dict['fcst_var_name'],
-                                                self.plot_type))
+                                                    date_info_dict['start_date'],
+                                                    date_info_dict['end_date'],
+                                                    date_type_hr_list, other_hr_list,
+                                                    fhr_for_title, self.plot_type,
+                                                    init_for_title, fday_for_title,
+                                                    plot_info_dict['fcst_var_name']))
         return plot_title
 
     def get_savefig_name(self, image_dir, plot_info_dict, date_info_dict):
@@ -763,41 +861,26 @@ class PlotSpecs:
                                    to save (string)
                  plot_info_dict  - plot information dictionary (strings)
                  date_info_dict  - date information dictionary (strings)
- 
+
              Returns:
                  image_path - full path of the name the plot will
                               be saved as (string)
         """
-        component_savefig_name = 'subseasonal'
-        if plot_info_dict['stat'] == 'PERF_DIA':
+        component_savefig_name = 'aqm'
+        if plot_info_dict['stat'] == 'PERFDIAG':
             metric_savefig_name = 'ctc'
         else:
             metric_savefig_name = plot_info_dict['stat']
-        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
-            nwidth = int(np.sqrt(float(plot_info_dict['interp_points'])))
-            metric_savefig_name = (
-                metric_savefig_name+'_'
-                +'width'+str(nwidth)
-            )
         if 'fcst_var_thresh' in list(plot_info_dict.keys()):
             if plot_info_dict['fcst_var_thresh'] != 'NA':
-                thresh_symbol, thresh_letter = sub_util.format_thresh(
+                thresh_symbol, thresh_letter = gda_util.format_thresh(
                     plot_info_dict['fcst_var_thresh']
                 )
-                if plot_info_dict['fcst_var_name'] not in ['SST_DAILYAVG',
-                                                           'SST_WEEKLYAVG',
-                                                           'SST_MONTHLYAVG']:
-                    metric_savefig_name = (
-                        metric_savefig_name+'_'
-                        +thresh_letter.replace('.','p')
-                    )
+                metric_savefig_name = (
+                    metric_savefig_name+'_'
+                    +thresh_letter.replace('.','p')
+                )
         parameter_savefig_name = plot_info_dict['fcst_var_name']
-        if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
-            parameter_savefig_name = (
-                parameter_savefig_name+'_'
-                +plot_info_dict['interp_method'].replace('WV1_', '')\
-                .replace('-', '_')
-            )
         level_savefig_name = (
             plot_info_dict['fcst_var_level'].replace('-', '_')\
             .replace('.', 'p')
@@ -809,62 +892,58 @@ class PlotSpecs:
             date_info_dict['end_date'], '%Y%m%d'
         )
         ndays = int((end_date_dt - start_date_dt).total_seconds()/86400) + 1
-        ndays_savefig_name = 'last'+str(ndays)+'days'
+
+        savefig_name_label = plot_info_dict['fig_name_label']
+
         if self.plot_type == 'time_series':
             plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'time_series_multifhr':
             plot_type_savefig_name = 'timeseries'
+        elif self.plot_type == 'time_series_fhr_mean':
+            plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'lead_average':
             plot_type_savefig_name = 'fhrmean'
-        elif self.plot_type == 'lead_by_date':
-            plot_type_savefig_name = 'leaddate'
-        elif self.plot_type == 'lead_by_level':
-            plot_type_savefig_name = 'vertprof_fhrmean'
+        elif self.plot_type == 'lead_average_vhr_mean':
+            plot_type_savefig_name = 'fhrmean'
         elif self.plot_type == 'performance_diagram':
-            plot_type_savefig_name = 'perfdia'
-        elif self.plot_type == 'stat_by_level':
-            plot_type_savefig_name = 'vertprof'
+            plot_type_savefig_name = 'perfdiag'
         elif self.plot_type == 'threshold_average':
             plot_type_savefig_name = 'threshmean'
         elif self.plot_type == 'valid_hour_average':
             plot_type_savefig_name = 'vhrmean'
+        elif self.plot_type == 'valid_hour_average_fhr_mean':
+            plot_type_savefig_name = 'vhrmean'
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')
         if self.plot_type in ['time_series', 'time_series_multifhr',
-                              'lead_average', 'stat_by_level', 'lead_by_level',
-                              'lead_by_date', 'performance_diagram',
-                              'threshold_average']:
-            plot_type_savefig_name = plot_type_savefig_name+'_valid'
-            valid_hr = int(date_info_dict['valid_hr_start'])
-            while valid_hr <= int(date_info_dict['valid_hr_end']):
-                plot_type_savefig_name = (plot_type_savefig_name
-                                          +str(valid_hr).zfill(2))
-                valid_hr+=int(date_info_dict['valid_hr_inc'])
-            plot_type_savefig_name = plot_type_savefig_name+'Z'
-        if self.plot_type in ['time_series',
-                              'stat_by_level', 'performance_diagram',
-                              'threshold_average']:
+                              'time_series_fhr_mean', 'performance_diagram',
+                              'valid_hour_average_fhr_mean',
+                              'threshold_average' ]:
+            init_hr_savefig_name = f"init{date_info_dict['init_hr_start']}z"
+            fcst_day_savefig_name = f"day{date_info_dict['fday_start']}"
             plot_type_savefig_name = (
-                 plot_type_savefig_name+'_'
-                 +'f'+date_info_dict['forecast_hour'].zfill(3)
+                 plot_type_savefig_name+'_'+fcst_day_savefig_name+'_'+init_hr_savefig_name
             )
-        elif self.plot_type == 'time_series_multifhr':
+        if self.plot_type in [ 'lead_average', 'lead_average_vhr_mean']:
+            init_hr_savefig_name = f"init{date_info_dict['init_hr_start']}z"
+            plot_type_savefig_name = (
+                 plot_type_savefig_name+'_dayna_'+init_hr_savefig_name
+            )
+        if self.plot_type == 'time_series_multifhr':
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +''.join(['f'+f.zfill(3) for \
                             f in date_info_dict['forecast_hours']])
             )
-        else:
-            plot_type_savefig_name = (
-                 plot_type_savefig_name+'_'
-                 +'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)
-            )
         grid_savefig_name = plot_info_dict['grid']
         region_savefig_dict = {
+            'AFRICA': 'africa',
             'Alaska': 'alaska',
             'Appalachia': 'buk_apl',
             'ANTARCTIC': 'antarctic',
             'ARCTIC': 'arctic',
+            'Asia': 'asia',
+            'ASIA': 'asia',
             'ATL_MDR': 'al_mdr',
             'CONUS': 'buk_conus',
             'CONUS_East': 'buk_conus_e',
@@ -877,9 +956,10 @@ class PlotSpecs:
             'GLOBAL': 'glb',
             'GreatBasin': 'buk_grb',
             'GreatLakes': 'buk_grlk',
-            'Mezqutial': 'buk_mez',
+            'Mezquital': 'buk_mez',
             'MidAtlantic': 'buk_matl',
             'N60N90': 'n60',
+            'NAMERICA': 'namer',
             'NAO': 'nao',
             'NHEM': 'nhem',
             'NorthAtlantic': 'buk_ne',
@@ -890,6 +970,7 @@ class PlotSpecs:
             'PacificSW': 'buk_psw',
             'Prairie': 'buk_pra',
             'S60S90': 's60',
+            'SAMERICA': 'samer',
             'SAO': 'sao',
             'SHEM': 'shem',
             'Southeast': 'buk_se',
@@ -897,43 +978,25 @@ class PlotSpecs:
             'SPlains': 'buk_spl',
             'SPO': 'spo',
             'SRockies': 'buk_srk',
-            'TROPICS': 'tropics',
-            'Hawaii': 'hawaii'
+            'TROPICS': 'tropics'
         }
         if plot_info_dict['vx_mask'] in list(region_savefig_dict.keys()):
             region_savefig_name = (
                 region_savefig_dict[plot_info_dict['vx_mask']]
             )
-        else:    
+        else:
             region_savefig_name = plot_info_dict['vx_mask']
         savefig_name = (
             'evs.'
             +component_savefig_name+'.'
             +metric_savefig_name+'.'
             +parameter_savefig_name+'_'+level_savefig_name+'.'
-            +ndays_savefig_name+'.'
+            +savefig_name_label+'.'
             +plot_type_savefig_name+'.'
             +grid_savefig_name+'_'+region_savefig_name
             +'.png'
-        )
-        if plot_info_dict['fcst_var_name'] in ['APCP_DAYS6_10',
-                                               'APCP_WEEKLY',
-                                               'APCP_WEEKS3_4']:
-            savefig_name = (
-                'evs.'
-                +component_savefig_name+'.'
-                +metric_savefig_name+'.'
-                +parameter_savefig_name+'.'
-                +ndays_savefig_name+'.'
-                +plot_type_savefig_name+'.'
-                +grid_savefig_name+'_'+region_savefig_name
-                +'.png'
-            )
-        image_path = os.path.join(image_dir, savefig_name.lower())
-        if plot_info_dict['fcst_var_name'] == 'CAPE':
-            image_path = image_path.replace('_z0', '_l0').replace('_p90_0', '_l90')
-            if plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME', 'FBAR_OBAR']:
-                image_path = image_path.replace('_gt0||', '')
+        ).lower()
+        image_path = os.path.join(image_dir, savefig_name)
         return image_path
 
     def get_logo_location(self, position, x_figsize, y_figsize, dpi):
@@ -944,7 +1007,7 @@ class PlotSpecs:
                  x_figsize - image size in x direction (float)
                  y_figsize - image size in y direction(float)
                  dpi       - image dots per inch (float)
- 
+
              Returns:
                  x_loc - logo position in x direction (float)
                  y_loc - logo position in y direction (float)
@@ -1153,13 +1216,13 @@ class PlotSpecs:
                                      (strings)
         """
         vert_profile_levels_dict = {
-            'all': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P400', 'P300',
-                    'P250', 'P200', 'P150', 'P100', 'P50', 'P20', 'P10',
+            'all': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P300',
+                    'P250', 'P200', 'P100', 'P50', 'P20', 'P10',
                     'P5'],
             'ltrop': ['P1000', 'P925', 'P850', 'P700', 'P500'],
-            'utrop': ['P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
-            'trop': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P400',
-                     'P300', 'P250', 'P200', 'P150', 'P100'],
+            'utrop': ['P500', 'P300', 'P250', 'P200', 'P100'],
+            'trop': ['P1000', 'P925', 'P850', 'P700', 'P500',
+                     'P300', 'P250', 'P200', 'P100'],
             'strat': ['P100', 'P50', 'P20', 'P10', 'P5']
         }
         if vert_profile in list(vert_profile_levels_dict.keys()):
@@ -1175,7 +1238,7 @@ class PlotSpecs:
 
              Args:
 
-             Returns: 
+             Returns:
                  marker_plot_settings_dict - dictionary of
                                              marker plotting specifications
                                              (strings)
@@ -1202,7 +1265,7 @@ class PlotSpecs:
 
              Args:
 
-             Returns: 
+             Returns:
                  model_plot_settings_dict - dictionary of
                                             model plotting specifications
                                             (strings)
@@ -1211,9 +1274,9 @@ class PlotSpecs:
             'model1': {'color': '#000000',
                        'marker': 'o', 'markersize': 6,
                        'linestyle': 'solid', 'linewidth': 3},
-            'model2': {'color': '#56b4e9',
-                       'marker': 'o', 'markersize': 6,
-                       'linestyle': 'solid', 'linewidth': 3},
+            'model2': {'color': '#fb2020',
+                       'marker': '^', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
             'model3': {'color': '#1e3cff',
                        'marker': 'X', 'markersize': 7,
                        'linestyle': 'solid', 'linewidth': 1.5},
@@ -1241,6 +1304,51 @@ class PlotSpecs:
             'obs': {'color': '#aaaaaa',
                     'marker': 'None', 'markersize': 0,
                     'linestyle': 'solid', 'linewidth': 2},
+            'gfs': {'color': '#000000',
+                    'marker': 'o', 'markersize': 6,
+                    'linestyle': 'solid', 'linewidth': 3},
+            'gfs00Z': {'color': '#000000',
+                       'marker': 'o', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 3},
+            'gfs06Z': {'color': '#fb2020',
+                       'marker': '^', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'gfs12Z': {'color': '#1e3cff',
+                       'marker': 'X', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'gfs18Z': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'cfs': {'color': '#56b4e9',
+                    'marker': 'o', 'markersize': 6,
+                    'linestyle': 'solid', 'linewidth': 1.5},
+            'cmc': {'color': '#1e3cff',
+                     'marker': 'X', 'markersize': 7,
+                     'linestyle': 'solid', 'linewidth': 1.5},
+            'cmc_regional': {'color': '#8400c8',
+                             'marker': 'D', 'markersize': 6,
+                             'linestyle': 'solid', 'linewidth': 1.5},
+            'dwd': {'color': '#56b4e9',
+                    'marker': 'o', 'markersize': 6,
+                    'linestyle': 'solid', 'linewidth': 1.5},
+            'ecmwf': {'color': '#fb2020',
+                      'marker': '^', 'markersize': 7,
+                      'linestyle': 'solid', 'linewidth': 1.5},
+            'fnmoc': {'color': '#00dc00',
+                      'marker': 'P', 'markersize': 7,
+                      'linestyle': 'solid', 'linewidth': 1.5},
+            'imd': {'color': '#8400c8',
+                    'marker': 'D', 'markersize': 6,
+                    'linestyle': 'solid', 'linewidth': 1.5},
+            'jma': {'color': '#696969',
+                    'marker': 's', 'markersize': 6,
+                    'linestyle': 'solid', 'linewidth': 1.5},
+            'metfra': {'color': '#00dc00',
+                      'marker': 'P', 'markersize': 7,
+                      'linestyle': 'solid', 'linewidth': 1.5},
+            'ukmet': {'color': '#e69f00',
+                      'marker': 'o', 'markersize': 7,
+                      'linestyle': 'solid', 'linewidth': 1.5},
         }
         return model_plot_settings_dict
 
