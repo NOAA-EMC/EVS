@@ -72,7 +72,7 @@ for OBTTYPE in ${obstype}; do
                         fi
                     fi
                 else
-                    echo "WARNING: can not find ${prep_config_file}"
+                    echo "DEBUG: can not find ${prep_config_file}"
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
@@ -159,7 +159,7 @@ for OBTTYPE in ${obstype}; do
                             if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
                         fi
                     else
-                        echo "WARNING: can not find ${prep_config_file}"
+                        echo "DEBUG: can not find ${prep_config_file}"
                     fi
                 else
                     if [ ${SENDMAIL} = "YES" ]; then
@@ -172,14 +172,14 @@ for OBTTYPE in ${obstype}; do
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}" >> ${email_msg}
+                    echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}" >> ${email_msg}
                     echo "Missing file is ${checkfile}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                 fi
         
-                echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
-                echo "WARNING: Missing file is ${checkfile}"
+                echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
+                echo "DEBUG: Missing file is ${checkfile}"
             fi
             ((ic++))
         done
@@ -244,7 +244,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
         fi
         while [ ${hour_now} -le ${max_hour} ]; do
             fhr3=`printf %3.3d ${hour_now}`
-            mdl_full_grib2=${MODELNAME}.t${mdl_cyc}z.prslev.f${fhr3}.grib2
+            mdl_full_grib2=${MODELNAME}.t${mdl_cyc}z.prslev.3km.f${fhr3}.na.grib2
             reduced_rec_grib2=${MODELNAME}.t${mdl_cyc}z.prslev.f${fhr3}.reduced.grib2
             check_full_file=${com_rrfs}/${mdl_full_grib2}
             check_reduced_file=${com_rrfs}/${reduced_rec_grib2}
@@ -266,23 +266,23 @@ for mdl_cyc in "${cyc_opt[@]}"; do
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: Can not find RRFS aerosol forecast grib2 output" >> ${email_msg}
+                    echo "DEBUG: Can not find RRFS aerosol forecast grib2 output" >> ${email_msg}
                     echo "Missing file is ${check_full_file}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                 fi
-                echo "WARNING: Can not find RRFS aerosol forecast grib2 output"
+                echo "DEBUG: Can not find RRFS aerosol forecast grib2 output"
                 echo "Missing file is ${check_full_file}"
             fi
             ((hour_now+=${inc}))
         done
     else
         if [ ${SENDMAIL} = "YES" ]; then
-            echo "WARNING: Can not find RRFS output directory ${com_rrfs}" >> ${email_msg}
+            echo "DEBUG: Can not find RRFS output directory ${com_rrfs}" >> ${email_msg}
             echo "==============" >> ${email_msg}
             flag_send_message=YES
         fi
-        echo "WARNING: Can not find RRFS output directory ${com_rrfs}"
+        echo "DEBUG: Can not find RRFS output directory ${com_rrfs}"
     fi
 done
 #
