@@ -2,8 +2,8 @@
 ###############################################################################
 # Name of Script: 
 # Contact(s):     Ho-Chun Huang (ho-chun.huang@noaa.gov)
-# Purpose of Script: Read AERONET AOD file and remove bad records with
-#                    inconsistent columns number as header
+# Purpose of Script: Read Hourly AIRNOW PM25/OZONE file and remove bad records
+#                    with inconsistent columns number as header
 #
 # History Log:
 ###############################################################################
@@ -21,14 +21,14 @@ if len(sys.argv) < 2:
 
 # Read the input file as the first argument
 input_file = os.path.expandvars(sys.argv[1])
-print(f'Input Original Aeronet File:  {input_file}')
+print(f'Input Original AirNOW File:  {input_file}')
 
 # Read the Output file as the second argument
 output_file = os.path.expandvars(sys.argv[2])
-print(f'Output screened Aeronet File: {output_file}')
+print(f'Output screened AirNOW File: {output_file}')
 
 if not os.path.exists(input_file):
-    print(f"DEBUG :: Can not find input Aeronet file - {input_file}")
+    print(f"DEBUG :: Can not find input AirNOW file - {input_file}")
     print(f"DEBUG :: Check the existence of input file before calling {sys.argv[0]}")
     sys.exit()
 

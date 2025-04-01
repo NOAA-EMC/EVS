@@ -79,8 +79,8 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 # Do check for valid config options
 VCS_type_list = os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
 valid_VCS_type_opts_dict = {
-    'grid2grid_plots': ['temp', 'pres_lvls', 'sst', 
-                        'sea_ice'],
+    'grid2grid_plots': ['temp', 'pres_lvls', 'precip',
+                        'sst', 'sea_ice'],
     'grid2obs_plots': ['prepbufr']
 }
 for VCS_type in VCS_type_list:

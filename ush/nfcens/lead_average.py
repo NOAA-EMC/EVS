@@ -1048,7 +1048,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     if save_header:
         save_name = f'{save_header}_'+save_name
     save_subdir = os.path.join(
-        save_dir, f'{str(run).lower()}' 
+        save_dir, 'images' 
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)

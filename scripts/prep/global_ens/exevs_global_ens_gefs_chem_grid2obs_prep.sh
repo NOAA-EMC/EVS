@@ -55,7 +55,7 @@ for OBTTYPE in ${obstype}; do
                         fi
                     fi
                 else
-                    echo "WARNING: can not find ${prep_config_file}"
+                    echo "DEBUG: can not find ${prep_config_file}"
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
@@ -68,13 +68,13 @@ for OBTTYPE in ${obstype}; do
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
-                echo "WARNING: No AEORNET Level 1.5 data was available for valid date ${INITDATE}" >> mailmsg
+                echo "DEBUG: No AERONET Level 1.5 data was available for valid date ${INITDATE}" >> mailmsg
                 echo "Missing file is ${checkfile}" >> mailmsg
                 echo "==============" >> mailmsg
                 flag_send_message=YES
             fi
-            echo "WARNING: No AEORNET Level 1.5 data was available for valid date ${INITDATE}"
-            echo "WARNING: Missing file is ${checkfile}"
+            echo "DEBUG: No AERONET Level 1.5 data was available for valid date ${INITDATE}"
+            echo "DEBUG: Missing file is ${checkfile}"
         fi
     elif [ "${OBTTYPE}" == "airnow" ]; then
         airnow_hourly_type="aqobs"
@@ -113,7 +113,7 @@ for OBTTYPE in ${obstype}; do
                             if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
                         fi
                     else
-                        echo "WARNING: can not find ${prep_config_file}"
+                        echo "DEBUG: can not find ${prep_config_file}"
                     fi
                 else
                     if [ ${SENDMAIL} = "YES" ]; then
@@ -126,14 +126,14 @@ for OBTTYPE in ${obstype}; do
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}" >> mailmsg
+                    echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}" >> mailmsg
                     echo "Missing file is ${checkfile}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
         
-                echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
-                echo "WARNING: Missing file is ${checkfile}"
+                echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
+                echo "DEBUG: Missing file is ${checkfile}"
             fi
             ((ic++))
         done
@@ -182,34 +182,34 @@ for mdl_cyc in "${cyc_opt[@]}"; do
                 if [ -e extract_pm25 ]; then /bin/rm -rf extract_pm25; fi
                 wgrib2 -match "${match_aod_1}" -match "${match_aod_2}" -match "${match_aod_3}" -match "${match_aod_4}" ${check_full_file} -grib extract_aod
                 wgrib2 -match "${match_pm25_1}" -match "${match_pm25_2}" -match "${match_pm25_3}" ${check_full_file} -grib extract_pm25
-                cat extract_aod extract_pm25 > ${reduced_rec_grib2}
+                cat extract_aod extract_pm25 >> ${reduced_rec_grib2}
                 if [ ${SENDCOM} = "YES" ]; then
                     cp -v ${reduced_rec_grib2} ${prep_gefs}
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
+                    echo "DEBUG: Can not find GEFS-aerosol forecast output" >> mailmsg
                     echo "Missing file is ${check_full_file}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
-                echo "WARNING: Can not find GEFS-aerosol forecast output" >> mailmsg
+                echo "DEBUG: Can not find GEFS-aerosol forecast output" >> mailmsg
                 echo "Missing file is ${check_full_file}" >> mailmsg
             fi
             ((hour_now+=${inc}))
         done
     else
         if [ ${SENDMAIL} = "YES" ]; then
-            echo "WARNING: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
+            echo "DEBUG: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
             echo "==============" >> mailmsg
             flag_send_message=YES
         fi
-        echo "WARNING: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
+        echo "DEBUG: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
     fi
 done
 #
 if [ "${flag_send_message}" == "YES" ]; then
-    export subject="AEORNET Level 1.5 NC or AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}_${RUN}"
+    export subject="AERONET Level 1.5 NC or AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}_${RUN}"
     echo "Job ID: ${jobid}" >> mailmsg
     cat mailmsg | mail -s "${subject}" ${MAILTO}
 fi 

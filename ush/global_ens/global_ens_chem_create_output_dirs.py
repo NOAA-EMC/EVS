@@ -40,12 +40,6 @@ data_base_dir = os.path.join(DATA, VERIF_CASE_STEP, 'data')
 data_dir_list = [data_base_dir]
 for model in model_list:
     data_dir_list.append(os.path.join(data_base_dir, model))
-if VERIF_CASE_STEP == 'grid2grid_plots':
-    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-        if VERIF_CASE_STEP_type == 'viirs':
-            data_dir_list.append(os.path.join(data_base_dir, 'viirs'))
-        elif VERIF_CASE_STEP_type == 'abi':
-            data_dir_list.append(os.path.join(data_base_dir, 'abi'))
 
 # Create data directories
 for data_dir in data_dir_list:
@@ -53,8 +47,12 @@ for data_dir in data_dir_list:
 
 # Create job script base directory
 if STEP == 'plots':
-   job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
+    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                    'plot_job_scripts')
+else:
+    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
+                                   'unknown_job_scripts')
+
 if not os.path.exists(job_scripts_dir):
     gda_util.make_dir(job_scripts_dir)
 
@@ -62,7 +60,8 @@ if not os.path.exists(job_scripts_dir):
 working_dir_list = []
 output_dir_list = []
 if STEP == 'plots':
-    NDAYS = str(os.environ['NDAYS'])
+    fig_name_label = os.environ['fig_name_label']
+    dir_name_label = fig_name_label
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
@@ -84,12 +83,12 @@ if STEP == 'plots':
                 os.path.join(working_output_base_dir,
                              f"{RUN}.{end_date_dt:%Y%m%d}",
                              f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
-                             f"last{NDAYS}days")
+                             dir_name_label)
             )
         if SENDCOM == 'YES':
             output_dir_list.append(
                 os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
-                             f"last{NDAYS}days")
+                             dir_name_label)
             )
 
 # Create working directories
