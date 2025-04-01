@@ -2200,29 +2200,29 @@ suite evs_nco
         family plots
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/plots'
           family subseasonal
-            task jevs_subseasonal_grid2obs_prepbufr_plots_90days
+            task jevs_subseasonal_grid2obs_prepbufr_plots_last90days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2obs_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2obs_stats == complete
-            task jevs_subseasonal_grid2obs_prepbufr_plots_31days
+            task jevs_subseasonal_grid2obs_prepbufr_plots_last31days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2obs_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2obs_stats == complete
-            task jevs_subseasonal_grid2grid_sst_plots_90days
+            task jevs_subseasonal_grid2grid_sst_plots_last90days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
-            task jevs_subseasonal_grid2grid_sst_plots_31days
+            task jevs_subseasonal_grid2grid_sst_plots_last31days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
-            task jevs_subseasonal_grid2grid_sea_ice_plots_90days
+            task jevs_subseasonal_grid2grid_sea_ice_plots_last90days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
-            task jevs_subseasonal_grid2grid_sea_ice_plots_31days
+            task jevs_subseasonal_grid2grid_sea_ice_plots_last31days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
-            task jevs_subseasonal_grid2grid_pres_lvls_plots_90days
+            task jevs_subseasonal_grid2grid_pres_lvls_plots_last90days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
-            task jevs_subseasonal_grid2grid_pres_lvls_plots_31days
+            task jevs_subseasonal_grid2grid_pres_lvls_plots_last31days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
-            task jevs_subseasonal_grid2grid_precip_plots_90days
+            task jevs_subseasonal_grid2grid_precip_plots_last90days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
-            task jevs_subseasonal_grid2grid_precip_plots_31days
+            task jevs_subseasonal_grid2grid_precip_plots_last31days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
-            task jevs_subseasonal_grid2grid_temp_plots_90days
+            task jevs_subseasonal_grid2grid_temp_plots_last90days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
-            task jevs_subseasonal_grid2grid_temp_plots_31days
+            task jevs_subseasonal_grid2grid_temp_plots_last31days
               trigger :TIME >= 1900 and ../../../../12/evs/stats/subseasonal/jevs_cfs_subseasonal_grid2grid_stats == complete and ../../../../12/evs/stats/subseasonal/jevs_gefs_subseasonal_grid2grid_stats == complete
           endfamily
           family mesoscale
