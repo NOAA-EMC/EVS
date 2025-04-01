@@ -45,7 +45,7 @@ export CMODEL=$(echo ${MODELNAME} | tr a-z A-Z)
 echo ${CMODEL}
 
 # date2jday in module prod_util
-export jday=$(date2jday.sh ${INITDATE}
+export jday=$(date2jday.sh ${INITDATE} )
 
 declare -a grid2grid_list=( ${DATA_TYPE} )
 num_obs=${#grid2grid_list[@]}
@@ -430,4 +430,3 @@ if [ "${flag_send_message}" == "YES" ]; then
   cat ${email_msg} | mail -s "${subject}" ${MAILTO}
 fi
 exit
-
