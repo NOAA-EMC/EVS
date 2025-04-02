@@ -37,15 +37,12 @@ export QUEUESERV=dev_transfer
 export PARTITION_BATCH=
 export nproc=66
 export USE_CFP=YES
-export met_ver=${met_ver}
-export metplus_ver=${metplus_ver}
 export vhr=00
 export NET=evs
 export STEP=stats
 export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME=gefs
-export gefs_ver=${gefs_ver}
 export VERIF_CASE=grid2grid
 
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT
