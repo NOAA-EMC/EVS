@@ -187,6 +187,7 @@ for grid in $VX_MASK_LIST ; do
      echo "if [ -s ${plot_dir}/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png ] ; then" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      echo "  cp -v ${plot_dir}/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png $all_plots" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      echo "  >${plot_dir}/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "  echo \"run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed\" >> ${plot_dir}/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      echo "  if [ $SENDCOM = YES ] ; then" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      echo "    cp $all_plots/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png $restart" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      echo "    cp ${plot_dir}/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed $restart" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh

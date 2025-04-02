@@ -40,6 +40,7 @@ if [ $modnam = prepbufr ] ; then
        if [ -s ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc ] ; then
 	 cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc $WORK/prepbufr.${VDATE}
 	 >${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.completed 
+	 echo "prepbufr.t${vhr}z.completed" >> ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.completed
 	 if [ $SENDCOM = YES ] ; then
 	   [[ ! -d $COMOUTsmall/prepbufr ]] && mkdir -p $COMOUTsmall/prepbufr
 	   cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc $COMOUTsmall/prepbufr

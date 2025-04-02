@@ -62,7 +62,7 @@ for prod in mean  ; do
 
       #Check for restart: check if the single sub-job is completed in the previous run
       #If this job has been completed in the previous run, then skip it
-      if [ ! -e $COMOUTsmall/run_narre_${model}.${dom}.${valid}.${fhr}.completed ] ; then
+   if [ ! -e $COMOUTsmall/run_narre_${model}.${dom}.${valid}.${fhr}.completed ] ; then
 
          ihr=`$NDATE -$fhr $VDATE$valid|cut -c 9-10`
          iday=`$NDATE -$fhr $VDATE$valid|cut -c 1-8`
@@ -70,7 +70,7 @@ for prod in mean  ; do
          input_fcst="$COMINnarre/narre.${iday}/ensprod/narre.t${ihr}z.mean.grd${grid}.f${fhr}.grib2"
          input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid}z.G${grid}.nc"
 
-       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
+     if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
        echo  "#!/bin/ksh">>run_narre_${model}.${dom}.${valid}.${fhr}.sh
        echo  "set -x" >>run_narre_${model}.${dom}.${valid}.${fhr}.sh
@@ -128,6 +128,7 @@ for prod in mean  ; do
        echo "if [ -s \$output_base/stat/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat ] ; then " >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
        echo "  cp \$output_base/stat/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat $all_stats" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
        echo "  >\$output_base/stat/run_narre_${model}.${dom}.${valid}.${fhr}.completed" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
+       echo "  echo \"run_narre_${model}.${dom}.${valid}.${fhr}.completed\" >> \$output_base/stat/run_narre_${model}.${dom}.${valid}.${fhr}.completed" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
        echo "  if [ $SENDCOM = YES ] ; then" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
        echo "    cp \$output_base/stat/*FHR${fhr}_${fhr}0000L_${VDATE}_${valid}0000V.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
        echo "    cp \$output_base/stat/run_narre_${model}.${dom}.${valid}.${fhr}.completed $COMOUTsmall" >> run_narre_${model}.${dom}.${valid}.${fhr}.sh
@@ -137,7 +138,7 @@ for prod in mean  ; do
        chmod +x run_narre_${model}.${dom}.${valid}.${fhr}.sh
        echo "${DATA}/scripts/run_narre_${model}.${dom}.${valid}.${fhr}.sh" >> run_all_narre_poe.sh
 
-       fi
+      fi
 
       
       else
