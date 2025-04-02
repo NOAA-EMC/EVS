@@ -353,7 +353,8 @@ for field in $fields ; do
           fi
 
           # Indicate sub-task is completed for restart 
-	  echo ">$WORK/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh	  
+	  echo ">$WORK/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+	  echo "echo "${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o task is completed" >> $WORK/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
 
           # Save files for restart
 	  echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
@@ -396,7 +397,7 @@ done # end of fields loop
 
 # Indicate all tasks are completed
 >$WORK/stats_completed
-echo "stats are completed" >> $WORK/stats_completed
+echo "All stats are completed" >> $WORK/stats_completed
 
 if [ $SENDCOM = YES ] ; then
   cp -f $WORK/stats_completed $COMOUTsmall
