@@ -71,7 +71,7 @@ for period in ${periods} ; do
             echo "export METRIC=p95 "  >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
             ;;
         esac
-        echo "export FHR='000,024,048,072,096,120,144,168,192,216,240'" >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
+        echo "export FHR='000,024,048,072,096,120,144'" >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export WVAR=${wvar}"      >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         case ${wvar} in
           'WIND')
