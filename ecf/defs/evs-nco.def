@@ -1062,7 +1062,7 @@ suite evs_nco
           endfamily
           family nfcens
             task jevs_nfcens_wave_grid2obs_prep
-              time 12:15
+              time 19:00
           endfamily
 	  family glwu
             task jevs_glwu_wave_grid2obs_prep
@@ -1134,7 +1134,7 @@ suite evs_nco
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/stats'
           family nfcens
             task jevs_nfcens_wave_grid2obs_stats
-              trigger ../../prep/nfcens == complete
+              trigger :TIME >= 1930 and ../../prep/nfcens == complete
           endfamily
 	  family glwu
 	    task jevs_glwu_wave_grid2obs_stats
@@ -1586,7 +1586,7 @@ suite evs_nco
           endfamily
           family nfcens
             task jevs_nfcens_wave_grid2obs_plots
-              trigger ../../../../12/evs/stats/nfcens == complete
+              trigger :TIME >= 2100 and ../../stats/nfcens == complete
           endfamily
           family glwu
             task jevs_glwu_wave_grid2obs_plots
