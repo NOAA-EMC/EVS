@@ -130,6 +130,7 @@ sed -i "s|$SEARCH6|$stbasin|g" TCPairs_template.conf
 sed -i "s|$SEARCHx|$Model_List|g" TCPairs_template.conf
 
 run_metplus.py -c $STORMdata/TCPairs_template.conf
+export err=$?; err_chk
 
 #--- run for TC_stat 
 cd $STORMdata
@@ -155,6 +156,7 @@ sed -i "s|$SEARCH7|$symdh|g" TCStat_template.conf
 sed -i "s|$SEARCH8|$eymdh|g" TCStat_template.conf
 
 run_metplus.py -c $STORMdata/TCStat_template.conf
+export err=$?; err_chk
 
 if [ "$SENDCOM" = 'YES' ]; then
   if [ ! -d ${comoutroot}/tc_pairs ]; then mkdir -p ${comoutroot}/tc_pairs; fi
@@ -237,6 +239,8 @@ sed -i "s|$SEARCH7|$symdhB|g" TCStat_template_basin.conf
 sed -i "s|$SEARCH8|$eymdhB|g" TCStat_template_basin.conf
 
 run_metplus.py -c ${metTCcomout}/TCStat_template_basin.conf
+export err=$?; err_chk
+
 if [ "$SENDCOM" = 'YES' ]; then
   if [ ! -d ${comoutbas}/tc_stat ]; then mkdir -p ${comoutbas}/tc_stat; fi
   cp ${metTCcomout}/tc_stat/tc_stat.out ${comoutbas}/tc_stat/tc_stat_basin.out
