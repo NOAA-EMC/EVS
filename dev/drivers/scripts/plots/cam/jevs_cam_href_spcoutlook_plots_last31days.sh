@@ -1,4 +1,4 @@
-#PBS -N jevs_cam_href_spcoutlook_last31days_plots
+#PBS -N jevs_cam_href_spcoutlook_plots_last31days
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash

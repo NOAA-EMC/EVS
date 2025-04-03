@@ -1,4 +1,4 @@
-#PBS -N jevs_cam_href_snowfall_last31days_plots
+#PBS -N jevs_cam_href_snowfall_plots_last31days
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
