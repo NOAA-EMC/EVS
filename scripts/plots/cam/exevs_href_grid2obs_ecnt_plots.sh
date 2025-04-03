@@ -211,7 +211,7 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
 	 echo "for domain in $subregions ; do "  >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
 	 echo "if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
 	 echo " cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
-	 echo " >$all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh 
+	 echo " echo completed >$all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh 
 
 	 #Copy files to restart directory
 	 echo " if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
