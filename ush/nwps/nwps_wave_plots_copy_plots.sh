@@ -59,17 +59,19 @@ for small_period in ${small_periods} ; do
 				esac
 
 				# Lead average plots
-				imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f144.${region}.png
-            			tmp_image=$DATA/images/$imagename
-				job_work_dir=${DATA}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${stats}_lead_average_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
-				job_image=$job_work_dir/images/$imagename
-				if [[ ! -s $tmp_image ]]; then
-					if [[ -s $job_image ]]; then
-						cp -v $job_image $tmp_image
-					else
-						echo "NOTE: $job_image does not exist"
+				for fhr in ${fhrs}; do
+					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f${fhr}.${region}.png
+            				tmp_image=$DATA/images/$imagename
+					job_work_dir=${DATA}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${stats}_lead_average_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
+					job_image=$job_work_dir/images/$imagename
+					if [[ ! -s $tmp_image ]]; then
+						if [[ -s $job_image ]]; then
+							cp -v $job_image $tmp_image
+						else
+							echo "NOTE: $job_image does not exist"
+						fi
 					fi
-				fi
+				done
 				# Time series plots
 				for fhr in ${fhrs} ; do
 					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.timeseries_valid${vhr}z_f${fhr}.${region}.png
