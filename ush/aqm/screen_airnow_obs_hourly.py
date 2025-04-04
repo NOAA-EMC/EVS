@@ -49,7 +49,9 @@ for line in rfile:
                 wfile.write(line)
                 flag_data=True
             else:
-                print(f"DEBUG: first row is not header {line}")
+                print(f"DEBUG: first row has inconsistent header column")
+        else:
+            print(f"DEBUG: first row is not header {line}")
         count += 1
     else:
         count += 1
