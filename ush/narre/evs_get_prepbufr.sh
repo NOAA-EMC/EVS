@@ -2,15 +2,15 @@
 #**************************************************************************
 #  Purpose: Get required input forecast and validation data files
 #           for narre stat jobs
-#  Last update:  3/26/2024, add restart capability, by Binbin Zhou Lynker@EMC/NCEP
+#  Last update:  02/5/2025, put the completed files in the working directory first,
+#                            then copy them to the COMOUTsmall/restart
+#                3/26/2024, add restart capability, by Binbin Zhou Lynker@EMC/NCEP
 #                10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
 #************************************************************************
 #
 set -x 
 
 modnam=$1
-
-
 
 if [ $modnam = prepbufr ] ; then
 
@@ -19,23 +19,41 @@ if [ $modnam = prepbufr ] ; then
 
  for vhr in 00  03  06  09  12  15  18   21  ; do
   if [ -s $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00 ] ; then 
-   split_by_subset $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00
-   for subset in ADPSFC SFCSHP MSONET; do
-    if [ -s ${WORK}/${subset} ]; then
-     cat ${WORK}/${subset} >> $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00
+    if [ ! -e $COMOUTsmall/prepbufr/prepbufr.t${vhr}z.completed ] ; then 
+      split_by_subset $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00
+      for subset in ADPSFC SFCSHP MSONET; do
+        if [ -s ${WORK}/${subset} ]; then
+          cat ${WORK}/${subset} >> $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00
+	  rm -f ${WORK}/${subset}
+        fi
+      done
+      export bufrpath=$WORK/prepbufr.$VDATE
+      for grid in G130 G242 ; do
+        export vbeg=${vhr}
+        export vend=${vhr}
+        export verif_grid=$grid
+        if [ -s $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00 ] ; then
+          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.conf
+          export err=$?; err_chk
+        fi
+      done
+       if [ -s ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc ] ; then
+	 cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc $WORK/prepbufr.${VDATE}
+	 >${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.completed 
+	 echo "prepbufr.t${vhr}z.completed" >> ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.completed
+	 if [ $SENDCOM = YES ] ; then
+	   [[ ! -d $COMOUTsmall/prepbufr ]] && mkdir -p $COMOUTsmall/prepbufr
+	   cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.G*.nc $COMOUTsmall/prepbufr
+	   cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.completed $COMOUTsmall/prepbufr
+	 fi 
+       fi
+    else 
+     #Get file from restart: 
+     if [ -s $COMOUTsmall/prepbufr/prepbufr.t${vhr}z.G*.nc ] ; then
+        cp $COMOUTsmall/prepbufr/prepbufr.t${vhr}z.G*.nc $WORK/prepbufr.${VDATE}
+     fi 
     fi
-   done
-   export bufrpath=$WORK/prepbufr.$VDATE
-   for grid in G130 G242 ; do
-     export vbeg=${vhr}
-     export vend=${vhr}
-     export verif_grid=$grid
-     if [ -s $WORK/prepbufr.$VDATE/rap.t${vhr}z.prepbufr.tm00 ] ; then
-       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.conf
-       export err=$?; err_chk
-       cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${VDATE}
-     fi
-   done
+
   else 
     echo "WARNING:  No Prepbufr data available $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00 for ${VDATE}"
     if [ $SENDMAIL = YES ] ; then
@@ -48,11 +66,6 @@ if [ $modnam = prepbufr ] ; then
     fi
   fi
  done
- #Save for restart
-  if [ -d $WORK/prepbufr.${VDATE} ] ; then
-      cp -r $WORK/prepbufr.${VDATE}  $COMOUTsmall
-  fi
- 
 
 fi
 
