@@ -18,11 +18,15 @@ rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
+###########################################
+# Shell Processing Variables
+###########################################
+export PS4='$SECONDS + '
+date
+
 export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . $DATA/PDY
-
-mkdir -p $DATA/logs
 
 export VDATE=${VDATE:-$PDYm1}
 
