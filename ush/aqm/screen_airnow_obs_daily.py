@@ -42,7 +42,7 @@ wfile=open(output_file,'w')
 #
 ## Check for number of column using the default 'DAILY_NCOL' defined in ~/job
 #
-num_ref_col=os.environ['DAILY_NCOL']
+num_ref_col=int(os.environ['DAILY_NCOL'])
 rcount=0
 wcount=0
 flag_data=False

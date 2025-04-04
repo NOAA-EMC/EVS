@@ -42,7 +42,7 @@ wfile=open(output_file,'w')
 #
 ## Check for number of column using the default 'HOURILY_NCOL' defined in ~/job
 #
-num_ref_hdr=os.environ['HOURLY_NCOL']
+num_ref_hdr=int(os.environ['HOURLY_NCOL'])
 rcount=0
 wcount=0
 flag_data=False
@@ -55,10 +55,10 @@ for line in rfile:
             num_hdr=len(hdr)
             print(f"header len {num_hdr}")
             if num_hdr == num_ref_hdr:
-                wfile.write(line)
+                wfile.write(line+"\n")
                 wcount += 1
                 flag_data=True
-                print(f"DEBUG :: find header row in line {rcount}")
+                print(f"DEBUG :: find header row in line {rcount} with header column = {num_ref_hdr}")
             else:
                 print(f"WARNING :: row {rcount} has inconsistent header column {num_hdr} vs reference {num_ref_hdr}")
     else:
