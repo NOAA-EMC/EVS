@@ -1031,9 +1031,9 @@ suite evs_nco
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/plots'
           family narre
             task jevs_narre_last90days_plots
-              trigger ../../../../06/evs/stats/narre == complete
+              trigger :TIME >= 0930 and ../../../../06/evs/stats/narre == complete
             task jevs_narre_last31days_plots
-              trigger ../../../../06/evs/stats/narre == complete
+              trigger :TIME >= 0930 and ../../../../06/evs/stats/narre == complete
           endfamily
           family global_ens
             task jevs_global_ens_wave_grid2obs_plots
