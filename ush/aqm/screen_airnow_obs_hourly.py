@@ -35,7 +35,7 @@ if not os.path.exists(input_file):
 rfile=open(input_file, 'r')
 wfile=open(output_file,'w')
 
-num_ref_hdr=34
+num_ref_hdr=os.environ['HOURLY_NCOL']
 rcount=0
 wcount=0
 flag_data=False
