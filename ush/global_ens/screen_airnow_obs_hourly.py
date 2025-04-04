@@ -2,10 +2,14 @@
 ###############################################################################
 # Name of Script: 
 # Contact(s):     Ho-Chun Huang (ho-chun.huang@noaa.gov)
-# Purpose of Script: Read Hourly AIRNOW PM25 file and remove bad records with
-#                    inconsistent columns number as header
-#
+# Purpose of Script: Read Hourly AIRNOW PM25/OZONE file and remove bad records
+#                    with inconsistent columns number as header
+#              
 # History Log:
+#              
+#   04/04/2025   Ho-Chun Huang  Use default number of column to handle AirNOW 
+#                               hourly file even it is a radom text file
+#
 ###############################################################################
 
 import os
@@ -35,28 +39,39 @@ if not os.path.exists(input_file):
 rfile=open(input_file, 'r')
 wfile=open(output_file,'w')
 
-count=0
+#
+## Check for number of column using the default 'HOURILY_NCOL' defined in ~/job
+#
+num_ref_hdr=os.environ['HOURLY_NCOL']
+rcount=0
+wcount=0
 flag_data=False
 for line in rfile:
     if not flag_data:
-        if line[1:6] != "AQSID":
-            wfile.write(line)
-        else:
-            wfile.write(line)
+        rcount += 1
+        if line[1:6] == "AQSID":
             line=line.rstrip("\n")
             hdr=line.split('","')
             num_hdr=len(hdr)
             print(f"header len {num_hdr}")
-            flag_data=True
-        count += 1
+            if num_hdr == num_ref_hdr:
+                wfile.write(line)
+                wcount += 1
+                flag_data=True
+                print(f"DEBUG :: find header row in line {rcount}")
+            else:
+                print(f"WARNING :: row {rcount} has inconsistent header column {num_hdr} vs reference {num_ref_hdr}")
     else:
-        count += 1
+        rcount += 1
         line=line.rstrip("\n")
         var=[]
         var=line.split('","')
         num_var=len(var)
-        if num_var == num_hdr:
+        if num_var == num_ref_hdr:
             wfile.write(line+"\n")
+            wcount += 1
         else:
-            print(f"DEBUG :: Line {count} has different columns number {num_var} vs standard {num_hdr}")
+            print(f"WARNING :: Line {rcount} has different columns number {num_var} vs reference {num_ref_hdr}")
+if wcount == 0:
+    print(f"WARNING - CHECK DATA FILE :: it is possible that {input_file} is not an EPA AirNOW hourly observation")
 wfile.close()
