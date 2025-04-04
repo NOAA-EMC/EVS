@@ -35,19 +35,21 @@ if not os.path.exists(input_file):
 rfile=open(input_file, 'r')
 wfile=open(output_file,'w')
 
+num_ref_hdr=34
 count=0
 flag_data=False
 for line in rfile:
     if not flag_data:
-        if line[1:6] != "AQSID":
-            wfile.write(line)
-        else:
-            wfile.write(line)
+        if line[1:6] == "AQSID":
             line=line.rstrip("\n")
             hdr=line.split('","')
             num_hdr=len(hdr)
             print(f"header len {num_hdr}")
-            flag_data=True
+            if num_hdr == num_ref_hdr:
+                wfile.write(line)
+                flag_data=True
+            else:
+                print(f"DEBUG: first row is not header {line}")
         count += 1
     else:
         count += 1
