@@ -32,6 +32,12 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO} 
 
+#############################################
+# Shell Processing Variables
+#############################################
+export PS4='$SECONDS + '
+date
+
 ####################################
 # Define NET/RUN variables
 ####################################
