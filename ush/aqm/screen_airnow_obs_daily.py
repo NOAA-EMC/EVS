@@ -6,6 +6,10 @@
 #                    with inconsistent columns number as header
 #
 # History Log:
+#              
+#   04/04/2025   Ho-Chun Huang  Use default number of column to handle AirNOW 
+#                               daily file even it is a radom text file
+#
 ###############################################################################
 
 import os
@@ -38,7 +42,7 @@ wfile=open(output_file,'w')
 #
 ## Check for number of column using the default 'DAILY_NCOL' defined in ~/job
 #
-num_hdr=os.environ['DAILY_NCOL']
+num_ref_col=os.environ['DAILY_NCOL']
 rcount=0
 wcount=0
 flag_data=False
@@ -48,11 +52,11 @@ for line in rfile:
     var=[]
     var=line.split("|")
     num_var=len(var)
-    if num_var == num_hdr:
+    if num_var == num_ref_col:
         wfile.write(line+"\n")
         wcount += 1
     else:
-        print(f"DEBUG :: Line {rcount} has different columns number {num_var} vs standard {num_hdr}")
+        print(f"DEBUG :: Line {rcount} has different columns number {num_var} vs reference {num_ref_col}")
 if wcount == 0:
-    print(f"CRITICAL - CHECK DATA FILE :: it is possible that {input_file} is not EPA AirNOW daily observation")
+    print(f"WARNING - CHECK DATA FILE :: it is possible that {input_file} is not an EPA AirNOW daily observation")
 wfile.close()
