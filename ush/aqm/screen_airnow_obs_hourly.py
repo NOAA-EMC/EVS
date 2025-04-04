@@ -53,7 +53,6 @@ for line in rfile:
             line=line.rstrip("\n")
             hdr=line.split('","')
             num_hdr=len(hdr)
-            print(f"header len {num_hdr}")
             if num_hdr == num_ref_hdr:
                 wfile.write(line+"\n")
                 wcount += 1
