@@ -36,10 +36,12 @@ rfile=open(input_file, 'r')
 wfile=open(output_file,'w')
 
 num_ref_hdr=34
-count=0
+rcount=0
+wcount=0
 flag_data=False
 for line in rfile:
     if not flag_data:
+        rcount += 1
         if line[1:6] == "AQSID":
             line=line.rstrip("\n")
             hdr=line.split('","')
@@ -47,20 +49,22 @@ for line in rfile:
             print(f"header len {num_hdr}")
             if num_hdr == num_ref_hdr:
                 wfile.write(line)
+                wcount += 1
                 flag_data=True
+                print(f"DEBUG :: find header row in line {rcount}")
             else:
-                print(f"DEBUG: first row has inconsistent header column")
-        else:
-            print(f"DEBUG: first row is not header {line}")
-        count += 1
+                print(f"DEBUG :: row {rcount} has inconsistent header column")
     else:
-        count += 1
+        rcount += 1
         line=line.rstrip("\n")
         var=[]
         var=line.split('","')
         num_var=len(var)
         if num_var == num_hdr:
             wfile.write(line+"\n")
+            wcount += 1
         else:
-            print(f"DEBUG :: Line {count} has different columns number {num_var} vs standard {num_hdr}")
+            print(f"DEBUG :: Line {rcount} has different columns number {num_var} vs standard {num_hdr}")
+if wcount == 0:
+    print(f"CRITICAL - CHECK DATA FILE :: it is possible that {input_file} is not EPA AirNOW hourly observation")
 wfile.close()
