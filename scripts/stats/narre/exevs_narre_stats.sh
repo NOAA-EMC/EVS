@@ -8,6 +8,9 @@ set -x
 
 export WORK=$DATA
 cd $WORK
+mkdir -p $WORK/scripts
+export all_stats=$WORK/all_stats
+mkdir -p $all_stats
 
 export run_mpi=${run_mpi:-'yes'}
 export stats=${stats:-'yes'}

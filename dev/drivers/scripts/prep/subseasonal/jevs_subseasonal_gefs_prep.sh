@@ -48,7 +48,6 @@ export STEP=prep
 export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME=gefs
-export gefs_ver=${gefs_ver}
 export PREP_TYPE=gefs
 
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT/$RUN
