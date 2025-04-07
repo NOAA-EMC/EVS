@@ -1,7 +1,9 @@
 #!/bin/ksh
 #################################################################################
 # Purpose: setup environment, paths, and run the narre ploting python script
-# Last updated: 04/01/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
+# Last updated: 
+#               02/05/2025, Add MPMD,  Binbin Zhou Lynker@EMC/NCEP
+#               04/01/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               After a sub-task file is create, first check if it has been done
 #               in the previous (see its .completed file exists or not)
 #               If it has been done before, then skip further building this 
@@ -12,19 +14,20 @@
 ##################################################################################
 set -x 
 
-cd $DATA
+mkdir -p $DATA/scripts
+cd $DATA/scripts
 
-export prune_dir=$DATA/data
-export save_dir=$DATA/out
+export machine=${machine:-"WCOSS2"}
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/NARRE_verif_plotting_job.out
-mkdir -p $prune_dir
-mkdir -p $save_dir
 mkdir -p $output_base_dir
-mkdir -p $DATA/logs
 
-if [ ! -d  $COMOUT/restart/$last_days ] ; then
-  mkdir -p $COMOUT/restart/$last_days
+all_plots=$DATA/plots/all_plots
+mkdir -p $all_plots
+if [ $SENDCOM = YES ] ; then
+  restart=$COMOUT/restart/$last_days/narre_plots
+  if [ ! -d  $restart ] ; then
+    mkdir -p $restart 
+  fi 
 fi
 
 export eval_period='TEST'
@@ -57,11 +60,8 @@ done
 
 VX_MASK_LIST="G130 G242"
 
-export fcst_valid_hour="0,3,6,9,12,15,18,21"
+export fcst_valid_hour="0 3 6 9 12 15 18 21"
 export fcst_lead="1,2,3,4,5,6,7,8,9,10,11,12"
-
-export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-mkdir -p ${plot_dir}
 
 #*****************************************
 # Build a POE file to collect sub-jobs
@@ -72,14 +72,19 @@ for grid in $VX_MASK_LIST ; do
  for score_type in performance_diagram ; do
 
   for var in VISsfc HGTcldceil ; do 
+ 
+    if [ $var = VISsfc ] ; then
+      export vname=vis
+    elif [ $var = HGTcldceil ] ; then
+      export vname=hgt
+    fi
 
-   #for line_type in ctc sl1l2 ; do 
    for line_type in ctc ; do 
 
     #*****************************************************************************
     # Build sub-jobs and setup environment for running the python plotting scripts
     # ****************************************************************************
-    > run_narre_${grid}.${score_type}.${var}.${line_type}.sh 
+    > run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh 
 
   if [ $grid = G130 ] ; then
     export grd=g130
@@ -87,31 +92,34 @@ for grid in $VX_MASK_LIST ; do
     export grd=g242
   fi
 
+  for valid in $fcst_valid_hour ; do
+
+   typeset -Z2 vhh
+   vhh=${valid}	  
+
   #**********************************************************************************************
   # Check if this sub-job has been completed in the previous run for restart
-   if [ ! -e $COMOUT/restart/$last_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed ] ; then
+   if [ ! -e $restart/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed ] ; then
   #************************************************************************************************
+    echo "#!/bin/ksh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+    echo "set -x" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+
+    save_dir=$DATA/plots/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}
+    plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
+    mkdir -p $plot_dir
+    mkdir -p $save_dir/data 
+
+    echo "export save_dir=$save_dir" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+    echo "export log_metplus=$save_dir/log_${grid}.${score_type}.${var}.${line_type}.${valid}.out" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+    echo "export prune_dir=$save_dir/data" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
 
     if [ $grid = G130 ] ; then
-      echo "export mask=buk_conus" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      #echo "export grd=g130"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      #grd=g130
+      echo "export mask=buk_conus" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
     elif [ $grid = G242 ] ; then
-      echo "export mask=alaska" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      #echo "export grd=g242"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      #grd=g242
+      echo "export mask=alaska" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
     fi
 
-      echo "export PLOT_TYPE=$score_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-
-    if [ $var = VISsfc ] ; then
-      echo "export field=vis_l0" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      echo "export vname=vis" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-    elif [ $var = HGTcldceil ] ; then
-      echo "export field=ceiling_l0" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      echo "export vname=hgt" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-    fi
-
+      echo "export PLOT_TYPE=$score_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
 
      if [ $var = VISsfc  ] || [ $var = HGTcldceil ] || [ $var = TCDC ] ; then
       FCST_LEVEL_value="L0"
@@ -146,49 +154,57 @@ for grid in $VX_MASK_LIST ; do
       thresh="<152,<305,<914,<1524,<3048"
      fi
 
-     echo "export vx_mask_list=$grid" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "export verif_case=grid2obs" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "export verif_type=conus_sfc" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "export vx_mask_list=$grid" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "export verif_case=grid2obs" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "export verif_type=conus_sfc" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
 
-     echo "export log_level=INFO" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "export model=NARRE_MEAN" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "export log_level=INFO" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "export model=NARRE_MEAN" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
 
-     echo "export eval_period=TEST" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "export eval_period=TEST" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
 
      if [ $score_type = valid_hour_average ] ; then
-       echo "export date_type=INIT" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+       echo "export date_type=INIT" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      else
-       echo "export date_type=VALID" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+       echo "export date_type=VALID" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
      fi
 
-     echo "export var_name=$var" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "export fcts_level=$FCST_LEVEL_value" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "export obs_level=$OBS_LEVEL_value" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "export var_name=$var" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "export fcts_level=$FCST_LEVEL_value" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "export obs_level=$OBS_LEVEL_value" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
 
 
-     echo "export line_type=$line_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "export interp=NEAREST" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "export score_py=$score_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "export line_type=$line_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "export interp=NEAREST" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "export score_py=$score_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
 
-     sed -e "s!stat_list!$stat_list!g"  -e "s!thresh_list!$thresh!g" -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$fcst_lead!g"  $USHevs/narre/evs_narre_plots.sh > run_py.${var}_${line_type}.${score_type}.${grid}.sh
+     sed -e "s!stat_list!$stat_list!g"  -e "s!thresh_list!$thresh!g" -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$valid!g" -e "s!fcst_lead!$fcst_lead!g"  $USHevs/narre/evs_narre_plots.sh > run_py.${var}_${line_type}.${score_type}.${grid}.${valid}.sh
 
-     chmod +x run_py.${var}_${line_type}.${score_type}.${grid}.sh
+     chmod +x run_py.${var}_${line_type}.${score_type}.${grid}.${valid}.sh
 
-     echo "${DATA}/run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "${DATA}/scripts/run_py.${var}_${line_type}.${score_type}.${grid}.${valid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
  
-     #For restart
-     echo "cp ${plot_dir}/${score_type}_regional_${grd}_valid_*${vname}_*.png  $COMOUT/restart/$last_days/." >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "[[ \$? = 0 ]] && >$COMOUT/restart/$last_days/run_narre_${grid}.${score_type}.${var}.${line_type}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     
-     chmod +x run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "${DATA}/run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
+     echo "if [ -s ${plot_dir}/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png ] ; then" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "  cp -v ${plot_dir}/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png $all_plots" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "  >${plot_dir}/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "  echo \"run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed\" >> ${plot_dir}/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "  if [ $SENDCOM = YES ] ; then" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "    cp $all_plots/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png $restart" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "    cp ${plot_dir}/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.completed $restart" >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "  fi " >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "fi " >> run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+
+     chmod +x run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh
+     echo "${DATA}/scripts/run_narre_${grid}.${score_type}.${var}.${line_type}.${valid}.sh" >> run_all_poe.sh
 
     else
-
-      #For restart
-      cp $COMOUT/restart/$last_days/${score_type}_regional_${grd}_*${vname}_*.png ${plot_dir}/.
-
+      #Copy stat files from restart to working directory
+      if [ -s $restart/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png ] ; then
+	cp $restart/${score_type}_regional_${grd}_valid_${vhh}z_${vname}_*.png $all_plots
+      fi
     fi      
+
+     done
 
     done 
 
@@ -204,18 +220,17 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
 if [ $run_mpi = yes ] ; then
-   mpiexec -np 8 -ppn 8 --cpu-bind verbose,core cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 16 -ppn 16 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_poe.sh
    export err=$?; err_chk
 else
-  ${DATA}/run_all_poe.sh
+  ${DATA}/scripts/run_all_poe.sh
   export err=$?; err_chk
 fi
-
 
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $plot_dir
+cd $all_plots
 
 for grid in g130 g242 ; do 
   if [ $grid = g130 ] ; then
@@ -232,14 +247,29 @@ for grid in g130 g242 ; do
           field=ceiling_l0
 	  thrsh=_lt152lt305lt914lt1524lt3048
     fi	  
-    if [ -s performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png ] ; then
-      cp  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${last_days}days.perfdiag_valid_all_times.${domain}.png
+
+   for valid in 00 03 06 09 12 15 18 21 ; do
+
+    if [ -s performance_diagram_regional_${grid}_valid_${valid}z_${var}_f1_to_f12_${thrsh}.png ] ; then
+      mv  performance_diagram_regional_${grid}_valid_${valid}z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${last_days}days.perfdiag_valid${valid}z.${domain}.png
     fi 
+   done
   done
 done
 
-if [ -s *.png ] ; then
- tar -cvf evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar *.png
+if [ -s evs*.png ] ; then
+ tar -cvf evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar evs*.png
+fi
+
+# Cat the plotting log files
+log_dir="$DATA/plots"
+if [ -s $log_dir/*/log*.out ]; then
+  log_files=`ls $log_dir/*/log*.out`
+  for log_file in $log_files ; do
+    echo "Start: $log_file"
+    cat  "$log_file" 
+    echo "End: $log_file"
+  done
 fi
 
 if [ $SENDCOM = YES ] && [ -s evs.plots.narre.grid2obs.last${last_days}days.v${VDATE}.tar ] ; then

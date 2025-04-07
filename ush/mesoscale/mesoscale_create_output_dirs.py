@@ -93,6 +93,10 @@ if STEP == 'plots':
 # Define data base directorie
 data_base_dir = os.path.join(DATA, VERIF_CASE, 'data')
 data_dir_list = [data_base_dir]
+completed_jobs_base_dir = os.path.join(DATA, VERIF_CASE, 'completed_jobs')
+completed_jobs_list = [completed_jobs_base_dir]
+completed_jobs_base_restart_dir = os.path.join(RESTART_DIR, 'completed_jobs')
+completed_jobs_restart_list = [completed_jobs_base_restart_dir]
 if VERIF_CASE == 'precip':
     if STEP == 'prep':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
@@ -117,6 +121,16 @@ for data_dir in data_dir_list:
     if not os.path.exists(data_dir):
         print(f"Creating data directory: {data_dir}")
         os.makedirs(data_dir, mode=0o755)
+
+for completed_jobs_dir in completed_jobs_list:
+    if not os.path.exists(completed_jobs_dir):
+        print(f"Creating completed_jobs dir: {completed_jobs_dir}")
+        os.makedirs(completed_jobs_dir, mode=0o755)
+
+for completed_jobs_restart_dir in completed_jobs_restart_list:
+    if not os.path.exists(completed_jobs_restart_dir):
+        print(f"Creating completed_jobs restart dir: {completed_jobs_restart_dir}")
+        os.makedirs(completed_jobs_restart_dir, mode=0o755)
 
 # Create job script base directory
 job_scripts_dirs = []
