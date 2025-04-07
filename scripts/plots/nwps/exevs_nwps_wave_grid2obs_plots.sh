@@ -3,7 +3,10 @@
 # Name of Script: exevs_nwps_wave_grid2obs_plots.sh                           
 # Samira Ardani / samira.ardani@noaa.gov                                    
 # Purpose of Script: Run the grid2obs plots for NWPS wave model           
-#                      
+#           Updates: 
+#           - Updated the code structure (11/2024)
+#           - addressed mpmd (03/2025)
+#                   
 #                                                                               
 # Usage:                                                                        
 #  Parameters: None                                                             
@@ -29,8 +32,10 @@ export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 #############################
 
 cd $DATA
-mkdir -p $DATA/ndbc_standard
-mkdir -p $DATA/wave
+
+mkdir -p ${DATA}/stats
+mkdir -p ${DATA}/job_work_dir
+mkdir -p ${DATA}/images
 
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
@@ -53,8 +58,6 @@ echo ' '
 echo 'Copying *.stat files :'
 echo '-----------------------------'
 [[ "$LOUD" = YES ]] && set -x
-
-mkdir -p ${DATA}/stats
 
 WFO='hgx bro'
 
@@ -121,16 +124,23 @@ for wfo in ${WFO}; do
 		sh plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
 	fi
 
+
+############################
+#  copy all the jobs files
+############################
+        ${USHevs}/${COMPONENT}/nwps_wave_plots_copy_plots.sh
+        export err=$?; err_chk
+
+
 #####################
 # Gather all the files 
 #######################
 
 	periods='LAST31DAYS LAST90DAYS'
 	if [ $gather = yes ] ; then
-		echo "copying all images into one directory"
-		cp ${DATA}/wave/*png ${DATA}/ndbc_standard/.  ## lead_average plots 
-		nc=$(ls ${DATA}/ndbc_standard/*.fhrmean_valid*.png | wc -l | awk '{print $1}')
-		echo "copied $nc lead_average plots"
+		nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
+		echo "Found ${nc} ${DATA}/images/*.png "
+		
 		for period in ${periods} ; do
 			period_lower=$(echo ${period,,})
 			if [ ${period} = 'LAST31DAYS' ] ; then
@@ -140,10 +150,8 @@ for wfo in ${WFO}; do
 			fi
 
 			# check to see if the plots are there
-			nc=$(ls ${DATA}/ndbc_standard/*${period_lower}*.png | wc -l | awk '{print $1}')
-			echo " Found ${nc} ${DATA}/plots/*${period_lower}*.png files for ${VDATE} "
-			if [ "${nc}" != '0' ]
-				then
+			if [ "${nc}" != '0' ]; then
+
 				set -x
 				echo "Found ${nc} ${period_lower} plots for ${VDATE}"
 				[[ "$LOUD" = YES ]] && set -x
@@ -164,7 +172,7 @@ for wfo in ${WFO}; do
 				# tar and copy them to the final destination
 
 			if [ "${nc}" > '0' ] ; then
-				cd ${DATA}/ndbc_standard
+				cd ${DATA}/images
 				tar -cvf evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*_${wfo}.png
 			fi
 			if [ $SENDCOM = YES ]; then
@@ -189,16 +197,7 @@ done
 #########################################
 
 cd ${DATA}
-mkdir -p ${DATA}/logs
-log_dir=$DATA/logs
-
-extns='out log'
-for extn in ${extns} ; do
-	count=$(find ${DATA} -type f -name "*.${extn}"|wc -l)
-	if [ $count != 0 ] ; then
-		cp ${DATA}/*.${extn} ${log_dir}
-	fi
-done
+log_dir=$DATA/job_work_dir/*/logs
 
 log_file_count=$(find ${DATA} -type f -name "*.out" -o -name ".log" |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
