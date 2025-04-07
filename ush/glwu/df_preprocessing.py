@@ -197,7 +197,7 @@ def filter_by_level_type(df, logger, verif_type):
             ~(df['FCST_LEV'].str.startswith('P') 
             | df['OBS_LEV'].str.startswith('P'))
         ]
-    check_empty(df, logger, 'filter_by_level_type'):
+    check_empty(df, logger, 'filter_by_level_type')
     return df
 
 def filter_by_var_name(df, logger, fcst_var_names, obs_var_names):
@@ -207,38 +207,38 @@ def filter_by_var_name(df, logger, fcst_var_names, obs_var_names):
         df['FCST_VAR'].isin(fcst_var_names) 
         & df['OBS_VAR'].isin(obs_var_names)
     ]
-    check_empty(df, logger, 'filter_by_var_name'):
+    check_empty(df, logger, 'filter_by_var_name')
     return df
 
 def filter_by_interp(df, logger, interp):
     if df is None:
         return df
     df = df[df['INTERP_MTHD'].eq(str(interp).upper())]
-    check_empty(df, logger, 'filter_by_interp'):
+    check_empty(df, logger, 'filter_by_interp')
     return df
 
 def filter_by_obtype(df, logger, obtype):
     if df is None:
         return df
     df = df[df['OBTYPE'].eq(str(obtype))]
-    check_empty(df, logger, 'filter_by_obtype'):
+    check_empty(df, logger, 'filter_by_obtype')
     return df
 
 def filter_by_domain(df, logger, domain):
     if df is None:
         return df
     df = df[df['VX_MASK'].eq(str(domain))]
-    check_empty(df, logger, 'filter_by_domain'):
+    check_empty(df, logger, 'filter_by_domain')
     return df
 
 def create_lead_hours(df, logger):
     df['LEAD_HOURS'] = np.array([int(lead[:-4]) for lead in df['FCST_LEAD']])
-    check_empty(df, logger, 'create_lead_hours'):
+    check_empty(df, logger, 'create_lead_hours')
     return df
 
 def create_valid_datetime(df, logger):
     df['VALID'] = pd.to_datetime(df['FCST_VALID_END'], format='%Y%m%d_%H%M%S')
-    check_empty(df, logger, 'create_valid_datetime'):
+    check_empty(df, logger, 'create_valid_datetime')
     return df
 
 def create_init_datetime(df, logger):
@@ -248,7 +248,7 @@ def create_init_datetime(df, logger):
         df['VALID'][v] - pd.DateOffset(hours=int(hour)) 
         for v, hour in enumerate(df['LEAD_HOURS'])
     ]
-    check_empty(df, logger, 'create_init_datetime'):
+    check_empty(df, logger, 'create_init_datetime')
     return df
 
 def filter_by_date_range(df, logger, date_type, date_range):
@@ -258,7 +258,7 @@ def filter_by_date_range(df, logger, date_type, date_range):
         (df[str(date_type).upper()] >= date_range[0]) 
         & (df[str(date_type).upper()] <= date_range[1])
     ]
-    check_empty(df, logger, 'filter_by_date_range'):
+    check_empty(df, logger, 'filter_by_date_range')
     return df
 
 def filter_by_hour(df, logger, date_type, date_hours):
@@ -291,12 +291,12 @@ def get_preprocessed_data(logger, stats_dir, prune_dir, output_base_template,
     if df is not None and check_empty(df, logger, 'get_preprocessed_data'):
         df = None
     return df
-    def run_filters(df, logger, verif_type, fcst_var_names, obs_var_names,
+def run_filters(df, logger, verif_type, fcst_var_names, obs_var_names,
                     interp, domain, date_type, date_range, date_hours):
     df = filter_by_level_type(df, logger, verif_type)
     df = filter_by_var_name(df, logger, fcst_var_names, obs_var_names)
     df = filter_by_interp(df, logger, interp)
-    df = filter_by_obtype(df, logger, obtype)
+#    df = filter_by_obtype(df, logger, obtype)
     df = filter_by_domain(df, logger, domain)
     df = create_lead_hours(df, logger)
     df = create_valid_datetime(df, logger)
