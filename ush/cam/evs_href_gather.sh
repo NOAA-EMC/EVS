@@ -25,6 +25,8 @@ elif [ $verify = grid2obs ] ; then
  MODELS='HREF HREF_MEAN HREF_PROB'
 elif [ $verify = spcoutlook ] ; then
  MODELS='HREF_MEAN'
+ verif_snowfall=no
+ verif_precip=no
 fi 
 
 #****************************************
@@ -81,8 +83,10 @@ if [ $run_mpi = yes ] ; then
     ${DATA}/scripts/run_gather_all_poe.sh
   elif [ $verif_snowfall = no ] && [ $verif_precip = yes ] ; then 
     mpiexec -np 7 -ppn 7 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_gather_all_poe.sh
+  elif [ $verify = grid2obs ] ; then
+    mpiexec -np 3 -ppn 3 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_gather_all_poe.sh
   else
-    mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_gather_all_poe.sh
+    ${DATA}/scripts/run_gather_all_poe.sh
   fi  
   export err=$?; err_chk
 else
