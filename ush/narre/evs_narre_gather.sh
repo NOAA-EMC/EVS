@@ -7,6 +7,7 @@ set -x
 #
 
 
+cd $DATA/scripts
 
 export regrid='NONE'
 
@@ -27,7 +28,7 @@ for verify in $verifys   ; do
     echo  "export verify=$verify" >> run_gather_${verify}.sh 
 
     echo  "export vbeg=00" >> run_gather_${verify}.sh
-    echo  "export vend=23" >> run_gather_${verify}.sh
+    echo  "export vend=00" >> run_gather_${verify}.sh
     echo  "export valid_increment=3600" >>  run_gather_${verify}.sh
 
     echo  "export OBTYPE=PREPBUFR" >>  run_gather_${verify}.sh
@@ -35,7 +36,7 @@ for verify in $verifys   ; do
 
     echo  "export model=$modnam" >> run_gather_${verify}.sh
     echo  "export MODEL=${MODEL}_MEAN" >> run_gather_${verify}.sh
-    echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${verify}.sh
+    echo  "export stat_file_dir=${WORK}/all_stats" >> run_gather_${verify}.sh
     echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${verify}.sh
 
     echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstNARRE_obsPREPBUFR_GatherByDay.conf " >> run_gather_${verify}.sh
@@ -44,13 +45,13 @@ for verify in $verifys   ; do
 
   chmod +x run_gather_${verify}.sh
 
-  echo "${DATA}/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
+  echo "${DATA}/scripts/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
 
 
 done 
 
 chmod 775 run_gather_all_poe.sh
 
- ${DATA}/run_gather_all_poe.sh
+ ${DATA}/scripts/run_gather_all_poe.sh
  export err=$?; err_chk
 

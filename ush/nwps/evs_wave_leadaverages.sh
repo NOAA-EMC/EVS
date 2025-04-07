@@ -14,7 +14,7 @@
 periods='LAST31DAYS LAST90DAYS'
 
 inithours='00 12'
-fhrs='000,024,048,072,096,120,144,168,192,216,240'
+fhrs='000,024,048,072,096,120,144'
 # fhr is hardcoded below!
 wave_vars='WIND HTSGW PERPW'
 stats_list='stats1 stats2 stats3 stats4 stats5'
@@ -36,6 +36,7 @@ for period in ${periods} ; do
   for vhr in ${inithours} ; do
     for wvar in ${wave_vars} ; do
       for stats in ${stats_list}; do
+	job_work_dir=${DATA}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}      
 	echo "export VX_MASK_LIST=${MASK} " >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export VERIF_CASE=${VERIF_CASE} " >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export RUN=${RUN} " >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
@@ -49,6 +50,7 @@ for period in ${periods} ; do
         echo "export plot_end_date=${VDATE} " >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export VHR=${vhr} " >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
 	echo "export WFO=${wfo} " >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
+	echo "export job_work_dir=${job_work_dir}" >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         case ${stats} in
           'stats1')
             echo "export METRIC='me, rmse' " >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
@@ -69,7 +71,7 @@ for period in ${periods} ; do
             echo "export METRIC=p95 "  >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
             ;;
         esac
-        echo "export FHR='000,024,048,072,096,120,144,168,192,216,240'" >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
+        echo "export FHR='000,024,048,072,096,120,144'" >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export WVAR=${wvar}"      >> plot_${wfo}_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         case ${wvar} in
           'WIND')
