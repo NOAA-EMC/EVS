@@ -47,7 +47,6 @@ export STEP=prep
 export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME=cfs
-export cfs_ver=${cfs_ver}
 export PREP_TYPE=cfs
 
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT/$RUN
