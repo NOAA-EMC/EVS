@@ -93,8 +93,8 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
 
 def check_empty(df, logger, called_from):
     if df.empty:
-        logger.warning(f"Called from {called_from}:")
-        logger.warning(f"Empty Dataframe encountered while filtering a subset" 
+        logger.info(f"Called from {called_from}:")
+        logger.info(f"Empty Dataframe encountered while filtering a subset" 
                        + f" of input statistics...")  
         logger.info("========================================")
         return True
