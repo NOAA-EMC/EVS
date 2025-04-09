@@ -656,12 +656,14 @@ class PlotSpecs:
                                   +'(Hours '+','.join(forecast_hour_list)+')')
         return date_plot_name
 
-    def get_plot_title(self, plot_info_dict, date_info_dict, units):
+    def get_plot_title(self, plot_info_dict, date_info_dict, 
+                       model_info_dict, units):
         """! Construct the title for the plot
 
              Args:
                  plot_info_dict  - plot information dictionary (strings)
                  date_info_dict  - date information dictionary (strings)
+                 model_info_dict - model information dictionary (strings)
                  units           - variable units (string)
  
              Returns:
@@ -745,6 +747,8 @@ class PlotSpecs:
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
                           +plot_info_dict['interp_points'])
+        plot_title = (plot_title+' - '
+                      +self.get_obs_plot_name(model_info_dict['obs_name']))
         plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
                                                 date_info_dict['start_date'], 
