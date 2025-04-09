@@ -373,29 +373,10 @@ if STEP == 'prep':
 elif STEP == 'stats':
     if job_type == 'reformat':
       completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+      print("completed_jobs_file_full", completed_jobs_file_full)
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
-           job_cmd_list_iterative.append(
-           f'#jobs were restarted, and the following has already run successfully'
-           )
-           job_cmd_list_iterative.append(
-            f'#{metplus_launcher} -c {machine_conf} '
-            + f'-c {MET_PLUS_CONF}/'
-            + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
-           )
-           if SENDCOM == 'YES':
-            job_cmd_list_iterative.append(
-              f'#python -c '
-              + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
-              + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-              + f'njob=\\\"{njob}\\\", '
-              + 'verif_case=\\\"${VERIF_CASE}\\\", '
-              + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-              + 'vx_mask=\\\"${NEST}\\\", '
-              + 'met_tool=\\\"pb2nc\\\", '
-              + 'vdate=\\\"${VDATE}\\\", '
-              + 'vhour=\\\"${VHOUR}\\\"'
-              + ')\"'
-            )
+           print(job_type,"job",njob)
+           pass 
       else:
         job_cmd_list_iterative.append(
             f'{metplus_launcher} -c {machine_conf} '
@@ -432,34 +413,7 @@ elif STEP == 'stats':
         if FCST_VAR2_NAME:
          completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
          if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
-             job_cmd_list_iterative.append(
-                  f'#jobs were restarted, and the following has already run successfully'
-             )
-             job_cmd_list_iterative.append(
-                  f'#{metplus_launcher} -c {machine_conf} '
-                  + f'-c {MET_PLUS_CONF}/'
-                  + f'PointStat_fcst{COMPONENT.upper()}_'
-                  + f'obs{VERIF_TYPE.upper()}_{str(NEST).upper()}_VAR2.conf'
-             )
-             if SENDCOM == 'YES':
-                job_cmd_list_iterative.append(
-                  f'#python -c '
-                  + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
-                  + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                  + f'njob=\\\"{njob}\\\", '
-                  + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                  + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                  + 'vx_mask=\\\"${NEST}\\\", '
-                  + 'met_tool=\\\"point_stat\\\", '
-                  + 'vdate=\\\"${VDATE}\\\", '
-                  + 'vhour=\\\"${VHOUR}\\\", '
-                  + 'fhr_start=\\\"${FHR_START}\\\", '
-                  + 'fhr_end=\\\"${FHR_END}\\\", '
-                  + 'fhr_incr=\\\"${FHR_INCR}\\\", '
-                  + 'model=\\\"${MODELNAME}\\\", '
-                  + 'var_name=\\\"${VAR_NAME}\\\"'
-                  + ')\"'
-                )
+                pass
          else:
             job_cmd_list_iterative.append(
                 f'{metplus_launcher} -c {machine_conf} '
@@ -502,80 +456,7 @@ elif STEP == 'stats':
                 if VAR_NAME == 'PTYPE':
                   completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                   if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
-                    job_cmd_list_iterative.append(
-                      f'#jobs were restarted, and the following has already run successfully'
-                    ) 
-                    job_cmd_list_iterative.append(
-                        f'#{metplus_launcher} -c {machine_conf} '
-                        + f'-c {MET_PLUS_CONF}/'
-                        + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
-                    )
-                    if SENDCOM == 'YES':
-                      job_cmd_list_iterative.append(
-                        f'#python -c '
-                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
-                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                        + f'njob=\\\"{njob}\\\", '
-                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                        + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                        + 'vx_mask=\\\"${NEST}\\\", '
-                        + 'met_tool=\\\"regrid_data_plane\\\", '
-                        + 'vdate=\\\"${VDATE}\\\", '
-                        + 'vhour=\\\"${VHOUR}\\\", '
-                        + 'fhr_start=\\\"${FHR_START}\\\", '
-                        + 'fhr_end=\\\"${FHR_END}\\\", '
-                        + 'fhr_incr=\\\"${FHR_INCR}\\\", '
-                        + 'model=\\\"${MODELNAME}\\\", '
-                        + ')\"'
-                      )
-                    job_cmd_list_iterative.append(
-                        f'#python '
-                        + f'{USHevs}/{COMPONENT}/'
-                        + f'{COMPONENT}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
-                    )
-                    if SENDCOM == 'YES':
-                      job_cmd_list_iterative.append(
-                        f'#python -c '
-                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
-                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                        + f'njob=\\\"{njob}\\\", '
-                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                        + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                        + 'vx_mask=\\\"${NEST}\\\", '
-                        + 'met_tool=\\\"merged_ptype\\\", '
-                        + 'vdate=\\\"${VDATE}\\\", '
-                        + 'vhour=\\\"${VHOUR}\\\", '
-                        + 'fhr_start=\\\"${FHR_START}\\\", '
-                        + 'fhr_end=\\\"${FHR_END}\\\", '
-                        + 'fhr_incr=\\\"${FHR_INCR}\\\", '
-                        + 'model=\\\"${MODELNAME}\\\", '
-                        + ')\"'
-                      )
-                    job_cmd_list_iterative.append(
-                        f'#{metplus_launcher} -c {machine_conf} '
-                        + f'-c {MET_PLUS_CONF}/'
-                        + f'PointStat_fcst{COMPONENT.upper()}_'
-                        + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
-                    )
-                    if SENDCOM == 'YES':
-                      job_cmd_list_iterative.append(
-                        f'#python -c '
-                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
-                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                        + f'njob=\\\"{njob}\\\", '
-                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                        + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                        + 'vx_mask=\\\"${NEST}\\\", '
-                        + 'met_tool=\\\"point_stat\\\", '
-                        + 'vdate=\\\"${VDATE}\\\", '
-                        + 'vhour=\\\"${VHOUR}\\\", '
-                        + 'fhr_start=\\\"${FHR_START}\\\", '
-                        + 'fhr_end=\\\"${FHR_END}\\\", '
-                        + 'fhr_incr=\\\"${FHR_INCR}\\\", '
-                        + 'model=\\\"${MODELNAME}\\\", '
-                        + 'var_name=\\\"${VAR_NAME}\\\"'
-                        + ')\"'
-                      )
+                      pass
                   else:
                    job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
@@ -668,33 +549,7 @@ elif STEP == 'stats':
                 else:
                   completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                   if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
-                    job_cmd_list_iterative.append(
-                        f'#jobs were restarted, and the following has already run successfully'
-                    )
-                    job_cmd_list_iterative.append(
-                        f'#{metplus_launcher} -c {machine_conf} '
-                        + f'-c {MET_PLUS_CONF}/'
-                        + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
-                    )
-                    if SENDCOM == 'YES':
-                      job_cmd_list_iterative.append(
-                        f'#python -c '
-                        + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
-                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                        + f'njob=\\\"{njob}\\\", '
-                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                        + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                        + 'vx_mask=\\\"${NEST}\\\", '
-                        + 'met_tool=\\\"point_stat\\\", '
-                        + 'vdate=\\\"${VDATE}\\\", '
-                        + 'vhour=\\\"${VHOUR}\\\", '
-                        + 'fhr_start=\\\"${FHR_START}\\\", '
-                        + 'fhr_end=\\\"${FHR_END}\\\", '
-                        + 'fhr_incr=\\\"${FHR_INCR}\\\", '
-                        + 'model=\\\"${MODELNAME}\\\", '
-                        + 'var_name=\\\"${VAR_NAME}\\\"'
-                        + ')\"'
-                      )
+                      pass
                   else:
                    job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
@@ -736,32 +591,7 @@ elif STEP == 'stats':
     elif job_type == 'gather':
       completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
-        job_cmd_list.append(
-            f'#jobs were restarted, and the following has already run successfully'
-        )
-        job_cmd_list_iterative.append(
-            f'#{metplus_launcher} -c {machine_conf} '
-            + f'-c {MET_PLUS_CONF}/'
-            + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
-            + f'_GatherByDay.conf'
-        )
-        if SENDCOM == 'YES':
-          job_cmd_list_iterative.append(
-            f'#python -c '
-            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
-            + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-            + f'njob=\\\"{njob}\\\", '
-            + 'verif_case=\\\"${VERIF_CASE}\\\", '
-            + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-            + 'met_tool=\\\"stat_analysis\\\", '
-            + 'vdate=\\\"${VDATE}\\\", '
-            + 'net=\\\"${NET}\\\", '
-            + 'step=\\\"${STEP}\\\", '
-            + 'model=\\\"${MODELNAME}\\\", '
-            + 'run=\\\"${RUN}\\\", '
-            + f'job_type=\\\"{job_type}\\\"'
-            + ')\"'
-          )
+          pass
       else:
         job_cmd_list_iterative.append(
             f'{metplus_launcher} -c {machine_conf} '
@@ -803,32 +633,7 @@ elif STEP == 'stats':
     elif job_type == 'gather2':
       completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
-        job_cmd_list.append(
-            f'#jobs were restarted, and the following has already run successfully'
-        )
-        job_cmd_list_iterative.append(
-            f'#{metplus_launcher} -c {machine_conf} '
-            + f'-c {MET_PLUS_CONF}/'
-            + f'StatAnalysis_fcst{COMPONENT.upper()}'
-            + f'_GatherByCycle.conf'
-        )
-        if SENDCOM == 'YES':
-          job_cmd_list_iterative.append(
-            f'#python -c '
-            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
-            + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-            + f'njob=\\\"{njob}\\\", '
-            + 'verif_case=\\\"${VERIF_CASE}\\\", '
-            + 'met_tool=\\\"stat_analysis\\\", '
-            + 'vdate=\\\"${VDATE}\\\", '
-            + 'net=\\\"${NET}\\\", '
-            + 'step=\\\"${STEP}\\\", '
-            + 'model=\\\"${MODELNAME}\\\", '
-            + 'run=\\\"${RUN}\\\", '
-            + 'vhr=\\\"${vhr}\\\", '
-            + f'job_type=\\\"{job_type}\\\"'
-            + ')\"'
-          )
+          pass
       else:
         job_cmd_list_iterative.append(
             f'{metplus_launcher} -c {machine_conf} '

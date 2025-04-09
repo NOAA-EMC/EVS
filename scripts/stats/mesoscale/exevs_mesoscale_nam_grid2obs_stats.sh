@@ -84,8 +84,10 @@ echo "*****************************"
 	   export err=$?; err_chk
            
          # Create Reformat Job Script
-           python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-           export err=$?; err_chk
+	   if [ ! -e ${RESTART_DIR}/completed_jobs/completed_jobs.txt_${job_type}_job${njob}.txt ]; then 
+             python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
+             export err=$?; err_chk
+	   fi
            
            export njob=$((njob+1))
            echo "Done $VHOUR"
@@ -97,13 +99,19 @@ echo "*****************************"
 
 # Create Reformat POE Job Scripts
   if [ $USE_CFP = YES ]; then
-     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
-     export err=$?; err_chk
+     ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+     if [ $ncount_job -gt 0. ]; then
+      python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
+      export err=$?; err_chk
+     fi
   fi
 
 # Create Reformat Working Directories
-  python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
-  export err=$?; err_chk
+  ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+  if [ $ncount_job -gt 0. ]; then
+    python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+    export err=$?; err_chk
+  fi
 
 echo "*****************************"
 echo "Reformat jobs begin"
@@ -142,8 +150,14 @@ echo "*****************************"
 
 # Copy Reformat Output to Main Directory
  for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
-     cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
-     export err=$?; err_chk
+     nc=1
+     if [ -e ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/job${nc} ]; then
+      cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+      export err=$?; err_chk
+     fi
+     while [ $nc -le $ncount_job ]; do
+      nc=$((nc+1))
+     done
  done
 
 echo "*****************************"
