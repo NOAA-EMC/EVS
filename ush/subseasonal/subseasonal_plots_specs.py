@@ -486,6 +486,34 @@ class PlotSpecs:
             var_plot_name = var_name_level
         return var_plot_name
 
+    def get_obs_plot_name(self, obs_name):
+        """! Get the full obs source name that will be
+             displayed on the plot
+
+             Args:
+                 obs_name - abbreviated obs source name (string)
+
+             Returns:
+                 obs_plot_name - full obs source name that
+                                 will be displayed on the plot
+                                 (string)
+        """
+        obs_plot_name_dict = {
+            'ecmwf': 'ECMWF Anl',
+            'gfs': 'GFS Anl',
+            'CCPA': 'CCPA',
+            'osi_saf': 'OSI-SAF',
+            'ghrsst_ospo': 'GHRSST-OSPO',
+            'ADPSFC': 'METARS'
+        }
+        if obs_name in list(obs_plot_name_dict.keys()):
+            obs_plot_name = obs_plot_name_dict[obs_name]
+        else:
+            self.logger.debug(f"{obs_name} not recognized, "
+                              +f"using {obs_name} on plot")
+            obs_plot_name = obs_name
+        return obs_plot_name
+
     def get_vx_mask_plot_name(self, vx_mask):
         """! Get the full verification masking information that will
              be displayed on the plot
