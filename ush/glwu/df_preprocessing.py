@@ -296,7 +296,6 @@ def run_filters(df, logger, verif_type, fcst_var_names, obs_var_names,
     df = filter_by_level_type(df, logger, verif_type)
     df = filter_by_var_name(df, logger, fcst_var_names, obs_var_names)
     df = filter_by_interp(df, logger, interp)
-#    df = filter_by_obtype(df, logger, obtype)
     df = filter_by_domain(df, logger, domain)
     df = create_lead_hours(df, logger)
     df = create_valid_datetime(df, logger)
