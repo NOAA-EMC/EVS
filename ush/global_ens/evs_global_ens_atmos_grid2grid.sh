@@ -226,6 +226,7 @@ if [ $verify = upper ] ; then
 
 	    # Indicate sub-task is completed for restart 
 	    echo ">$WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+            echo "echo "${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g task is completed" >> $WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 
             # Save files for restart
 	    echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
@@ -261,6 +262,7 @@ if [ $verify = upper ] ; then
 
               # Indicate sub-task is completed for restart
 	      echo ">$WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+              echo "echo "${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g task is completed" >> $WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 
               # Save files for restart
 	      echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
@@ -322,7 +324,7 @@ if [ $verify = upper ] ; then
 
   # Indicate all tasks are completed
   >$WORK/stats_completed
-  echo "stats are completed" >> $WORK/stats_completed
+  echo "All stats are completed" >> $WORK/stats_completed
   if [ $SENDCOM = YES ] ; then
     cp -f $WORK/stats_completed $COMOUTsmall
   fi
@@ -511,6 +513,7 @@ if [ $verify = precip ] ; then
 
         # Indicate sub-task is completed for restart
 	echo ">$WORK/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+        echo "echo "${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job} task is completed" >> $WORK/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
 
 	# Save files for restart
 	echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
@@ -585,7 +588,7 @@ if [ $verify = precip ] ; then
 
   # Indicate all tasks are completed
   >$WORK/stats_completed
-  echo "stats are completed" >> $WORK/stats_completed
+  echo "All stats are completed" >> $WORK/stats_completed
   if [ $SENDCOM = YES ] ; then
     cp -f $WORK/stats_completed $COMOUTsmall_precip
   fi

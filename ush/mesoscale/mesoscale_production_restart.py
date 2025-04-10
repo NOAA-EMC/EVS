@@ -30,8 +30,13 @@ VERIF_CASE = os.environ['VERIF_CASE']
 if STEP == 'stats':
     VERIF_CASE = os.environ['VERIF_CASE']
     RESTART_DIR = os.environ['RESTART_DIR']
+    njob = os.environ['njob']
+    job_type = os.environ['job_type']
+    COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
     working_dir = os.path.join(DATA, VERIF_CASE)
-    completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs.txt')
+    completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+    completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
+    print("restart file",completed_jobs_file)
     if os.path.exists(RESTART_DIR):
         if (os.path.exists(completed_jobs_file) 
                 and os.stat(completed_jobs_file).st_size != 0):

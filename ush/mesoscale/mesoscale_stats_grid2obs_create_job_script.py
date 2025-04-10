@@ -372,7 +372,8 @@ if STEP == 'prep':
     pass
 elif STEP == 'stats':
     if job_type == 'reformat':
-      if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+      completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+      if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
            job_cmd_list_iterative.append(
            f'#jobs were restarted, and the following has already run successfully'
            )
@@ -415,19 +416,22 @@ elif STEP == 'stats':
             + 'vhour=\\\"${VHOUR}\\\"'
             + ')\"'
           )
+        completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
         job_cmd_list_iterative.append(
            "python -c "
            + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-           + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
+           + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
            + f"\"job{njob}\", job_type=\"{job_type}\")'"
         )
-        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
+        completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
         job_cmd_list_iterative.append(
-           f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
+           f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
         )
     if job_type == 'generate':
         if FCST_VAR2_NAME:
-         if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+         completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+         if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
              job_cmd_list_iterative.append(
                   f'#jobs were restarted, and the following has already run successfully'
              )
@@ -481,20 +485,23 @@ elif STEP == 'stats':
                + 'var_name=\\\"${VAR_NAME}\\\"'
                + ')\"'
               )
+            completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
             job_cmd_list_iterative.append(
                "python -c "
                + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-               + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
+               + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
                + f"\"job{njob}\", job_type=\"{job_type}\")'"
             )
-            completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+            completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
+            completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
             job_cmd_list_iterative.append(
-               f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
+               f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
             )
         else:
             if NEST == 'conusp':
                 if VAR_NAME == 'PTYPE':
-                  if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+                  completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+                  if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
                     job_cmd_list_iterative.append(
                       f'#jobs were restarted, and the following has already run successfully'
                     ) 
@@ -641,15 +648,17 @@ elif STEP == 'stats':
                        + 'var_name=\\\"${VAR_NAME}\\\"'
                        + ')\"'
                       )
+                   completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                    job_cmd_list_iterative.append(
                        "python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-                       + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
+                       + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
                    )
-                   completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+                   completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
+                   completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
                    job_cmd_list_iterative.append(
-                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
+                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
                    )
 
             else:
@@ -657,7 +666,8 @@ elif STEP == 'stats':
                 if pstat_file_exist:
                     print(f"skip this run, pstat already exist")
                 else:
-                  if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+                  completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+                  if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
                     job_cmd_list_iterative.append(
                         f'#jobs were restarted, and the following has already run successfully'
                     )
@@ -711,29 +721,32 @@ elif STEP == 'stats':
                        + 'var_name=\\\"${VAR_NAME}\\\"'
                        + ')\"'
                      )
+                   completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                    job_cmd_list_iterative.append(
                        "python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-                       + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
+                       + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
                    )
-                   completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+                   completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
+                   completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
                    job_cmd_list_iterative.append(
-                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
+                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
                    )
     elif job_type == 'gather':
-      if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+      completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+      if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
         job_cmd_list.append(
             f'#jobs were restarted, and the following has already run successfully'
         )
-        job_cmd_list.append(
+        job_cmd_list_iterative.append(
             f'#{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
             + f'_GatherByDay.conf'
         )
         if SENDCOM == 'YES':
-          job_cmd_list.append(
+          job_cmd_list_iterative.append(
             f'#python -c '
             + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -750,7 +763,7 @@ elif STEP == 'stats':
             + ')\"'
           )
       else:
-        job_cmd_list.append(
+        job_cmd_list_iterative.append(
             f'{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
@@ -773,29 +786,34 @@ elif STEP == 'stats':
             + f'job_type=\\\"{job_type}\\\"'
             + ')\"'
           )
-        job_cmd_list.append(
+        completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+        job_cmd_list_iterative.append(
             "python -c "
             + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-            + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
+            + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
             + f"\"job{njob}\", job_type=\"{job_type}\")'"
         )
-        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
+        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
+        completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
+        print("completed job path", completed_job_path)
+        print("completed_job_restart_dir", completed_job_restart_dir)
         job_cmd_list_iterative.append(
-            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
+            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
         )
     elif job_type == 'gather2':
-      if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+      completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+      if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
         job_cmd_list.append(
             f'#jobs were restarted, and the following has already run successfully'
         )
-        job_cmd_list.append(
+        job_cmd_list_iterative.append(
             f'#{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}'
             + f'_GatherByCycle.conf'
         )
         if SENDCOM == 'YES':
-          job_cmd_list.append(
+          job_cmd_list_iterative.append(
             f'#python -c '
             + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -812,14 +830,14 @@ elif STEP == 'stats':
             + ')\"'
           )
       else:
-        job_cmd_list.append(
+        job_cmd_list_iterative.append(
             f'{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}'
             + f'_GatherByCycle.conf'
         )
         if SENDCOM == 'YES':
-          job_cmd_list.append(
+          job_cmd_list_iterative.append(
             f'python -c '
             + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -835,15 +853,19 @@ elif STEP == 'stats':
             + f'job_type=\\\"{job_type}\\\"'
             + ')\"'
           )
-        job_cmd_list.append(
+        completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+        job_cmd_list_iterative.append(
             "python -c "
             + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-            + f"\"{os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)}\", "
+            + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
             + f"\"job{njob}\", job_type=\"{job_type}\")'"
         )
-        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, COMPLETED_JOBS_FILE)
-        job_cmd_list.append(
-            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {RESTART_DIR}; fi"
+        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
+        completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
+        print("completed job path", completed_job_path)
+        print("completed_job_restart_dir", completed_job_restart_dir)
+        job_cmd_list_iterative.append(
+            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
         )
     elif job_type == 'gather3':
         job_cmd_list.append(
