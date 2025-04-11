@@ -159,6 +159,7 @@ original_plot_info_dict = {
     'line_type': line_type,
     'grid': grid,
     'vx_mask': vx_mask,
+    'obs_name': obs_list,
     'interp_method': interp_method,
     'event_equalization': event_equalization
 }

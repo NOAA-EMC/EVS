@@ -242,7 +242,7 @@ class TimeSeries:
             self.logger.warning("Empty dataframe")
             fcst_units = ['']
         plot_title = plot_specs_ts.get_plot_title(
-            self.plot_info_dict, self.date_info_dict, self.model_info_dict,
+            self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
         plot_left_logo = False
