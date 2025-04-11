@@ -72,6 +72,7 @@ sed -i "s|$SEARCH5|$VALID_FREQ|g" TCGen_template.conf
 sed -i "s|$SEARCH6|$BASIN_MASK|g" TCGen_template.conf
 
 run_metplus.py -c ${OUTPUT}/TCGen_template.conf
+export err=$?; err_chk
 
 if [ "$SENDCOM" = 'YES' ]; then
   if [ ! -d ${COMOUT} ]; then mkdir -p ${COMOUT}; fi
