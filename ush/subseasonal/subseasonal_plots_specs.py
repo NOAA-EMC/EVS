@@ -774,6 +774,7 @@ class PlotSpecs:
                           +'Neighborhood Points: '
                           +plot_info_dict['interp_points'])
         plot_title = (plot_title+' - '
+                      +'Validation: '
                       +self.get_obs_plot_name(plot_info_dict['ob_name']))
         plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
