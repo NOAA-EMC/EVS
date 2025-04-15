@@ -293,7 +293,7 @@ def get_preprocessed_data(logger, stats_dir, prune_dir, output_base_template,
     if df is not None and check_empty(df, logger, 'get_preprocessed_data'):
         df = None
     return df
-    def run_filters(df, logger, verif_type, fcst_var_names, obs_var_names,
+def run_filters(df, logger, verif_type, fcst_var_names, obs_var_names,
                     interp, domain, date_type, date_range, date_hours):
     df = filter_by_level_type(df, logger, verif_type)
     df = filter_by_var_name(df, logger, fcst_var_names, obs_var_names)
