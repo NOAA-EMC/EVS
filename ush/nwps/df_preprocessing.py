@@ -226,7 +226,7 @@ def filter_by_obtype(df, logger, obtype):
 
 def filter_by_domain(df, logger, domain):
     if df is None:
-        return None
+        return df
     df = df[df['VX_MASK'].eq(str(domain))]
     check_empty(df, logger, 'filter_by_domain')
     return df
