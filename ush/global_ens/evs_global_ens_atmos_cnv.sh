@@ -198,13 +198,14 @@ for fhr in $fhrs ; do
     echo ">$WORK/run_${modnam}_${fhr}_cnv.completed" >> run_${modnam}_${fhr}_cnv.sh
     echo "echo "${modnam}_${fhr} task is completed" >> $WORK/run_${modnam}_${fhr}_cnv.completed" >> run_${modnam}_${fhr}_cnv.sh
 
-    if [ $SENDCOM="YES" ] ; then
-        echo "for FILE in \$output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat ; do" >> run_${modnam}_${fhr}_cnv.sh
-        echo "  if [ -s \$FILE ]; then" >> run_${modnam}_${fhr}_cnv.sh
-        echo "    cp -v \$FILE $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
-        echo "  fi" >> run_${modnam}_${fhr}_cnv.sh
-        echo "done" >> run_${modnam}_${fhr}_cnv.sh
-    fi
+    echo "if [ $SENDCOM="YES" ] ; then" >> run_${modnam}_${fhr}_cnv.sh
+    echo "  cp -f $WORK/run_${modnam}_${fhr}_cnv.completed $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
+    echo "  for FILE in \$output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat ; do" >> run_${modnam}_${fhr}_cnv.sh
+    echo "    if [ -s \$FILE ]; then" >> run_${modnam}_${fhr}_cnv.sh
+    echo "      cp -v \$FILE $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
+    echo "    fi" >> run_${modnam}_${fhr}_cnv.sh
+    echo "  done" >> run_${modnam}_${fhr}_cnv.sh
+    echo "fi" >> run_${modnam}_${fhr}_cnv.sh
   fi # end of check restart for sub-task
 
   chmod +x run_${modnam}_${fhr}_cnv.sh
