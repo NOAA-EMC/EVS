@@ -313,7 +313,7 @@ if [ "$data" = "apcp24h_alaska" ] ; then
    obsv_vcyc=${vday}${vcyc}
 
    export fhr
-   for fhr in 30 ; do  #since Alaska run only at 06Z, only 30fhr fcst can be validated at 12Z 
+   for fhr in 30 42 ; do  #since Alaska run only at 06Z and 18Z, only 30fhr and 42fhr fcsts can be validated at 12Z 
       fcst_time=`$NDATE -$fhr $obsv_vcyc`
       fyyyymmdd=${fcst_time:0:8}
       export fcyc=${fcst_time:8:2} #Alaska only has 06 cycle run 
