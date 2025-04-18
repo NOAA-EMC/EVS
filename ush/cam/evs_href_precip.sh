@@ -30,7 +30,7 @@ for obsvtype in ccpa mrms ; do
 
 	  
       if [ $prod = system ] ; then
-        acum="03h 24h"
+        acum="01h 03h 24h"
       else
 	acum="01h 03h 24h"
       fi
