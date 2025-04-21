@@ -69,7 +69,11 @@ elif VERIF_CASE == "grid2obs":
         OBSNAME = os.environ['OBSNAME']
         COMOUTsmall = os.environ['COMOUTsmall']
     elif STEP == 'plots':
-        all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
+        EVAL_PERIOD = os.environ['EVAL_PERIOD']
+        if EVAL_PERIOD == 'last31days':
+          all_eval_periods = cutil.get_all_eval_periods(graphics_g2o31)
+        elif EVAL_PERIOD == 'last90days':
+          all_eval_periods = cutil.get_all_eval_periods(graphics_g2o90)
         COMOUTplots = os.environ['COMOUTplots']
 elif VERIF_CASE == "headline":
     if STEP == 'plots':
