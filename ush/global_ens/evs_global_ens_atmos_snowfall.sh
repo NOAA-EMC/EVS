@@ -73,7 +73,9 @@ vhour='12'
 
 #*****************************************************************
 # Check if all stats sub-tasks are completed in the previous runs
-if [ ! -s $COMOUTsmall/stats_completed ] ; then
+if [ ! -s $COMOUTsmall/completed/stats_completed ] ; then
+mkdir -p $COMOUTsmall/completed
+mkdir -p $WORK/completed
 
 # Check if restart directory exists
 if [ -d $COMOUTsmall/restart/${verify} ] ; then
@@ -160,7 +162,7 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
     for lead_hr in ${lead_arr[@]}; do
       # Check for restart: check if the single sub-task is completed in the previous run
       # If this task has been completed in the previous run, then skip it
-      if [ ! -e $COMOUTsmall/run_${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr}.completed ] ; then
+      if [ ! -e $COMOUTsmall/completed/run_${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr}.completed ] ; then
         echo "export lead=${lead_hr}" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
 
         if [ $metplus_job = GridStat ]; then
@@ -174,14 +176,14 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
         fi
 
         # Indicate sub-task is completed for restart
-        echo ">$WORK/run_${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr}.completed" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
-        echo "echo "${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr} task is completed" >> $WORK/run_${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr}.completed" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
+        echo ">$WORK/completed/run_${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr}.completed" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
+        echo "echo "${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr} task is completed" >> $WORK/completed/run_${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr}.completed" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
 
         # Save files for restart
         echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
         echo "  if [ -d $WORK/${verify}/run_${modnam}_${verify}_${type}/stat/${modnam} ] ; then" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
         echo "    mkdir -p $COMOUTsmall/restart/${verify}/run_${modnam}_${verify}_${type}/stat" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
-        echo "    cp -f $WORK/run_${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr}.completed $COMOUTsmall" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
+        echo "    cp -f $WORK/completed/run_${modnam}_${verify}_${type}_${metplus_job}_f${lead_hr}.completed $COMOUTsmall/completed" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
         echo "    cp -rfu $WORK/${verify}/run_${modnam}_${verify}_${type}/stat/${modnam} $COMOUTsmall/restart/${verify}/run_${modnam}_${verify}_${type}/stat" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
         echo "  fi" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
         echo "fi" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
@@ -224,11 +226,11 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
 done # end of metplus_jobs loop
 
 # Indicate all tasks are completed
->$WORK/stats_completed
-echo "All stats are completed" >> $WORK/stats_completed
+>$WORK/completed/stats_completed
+echo "All stats are completed" >> $WORK/completed/stats_completed
 
 if [ $SENDCOM = YES ] ; then
-  cp -f $WORK/stats_completed $COMOUTsmall
+  cp -f $WORK/completed/stats_completed $COMOUTsmall/completed
 fi
 
 fi # end of check restart for all tasks

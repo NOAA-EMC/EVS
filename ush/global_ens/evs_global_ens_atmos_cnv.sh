@@ -70,7 +70,9 @@ echo $COM_IN
 #************************************
 
 # Check if all stats sub-tasks are completed in the previous runs
-if [ ! -s $COMOUTsmall/stats_completed ] ; then
+if [ ! -s $COMOUTsmall/completed/stats_completed ] ; then
+mkdir -p $COMOUTsmall/completed
+mkdir -p $WORK/completed
 
 # Check if restart directory exists
 if [ -d $COMOUTsmall/restart/cnv ] ; then
@@ -126,20 +128,20 @@ for vhour in $validhours ; do
       if [ -s $chk_file ] ; then
         # Check for restart: check if the single sub-task is completed in the previous run
 	# If this task has been completed in the previous run, then skip it
-	if [ ! -e $COMOUTsmall/run_${modnam}_t${vhour}z_f${fhr}_m${mbr}_cnv.completed ] ; then
+	if [ ! -e $COMOUTsmall/completed/run_${modnam}_t${vhour}z_f${fhr}_m${mbr}_cnv.completed ] ; then
       	  echo "export mbr=$mbr" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
           echo "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_CNV.conf" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
           echo "export err=\$?; err_chk" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
 
 	  # Indicate sub-task is completed for restart        
-	  echo ">$WORK/run_${modnam}_t${vhour}z_f${fhr}_m${mbr}_cnv.completed" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh        
-	  echo "echo "${modnam}_t${vhour}z_f${fhr}_m${mbr} task is completed" >> $WORK/run_${modnam}_t${vhour}z_f${fhr}_m${mbr}_cnv.completed" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
+	  echo ">$WORK/completed/run_${modnam}_t${vhour}z_f${fhr}_m${mbr}_cnv.completed" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh        
+	  echo "echo "${modnam}_t${vhour}z_f${fhr}_m${mbr}_cnv task is completed" >> $WORK/completed/run_${modnam}_t${vhour}z_f${fhr}_m${mbr}_cnv.completed" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
 
           # Save files for restart
 	  echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
 	  echo "  if [ -d $WORK/cnv/run_${modnam}_t${vhour}z_${fhr}_cnv/stat/${modnam} ] ; then" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
 	  echo "    mkdir -p $COMOUTsmall/restart/cnv/run_${modnam}_t${vhour}z_${fhr}_cnv/stat" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
-	  echo "    cp -f $WORK/run_${modnam}_t${vhour}z_f${fhr}_m${mbr}_cnv.completed $COMOUTsmall" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
+	  echo "    cp -f $WORK/completed/run_${modnam}_t${vhour}z_f${fhr}_m${mbr}_cnv.completed $COMOUTsmall/completed" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
 	  echo "    cp -rfu $WORK/cnv/run_${modnam}_t${vhour}z_${fhr}_cnv/stat/${modnam} $COMOUTsmall/restart/cnv/run_${modnam}_t${vhour}z_${fhr}_cnv/stat" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
 	  echo "  fi" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
 	  echo "fi" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
@@ -175,7 +177,7 @@ fi
 for fhr in $fhrs ; do
   # Check for restart: check if the single sub-task is completed in the previous run
   # If this task has been completed in the previous run, then skip it
-  if [ ! -e $COMOUTsmall/run_${modnam}_${fhr}_cnv.completed ] ; then
+  if [ ! -e $COMOUTsmall/completed/run_${modnam}_${fhr}_cnv.completed ] ; then
 
     #***************************************************************************
     # Build sub-tasks which use $USHevs/global_ens/evs_global_ens_average_cnv.sh
@@ -195,11 +197,11 @@ for fhr in $fhrs ; do
     echo "export err=\$?; err_chk" >> run_${modnam}_${fhr}_cnv.sh
 
     # Indicate sub-task is completed for restart
-    echo ">$WORK/run_${modnam}_${fhr}_cnv.completed" >> run_${modnam}_${fhr}_cnv.sh
-    echo "echo "${modnam}_${fhr} task is completed" >> $WORK/run_${modnam}_${fhr}_cnv.completed" >> run_${modnam}_${fhr}_cnv.sh
+    echo ">$WORK/completed/run_${modnam}_${fhr}_cnv.completed" >> run_${modnam}_${fhr}_cnv.sh
+    echo "echo "${modnam}_${fhr}_cnv task is completed" >> $WORK/completed/run_${modnam}_${fhr}_cnv.completed" >> run_${modnam}_${fhr}_cnv.sh
 
     echo "if [ $SENDCOM="YES" ] ; then" >> run_${modnam}_${fhr}_cnv.sh
-    echo "  cp -f $WORK/run_${modnam}_${fhr}_cnv.completed $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
+    echo "  cp -f $WORK/completed/run_${modnam}_${fhr}_cnv.completed $COMOUTsmall/completed" >> run_${modnam}_${fhr}_cnv.sh
     echo "  for FILE in \$output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat ; do" >> run_${modnam}_${fhr}_cnv.sh
     echo "    if [ -s \$FILE ]; then" >> run_${modnam}_${fhr}_cnv.sh
     echo "      cp -v \$FILE $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh
@@ -225,11 +227,11 @@ else
 fi
 
 # Indicate all tasks are completed
->$WORK/stats_completed
-echo "All stats are completed" >> $WORK/stats_completed
+>$WORK/completed/stats_completed
+echo "All stats are completed" >> $WORK/completed/stats_completed
 
 if [ $SENDCOM = YES ] ; then
-  cp -f $WORK/stats_completed $COMOUTsmall
+  cp -f $WORK/completed/stats_completed $COMOUTsmall/completed
 fi
 
 fi # end of check restart for all tasks
