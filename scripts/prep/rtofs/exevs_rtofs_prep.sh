@@ -96,7 +96,8 @@ done
 #  convert RTOFS forecast data into lat-lon grids for each OBTYPE;
 #  OBTYPE is the validation source: ghrsst, smos, smap etc.
 ##########################
-for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
+#for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
+for rcase in osisaf; do
 	export OBTYPE=$rcase
 	for lead in ${leads}; do
 		if [ $lead = n024 ]; then
@@ -171,15 +172,27 @@ fi
 mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
 for ftype in nh sh; do
 	osi_saf_grid_file=$FIXevs/cdo_grids/rtofs_$OBTYPE.grid
-	input_osisaf_file=$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
+	#input_osisaf_file=$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
+	input_osisaf_file=/lfs/h2/emc/ptmp/samira.ardani/test/corrupted.nc
 	tmp_osisaf_file=$DATA/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	output_osisaf_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	if [ -s $input_osisaf_file ]; then
-    		actual_size_osisaf=$(wc -c <"$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc")
+    		#actual_size_osisaf=$(wc -c <"$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc")
+		python $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file"
+		export err=$?; err_chk
+		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file")
+		echo "$file_check"
+		if [ "$file_check" -eq 0 ]; then
+			echo "$input_osisaf_file is valid."
+		elif [ "$file_check" -eq 1 ]; then
+			echo "$input_osisaf_file is corrupted or unreadable."
+		fi
     	fi
-    	if [[ ! -s $input_osisaf_file || $actual_size_osisaf -lt $min_size ]]; then
-	    	echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
-	    	if [ $SENDMAIL = YES ] ; then
+    	#if [[ ! -s $input_osisaf_file || $actual_size_osisaf -lt $min_size ]]; then
+	    	#echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
+	if [[ ! -s $input_osisaf_file || $file_check !=  0 ]]; then
+			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
+		if [ $SENDMAIL = YES ] ; then
 			export subject="OSI-SAF Data Missing for EVS RTOFS"
 		    	echo "Warning: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
 		    	echo "Missing file is $input_osisaf_file" >> mailmsg
@@ -187,7 +200,7 @@ for ftype in nh sh; do
 	    	fi
     	fi
     	if [ ! -s $output_osisaf_file ]; then
-        	if [ -s $input_osisaf_file ]; then
+        	if [[ -s $input_osisaf_file && $file_check -eq 0 ]]; then
             		cdo remapbil,$osi_saf_grid_file $input_osisaf_file $tmp_osisaf_file
             		export err=$?; err_chk
             		if [ $SENDCOM = "YES" ]; then
