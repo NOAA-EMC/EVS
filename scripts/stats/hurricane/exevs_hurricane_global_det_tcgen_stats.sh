@@ -21,7 +21,7 @@ if [ ! -d ${OUTPUT} ]; then mkdir -p ${OUTPUT}; fi
 
 if [ ${model} = "gfs" ]; then
   cp ${COMINgenesis}/${model}_genesis_${YEAR} ${INPUT}/ALLgenesis_${YEAR}
-  export INIT_FREQ=6
+  export INIT_FREQ=12
 elif [ ${model} = "ecmwf" ]; then
   cp ${COMINgenesis}/${model}_genesis_${YEAR} ${INPUT}/ALLgenesis_${YEAR}
   export INIT_FREQ=12
