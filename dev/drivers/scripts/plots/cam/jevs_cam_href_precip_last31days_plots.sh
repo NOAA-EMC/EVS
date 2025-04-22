@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_href_grid2obs_cape_plots_last31days
+#PBS -N jevs_cam_href_precip_last31days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=9:ncpus=85:mem=20GB
+#PBS -l place=vscatter,select=4:ncpus=76:mem=100GB
 #PBS -l debug=true
 
 set -x
@@ -19,8 +19,9 @@ export envir=prod
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=grid2obs_cape
+export VERIF_CASE=precip
 export MODELNAME=href
+
 
 module reset
 module load prod_envir/${prod_envir_ver}

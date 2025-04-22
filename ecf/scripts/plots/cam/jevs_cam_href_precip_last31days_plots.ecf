@@ -1,13 +1,13 @@
-#PBS -N evs_cam_href_grid2obs_cape_plots_last31days
+#PBS -N evs_cam_href_precip_last31days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=9:ncpus=85:mem=20GB
+#PBS -l place=vscatter,select=4:ncpus=76:mem=100GB
 #PBS -l debug=true
 
-export model=evs
+export model=evs 
 %include <head.h>
 %include <envir-p1.h>
 
@@ -51,11 +51,11 @@ else
   export vhr=00
 fi
 export OMP_NUM_THREADS=1
+export last_days=31
 export NET="evs"
 export RUN="atmos"
-export VERIF_CASE="grid2obs_cape"
+export VERIF_CASE="precip"
 export MODELNAME=href
-export last_days=31
 export run_mpi=yes
 
 ############################################################

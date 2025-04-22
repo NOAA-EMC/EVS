@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_href_profile_plots_last90days
+#PBS -N jevs_cam_href_grid2obs_ecnt_last31days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=1:ncpus=60:mem=50GB
+#PBS -l place=vscatter,select=2:ncpus=33:mem=40GB
 #PBS -l debug=true
 
 set -x
@@ -19,7 +19,7 @@ export envir=prod
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=profile
+export VERIF_CASE=grid2obs_ecnt
 export MODELNAME=href
 
 module reset
@@ -32,10 +32,9 @@ export SENDMAIL=YES
 export SENDDBN=NO
 
 export vhr=00
-export last_days=90
+export last_days=31
 
 export run_mpi=yes
-export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d

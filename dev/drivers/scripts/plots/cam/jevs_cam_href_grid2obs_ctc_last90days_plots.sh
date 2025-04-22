@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_href_grid2obs_ecnt_plots_last31days
+#PBS -N jevs_cam_href_grid2obs_ctc_last90days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=2:ncpus=33:mem=40GB
+#PBS -l walltime=00:25:00
+#PBS -l place=vscatter,select=6:ncpus=85:mem=50GB
 #PBS -l debug=true
 
 set -x
@@ -19,8 +19,9 @@ export envir=prod
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=grid2obs_ecnt
+export VERIF_CASE=grid2obs_ctc
 export MODELNAME=href
+
 
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -32,11 +33,11 @@ export SENDMAIL=YES
 export SENDDBN=NO
 
 export vhr=00
-export last_days=31
+export last_days=90
 
 export run_mpi=yes
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
