@@ -43,7 +43,8 @@ if [ ! -d ${OUTPUT} ]; then mkdir -p ${OUTPUT}; fi
 cd ${OUTPUT}
 cp ${USHevs}/${COMPONENT}/hits_${basin}.py .
 cp ${COMINstats}/tc_gen_${YEAR}_genmpr_${basin}_${model}.txt tc_gen_${YEAR}_genmpr.txt 
-grep "00    FYOY" tc_gen_${YEAR}_genmpr.txt > tc_gen_hits.txt
+awk '$NF == "FYOY"'  tc_gen_${YEAR}_genmpr.txt > tc_gen_hits.txt
+#grep "00    FYOY" tc_gen_${YEAR}_genmpr.txt > tc_gen_hits.txt
 export hitfile="tc_gen_hits.txt"
 python hits_${basin}.py
 convert TC_genesis.png tcgen_hits_${basin}_${model}.gif
@@ -63,8 +64,9 @@ error=$?
 rm -f TC_genesis.png
 
 cp ${USHevs}/${COMPONENT}/false_${basin}.py .
-grep "00    FYON" tc_gen_${YEAR}_genmpr.txt > tc_gen_false.txt
-grep "NA    FYON" tc_gen_${YEAR}_genmpr.txt >> tc_gen_false.txt
+awk '$NF == "FYON"'  tc_gen_${YEAR}_genmpr.txt > tc_gen_false.txt
+#grep "00    FYON" tc_gen_${YEAR}_genmpr.txt > tc_gen_false.txt
+#grep "NA    FYON" tc_gen_${YEAR}_genmpr.txt >> tc_gen_false.txt
 export falsefile="tc_gen_false.txt"
 python false_${basin}.py
 convert TC_genesis.png tcgen_falseAlarm_${basin}_${model}.gif
