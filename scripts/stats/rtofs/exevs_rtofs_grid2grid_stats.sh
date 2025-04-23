@@ -46,7 +46,6 @@ else
 fi
 
 export JDATE=$(date2jday.sh $VDATE)
-min_size=2404
 
 #########################################################################################
 # GridStat
@@ -127,10 +126,18 @@ else
 	fi
 
 	if [ -s $DCOMINrtofsfilename ] ; then
-	actual_size=$(wc -c <"$DCOMINrtofsfilename")
-		if [ $actual_size -ge $min_size ]; then
-     			if [ -s $COMINicefilename ] ; then
-      				for fday in 0 1 2 3 4 5 6 7 8; do
+		python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename"
+		export err=$?; err_chk
+		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename")
+		echo "$file_check"
+		if [ $file_check -eq 0 ]; then
+			echo "$DCOMINrtofsfilename is valid."
+		elif [ "$file_check" -eq 1 ]; then
+			echo "$DCOMINrtofsfilename is corrupted or unreadable."
+		fi
+     		if [ -s $COMINicefilename ] ; then
+      			if [ $file_check -eq 0 ]; then
+				for fday in 0 1 2 3 4 5 6 7 8; do
         				fhr=$(($fday * 24))
         				fhr2=$(printf "%02d" "${fhr}")
         				export fhr3=$(printf "%03d" "${fhr}")
@@ -159,11 +166,11 @@ else
           					echo "WARNING: Missing RTOFS f${fhr3} file for $VDATE: $COMINrtofsfilename"
         				fi
       				done
-   			else
+  			else
      				echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMINicefilename"
    			fi
 		else
-   			echo "WARNING:  Missing SMOS data file for $VDATE: $DCOMINrtofsfilename"
+   			echo "WARNING:  Missing $DCOMINrtofsfilename data file for $VDATE: $DCOMINrtofsfilename"
    			if [ $SENDMAIL = YES ] ; then
        				export subject="${OBTYPEupper} Data Missing for EVS RTOFS"
        				echo "Warning: No ${OBTYPEupper} data was available for valid date $VDATE." > mailmsg

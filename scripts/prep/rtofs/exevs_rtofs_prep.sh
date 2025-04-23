@@ -96,8 +96,7 @@ done
 #  convert RTOFS forecast data into lat-lon grids for each OBTYPE;
 #  OBTYPE is the validation source: ghrsst, smos, smap etc.
 ##########################
-#for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
-for rcase in osisaf; do
+for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
 	export OBTYPE=$rcase
 	for lead in ${leads}; do
 		if [ $lead = n024 ]; then
@@ -163,7 +162,6 @@ done
 ##########################
 #  process obs data
 ##########################
-min_size=2404
 # convert OSI-SAF data into lat-lon grid
 export OBTYPE=osisaf
 if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE ]; then
@@ -172,12 +170,10 @@ fi
 mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
 for ftype in nh sh; do
 	osi_saf_grid_file=$FIXevs/cdo_grids/rtofs_$OBTYPE.grid
-	#input_osisaf_file=$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
-	input_osisaf_file=/lfs/h2/emc/ptmp/samira.ardani/test/corrupted.nc
+	input_osisaf_file=$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	tmp_osisaf_file=$DATA/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	output_osisaf_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	if [ -s $input_osisaf_file ]; then
-    		#actual_size_osisaf=$(wc -c <"$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc")
 		python $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file"
 		export err=$?; err_chk
 		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file")
@@ -188,8 +184,6 @@ for ftype in nh sh; do
 			echo "$input_osisaf_file is corrupted or unreadable."
 		fi
     	fi
-    	#if [[ ! -s $input_osisaf_file || $actual_size_osisaf -lt $min_size ]]; then
-	    	#echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
 	if [[ ! -s $input_osisaf_file || $file_check !=  0 ]]; then
 			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
 		if [ $SENDMAIL = YES ] ; then
@@ -270,10 +264,41 @@ if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE ]; then
 fi
 mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
 if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc ] && [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc ] && [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc ]; then
-	actual_size_argo_atlantic=$(wc -c <"$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc")
-	actual_size_argo_indian=$(wc -c <"$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc")
-	actual_size_argo_pacific=$(wc -c <"$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc")
-	if [ $actual_size_argo_atlantic -gt $min_size ] && [ $actual_size_argo_indian -gt $min_size ] && [ $actual_size_argo_pacific -gt $min_size ] ; then
+	
+	# check atlantic:
+	python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc"
+	export err=$?; err_chk
+	file_check_atlantic=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc")
+	echo "$file_check_atlantic"
+	if [ "$file_check_atlantic" -eq 0 ]; then
+		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc is valid."
+	elif [ "$file_check_atlantic" -eq 1 ]; then
+		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc is corrupted or unreadable."
+	fi
+
+        # check indian
+	python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc"
+	export err=$?; err_chk
+	file_check_indian=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc")
+	echo "$file_check_indian"
+	if [ "$file_check_indian" -eq 0 ]; then
+		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is valid."
+	elif [ "$file_check_atlantic" -eq 1 ]; then
+		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is corrupted or unreadable."
+	fi
+	
+	# check pacific
+	python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc"
+	export err=$?; err_chk
+	file_check_pacific=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc")
+	echo "$file_check_pacific"
+	if [ "$file_check_pacific" -eq 0 ]; then
+		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is valid."
+	elif [ "$file_check_atlantic" -eq 1 ]; then
+		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is corrupted or unreadable."
+	fi
+
+	if [ $file_check_atlantic -eq 0 ] && [ $file_check_indian -eq 0 ] && [ $file_check_pacific -eq 0 ] ; then
 		tmp_argo_file=$DATA/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
 		output_argo_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
 		if [ ! -s $output_argo_file ]; then
