@@ -211,9 +211,6 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
       fi
     fi
 
-    # Clean up duplicate stat files under restart directory
-    echo "rm -f $COMOUTsmall/restart/${verify}/run_${modnam}_${verify}_${type}/stat/${modnam}/*.stat" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
-
     chmod +x run_${modnam}_${verify}_${type}_${metplus_job}.sh
     echo "${DATA}/run_${modnam}_${verify}_${type}_${metplus_job}.sh" >> run_all_gens_snowfall_${metplus_job}_poe.sh
   done # end of types loop
