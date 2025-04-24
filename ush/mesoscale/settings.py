@@ -3599,8 +3599,8 @@ class Reference():
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
                         'SNOD_06': {'fcst_var_names': [
-                                        'SNOD', 'ASNOW', 'SNOD_06', 'ASNOW_06', 
-                                        'SNOD_A06', 'ASNOW_A06'
+                                        'SNOD', 'SNOD_06',  
+                                        'SNOD_A06'
                                     ],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3617,8 +3617,8 @@ class Reference():
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
                         'SNOD_24': {'fcst_var_names': [
-                                        'SNOD', 'ASNOW', 'SNOD_24', 'ASNOW_24',
-                                        'SNOD_A24', 'ASNOW_A24'
+                                        'SNOD',  'SNOD_24', 
+                                        'SNOD_A24'
                                     ],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3678,8 +3678,8 @@ class Reference():
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
                         'SNOD_06': {'fcst_var_names': [
-                                        'SNOD', 'ASNOW', 'SNOD_06', 'ASNOW_06',
-                                        'SNOD_A06', 'ASNOW_A06'
+                                        'SNOD', 'SNOD_06',
+                                        'SNOD_A06'
                                     ],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3696,8 +3696,8 @@ class Reference():
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
                         'SNOD_24': {'fcst_var_names': [
-                                        'SNOD', 'ASNOW', 'SNOD_24', 'ASNOW_24',
-                                        'SNOD_A24', 'ASNOW_A24'
+                                        'SNOD', 'SNOD_24',
+                                        'SNOD_A24'
                                     ],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'

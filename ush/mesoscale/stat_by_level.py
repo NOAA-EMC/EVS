@@ -1023,6 +1023,10 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
         var_savename = 'MSLET'
+    elif any(field in var_savename.upper() for field in ['ASNOW']):
+        var_savename = 'ASNOW'
+    elif any(field in var_savename.upper() for field in ['SNOD']):
+        var_savename = 'SNOD'
     if domain in list(domain_translator.keys()):
         domain_string = domain_translator[domain]['long_name']
         domain_save_string = domain_translator[domain]['save_name']
