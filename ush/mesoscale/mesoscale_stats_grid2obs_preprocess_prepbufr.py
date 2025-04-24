@@ -39,7 +39,6 @@ vdate = datetime.strptime(VDATE+VHOUR, '%Y%m%d%H')
 infiles = cutil.get_prepbufr_templates(COMINobsproc, [vdate])
 
 for infile in infiles:
-    print(infile, "infile")
     indir, fname = os.path.split(infile)
     cutil.preprocess_prepbufr(
         indir, fname, workdir, outdir, subsets

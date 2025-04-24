@@ -33,7 +33,6 @@ PBS_NODEFILE = os.environ['PBS_NODEFILE']
 if USE_CFP == 'YES':
     job_dir = os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', job_type)
     job_files = glob.glob(os.path.join(job_dir, 'job*'))
-    print('job_files', job_files)
     njob_files = len(job_files)
     if njob_files == 0:
         print(f"ERROR: No job files created in {job_dir}")
@@ -45,8 +44,6 @@ if USE_CFP == 'YES':
             os.remove(poe_job_file)
     njob, iproc, node = 1, 0, 1
     for job_file in job_files:
-        print('job_file', job_file)
-#        job_filename = f'job{njob}'
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             if iproc >= int(nproc):
                 iproc = 0
@@ -57,7 +54,6 @@ if USE_CFP == 'YES':
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             poe_job.write(f'{iproc-1} {os.path.join(job_dir, job_filename)}\n')
         else:
-#            poe_job.write(f'{os.path.join(job_dir, job_filename)}\n')
             poe_job.write(f'{job_file}\n')
         poe_job.close()
         njob+=1

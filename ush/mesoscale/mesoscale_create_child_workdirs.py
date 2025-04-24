@@ -69,7 +69,6 @@ else:
             completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
             if not os.path.exists(completed_jobs_file):
               workdir = os.path.join(workdirs, job_name)
-              print("job_name",job_name)
               if not os.path.exists(workdir):
                   os.makedirs(workdir)
               cutil.run_shell_command([
