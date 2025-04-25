@@ -486,6 +486,34 @@ class PlotSpecs:
             var_plot_name = var_name_level
         return var_plot_name
 
+    def get_obs_plot_name(self, ob_name):
+        """! Get the full obs source name that will be
+             displayed on the plot
+
+             Args:
+                 ob_name - abbreviated obs source name (string)
+
+             Returns:
+                 obs_plot_name - full obs source name that
+                                 will be displayed on the plot
+                                 (string)
+        """
+        obs_plot_name_dict = {
+            'ecmwf': 'ECMWF Anl',
+            'gfs': 'GFS Anl',
+            'CCPA': 'CCPA',
+            'osi_saf': 'OSI-SAF',
+            'ghrsst_ospo': 'GHRSST-OSPO',
+            'ADPSFC': 'METARS'
+        }
+        if ob_name in list(obs_plot_name_dict.keys()):
+            obs_plot_name = obs_plot_name_dict[ob_name]
+        else:
+            self.logger.debug(f"{ob_name} not recognized, "
+                              +f"using {ob_name} on plot")
+            obs_plot_name = ob_name
+        return obs_plot_name
+
     def get_vx_mask_plot_name(self, vx_mask):
         """! Get the full verification masking information that will
              be displayed on the plot
@@ -745,6 +773,9 @@ class PlotSpecs:
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
                           +plot_info_dict['interp_points'])
+        plot_title = (plot_title+' - '
+                      +'Validation: '
+                      +self.get_obs_plot_name(plot_info_dict['ob_name']))
         plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
                                                 date_info_dict['start_date'], 
