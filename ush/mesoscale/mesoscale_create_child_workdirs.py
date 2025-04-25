@@ -63,13 +63,18 @@ else:
             if job_name[:3] == 'job'
         ]
         for job_name in job_scripts:
-            workdir = os.path.join(workdirs, job_name)
-            if not os.path.exists(workdir):
-                os.makedirs(workdir)
-            cutil.run_shell_command([
-                'find', '.', '-type', 'd', '-not', '-path', 
-                '\"*workdirs*\"', '-not', '-path', '\"*job*\"', '-exec', 
-                'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
+            RESTART_DIR = os.environ['RESTART_DIR']
+            COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
+            completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_" + job_name + ".txt"
+            completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
+            if not os.path.exists(completed_jobs_file):
+              workdir = os.path.join(workdirs, job_name)
+              if not os.path.exists(workdir):
+                  os.makedirs(workdir)
+              cutil.run_shell_command([
+                  'find', '.', '-type', 'd', '-not', '-path', 
+                  '\"*workdirs*\"', '-not', '-path', '\"*job*\"', '-exec', 
+                  'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
             ])
         if STEP == "prep":
             print(
