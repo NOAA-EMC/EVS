@@ -40,11 +40,12 @@ rfile=open(input_file, 'r')
 wfile=open(output_file,'w')
 
 #
-## Check for number of column using the default 'HOURILY_NCOL' defined in ~/job
+## Check for number of columns using the default 'HOURLY_NCOL' defined in ~/job
 #
 num_ref_hdr=int(os.environ['HOURLY_NCOL'])
 rcount=0
 wcount=0
+bad_rec=0
 flag_data=False
 for line in rfile:
     if not flag_data:
@@ -59,7 +60,7 @@ for line in rfile:
                 flag_data=True
                 print(f"DEBUG :: find header row in line {rcount} with header column = {num_ref_hdr}")
             else:
-                print(f"DEBUG :: row {rcount} has inconsistent header column {num_hdr} vs reference {num_ref_hdr}")
+                print(f"DEBUG :: Skip line {rcount} with wrong number of column")
     else:
         rcount += 1
         line=line.rstrip("\n")
@@ -70,8 +71,10 @@ for line in rfile:
             wfile.write(line+"\n")
             wcount += 1
         else:
-            print(f"DEBUG :: Line {rcount} has different columns number {num_var} vs reference {num_ref_hdr}")
-            print(f"DEBUG :: The corrupted record has been removed")
+            bad_rec += 1
 if wcount == 0:
-    print(f"WARNING - Corrupted validation file in dcom: {input_file} has the wrong number of columns. aqm prep step will skip the corrupted validation file.")
+    print(f"WARNING - {input_file} is corrupt. aqm prep step will skip the corrupted validation file.")
+else:
+    if bad_rec > 0:
+        print(f"WARNING: {input_file} is corrupt, {bad_rec} line(s) with wrong number of columns. Removing the corrupted line(s) from file and continuing")
 wfile.close()

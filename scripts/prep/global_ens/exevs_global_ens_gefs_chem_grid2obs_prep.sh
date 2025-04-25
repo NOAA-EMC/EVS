@@ -55,7 +55,7 @@ for OBTTYPE in ${obstype}; do
                         fi
                     fi
                 else
-                    echo "DEBUG: can not find ${prep_config_file}"
+                    echo "DEBUG: can not find ${prep_config_file}, so ${MODELNAME} ${STEP} will skip ${screen_file}"
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
@@ -64,7 +64,7 @@ for OBTTYPE in ${obstype}; do
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
-                echo "DEBUG : There is no valid record to be processed for ${checkfile}"
+                echo "DEBUG : There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip ${checkfile}"
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
@@ -73,8 +73,7 @@ for OBTTYPE in ${obstype}; do
                 echo "==============" >> mailmsg
                 flag_send_message=YES
             fi
-            echo "DEBUG: No AERONET Level 1.5 data was available for valid date ${INITDATE}"
-            echo "DEBUG: Missing file is ${checkfile}"
+            echo "WARNING: ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
         fi
     elif [ "${OBTTYPE}" == "airnow" ]; then
         airnow_hourly_type="aqobs"
@@ -113,7 +112,7 @@ for OBTTYPE in ${obstype}; do
                             if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
                         fi
                     else
-                        echo "DEBUG: can not find ${prep_config_file}"
+                        echo "DEBUG: can not find ${prep_config_file}, so ${MODELNAME} ${STEP} will skip the ${screen_file}"
                     fi
                 else
                     if [ ${SENDMAIL} = "YES" ]; then
@@ -122,7 +121,7 @@ for OBTTYPE in ${obstype}; do
                         echo "==============" >> mailmsg
                         flag_send_message=YES
                     fi
-                    echo "DEBUG : There is no valid record to be processed for ${checkfile}"
+                    echo "DEBUG : There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
@@ -132,8 +131,7 @@ for OBTTYPE in ${obstype}; do
                     flag_send_message=YES
                 fi
         
-                echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
-                echo "DEBUG: ${MODELNAME} ${STEP} will skip the ${checkfile}"
+                echo "WARNING: AIRNOW ASCII file ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}${vldhr}"
             fi
             ((ic++))
         done

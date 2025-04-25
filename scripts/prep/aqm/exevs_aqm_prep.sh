@@ -78,7 +78,7 @@ while [ ${ic} -le ${endvhr} ]; do
                     if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
                 fi
             else
-                echo "WARNING: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
+                echo "WARNING: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf, so ${MODELNAME} ${STEP} will skip the ${screen_file}"
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
@@ -88,7 +88,7 @@ while [ ${ic} -le ${endvhr} ]; do
                 echo "Job ID: $jobid" >> mailmsg
                 cat mailmsg | mail -s "$subject" $MAILTO 
             fi
-            echo "DEBUG : There is no valid record to be processed for ${checkfile}"
+            echo "DEBUG : There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
         fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
@@ -99,8 +99,7 @@ while [ ${ic} -le ${endvhr} ]; do
             cat mailmsg | mail -s "$subject" $MAILTO 
         fi
 
-        echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
-        echo "DEBUG: ${MODELNAME} ${STEP} will skip the ${checkfile}"
+        echo "WARNING: AIRNOW ASCII file ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}${vldhr}"
     fi
     ((ic++))
 done
@@ -122,7 +121,7 @@ if [ -s ${checkfile} ]; then
                 if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc};fi
             fi
         else
-            echo "WARNING: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
+            echo "WARNING: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf, so ${MODELNAME} ${STEP} will skip the ${screen_file}"
         fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
@@ -132,7 +131,7 @@ if [ -s ${checkfile} ]; then
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO 
         fi
-        echo "DEBUG : There is no valid record to be processed for ${checkfile}"
+        echo "DEBUG : There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
     fi
 else
     if [ ${SENDMAIL} = "YES" ]; then
@@ -143,8 +142,7 @@ else
         cat mailmsg | mail -s "$subject" $MAILTO 
     fi
 
-    echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}"
-    echo "DEBUG: ${MODELNAME} ${STEP} will skip the ${checkfile}"
+    echo "WARNING: AIRNOW ASCII file ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
 fi
 #
 ##
