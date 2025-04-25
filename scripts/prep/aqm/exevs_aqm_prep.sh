@@ -49,7 +49,7 @@ export PREP_SAVE_DIR=${DATA}/prepsave
 mkdir -p ${PREP_SAVE_DIR}
 
 
-export model1=`echo $MODELNAME | tr a-z A-Z`
+export model1=`echo ${MODELNAME} | tr a-z A-Z`
 echo $model1
 
 ## Pre-Processed EPA AIRNOW ASCII input file to METPlus NetCDF input for PointStat
@@ -99,8 +99,8 @@ while [ ${ic} -le ${endvhr} ]; do
             cat mailmsg | mail -s "$subject" $MAILTO 
         fi
 
-        echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
-        echo "WARNING: Missing file is ${checkfile}"
+        echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
+        echo "DEBUG: ${MODELNAME} ${STEP} will skip the ${checkfile}"
     fi
     ((ic++))
 done
@@ -143,8 +143,8 @@ else
         cat mailmsg | mail -s "$subject" $MAILTO 
     fi
 
-    echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}"
-    echo "WARNING: Missing file is ${checkfile}"
+    echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}"
+    echo "DEBUG: ${MODELNAME} ${STEP} will skip the ${checkfile}"
 fi
 #
 ##

@@ -57,6 +57,7 @@ for line in rfile:
         wcount += 1
     else:
         print(f"DEBUG :: Line {rcount} has different columns number {num_var} vs reference {num_ref_col}")
+        print(f"DEBUG :: The corrupted record has been removed")
 if wcount == 0:
-    print(f"WARNING - CHECK DATA FILE :: it is possible that {input_file} is not an EPA AirNOW daily observation")
+    print(f"WARNING - Corrupted validation file in dcom: {input_file} has the wrong number of columns. aqm prep step will skip the corrupted validation file.")
 wfile.close()

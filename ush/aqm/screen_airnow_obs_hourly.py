@@ -59,7 +59,7 @@ for line in rfile:
                 flag_data=True
                 print(f"DEBUG :: find header row in line {rcount} with header column = {num_ref_hdr}")
             else:
-                print(f"WARNING :: row {rcount} has inconsistent header column {num_hdr} vs reference {num_ref_hdr}")
+                print(f"DEBUG :: row {rcount} has inconsistent header column {num_hdr} vs reference {num_ref_hdr}")
     else:
         rcount += 1
         line=line.rstrip("\n")
@@ -70,7 +70,8 @@ for line in rfile:
             wfile.write(line+"\n")
             wcount += 1
         else:
-            print(f"WARNING :: Line {rcount} has different columns number {num_var} vs reference {num_ref_hdr}")
+            print(f"DEBUG :: Line {rcount} has different columns number {num_var} vs reference {num_ref_hdr}")
+            print(f"DEBUG :: The corrupted record has been removed")
 if wcount == 0:
-    print(f"WARNING - CHECK DATA FILE :: it is possible that {input_file} is not an EPA AirNOW hourly observation")
+    print(f"WARNING - Corrupted validation file in dcom: {input_file} has the wrong number of columns. aqm prep step will skip the corrupted validation file.")
 wfile.close()

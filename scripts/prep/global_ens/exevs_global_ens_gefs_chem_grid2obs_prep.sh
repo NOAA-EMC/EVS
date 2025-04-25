@@ -133,7 +133,7 @@ for OBTTYPE in ${obstype}; do
                 fi
         
                 echo "DEBUG: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}"
-                echo "DEBUG: Missing file is ${checkfile}"
+                echo "DEBUG: ${MODELNAME} ${STEP} will skip the ${checkfile}"
             fi
             ((ic++))
         done
