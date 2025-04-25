@@ -170,11 +170,11 @@ else
      				echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMINicefilename"
    			fi
 		else
-   			echo "WARNING:  Missing $DCOMINrtofsfilename data file for $VDATE: $DCOMINrtofsfilename"
+   			echo "WARNING:  Corrupted ${OBTYPEupper} validation data file for $VDATE: $DCOMINrtofsfilename"
    			if [ $SENDMAIL = YES ] ; then
-       				export subject="${OBTYPEupper} Data Missing for EVS RTOFS"
+       				export subject="${OBTYPEupper} Data is corrupted for EVS RTOFS"
        				echo "Warning: No ${OBTYPEupper} data was available for valid date $VDATE." > mailmsg
-       				echo "Missing file is ${DCOMINrtofsfilename}." >> mailmsg
+       				echo "Corrupted file is ${DCOMINrtofsfilename}." >> mailmsg
        				cat mailmsg | mail -s "$subject" $MAILTO
    			fi
 		fi

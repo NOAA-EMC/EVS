@@ -50,7 +50,7 @@ for lead in ${leads}; do
                 echo "WARNING: ${input_rtofs_file} does not exist"
                 if [ $SENDMAIL = YES ] ; then
                     export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "Warning: No RTOFS forecast was available for ${INITDATE}${lead}" > mailmsg
+                    echo "WARNING: No RTOFS forecast was available for ${INITDATE}${lead}" > mailmsg
                     echo "Missing file is ${input_rtofs_file}" >> mailmsg
                     echo "Job ID: $jobid" >> mailmsg
                     cat mailmsg | mail -s "$subject" $MAILTO
@@ -79,7 +79,7 @@ for lead in ${leads}; do
                 echo "WARNING: ${input_rtofs_file} does not exist"
                 if [ $SENDMAIL = YES ] ; then
                     export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "Warning: No RTOFS forecast was available for ${INITDATE}${lead}" > mailmsg
+                    echo "WARNING: No RTOFS forecast was available for ${INITDATE}${lead}" > mailmsg
                     echo "Missing file is ${input_rtofs_file}" >> mailmsg
                     echo "Job ID: $jobid" >> mailmsg
                     cat mailmsg | mail -s "$subject" $MAILTO
@@ -181,18 +181,26 @@ for ftype in nh sh; do
 		if [ "$file_check" -eq 0 ]; then
 			echo "$input_osisaf_file is valid."
 		elif [ "$file_check" -eq 1 ]; then
-			echo "$input_osisaf_file is corrupted or unreadable."
+			echo "WARNING:  Corrupted validation file: OSI-SAF ${ftype} is corrupted for valid date $INITDATE."
+			if [ $SENDMAIL = YES ] ; then
+				export subject="OSI-SAF Data is corrupted for EVS RTOFS"
+		    		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
+		    		echo "Corrupted file is $input_osisaf_file" >> mailmsg
+		    		cat mailmsg | mail -s "$subject" $MAILTO
+	    	fi
 		fi
     	fi
-	if [[ ! -s $input_osisaf_file || $file_check !=  0 ]]; then
-			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
+	if [ ! -s $input_osisaf_file ]; then
+		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
 		if [ $SENDMAIL = YES ] ; then
 			export subject="OSI-SAF Data Missing for EVS RTOFS"
-		    	echo "Warning: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
+		    	echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
 		    	echo "Missing file is $input_osisaf_file" >> mailmsg
 		    	cat mailmsg | mail -s "$subject" $MAILTO
 	    	fi
     	fi
+
+
     	if [ ! -s $output_osisaf_file ]; then
         	if [[ -s $input_osisaf_file && $file_check -eq 0 ]]; then
             		cdo remapbil,$osi_saf_grid_file $input_osisaf_file $tmp_osisaf_file
@@ -206,7 +214,7 @@ for ftype in nh sh; do
 			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
             		if [ $SENDMAIL = YES ] ; then
                 		export subject="OSI-SAF Data Missing for EVS RTOFS"
-                		echo "Warning: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
+                		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
                 		echo "Missing file is $input_osisaf_file" >> mailmsg
                 		cat mailmsg | mail -s "$subject" $MAILTO
             		fi
@@ -252,7 +260,7 @@ else
 	echo "WARNING: No NDBC data was available for valid date $INITDATE."	
   	if [ $SENDMAIL = YES ] ; then
     		export subject="NDBC Data Missing for EVS RTOFS"
-    		echo "Warning: No NDBC data was available for valid date $INITDATE." > mailmsg
+    		echo "WARNING: No NDBC data was available for valid date $INITDATE." > mailmsg
     		echo "Missing files are located at $DCOMROOT/$INITDATE/validation_data/marine/buoy" >> mailmsg
     		cat mailmsg | mail -s "$subject" $MAILTO
   	fi
@@ -315,10 +323,11 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 			cp -v $output_argo_file $tmp_argo_file
 		fi
 	else
+		echo "WARNING:  Corrupted validation file: ARGO ${ftype} is corrupted for valid date $INITDATE."
 		if [ $SENDMAIL = YES ] ; then
-			export subject="Argo Data Missing for EVS RTOFS"
-			echo "Warning: No Argo data was available for valid date $INITDATE." > mailmsg
-			echo "Missing file is $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc, $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc, and/or $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc" >> mailmsg
+			export subject="Argo Data is corrupted for EVS RTOFS"
+			echo "WARNING: No Argo data was available for valid date $INITDATE." > mailmsg
+			echo "Corrupted file is $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc, $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc, and/or $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc" >> mailmsg
 			cat mailmsg | mail -s "$subject" $MAILTO
 		fi
 	fi
@@ -326,7 +335,7 @@ else
 	echo "WARNING: No Argo data was available for valid date $INITDATE."
 	if [ $SENDMAIL = YES ] ; then
 		export subject="Argo Data Missing for EVS RTOFS"
-		echo "Warning: No Argo data was available for valid date $INITDATE." > mailmsg
+		echo "WARNING: No Argo data was available for valid date $INITDATE." > mailmsg
 		echo "Missing file is $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc, $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc, and/or $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc" >> mailmsg
 		cat mailmsg | mail -s "$subject" $MAILTO
 	fi
