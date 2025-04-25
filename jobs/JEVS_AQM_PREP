@@ -82,7 +82,7 @@ else
     export DATA_TYPE=${DATA_TYPE:-abi}
     if [ "${DATA_TYPE}" == "abi" ]; then
         export DCOMINabi=${DCOMINabi:-${DCOMROOT}}
-        export GOES_EAST=${GOES_EAST:-g16}
+        export GOES_EAST=${GOES_EAST:-g19}
         export GOES_WEST=${GOES_WEST:-g18}
         export AOD_SCAN_TYPE=${AOD_SCAN_TYPE:-AODC}
         export ADP_SCAN_TYPE=${ADP_SCAN_TYPE:-ADPC}
