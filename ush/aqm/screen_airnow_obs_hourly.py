@@ -60,7 +60,7 @@ for line in rfile:
                 flag_data=True
                 print(f"DEBUG :: find header row in line {rcount} with header column = {num_ref_hdr}")
             else:
-                print(f"DEBUG :: Skip line {rcount} with wrong number of column")
+                print(f"DEBUG :: Skip line {rcount} with wrong number of columns")
     else:
         rcount += 1
         line=line.rstrip("\n")
