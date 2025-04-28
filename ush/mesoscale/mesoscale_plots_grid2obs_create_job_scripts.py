@@ -13,11 +13,12 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
 njob = os.environ['njob']
+EVAL_PERIOD = os.environ['EVAL_PERIOD']
 for VERIF_TYPE in graphics[COMPONENT][VERIF_CASE]:
     for MODELS in graphics[COMPONENT][VERIF_CASE][VERIF_TYPE]:
         for PLOT_TYPE in graphics[COMPONENT][VERIF_CASE][VERIF_TYPE][MODELS]:
             plot_type_settings = graphics[COMPONENT][VERIF_CASE][VERIF_TYPE][MODELS][PLOT_TYPE]
-            for EVAL_PERIOD in plot_type_settings['EVAL_PERIODS']:
+            for EVAL_PERIOD in plot_type_settings['EVAL_PERIOD']:
                 if plot_type_settings['DATE_TYPE'] == 'VALID':
                     ANTI_DATE_TYPE = 'INIT'
                     FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
