@@ -4,7 +4,8 @@ export PS4=' + exevs_hurricane_global_det_tcgen_stats.sh line $LINENO: '
 
 export MetOnMachine=${MetOnMachine:-$MET_ROOT}
 export YEAR=${YYYY}
-export basinlist="al ep wp"
+#export basinlist="al ep wp"
+export basinlist="al"
 export modellist="gfs ecmwf cmc"
 
 for basin in $basinlist; do
@@ -53,7 +54,9 @@ fi
 #--- run for TC_gen
 cd ${OUTPUT}
 cp ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/TCGen_template.conf .
-export VALID_FREQ=6
+export VALID_FREQ=12
+export INIT_FREQ=12
+#export PROB_GENESIS_THRESH= >0.5
 
 export SEARCH0="METBASE_template"
 export SEARCH1="INPUT_BASE_template"
@@ -82,6 +85,8 @@ if [ "$SENDCOM" = 'YES' ]; then
   cp ${OUTPUT}/tc_gen_${YEAR}.stat ${COMOUT}/tc_gen_${YEAR}_${basin}_${model}.stat
   cp ${OUTPUT}/tc_gen_${YEAR}_pairs.nc ${COMOUT}/tc_gen_${YEAR}_pairs_${basin}_${model}.nc
 fi
+
+cp -r ${DATAROOT}/${jobid} /lfs/h2/emc/vpppg/noscrub/olivia.ostwald/gen-test
 
 ### model do loop end
 ### basin do loop end
