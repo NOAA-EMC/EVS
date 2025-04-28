@@ -537,4 +537,5 @@ for obsvtype in ccpa mrms ; do
    done  #end of obsv
 
 done # end of domain 
+chmod 775 run_all_href_precip_poe.sh
 export err=$?; err_chk

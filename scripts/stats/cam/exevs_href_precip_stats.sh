@@ -75,39 +75,45 @@ fi
 #***************************************
 # Build a POE script to collect sub-jobs
 # **************************************
->$DATA/scripts/run_all_precip_poe.sh
 
 # Build sub-jobs for precip
 if [ $verif_precip = yes ] ; then
  $USHevs/cam/evs_href_precip.sh
  export err=$?; err_chk
- cat ${DATA}/scripts/run_all_href_precip_poe.sh >> $DATA/scripts/run_all_precip_poe.sh
 fi
 
 # Build sub-jobs for snowfall
 if [ $verif_snowfall = yes ] ; then
  $USHevs/cam/evs_href_snowfall.sh
  export err=$?; err_chk
- cat ${DATA}/scripts/run_all_href_snowfall_poe.sh >> $DATA/scripts/run_all_precip_poe.sh
 fi
 
 
 #*************************************************
 # Run the POE script to generate small stat files
 #*************************************************
-if [ -s ${DATA}/scripts/run_all_precip_poe.sh ]  ; then
-  chmod 775 ${DATA}/scripts/run_all_precip_poe.sh
+if [ -s ${DATA}/scripts/run_all_href_precip_poe.sh ] || [ -s ${DATA}/scripts/run_all_href_snowfall_poe.sh ] ; then
 
   if [ $run_mpi = yes ] ; then
    if [ $verif_precip = yes ] ; then
-    mpiexec  -n 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_precip_poe.sh
+    mpiexec  -n 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_href_precip_poe.sh
+   elif [ $verif_snowfall = yes ] && [ $verif_precip = yes ] ; then
+    mpiexec  -n 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_href_precip_poe.sh
+    mpiexec  -n 21 -ppn 21 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_href_snowfall_poe.sh
    elif [ $verif_snowfall = yes ] && [ $verif_precip = no ] ; then 
-    mpiexec  -n 21 -ppn 21 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_precip_poe.sh
+    mpiexec  -n 21 -ppn 21 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_href_snowfall_poe.sh
    fi
-    export err=$?; err_chk
+   export err=$?; err_chk
   else
-   ${DATA}/scripts/run_all_precip_poe.sh
-    export err=$?; err_chk
+   if [ $verif_precip = yes ] ; then
+      ${DATA}/scripts/run_all_href_precip_poe.sh
+   elif [ $verif_snowfall = yes ] && [ $verif_precip = yes ] ; then
+      ${DATA}/scripts/run_all_href_precip_poe.sh
+      ${DATA}/scripts/run_all_href_snowfall_poe.sh
+   elif [ $verif_snowfall = yes ] && [ $verif_precip = no ] ; then
+      ${DATA}/scripts/run_all_href_snowfall_poe.sh
+   fi      
+   export err=$?; err_chk
   fi
 
 fi
