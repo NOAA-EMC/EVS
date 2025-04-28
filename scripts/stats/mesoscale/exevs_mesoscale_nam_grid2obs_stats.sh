@@ -84,8 +84,10 @@ echo "*****************************"
 	   export err=$?; err_chk
            
          # Create Reformat Job Script
-           python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-           export err=$?; err_chk
+	   if [ ! -e ${RESTART_DIR}/completed_jobs/completed_jobs.txt_${job_type}_job${njob}.txt ]; then 
+             python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
+             export err=$?; err_chk
+	   fi
            
            export njob=$((njob+1))
            echo "Done $VHOUR"
@@ -95,25 +97,34 @@ echo "*****************************"
      echo "Done $NEST"
   done
 
+  ncount_job=0
+  if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+    ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+  fi
+
 # Create Reformat POE Job Scripts
   if [ $USE_CFP = YES ]; then
-     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
-     export err=$?; err_chk
+     if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+      python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
+      export err=$?; err_chk
+     fi
   fi
 
 # Create Reformat Working Directories
-  python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
-  export err=$?; err_chk
+  if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+    python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+    export err=$?; err_chk
+  fi
 
 echo "*****************************"
 echo "Reformat jobs begin"
 echo "*****************************"
 
 # Run All NAM grid2obs/stats Reformat Jobs
-  chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-  ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
-  nc=1
-  if [ $USE_CFP = YES ]; then
+  if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+   chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
+   nc=1
+   if [ $USE_CFP = YES ]; then
      ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
      while [ $nc -le $ncount_poe ]; do
         poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
@@ -133,18 +144,21 @@ echo "*****************************"
         $launcher $MP_CMDFILE
         nc=$((nc+1))
      done
-  else
+   else
      while [ $nc -le $ncount_job ]; do
         sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
      done
+   fi
   fi
 
 # Copy Reformat Output to Main Directory
- for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
-     cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
-     export err=$?; err_chk
- done
+ if [ $ncount_job -gt 0 ]; then
+   for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+       cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+       export err=$?; err_chk
+   done
+ fi
 
 echo "*****************************"
 echo "Reformat jobs done"
@@ -176,10 +190,12 @@ echo "*****************************"
             # Create Output Directories
               python $USHevs/mesoscale/mesoscale_create_output_dirs.py
               export err=$?; err_chk
-              
+
             # Create Generate Job Script
-              python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-              export err=$?; err_chk
+	      if [ ! -e ${RESTART_DIR}/completed_jobs/completed_jobs.txt_${job_type}_job${njob}.txt ]; then
+                python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
+                export err=$?; err_chk
+              fi
               
               export njob=$((njob+1))
            done
@@ -187,25 +203,34 @@ echo "*****************************"
      done 
   done
 
+  ncount_job=0
+  if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+      ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+  fi
+
 # Create Generate POE Job Scripts
   if [ $USE_CFP = YES ]; then
-     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
-     export err=$?; err_chk
+     if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+       python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
+       export err=$?; err_chk
+     fi
   fi
 
 # Create Generate Working Directories
- python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
- export err=$?; err_chk
+ if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+   python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+   export err=$?; err_chk
+ fi
 
 echo "*****************************"
 echo "Generate jobs begin"
 echo "*****************************"
 
 # Run All NAM grid2obs/stats Generate Jobs
-  chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-  ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
-  nc=1
-  if [ $USE_CFP = YES ]; then
+  if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+   chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
+   nc=1
+   if [ $USE_CFP = YES ]; then
      ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
      while [ $nc -le $ncount_poe ]; do
         poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
@@ -225,18 +250,21 @@ echo "*****************************"
         $launcher $MP_CMDFILE
         nc=$((nc+1))
      done
-  else
+   else
      while [ $nc -le $ncount_job ]; do
         sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
      done
+   fi
   fi
 
 # Copy Generate Output to Main Directory
- for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
-     cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
-     export err=$?; err_chk
- done
+ if [ $ncount_job -gt 0 ]; then
+   for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+       cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
+       export err=$?; err_chk
+   done
+ fi
 
 echo "*****************************"
 echo "Generate jobs done"
@@ -260,25 +288,34 @@ echo "*****************************"
      export njob=$((njob+1))
   done
 
+  ncount_job=0
+  if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+     ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+  fi
+
 # Create Gather POE Job Scripts
   if [ $USE_CFP = YES ]; then
+    if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
      python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
      export err=$?; err_chk
+    fi
   fi
  
 # Create Gather Working Directories
- python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
- export err=$?; err_chk
+ if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+  python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+  export err=$?; err_chk
+ fi
 
 echo "*****************************"
 echo "Gather jobs begin"
 echo "*****************************"
 
 # Run All NAM grid2obs/stats Gather Jobs
-  chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-  ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
-  nc=1
-  if [ $USE_CFP = YES ]; then
+  if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+   chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
+   nc=1
+   if [ $USE_CFP = YES ]; then
      ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
      while [ $nc -le $ncount_poe ]; do
         poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
@@ -298,18 +335,21 @@ echo "*****************************"
 	$launcher $MP_CMDFILE
 	nc=$((nc+1))
      done
-  else
+   else
      while [ $nc -le $ncount_job ]; do
         sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
 	nc=$((nc+1))
      done
+   fi
   fi
 
 # Copy Gather Output to Main Directory
- for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+ if [ $ncount_job -gt 0 ]; then
+   for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
      cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
      export err=$?; err_chk
- done 
+   done 
+ fi
 
 echo "*****************************"
 echo "Gather jobs done"
@@ -345,22 +385,31 @@ echo "*****************************"
   export err=$?; err_chk
   
   export njob=$((njob+1))
+
+  ncount_job=0
+  if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+      ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+  fi
   
 # Create Gather 3 POE Job Scripts
   if [ $USE_CFP = YES ]; then
+    if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
      python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
      export err=$?; err_chk
+    fi
   fi
  
 #Create Gather 3 Working Directories
- python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
- export err=$?; err_chk
+ if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+  python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+  export err=$?; err_chk
+ fi
   
 # Run All NAM grid2obs/stats Gather 3 Jobs
-  chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-  ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
-  nc=1
-  if [ $USE_CFP = YES ]; then
+  if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
+   chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
+   nc=1
+   if [ $USE_CFP = YES ]; then
      ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
      while [ $nc -le $ncount_poe ]; do
         poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
@@ -380,11 +429,12 @@ echo "*****************************"
         $launcher $MP_CMDFILE
         nc=$((nc+1))
      done
-  else
+   else
      while [ $nc -le $ncount_job ]; do
         sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
      done
+   fi
   fi
 
 echo "*****************************"
@@ -392,10 +442,12 @@ echo "Gather3 jobs done"
 echo "*****************************"
 
 # Copy Gather 3 Output to Main Directory
-  for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
+  if [ $ncount_job -gt 0 ]; then
+    for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
       cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
       export err=$?; err_chk
-  done
+    done
+  fi
 
 # Copy "gather" output files to EVS COMOUTsmall directory
   if [ $SENDCOM = YES ]; then
