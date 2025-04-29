@@ -54,26 +54,22 @@ for OBTTYPE in ${obstype}; do
                             cp -v ${cpfile} ${COMOUTprep}
                         fi
                     fi
-                else
-                    echo "DEBUG: can not find ${prep_config_file}, so ${MODELNAME} ${STEP} will skip ${screen_file}"
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: There is no valid record to be processed for ${checkfile}" >> mailmsg
-                    echo "File in question is ${checkfile}" >> mailmsg
+                    echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip ${checkfile}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
-                echo "WARNING: There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip ${checkfile}"
+                echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip ${checkfile}"
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
-                echo "WARNING: No AERONET Level 1.5 data was available for valid date ${INITDATE}" >> mailmsg
-                echo "Missing file is ${checkfile}" >> mailmsg
+                echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
                 echo "==============" >> mailmsg
                 flag_send_message=YES
             fi
-            echo "WARNING: ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
+            echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}"
         fi
     elif [ "${OBTTYPE}" == "airnow" ]; then
         airnow_hourly_type="aqobs"
@@ -111,27 +107,23 @@ for OBTTYPE in ${obstype}; do
                             cpfile=${finalprep}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
                             if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
                         fi
-                    else
-                        echo "DEBUG: can not find ${prep_config_file}, so ${MODELNAME} ${STEP} will skip the ${screen_file}"
                     fi
                 else
                     if [ ${SENDMAIL} = "YES" ]; then
-                        echo "WARNING: There is no valid record to be processed for ${checkfile}" >> mailmsg
-                        echo "File in question is ${checkfile}" >> mailmsg
+                        echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip the ${checkfile}" >> mailmsg
                         echo "==============" >> mailmsg
                         flag_send_message=YES
                     fi
-                    echo "WARNING: There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
+                    echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip the ${checkfile}"
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}" >> mailmsg
-                    echo "Missing file is ${checkfile}" >> mailmsg
+                    echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
         
-                echo "WARNING: AIRNOW ASCII file ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}${vldhr}"
+                echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}"
             fi
             ((ic++))
         done

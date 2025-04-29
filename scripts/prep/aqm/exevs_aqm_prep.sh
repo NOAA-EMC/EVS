@@ -77,29 +77,25 @@ while [ ${ic} -le ${endvhr} ]; do
                     cpfile=${PREP_SAVE_DIR}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
                     if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
                 fi
-            else
-                echo "WARNING: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf, so ${MODELNAME} ${STEP} will skip the ${screen_file}"
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
-                export subject="NO AIRNOW ASCII Hourly Data for EVS ${COMPONENT}"
-                echo "WARNING: There is no valid record to be processed for ${checkfile}" >> mailmsg
-                echo "File in question is ${checkfile}" >> mailmsg
+                export subject="No Valid AIRNOW ASCII Hourly Data for EVS ${COMPONENT}"
+                echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${STEP} will skip the ${checkfile}" >> mailmsg
                 echo "Job ID: $jobid" >> mailmsg
                 cat mailmsg | mail -s "$subject" $MAILTO 
             fi
-            echo "WARNING: There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
+            echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${STEP} will skip the ${checkfile}"
         fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
             export subject="AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}"
-            echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}${vldhr}" > mailmsg
-            echo "Missing file is ${checkfile}" >> mailmsg
+            echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO 
         fi
 
-        echo "WARNING: AIRNOW ASCII file ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}${vldhr}"
+        echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
     fi
     ((ic++))
 done
@@ -124,23 +120,21 @@ if [ -s ${checkfile} ]; then
     else
         if [ ${SENDMAIL} = "YES" ]; then
             export subject="NO AIRNOW ASCII Daily Data for EVS ${COMPONENT}"
-            echo "WARNING: There is no valid record to be processed for ${checkfile}" >> mailmsg
-            echo "File in question is ${checkfile}" >> mailmsg
+            echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${STEP} will skip the ${checkfile}" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO 
         fi
-        echo "WARNING: There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
+        echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${STEP} will skip the ${checkfile}"
     fi
 else
     if [ ${SENDMAIL} = "YES" ]; then
         export subject="AIRNOW ASCII Daily Data Missing for EVS ${COMPONENT}"
-        echo "WARNING: No AIRNOW ASCII data was available for valid date ${INITDATE}" > mailmsg
-        echo "Missing file is ${checkfile}" >> mailmsg
+        echo "WARNING: ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO 
     fi
 
-    echo "WARNING: AIRNOW ASCII file ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
+    echo "WARNING: ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
 fi
 #
 ##
