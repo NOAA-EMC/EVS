@@ -15,6 +15,12 @@
 # 03/2025: 
 # 1- Appplied adjustments based on the changes for $COMOUT in prep scripts, 
 # 2- Updated the ecf scripts names and adjustments in defs.
+# 04/2025:
+# 1- Updated the file checks to ensure that dcom files are not corrupted before using them. 
+# New approach uses ncdump (added script in ush directory: rtofs_check_nc.py) instead of checking the file size.
+# 2- Updated the WARNING messages for corrupted files.
+# 3- Adjusted the end on RTOFS plots with the date in .tar files (ush/settings.py).
+
 ###############################################################################
 
 set -x
