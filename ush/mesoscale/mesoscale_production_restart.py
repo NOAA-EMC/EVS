@@ -59,7 +59,7 @@ elif STEP == 'plots':
            RESTART_DIR, 
            f"completed_jobs_{os.environ['EVAL_PERIOD']}.txt"
         )
-        else:
+    else:
            completed_jobs_file = os.path.join(RESTART_DIR, f'completed_jobs.txt')
     if os.path.exists(completed_jobs_file):
         if os.stat(completed_jobs_file).st_size != 0:
