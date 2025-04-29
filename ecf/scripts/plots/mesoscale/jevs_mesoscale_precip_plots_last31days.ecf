@@ -1,4 +1,4 @@
-#PBS -N evs_mesoscale_precip_plots
+#PBS -N evs_mesoscale_precip_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -58,6 +58,7 @@ export VERIF_CASE=precip
 export MODELNAME=${COMPONENT}
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
 export evs_run_mode=production
+export EVAL_PERIOD="last31days"
 
 ############################################################
 # Execute j-job
