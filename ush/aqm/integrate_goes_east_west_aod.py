@@ -19,6 +19,11 @@ if flag_info:
     print(f"GOES_WEST Input :{goes_west_aod}")
     print(f"MERGED Output   :{output_file}")
 
+goes_east=os.environ['GOES_EAST']
+goes_west=os.environ['GOES_WEST']
+GOES_EAST=goes_east.upper()
+GOES_WEST=goes_west.upper()
+
 if os.path.exists(goes_east_aod) and os.path.exists(goes_west_aod):
     with nc.Dataset(goes_east_aod,"r") as srce, nc.Dataset(goes_west_aod,"r") as srcw, nc.Dataset(output_file,"w") as dst1:
         late=srce.variables["lat"][:,:]
@@ -83,11 +88,11 @@ if os.path.exists(goes_east_aod) and os.path.exists(goes_west_aod):
                     dst1.variables[name].setncattr(attr_name,newdesc)
                 elif attr_name == "platform_ID":
                     olddesc=var.getncattr(attr_name)
-                    newdesc=olddesc.replace("G16","G16/18")
+                    newdesc=olddesc.replace(GOES_EAST,f"{GOES_EAST}/{GOES_WEST}")
                     dst1.variables[name].setncattr(attr_name,newdesc)
                 elif attr_name == "dataset_name":
                     olddesc=var.getncattr(attr_name)
-                    newdesc=olddesc.replace("G16","(G16/18)")
+                    newdesc=olddesc.replace(GOES_EAST,f"{GOES_EAST}/{GOES_WEST}")
                     dst1.variables[name].setncattr(attr_name,newdesc)
                 elif attr_name != "_FillValue":
                     dst1.variables[name].setncattr(attr_name,var.getncattr(attr_name))
