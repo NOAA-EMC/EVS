@@ -1,4 +1,4 @@
-#PBS -N jevs_mesoscale_snowfall_plots
+#PBS -N jevs_mesoscale_snowfall_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -18,7 +18,7 @@ export KEEPDATA=NO
 export SENDDBN=NO
 export SENDDBN_NTC=
 export SENDMAIL=YES
-export job=${PBS_JOBNAME:-jevs_mesoscale_snowfall_plots}
+export job=${PBS_JOBNAME:-jevs_mesoscale_snowfall_plots_last31days}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
@@ -52,6 +52,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
+export EVAL_PERIOD="last31days"
 export vhr=${vhr:-${vhr}}
 
 # Job Settings and Run

@@ -1,14 +1,15 @@
-#PBS -N jevs_mesoscale_precip_plots_last31days
+#PBS -N jevs_mesoscale_grid2obs_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=09:45:00
+#PBS -l walltime=4:00:00
 #PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=500GB
 #PBS -l debug=true
 
 set -x
 export model=evs
+module reset
 export machine=WCOSS2
 
 # ECF Settings
@@ -18,11 +19,11 @@ export KEEPDATA=NO
 export SENDDBN=NO
 export SENDDBN_NTC=
 export SENDMAIL=YES
-export job=${PBS_JOBNAME:-jevs_mesoscale_precip_plots_last31days}
+export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_plots_last90days}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
-export nproc=128
+export nproc=64
 export evs_run_mode="production"
 
 # General Verification Settings
@@ -31,7 +32,7 @@ export NET="evs"
 export STEP="plots"
 export COMPONENT="mesoscale"
 export RUN="atmos"
-export VERIF_CASE="precip"
+export VERIF_CASE="grid2obs"
 export MODELNAME=${COMPONENT}
 
 # EVS Settings
@@ -41,17 +42,17 @@ export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPO
 
 # Load Modules
 source $HOMEevs/versions/run.ver
+
 module reset
-module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 # Developer Settings
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
-export EVAL_PERIOD="last31days"
+export EVAL_PERIOD="last90days"
 export vhr=${vhr:-${vhr}}
 
 # Job Settings and Run
