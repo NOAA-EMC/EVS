@@ -83,12 +83,12 @@ while [ ${ic} -le ${endvhr} ]; do
         else
             if [ ${SENDMAIL} = "YES" ]; then
                 export subject="NO AIRNOW ASCII Hourly Data for EVS ${COMPONENT}"
-                echo "DEBUG : There is no valid record to be processed for ${checkfile}" >> mailmsg
+                echo "WARNING: There is no valid record to be processed for ${checkfile}" >> mailmsg
                 echo "File in question is ${checkfile}" >> mailmsg
                 echo "Job ID: $jobid" >> mailmsg
                 cat mailmsg | mail -s "$subject" $MAILTO 
             fi
-            echo "DEBUG : There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
+            echo "WARNING: There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
         fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
@@ -120,18 +120,16 @@ if [ -s ${checkfile} ]; then
                 cpfile=${PREP_SAVE_DIR}/airnow_daily_${INITDATE}.nc
                 if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc};fi
             fi
-        else
-            echo "WARNING: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf, so ${MODELNAME} ${STEP} will skip the ${screen_file}"
         fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
             export subject="NO AIRNOW ASCII Daily Data for EVS ${COMPONENT}"
-            echo "DEBUG : There is no valid record to be processed for ${checkfile}" >> mailmsg
+            echo "WARNING: There is no valid record to be processed for ${checkfile}" >> mailmsg
             echo "File in question is ${checkfile}" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $MAILTO 
         fi
-        echo "DEBUG : There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
+        echo "WARNING: There is no valid record to be processed, so ${MODELNAME} ${STEP} will skip the ${checkfile}"
     fi
 else
     if [ ${SENDMAIL} = "YES" ]; then
