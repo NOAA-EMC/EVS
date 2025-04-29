@@ -96,7 +96,8 @@ done
 #  convert RTOFS forecast data into lat-lon grids for each OBTYPE;
 #  OBTYPE is the validation source: ghrsst, smos, smap etc.
 ##########################
-for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
+#for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
+for rcase in osisaf; do
 	export OBTYPE=$rcase
 	for lead in ${leads}; do
 		if [ $lead = n024 ]; then
