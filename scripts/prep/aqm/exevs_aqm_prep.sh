@@ -151,8 +151,6 @@ fi
 mkdir -p $DATA/modelinput
 cd $DATA/modelinput
 
-## mkdir -p $COMOUT.${INITDATE}/${MODELNAME}
-
 for hour in 06 12; do
 
     for biastyp in raw bc; do
