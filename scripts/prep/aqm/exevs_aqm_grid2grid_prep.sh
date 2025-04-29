@@ -254,17 +254,15 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "DEBUG: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
+                    echo "WARNING: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
                 fi
-              else
-                echo "DEBUG: can not find ${conf_dir}/${config_file}"
               fi
             else
               if [ "${SENDMAIL}" = "YES" ]; then
-                echo "DEBUG: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATE} ${vldhr}" >> ${email_msg}
+                echo "WARNING: NO available ${SATID} GOES_${AOD_SCAN} for hour ${INITDATE} ${vldhr}" >> ${email_msg}
                 echo "==============" >> ${email_msg}
                 flag_send_message=YES
               fi
@@ -322,22 +320,15 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
-                    echo "DEBUG: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
+                    echo "WARNING: Detected a corrupted input file ${filein_aod} for ${INITDATE} ${vldhr}" >> ${email_msg}
                     echo "==============" >> ${email_msg}
                     flag_send_message=YES
                   fi
                 fi
-              else
-                echo "DEBUG: can not find ${conf_dir}/${config_file}"
               fi
             else
-              if [ "${SENDMAIL}" = "YES" ]; then
-                echo "DEBUG: Can not find ${idir} for ${INITDATE} ${vldhr}" >> ${email_msg}
-                echo "==============" >> ${email_msg}
-                flag_send_message=YES
-              fi
+                echo "DEBUG: Can not find ${idir} for ${INITDATE} ${vldhr}, skip ro next valid hour"
             fi
-            echo "DEBUG: Can not find ${idir} for ${INITDATE} ${vldhr}, skip ro next valid hour"
           fi  ## find idir
           ((ic++))
         done  # vldhr
