@@ -76,7 +76,7 @@ for line in rfile:
         else:
             bad_rec += 1
 if wcount == 0:
-    print(f"WARNING - {input_file} is corrupt (wrong number of columns). {evs_component} {evs_step} step will skip the corrupted validation file.")
+    print(f"WARNING: {input_file} is corrupt (wrong number of columns). {evs_component} {evs_step} step will skip the corrupted validation file.")
 else:
     if bad_rec > 0:
         print(f"WARNING: {input_file} is corrupt, {bad_rec} line(s) with wrong number of columns. Removing the corrupted line(s) from file and continuing")
