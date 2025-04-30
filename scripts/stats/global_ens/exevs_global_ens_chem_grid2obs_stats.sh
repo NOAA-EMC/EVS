@@ -9,6 +9,8 @@
 ###   Change Logs:
 ###
 ###   01/16/2024   Ho-Chun Huang  consolidate exevs_global_ens_chem_grid2obs scripts
+###   04/30/2025   Ho-Chun Huang  Remove email function for missing 
+###                               Prep-Obs input and Fcst Mdl output
 ###
 ########################################################################
 set -x
@@ -35,9 +37,6 @@ export METPLUS_PATH
 grid2obs_list="${DATA_TYPE}"
 
 export init_cyc="00 06 12 18"
-
-flag_send_message=NO
-if [ -e mailmsg ]; then /bin/rm -f mailmsg; fi
 
 for ObsType in ${grid2obs_list}; do
     export ObsType
@@ -71,14 +70,8 @@ for ObsType in ${grid2obs_list}; do
           num_obs_found=1
         else
           echo "DEBUG: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
-          if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "DEBUG: No pre-processed ${OBSTYPE} Level 1.5 was available for ${VDATE} " >> mailmsg
-            echo "Missing file is ${check_file}" >> mailmsg
-            echo "==============" >> mailmsg
-            flag_send_message=YES
-          fi
         fi
-        echo "index of daily aeronet obs found = ${num_obs_found}"
+        echo "DEBUG: index of daily aeronet obs found = ${num_obs_found}"
     elif [ "${ObsType}" == "airnow" ]; then
         fcstmax=120
 
@@ -92,14 +85,8 @@ for ObsType in ${grid2obs_list}; do
           num_obs_found=1
         else
           echo "DEBUG: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
-          if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "DEBUG: No ${OBSTYPE} ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" >> mailmsg
-            echo "Missing file is ${check_file}" >> mailmsg
-            echo "==============" >> mailmsg
-            flag_send_message=YES
-          fi
         fi
-        echo "index of hourly AirNOW obs found = ${num_obs_found}"
+        echo "DEBUG: index of hourly AirNOW obs found = ${num_obs_found}"
     fi
 
     for mdl_cyc in ${init_cyc}; do
@@ -124,15 +111,8 @@ for ObsType in ${grid2obs_list}; do
             echo ${fhr} >> ${recorded_temp_list}
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
-            if [ "${SENDMAIL}" == "YES" ]; then
-              echo "DEBUG: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z" >> mailmsg
-              echo "Missing file is ${fcst_file}" >> mailmsg
-              echo "==============" >> mailmsg
-              flag_send_message=YES
-            fi
-
-            echo "DEBUG: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z"
-            echo "DEBUG: Missing file is ${fcst_file}"
+            echo "FCST_OUTPUT_MISSING: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z"
+            echo "FCST_OUTPUT_MISSING: Missing file is ${fcst_file}"
           fi 
         fi 
         ## ((ihr++))
@@ -184,9 +164,4 @@ for ObsType in ${grid2obs_list}; do
     fi
 
 done
-if [ "${flag_send_message}" == "YES" ]; then
-    export subject="${OBSTYPE} Obs or ${CMODEL} Fcst files Missing for EVS ${COMPONENT} ${RUN} ${VERIF_CASE}"
-    echo "Job ID: ${jobid}" >> mailmsg
-    cat mailmsg | mail -s "${subject}" ${MAILTO}
-fi 
 exit
