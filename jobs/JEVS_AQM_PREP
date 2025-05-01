@@ -77,6 +77,7 @@ if [ "${VERIF_CASE}" == "grid2obs" ]; then
     # alternative choice is dan option different from aqons
     export airnow_hourly_type=${airnow_hourly_type:-aqobs}
     export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
+    export HOURLY_NCOL=${HOURLY_NCOL:-34}
     export DAILY_NCOL=${DAILY_NCOL:-13}
 else
     export DATA_TYPE=${DATA_TYPE:-abi}
