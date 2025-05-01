@@ -60,7 +60,6 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
   export vhr=${vhr:-${vhr}}
   export MAILTO="perry.shafran@noaa.gov,andrew.benjamin@noaa.gov"
-  # export MAILTO="firstname.lastname@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_MESOSCALE_STATS
