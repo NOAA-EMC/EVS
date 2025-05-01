@@ -6,6 +6,10 @@
 #                    with inconsistent columns number as header
 #
 # History Log:
+#              
+#   04/04/2025   Ho-Chun Huang  Use default number of column to handle AirNOW 
+#                               daily file even it is a radom text file
+#
 ###############################################################################
 
 import os
@@ -35,75 +39,30 @@ if not os.path.exists(input_file):
 rfile=open(input_file, 'r')
 wfile=open(output_file,'w')
 
+evs_component=os.environ['COMPONENT']
+evs_step=os.environ['STEP']
+evs_run=os.environ['RUN']
 #
-## Check first 3 line for number of column or use the default column 'DAILY_NCOL' defined in ~/job
+## Check for number of columns using the default 'DAILY_NCOL' defined in ~/job
 #
-count=0
-flag_data=False
+num_ref_col=int(os.environ['DAILY_NCOL'])
+rcount=0
+wcount=0
+bad_rec=0
 for line in rfile:
-    if not flag_data:
-        if count == 0:
-            line1=line
-        elif count == 1:
-            line2=line
-        elif count == 2:
-            line3=line
-        line=line.rstrip("\n")
-        hdr=line.split("|")
-        if count == 0:
-            num_hdr1=len(hdr)
-        elif count == 1:
-            num_hdr2=len(hdr)
-            if num_hdr1 == num_hdr2:
-                num_hdr = num_hdr1
-                wfile.write(line1)
-                wfile.write(line2)
-                flag_data=True
-        elif count == 2:
-            num_hdr3=len(hdr)
-            if num_hdr3 == num_hdr1:
-                num_hdr = num_hdr1
-                wfile.write(line1)
-                wfile.write(line3)
-                print(f"DEBUG :: Line 2 has different columns number {num_hdr2} vs standard {num_hdr}")
-                flag_data=True
-            elif num_hdr3 == num_hdr2:
-                num_hdr = num_hdr2
-                wfile.write(line2)
-                wfile.write(line3)
-                print(f"DEBUG :: Line 1 has different columns number {num_hdr1} vs standard {num_hdr}")
-                flag_data=True
-            else:   ## USE DEFAULT Column number
-                print(f"DEBUG :: First 3 lines of {input_file} have different column number")
-                try:
-                    str_num_hdr=os.environ['DAILY_NCOL']
-                    num_hdr=int(str_num_hdr)
-                    print(f"DEBUG :: Use default {num_hdr} as reference column number")
-                    if num_hdr1 == num_hdr:
-                        wfile.write(line1)
-                    else:
-                        print(f"DEBUG :: Line 1 has different columns number {num_hdr1} vs standard {num_hdr}")
-                    if num_hdr2 == num_hdr:
-                        wfile.write(line2)
-                    else:
-                        print(f"DEBUG :: Line 2 has different columns number {num_hdr2} vs standard {num_hdr}")
-                    if num_hdr3 == num_hdr:
-                        wfile.write(line3)
-                    else:
-                        print(f"DEBUG :: Line 3 has different columns number {num_hdr3} vs standard {num_hdr}")
-                    flag_data=True
-                except KeyError:
-                    print(f"WARNING ::  no reference DAILY_NCOL daily column number has been defined")
-                    sys.exit()
-        count += 1
+    rcount += 1
+    line=line.rstrip("\n")
+    var=[]
+    var=line.split("|")
+    num_var=len(var)
+    if num_var == num_ref_col:
+        wfile.write(line+"\n")
+        wcount += 1
     else:
-        count += 1
-        line=line.rstrip("\n")
-        var=[]
-        var=line.split("|")
-        num_var=len(var)
-        if num_var == num_hdr:
-            wfile.write(line+"\n")
-        else:
-            print(f"DEBUG :: Line {count} has different columns number {num_var} vs standard {num_hdr}")
+        bad_rec += 1
+if wcount == 0:
+    print(f"WARNING: {input_file} is corrupt (wrong number of columns). {evs_component} {evs_step} step will skip the corrupted validation file.")
+else:
+    if bad_rec > 0:
+        print(f"WARNING: {input_file} is corrupt, {bad_rec} line(s) with having wrong number of columns. Removing the corrupted line(s) from file and continuing")
 wfile.close()
