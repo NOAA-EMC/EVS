@@ -10,7 +10,7 @@
 ###
 ###   01/16/2024   Ho-Chun Huang  consolidate exevs_global_ens_chem_grid2obs scripts
 ###   04/30/2025   Ho-Chun Huang  Remove email function for missing 
-###                               Prep-Obs input and Fcst Mdl output
+###                               pre-processed forecast output
 ###
 ########################################################################
 set -x
@@ -69,7 +69,7 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "DEBUG: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
+          echo "PREP_OUTPUT_MISSING: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
         fi
         echo "DEBUG: index of daily aeronet obs found = ${num_obs_found}"
     elif [ "${ObsType}" == "airnow" ]; then
@@ -84,7 +84,7 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "DEBUG: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
+          echo "PREP_OUTPUT_MISSING: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
         fi
         echo "DEBUG: index of hourly AirNOW obs found = ${num_obs_found}"
     fi
@@ -111,8 +111,7 @@ for ObsType in ${grid2obs_list}; do
             echo ${fhr} >> ${recorded_temp_list}
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
-            echo "FCST_OUTPUT_MISSING: No ${model1} ${obs_var} forecast was available for ${aday} t${acyc}z"
-            echo "FCST_OUTPUT_MISSING: Missing file is ${fcst_file}"
+            echo "PREP_OUTPUT_MISSING: Can not find pre-processed GEFS-aerosol output ${fcst_file}"
           fi 
         fi 
         ## ((ihr++))

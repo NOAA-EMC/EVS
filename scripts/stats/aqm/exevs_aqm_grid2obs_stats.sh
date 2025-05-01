@@ -20,7 +20,7 @@
 ##   02/21/2024   Ho-Chun Huang  modify for AQMv7 verification
 ##   06/25/2024   Ho-Chun Huang  Remove concatenating log file sections
 ##   04/30/2025   Ho-Chun Huang  Remove email function for missing 
-##                               Prep-Obs input and Fcst Mdl output
+##                               pre-processed and original forecast output
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
@@ -76,7 +76,7 @@ obs_hourly_found=0
 if [ -s ${check_file} ]; then
   obs_hourly_found=1
 else
-  echo "DEBUG: Can not find pre-processed obs hourly input ${check_file}"
+  echo "PREP_OUTPUT_MISSING: Can not find pre-processed AIRNOW hourly input ${check_file}"
 fi
 echo "DEBUG: index of hourly obs found = ${obs_hourly_found}"
 
@@ -133,8 +133,7 @@ for outtyp in awpozcon pm25; do
             echo ${fhr} >> ${recorded_temp_list}
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
-            echo "FCST_OUTPUT_MISSING: No AQM ${outtyp}${bctag} forecast was available for ${aday} t${acyc}z"
-            echo "FCST_OUTPUT_MISSING: Missing file is ${fcst_file}"
+            echo "FCST_OUTPUT_MISSING: Can not find AQM forecast output ${fcst_file}"
           fi 
         fi 
         ((ihr++))
@@ -188,7 +187,7 @@ obs_daily_found=0
 if [ -s ${check_file} ]; then
   obs_daily_found=1
 else
-  echo "DEBUG: Can not find pre-processed obs daily input ${check_file}"
+  echo "PREP_OUTPUT_MISSING: Can not find pre-processed AIRNOW daily input ${check_file}"
 fi
 echo "DEBUG: Index of daily obs found = ${obs_daily_found}"
 
@@ -233,8 +232,7 @@ if [ ${vhr} = 11 ]; then
           echo ${fhr} >> ${recorded_temp_list}
           let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
-          echo "FCST_OUTPUT_MISSING: No AQM max_8hr_o3${bctag} forecast was available for ${chk_date} t${hour}z"
-          echo "FCST_OUTPUT_MISSING: Missing file is ${ozmax8_preprocessed_file}"
+          echo "PREP_OUTPUT_MISSING: Can not find pre-processed AQM forecast output ${ozmax8_preprocessed_file}"
         fi
         let "ihr=ihr+24"
       done
@@ -317,8 +315,7 @@ if [ ${vhr} = 04 ]; then
           echo ${fhr} >> ${recorded_temp_list}
           let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
-          echo "FCST_OUTPUT_MISSING: No AQM ave_24hr_pm25${bctag} forecast was available for ${chk_date} t${hour}z"
-          echo "FCST_OUTPUT_MISSING: Missing file is $fcst_file}"
+          echo "FCST_OUTPUT_MISSING: Can not find AQM forecast output ${fcst_file}"
         fi
         let "ihr=ihr+24"
       done
