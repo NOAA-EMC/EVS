@@ -37,7 +37,6 @@ export verif_product='yes'
 export verif_spcoutlook='yes'
 export gather=${gather:-'yes'}
 export verify=$VERIF_CASE
-export run_mpi=${run_mpi:-'yes'}
 
 export COMHREF=$COMINhref
 export PREPBUFR=$COMINobsproc

@@ -30,7 +30,6 @@ export verif_profile='yes'
 export verif_product='yes'
 export gather=${gather:-'yes'}
 export verify=$VERIF_CASE
-export run_mpi=${run_mpi:-'yes'}
 
 #*************************************
 #check input data are available:

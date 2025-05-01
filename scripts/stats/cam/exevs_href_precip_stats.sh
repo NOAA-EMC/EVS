@@ -23,7 +23,6 @@ mkdir -p $WORK/scripts
 export all_stats=$WORK/all_stats
 mkdir -p $all_stats
 
-export run_mpi=${run_mpi:-'yes'}
 export verif_precip=${verif_precip:-'yes'}
 export verif_snowfall=${verif_snowfall:-'yes'}
 if [ "$verif_precip" = "no" ] && [ "$verif_snowfall" = "no" ] ; then
@@ -94,7 +93,7 @@ fi
 #*************************************************
 if [ -s ${DATA}/scripts/run_all_href_precip_poe.sh ] || [ -s ${DATA}/scripts/run_all_href_snowfall_poe.sh ] ; then
 
-   if [ $verif_precip = yes ] ; then
+   if [ $verif_snowfall = no ] && [ $verif_precip = yes ] ; then
     mpiexec  -n 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_href_precip_poe.sh
    elif [ $verif_snowfall = yes ] && [ $verif_precip = yes ] ; then
     mpiexec  -n 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_href_precip_poe.sh
