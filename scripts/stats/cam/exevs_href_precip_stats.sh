@@ -94,7 +94,6 @@ fi
 #*************************************************
 if [ -s ${DATA}/scripts/run_all_href_precip_poe.sh ] || [ -s ${DATA}/scripts/run_all_href_snowfall_poe.sh ] ; then
 
-  if [ $run_mpi = yes ] ; then
    if [ $verif_precip = yes ] ; then
     mpiexec  -n 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_href_precip_poe.sh
    elif [ $verif_snowfall = yes ] && [ $verif_precip = yes ] ; then
@@ -104,17 +103,6 @@ if [ -s ${DATA}/scripts/run_all_href_precip_poe.sh ] || [ -s ${DATA}/scripts/run
     mpiexec  -n 21 -ppn 21 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_href_snowfall_poe.sh
    fi
    export err=$?; err_chk
-  else
-   if [ $verif_precip = yes ] ; then
-      ${DATA}/scripts/run_all_href_precip_poe.sh
-   elif [ $verif_snowfall = yes ] && [ $verif_precip = yes ] ; then
-      ${DATA}/scripts/run_all_href_precip_poe.sh
-      ${DATA}/scripts/run_all_href_snowfall_poe.sh
-   elif [ $verif_snowfall = yes ] && [ $verif_precip = no ] ; then
-      ${DATA}/scripts/run_all_href_snowfall_poe.sh
-   fi      
-   export err=$?; err_chk
-  fi
 
 fi
 

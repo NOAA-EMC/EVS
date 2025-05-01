@@ -90,13 +90,8 @@ fi
 # ***************************************
 if [ -s $DATA/scripts/run_href_all_grid2obs_poe ] ; then
  chmod 775 $DATA/scripts/run_href_all_grid2obs_poe
- if [ $run_mpi = yes ] ; then
-    mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/scripts/run_href_all_grid2obs_poe
-    export err=$?; err_chk
- else
-    ${DATA}/scripts/run_href_all_grid2obs_poe
-    export err=$?; err_chk
- fi
+ mpiexec -np 2 -ppn 2 --cpu-bind verbose,core cfp  ${DATA}/scripts/run_href_all_grid2obs_poe
+ export err=$?; err_chk
 fi
 
 #*******************************************************************

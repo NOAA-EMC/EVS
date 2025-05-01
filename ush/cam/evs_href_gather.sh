@@ -78,18 +78,13 @@ chmod 775 run_gather_all_poe.sh
 #*****************************
 #  Run the POE script
 #*****************************
-if [ $run_mpi = yes ] ; then
-  if  [ $verif_snowfall = yes ] && [ $verif_precip = no ] ; then 
+if  [ $verif_snowfall = yes ] && [ $verif_precip = no ] ; then 
     ${DATA}/scripts/run_gather_all_poe.sh
-  elif [ $verif_snowfall = no ] && [ $verif_precip = yes ] ; then 
+elif [ $verif_snowfall = no ] && [ $verif_precip = yes ] ; then 
     mpiexec -np 7 -ppn 7 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_gather_all_poe.sh
-  elif [ $verify = grid2obs ] ; then
+elif [ $verify = grid2obs ] ; then
     mpiexec -np 3 -ppn 3 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_gather_all_poe.sh
-  else
-    ${DATA}/scripts/run_gather_all_poe.sh
-  fi  
-  export err=$?; err_chk
 else
-  ${DATA}/scripts/run_gather_all_poe.sh
-  export err=$?; err_chk
-fi
+    ${DATA}/scripts/run_gather_all_poe.sh
+fi  
+export err=$?; err_chk

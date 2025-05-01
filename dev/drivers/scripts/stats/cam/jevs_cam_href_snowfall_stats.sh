@@ -41,7 +41,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 
 export prepare=no
-export run_mpi=yes
 export verif_precip=no
 export verif_snowfall=yes
 

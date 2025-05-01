@@ -53,7 +53,6 @@ export RUN=atmos
 export VERIF_CASE=precip
 export MODELNAME=href
 export prepare=yes
-export run_mpi=yes
 export verif_precip=yes
 export verif_snowfall=no
 export gather=yes
