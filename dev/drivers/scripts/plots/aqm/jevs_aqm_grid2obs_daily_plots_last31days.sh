@@ -43,18 +43,12 @@ export modsys=aqm
 export mod_ver=${aqm_ver}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-<<<<<<< HEAD:dev/drivers/scripts/plots/aqm/jevs_aqm_grid2obs_plots.sh
-export KEEPDATA=NO
-export SENDMAIL=YES
-export SENDDBN=YES
-=======
->>>>>>> develop:dev/drivers/scripts/plots/aqm/jevs_aqm_grid2obs_daily_plots_last31days.sh
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
 export SENDMAIL=YES
-export SENDDBN=NO
+export SENDDBN=YES
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 today=$(cut -c7-14 ${COMROOT}/date/t${vhr}z)
