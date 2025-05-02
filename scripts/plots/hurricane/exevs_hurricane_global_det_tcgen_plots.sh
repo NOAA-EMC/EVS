@@ -117,12 +117,12 @@ export DATAplot=${DATA}/${basin}
 if [ ! -d ${DATAplot} ]; then mkdir -p ${DATAplot}; fi
 cd ${DATAplot}
 cp ${USHevs}/${COMPONENT}/tcgen_performance_diagram.py .
-grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_gfs.txt > dev_tc_gen_${YEAR}_ctc_${basin}_gfs.txt
-grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt > dev_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt
-grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_cmc.txt > dev_tc_gen_${YEAR}_ctc_${basin}_cmc.txt
-export CTCfile01="dev_tc_gen_${YEAR}_ctc_${basin}_gfs.txt"
-export CTCfile02="dev_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt"
-export CTCfile03="dev_tc_gen_${YEAR}_ctc_${basin}_cmc.txt"
+grep "GENESIS_OPS" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_gfs.txt > ops_tc_gen_${YEAR}_ctc_${basin}_gfs.txt
+grep "GENESIS_OPS" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt > ops_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt
+grep "GENESIS_OPS" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_cmc.txt > ops_tc_gen_${YEAR}_ctc_${basin}_cmc.txt
+export CTCfile01="ops_tc_gen_${YEAR}_ctc_${basin}_gfs.txt"
+export CTCfile02="ops_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt"
+export CTCfile03="ops_tc_gen_${YEAR}_ctc_${basin}_cmc.txt"
 python tcgen_performance_diagram.py
 convert tcgen_performance_diagram.png tcgen_performance_diagram_${basin}.gif
 
