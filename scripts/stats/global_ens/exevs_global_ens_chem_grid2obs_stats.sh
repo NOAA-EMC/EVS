@@ -122,7 +122,7 @@ for ObsType in ${grid2obs_list}; do
       fi
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       export num_fcst_in_metplus
-      echo "number of fcst lead in_metplus point_stat for ${model1} ${obs_var} == ${num_fcst_in_metplus}"
+      echo "number of fcst lead in_metplus point_stat for ${CMODEL}-aerosol ${obs_var} == ${num_fcst_in_metplus}"
     
       if [ ${num_fcst_in_metplus} -gt 0 -a ${num_obs_found} -eq 1 ]; then
         export fcsthours=${fcsthours_list}
@@ -132,8 +132,12 @@ for ObsType in ${grid2obs_list}; do
         run_metplus.py ${point_stat_conf_file} ${config_common}
         export err=$?; err_chk
       else
-        echo "DEBUG: NO ${model1} ${obs_var} FORECAST OR OBS TO VERIFY"
-        echo "DEBUG: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${num_obs_found}"
+        if [ ${num_obs_found} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed ${OBSTYPE} OBS, the metplus stats process will be skipped"
+        fi
+        if [ ${num_fcst_in_metplus} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed ${obs_var} ${CMODEL}-aerosol ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+        fi
       fi
     done   ## hour loop
     if [ "${SENDCOM}" == "YES" ]; then

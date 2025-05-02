@@ -150,8 +150,12 @@ for outtyp in awpozcon pm25; do
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
-        echo "DEBUG: NO ${cap_outtyp} FORECAST OR OBS TO VERIFY"
-        echo "DEBUG: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_hourly_found}"
+        if [ ${obs_hourly_found} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed hourly ${cap_outtyp} OBS, the metplus stats process will be skipped"
+        fi
+        if [ ${num_fcst_in_metplus} -eq 0 ]; then
+            echo "DEBUG: There is no ${outtyp}${bcout} ${model1} ${hour}Z cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+        fi
       fi
     done   ## hour loop
     mkdir -p ${COMOUTsmall}
@@ -248,8 +252,12 @@ if [ ${vhr} = 11 ]; then
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
-        echo "DEBUG: NO OZMAX8 OBS OR MODEL DATA"
-        echo "DEBUG: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
+        if [ ${obs_daily_found} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed ${outtyp} OBS, the metplus stats process will be skipped"
+        fi
+        if [ ${num_fcst_in_metplus} -eq 0 ]; then
+            echo "DEBUG: There is no ${outtyp}${bcout} ${model1} ${hour}Z cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+        fi
       fi
     done   ## cyc hour loop
     if [ ${SENDCOM} = "YES" ]; then
@@ -332,8 +340,12 @@ if [ ${vhr} = 04 ]; then
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
-        echo "DEBUG: NO PMAVE OBS OR MODEL DATA"
-        echo "DEBUG: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
+        if [ ${obs_daily_found} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed ${outtyp} OBS, the metplus stats process will be skipped"
+        fi
+        if [ ${num_fcst_in_metplus} -eq 0 ]; then
+            echo "DEBUG: There is no ${outtyp}${bcout} ${model1} ${hour}Z cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+        fi
       fi
     done   ## cyc hour loop
     if [ ${SENDCOM} = "YES" ]; then
