@@ -90,7 +90,7 @@ export USH_DIR=${USH_DIR:-$HOMEevs/ush/$COMPONENT}
 # Execute the script.
 ############################################
 export DAYS_LIST=${DAYS_LIST:-"90 31"}
-$SCRIPTSevs/exevs_wafs_atmos_plots.sh
+$SCRIPTSevs/exevs_wafs_plots.sh
 
 export err=$?; err_chk
 
