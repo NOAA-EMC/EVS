@@ -4,8 +4,7 @@ export PS4=' + exevs_hurricane_global_det_tcgen_stats.sh line $LINENO: '
 
 export MetOnMachine=${MetOnMachine:-$MET_ROOT}
 export YEAR=${YYYY}
-#export basinlist="al ep wp"
-export basinlist="al"
+export basinlist="al ep wp"
 export modellist="gfs ecmwf cmc"
 
 for basin in $basinlist; do
@@ -22,7 +21,7 @@ if [ ! -d ${OUTPUT} ]; then mkdir -p ${OUTPUT}; fi
 
 if [ ${model} = "gfs" ]; then
   cp ${COMINgenesis}/${model}_genesis_${YEAR} ${INPUT}/ALLgenesis_${YEAR}
-  export INIT_FREQ=12
+  export INIT_FREQ=6
 elif [ ${model} = "ecmwf" ]; then
   cp ${COMINgenesis}/${model}_genesis_${YEAR} ${INPUT}/ALLgenesis_${YEAR}
   export INIT_FREQ=12
@@ -54,9 +53,9 @@ fi
 #--- run for TC_gen
 cd ${OUTPUT}
 cp ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/TCGen_template.conf .
-export VALID_FREQ=12
-export INIT_FREQ=12
-#export PROB_GENESIS_THRESH= >0.5
+export VALID_FREQ=6
+export INIT_FREQ=6
+#export PROB_GENESIS_THRESH=0.1
 
 export SEARCH0="METBASE_template"
 export SEARCH1="INPUT_BASE_template"
@@ -65,6 +64,7 @@ export SEARCH3="YEAR_template"
 export SEARCH4="INIT_FREQ_template"
 export SEARCH5="VALID_FREQ_template"
 export SEARCH6="BASIN_MASK_template"
+#export SEARCH7="PROB_GENESIS_THRESH_template"
 
 sed -i "s|$SEARCH0|$MetOnMachine|g" TCGen_template.conf
 sed -i "s|$SEARCH1|$INPUT|g" TCGen_template.conf
@@ -73,6 +73,7 @@ sed -i "s|$SEARCH3|$YEAR|g" TCGen_template.conf
 sed -i "s|$SEARCH4|$INIT_FREQ|g" TCGen_template.conf
 sed -i "s|$SEARCH5|$VALID_FREQ|g" TCGen_template.conf
 sed -i "s|$SEARCH6|$BASIN_MASK|g" TCGen_template.conf
+#sed -i "s|$SEARCH7|$PROB_GENESIS_THRESH|g" TCGen_template.conf
 
 run_metplus.py -c ${OUTPUT}/TCGen_template.conf
 export err=$?; err_chk
@@ -86,6 +87,8 @@ if [ "$SENDCOM" = 'YES' ]; then
   cp ${OUTPUT}/tc_gen_${YEAR}_pairs.nc ${COMOUT}/tc_gen_${YEAR}_pairs_${basin}_${model}.nc
 fi
 
+
+###THIS LINE IS BEING USED DURING TESTS AND WILL BE REMOVED PRIOR TO OPENING PR (CURRENTLY DRAFT PR)###
 cp -r ${DATAROOT}/${jobid} /lfs/h2/emc/vpppg/noscrub/olivia.ostwald/gen-test
 
 ### model do loop end

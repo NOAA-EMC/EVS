@@ -7,8 +7,7 @@ export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 export YEAR=${YYYY}
 export TCGENdays="TC Genesis(05/01/${YEAR}-11/30/${YEAR})"
-#export basinlist="al ep wp"
-export basinlist="al"
+export basinlist="al ep wp"
 export modellist="gfs ecmwf cmc"
 
 noaa_logo() {
@@ -45,7 +44,6 @@ cd ${OUTPUT}
 cp ${USHevs}/${COMPONENT}/hits_${basin}.py .
 cp ${COMINstats}/tc_gen_${YEAR}_genmpr_${basin}_${model}.txt tc_gen_${YEAR}_genmpr.txt 
 awk '$NF == "FYOY"'  tc_gen_${YEAR}_genmpr.txt > tc_gen_hits.txt
-#grep "00    FYOY" tc_gen_${YEAR}_genmpr.txt > tc_gen_hits.txt
 export hitfile="tc_gen_hits.txt"
 python hits_${basin}.py
 convert TC_genesis.png tcgen_hits_${basin}_${model}.gif
@@ -66,8 +64,6 @@ rm -f TC_genesis.png
 
 cp ${USHevs}/${COMPONENT}/false_${basin}.py .
 awk '$NF == "FYON"'  tc_gen_${YEAR}_genmpr.txt > tc_gen_false.txt
-#grep "00    FYON" tc_gen_${YEAR}_genmpr.txt > tc_gen_false.txt
-#grep "NA    FYON" tc_gen_${YEAR}_genmpr.txt >> tc_gen_false.txt
 export falsefile="tc_gen_false.txt"
 python false_${basin}.py
 convert TC_genesis.png tcgen_falseAlarm_${basin}_${model}.gif
