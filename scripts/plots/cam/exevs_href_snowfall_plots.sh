@@ -318,7 +318,7 @@ for var in weasd ; do
      fi
 
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png ] ; then
-         mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}_${new_level}.last${last_days}days.${scoretype}_valid${valid}.buk_${new_domain}.png
+         mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}_${new_level}.last${last_days}days.${scoretype}_valid${valid}.${new_domain}.png
       fi 
     done
    done
