@@ -187,7 +187,7 @@ for ftype in nh sh; do
 		if [ "$file_check" -eq 0 ]; then
 			echo "$input_osisaf_file is valid."
 		elif [ "$file_check" -eq 1 ]; then
-			echo "WARNING:  Corrupted validation file: OSI-SAF ${ftype} is corrupted for valid date $INITDATE."
+			echo "WARNING:  Corrupted validation file: OSI-SAF ${ftype} is corrupted for valid date $INITDATE. METplus will skip ${input_osisaf_file} and not run."
 			if [ $SENDMAIL = YES ] ; then
 				export subject="OSI-SAF Data is corrupted for EVS RTOFS"
 		    		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
@@ -287,7 +287,7 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	if [ "$file_check_atlantic" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc is valid."
 	elif [ "$file_check_atlantic" -eq 1 ]; then
-		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc is corrupted or unreadable."
+		echo "WARNING: Corrupted validation file: $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc is corrupted for valid date ${INITDATE}. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc and not run"
 	fi
 
         # check indian
@@ -298,7 +298,7 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	if [ "$file_check_indian" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is valid."
 	elif [ "$file_check_atlantic" -eq 1 ]; then
-		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is corrupted or unreadable."
+		echo "WARNING: Corrupted validation file: $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is corrupted for valid date ${INITDATE}. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc and not run."
 	fi
 	
 	# check pacific
@@ -309,7 +309,8 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	if [ "$file_check_pacific" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is valid."
 	elif [ "$file_check_atlantic" -eq 1 ]; then
-		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is corrupted or unreadable."
+		echo "WARNING: Corrupted validation file: $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is corrupted for valid date ${INITDATE}. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc and not run."
+
 	fi
 
 	if [ $file_check_atlantic -eq 0 ] && [ $file_check_indian -eq 0 ] && [ $file_check_pacific -eq 0 ] ; then
@@ -329,7 +330,7 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 			cp -v $output_argo_file $tmp_argo_file
 		fi
 	else
-		echo "WARNING:  Corrupted validation file: ARGO ${ftype} is corrupted for valid date $INITDATE."
+		echo "WARNING:  Corrupted validation file: ARGO ${ftype} is corrupted for valid date $INITDATE. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc and not run."
 		if [ $SENDMAIL = YES ] ; then
 			export subject="Argo Data is corrupted for EVS RTOFS"
 			echo "WARNING: No Argo data was available for valid date $INITDATE." > mailmsg

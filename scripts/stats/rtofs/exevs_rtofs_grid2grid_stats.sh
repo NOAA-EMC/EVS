@@ -139,7 +139,7 @@ else
 		if [ $file_check -eq 0 ]; then
 			echo "$DCOMINrtofsfilename is valid."
 		elif [ "$file_check" -eq 1 ]; then
-			echo "$DCOMINrtofsfilename is corrupted or unreadable."
+			echo "$DCOMINrtofsfilename is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
 		fi
      		if [ -s $COMINicefilename ] ; then
       			if [ $file_check -eq 0 ]; then
@@ -173,7 +173,7 @@ else
         				fi
       				done
   			else
-				echo "WARNING: Corrupted validation file: ${OBTYPEupper} is corrupted for valid date $VDATE"
+				echo "WARNING: Corrupted validation file: ${OBTYPEupper} is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
 				
    				if [ $SENDMAIL = YES ] ; then
        					export subject="${OBTYPEupper} Data is corrupted for EVS RTOFS"
