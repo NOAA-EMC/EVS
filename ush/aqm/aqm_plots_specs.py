@@ -435,9 +435,14 @@ class PlotSpecs:
         """
         obs_plot_name_dict = {
             'airnow': 'AIRNOW',
+            'airnow_pm25': 'AIRNOW',
+            'airnow_pm10': 'AIRNOW',
             'aeronet': 'AERONET',
+            'aeronet_aod': 'AERONET',
             'abi': 'GOES ABI',
-            'viirs': 'VIIRS'
+            'abi_aod': 'GOES ABI',
+            'viirs': 'VIIRS',
+            'viirs_aod': 'VIIRS'
         }
         if ob_name in list(obs_plot_name_dict.keys()):
             obs_plot_name = obs_plot_name_dict[ob_name]
