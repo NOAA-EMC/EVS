@@ -68,6 +68,7 @@ if [ "${RUN}" == "chem" ]; then
     export machine=${machine:-WCOSS2}
     export evs_run_mode=${evs_run_mode:-production}
     export DATA_TYPE=${DATA_TYPE:-aeronet}
+    export OBS_SRC=${OBS_SRC:-${DATA_TYPE}}
     export restart_mode=${restart_mode:-YES}
     export fig_name_label=${fig_name_label:-last${NDAYS}days}
 fi
