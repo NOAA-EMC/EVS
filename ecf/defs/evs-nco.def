@@ -893,6 +893,8 @@ suite evs_nco
               time 07:30
             task jevs_cam_href_precip_stats
               time 08:30
+            task jevs_cam_href_snowfall_stats
+              time 09:00
             task jevs_cam_href_spcoutlook_stats
               trigger :TIME >= 0830 and ../../prep/cam/jevs_cam_severe_prep == complete
           endfamily
