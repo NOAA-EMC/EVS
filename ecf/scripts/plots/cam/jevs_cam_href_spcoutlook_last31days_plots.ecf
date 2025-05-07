@@ -56,7 +56,6 @@ export RUN="atmos"
 export VERIF_CASE="spcoutlook"
 export MODELNAME=href
 export last_days=31
-export run_mpi=no
 export valid_time=both
 
 ############################################################
