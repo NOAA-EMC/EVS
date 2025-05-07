@@ -131,19 +131,34 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
 
         level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
 
-        doms="dom1 dom2 dom3"
+        doms="dom1 dom2 dom3 dom4 dom5 dom6 dom7 dom8"
 
 	for dom in $doms ; do
 
          if [ $dom = dom1 ] ; then
-	    VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central, Alaska"
-	    subregions="conus conus_east conus_west conus_south conus_central alaska"
-          elif [ $dom = dom2 ] ; then
-            VX_MASK_LIST="Appalachia, CPlains, DeepSouth, GreatBasin, GreatLakes, Mezquital, MidAtlantic, NorthAtlantic, NPlains"
-            subregions="appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nplains"	
+	    VX_MASK_LIST="CONUS, CONUS_East, CONUS_West" 
+	    subregions="conus conus_east conus_west"
+	  elif [ $dom = dom2 ] ; then
+	    VX_MASK_LIST="CONUS_South, CONUS_Central, Alaska"
+	    subregions="conus_south conus_central alaska"
           elif [ $dom = dom3 ] ; then
-            VX_MASK_LIST="NRockies, PacificNW, PacificSW, SRockies, Prairie, Southeast, Southwest, SPlains"
-	    subregions="nrockies pacificnw pacificsw srockies prairie southeast southwest splains"
+            VX_MASK_LIST="Appalachia, CPlains, DeepSouth"
+            subregions="appalachia cplains deepsouth"	
+	  elif [ $dom = dom4 ] ; then
+            VX_MASK_LIST="GreatBasin, GreatLakes, Mezquital"
+	    subregions="greatbasin greatlakes mezquital"
+	  elif [ $dom = dom5 ] ; then
+            VX_MASK_LIST="MidAtlantic, NorthAtlantic, NPlains"
+            subregions="midatlantic northatlantic nplains"
+          elif [ $dom = dom6 ] ; then
+            VX_MASK_LIST="NRockies, PacificNW, PacificSW"
+	    subregions="nrockies pacificnw pacificsw"
+           elif [ $dom = dom7 ] ; then
+	    VX_MASK_LIST="SRockies, Prairie, Southeast"
+            subregions="srockies prairie southeast"
+	   elif [ $dom = dom8 ] ; then
+            VX_MASK_LIST="Southwest, SPlains"
+            subregions="southwest splains"	    
 	 fi
 
 	 #****************
@@ -211,12 +226,12 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
 	 echo "for domain in $subregions ; do "  >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
 	 echo "if [ -s ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
 	 echo " cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
-	 echo " >$all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh 
+	 echo " echo completed >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh 
 
 	 #Copy files to restart directory
 	 echo " if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
-	 echo "  cp -v $all_plots/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
-	 echo "  cp -v $all_plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.completed $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh 
+	 echo "  cp -v ${plot_dir}/${score_type}_regional_\${domain}_valid_${fcst_valid_hour}z_*${new_var}_${stats}.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
+	 echo "  cp -v ${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.completed $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh 
 	 echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
 	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
          echo "done" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
@@ -251,11 +266,7 @@ chmod +x run_all_poe.sh
 #***************************************************************************
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
-if [ $run_mpi = yes ] ; then
-  mpiexec -np 66 -ppn 66 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
-else
-  ${DATA}/scripts/run_all_poe.sh
-fi
+mpiexec -np 66 -ppn 66 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
 export err=$?; err_chk
 
 #**************************************************

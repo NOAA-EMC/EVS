@@ -178,7 +178,7 @@ for stats in csi_fbias ratio_pod_csi ; do
 
          echo "if [ -s ${plot_dir}/${score_type}_regional_*_valid_${valid_time}z_${var_rst}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${valid_time}.sh
 	 echo "  cp -v ${plot_dir}/${score_type}_regional_*_valid_${valid_time}z_${var_rst}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${valid_time}.sh
-	 echo "  >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${valid_time}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${valid_time}.sh
+	 echo "  echo completed >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${valid_time}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${valid_time}.sh
         
 	 #Copy files to restart directory
 	 echo "  if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${valid_time}.sh
@@ -214,11 +214,7 @@ chmod +x run_all_poe.sh
 #***************************************************************************
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
-if [ $run_mpi = yes ] ; then
-   mpiexec -np 6 -ppn 6 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
-else
-  ${DATA}/scripts/run_all_poe.sh
-fi
+mpiexec -np 6 -ppn 6 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
 export err=$?; err_chk
 
 
