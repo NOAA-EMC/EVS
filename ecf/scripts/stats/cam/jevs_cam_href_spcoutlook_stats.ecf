@@ -53,7 +53,6 @@ export NET=evs
 export RUN=atmos
 export VERIF_CASE=spcoutlook
 export MODELNAME=href
-export run_mpi=yes
 export gather=yes
 
 ############################################################

@@ -164,7 +164,7 @@ for prod in mean ; do
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SPCoutlook.conf " >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo  "err=$?; err_chk" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo "if [ \$? = 0 ] ; then" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
-       echo "  >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo "  echo completed >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.completed" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo "  cp \$output_base/stat/\${MODEL}/*.stat $all_stats" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        #Copy  files to COMOUT directory
        echo "  if [ $SENDCOM = YES ] ; then" >> run_href_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh

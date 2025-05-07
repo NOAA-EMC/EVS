@@ -229,7 +229,7 @@ for valid_time in 00 12 ; do
 	 echo "  plot=${plot_dir}/${score_type}_regional_\${domain}_valid_${valid_time}z_${variable}_${stats}_${tail}.png" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 	 echo "  if [ -s \$plot ] ; then " >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
      	 echo "     cp -v \$plot $all_plots" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
-	 echo "     >${plot_dir}/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+	 echo "     echo completed >${plot_dir}/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.completed" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
 	#Copy files to restart directory
 	 echo "    if [ $SENDCOM = YES ] ; then" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
@@ -274,11 +274,7 @@ chmod +x run_all_poe.sh
 #***************************************************************************
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
-if [ $run_mpi = yes ] ; then
-   mpiexec -np 765 -ppn 85 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
-else
-  ${DATA}/scripts/run_all_poe.sh
-fi
+mpiexec -np 765 -ppn 85 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
 export err=$?; err_chk
 
 #**************************************************

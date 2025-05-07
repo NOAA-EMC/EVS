@@ -30,7 +30,7 @@ for obsvtype in ccpa mrms ; do
 
 	  
       if [ $prod = system ] ; then
-        acum="03h 24h"
+        acum="01h 03h 24h"
       else
 	acum="01h 03h 24h"
       fi
@@ -503,7 +503,7 @@ for obsvtype in ccpa mrms ; do
 		#Mark job is completed
 	        echo "if [ -s \$output_base/stat/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat ] ; then" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 		echo "  cp \$output_base/stat/${MODEL}/*_stat_${MODEL}_${obsv}_G*_${fhr}0000L_${VDATE}_${vhr}0000V.stat $all_stats/${MODEL}" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-	        echo "  >\$output_base/stat/${MODEL}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+	        echo "  echo completed >\$output_base/stat/${MODEL}/run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.completed" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 		echo "fi" >> run_href_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
 
 
@@ -537,4 +537,5 @@ for obsvtype in ccpa mrms ; do
    done  #end of obsv
 
 done # end of domain 
+chmod 775 run_all_href_precip_poe.sh
 export err=$?; err_chk
