@@ -169,7 +169,7 @@ for hour in 06 12; do
                     if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTproc}; fi
                 fi
             else
-                echo "FCST_OUTPUT_MISSING: Can not find AQM forecast output ${ozmax8_file}"
+                echo "FCST_OUTPUT_MISSING: AQM forecast file ${ozmax8_file} is missing. The missing AQM forecast file will be skipped"
             fi
         fi
         
@@ -186,7 +186,7 @@ for hour in 06 12; do
                     if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTproc}; fi
                 fi
             else
-                echo "FCST_OUTPUT_MISSING: Can not find AQM forecast output ${ozmax8_file}"
+                echo "FCST_OUTPUT_MISSING: AQM forecast file ${ozmax8_file} is missing. The missing AQM forecast file will be skipped"
             fi
         fi
     done

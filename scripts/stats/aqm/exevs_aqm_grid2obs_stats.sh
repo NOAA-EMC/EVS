@@ -76,7 +76,7 @@ obs_hourly_found=0
 if [ -s ${check_file} ]; then
   obs_hourly_found=1
 else
-  echo "PREP_OUTPUT_MISSING: Can not find pre-processed AIRNOW hourly input ${check_file}"
+  echo "PREP_OUTPUT_MISSING: Pre-processed AIRNOW hourly input ${check_file} is missing. The verification at ${vhr}Z will be skipped"
 fi
 echo "DEBUG: index of hourly obs found = ${obs_hourly_found}"
 
@@ -133,7 +133,7 @@ for outtyp in awpozcon pm25; do
             echo ${fhr} >> ${recorded_temp_list}
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
-            echo "FCST_OUTPUT_MISSING: Can not find AQM forecast output ${fcst_file}"
+            echo "FCST_OUTPUT_MISSING: AQM forecast file ${fcst_file} is missing. The missing AQM forecast file will be skipped"
           fi 
         fi 
         ((ihr++))
@@ -191,7 +191,7 @@ obs_daily_found=0
 if [ -s ${check_file} ]; then
   obs_daily_found=1
 else
-  echo "PREP_OUTPUT_MISSING: Can not find pre-processed AIRNOW daily input ${check_file}"
+  echo "PREP_OUTPUT_MISSING: Pre-processed AIRNOW daily input ${check_file} is missing. The verification on ${VDATE} will be skipped"
 fi
 echo "DEBUG: Index of daily obs found = ${obs_daily_found}"
 
@@ -236,7 +236,7 @@ if [ ${vhr} = 11 ]; then
           echo ${fhr} >> ${recorded_temp_list}
           let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
-          echo "PREP_OUTPUT_MISSING: Can not find pre-processed AQM forecast output ${ozmax8_preprocessed_file}"
+          echo "PREP_OUTPUT_MISSING: Pre-processed AQM forecast output ${ozmax8_preprocessed_file} is missing. The missing AQM forecast file will be skipped"
         fi
         let "ihr=ihr+24"
       done
@@ -323,7 +323,7 @@ if [ ${vhr} = 04 ]; then
           echo ${fhr} >> ${recorded_temp_list}
           let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
-          echo "FCST_OUTPUT_MISSING: Can not find AQM forecast output ${fcst_file}"
+          echo "FCST_OUTPUT_MISSING: AQM forecast file ${fcst_file} is missing. The missing AQM forecast file will be skipped"
         fi
         let "ihr=ihr+24"
       done

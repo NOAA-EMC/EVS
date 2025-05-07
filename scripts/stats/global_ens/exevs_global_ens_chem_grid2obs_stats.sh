@@ -69,7 +69,7 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "PREP_OUTPUT_MISSING: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
+          echo "PREP_OUTPUT_MISSING: Pre-processed ${OBSTYPE} Level 1.5 input ${check_file} is missing. The verification on ${VDATE} will be skipped"
         fi
         echo "DEBUG: index of daily aeronet obs found = ${num_obs_found}"
     elif [ "${ObsType}" == "airnow" ]; then
@@ -84,7 +84,7 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "PREP_OUTPUT_MISSING: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
+          echo "PREP_OUTPUT_MISSING: Pre-processed ${OBSTYPE} hourly input ${check_file} is missing. The verification at ${vhr}Z will be skipped"
         fi
         echo "DEBUG: index of hourly AirNOW obs found = ${num_obs_found}"
     fi
@@ -111,7 +111,7 @@ for ObsType in ${grid2obs_list}; do
             echo ${fhr} >> ${recorded_temp_list}
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
-            echo "PREP_OUTPUT_MISSING: Can not find pre-processed GEFS-aerosol output ${fcst_file}"
+            echo "PREP_OUTPUT_MISSING: Pre-processed GEFS-aerosol output ${fcst_file} is missing. The missing GEFS-aerosol forecast file will be skipped"
           fi 
         fi 
         ## ((ihr++))

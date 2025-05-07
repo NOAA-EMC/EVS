@@ -178,12 +178,12 @@ for mdl_cyc in "${cyc_opt[@]}"; do
                     cp -v ${reduced_rec_grib2} ${prep_gefs}
                 fi
             else
-                echo "FCST_OUTPUT_MISSING: Can not find GEFS-aerosol forecast output ${check_full_file}"
+                echo "FCST_OUTPUT_MISSING: GEFS-aerosol forecast file ${check_full_file} is missing. The missing GEFS-aerosol forecast file will be skipped"
             fi
             ((hour_now+=${inc}))
         done
     else
-        echo "FCST_OUTPUT_MISSING: Can not find GEFS-aerosol output directory ${com_gefs}"
+        echo "FCST_OUTPUT_MISSING: GEFS-aerosol output directory ${com_gefs} is missing. The missing GEFS-aerosol forecast files will be skipped"
     fi
 done
 #
