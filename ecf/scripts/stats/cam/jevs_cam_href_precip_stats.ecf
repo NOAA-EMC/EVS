@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:50:00
+#PBS -l walltime=01:00:00
 #PBS -l place=vscatter,select=1:ncpus=72:mem=100GB
 #PBS -l debug=true
 
@@ -53,9 +53,8 @@ export RUN=atmos
 export VERIF_CASE=precip
 export MODELNAME=href
 export prepare=yes
-export run_mpi=yes
 export verif_precip=yes
-export verif_snowfall=yes
+export verif_snowfall=no
 export gather=yes
 
 ############################################################

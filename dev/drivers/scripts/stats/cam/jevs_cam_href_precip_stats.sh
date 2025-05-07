@@ -3,7 +3,7 @@
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=00:50:00
+#PBS -l walltime=01:00:00
 #PBS -l place=vscatter,select=1:ncpus=72:mem=100GB
 #PBS -l debug=true
 
@@ -41,9 +41,8 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 
 export prepare=yes
-export run_mpi=yes
 export verif_precip=yes
-export verif_snowfall=yes
+export verif_snowfall=no
 
 export gather=yes
 

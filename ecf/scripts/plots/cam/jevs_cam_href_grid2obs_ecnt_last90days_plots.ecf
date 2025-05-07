@@ -56,7 +56,6 @@ export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="grid2obs_ecnt"
 export MODELNAME=href
-export run_mpi=yes
 export valid_time=both
 
 ############################################################

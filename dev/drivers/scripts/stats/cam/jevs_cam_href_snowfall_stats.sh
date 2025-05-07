@@ -1,45 +1,58 @@
-#PBS -N jevs_cam_href_precip_last90days_plots
+#PBS -N jevs_cam_href_snowfall_stats
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=4:ncpus=76:mem=200GB
+#PBS -l place=vscatter,select=1:ncpus=21:mem=100GB
 #PBS -l debug=true
 
-set -x
+set -x 
 
 export OMP_NUM_THREADS=1
+
+## 3x7 conus(ccpa) + 3x7 alaska(mrms) + 2 snow = 44 jobs 
 
 export NET=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
-export envir=prod
-export STEP=plots
+export STEP=stats
 export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=precip
 export MODELNAME=href
+export KEEPDATA=NO
+export SENDMAIL=YES
 
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
-export KEEPDATA=NO
-export SENDMAIL=YES
-export SENDDBN=NO
-
 export vhr=00
-export last_days=90
 
-export valid_time=both
-
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
-export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export envir=prod
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-${HOMEevs}/jobs/JEVS_CAM_PLOTS
+
+export prepare=no
+export verif_precip=no
+export verif_snowfall=yes
+
+export gather=yes
+
+export MAILTO='andrew.benjamin@noaa.gov,binbin.zhou@noaa.gov'
+
+if [ -z "$MAILTO" ]; then
+
+   echo "MAILTO variable is not defined. Exiting without continuing."
+
+else
+  ${HOMEevs}/jobs/JEVS_CAM_STATS
+fi
+
