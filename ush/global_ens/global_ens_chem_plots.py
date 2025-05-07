@@ -41,6 +41,7 @@ date_type = os.environ['date_type']
 NDAYS = os.environ['NDAYS']
 fig_name_label = os.environ['fig_name_label']
 dir_name_label = fig_name_label
+obs_src_name=os.environ['OBS_SRC']
 restart_mode = os.environ['restart_mode']
 plot_verbosity = os.environ['plot_verbosity']
 VERIF_TYPE = os.environ['VERIF_TYPE']
@@ -402,6 +403,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_level'] = ts_info[2][1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[2][1][2]
             plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['obs_src_name'] = obs_src_name
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -455,6 +457,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_level'] = la_info[1][1][1]
             plot_info_dict['obs_var_thresh'] = la_info[1][1][2]
             plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['obs_src_name'] = obs_src_name
             job_work_image_name = plot_specs.get_savefig_name(
                 job_work_dir, plot_info_dict, date_info_dict
             )
@@ -506,6 +509,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_level'] = vha_info[0][1][1]
             plot_info_dict['obs_var_thresh'] = vha_info[0][1][2]
             plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['obs_src_name'] = obs_src_name
             job_work_image_name = plot_specs.get_savefig_name(
                 job_work_dir, plot_info_dict, date_info_dict
             )
@@ -561,6 +565,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
             plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['obs_src_name'] = obs_src_name
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -623,6 +628,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
             plot_info_dict['fig_name_label'] = fig_name_label
+            plot_info_dict['obs_src_name'] = obs_src_name
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
