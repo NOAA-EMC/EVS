@@ -186,7 +186,7 @@ else
      			echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMINicefilename"
    		fi
 	else
-		echo "WARNING:  Missing ${OBTYPEupper} data file for $VDATE: $DCOMINrtofsfilename"
+		echo "WARNING:  Missing ${OBTYPEupper} data file for $VDATE: $DCOMINrtofsfilename. $DCOMINrtofsfilename does not exist. METplus will not run."
 		if [ $SENDMAIL = YES ] ; then
 			export subject="${OBTYPEupper} Data Missing for EVS RTOFS"
 			echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE." > mailmsg

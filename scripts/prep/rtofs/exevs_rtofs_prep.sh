@@ -197,7 +197,7 @@ for ftype in nh sh; do
 		fi
     	fi
 	if [ ! -s $input_osisaf_file ]; then
-		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
+		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. $input_osisaf_file does not exist. METplus will not run."
 		if [ $SENDMAIL = YES ] ; then
 			export subject="OSI-SAF Data Missing for EVS RTOFS"
 		    	echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
@@ -217,7 +217,7 @@ for ftype in nh sh; do
 				fi
             		fi
         	else
-			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
+			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. $input_osisaf_file can be missing or corrupted. METplus will not run."
             		if [ $SENDMAIL = YES ] ; then
                 		export subject="OSI-SAF Data Missing for EVS RTOFS"
                 		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
@@ -263,7 +263,7 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 
    	 fi
 else
-	echo "WARNING: No NDBC data was available for valid date $INITDATE."	
+	echo "WARNING: No NDBC data was available for valid date $INITDATE. $DCOMROOT/$INITDATE/validation_data/marine/buoy/ is empty or does not exist. METplus will not run. "	
   	if [ $SENDMAIL = YES ] ; then
     		export subject="NDBC Data Missing for EVS RTOFS"
     		echo "WARNING: No NDBC data was available for valid date $INITDATE." > mailmsg
@@ -339,7 +339,7 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 		fi
 	fi
 else
-	echo "WARNING: No Argo data was available for valid date $INITDATE."
+	echo "WARNING: No Argo data was available for valid date $INITDATE. $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc do not exist. METplus will not run. "
 	if [ $SENDMAIL = YES ] ; then
 		export subject="Argo Data Missing for EVS RTOFS"
 		echo "WARNING: No Argo data was available for valid date $INITDATE." > mailmsg
