@@ -7,7 +7,9 @@
 ###
 ###   Change Logs:
 ###
-###   01/01/2025   Ho-Chun Huang  
+###   04/30/2025   Ho-Chun Huang  Remove email function for missing 
+###                               Prep-Obs input and Fcst Mdl output
+###                                 
 ###
 ########################################################################
 set -x
@@ -37,10 +39,6 @@ grid2obs_list="${DATA_TYPE}"
 
 export init_cyc="00 06 12 18"
 let inc=1
-
-flag_send_message=NO
-email_msg=${DATA}/mailmsg
-if [ -e ${email_msg} ]; then /bin/rm -f ${email_msg}; fi
 
 check_restart=$( echo ${restart_mode} | tr a-z A-Z )
 
@@ -85,15 +83,9 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "DEBUG: Can not find pre-processed ${OBSTYPE} Level 1.5 input ${check_file}"
-          if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "WARNING: No pre-processed ${OBSTYPE} Level 1.5 was available for ${VDATE} " >> ${email_msg}
-            echo "Missing file is ${check_file}" >> ${email_msg}
-            echo "==============" >> ${email_msg}
-            flag_send_message=YES
-          fi
+          echo "PREP_OUTPUT_MISSING: Pre-processed ${ObsSrc} Level 1.5 input ${check_file} is missing. The verification on ${VDATE} will be skipped"
         fi
-        echo "index of daily aeronet obs found = ${num_obs_found}"
+        echo "DEBUG: index of daily aeronet obs found = ${num_obs_found}"
     elif [ "${ObsSrc}" == "airnow" ]; then
         cdate=${VDATE}${vhr}
         vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
@@ -104,13 +96,7 @@ for ObsType in ${grid2obs_list}; do
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "DEBUG: Can not find pre-processed ${OBSTYPE} hourly input ${check_file}"
-          if [ "${SENDMAIL}" == "YES" ]; then 
-            echo "WARNING: No ${OBSTYPE} ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" >> ${email_msg}
-            echo "Missing file is ${check_file}" >> ${email_msg}
-            echo "==============" >> ${email_msg}
-            flag_send_message=YES
-          fi
+          echo "PREP_OUTPUT_MISSING: Pre-processed ${ObsSrc} hourly input ${check_file} is missing. The verification at ${vhr}Z will be skipped"
         fi
         echo "DEBUG: index of hourly ${OBSTYPE} obs found = ${num_obs_found}"
     fi
@@ -147,15 +133,7 @@ for ObsType in ${grid2obs_list}; do
               let "num_fcst_in_metplus=num_fcst_in_metplus+1"
             fi
           else
-            if [ "${SENDMAIL}" == "YES" ]; then
-              echo "WARNING: No ${CMODEL} ${ObsType} forecast was available for ${aday} t${acyc}z" >> ${email_msg}
-              echo "Missing file is ${fcst_file}" >> ${email_msg}
-              echo "==============" >> ${email_msg}
-              flag_send_message=YES
-            fi
-
-            echo "DEBUG: No ${CMODEL} ${ObsType} forecast was available for ${aday} t${acyc}z"
-            echo "DEBUG: Missing file is ${fcst_file}"
+            echo "PREP_OUTPUT_MISSING: Pre-processed RRFS-smoke and dust output ${fcst_file} is missing. The missing GEFS-aerosol forecast file will be skipped"
           fi 
         fi 
         ((ihr+=${inc}))
@@ -173,8 +151,12 @@ for ObsType in ${grid2obs_list}; do
         run_metplus.py ${point_stat_conf_file} ${config_common}
         export err=$?; err_chk
       else
-        echo "DEBUG: NO ${CMODEL} ${ObsType} FORECAST OR OBS TO VERIFY"
-        echo "DEBUG: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${num_obs_found}"
+        if [ ${num_obs_found} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed ${ObsSrc} OBS, the metplus stats process will be skipped"
+        fi
+        if [ ${num_fcst_in_metplus} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed ${ObsVar} ${CMODEL}-smoke and dust ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+        fi
       fi
       if [ "${SENDCOM}" == "YES" ]; then
         if [ -d ${RUNTIME_STATS}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
@@ -189,28 +171,21 @@ for ObsType in ${grid2obs_list}; do
       fi
     done   ## init hour loop
     if [ "${vhr}" == "23" ]; then
-##       for mdl_cyc in ${init_cyc}; do
-        stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
-        if [ ${stat_file_count} -ne 0 ]; then
-          cpreq ${COMOUTsmall}/*${OutputId}* ${finalstat}
-          cd ${finalstat}
-          run_metplus.py ${stat_analysis_conf_file} ${config_common}
-          export err=$?; err_chk
-          if [ ${SENDCOM} = "YES" ]; then
-            cpfile=${finalstat}/${StatFileId}.v${VDATE}.stat
-            if [ -s ${cpfile} ]; then
-              mkdir -p ${COMOUTfinal}
-              cp -v ${cpfile} ${COMOUTfinal}
-            fi
+      stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
+      if [ ${stat_file_count} -ne 0 ]; then
+        cpreq ${COMOUTsmall}/*${OutputId}* ${finalstat}
+        cd ${finalstat}
+        run_metplus.py ${stat_analysis_conf_file} ${config_common}
+        export err=$?; err_chk
+        if [ ${SENDCOM} = "YES" ]; then
+          cpfile=${finalstat}/${StatFileId}.v${VDATE}.stat
+          if [ -s ${cpfile} ]; then
+            mkdir -p ${COMOUTfinal}
+            cp -v ${cpfile} ${COMOUTfinal}
           fi
         fi
-##       done
+      fi
     fi
 done    ## loop over ObsType
 
-if [ "${flag_send_message}" == "YES" ]; then
-    export subject="${OBSTYPE} Obs or ${CMODEL} Fcst files Missing for EVS ${COMPONENT} ${RUN} ${VERIF_CASE}"
-    echo "Job ID: ${jobid}" >> ${email_msg}
-    cat ${email_msg} | mail -s "${subject}" ${MAILTO}
-fi 
 exit
