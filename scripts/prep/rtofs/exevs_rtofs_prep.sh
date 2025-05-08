@@ -57,7 +57,6 @@ for lead in ${leads}; do
                 if [ $SENDMAIL = YES ] ; then
                     export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
                     echo "WARNING: No RTOFS forecast was available for ${INITDATE}${lead}. Missing file is: ${input_rtofs_file}. METplus will not run." > mailmsg
-                    echo "Missing file is ${input_rtofs_file}". >> mailmsg
                     echo "Job ID: $jobid" >> mailmsg
                     cat mailmsg | mail -s "$subject" $MAILTO
                 fi
@@ -86,7 +85,6 @@ for lead in ${leads}; do
                 if [ $SENDMAIL = YES ] ; then
                     export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
                     echo "WARNING: No RTOFS forecast was available for ${INITDATE}${lead}. Missing file is: ${input_rtofs_file}. METplus will not run." > mailmsg
-                    echo "Missing file is ${input_rtofs_file}" >> mailmsg
                     echo "Job ID: $jobid" >> mailmsg
                     cat mailmsg | mail -s "$subject" $MAILTO
                 fi
