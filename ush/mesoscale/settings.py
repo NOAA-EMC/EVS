@@ -1828,7 +1828,7 @@ class Reference():
                                   'obs_var_levels': ['Z0'],
                                   'obs_var_thresholds': '',
                                   'obs_var_options': '',
-                                  'plot_group':'precip'},
+                                  'plot_group':'snowfall'},
                         'CAPE': {'fcst_var_names': ['CAPE'],
                                  'fcst_var_levels': ['Z0'],
                                  'fcst_var_thresholds': '',
@@ -3582,7 +3582,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24', 'WEASD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3597,7 +3597,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'SNOD_06': {'fcst_var_names': [
                                         'SNOD', 'ASNOW', 'SNOD_06', 'ASNOW_06', 
                                         'SNOD_A06', 'ASNOW_A06'
@@ -3615,7 +3615,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'SNOD_24': {'fcst_var_names': [
                                         'SNOD', 'ASNOW', 'SNOD_24', 'ASNOW_24',
                                         'SNOD_A24', 'ASNOW_A24'
@@ -3633,7 +3633,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'}
+                                    'plot_group':'snowfall'}
                     }
                 },
                 'CTC': {
@@ -3661,7 +3661,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24', 'WEASD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3676,7 +3676,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'SNOD_06': {'fcst_var_names': [
                                         'SNOD', 'ASNOW', 'SNOD_06', 'ASNOW_06',
                                         'SNOD_A06', 'ASNOW_A06'
@@ -3694,7 +3694,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'SNOD_24': {'fcst_var_names': [
                                         'SNOD', 'ASNOW', 'SNOD_24', 'ASNOW_24',
                                         'SNOD_A24', 'ASNOW_A24'
@@ -3712,7 +3712,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'}
+                                    'plot_group':'snowfall'}
                     }
                 }
             },
