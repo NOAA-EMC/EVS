@@ -261,7 +261,7 @@ else
 	echo "WARNING: No NDBC data was available for valid date $INITDATE. $DCOMROOT/$INITDATE/validation_data/marine/buoy/ is empty or does not exist. METplus will not run. "	
   	if [ $SENDMAIL = YES ] ; then
     		export subject="NDBC Data Missing for EVS RTOFS"
-    		echo "WARNING: No NDBC data was available for valid date $INITDATE. Missing files are located at $DCOMROOT/$INITDATE/validation_data/marine/buoy. METplus will not run." > mailmsg
+    		echo "WARNING: No NDBC data was available for valid date $INITDATE. Missing file is $DCOMROOT/$INITDATE/validation_data/marine/buoy. METplus will not run." > mailmsg
     		cat mailmsg | mail -s "$subject" $MAILTO
   	fi
 fi
