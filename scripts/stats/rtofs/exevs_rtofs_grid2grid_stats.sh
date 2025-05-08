@@ -183,7 +183,7 @@ else
    				fi
 			fi
 		else
-     			echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMINicefilename"
+     			echo "WARNING: Missing validation f000 ice file: $COMINicefilename is missing for valid date $VDATE. Metplus wil not run."
    		fi
 	else
 		echo "WARNING:  Missing ${OBTYPEupper} data file for $VDATE: $DCOMINrtofsfilename. $DCOMINrtofsfilename does not exist. METplus will not run."
@@ -217,7 +217,7 @@ for vari in ${VARS}; do
 	    fi
     fi
   else
-     echo "WARNING: Missing RTOFS_${OBTYPEupper}_$VARupper stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat" 
+	  echo "WARNING: Missing RTOFS_${OBTYPEupper}_$VARupper stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat. METplus will not run to generate the final stat file." 
   fi
 done
 
