@@ -177,20 +177,18 @@ else
 				
    				if [ $SENDMAIL = YES ] ; then
        					export subject="${OBTYPEupper} Data is corrupted for EVS RTOFS"
-       					echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE." > mailmsg
-       					echo "Corrupted file is ${DCOMINrtofsfilename}." >> mailmsg
+       					echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE. Corrupted file is ${DCOMINrtofsfilename}. METplus will skip ${DCOMINrtofsfilename} and not run." > mailmsg
        					cat mailmsg | mail -s "$subject" $MAILTO
    				fi
 			fi
 		else
-     			echo "WARNING: Missing validation f000 ice file: $COMINicefilename is missing for valid date $VDATE. Metplus wil not run."
+     			echo "WARNING: Missing validation f000 ice file: $COMINicefilename is missing for valid date $VDATE. METplus wil not run."
    		fi
 	else
 		echo "WARNING:  Missing ${OBTYPEupper} data file for $VDATE: $DCOMINrtofsfilename. $DCOMINrtofsfilename does not exist. METplus will not run."
 		if [ $SENDMAIL = YES ] ; then
 			export subject="${OBTYPEupper} Data Missing for EVS RTOFS"
-			echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE." > mailmsg
-			echo "Missing file is ${DCOMINrtofsfilename}." >> mailmsg
+			echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE. Missing file is ${DCOMINrtofsfilename}. METplus will not run." > mailmsg
 			cat mailmsg | mail -s "$subject" $MAILTO
 		fi
 	fi

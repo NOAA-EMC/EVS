@@ -188,8 +188,7 @@ for ftype in nh sh; do
 			echo "WARNING:  Corrupted validation file: OSI-SAF ${ftype} is corrupted for valid date $INITDATE. METplus will skip ${input_osisaf_file} and not run."
 			if [ $SENDMAIL = YES ] ; then
 				export subject="OSI-SAF Data is corrupted for EVS RTOFS"
-		    		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
-		    		echo "Corrupted file is $input_osisaf_file" >> mailmsg
+		    		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. Corrupted file is $input_osisaf_file. METplus will not run." > mailmsg
 		    		cat mailmsg | mail -s "$subject" $MAILTO
 	    	fi
 		fi
@@ -198,8 +197,7 @@ for ftype in nh sh; do
 		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. $input_osisaf_file does not exist. METplus will not run."
 		if [ $SENDMAIL = YES ] ; then
 			export subject="OSI-SAF Data Missing for EVS RTOFS"
-		    	echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
-		    	echo "Missing file is $input_osisaf_file" >> mailmsg
+		    	echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. Missing file is: $input_osisaf_file. METplus will not run." > mailmsg
 		    	cat mailmsg | mail -s "$subject" $MAILTO
 	    	fi
     	fi
@@ -218,8 +216,7 @@ for ftype in nh sh; do
 			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. $input_osisaf_file can be missing or corrupted. METplus will not run."
             		if [ $SENDMAIL = YES ] ; then
                 		export subject="OSI-SAF Data Missing for EVS RTOFS"
-                		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
-                		echo "Missing file is $input_osisaf_file" >> mailmsg
+                		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. Missing file is $input_osisaf_file. METplus will not run." > mailmsg
                 		cat mailmsg | mail -s "$subject" $MAILTO
             		fi
         	fi
@@ -264,8 +261,7 @@ else
 	echo "WARNING: No NDBC data was available for valid date $INITDATE. $DCOMROOT/$INITDATE/validation_data/marine/buoy/ is empty or does not exist. METplus will not run. "	
   	if [ $SENDMAIL = YES ] ; then
     		export subject="NDBC Data Missing for EVS RTOFS"
-    		echo "WARNING: No NDBC data was available for valid date $INITDATE." > mailmsg
-    		echo "Missing files are located at $DCOMROOT/$INITDATE/validation_data/marine/buoy" >> mailmsg
+    		echo "WARNING: No NDBC data was available for valid date $INITDATE. Missing files are located at $DCOMROOT/$INITDATE/validation_data/marine/buoy. METplus will not run." > mailmsg
     		cat mailmsg | mail -s "$subject" $MAILTO
   	fi
 fi
