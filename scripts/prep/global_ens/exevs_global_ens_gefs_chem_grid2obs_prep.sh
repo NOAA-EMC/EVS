@@ -10,6 +10,7 @@
 ###
 ###   01/16/2024   Ho-Chun Huang  EVSv1.0 EE2 compliance
 ###   01/30/2024   Ho-Chun Huang  for a single email of missing files of both OBS and FCST
+###   05/01/2025   Ho-Chun Huang  Remove email function for missing model forecast output
 ###
 ########################################################################
 #
@@ -177,19 +178,12 @@ for mdl_cyc in "${cyc_opt[@]}"; do
                     cp -v ${reduced_rec_grib2} ${prep_gefs}
                 fi
             else
-                if [ ${SENDMAIL} = "YES" ]; then
-                    echo "DEBUG: Can not find GEFS-aerosol forecast output" >> mailmsg
-                    echo "Missing file is ${check_full_file}" >> mailmsg
-                    echo "==============" >> mailmsg
-                    flag_send_message=YES
-                fi
-                echo "DEBUG: Can not find GEFS-aerosol forecast output" >> mailmsg
-                echo "Missing file is ${check_full_file}" >> mailmsg
+                echo "FCST_OUTPUT_MISSING: GEFS-aerosol forecast file ${check_full_file} is missing. The missing GEFS-aerosol forecast file will be skipped"
             fi
             ((hour_now+=${inc}))
         done
     else
-        echo "DEBUG: Can not find GEFS-aerosol output directory ${com_gefs}" >> mailmsg
+        echo "FCST_OUTPUT_MISSING: GEFS-aerosol output directory ${com_gefs} is missing. The missing GEFS-aerosol forecast files will be skipped"
     fi
 done
 #
