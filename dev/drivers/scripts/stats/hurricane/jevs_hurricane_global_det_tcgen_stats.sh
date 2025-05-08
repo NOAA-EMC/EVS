@@ -42,12 +42,6 @@ export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
 export COMINadeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/adeck
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
 
-#export COMINgenesis=/lfs/h2/emc/vpppg/noscrub/$USER/Data/Year2022/TCgen
-#export COMINadeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/Data/Year2022/adeck
-#export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/Data/Year2022/bdeck
-#export COMINadeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/Data/Year2022/adeck
-#export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/Data/Year2022/bdeck
-
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export KEEPDATA=NO
