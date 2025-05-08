@@ -217,7 +217,7 @@ for vari in ${VARS}; do
 	    fi
     fi
   else
-	  echo "WARNING: Missing RTOFS_${OBTYPEupper}_$VARupper stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat. METplus will not run to generate the final stat file." 
+	  echo "DEBUG: Missing RTOFS_${OBTYPEupper}_$VARupper stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat. METplus will not run to generate the final stat file." 
   fi
 done
 
