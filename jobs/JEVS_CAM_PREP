@@ -128,6 +128,7 @@ if [ "${RUN}" == "chem" ]; then
    
     # alternative choice is an option different from aqobs
     export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+    export HOURLY_NCOL=${HOURLY_NCOL:-34}
     export restart_mode=${restart_mode:-YES}
    
 else
