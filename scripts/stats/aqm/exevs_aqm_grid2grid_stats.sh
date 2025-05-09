@@ -61,7 +61,6 @@ for ObsType in "${grid2grid_list[@]}"; do
 
   case ${ObsType} in
        abi) export obs_var=aod;;
-       viirs)  export obs_var=aod;;
        *)  export obs_var=aod;;
   esac
 
