@@ -3600,7 +3600,7 @@ class Reference():
                                     'plot_group':'snowfall'},
                         'SNOD_06': {'fcst_var_names': [
                                         'SNOD', 'SNOD_06', 
-                                        'SNOD_A06
+                                        'SNOD_A06'
                                     ],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
