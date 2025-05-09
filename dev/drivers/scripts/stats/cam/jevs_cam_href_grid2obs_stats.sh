@@ -30,7 +30,6 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export vhr=00
 
-export run_mpi=yes
 export gather=yes
 
 

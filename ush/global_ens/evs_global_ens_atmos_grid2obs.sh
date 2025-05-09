@@ -99,7 +99,9 @@ fi
 
 #*****************************************************************
 # Check if all stats sub-tasks are completed in the previous runs
-if [ ! -s $COMOUTsmall/stats_completed ] ; then
+if [ ! -s $COMOUTsmall/completed/stats_completed ] ; then
+mkdir -p $COMOUTsmall/completed
+mkdir -p $WORK/completed
 
 # Check if restart directory exists
 if [ -d $COMOUTsmall/restart/grid2obs ] ; then
@@ -244,7 +246,7 @@ for field in $fields ; do
 
           # Check for restart: check if the single sub-task is completed in the previous run
 	  # If this task has been completed in the previous run, then skip it
-	  if [ ! -e $COMOUTsmall/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed ] ; then
+	  if [ ! -e $COMOUTsmall/completed/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed ] ; then
 
 	  echo  "export output_base=$WORK/grid2obs/run_${modnam}_${vhour}_${fhr}_${field}_g2o" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
           if [ $modnam = naefs ] ; then
@@ -353,12 +355,12 @@ for field in $fields ; do
           fi
 
           # Indicate sub-task is completed for restart 
-	  echo ">$WORK/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-	  echo "echo "${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o task is completed" >> $WORK/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+	  echo ">$WORK/completed/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+	  echo "echo "${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o task is completed" >> $WORK/completed/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
 
           # Save files for restart
 	  echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-          echo "  cp -f $WORK/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed $COMOUTsmall" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh 
+          echo "  cp -f $WORK/completed/run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.completed $COMOUTsmall/completed" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh 
 	  echo "  if [ -d $WORK/grid2obs/run_${modnam}_${vhour}_${fhr}_${field}_g2o/stat/${modnam} ] ; then" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
 	  echo "    mkdir -p $COMOUTsmall/restart/grid2obs/run_${modnam}_${vhour}_${fhr}_${field}_g2o/stat" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
 	  echo "    cp -rfu $WORK/grid2obs/run_${modnam}_${vhour}_${fhr}_${field}_g2o/stat/${modnam} $COMOUTsmall/restart/grid2obs/run_${modnam}_${vhour}_${fhr}_${field}_g2o/stat" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
@@ -396,11 +398,11 @@ for field in $fields ; do
 done # end of fields loop
 
 # Indicate all tasks are completed
->$WORK/stats_completed
-echo "All stats are completed" >> $WORK/stats_completed
+>$WORK/completed/stats_completed
+echo "All stats are completed" >> $WORK/completed/stats_completed
 
 if [ $SENDCOM = YES ] ; then
-  cp -f $WORK/stats_completed $COMOUTsmall
+  cp -f $WORK/completed/stats_completed $COMOUTsmall/completed
 fi
 
 fi # end of check restart for all tasks
