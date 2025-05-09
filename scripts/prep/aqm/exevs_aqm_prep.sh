@@ -19,6 +19,7 @@
 ##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
 ##   02/21/2024   Ho-Chun Huang  modify for AQMv7 verification
 ##   06/25/2024   Ho-Chun Huang  Remove concatenating log file sections
+##   05/01/2025   Ho-Chun Huang  Remove email function for missing model forecast output
 ##
 ##
 #######################################################################
@@ -168,16 +169,7 @@ for hour in 06 12; do
                     if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTproc}; fi
                 fi
             else
-                if [ ${SENDMAIL} = "YES" ]; then
-                    export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z" > mailmsg
-                    echo "Missing file is ${ozmax8_file}" >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $MAILTO
-                fi
-        
-                echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z"
-                echo "WARNING: Missing file is ${ozmax8_file}"
+                echo "FCST_OUTPUT_MISSING: AQM forecast file ${ozmax8_file} is missing. The missing AQM forecast file will be skipped"
             fi
         fi
         
@@ -194,16 +186,7 @@ for hour in 06 12; do
                     if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTproc}; fi
                 fi
             else
-                if [ ${SENDMAIL} = "YES" ]; then
-                    export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z" > mailmsg
-                    echo "Missing file is ${ozmax8_file}" >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $MAILTO
-                fi
-        
-                echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${INITDATE} t${hour}z"
-                echo "WARNING: Missing file is ${ozmax8_file}"
+                echo "FCST_OUTPUT_MISSING: AQM forecast file ${ozmax8_file} is missing. The missing AQM forecast file will be skipped"
             fi
         fi
     done
