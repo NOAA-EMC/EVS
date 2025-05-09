@@ -55,10 +55,6 @@ num_scan=${#goes_scan_list[@]}
 
 export vld_cyc="06 12"
 
-flag_send_message=NO
-email_msg=${DATA}/mailmsg
-if [ -e ${email_msg} ]; then /bin/rm -f ${email_msg}; fi
-
 for ObsType in "${grid2grid_list[@]}"; do
   export ObsType
   export OBSTYPE=`echo ${ObsType} | tr a-z A-Z`    # config variable
@@ -101,12 +97,7 @@ for ObsType in "${grid2grid_list[@]}"; do
       if [ -s ${check_file} ]; then
         obs_hourly_found=1
       else
-        echo "DEBUG: Can not find pre-processed obs hourly input ${check_file}"
-        if [ $SENDMAIL = "YES" ]; then 
-          echo "DEBUG: No ${SatID} ${ObsType} ${VarId} was available for ${vld_date} ${vld_time}" >> ${email_msg}
-          echo "==============" >> ${email_msg}
-          flag_send_message=YES
-        fi
+        echo "PREP_OUTPUT_MISSING: Pre-processed ${SatID} ${ObsType} ${VarId} input ${check_file} is missing. The verification at ${VDATE} ${vhr}Z will be skipped""
       fi
       echo "DEBUG: index of hourly obs found = ${obs_hourly_found}"
 
@@ -149,14 +140,7 @@ for ObsType in "${grid2grid_list[@]}"; do
                 echo ${fhr} >> ${recorded_temp_list}
                 let "num_fcst_in_metplus=num_fcst_in_metplus+1"
               else
-                if [ $SENDMAIL = "YES" ]; then
-                  echo "DEBUG: No AQM ${FileinId}${bctag} forecast was available for ${aday} t${acyc}z" >> ${email_msg}
-                  echo "==============" >> ${email_msg}
-                  flag_send_message=YES
-                fi
-
-                echo "DEBUG: No AQM${bctag} ${SatId}${VarId} forecast was available for ${aday} t${acyc}z"
-                echo "DEBUG: Missing file is ${fcst_file}"
+		echo "FCST_OUTPUT_MISSING: AQM forecast file ${fcst_file} is missing. The missing AQM forecast file will be skipped"
               fi 
             fi 
             ((ihr++))
@@ -173,8 +157,12 @@ for ObsType in "${grid2grid_list[@]}"; do
             run_metplus.py ${conf_file_dir}/${grid_stat_conf_file} ${config_common}
             export err=$?; err_chk
           else
-            echo "DEBUG: NO ${VARID} FORECAST OR OBS TO VERIFY"
-            echo "DEBUG: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_hourly_found}"
+            if [ ${obs_hourly_found} -eq 0 ]; then
+              echo "DEBUG: There is no pre-processed hourly ${SatID} ${ObsType} ${VarId} OBS, the metplus stats process will be skipped"
+            fi
+            if [ ${num_fcst_in_metplus} -eq 0 ]; then
+              echo "DEBUG: There is no ${FileinId}${bctag} ${CMODEL} ${hour}Z cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+            fi
           fi
         done   ## hour loop
         mkdir -p ${COMOUTsmall}
@@ -209,10 +197,4 @@ for ObsType in "${grid2grid_list[@]}"; do
     done  ## AOD_SCAN loop
   done  ## SatId loop
 done  ## ObsType loop
-
-if [ "${flag_send_message}" == "YES" ]; then
-  export subject="${MODELNAME} ${AOD_SCAN} PROCESSING ISSUES for EVS ${COMPONENT}"
-  echo "Job ID: ${jobid}" >> ${email_msg}
-  cat ${email_msg} | mail -s "${subject}" ${MAILTO}
-fi
 exit

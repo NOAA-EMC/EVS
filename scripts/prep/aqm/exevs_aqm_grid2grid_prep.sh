@@ -23,10 +23,6 @@ set -x
 
 cd ${DATA}
 
-flag_send_message=NO
-email_msg=${DATA}/mailmsg
-if [ -e ${email_msg} ]; then /bin/rm -f ${email_msg}; fi
-
 check_restart=$(echo ${restart_mode} | tr a-z A-Z)    ## set RESTART option
 #######################################################################
 # Define INPUT OBS DATA TYPE for ASCII2NC 
@@ -50,12 +46,9 @@ export jday=$(date2jday.sh ${INITDATE} )
 declare -a grid2grid_list=( ${DATA_TYPE} )
 num_obs=${#grid2grid_list[@]}
 
+## Need IDs for GOES-EAST and GOES-West
 declare -a satellite_list=( ${GOES_EAST} ${GOES_WEST} )
 num_sat=${#satellite_list[@]}
-if [ "${num_sat}"  != "2" ]; then
-  echo "WARNING :: number of satellites id ${num_sat} is not 2, i.e, IDs for GOES-EAST and GOES-West"
-  exit
-fi
 
 declare -a goes_scan_list=( ${AOD_SCAN_TYPE} )
 num_scan=${#goes_scan_list[@]}
@@ -406,18 +399,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
     done  # AOD_SCAN
   done  # ObsType
 else
-    if [ "${SENDMAIL}" = "YES" ]; then
-      echo "DEBUG: No ${MODELNAME} FCST ${VARID} grib2 was avaiable as POINT2GRID template valid ${INITDATE}" >> ${email_msg}
-      echo "==============" >> ${email_msg}
-      flag_send_message=YES
-    fi
-
-    echo "DEBUG: No ${MODELNAME} FCST ${VARID} grib2 was available as POINT2GRID template valid ${INITDATE}"
+  echo "FCST_OUTPUT_MISSING: All AQM ${VARID} forecast file output are missing. The ${COMPONENT} ${VERIF_CASE} ${STEP} will be skipped"
 fi
 
-if [ "${flag_send_message}" == "YES" ]; then
-  export subject="${MODELNAME} ${AOD_SCAN} PROCESSING ISSUES for EVS ${COMPONENT}"
-  echo "Job ID: ${jobid}" >> ${email_msg}
-  cat ${email_msg} | mail -s "${subject}" ${MAILTO}
-fi
 exit
