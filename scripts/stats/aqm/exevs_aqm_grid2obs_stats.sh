@@ -19,6 +19,8 @@
 ##   02/02/2024   Ho-Chun Huang  Replace cpreq with cp to copy file from DATA to COMOUT
 ##   02/21/2024   Ho-Chun Huang  modify for AQMv7 verification
 ##   06/25/2024   Ho-Chun Huang  Remove concatenating log file sections
+##   04/30/2025   Ho-Chun Huang  Remove email function for missing 
+##                               pre-processed and original forecast output
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
@@ -74,16 +76,9 @@ obs_hourly_found=0
 if [ -s ${check_file} ]; then
   obs_hourly_found=1
 else
-  echo "WARNING: Can not find pre-processed obs hourly input ${check_file}"
-  if [ $SENDMAIL = "YES" ]; then 
-    export subject="AQM Hourly Observed Missing for EVS ${COMPONENT}"
-    echo "WARNING: No AQM ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" > mailmsg
-    echo "Missing file is ${check_file}" >> mailmsg
-    echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $MAILTO
-  fi
+  echo "PREP_OUTPUT_MISSING: Pre-processed AIRNOW hourly input ${check_file} is missing. The verification at ${vhr}Z will be skipped"
 fi
-echo "index of hourly obs found = ${obs_hourly_found}"
+echo "DEBUG: index of hourly obs found = ${obs_hourly_found}"
 
 for outtyp in awpozcon pm25; do
   export outtyp
@@ -138,16 +133,7 @@ for outtyp in awpozcon pm25; do
             echo ${fhr} >> ${recorded_temp_list}
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
-            if [ $SENDMAIL = "YES" ]; then
-              export subject="t${acyc}z ${outtyp}${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-              echo "WARNING: No AQM ${outtyp}${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
-              echo "Missing file is ${fcst_file}" >> mailmsg
-              echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $MAILTO
-            fi
-
-            echo "WARNING: No AQM ${outtyp}${bctag} forecast was available for ${aday} t${acyc}z"
-            echo "WARNING: Missing file is ${fcst_file}"
+            echo "FCST_OUTPUT_MISSING: AQM forecast file ${fcst_file} is missing. The missing AQM forecast file will be skipped"
           fi 
         fi 
         ((ihr++))
@@ -157,15 +143,19 @@ for outtyp in awpozcon pm25; do
       fi
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       export num_fcst_in_metplus
-      echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
+      echo "DEBUG: number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
     
       if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_hourly_found} -eq 1 ]; then
         export fcsthours=${fcsthours_list}
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
-        echo "WARNING: NO ${cap_outtyp} FORECAST OR OBS TO VERIFY"
-        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_hourly_found}"
+        if [ ${obs_hourly_found} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed hourly ${cap_outtyp} OBS, the metplus stats process will be skipped"
+        fi
+        if [ ${num_fcst_in_metplus} -eq 0 ]; then
+            echo "DEBUG: There is no ${outtyp}${bcout} ${model1} ${hour}Z cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+        fi
       fi
     done   ## hour loop
     mkdir -p ${COMOUTsmall}
@@ -201,16 +191,9 @@ obs_daily_found=0
 if [ -s ${check_file} ]; then
   obs_daily_found=1
 else
-  echo "WARNING: Can not find pre-processed obs daily input ${check_file}"
-  if [ $SENDMAIL = "YES" ]; then
-    export subject="AQM Daily Observed Missing for EVS ${COMPONENT}"
-    echo "WARNING: No AQM Daily Observed file was available for ${VDATE}" > mailmsg
-    echo "Missing file is ${check_file}" >> mailmsg
-    echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $MAILTO
-  fi
+  echo "PREP_OUTPUT_MISSING: Pre-processed AIRNOW daily input ${check_file} is missing. The verification on ${VDATE} will be skipped"
 fi
-echo "Index of daily obs found = ${obs_daily_found}"
+echo "DEBUG: Index of daily obs found = ${obs_daily_found}"
 
 
 if [ ${vhr} = 11 ]; then
@@ -253,15 +236,7 @@ if [ ${vhr} = 11 ]; then
           echo ${fhr} >> ${recorded_temp_list}
           let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
-          if [ $SENDMAIL = "YES" ]; then
-            export subject="ozmax8${bctag} AQM Daily Forecast Data Missing for EVS ${COMPONENT}"
-            echo "WARNING: No AQM ozmax8${bctag} daily forecast was available for ${chk_date} t${hour}z" > mailmsg
-            echo "Missing file is ${ozmax8_preprocessed_file}" >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $MAILTO
-          fi
-          echo "WARNING: No AQM max_8hr_o3${bctag} forecast was available for ${chk_date} t${hour}z"
-          echo "WARNING: Missing file is ${ozmax8_preprocessed_file}"
+          echo "PREP_OUTPUT_MISSING: Pre-processed AQM forecast output ${ozmax8_preprocessed_file} is missing. The missing AQM forecast file will be skipped"
         fi
         let "ihr=ihr+24"
       done
@@ -277,8 +252,12 @@ if [ ${vhr} = 11 ]; then
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
-        echo "WARNING: NO OZMAX8 OBS OR MODEL DATA"
-        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
+        if [ ${obs_daily_found} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed ${outtyp} OBS, the metplus stats process will be skipped"
+        fi
+        if [ ${num_fcst_in_metplus} -eq 0 ]; then
+            echo "DEBUG: There is no ${outtyp}${bcout} ${model1} ${hour}Z cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+        fi
       fi
     done   ## cyc hour loop
     if [ ${SENDCOM} = "YES" ]; then
@@ -344,16 +323,7 @@ if [ ${vhr} = 04 ]; then
           echo ${fhr} >> ${recorded_temp_list}
           let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
-          if [ $SENDMAIL = "YES" ]; then
-            export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-            echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${chk_date} t${hour}z" > mailmsg
-            echo "Missing file is $fcst_file}" >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $MAILTO
-          fi
-
-          echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${chk_date} t${hour}z"
-          echo "WARNING: Missing file is $fcst_file}"
+          echo "FCST_OUTPUT_MISSING: AQM forecast file ${fcst_file} is missing. The missing AQM forecast file will be skipped"
         fi
         let "ihr=ihr+24"
       done
@@ -362,16 +332,20 @@ if [ ${vhr} = 04 ]; then
       fi
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       export num_fcst_in_metplus
-      echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
-      echo "index of daily obs_found == ${obs_daily_found}"
+      echo "DEBUG: number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
+      echo "DEBUG: index of daily obs_found == ${obs_daily_found}"
 
       if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_daily_found} -gt 0 ]; then
         export fcsthours=${fcsthours_list}
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
-        echo "WARNING: NO PMAVE OBS OR MODEL DATA"
-        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
+        if [ ${obs_daily_found} -eq 0 ]; then
+            echo "DEBUG: There is no pre-processed ${outtyp} OBS, the metplus stats process will be skipped"
+        fi
+        if [ ${num_fcst_in_metplus} -eq 0 ]; then
+            echo "DEBUG: There is no ${outtyp}${bcout} ${model1} ${hour}Z cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+        fi
       fi
     done   ## cyc hour loop
     if [ ${SENDCOM} = "YES" ]; then
