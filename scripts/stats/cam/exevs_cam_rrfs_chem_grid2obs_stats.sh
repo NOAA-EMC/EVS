@@ -133,7 +133,7 @@ for ObsType in ${grid2obs_list}; do
               let "num_fcst_in_metplus=num_fcst_in_metplus+1"
             fi
           else
-            echo "PREP_OUTPUT_MISSING: Pre-processed RRFS-smoke and dust output ${fcst_file} is missing. The missing GEFS-aerosol forecast file will be skipped"
+            echo "PREP_OUTPUT_MISSING: Pre-processed RRFS-smoke and dust output ${fcst_file} is missing. The missing RRFS-smoke and dust forecast file will be skipped"
           fi 
         fi 
         ((ihr+=${inc}))
