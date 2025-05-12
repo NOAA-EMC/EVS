@@ -96,7 +96,7 @@ for ObsType in "${grid2grid_list[@]}"; do
       if [ -s ${check_file} ]; then
         obs_hourly_found=1
       else
-        echo "PREP_OUTPUT_MISSING: Pre-processed ${SatID} ${ObsType} ${VarId} input ${check_file} is missing. The verification at ${VDATE} ${vhr}Z will be skipped""
+        echo "PREP_OUTPUT_MISSING: Pre-processed ${SatID} ${ObsType} ${VarId} input ${check_file} is missing. The verification at ${VDATE} ${vhr}Z will be skipped"
       fi
       echo "DEBUG: index of hourly obs found = ${obs_hourly_found}"
 
