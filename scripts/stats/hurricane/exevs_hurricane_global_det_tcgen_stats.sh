@@ -4,10 +4,8 @@ export PS4=' + exevs_hurricane_global_det_tcgen_stats.sh line $LINENO: '
 
 export MetOnMachine=${MetOnMachine:-$MET_ROOT}
 export YEAR=${YYYY}
-#export basinlist="al ep wp"
-export basinlist="al"
-#export modellist="gfs ecmwf cmc"
-export modellist="gfs"
+export basinlist="al ep wp"
+export modellist="gfs ecmwf cmc"
 
 for basin in $basinlist; do
 ### basin do loop start
