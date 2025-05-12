@@ -118,14 +118,14 @@ if [ $OBTYPE = argo ]; then
 							fi
 						done
 					else
-						echo "WARNING: Missing RTOFS f${fhr3} 3dz file for $VDATE: ${COMINrtofsfilename}"
+						echo "WARNING: Missing validation file: RTOFS f${fhr3} 3dz. ${COMINrtofsfilename} is missing for valid date $VDATE. METplus will not run."
 					fi
 				done
 			else
-				echo "WARNING: Missing RTOFS f000 ice file for $VDATE: ${COMINicefilename}"
+				echo "WARNING: Missing RTOFS f000 ice file: ${COMINicefilename} is missing for valid date $VDATE. METplus will not run."
 			fi
 		else
-			echo "WARNING: Missing ARGO data file for $VDATE: $EVSINfilename"
+			echo "WARNING: Missing ARGO data file: $EVSINfilename is missing for valid date $VDATE. METplus will not run."
 		fi
 	done
 
@@ -162,14 +162,14 @@ elif [ $OBTYPE = ndbc ]; then
 						fi
 					done
 				else
-					echo "WARNING: Missing RTOFS f${fhr3} prog file for $VDATE: $COMINrtofsfilename"
+					echo "WARNING: Missing RTOFS f${fhr3} prog file. $COMINrtofsfilename is missing for valid date $VDATE. METplus will not run."
 				fi
 			done
 		else
-			echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMINicefilename"
+			echo "WARNING: Missing RTOFS f000 ice file. $COMINicefilename is missing for valid date $VDATE. METplus will not run."
 		fi
 	else
-		echo "WARNING: Missing NDBC data file for $VDATE: $EVSINfilename"
+		echo "WARNING: Missing NDBC data file: $EVSINfilename is missing for valid date $VDATE. METplus will not run."
 	fi
 fi
 
@@ -192,7 +192,7 @@ if [ $OBTYPE = argo ]; then
       				fi
     			fi
   		else
-     			echo "WARNING: Missing RTOFS_${OBTYPEupper}_$VAR stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat" 
+     			echo "DEBUG: Missing RTOFS_${OBTYPEupper}_$VAR stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat" 
   		fi
 	done
 elif [ $OBTYPE = ndbc ]; then
@@ -212,7 +212,7 @@ elif [ $OBTYPE = ndbc ]; then
       				fi
     			fi
   		else
-     			echo "WARNING: Missing RTOFS_${OBTYPEupper}_$VAR stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat" 
+     			echo "DEBUG: Missing RTOFS_${OBTYPEupper}_$VAR stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat" 
   		fi
 	done
 fi
