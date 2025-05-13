@@ -15,6 +15,12 @@
 # 03/2025: 
 # 1- Appplied adjustments based on the changes for $COMOUT in prep scripts, 
 # 2- Updated the ecf scripts names and adjustments in defs.
+# 04/2025:
+# 1- Updated the file checks to ensure that dcom files are not corrupted before using them. 
+# New approach uses ncdump (added script in ush directory: rtofs_check_nc.py) instead of checking the file size.
+# 2- Updated the WARNING messages for corrupted files.
+# 3- Adjusted the end on RTOFS plots with the date in .tar files (ush/settings.py).
+
 ###############################################################################
 
 set -x
@@ -46,7 +52,6 @@ else
 fi
 
 export JDATE=$(date2jday.sh $VDATE)
-min_size=2404
 
 #########################################################################################
 # GridStat
@@ -127,10 +132,18 @@ else
 	fi
 
 	if [ -s $DCOMINrtofsfilename ] ; then
-	actual_size=$(wc -c <"$DCOMINrtofsfilename")
-		if [ $actual_size -ge $min_size ]; then
-     			if [ -s $COMINicefilename ] ; then
-      				for fday in 0 1 2 3 4 5 6 7 8; do
+		python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename"
+		export err=$?; err_chk
+		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename")
+		echo "$file_check"
+		if [ $file_check -eq 0 ]; then
+			echo "$DCOMINrtofsfilename is valid."
+		elif [ "$file_check" -eq 1 ]; then
+			echo "$DCOMINrtofsfilename is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
+		fi
+     		if [ -s $COMINicefilename ] ; then
+      			if [ $file_check -eq 0 ]; then
+				for fday in 0 1 2 3 4 5 6 7 8; do
         				fhr=$(($fday * 24))
         				fhr2=$(printf "%02d" "${fhr}")
         				export fhr3=$(printf "%03d" "${fhr}")
@@ -159,24 +172,23 @@ else
           					echo "WARNING: Missing RTOFS f${fhr3} file for $VDATE: $COMINrtofsfilename"
         				fi
       				done
-   			else
-     				echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMINicefilename"
-   			fi
+  			else
+				echo "WARNING: Corrupted validation file: ${OBTYPEupper} is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
+				
+   				if [ $SENDMAIL = YES ] ; then
+       					export subject="${OBTYPEupper} Data is corrupted for EVS RTOFS"
+       					echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE. Corrupted file is ${DCOMINrtofsfilename}. METplus will skip ${DCOMINrtofsfilename} and not run." > mailmsg
+       					cat mailmsg | mail -s "$subject" $MAILTO
+   				fi
+			fi
 		else
-   			echo "WARNING:  Missing SMOS data file for $VDATE: $DCOMINrtofsfilename"
-   			if [ $SENDMAIL = YES ] ; then
-       				export subject="${OBTYPEupper} Data Missing for EVS RTOFS"
-       				echo "Warning: No ${OBTYPEupper} data was available for valid date $VDATE." > mailmsg
-       				echo "Missing file is ${DCOMINrtofsfilename}." >> mailmsg
-       				cat mailmsg | mail -s "$subject" $MAILTO
-   			fi
-		fi
+     			echo "WARNING: Missing validation f000 ice file: $COMINicefilename is missing for valid date $VDATE. METplus wil not run."
+   		fi
 	else
-		echo "WARNING:  Missing ${OBTYPEupper} data file for $VDATE: $DCOMINrtofsfilename"
+		echo "WARNING:  Missing ${OBTYPEupper} data file for $VDATE: $DCOMINrtofsfilename. $DCOMINrtofsfilename does not exist. METplus will not run."
 		if [ $SENDMAIL = YES ] ; then
 			export subject="${OBTYPEupper} Data Missing for EVS RTOFS"
-			echo "Warning: No ${OBTYPEupper} data was available for valid date $VDATE." > mailmsg
-			echo "Missing file is ${DCOMINrtofsfilename}." >> mailmsg
+			echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE. Missing file is ${DCOMINrtofsfilename}. METplus will not run." > mailmsg
 			cat mailmsg | mail -s "$subject" $MAILTO
 		fi
 	fi
@@ -203,7 +215,7 @@ for vari in ${VARS}; do
 	    fi
     fi
   else
-     echo "WARNING: Missing RTOFS_${OBTYPEupper}_$VARupper stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat" 
+	  echo "DEBUG: Missing RTOFS_${OBTYPEupper}_$VARupper stat files for $VDATE in $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/*.stat. METplus will not run to generate the final stat file." 
   fi
 done
 
