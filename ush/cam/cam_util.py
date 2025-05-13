@@ -8,6 +8,7 @@
 # =============================================================================
 
 import os
+from pathlib import Path
 from collections.abc import Iterable
 import numpy as np
 import subprocess
@@ -319,19 +320,64 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                                           filled_file_format_chunk)
     return filled_file_format
 
-def get_completed_jobs(completed_jobs_file):
-    completed_jobs = set()
-    if os.path.exists(completed_jobs_file):
-        with open(completed_jobs_file, 'r') as f:
-            completed_jobs = set(f.read().splitlines())
+def get_completed_jobs(completed_jobs_dir, job_type=''):
+    """
+    Returns a set of job names (e.g., 'job1', 'job2') that are marked complete
+    in completed_jobs_dir.
+    """
+    if not job_type:
+        job_dir = Path(completed_jobs_dir)
+    else:
+        job_dir = Path(completed_jobs_dir) / job_type
+
+    if job_dir.is_dir():
+        completed_jobs = {
+            p.name for p in job_dir.iterdir() 
+            if p.is_file() and p.name.startswith("job")
+        }
+    else:
+        completed_jobs = {}
+
     return completed_jobs
 
-def mark_job_completed(completed_jobs_file, job_name, job_type=""):
-    with open(completed_jobs_file, 'a') as f:
+def mark_job_completed(restart_dir, data_dir, verif_case, 
+                       completed_jobs_dirname, job_name, job_type=''):
+    """
+    Marks a job as completed by creating a blank file at:
+        data_dir/verif_case/completed_jobs_dirname[/job_type]/job_name
+    If SENDCOM is set, copies the file to:
+        restart_dir/completed_jobs_dirname[/job_type]/job_name
+    """ 
+
+    SENDCOM = os.environ.get('SENDCOM')
+    if SENDCOM is None:
+        e = f"FATAL ERROR: SENDCOM is not defined in the job card for {job_name}"
         if job_type:
-            f.write(job_type + "_" + job_name + "\n")
-        else:
-            f.write(job_name + "\n")
+            e+=f" (type: {job_type})"
+        raise ValueError(e)
+
+    restart_out = Path(restart_dir) / completed_jobs_dirname
+    data_out = Path(data_dir) / verif_case / completed_jobs_dirname
+    if job_type:
+        restart_out = restart_out / job_type
+        data_out = data_out / job_type
+
+    if not data_out.is_dir():
+        e = f"FATAL ERROR: Completed jobs directory does not exist: {data_out}"
+        raise FileNotFoundError(e)
+
+    job_file = data_out / job_name
+
+    # Create an empty file to mark completion
+    job_file.touch(exist_ok=True)
+
+    if SENDCOM.lower() == "true":
+        if not restart_out.is_dir():
+            e = f"FATAL ERROR: Completed jobs directory does not exist: {restart_out}"
+            raise FileNotFoundError(e)
+        run_shell_command(
+            ['cp', '-rpv', job_file, restart_out / '.']
+        ) 
 
 def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 
                          run=None, step=None, model=None, vdate=None, vhr=None, 
