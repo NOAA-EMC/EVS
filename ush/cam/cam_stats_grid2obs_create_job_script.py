@@ -331,7 +331,7 @@ if STEP == 'prep':
 elif STEP == 'stats':
     if job_type == 'reformat':
         if NEST == 'firewx':
-            if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+            if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                 if obs_avail:
                     job_cmd_list_iterative.append(
                         f'{metplus_launcher} -c {machine_conf} '
@@ -360,7 +360,7 @@ elif STEP == 'stats':
                         + f"\"{RESTART_DIR}\", \"{DATA}\", \"{VERIF_CASE}\", \"{COMPLETED_JOBS_DIR}\", "
                         + f"\"job{njob}\", job_type=\"{job_type}\")'"
                     )
-        if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+        if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
             if obs_avail:
                 job_cmd_list_iterative.append(
                     f'{metplus_launcher} -c {machine_conf} '
@@ -389,7 +389,7 @@ elif STEP == 'stats':
     if job_type == 'generate':
         if FCST_VAR2_NAME:
             if NEST == 'firewx':
-                if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+                if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                     if obs_avail:
                         job_cmd_list_iterative.append(
                             f'{metplus_launcher} -c {machine_conf} '
@@ -426,7 +426,7 @@ elif STEP == 'stats':
                     spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'spc_otlk.*',f'spc_otlk.*.v*-{VDATE}12.3km*')))
                 else:
                     spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'spc_otlk.*',f'spc_otlk.*.v{VDATE}*3km*')))
-                if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+                if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                     if spc_otlk_avail:
                         if obs_avail:
                             job_cmd_list_iterative.append(
@@ -492,7 +492,7 @@ elif STEP == 'stats':
                             + f"\"job{njob}\", job_type=\"{job_type}\")'"
                         )
             else:
-                if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+                if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                     if obs_avail:
                         job_cmd_list_iterative.append(
                             f'{metplus_launcher} -c {machine_conf} '
@@ -526,7 +526,7 @@ elif STEP == 'stats':
         else:
             if NEST == 'firewx':
                 if VAR_NAME == 'PTYPE':
-                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if obs_avail:
                             job_cmd_list_iterative.append(
                                 f'{metplus_launcher} -c {machine_conf} '
@@ -604,7 +604,7 @@ elif STEP == 'stats':
                                 + f"\"job{njob}\", job_type=\"{job_type}\")'"
                             )
                 else:
-                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if obs_avail:
                             job_cmd_list_iterative.append(
                                 f'{metplus_launcher} -c {machine_conf} '
@@ -642,7 +642,7 @@ elif STEP == 'stats':
                 else:
                     spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'spc_otlk.*',f'spc_otlk.*.v{VDATE}*3km*')))
                 if VAR_NAME == 'PTYPE':
-                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if spc_otlk_avail:
                             if obs_avail:
                                 job_cmd_list_iterative.append(
@@ -798,7 +798,7 @@ elif STEP == 'stats':
                                 + f"\"job{njob}\", job_type=\"{job_type}\")'"
                             )
                 else:
-                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if spc_otlk_avail:
                             if obs_avail:
                                 job_cmd_list_iterative.append(
@@ -867,7 +867,7 @@ elif STEP == 'stats':
                             )
             else:
                 if VAR_NAME == 'PTYPE':
-                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if obs_avail:
                             job_cmd_list_iterative.append(
                                 f'{metplus_launcher} -c {machine_conf} '
@@ -944,7 +944,7 @@ elif STEP == 'stats':
                                 + f"\"job{njob}\", job_type=\"{job_type}\")'"
                             )
                 else:
-                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+                    if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if obs_avail:
                             job_cmd_list_iterative.append(
                                 f'{metplus_launcher} -c {machine_conf} '
@@ -977,7 +977,7 @@ elif STEP == 'stats':
                                 + f"\"job{njob}\", job_type=\"{job_type}\")'"
                             )
     elif job_type == 'gather':
-        if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+        if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
             if glob.glob(os.path.join(
                     DATA,VERIF_CASE,'METplus_output',VERIF_TYPE,'point_stat',
                     f'{MODELNAME}.{VDATE}','*stat')):
@@ -1010,7 +1010,7 @@ elif STEP == 'stats':
                     + f"\"job{njob}\", job_type=\"{job_type}\")'"
                 )
     elif job_type == 'gather2':
-        if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type):
+        if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
             if glob.glob(os.path.join(
                     DATA,VERIF_CASE,'METplus_output','gather_small',
                     'stat_analysis',f'{MODELNAME}.{VDATE}','*stat')):
