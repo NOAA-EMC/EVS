@@ -4,7 +4,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=05:00:00
+#PBS -l walltime=05:15:00
 #PBS -l place=shared,select=1:ncpus=1:mem=20GB
 #PBS -l debug=true
 
