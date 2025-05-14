@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=03:45:00
-#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=500GB
+#PBS -l walltime=08:20:00
+#PBS -l place=vscatter:exclhost,select=6:ncpus=128:mem=500GB
 #PBS -l debug=true
 
 set -x
@@ -14,7 +14,7 @@ export machine=WCOSS2
 # ECF Settings
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
+export KEEPDATA=YES
 export SENDDBN=NO
 export SENDDBN_NTC=
 export SENDMAIL=YES
