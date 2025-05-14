@@ -87,13 +87,13 @@ python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
 # Run all HRRR precip/stats Reformat jobs
-chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
     while [ $nc -le $ncount_poe ]; do
-        poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+        poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
@@ -112,8 +112,11 @@ if [ $USE_CFP = YES ]; then
 else
     set -x
     while [ $nc -le $ncount_job ]; do
-        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-        export err=$?; err_chk
+        job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+        if [ -f "$job_file" ]; then
+            $job_file
+            export err=$?; err_chk
+        fi
         nc=$((nc+1))
     done
     set -x
@@ -176,13 +179,13 @@ python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
 # Run All HRRR precip/stats Generate Jobs
-chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
     while [ $nc -le $ncount_poe ]; do
-        poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+        poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
@@ -201,8 +204,11 @@ if [ $USE_CFP = YES ]; then
 else
     set -x
     while [ $nc -le $ncount_job ]; do
-        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-        export err=$?; err_chk
+        job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+        if [ -f "$job_file" ]; then
+            $job_file
+            export err=$?; err_chk
+        fi
         nc=$((nc+1))
     done
     set -x
@@ -241,13 +247,13 @@ python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
 # Run All HRRR precip/stats Gather Jobs
-chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
     while [ $nc -le $ncount_poe ]; do
-        poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+        poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
@@ -266,8 +272,11 @@ if [ $USE_CFP = YES ]; then
 else
     set -x
     while [ $nc -le $ncount_job ]; do
-        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-        export err=$?; err_chk
+        job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+        if [ -f "$job_file" ]; then
+            $job_file
+            export err=$?; err_chk
+        fi
         nc=$((nc+1))
     done
     set -x
@@ -303,13 +312,13 @@ python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
 # Run All HRRR precip/stats Gather 2 Jobs
-chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
     while [ $nc -le $ncount_poe ]; do
-        poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+        poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
@@ -328,8 +337,11 @@ if [ $USE_CFP = YES ]; then
 else
     set -x
     while [ $nc -le $ncount_job ]; do
-        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-        export err=$?; err_chk
+        job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+        if [ -f "$job_file" ]; then
+            $job_file
+            export err=$?; err_chk
+        fi
         nc=$((nc+1))
     done
     set -x
@@ -390,13 +402,13 @@ if [ "$vhr" -ge "$last_cyc" ]; then
         export err=$?; err_chk
 
         # Run All NAM Nest precip/stats Gather 3 Jobs
-        chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-        ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+        chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+        ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
         nc=1
         if [ $USE_CFP = YES ]; then
-            ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+            ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
             while [ $nc -le $ncount_poe ]; do
-                poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+                poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
                 chmod 775 $poe_script
                 export MP_PGMMODEL=mpmd
                 export MP_CMDFILE=${poe_script}
@@ -415,8 +427,11 @@ if [ "$vhr" -ge "$last_cyc" ]; then
         else
             set -x
             while [ $nc -le $ncount_job ]; do
-                ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-                export err=$?; err_chk
+                job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+                if [ -f "$job_file" ]; then
+                    $job_file
+                    export err=$?; err_chk
+                fi
                 nc=$((nc+1))
             done
             set -x
