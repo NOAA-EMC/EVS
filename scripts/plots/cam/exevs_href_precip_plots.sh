@@ -164,9 +164,9 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
 
 	if [ $VX_MASK_LIST = Alaska ] ; then
-	   echo "export obsv=\" - Obs: MRMS\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+	   echo "export obsv=\" - Validation: MRMS\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
         else
-           echo "export obsv=\" - Obs: CCPA\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+           echo "export obsv=\" - Validation: CCPA\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
         fi
 
         if [ $score_type = valid_hour_average ] ; then

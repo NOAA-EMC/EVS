@@ -935,9 +935,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_left:
         if os.path.exists(path_logo_left):
             left_logo_arr = mpimg.imread(path_logo_left)
-            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.8)
+            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*1.)
             ab_left = AnnotationBbox(
-                left_image_box, xy=(0.,1.), xycoords='axes fraction',
+                left_image_box, xy=(0.,1.07), xycoords='axes fraction',
                 xybox=(0, 3), boxcoords='offset points', frameon = False,
                 box_alignment=(0,0)
             )
@@ -950,9 +950,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_right:
         if os.path.exists(path_logo_right):
             right_logo_arr = mpimg.imread(path_logo_right)
-            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.8)
+            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*1.)
             ab_right = AnnotationBbox(
-                right_image_box, xy=(1.,1.), xycoords='axes fraction',
+                right_image_box, xy=(1.,1.07), xycoords='axes fraction',
                 xybox=(0, 3), boxcoords='offset points', frameon = False,
                 box_alignment=(1,0)
             )

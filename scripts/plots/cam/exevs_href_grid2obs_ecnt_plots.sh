@@ -185,9 +185,9 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
 	echo "export prune_dir=$save_dir/data" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
 
 	if [ $VAR = HPBL ] ; then
-	  echo "export obsv=\" - Obs: RAOB\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
+	  echo "export obsv=\" - Validation: RAOB\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
 	else
-	  echo "export obsv=\" - Obs: METAR\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
+	  echo "export obsv=\" - Validation: METAR\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.${dom}.sh
 	fi
 
 

@@ -212,9 +212,9 @@ for stats in $stats_list ; do
 	echo "export prune_dir=$save_dir/data" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 
         if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then
-          echo "export obsv=\" - Obs: RAOB\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+          echo "export obsv=\" - Validation: RAOB\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
         elif [ $VAR = VISsfc ] || [ $VAR = HGTcldceil ] || [ $VAR = TCDC ] ; then
-          echo "export obsv=\" - Obs: METAR\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+          echo "export obsv=\" - Validation: METAR\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
         fi
 
 

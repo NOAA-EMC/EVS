@@ -43,7 +43,7 @@ done
 
 export init_beg=$first_day
 export valid_beg=$first_day
-export obsv=" - Obs: RAOB"
+export obsv=" - Validation: RAOB"
 
 
 #*************************************************************
