@@ -30,6 +30,7 @@ export interp_pnts=''
 
 export init_end=$VDATE
 export valid_end=$VDATE
+export obsv=" - Validation: RAOB"
 
 model_list='HREF_MEAN'
 models='HREF_MEAN'
