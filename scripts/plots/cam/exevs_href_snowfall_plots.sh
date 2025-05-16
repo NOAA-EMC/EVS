@@ -45,6 +45,7 @@ done
 
 export init_beg=$first_day
 export valid_beg=$first_day
+export obsv=" - Validation: NOHRSC"
 
 #*************************************************************
 # Virtual link the href's stat data files of last 31/90 days
