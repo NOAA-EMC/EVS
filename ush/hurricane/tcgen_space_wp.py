@@ -101,7 +101,15 @@ if(domain == "westpac"):
 
 #    plt.title(f"West Pacific TC Genesis Hits")
     TCGENdays = os.environ['TCGENdays']
-    plt.title(TCGENdays)
+    modelname = os.environ['modelname']
+    if modelname == 'gfs':
+        formal_model = 'GFS'
+    elif modelname == 'ecmwf':
+        formal_model = 'ECMWF'
+    elif modelname == 'cmc':
+        formal_model = 'CMC'
+
+    plt.title(""+str(formal_model)+" "+str(TCGENdays)+"")
 ####################################################################
 ##The plt is saved as png and converted to gif in the bash script.
 
