@@ -104,7 +104,15 @@ if(domain == "atlantic"):
     plt.annotate("False alarms ("+str(numfals)+")", (0,0), (286,177), xycoords='axes fraction', textcoords='offset points', va='top', color='Red', fontsize=6.5)
 
     TCGENdays = os.environ['TCGENdays']
-    plt.title(TCGENdays)
+    modelname = os.environ['modelname']
+    if modelname == 'gfs':
+        formal_model = 'GFS'
+    elif modelname == 'ecmwf':
+        formal_model = 'ECMWF'
+    elif modelname == 'cmc':
+        formal_model = 'CMC'
+                 
+    plt.title(""+str(formal_model)+" "+str(TCGENdays)+"")             
 ####################################################################
 ##The plt is saved as png and converted to gif in the bash script.
 

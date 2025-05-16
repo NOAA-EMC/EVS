@@ -52,8 +52,9 @@ fi
 
 #--- run for TC_gen
 cd ${OUTPUT}
-cp ${PARMevs}/metplus_config/hurricane/stats/TCGen_template.conf .
+cp ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/TCGen_template.conf .
 export VALID_FREQ=6
+export INIT_FREQ=6
 
 export SEARCH0="METBASE_template"
 export SEARCH1="INPUT_BASE_template"
