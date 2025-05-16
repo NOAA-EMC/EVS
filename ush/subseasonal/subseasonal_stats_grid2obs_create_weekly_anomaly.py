@@ -131,7 +131,8 @@ while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
         input_file_df = pd.read_csv(input_file, sep=" ", skiprows=1,
                                     skipinitialspace=True, header=None,
                                     names=MET_MPR_column_list, 
-                                    na_filter=False, dtype=str)
+                                    na_filter=False, dtype=str,
+                                    on_bad_lines='warn')
         input_file_var_level_df = input_file_df[
             (input_file_df['FCST_VAR'] == var1_obs_name) \
             & (input_file_df['FCST_LEV'] == var1_obs_levels) \
