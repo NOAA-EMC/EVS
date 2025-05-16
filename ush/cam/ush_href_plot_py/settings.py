@@ -30,8 +30,8 @@ class Toggle():
             'clear_prune_directory': False, # remove the intermediate directory created to store pruned data files temporarily
             'plot_logo_left': True,
             'plot_logo_right': True,
-            'zoom_logo_left': 1.0, 
-            'zoom_logo_right': 1.0,
+            'zoom_logo_left': 1., 
+            'zoom_logo_right': 1.,
             'delete_intermed_data': True 
             #'delete_intermed_data': False # Just for SREF/GEFS comparison since they have different lead times. whether or not to delete DataFrame rows if, for any model, rows include NaN (currently only used in lead_average.py)
         }
