@@ -133,19 +133,27 @@ def performance_diag():
   ax.plot(ySUR,yPOD,marker='o',markersize=10,c='blue')
 #  ax.text(ySUR,yPOD1,'CMC',fontsize=11,fontweight='bold',ha='center',va='center',color='blue')
 
-  ax.plot(0.3,0.95,marker='o',markersize=6,c='black')
-  ax.text(0.35,0.95,'GFS',fontsize=6,fontweight='bold',ha='center',va='center',color='black')
+  ax.plot(0.3,0.95,marker='o',markersize=8,c='black')
+  ax.text(0.35,0.95,'GFS',fontsize=8,fontweight='bold',ha='center',va='center',color='black')
 
-  ax.plot(0.5,0.95,marker='o',markersize=6,c='red')
-  ax.text(0.55,0.95,'ECMWF',fontsize=6,fontweight='bold',ha='center',va='center',color='red')
+  ax.plot(0.5,0.95,marker='o',markersize=8,c='red')
+  ax.text(0.55,0.95,'ECMWF',fontsize=8,fontweight='bold',ha='center',va='center',color='red')
 
-  ax.plot(0.7,0.95,marker='o',markersize=6,c='blue')
-  ax.text(0.75,0.95,'CMC',fontsize=6,fontweight='bold',ha='center',va='center',color='blue')
+  ax.plot(0.7,0.95,marker='o',markersize=8,c='blue')
+  ax.text(0.75,0.95,'CMC',fontsize=8,fontweight='bold',ha='center',va='center',color='blue')
 
 #  title="Performance Diagram"
 #  plt.title(title, fontsize=12, fontweight="bold")
+  basinname = os.environ['basinname']
   TCGENdays = os.environ['TCGENdays']
-  plt.title(TCGENdays, fontsize=12, fontweight="bold")
+  if basinname == 'al':
+    formal_basin = 'North Atlantic'
+  elif basinname == 'ep':
+    formal_basin = 'East Pacific'
+  elif basinname == 'wp':
+    formal_basin = 'West Pacific'
+
+  plt.title(""+str(formal_basin)+" "+str(TCGENdays)+"", fontsize=12, fontweight="bold")
 
   #Save, close, and trim whitespace around plot
 #  plt.savefig(outf,pad_inches=0.01, orientation='landscape')

@@ -6,7 +6,7 @@ export PS4=' + exevs_hurricane_global_det_tcgen_plots.sh line $LINENO: '
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 export YEAR=${YYYY}
-export TCGENdays="TC Genesis(05/01/${YEAR}-11/30/${YEAR})"
+export TCGENdays="TC Genesis (05/01/${YEAR}-11/30/${YEAR})"
 export basinlist="al ep wp"
 export modellist="gfs ecmwf cmc"
 
@@ -35,6 +35,13 @@ for basin in $basinlist; do
 ### basin do loop start
 for model in $modellist; do
 ### model do loop start
+
+
+export stormBasin=${basin}
+export stbasin=`echo ${stormBasin} | tr "[a-z]" "[A-Z]"`
+echo "${stbasin} upper case: AL/EP/WP"
+export basinname=${basin}
+export modelname=${model}
 
 export OUTPUT=${DATA}/${basin}_${model}
 if [ ! -d ${OUTPUT} ]; then mkdir -p ${OUTPUT}; fi
