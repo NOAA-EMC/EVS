@@ -34,6 +34,7 @@ export valid_end=$VDATE
 
 model_list='HREF_MEAN'
 models='HREF_MEAN'
+export obsv=" - Validation: RAOB"
 
 n=0
 while [ $n -le $last_days ] ; do
