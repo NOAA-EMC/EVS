@@ -50,10 +50,6 @@ mkdir -p ${PREP_SAVE_DIR}
 export model1=`echo ${MODELNAME} | tr a-z A-Z`
 echo $model1
 
-flag_send_message=NO
-email_msg=${DATA}/mailmsg
-if [ -e ${email_msg} ]; then /bin/rm -f ${email_msg}; fi
-
 ## Pre-Processed EPA AIRNOW ASCII input file to METPlus NetCDF input for PointStat
 ##
 ## Hourly AirNOW observation

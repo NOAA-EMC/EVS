@@ -27,6 +27,8 @@ export PS4='$SECONDS + '
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
+export pid=$$
+
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p ${DATA}
 cd ${DATA}
