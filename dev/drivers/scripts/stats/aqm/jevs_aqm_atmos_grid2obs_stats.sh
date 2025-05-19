@@ -1,4 +1,4 @@
-#PBS -N jevs_aqm_grid2grid_stats
+#PBS -N jevs_aqm_atmos_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -14,20 +14,20 @@ cd $PBS_O_WORKDIR
 export model=evs
 export COMPONENT=aqm
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 ############################################################
 # Load modules
 ############################################################
 
-source ${HOMEevs}/versions/run.ver
+source $HOMEevs/versions/run.ver
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source ${HOMEevs}/dev/modulefiles/aqm/aqm_stats.sh
+source $HOMEevs/dev/modulefiles/aqm/aqm_stats.sh
 
 export vhr
 echo $vhr
@@ -35,7 +35,7 @@ export envir=prod
 export NET=evs
 export STEP=stats
 export RUN=atmos
-export VERIF_CASE=grid2grid
+export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
 export mod_ver=${aqm_ver}
@@ -48,8 +48,8 @@ export KEEPDATA=NO
 export SENDMAIL=YES
 export SENDDBN=NO
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 
 ########################################################################
 
@@ -62,7 +62,7 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   ${HOMEevs}/jobs/JEVS_AQM_STATS
+   $HOMEevs/jobs/JEVS_AQM_STATS
 
 fi
 

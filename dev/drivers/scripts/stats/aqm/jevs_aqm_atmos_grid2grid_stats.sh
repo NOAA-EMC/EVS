@@ -1,9 +1,9 @@
-#PBS -N jevs_aqm_grid2grid_prep
+#PBS -N jevs_aqm_atmos_grid2grid_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=00:10:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
@@ -27,18 +27,18 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source ${HOMEevs}/dev/modulefiles/aqm/aqm_prep.sh
+source ${HOMEevs}/dev/modulefiles/aqm/aqm_stats.sh
 
-export vhr=00
+export vhr
 echo $vhr
+export envir=prod
 export NET=evs
-export STEP=prep
+export STEP=stats
 export RUN=atmos
 export VERIF_CASE=grid2grid
 export MODELNAME=aqm
 export modsys=aqm
 export mod_ver=${aqm_ver}
-export envir=prod
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
@@ -50,7 +50,9 @@ export SENDDBN=NO
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
- 
+
+########################################################################
+
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
@@ -60,8 +62,11 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   ${HOMEevs}/jobs/JEVS_AQM_PREP
+   ${HOMEevs}/jobs/JEVS_AQM_STATS
 
 fi
 
 exit
+
+
+
