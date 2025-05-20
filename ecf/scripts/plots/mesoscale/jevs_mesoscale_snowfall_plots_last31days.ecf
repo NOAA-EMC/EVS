@@ -1,10 +1,10 @@
-#PBS -N evs_mesoscale_snowfall_plots
+#PBS -N evs_mesoscale_snowfall_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=11:30:00
-#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=500GB
+#PBS -l walltime=08:20:00
+#PBS -l place=vscatter:exclhost,select=6:ncpus=128:mem=500GB
 #PBS -l debug=true
 
 export model=evs
@@ -58,6 +58,7 @@ export VERIF_CASE=snowfall
 export evs_run_mode=production
 export MODELNAME=${COMPONENT}
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
+export EVAL_PERIOD="last31days"
 
 ############################################################
 # Execute j-job
