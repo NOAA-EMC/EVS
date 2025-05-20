@@ -58,6 +58,7 @@ export VERIF_CASE=headline
 export MODELNAME=mesoscale
 export evs_run_mode=production
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
+export EVAL_PERIOD=last90days
 
 ############################################################
 # Execute j-job
