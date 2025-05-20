@@ -54,8 +54,9 @@ if VERIF_CASE == "precip":
         OBSNAME = os.environ['OBSNAME']
         COMOUTsmall = os.environ['COMOUTsmall']
     elif STEP == 'plots':
-        all_eval_periods = cutil.get_all_eval_periods(graphics_pcp)
         COMOUTplots = os.environ['COMOUTplots']
+        EVAL_PERIOD = os.environ['EVAL_PERIOD']
+        eval_period = EVAL_PERIOD
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
@@ -69,8 +70,9 @@ elif VERIF_CASE == "grid2obs":
         OBSNAME = os.environ['OBSNAME']
         COMOUTsmall = os.environ['COMOUTsmall']
     elif STEP == 'plots':
-        all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
         COMOUTplots = os.environ['COMOUTplots']
+        EVAL_PERIOD = os.environ['EVAL_PERIOD']
+        eval_period = EVAL_PERIOD
 elif VERIF_CASE == "headline":
     if STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_hdl)
@@ -81,8 +83,9 @@ elif VERIF_CASE == "snowfall":
     elif STEP == 'stats':
         pass
     elif STEP == 'plots':
-        all_eval_periods = cutil.get_all_eval_periods(graphics_sno)
         COMOUTplots = os.environ['COMOUTplots']
+        EVAL_PERIOD = os.environ['EVAL_PERIOD']
+        eval_period = EVAL_PERIOD
 if STEP == 'stats':
     job_type = os.environ['job_type']
     RESTART_DIR = os.environ['RESTART_DIR']
@@ -93,10 +96,16 @@ if STEP == 'plots':
 # Define data base directorie
 data_base_dir = os.path.join(DATA, VERIF_CASE, 'data')
 data_dir_list = [data_base_dir]
-completed_jobs_base_dir = os.path.join(DATA, VERIF_CASE, 'completed_jobs')
-completed_jobs_list = [completed_jobs_base_dir]
-completed_jobs_base_restart_dir = os.path.join(RESTART_DIR, 'completed_jobs')
-completed_jobs_restart_list = [completed_jobs_base_restart_dir]
+if STEP == 'stats':
+  completed_jobs_base_dir = os.path.join(DATA, VERIF_CASE, 'completed_jobs')
+  completed_jobs_list = [completed_jobs_base_dir]
+  completed_jobs_base_restart_dir = os.path.join(RESTART_DIR, 'completed_jobs')
+  completed_jobs_restart_list = [completed_jobs_base_restart_dir]
+if STEP == 'plots':
+  completed_jobs_base_dir = os.path.join(DATA, VERIF_CASE, 'completed_jobs', EVAL_PERIOD)
+  completed_jobs_list = [completed_jobs_base_dir]
+  completed_jobs_base_restart_dir = os.path.join(RESTART_DIR, 'completed_jobs', EVAL_PERIOD)
+  completed_jobs_restart_list = [completed_jobs_base_restart_dir]
 if VERIF_CASE == 'precip':
     if STEP == 'prep':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
@@ -413,7 +422,7 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in ['cape', 'ceil_vis','sfc_upper']:
-            for eval_period in all_eval_periods:
+###            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
                     str(eval_period).lower()
@@ -449,7 +458,7 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in ['precip']:
-            for eval_period in all_eval_periods:
+###            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
                     str(eval_period).lower()
@@ -486,7 +495,7 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in ['snowfall']:
-            for eval_period in all_eval_periods:
+##            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
                     str(eval_period).lower()
