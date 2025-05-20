@@ -13,7 +13,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -84,7 +84,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -127,7 +127,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -198,7 +198,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -241,7 +241,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -312,7 +312,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -355,7 +355,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -426,7 +426,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -469,7 +469,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -540,7 +540,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_03':{
@@ -583,7 +583,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -626,7 +626,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -655,7 +655,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -698,7 +698,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -727,7 +727,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -770,7 +770,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -799,7 +799,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -842,7 +842,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -871,7 +871,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -914,7 +914,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -1061,7 +1061,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'Alaska',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
@@ -1160,7 +1160,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'Alaska',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'APCP_01':{
