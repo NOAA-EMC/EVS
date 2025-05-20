@@ -120,6 +120,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
 	# switching satellite or Scan-modes or both, and the old file need
 	# to be removed manauelly.
 	#
+	if [ ! -d ${DATA}/tmp ]; then  mkdir -p ${DATA}/tmp; fi
 	num_mapping_file=$( find ${DATA}/tmp -name CONUS_2500_1500_56_-56* | wc -l )
         if [ ${num_mapping_file} -gt 0 ]; then /bin/rm -f ${DATA}/tmp/CONUS_2500_1500_56_-56*; fi 
 
