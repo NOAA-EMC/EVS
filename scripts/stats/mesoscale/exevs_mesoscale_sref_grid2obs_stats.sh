@@ -14,6 +14,8 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export WORK=$DATA
 cd $WORK
 mkdir -p $WORK/scripts
+export all_stats=$WORK/all_stats
+mkdir -p $all_stats
 
 export MET_bin_exec='bin'
 
@@ -60,10 +62,10 @@ if [ -e $DATA/prepbufr.missing ] || [ -e $DATA/sref_mbrs.missing ]; then
   echo "WARNING: either prepbufr or sref members are missing"
 else
 
-  if [ ! -e $COMOUTrestart/evs_sref_cnv.completed ] ; then
+  #if [ ! -e $COMOUTrestart/evs_sref_cnv.completed ] ; then
     $USHevs/mesoscale/evs_sref_cnv.sh
     export err=$?; err_chk
-  fi
+  #fi
 
    $USHevs/mesoscale/evs_sref_grid2obs.sh
    export err=$?; err_chk

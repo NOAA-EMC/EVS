@@ -31,13 +31,13 @@ cd $WORK/scripts
     echo  "export verify=$verify" >> run_gather_${verify}.sh 
 
     echo  "export vbeg=03" >> run_gather_${verify}.sh
-    echo  "export vend=21" >> run_gather_${verify}.sh
+    echo  "export vend=03" >> run_gather_${verify}.sh
     echo  "export valid_increment=21600" >>  run_gather_${verify}.sh
 
     echo  "export model=$modnam" >> run_gather_${verify}.sh
     echo  "export MODEL=${MODEL}" >> run_gather_${verify}.sh
-    echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${verify}.sh
-    #echo  "export stat_file_dir=${WORK}/${verify}/stat" >> run_gather_${verify}.sh
+    #echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${verify}.sh
+    echo  "export stat_file_dir=$all_stats" >> run_gather_${verify}.sh
     echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${verify}.sh
 
     if [ $verify = grid2obs ] ; then   
