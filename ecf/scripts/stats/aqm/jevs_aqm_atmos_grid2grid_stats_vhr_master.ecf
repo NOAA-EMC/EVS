@@ -1,4 +1,4 @@
-#PBS -N evs_aqm_stats_vhr_%VHR%
+#PBS -N evs_aqm_atmos_grid2grid_stats_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -38,7 +38,7 @@ export vhr=%VHR%
 export cycle=t${vhr}z
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=grid2obs
+export VERIF_CASE=grid2grid
 export MODELNAME=aqm
 export modsys=aqm
 ############################################################
