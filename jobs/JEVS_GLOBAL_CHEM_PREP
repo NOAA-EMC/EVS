@@ -1,8 +1,4 @@
 #!/bin/bash
-#  JOB card created for running METPlus-based Global ensemble verifications
-#   By Binbin Zhou, IMSG@EMC/NCEP
-#   Feb 2, 2022
-#
 #######################################################
 set -x
 ##################################################
@@ -30,11 +26,8 @@ export cycle=${cycle:-t${vhr}z}
 ##########################################################
 export pid=$$
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-if [ "${RUN}" != "chem" ]; then
-    rm -rf $DATA
-fi
-mkdir -p $DATA
-cd $DATA
+mkdir -p ${DATA}
+cd ${DATA}
 
 export envir=${envir:-prod}
 
