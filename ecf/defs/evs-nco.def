@@ -499,13 +499,13 @@ suite evs_nco
               time 00:30
           endfamily
           family global_ens
-            task jevs_global_ens_chem_gefs_grid2obs_aeronet_plots_last90days
+            task jevs_global_chem_atmos_grid2obs_aeronet_plots_last90days
               time 01:10
-            task jevs_global_ens_chem_gefs_grid2obs_airnow_plots_last90days
+            task jevs_global_chem_atmos_grid2obs_airnow_plots_last90days
               time 02:10
-            task jevs_global_ens_chem_gefs_grid2obs_aeronet_plots_last31days
+            task jevs_global_chem_atmos_grid2obs_aeronet_plots_last31days
               time 03:10
-            task jevs_global_ens_chem_gefs_grid2obs_airnow_plots_last31days
+            task jevs_global_chem_atmos_grid2obs_airnow_plots_last31days
               time 04:10
           endfamily
           family aqm
