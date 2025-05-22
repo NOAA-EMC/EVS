@@ -2,8 +2,8 @@
 ########################################################################
 ###  UNIX Script Documentation Block
 ###                      .
-### Script name:         exevs_global_ens_chem_grid2obs_prep.sh
-### Script description:  To run grid-to-obs verification on GEFS-aerosol (chem-component)
+### Script name:         exevs_global_chem_atmos_grid2obs_prep.sh
+### Script description:  To run grid-to-obs verification on Global aerosol modeling
 ### Original Author   :  Partha Bhattacharjee
 ###
 ###   Change Logs:
@@ -11,6 +11,7 @@
 ###   01/16/2024   Ho-Chun Huang  EVSv1.0 EE2 compliance
 ###   01/30/2024   Ho-Chun Huang  for a single email of missing files of both OBS and FCST
 ###   05/01/2025   Ho-Chun Huang  Remove email function for missing model forecast output
+###   05/22/2025   Ho-Chun Huang  Move from global_ens chem to global_chem
 ###
 ########################################################################
 #
@@ -58,19 +59,19 @@ for OBTTYPE in ${obstype}; do
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip ${checkfile}" >> mailmsg
+                    echo "WARNING: There is no valid record to be processed, ${COMPONENT} ${MODELNAME} ${STEP} will skip ${checkfile}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
-                echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip ${checkfile}"
+                echo "WARNING: There is no valid record to be processed, ${COMPONENT} ${MODELNAME} ${STEP} will skip ${checkfile}"
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
-                echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
+                echo "WARNING: ${checkfile} is missing, ${COMPONENT} ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
                 echo "==============" >> mailmsg
                 flag_send_message=YES
             fi
-            echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}"
+            echo "WARNING: ${checkfile} is missing, ${COMPONENT} ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
         fi
     elif [ "${OBTTYPE}" == "airnow" ]; then
         airnow_hourly_type="aqobs"
@@ -111,25 +112,25 @@ for OBTTYPE in ${obstype}; do
                     fi
                 else
                     if [ ${SENDMAIL} = "YES" ]; then
-                        echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip the ${checkfile}" >> mailmsg
+                        echo "WARNING: There is no valid record to be processed, ${COMPONENT} ${MODELNAME} ${STEP} will skip the ${checkfile}" >> mailmsg
                         echo "==============" >> mailmsg
                         flag_send_message=YES
                     fi
-                    echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip the ${checkfile}"
+                    echo "WARNING: There is no valid record to be processed, ${COMPONENT} ${MODELNAME} ${STEP} will skip the ${checkfile}"
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
+                    echo "WARNING: ${checkfile} is missing, ${COMPONENT} ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
         
-                echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}"
+                echo "WARNING: ${checkfile} is missing, ${COMPONENT} ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
             fi
             ((ic++))
         done
     else
-        echo "DEBUG :: OBTTYPE=${OBTTYPE} is not defined for ${COMPONENT}_${RUN} ${STEP} step"
+        echo "DEBUG :: OBTTYPE=${OBTTYPE} is not defined for ${COMPONENT} ${MODELNAME} ${STEP} step"
     fi
 
 done
