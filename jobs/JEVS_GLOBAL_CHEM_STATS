@@ -1,7 +1,4 @@
 #!/bin/bash
-#  JOB card created for running METPlus-based Global ensemble verifications
-#   By Binbin Zhou, IMSG@EMC/NCEP
-#   Feb 2, 2022
 #
 #######################################################
 set -x
@@ -52,7 +49,7 @@ export modsys=${modsys:-gefs}
 export mod_ver=${mod_ver:-${gefs_ver}}
 
 # Run setpdy and initialize PDY variables
-setpdy.sh 
+setpdy.sh
 . ./PDY
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
@@ -61,45 +58,27 @@ export PARMevs=${PARMevs:-${HOMEevs}/parm}
 export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
 export USHevs=${USHevs:-${HOMEevs}/ush}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
+export MASK_DIR=${MASK_DIR:-${FIXevs}/masks}
 
-## May need a default setting to avoid non-defined VDATE
-if [ "${RUN}" == "atmos" ] || [ "${RUN}" == "wmo" ] || [ "${RUN}" == "headline" ] ; then
-    export VDATE=${VDATE:-$PDYm2}
-fi
+export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export EVSIN=${EVSIN:-$COMIN/prep/$COMPONENT/$RUN}
-export EVSINwmo=${EVSINwmo:-$COMIN/prep/$COMPONENT/atmos}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver)}/$STEP/$COMPONENT
+export EVSINgefs=${EVSINgefs:-${COMIN}/prep/${COMPONENT}}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
+export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
+export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}}
     
-export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
-export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
-    
-####################################
-# Determine Job Output Name on System
-####################################
-export outid="LL$job"
-export jobid="${outid}.o${pid}"
+export DATA_TYPE=${DATA_TYPE:-aeronet}
+     
+# alternative choice is an option different from aqobs
+export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 
 mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
     
-
-if [ "${RUN}" == "headline" ] ; then
-    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
-elif [ "${RUN}" == "wmo" ] ; then
-    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
-elif [ "${RUN}" == "atmos" ] ; then
-    if [ "${VERIF_CASE}" == "grid2grid" ] ; then
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
-    elif [ "${VERIF_CASE}" == "grid2obs" ] || [ "${VERIF_CASE}" == "cnv" ] ; then
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_grid2obs_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
-    else
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_grid2grid_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
-    fi 
-else
-    echo "Wrong RUN: $RUN"
-    exit
-fi
+${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+    
+msg="JOB ${job} HAS COMPLETED NORMALLY."
+postmsg "${msg}"
 
 if [ "${KEEPDATA}" != "YES" ]; then
     cd ${DATAROOT}
