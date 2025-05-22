@@ -126,7 +126,7 @@ elif STEP == 'stats':
 elif STEP == 'plots':
     completed_jobs_file_full = COMPLETED_JOBS_FILE + "_job" + njob + ".txt"
     print("completed_jobs_file_full", completed_jobs_file_full)
-    if f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
+    if f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", EVAL_PERIOD, completed_jobs_file_full)):
         job_cmd_list_iterative.append(
             f'#jobs were restarted, and the following command has already run successfully'
         )
@@ -148,7 +148,7 @@ elif STEP == 'plots':
         )
 
         completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
-        completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
+        completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs", EVAL_PERIOD)
         job_cmd_list_iterative.append(
            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
         )
