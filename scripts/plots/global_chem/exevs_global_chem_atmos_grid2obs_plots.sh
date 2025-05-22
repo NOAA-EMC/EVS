@@ -5,11 +5,11 @@
 #
 # Original Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
 # Original Author: Mallory Row / Mallory.Row@noaa.gov
-# Purpose of Script: This script is run for the global_ens_chem_gefs plots step
+# Purpose of Script: This script is run for the global_chem_atmos plots step
 #                    for the grid-to-obs verification. It uses EMC-developed
 #                    python scripts to do the plotting.
 #                    
-#    05/22/2025 Ho-Chun Huang move from global_ens to global_chem components
+#    05/22/2025  Ho-Chun Huang    move from global_ens to global_chem
 ###############################################################################
 
 set -x
@@ -27,8 +27,8 @@ export err=$?; err_chk
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
-gefs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1}' )
-export modelid=${MODELNAME}${gefs_ver_id}
+## mdl_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1}' )
+## export modelid=${MODELNAME}${mdl_ver_id}
 
 ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
 export ObsType
