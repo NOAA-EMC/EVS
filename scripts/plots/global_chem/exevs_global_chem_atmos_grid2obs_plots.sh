@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_ens_chem_gefs_grid2obs_plots.sh
+# Name of Script: exevs_global_chem_atmos_grid2obs_plots.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
 # Original Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
@@ -8,6 +8,8 @@
 # Purpose of Script: This script is run for the global_ens_chem_gefs plots step
 #                    for the grid-to-obs verification. It uses EMC-developed
 #                    python scripts to do the plotting.
+#                    
+#    05/22/2025 Ho-Chun Huang move from global_ens to global_chem components
 ###############################################################################
 
 set -x
@@ -146,7 +148,7 @@ for group in "${proc_list[@]}"; do
             nc=$((nc+1))
         done
     fi
-    python ${USHevs}/global_ens/global_ens_chem_copy_job_dir_output.py
+    python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_copy_job_dir_output.py
     export err=$?; err_chk
     # Cat the plotting log files
     if [ "${JOB_GROUP}" = "make_plots" ] || [ "${JOB_GROUP}" = "tar_images" ]; then

@@ -1,11 +1,11 @@
 #!/bin/bash
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
-## NCEP EMC Verification System (EVS) - GEFS Chemistry
+## NCEP EMC Verification System (EVS) - Global Chemistry
 ##
 ## ORIGINAL AUTHOR: Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 ## CONTRIBUTORS: Ho-Chun Huang, ho-chun.huang@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-## PURPOSE: Set up configurations to run EVS GEFS Chemistry standalone
+## PURPOSE: Set up configurations to run EVS Global Chemistry standalone
 ##---------------------------------------------------------------------------
 ##--------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ set -x
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 ####################################################
-# WHAT METPLUS USE CASES TO RUN FOR GEFS CHEM
+# WHAT METPLUS USE CASES TO RUN FOR Global CHEM
 ####################################################
 ## SET TO "YES" or "NO"
 ## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
@@ -61,11 +61,11 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
     #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2op_model_plot_name_list="${gefs_ver_id}"
-    export g2op_type_list="aeronet"
-    export g2op_obsvar_list="aod"
+    export g2op_type_list="airnow"
+    export g2op_obsvar_list="pm25"
     export g2op_event_equalization="YES"
-    export g2op_aeronet_init_hr_list="00 06 12 18"
-    export g2op_aeronet_valid_hr_list="00 03 06 09 12 15 18 21"
-    export g2op_aeronet_fhr_list="0 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72 75 78 81 84 87 90 93 96 99 102 105 108 111 114 117 120"
+    export g2op_airnow_init_hr_list="00 06 12 18"
+    export g2op_airnow_valid_hr_list="00 03 06 09 12 15 18 21"
+    export g2op_airnow_fhr_list="0 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72 75 78 81 84 87 90 93 96 99 102 105 108 111 114 117 120"
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"

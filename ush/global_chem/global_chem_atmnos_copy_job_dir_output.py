@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_copy_job_dir_output.py
+Name: global_chem_atmnos_copy_job_dir_output.py
 Orginal Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This copies MPMD working directory output to common DATA directory
-Run By: scripts/plots/global_ens/exevs_global_ens_chem_grid2obs.sh
+Run By: scripts/plots/global_chem/exevs_global_chem_atmnos_grid2obs.sh
 '''
 
 import os
 import glob
-import global_ens_chem_util as gda_util
+import global_chem_atmnos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
