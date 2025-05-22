@@ -60,12 +60,12 @@ for ObsType in ${grid2obs_list}; do
     export OutputId=${MODELNAME}_${ObsType}_${obs_var}            # config variable
     export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${obs_var} # config variable
     export OBSTYPE=`echo ${ObsType} | tr a-z A-Z`    # config variable
-    point_stat_conf_file=${CONFIGevs}/PointStat_fcstGEFSAero_obs${OBSTYPE}.conf
-    stat_analysis_conf_file=${CONFIGevs}/Statanalysis_fcstGEFSAero_obs${OBSTYPE}.conf
+    point_stat_conf_file="${CONFIGevs}/PointStat_fcst${CMODEL}Aero_obs${OBSTYPE}.conf"
+    stat_analysis_conf_file="${CONFIGevs}/Statanalysis_fcst${CMODEL}Aero_obs${OBSTYPE}.conf"
 
     if [ "${ObsType}" == "aeronet" ]; then
         fcstmax=120
-        check_file=${EVSINgefs}/${RUN}.${VDATE}/${MODELNAME}/${ObsType}_All_${VDATE}_lev15.nc
+        check_file=${EVSINmdl}/${RUN}.${VDATE}/${MODELNAME}/${ObsType}_All_${VDATE}_lev15.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
@@ -80,7 +80,7 @@ for ObsType in ${grid2obs_list}; do
         vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
         vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
-        check_file=${EVSINgefs}/${RUN}.${vld_date}/${MODELNAME}/${ObsType}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+        check_file=${EVSINmdl}/${RUN}.${vld_date}/${MODELNAME}/${ObsType}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
@@ -106,13 +106,13 @@ for ObsType in ${grid2obs_list}; do
         aday=`echo ${adate} |cut -c1-8`
         acyc=`echo ${adate} |cut -c9-10`
         if [ "${acyc}" == "${mdl_cyc}" ]; then
-          fcst_file=${EVSINgefs}/${RUN}.${aday}/${MODELNAME}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.reduced.grib2
+          fcst_file=${EVSINmdl}/${RUN}.${aday}/${MODELNAME}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.reduced.grib2
           if [ -s ${fcst_file} ]; then
             echo "${fhr} found"
             echo ${fhr} >> ${recorded_temp_list}
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
           else
-            echo "PREP_OUTPUT_MISSING: Pre-processed GEFS-aerosol output ${fcst_file} is missing. The missing GEFS-aerosol forecast file will be skipped"
+            echo "PREP_OUTPUT_MISSING: Pre-processed Global-Chemical output ${fcst_file} is missing. The missing Global-Chemical forecast file will be skipped"
           fi 
         fi 
         ## ((ihr++))
