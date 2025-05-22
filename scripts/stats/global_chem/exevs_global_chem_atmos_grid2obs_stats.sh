@@ -2,7 +2,7 @@
 ########################################################################
 ###  UNIX Script Documentation Block
 ###                      .
-### Script name:         exevs_global_ens_chem_grid2obs_stats.sh
+### Script name:         exevs_global_chem_atmos_grid2obs_stats.sh
 ### Script description:  To run grid-to-grid verification on all global chem
 ### Original Author   :  Partha Bhattacharjee
 ###
@@ -11,6 +11,7 @@
 ###   01/16/2024   Ho-Chun Huang  consolidate exevs_global_ens_chem_grid2obs scripts
 ###   04/30/2025   Ho-Chun Huang  Remove email function for missing 
 ###                               pre-processed forecast output
+###   01/16/2024   Ho-Chun Huang  mv from global_ens to global_chem
 ###
 ########################################################################
 set -x

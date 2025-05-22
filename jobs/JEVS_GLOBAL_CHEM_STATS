@@ -41,7 +41,7 @@ echo ${COMPATH}
 
 export NET=${NET:-evs}
 export STEP=${STEP:-stats}
-export COMPONENT=${COMPONENT:-global_ens}
+export COMPONENT=${COMPONENT:-global_chem}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export MODELNAME=${MODELNAME:-gefs}
