@@ -136,7 +136,6 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 
   for vhr in 09 15 ; do
     large=${COMINsref}/sref.${vday}/${vhr}/ensprod/sref.t${vhr}z.pgrb212.mean_3hrly.grib2
-    #$WGRIB2 $large -match APCP -set_grib_type c2 -grib_out $output_base/sref.t${vhr}z.pgrb212.apcp.grib2
     fhr=3
     while [ $fhr -le 87 ] ; do
      fhr_3=$((fhr-3))
@@ -144,8 +143,6 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
      hh=$fhr
      typeset -Z2 hh
      if [ -s $large ] ; then
-	
-       #$WGRIB2 $output_base/sref.t${vhr}z.pgrb212.apcp.grib2|grep "$string"|$WGRIB2 -i $output_base/sref.t${vhr}z.pgrb212.apcp.grib2 -grib $output_base/sref.t${vhr}z.pgrb212.mean.fhr${hh}.grib2
        $WGRIB2 $large -match "$string"|$WGRIB2 -i $large -grib $output_base/sref.t${vhr}z.pgrb212.mean.fhr${hh}.grib2
        export err=$?; err_chk
      fi
