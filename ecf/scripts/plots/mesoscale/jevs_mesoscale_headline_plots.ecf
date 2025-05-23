@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:30:00
+#PBS -l walltime=00:15:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=16:ompthreads=1:mem=35GB
 #PBS -l debug=true
 
@@ -58,6 +58,7 @@ export VERIF_CASE=headline
 export MODELNAME=mesoscale
 export evs_run_mode=production
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
+export EVAL_PERIOD=last90days
 
 ############################################################
 # Execute j-job
