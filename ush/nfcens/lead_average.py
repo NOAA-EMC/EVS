@@ -397,13 +397,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 models_sharing_colors = models_renamed[
                     np.array(temp_colors)==c
                 ]
-                if np.flatnonzero(np.core.defchararray.find(
-                        models_sharing_colors, 'model')!=-1):
-                    need_to_rename = models_sharing_colors[
-                        np.flatnonzero(np.core.defchararray.find(
-                            models_sharing_colors, 'model'
-                        )!=-1)[0]
-                    ]
+                arr= np.atleast_1d(models_sharing_colors).astype(str)
+                if np.any(np.char.find(arr, 'model') != -1):
+                    need_to_rename = arr[np.char.find(arr,'model') != -1]
                 else:
                     continue
                 models_renamed[models_renamed==need_to_rename] = (
