@@ -480,6 +480,7 @@ class PlotSpecs:
         obs_plot_name_dict = {
             'ecmwf': 'ECMWF Anl',
             'gfs': 'GFS Anl',
+            'gfs_anl': 'GFS Anl',
             'CCPA': 'CCPA',
             'osi_saf': 'OSI-SAF',
             'ghrsst_ospo': 'GHRSST-OSPO',
