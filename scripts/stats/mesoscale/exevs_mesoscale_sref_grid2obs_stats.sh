@@ -19,7 +19,6 @@ mkdir -p $all_stats
 
 export MET_bin_exec='bin'
 
-export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 export just_cnv=${just_cnv:-'no'} 
 
@@ -62,10 +61,8 @@ if [ -e $DATA/prepbufr.missing ] || [ -e $DATA/sref_mbrs.missing ]; then
   echo "WARNING: either prepbufr or sref members are missing"
 else
 
-  #if [ ! -e $COMOUTrestart/evs_sref_cnv.completed ] ; then
-    $USHevs/mesoscale/evs_sref_cnv.sh
-    export err=$?; err_chk
-  #fi
+   $USHevs/mesoscale/evs_sref_cnv.sh
+   export err=$?; err_chk
 
    $USHevs/mesoscale/evs_sref_grid2obs.sh
    export err=$?; err_chk

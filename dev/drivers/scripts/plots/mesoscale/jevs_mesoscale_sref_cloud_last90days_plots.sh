@@ -33,7 +33,6 @@ export SENDDBN=NO
 
 export last_days=90
 
-export run_mpi=yes
 export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d

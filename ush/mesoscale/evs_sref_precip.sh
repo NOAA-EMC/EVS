@@ -189,11 +189,7 @@ done
 #*************************************************
 if [ -s ${DATA}/scripts/run_all_sref_precip_poe ] ; then
  chmod +x  run_all_sref_precip_poe
- if [ $run_mpi = yes ] ; then
-   mpiexec  -n 28 -ppn 28 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_precip_poe
- else
-   ${DATA}/scripts/run_all_sref_precip_poe
- fi 
+ mpiexec  -n 28 -ppn 28 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_precip_poe
  export err=$?; err_chk
 fi
 

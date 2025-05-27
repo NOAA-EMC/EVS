@@ -175,11 +175,7 @@ done
 #*************************************************
 if [ -s ${DATA}/scripts/run_all_sref_g2o_poe.sh ] ; then
  chmod 775 run_all_sref_g2o_poe.sh
- if [ $run_mpi = yes ] ; then
-   mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_g2o_poe.sh
- else
-   ${DATA}/scripts/run_all_sref_g2o_poe.sh
- fi 
+ mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_g2o_poe.sh
  export err=$?; err_chk
 fi
 

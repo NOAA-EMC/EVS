@@ -270,13 +270,8 @@ chmod +x run_all_poe.sh
 #***************************************************************************
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
-if [ $run_mpi = yes ] ; then
-  mpiexec -np 176 -ppn 88 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
-  export err=$?; err_chk
-else
-   ${DATA}/scripts/run_all_poe.sh
-   export err=$?; err_chk
-fi
+mpiexec -np 176 -ppn 88 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
+export err=$?; err_chk
 
 echo "run_all_poe done!"
 
