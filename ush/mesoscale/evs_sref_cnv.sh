@@ -128,7 +128,6 @@ done
 if [ -s ${DATA}/scripts/run_all_sref_cnv_poe.sh ] ; then 
  chmod 775 run_all_sref_cnv_poe.sh
  mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_cnv_poe.sh
- fi 
  export err=$?; err_chk
  >$COMOUTrestart/evs_sref_cnv.completed
 fi
