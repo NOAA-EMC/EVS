@@ -108,9 +108,8 @@ if [ $OBTYPE = argo ]; then
            						else
 								python ${USHevs}/${COMPONENT}/rtofs_stats_qc_argo.py
 								export err=$?; err_chk
-								export temp_id=`sed -n 1,1p ${COMOUTsmall}/rejected_temp_$VDATE.txt`
-								export psal_id=`sed -n 1,1p ${COMOUTsmall}/rejected_psal_$VDATE.txt`
-              							
+              						        export id=`sed -n 1,1p ${COMOUTsmall}/rejected_${VAR}_$VDATE.txt`
+
 								run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${OBTYPEupper}_climoWOA23_$VAR.conf
               							export err=$?; err_chk

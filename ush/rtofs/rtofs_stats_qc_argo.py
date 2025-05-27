@@ -17,23 +17,23 @@ import numpy as np
 
 # Read in environment variables to use
 VDATE = os.environ['VDATE']
-PDATE = os.environ['PDATE']
 DATA = os.environ['DATA']
 DCOMROOT = os.environ['DCOMROOT']
 COMROOT = os.environ ['COMROOT']
 SENDCOM = os.environ['SENDCOM']
 COMOUTsmall = os.environ['COMOUTsmall']
 RUN = os.environ['RUN']
-
+VAR = os.environ['VAR']
 
 # Set up date/time
 VDATE_YMD = datetime.datetime.strptime(VDATE, '%Y%m%d')
-PDATE_YMD = datetime.datetime.strptime(PDATE, '%Y%m%d')
+PDATE= VDATE_YMD-datetime.timedelta(days=1)
+PDATE_YMD = datetime.datetime.strftime(PDATE, '%Y%m%d')
 
 rtofs_qc = os.path.join(COMROOT,
                         'rtofs/v2.3/',f"rtofs.{VDATE_YMD:%Y%m%d}",
                         'ncoda/logs/profile_qc',
-                        f"prof_argo_rpt.{PDATE_YMD:%Y%m%d}00.txt")
+                        f"prof_argo_rpt.{PDATE_YMD}00.txt")
 
 #########################################################################################
 # Identify and filter the call sign of profiles with rejected flag from QC ARTOFS outputs:
