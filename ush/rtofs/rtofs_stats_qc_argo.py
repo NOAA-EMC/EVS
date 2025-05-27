@@ -31,7 +31,7 @@ PDATE= VDATE_YMD-datetime.timedelta(days=1)
 PDATE_YMD = datetime.datetime.strftime(PDATE, '%Y%m%d')
 
 rtofs_qc = os.path.join(COMROOT,
-                        'rtofs/v2.3/',f"rtofs.{VDATE_YMD:%Y%m%d}",
+                        'rtofs/v2.4/',f"rtofs.{VDATE_YMD:%Y%m%d}",
                         'ncoda/logs/profile_qc',
                         f"prof_argo_rpt.{PDATE_YMD}00.txt")
 
