@@ -2,13 +2,8 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-<<<<<<< HEAD
 #PBS -A EVS-DEV
-#PBS -l walltime=06:00:00
-=======
-#PBS -A VERF-DEV
 #PBS -l walltime=04:25:00
->>>>>>> develop
 #PBS -l place=shared,select=1:ncpus=1:mem=200GB
 #PBS -l debug=true
 
