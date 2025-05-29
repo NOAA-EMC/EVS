@@ -25,7 +25,7 @@ VERIF_CASE = os.environ['VERIF_CASE']
 DATA = os.environ['DATA']
 
 # If Using CFP, create POE scripts
-f USE_CFP == 'YES':
+if USE_CFP == 'YES':
     job_dir = os.path.join(DATA, VERIF_CASE, 'plotting_job_scripts')
     job_files = glob.glob(os.path.join(job_dir, 'job*'))
     njob_files = len(job_files)
