@@ -153,11 +153,11 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather3'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR, 'reformat'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR, 'generate'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR, 'gather'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR, 'gather2'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR, 'gather3'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'reformat'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'generate'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'gather'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'gather2'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'gather3'))
     job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'reformat'))
     job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'generate'))
     job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather'))
@@ -165,7 +165,7 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather3'))
 if STEP == 'plots':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'plotting_job_scripts'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'out', COMPLETED_JOBS_DIR))
     job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR))
 for job_scripts_dir in job_scripts_dirs:
     if not os.path.exists(job_scripts_dir):

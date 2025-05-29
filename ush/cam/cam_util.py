@@ -357,10 +357,12 @@ def mark_job_completed(restart_dir, data_dir, verif_case,
         raise ValueError(e)
 
     restart_out = Path(restart_dir) / completed_jobs_dirname
-    data_out = Path(data_dir) / verif_case / completed_jobs_dirname
+    data_out = Path(data_dir) / verif_case
     if job_type:
         restart_out = restart_out / job_type
-        data_out = data_out / job_type
+        data_out = data_out / 'METplus_output' / 'workdirs' / job_type / job_name / completed_jobs_dirname
+    else:
+        data_out = data_out / 'out' / 'workdirs' / job_name / completed_jobs_dirname
 
     if not data_out.is_dir():
         e = f"FATAL ERROR: Completed jobs directory does not exist: {data_out}"
@@ -388,6 +390,15 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
     sub_dirs_in = []
     sub_dirs_out = []
     copy_files = []
+    SENDCOM = os.environ.get('SENDCOM')
+    if SENDCOM is None:
+        e = f"FATAL ERROR: SENDCOM is not defined in the job card"
+        if njob:
+            e+=f" for job{njob}"
+        if job_type:
+            e+=f" (type: {job_type})"
+        raise ValueError(e)
+
     if met_tool == "ascii2nc":
         check_if_none = [
             data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
@@ -761,9 +772,14 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 print(f"Not copying restart files to restart_directory"
                       + f" {dest_path} because they already exist.")
             else:
-                run_shell_command(
-                    ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
-                )
+                if SENDCOM == "YES":
+                    run_shell_command(
+                        ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
+                    )
+                else:
+                    print(f"Not copying restart files to restart_directory "
+                          + f"{dest_path}.  Set SENDCOM to \"YES\" in the "
+                          + f"driver script to enable copy.")
 
 # Construct a file name given a template
 def fname_constructor(template_str, IDATE="YYYYmmdd", IHOUR="HH", 
