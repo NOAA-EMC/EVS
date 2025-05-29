@@ -66,10 +66,15 @@ else:
             workdir = os.path.join(workdirs, job_name)
             if not os.path.exists(workdir):
                 os.makedirs(workdir)
+            # Exclude "workdirs" and "job" unless it's "completed_jobs"
+            # "-prune" prevents recursion into those excluded dirs
+            # Other than that, make all directories in current workdir
             cutil.run_shell_command([
-                'find', '.', '-type', 'd', '-not', '-path', 
-                '\"*workdirs*\"', '-not', '-path', '\"*job*\"', '-exec', 
-                'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
+                'find', '.', '-type', 'd', '\\(', '-path', 
+                '\"*workdirs*\"', '-o', '\\(', '-path', '\"*job*\"', 
+                '!', '-path', '\"*completed_jobs*\"', '\\)', '\\)', 
+                '-prune', '-o' '-exec', 'mkdir', '-p', 
+                os.path.join(workdir,'{}'), '\\;'
             ])
         if STEP == "prep":
             print(
