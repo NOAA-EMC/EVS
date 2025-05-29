@@ -123,10 +123,12 @@ else
 fi
 
 # Copy Reformat Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 NEST_LIST="conus ak"
 # Generate MET Data
@@ -216,10 +218,12 @@ else
 fi
 
 # Copy Generate Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 export job_type="gather"
 export njob=1
@@ -283,10 +287,12 @@ else
 fi
 
 # Copy Gather Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 export job_type="gather2"
 export njob=1
@@ -347,10 +353,12 @@ else
 fi
 
 # Copy Gather 2 Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 # Copy files to desired location
 #all commands to copy output files into the correct EVS COMOUT directory
@@ -437,9 +445,11 @@ if [ "$vhr" -ge "$last_cyc" ]; then
         fi
 
         # Copy Gather 3 Output to Main Directory
+        shopt -s nullglob
         for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
             cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
             export err=$?; err_chk
         done
+        shopt -u nullglob
     fi
 fi
