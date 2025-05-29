@@ -26,9 +26,6 @@
 #
 set -x
 
-export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
-source $config
-
 #######################################################################
 # Define INPUT OBS DATA TYPE for ASCII2NC 
 #######################################################################
@@ -191,5 +188,4 @@ for hour in 06 12; do
         fi
     done
 done
-
 exit
