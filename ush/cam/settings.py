@@ -872,9 +872,9 @@ class Reference():
                                     'SNOD': 'Accum. Snow Depth',
                                     'SNOD_06': ('6-hour Accum. Snow Depth'),
                                     'SNOD_24': ('24-hour Accum. Snow Depth'),
-                                    'ASNOW': 'Total Snowfall',
-                                    'ASNOW_06': ('6-hour Total Snowfall'),
-                                    'ASNOW_24': ('24-hour Total Snowfall'),
+                                    'ASNOW': 'Accumulated Snowfall',
+                                    'ASNOW_06': ('6-hour Accumulated Snowfall'),
+                                    'ASNOW_24': ('24-hour Accumulated Snowfall'),
                                     'APCP': ('Accumulated'
                                                 + ' Precipitation'),
                                     'APCP_01': ('Accumulated'
