@@ -154,7 +154,7 @@ match_pm25_3="aerosol_size <2.5e-06"
 declare -a cyc_opt=( 00 06 12 18 )
 let inc=3
 for mdl_cyc in "${cyc_opt[@]}"; do
-    com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/chem/pgrb2ap25   ## FOR GEFSv12-aerosol
+    com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/chem/pgrb2ap25   ## FOR GEFS-chem
     if [ -d ${com_gc_mdl} ]; then
         prep_gc_mdl=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
         mkdir -p ${prep_gc_mdl}
@@ -162,7 +162,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
         let max_hour=120
         while [ ${hour_now} -le ${max_hour} ]; do
             fhr=`printf %3.3d ${hour_now}`
-            mdl_full_grib2=${MODELNAME}.chem.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2  ## FOR GEFSv12-aerosol
+            mdl_full_grib2=${MODELNAME}.chem.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2  ## FOR GEFS-chem
             reduced_rec_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.reduced.grib2
             check_full_file=${com_gc_mdl}/${mdl_full_grib2}
             check_reduced_file=${com_gc_mdl}/${reduced_rec_grib2}
