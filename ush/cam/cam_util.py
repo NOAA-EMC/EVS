@@ -371,12 +371,12 @@ def mark_job_completed(restart_dir, data_dir, verif_case,
     # Create an empty file to mark completion
     job_file.touch(exist_ok=True)
 
-    if SENDCOM.lower() == "true":
+    if SENDCOM == "YES":
         if not restart_out.is_dir():
             e = f"FATAL ERROR: Completed jobs directory does not exist: {restart_out}"
             raise FileNotFoundError(e)
         run_shell_command(
-            ['cp', '-rpv', job_file, restart_out / '.']
+            ['cp', '-rpv', str(job_file), str(restart_out / '.')]
         ) 
 
 def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 

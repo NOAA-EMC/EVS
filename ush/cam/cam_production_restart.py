@@ -38,7 +38,7 @@ if STEP == 'stats':
     )
     if os.path.exists(RESTART_DIR):
         if (os.path.exists(completed_jobs_dir) 
-                and any(p.is_file() for p in Path(completed_jobs_dir).rglob('*')):
+                and any(p.is_file() for p in Path(completed_jobs_dir).rglob('*'))):
             print(f"Copying restart directory {RESTART_DIR} "
                   +f"into working directory {working_dir}")
             cutil.run_shell_command(
@@ -55,21 +55,22 @@ elif STEP == 'plots':
             COMPLETED_JOBS_DIR
         )
     elif VERIF_CASE == "precip":
-        completed_jobs_file = os.path.join(
+        completed_jobs_dir = os.path.join(
             RESTART_DIR, 
             COMPLETED_JOBS_DIR
         )
     else:
-        completed_jobs_file = os.path.join(
+        completed_jobs_dir = os.path.join(
             RESTART_DIR, 
             COMPLETED_JOBS_DIR
         )
-    if os.path.exists(completed_jobs_file):
-        if os.stat(completed_jobs_file).st_size != 0:
+    if os.path.exists(completed_jobs_dir):
+        if any(p.is_file() for p in Path(completed_jobs_dir).rglob('*')):
+            print(f"Copying restart directory {RESTART_DIR} "
+                  +f"into working directory {working_dir}")
             cutil.run_shell_command(
                 ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), working_dir]
             )
-
 
 
 print("END: "+os.path.basename(__file__))

@@ -105,9 +105,11 @@ elif VERIF_CASE == "headline":
 if STEP == 'stats':
     COMOUTsmall = os.environ['COMOUTsmall']
     RESTART_DIR = os.environ['RESTART_DIR']
+    COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
     job_type = os.environ['job_type']
 if STEP == 'plots':
     RESTART_DIR = os.environ['RESTART_DIR']
+    COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
 
 
 # Define data base directorie
@@ -156,9 +158,15 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR, 'gather'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR, 'gather2'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR, 'gather3'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'reformat'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'generate'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather2'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather3'))
 if STEP == 'plots':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'plotting_job_scripts'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, COMPLETED_JOBS_DIR))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR))
 for job_scripts_dir in job_scripts_dirs:
     if not os.path.exists(job_scripts_dir):
         print(f"Creating job script directory: {job_scripts_dir}")
