@@ -18,9 +18,11 @@
 set -x
 
 cd ${DATA}
+
 ########################################################################
 ## Pre-Processed Observations
-
+########################################################################
+#
 ## For temporary stoage on the working dirary before moving to COMOUT with SENDCOM setting
 #
 export finalprep=${DATA}/final
@@ -84,7 +86,7 @@ for OBTTYPE in ${obstype}; do
             export HOURLY_OUTPUT_TYPE=hourly_data
             export HOURLY_ASCII2NC_FORMAT=airnowhourly
         fi
-         
+        ##
         ## Pre-Processed EPA AIRNOW ASCII input file to METPlus NetCDF input for PointStat
         ##
         ## Hourly AirNOW observation
@@ -152,12 +154,7 @@ match_pm25_3="aerosol_size <2.5e-06"
 declare -a cyc_opt=( 00 06 12 18 )
 let inc=3
 for mdl_cyc in "${cyc_opt[@]}"; do
-    ## check GCAFS directory idirectory for ${RUN}= atmos or chem
-    if [ ${MODELNAME} == "gcafs" ]; then
-        com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/${RUN}/pgrb2ap25
-    else
-        com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/chem/pgrb2ap25   ## FOR GEFSv12-aerosol
-    fi
+    com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/chem/pgrb2ap25   ## FOR GEFSv12-aerosol
     if [ -d ${com_gc_mdl} ]; then
         prep_gc_mdl=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
         mkdir -p ${prep_gc_mdl}
@@ -165,12 +162,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
         let max_hour=120
         while [ ${hour_now} -le ${max_hour} ]; do
             fhr=`printf %3.3d ${hour_now}`
-            ## check GCAFS directory idirectory for ${RUN}= atmos or chem
-            if [ ${MODELNAME} == "gcafs" ]; then
-               mdl_full_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2
-            else
-               mdl_full_grib2=${MODELNAME}.chem.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2
-            fi
+            mdl_full_grib2=${MODELNAME}.chem.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2  ## FOR GEFSv12-aerosol
             reduced_rec_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.reduced.grib2
             check_full_file=${com_gc_mdl}/${mdl_full_grib2}
             check_reduced_file=${com_gc_mdl}/${reduced_rec_grib2}

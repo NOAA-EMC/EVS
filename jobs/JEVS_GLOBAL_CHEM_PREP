@@ -1,6 +1,7 @@
 #!/bin/bash
 #######################################################
 set -x
+
 ##################################################
 ### SENDCOM  - Copy Files From TMPDIR to $COMOUT
 ### SENDDBN  - Issue DBNet Client Calls 
@@ -31,8 +32,6 @@ cd ${DATA}
 
 export envir=${envir:-prod}
 
-# Define COMIN/COMOUT variables:
-
 echo ${COMPATH}
 
 export NET=${NET:-evs}
@@ -57,14 +56,15 @@ export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
 export INITDATE=${INITDATE:-${PDYm3}}
 
-#
+# Define COMIN/COMOUT variables:
+
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 export COMINgefs=${COMINgefs:-$(compath.py $envir/com/gefs/${gefs_ver})}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
+export COMOUTprep=${COMOUTprep:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}}
 
 export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
 export DCOMINaeronet=${DCOMINaeronet:-${DCOMROOT}}
-export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
-export COMOUTprep=${COMOUTprep:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}}
    
 mkdir -p ${COMOUT} ${COMOUTprep}
    
@@ -72,8 +72,15 @@ mkdir -p ${COMOUT} ${COMOUTprep}
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 export HOURLY_NCOL=${HOURLY_NCOL:-34}
 
+##########################################################
+# Execute the script.
+##########################################################
 
 ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_chk
+
+msg="JOB ${job} HAS COMPLETED NORMALLY."
+postmsg "${msg}"
 
 if [ "${KEEPDATA}" != "YES" ]; then
     cd ${DATAROOT}
