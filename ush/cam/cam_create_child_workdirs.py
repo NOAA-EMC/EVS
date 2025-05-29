@@ -28,7 +28,7 @@ if STEP == 'prep':
     )
 elif STEP == 'stats':
     jobdir = os.path.join(
-        DATA, VERIF_CASE, STEP, 'METplus_job_scripts', job_type
+        DATA, VERIF_CASE, 'METplus_job_scripts', job_type
     )
     outdir = os.path.join(
         DATA, VERIF_CASE, 'METplus_output'
@@ -38,7 +38,7 @@ elif STEP == 'stats':
     )
 elif STEP == 'plots':
     jobdir = os.path.join(
-        DATA, VERIF_CASE, STEP, 'plotting_job_scripts'
+        DATA, VERIF_CASE, 'plotting_job_scripts'
     )
     outdir = os.path.join(
         DATA, VERIF_CASE, 'out'

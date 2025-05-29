@@ -136,7 +136,7 @@ elif STEP == 'plots':
 indent = ''
 indent_width = 4
 iterative_first = True
-job_dir = os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts')
+job_dir = os.path.join(DATA, VERIF_CASE, 'plotting_job_scripts')
 if not os.path.exists(job_dir):
     os.makedirs(job_dir)
 job_file = os.path.join(job_dir, f'job{njob}')
