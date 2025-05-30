@@ -1051,7 +1051,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     else:
         title2 = f'{var_long_name} (unitless), {domain_string}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string}'
-              + f' {date_start_string} to {date_end_string}, {frange_string}')
+              + f' {date_start_string} to {date_end_string}, {frange_string}, '
+              + f'Validation: {str(VERIF_TYPE).upper()} ')
     title_center = '\n'.join([title1, title2, title3])
     ax.set_title(title_center) 
     logger.info("... Plotting complete.")

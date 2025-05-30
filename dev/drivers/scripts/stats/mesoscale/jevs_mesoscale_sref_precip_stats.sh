@@ -36,8 +36,6 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export run_mpi=yes
-
 export MAILTO='andrew.benjamin@noaa.gov,binbin.zhou@noaa.gov'
 
 if [ -z "$MAILTO" ]; then
