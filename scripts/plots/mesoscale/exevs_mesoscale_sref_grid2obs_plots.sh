@@ -2,6 +2,7 @@
 #*************************************************************************************
 # Purpose: setup environment, paths, and run the sref grid2obs plotting python script
 # Last updated:
+#               03/20/2025, Update restart, Binbin Zhou Lynker@EMC/NCEP
 #               04/10/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               10/27/2023, Add comments,           Binbin Zhou Lynker@EMC/NCEP
 #
@@ -15,9 +16,14 @@ cd $DATA/scripts
 export output_base_dir=$DATA/stat_archive
 mkdir -p $output_base_dir
 
-restart=$COMOUTplots/restart/$last_days/sref_grid2obs_plots
-if [ ! -d  $restart ] ; then
+export all_plots=$DATA/plots/all_plots
+mkdir -p $all_plots
+         
+if [ $SENDCOM = YES ] ; then
+ restart=$COMOUTplots/restart/$last_days/sref_grid2obs_plots
+ if [ ! -d  $restart ] ; then
   mkdir -p $restart
+ fi
 fi
 
 export eval_period='TEST'
@@ -199,6 +205,7 @@ for fcst_valid_hour in $fcst_valid_hours ; do
         mkdir -p $save_dir/data
 
 	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	echo "set -x" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	echo "export save_dir=$save_dir" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	echo "export prune_dir=$save_dir/data" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
@@ -253,19 +260,37 @@ for fcst_valid_hour in $fcst_valid_hours ; do
 
 	 #tar all files and save for restart:
 	 echo "if [ ${score_type} = lead_average ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-         echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png $restart ; fi " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo " if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "   cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "   >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed">> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "   if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "      cp -v ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "      cp -v ${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed $restart">> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "   fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
          echo "else" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "  if [ ${score_type} = threshold_average ] && [ $stats = ets_fbias ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh 
-	 echo "    if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_ets*.png ] ; then  cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_ets*.png $restart ; fi " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "    if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_fbias*.png ] ; then  cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_fbias*.png $restart ; fi " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "  else " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "    if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png $restart ; fi " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "  fi"  >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo " if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_ets*.png ] && [ -s ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_fbias*.png ]; then"  >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "	  cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_ets*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "	  cp ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_fbias*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "   >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+         echo "   if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "      cp -v ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_ets*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "      cp -v ${plot_dir}/${score_type}_regional_conus_valid_${vld}z_${level_var}_fbias*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "      cp -v ${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed $restart">> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo "   fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
+	 echo " fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 	 echo "fi" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
-	 echo "[[ \$? = 0 ]] && >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh 
          echo "${DATA}/scripts/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh" >> run_all_poe.sh
+
+       else
+	 #Copy png files from restart
+         if [ ${score_type} = lead_average ] && [ -s $restart/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png ] ; then
+	  cp -v $restart/${score_type}_regional_conus_valid_${vld}z_${level_var}_${stats}*.png $all_plots
+         elif [ ${score_type} = threshold_average ] && [ -s $restart/${score_type}_regional_conus_valid_${vld}z_${level_var}_*.png ] ; then
+	  cp -v $restart/${score_type}_regional_conus_valid_${vld}z_${level_var}_*.png $all_plots
+         fi	  
 
        fi	 
       done #end of line_type
@@ -287,19 +312,14 @@ chmod +x run_all_poe.sh
 #***************************************************************************
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
-if [ $run_mpi = yes ] ; then
-   mpiexec -np 216 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
-   export err=$?; err_chk
-else
-   ${DATA}/scripts/run_all_poe.sh
-   export err=$?; err_chk
-fi
+mpiexec -np 216 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
+export err=$?; err_chk
 
 
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $restart
+cd $all_plots
 
 for valid in 00z 06z 12z 18z ; do 
 
@@ -340,7 +360,7 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
 	var_level=${var}_p${level}
     elif [ $level = 2 ] || [ $level = 10 ] ; then
 	unit=m
-	var_level=${var}_${level}m
+	var_level=${var}_z${level}
     elif [ $level = L0 ] ; then
 	unit='non'
 	var_level=${var}_l0
