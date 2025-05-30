@@ -371,7 +371,7 @@ def mark_job_completed(restart_dir, data_dir, verif_case,
     job_file = data_out / job_name
 
     # Create an empty file to mark completion
-    job_file.touch(exist_ok=True)
+    job_file.write_text("Completed successfully!\n")
 
     if SENDCOM == "YES":
         if not restart_out.is_dir():
