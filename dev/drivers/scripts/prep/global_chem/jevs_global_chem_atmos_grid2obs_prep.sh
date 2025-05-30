@@ -1,9 +1,9 @@
-#PBS -N jevs_global_ens_chem_grid2obs_prep
+#PBS -N jevs_global_chem_atmos_grid2obs_prep
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=00:10:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB:prepost=true
 #PBS -l debug=true
 
@@ -31,7 +31,7 @@ module reset
 
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/dev/modulefiles/global_ens/global_ens_prep.sh
+source $HOMEevs/dev/modulefiles/global_chem/global_chem_prep.sh
 
 ############################################################
 ## set some variables
@@ -43,8 +43,8 @@ export SENDDBN=NO
 export envir=prod
 export NET=${NET:-evs}
 export STEP=${STEP:-prep}
-export COMPONENT=${COMPONENT:-global_ens}
-export RUN=${RUN:-chem}
+export COMPONENT=${COMPONENT:-global_chem}
+export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
@@ -71,10 +71,10 @@ if [ -z "$MAILTO" ]; then
 
 else
 
-    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
+    ${HOMEevs}/jobs/JEVS_GLOBAL_CHEM_PREP
 
 fi
 
 #######################################################################
-# Purpose: This does the prep work for the global_ens GEFS-Chem model
+# Purpose: This does the prep work for the global_chem GEFS-Chem model
 #######################################################################
