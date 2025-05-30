@@ -2,6 +2,7 @@
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the sref cape plotting python script
 # Last updated: 
+#               03/20/2025, Update restart, Binbin Zhou Lynker@EMC/NCEP
 #               04/20/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               10/27/2023, Add comments,           Binbin Zhou Lynker@EMC/NCEP
 #
@@ -15,10 +16,15 @@ cd $DATA/scripts
 export output_base_dir=$DATA/stat_archive
 mkdir -p $output_base_dir
 
-restart=$COMOUTplots/restart/$last_days/sref_cape_plots
-if [ ! -d  $restart ] ; then
+export all_plots=$DATA/plots/all_plots
+mkdir -p $all_plots
+
+if [ $SENDCOM = YES ] ; then
+ restart=$COMOUTplots/restart/$last_days/sref_cape_plots
+ if [ ! -d  $restart ] ; then
   mkdir -p $restart
-fi  
+ fi  
+fi
 
 export eval_period='TEST'
 
@@ -144,6 +150,7 @@ for stat in  ets fbias; do
         mkdir -p $save_dir/data
 
 	echo "#!/bin/ksh" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	echo "set -x" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	echo "export save_dir=$save_dir" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh 
         echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
         echo "export prune_dir=$save_dir/data" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
@@ -194,15 +201,36 @@ for stat in  ets fbias; do
          echo "${DATA}/scripts/run_py.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
 	 #Tar files and save for restart:
-	  echo "if [ ${score_type} = lead_average ] ; then " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-          echo " if [ -s $plot_dir/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png ] ; then  cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png $restart ; >$restart/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed ; fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-	  echo "else" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-	  echo " if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png $restart ; >$restart/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed ; fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-	  echo "fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "if [ ${score_type} = lead_average ] ; then " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo " if [ -s $plot_dir/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png ] ; then" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png $all_plots">>run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  >${plot_dir}/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed">> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  if [ $SENDCOM = YES ] ; then" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "    cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png $restart">>run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "    cp -v ${plot_dir}/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed $restart">>run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo " fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "else" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo " if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png ] ; then" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  cp ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png $all_plots">>run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  >${plot_dir}/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  if [ $SENDCOM = YES ] ; then" >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "    cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png $restart">>run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "    cp -v ${plot_dir}/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed $restart">>run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo " fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "fi " >> run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
          chmod +x  run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh 
          echo "${DATA}/scripts/run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_all_poe.sh
 
+      else
+	 #Copy png files from restart 
+         if [ ${score_type} = lead_average ] && [ -s $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png ] ; then 
+           cp $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_*${thresh}.png $all_plots
+         elif [ ${score_type} = threshold_average ] && [ -s $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png ] ; then
+	   cp $restart/${score_type}_regional_conus_valid_${valid_time}z_cape_${stat}_${lead}.png $all_plots
+         fi 	   
       fi
 
     done # enf of threshold
@@ -221,19 +249,14 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
 
-if [ $run_mpi = yes ] ; then
-   mpiexec -np 80 -ppn 80 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
-   export err=$?; err_chk
-else
-   ${DATA}/scripts/run_all_poe.sh
-    export err=$?; err_chk
-fi
+mpiexec -np 80 -ppn 80 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
+export err=$?; err_chk
 
 
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $restart
+cd $all_plots
 
 var=cape 
    levels=L0
@@ -262,15 +285,23 @@ for stat in $stats ; do
       for lead in $leads ; do 
 
 	  if [ $lead = f6-9-12-15-18-21-24-27 ] ; then
-	      new_lead=f06_to_f27
-          else
-              new_lead=$lead
+	      new_lead=f006_to_f027
+          elif [ $lead = f12_to_f39 ] ; then 
+              new_lead=f012_to_f039
+	  elif [ $lead = f24_to_f51 ] ; then
+	      new_lead=f024_to_f051
+          elif [ $lead = f36_to_f63 ] ; then
+	      new_lead=f036_to_f063
+	  elif [ $lead = f48_to_f75 ] ; then
+	      new_lead=f048_to_f075
+	  elif [ $lead = f60_to_f87 ] ; then
+	      new_lead=f060_to_f087
           fi	      
        for threshold in $thresholds ; do
 
 	   if [ $score_type = lead_average ] ; then
              if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png ] ; then
-               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
+               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png  evs.sref.${stat}_${threshold}.${var_level}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
 	     fi
            elif [ $score_type = threshold_average ] ; then
              if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${lead}.png ] ; then 
