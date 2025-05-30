@@ -3,6 +3,7 @@
 #  Purpose: Get required input forecast and validation data files
 #           for sref stat jobs
 #  Last update: 
+#               21/03/2025, Update restart, by Binbin Zhou Lynker@EMC/NCEP 
 #               10/18/2024, resolved the duplicated APCP03 in arw/f03 and 06 members
 #               06/05/2024, add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #               05/04/2024, (1) change gfs to gdas for prepbufr files
@@ -46,12 +47,22 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
        mkdir $WORK/sref.${fday}
       fi
 
-      #Create for  restart
-      if [ ! -d $COMOUTrestart/sref.${fday} ] ; then
-        mkdir -p $COMOUTrestart/sref.${fday}
-      fi
-
+      #Create sref.* sub-directories for restart
       export modelpath=$WORK/sref.${fday}
+      if [ $fday = $PDYm2 ] ; then
+	restart_day=vday
+      elif [ $fday = $PDYm3 ] ; then
+	restart_day=past1
+      elif [ $fday = $PDYm4 ] ; then
+	restart_day=past2
+      elif [ $fday = $PDYm5 ] ; then
+	restart_day=past3
+      elif [ $fday = $PDYm6 ] ; then
+	restart_day=past4
+      elif [ $fday = $PDYm7 ] ; then
+	restart_day=past5
+      fi
+      [[ ! -d $COMOUTrestart/sref.${restart_day} ]] && mkdir -p $COMOUTrestart/sref.${restart_day}
 
       for base in arw nmb ; do
         for mb in ctl n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ; do
@@ -61,7 +72,7 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 	 #         if not existing, run metplus to get it
 	 #         if yes, copy it to the working directory (restart case)  
 	 ##################################################################################################
-	 if [ ! -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+	 if [ ! -s $COMOUTrestart/sref.${restart_day}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
 
            ############################################################################################
 	   # Note: for arw/f03 and f06 members, the APCP03 is duplicated. So grab the second one (#479:)
@@ -87,13 +98,15 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
               if [ -s $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
 	        cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
 	        #save for restart:
-	        mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${fday}/.
+		if [ $SENDCOM = YES ] ; then
+	          cp $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $COMOUTrestart/sref.${restart_day}/.
+		fi
 	      fi
 	   fi
 	 else
 	   #Restart:
-	   if [ -s $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
-	     cp $COMOUTrestart/sref.${fday}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}
+	   if [ -s $COMOUTrestart/sref.${restart_day}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc ] ; then
+	     cp $COMOUTrestart/sref.${restart_day}/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}
 	   fi
 	 fi
 
@@ -110,9 +123,16 @@ fi
 #    Then use Pcpcombine to get 24hr APCP netCDF files
 #********************************************************************************
 if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
+
   export output_base=${WORK}/sref.${vday}
   mkdir -p $output_base
   cd $output_base
+  if [ ! -d ${COMOUTfinal}/apcp24mean ] ; then
+     mkdir -p ${COMOUTfinal}/apcp24mean
+  fi
+
+
+ if [ ! -s ${COMOUTfinal}/apcp24mean/sref.t12z.pgrb212.24mean.f72.nc ] ; then 
 
   for vhr in 09 15 ; do
     large=${COMINsref}/sref.${vday}/${vhr}/ensprod/sref.t${vhr}z.pgrb212.mean_3hrly.grib2
@@ -123,31 +143,39 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
      hh=$fhr
      typeset -Z2 hh
      if [ -s $large ] ; then
-       $WGRIB2 $large|grep "$string"|$WGRIB2 -i $large -grib $output_base/sref.t${vhr}z.pgrb212.mean.fhr${hh}.grib2
+       $WGRIB2 $large -match "$string"|$WGRIB2 -i $large -grib $output_base/sref.t${vhr}z.pgrb212.mean.fhr${hh}.grib2
+       export err=$?; err_chk
      fi
      fhr=$((fhr+3))
     done
   done
+  
+
   for nfhr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 ; do
    echo $nfhr |$EXECevs/sref_precip.x
+   export err=$?; err_chk
   done
+
 
   export lead='24, 48, 72'
   export vhr='12'
   export modelpath=$output_base
 
-  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP24h.conf
-  export err=$?; err_chk
-  
-  #Save for restart:
-  if [ -s $output_base/*24mean*.nc ] ; then
-    if [ ! -d ${COMOUTfinal}/apcp24mean ] ; then
-        mkdir -p ${COMOUTfinal}/apcp24mean
-    fi
-    if [ -s $output_base/*24mean*.nc ] ; then
-      cp $output_base/*24mean*.nc ${COMOUTfinal}/apcp24mean
-    fi
+  if [ -s $modelpath/sref.t${vhr}z.pgrb212.mean.fhr24.grib2 ] && [ -s $modelpath/sref.t${vhr}z.pgrb212.mean.fhr48.grib2 ] && [ -s $modelpath/sref.t${vhr}z.pgrb212.mean.fhr72.grib2 ] ; then
+   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP24h.conf
+   export err=$?; err_chk
   fi
+
+  if [ -s $output_base/sref.t12z.pgrb212.24mean.f24.nc ] && [ -s $output_base/sref.t12z.pgrb212.24mean.f72.nc ] && [ -s $output_base/sref.t12z.pgrb212.24mean.f72.nc ] ; then 
+   if [ $SENDCOM = YES ] ; then
+    if [ -s $output_base/sref.t12z.pgrb212.24mean.f*.nc ] ; then
+      cp $output_base/sref.t12z.pgrb212.24mean.f*.nc ${COMOUTfinal}/apcp24mean
+    fi
+   fi 
+  fi
+
+ fi
+
 fi  
 
 
@@ -159,10 +187,11 @@ fi
 if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
 
   export output_base=${WORK}/ccpa.${vday}
+  mkdir -p ${COMOUTrestart}/ccpa.${vday}
 
  if [ -s $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2 ] ; then
 
-  #ccpa hrap is in G240	
+  #Note: ccpa hrap is in G240	
 
   export vhr
   for vhr in 00 06 12 18 ; do
@@ -170,11 +199,26 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
     export vbeg=$vday$vhr
     export vend=$vday$vhr
 
-    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
-    export err=$?; err_chk
-    if [ -s $COMINccpa/ccpa.${vday}/$vhr/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
+   if [ ! -e ${COMOUTrestart}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed ] ; then  
+    if [ -s $COMINccpa/ccpa.${vday}/$vhr/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then 
+      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
+      export err=$?; err_chk
       cp $COMINccpa/ccpa.${vday}/$vhr/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
+      >${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed
     fi
+
+    if [ $SENDCOM = YES ] ; then
+       cp ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212.f00.nc ${COMOUTrestart}/ccpa.${vday}
+       cp ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2 ${COMOUTrestart}/ccpa.${vday}
+       cp ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed ${COMOUTrestart}/ccpa.${vday}
+    fi
+
+   else
+     [[ ! -d ${WORK}/ccpa.${vday} ]] && mkdir -p ${WORK}/ccpa.${vday}
+     cp ${COMOUTrestart}/ccpa.${vday}/ccpa.t${vhr}z.grid212.f00.nc ${WORK}/ccpa.${vday}
+     cp ${COMOUTrestart}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2 ${WORK}/ccpa.${vday} 
+   fi
+
   done
    
    
@@ -185,11 +229,26 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
     export vbeg=$vday$vhr3
     export vend=$vday$vhr3
 
-    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
-    export err=$?; err_chk
+   if [ ! -e ${COMOUTrestart}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed ] ; then 
     if [ -s $COMINccpa/ccpa.${vday}/$vhr3/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
+      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
+      export err=$?; err_chk
       cp $COMINccpa/ccpa.${vday}/$vhr3/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
+      >${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed
     fi
+
+    if [ $SENDCOM = YES ] ; then
+      cp ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212.f00.nc ${COMOUTrestart}/ccpa.${vday}
+      cp ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2 ${COMOUTrestart}/ccpa.${vday}
+      cp ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed ${COMOUTrestart}/ccpa.${vday}
+    fi
+
+   else
+     [[ ! -d ${WORK}/ccpa.${vday} ]] && mkdir -p ${WORK}/ccpa.${vday}
+     cp ${COMOUTrestart}/ccpa.${vday}/ccpa.t${vhr}z.grid212.f00.nc ${WORK}/ccpa.${vday}
+     cp ${COMOUTrestart}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2 ${WORK}/ccpa.${vday}
+   fi
+
   done
 
      DAY1=`$NDATE +24 ${vday}12`
@@ -200,11 +259,26 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
       export vbeg=$next$vhr
       export vend=$next$vhr
 
-     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
-     export err=$?; err_chk
+    if [ ! -e ${COMOUTrestart}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed ] ; then
      if [ -s $COMINccpa/ccpa.${next}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
+       export err=$?; err_chk
        cp $COMINccpa/ccpa.${next}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
+       >${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed
      fi
+
+     if [ $SENDCOM = YES ] ; then
+	cp ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212.f00.nc ${COMOUTrestart}/ccpa.${vday}
+        cp ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2 ${COMOUTrestart}/ccpa.${vday}
+        cp ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed ${COMOUTrestart}/ccpa.${vday}
+     fi
+
+    else
+     [[ ! -d ${WORK}/ccpa.${vday} ]] && mkdir -p ${WORK}/ccpa.${vday}
+     cp ${COMOUTrestart}/ccpa.${vday}/ccpa.t${vhr}z.grid212.f00.nc ${WORK}/ccpa.${vday}
+     cp ${COMOUTrestart}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2 ${WORK}/ccpa.${vday}
+    fi
+
    done
 
 
@@ -212,44 +286,66 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
   # Get 06hr CCPA data from previously obtained 3hr CCPA data files by using
   #   MET PcpCombine tool
   #************************************************************************
-  ccpa06_G212=${WORK}/ccpa.${vday}/ccpa06_G212
-  ccpa06_G240=${WORK}/ccpa.${vday}/ccpa06_G240
-  mkdir -p $ccpa06_G212
-  mkdir -p $ccpa06_G240
-
-   export vhr 
+ 
+  if [ ! -e ${COMOUTrestart}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid212.f00.completed ] ; then 
+    export vhr 
     export vbeg=${vday}03
     export vend=${vday}21
     export valid_increment=6H
     export ccpatype=NETCDF
     export grid=grid212
-    export ccpa06h=$ccpa06_G212
     export tail=nc
+   
+     if [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid212.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t09z.grid212.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t15z.grid212.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t21z.grid212.f00.nc ] ; then
+      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
+      export err=$?; err_chk
 
-    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
-    export err=$?; err_chk
+      #Save for restart
+      if [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid212.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid212.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid212.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid212.06h.f00.nc ] ; then
+        >${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid212.f00.completed
+        if [ $SENDCOM = YES ] ; then
+	  cp ${WORK}/ccpa.${vday}/ccpa.t*z.grid212.06h.f00.nc ${COMOUTrestart}/ccpa.${vday} 
+       	  cp ${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid212.f00.completed ${COMOUTrestart}/ccpa.${vday}
+	fi
+      fi 
+     fi
+
+  else
+
+    #Copy from restart 
+    [[ ! -d ${WORK}/ccpa.${vday} ]] && mkdir -p ${WORK}/ccpa.${vday}
+    cp ${COMOUTrestart}/ccpa.${vday}/ccpa.t*z.grid212.06h.f00.nc ${WORK}/ccpa.${vday} 	  
+    
+  fi 
+
+  if [ ! -e ${COMOUTrestart}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid240.f00.completed ] ; then
     export ccpatype=GFRIB
     export grid=grid240
     export ccpa06h=$ccpa06_G240
     export tail=grib2
+    
+     if [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid240.f00.grib2 ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t09z.grid240.f00.grib2 ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t15z.grid240.f00.grib2 ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t21z.grid240.f00.grib2 ] ; then
+      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
+      export err=$?; err_chk
 
-    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
-    export err=$?; err_chk
+      #Save for restart
+      if [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid240.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid240.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid240.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid240.06h.f00.nc ] ; then
+       >${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid240.f00.completed
+       if [ $SENDCOM = YES ] ; then
+	 cp ${WORK}/ccpa.${vday}/ccpa.t*z.grid240.06h.f00.nc ${COMOUTrestart}/ccpa.${vday}
+	 cp ${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid240.f00.completed ${COMOUTrestart}/ccpa.${vday}
+        fi
+      fi
+     fi
+   
+   else
+	
+    #Copy from restart
+    [[ ! -d ${WORK}/ccpa.${vday} ]] && mkdir -p ${WORK}/ccpa.${vday}
+    cp ${COMOUTrestart}/ccpa.${vday}/ccpa.t*z.grid240.06h.f00.nc ${WORK}/ccpa.${vday}
 
- else
-  echo "WARNING: Missing file $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2"
-  if [ $SENDMAIL = YES ] ; then	 
-    export subject="CCPA Data Missing for EVS ${COMPONENT}"
-    echo "WARNING:  No CCPA data available for ${VDATE}" > mailmsg
-    echo "Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2"  >> mailmsg
-    echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $MAILTO  
-  fi
- fi
+  fi    
 
- #Save for restart
- if [ -d ${WORK}/ccpa.${vday} ] ; then
-   cp -r ${WORK}/ccpa.${vday} $COMOUTrestart
  fi
 
 fi
@@ -262,13 +358,16 @@ fi
 if [ $modnam = prepbufr ] && [ ! -e $DATA/prepbufr.missing ] ; then
 
  mkdir -p $WORK/prepbufr.$vday
+ mkdir -p $COMOUTrestart/prepbufr.$vday 
 
 export output_base=${WORK}/pb2nc
 
- if [ -s ${COMINobsproc}/gdas.${vday}/??/atmos/gdas.t??z.prepbufr ] ; then
+ for vhr in 00  06  12  18  ; do
 
-   for vhr in 00  06  12  18  ; do
+  if [ ! -s $COMOUTrestart/prepbufr.${vday}/prepbufr.t${vhr}z.grid212.nc ] ; then	
 
+    if [ -s ${COMINobsproc}/gdas.${vday}/${vhr}/atmos/gdas.t${vhr}z.prepbufr ] ; then
+   
      export vbeg=${vhr}
      export vend=${vhr}
 
@@ -278,36 +377,41 @@ export output_base=${WORK}/pb2nc
      #*******************************************************************************
      >$WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
      split_by_subset ${COMINobsproc}/gdas.${vday}/$vhr/atmos/gdas.t${vhr}z.prepbufr
+     export err=$?; err_chk
+
      for subset in ADPSFC SFCSHP ADPUPA ; do
        if [ -s ${WORK}/${subset} ]; then
           cat ${WORK}/${subset} >> $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr
        fi
+       rm -f $subset 
      done
      export bufrpath=$WORK
      if [ -s $WORK/prepbufr.$vday/gdas.t${vhr}z.prepbufr ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf
        export err=$?; err_chk
-       if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
-         cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
+
+       if [ -s ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.grid212.nc ] ; then
+         cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.grid212.nc $WORK/prepbufr.${vday} 
+	 #Save for restart
+	 if [ $SENDCOM = YES ] ; then
+	   cp ${WORK}/pb2nc/prepbufr_nc/prepbufr.t${vhr}z.grid212.nc $COMOUTrestart/prepbufr.${vday}
+         fi          		 
        fi
+
      fi
-   done
 
- else
-  echo "WARNING: Missing file is ${COMINobsproc}/gdas.${vday}/??/atmos/gdas.t??z.prepbufr"
-  if [ $SENDMAIL = YES ] ; then
-   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-   echo "WARNING:  No Prepbufr data available for ${VDATE}" > mailmsg
-   echo "Missing file is ${COMINobsproc}/gdas.${vday}/??/atmos/gdas.t??z.prepbufr"  >> mailmsg
-   echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $MAILTO 
-  fi
- fi
+    fi
 
-  #Save for restart
-  if [ -d $WORK/prepbufr.${vday} ] ; then
-    cp -r $WORK/prepbufr.${vday} $COMOUTrestart
-  fi
+   else
+
+     #Copy from restart
+     if [ -s $COMOUTrestart/prepbufr.${vday}/prepbufr.t${vhr}z.grid212.nc ] ; then
+      cp $COMOUTrestart/prepbufr.${vday}/prepbufr.t${vhr}z.grid212.nc $WORK/prepbufr.${vday}
+     fi 
+
+   fi
+
+ done
 
 fi 
 
