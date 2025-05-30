@@ -73,7 +73,7 @@ else:
                 'find', '.', '-type', 'd', '\\(', '-path', 
                 '\"*workdirs*\"', '-o', '\\(', '-path', '\"*job*\"', 
                 '!', '-path', '\"*completed_jobs*\"', '\\)', '\\)', 
-                '-prune', '-o' '-exec', 'mkdir', '-p', 
+                '-prune', '-o', '-exec', 'mkdir', '-p', 
                 os.path.join(workdir,'{}'), '\\;'
             ])
         if STEP == "prep":
