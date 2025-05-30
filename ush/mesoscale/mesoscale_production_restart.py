@@ -73,8 +73,12 @@ elif STEP == 'plots':
         )
     else:
            completed_jobs_file = os.path.join(RESTART_DIR, f'completed_jobs.txt')
-    if os.path.exists(completed_jobs_file):
-        if os.stat(completed_jobs_file).st_size != 0:
+    if os.path.exists(RESTART_DIR):
+###        print(completed_jobs_file)
+###        if (os.path.exists(completed_jobs_file)
+##                and os.stat(completed_jobs_file).st_size != 0):
+            print(f"Copying restart directory {RESTART_DIR} "
+                +f"into working directory {working_dir}")
             cutil.run_shell_command(
                 ['cp', '-rpv', RESTART_DIR, working_dir]
             )

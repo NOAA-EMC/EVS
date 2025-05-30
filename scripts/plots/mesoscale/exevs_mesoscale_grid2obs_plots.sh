@@ -35,8 +35,10 @@ if [ $evs_run_mode = production ]; then
 fi
 
 # Create Job Script 
-python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_job_scripts.py
+if [ ! -e ${RESTART_DIR}/completed_jobs/${EVAL_PERIOD}/completed_jobs.txt_${EVAL_PERIOD}_job${njob}.txt ]; then
+    python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_job_scripts.py
     export err=$?; err_chk
+fi
 
 export njob=$((njob+1))
 
@@ -44,12 +46,12 @@ export njob=$((njob+1))
 if [ $USE_CFP = YES ]; then
     python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_poe_job_scripts.py
     export err=$?; err_chk
-
 fi
 
 # Create Working Directories
 python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
 export err=$?; err_chk
+
 
 # Run All Mesoscale grid2obs/plots Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/plotting_job_scripts/*
