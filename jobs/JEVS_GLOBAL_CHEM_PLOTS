@@ -19,9 +19,6 @@ export SENDMAIL=${SENDMAIL:-NO}
 date
 export PS4='$SECONDS + '
 
-export vhr=${vhr:-00}
-export cycle=${cycle:-t${vhr}z}
-
 ##########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ##########################################################
@@ -29,6 +26,12 @@ export pid=$$
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p ${DATA}
 cd ${DATA}
+
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
+
+setpdy.sh
+. ./PDY
 
 export envir=${envir:-prod}
 
@@ -45,9 +48,6 @@ export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
 export mod_ver=${mod_ver:-${gefs_ver}}
 
-setpdy.sh
-. ./PDY
-
 ########################################
 # Set EVS directories
 ########################################
@@ -57,13 +57,6 @@ export PARMevs=${PARMevs:-${HOMEevs}/parm}
 export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
 export USHevs=${USHevs:-${HOMEevs}/ush}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
-
-export machine=${machine:-WCOSS2}
-export evs_run_mode=${evs_run_mode:-production}
-export DATA_TYPE=${DATA_TYPE:-aeronet}
-export OBS_SRC=${OBS_SRC:-${DATA_TYPE}}
-export restart_mode=${restart_mode:-YES}
-export fig_name_label=${fig_name_label:-last${NDAYS}days}
 
 export VDATE_END=${VDATE_END:-$PDYm4}
 export NDAYS=${NDAYS:-31}
@@ -77,14 +70,24 @@ export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/$
 
 mkdir -p ${COMOUT}
 
+export machine=${machine:-WCOSS2}
+export evs_run_mode=${evs_run_mode:-production}
+export DATA_TYPE=${DATA_TYPE:-aeronet}
+export OBS_SRC=${OBS_SRC:-${DATA_TYPE}}
+export restart_mode=${restart_mode:-YES}
+export fig_name_label=${fig_name_label:-last${NDAYS}days}
+
+export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
+
 ########################################
 # Execute the script
 ########################################
-export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
 
 ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
-
 export err=$?; err_chk
+
+msg="JOB ${job} HAS COMPLETED NORMALLY."
+postmsg "${msg}"
 
 if [ "${KEEPDATA}" != "YES" ]; then
     cd ${DATAROOT}
