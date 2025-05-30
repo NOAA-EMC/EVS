@@ -705,13 +705,10 @@ suite evs_nco
             task jevs_mesoscale_rap_snowfall_stats_vhr_06
               time 06:00
               edit VHR '06'
-            task jevs_mesoscale_sref_cnv_stats
-              time 08:30
             task jevs_mesoscale_sref_precip_stats
               time 09:30
             task jevs_mesoscale_sref_grid2obs_stats
               time 09:30
-               trigger :TIME >= 0930 and ./jevs_mesoscale_sref_cnv_stats == complete
           endfamily
           family cam
             task jevs_cam_nam_firewxnest_grid2obs_stats_vhr_06
