@@ -2,8 +2,8 @@
 ########################################################################
 ###  UNIX Script Documentation Block
 ###                      .
-### Script name:         exevs_global_ens_chem_grid2obs_prep.sh
-### Script description:  To run grid-to-obs verification on GEFS-aerosol (chem-component)
+### Script name:         exevs_global_chem_atmos_grid2obs_prep.sh
+### Script description:  To run grid-to-obs verification on Global Chemical modeling
 ### Original Author   :  Partha Bhattacharjee
 ###
 ###   Change Logs:
@@ -11,15 +11,18 @@
 ###   01/16/2024   Ho-Chun Huang  EVSv1.0 EE2 compliance
 ###   01/30/2024   Ho-Chun Huang  for a single email of missing files of both OBS and FCST
 ###   05/01/2025   Ho-Chun Huang  Remove email function for missing model forecast output
+###   05/22/2025   Ho-Chun Huang  Move from global_ens chem to global_chem
 ###
 ########################################################################
 #
 set -x
 
 cd ${DATA}
+
 ########################################################################
 ## Pre-Processed Observations
-
+########################################################################
+#
 ## For temporary stoage on the working dirary before moving to COMOUT with SENDCOM setting
 #
 export finalprep=${DATA}/final
@@ -58,19 +61,19 @@ for OBTTYPE in ${obstype}; do
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip ${checkfile}" >> mailmsg
+                    echo "WARNING: There is no valid record to be processed, ${COMPONENT} ${MODELNAME} ${STEP} will skip ${checkfile}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
-                echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip ${checkfile}"
+                echo "WARNING: There is no valid record to be processed, ${COMPONENT} ${MODELNAME} ${STEP} will skip ${checkfile}"
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
-                echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
+                echo "WARNING: ${checkfile} is missing, ${COMPONENT} ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
                 echo "==============" >> mailmsg
                 flag_send_message=YES
             fi
-            echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}"
+            echo "WARNING: ${checkfile} is missing, ${COMPONENT} ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
         fi
     elif [ "${OBTTYPE}" == "airnow" ]; then
         airnow_hourly_type="aqobs"
@@ -83,7 +86,7 @@ for OBTTYPE in ${obstype}; do
             export HOURLY_OUTPUT_TYPE=hourly_data
             export HOURLY_ASCII2NC_FORMAT=airnowhourly
         fi
-         
+        ##
         ## Pre-Processed EPA AIRNOW ASCII input file to METPlus NetCDF input for PointStat
         ##
         ## Hourly AirNOW observation
@@ -111,34 +114,34 @@ for OBTTYPE in ${obstype}; do
                     fi
                 else
                     if [ ${SENDMAIL} = "YES" ]; then
-                        echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip the ${checkfile}" >> mailmsg
+                        echo "WARNING: There is no valid record to be processed, ${COMPONENT} ${MODELNAME} ${STEP} will skip the ${checkfile}" >> mailmsg
                         echo "==============" >> mailmsg
                         flag_send_message=YES
                     fi
-                    echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip the ${checkfile}"
+                    echo "WARNING: There is no valid record to be processed, ${COMPONENT} ${MODELNAME} ${STEP} will skip the ${checkfile}"
                 fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
-                    echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
+                    echo "WARNING: ${checkfile} is missing, ${COMPONENT} ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}" >> mailmsg
                     echo "==============" >> mailmsg
                     flag_send_message=YES
                 fi
         
-                echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}"
+                echo "WARNING: ${checkfile} is missing, ${COMPONENT} ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
             fi
             ((ic++))
         done
     else
-        echo "DEBUG :: OBTTYPE=${OBTTYPE} is not defined for ${COMPONENT}_${RUN} ${STEP} step"
+        echo "DEBUG :: OBTTYPE=${OBTTYPE} is not defined for ${COMPONENT} ${MODELNAME} ${STEP} step"
     fi
 
 done
 #
 ########################################################################
-##  Extract variables from full GEFS-aerosol output to be verified
+##  Extract variables from full Global-Chemical output to be verified
 ##    against observation and option to used already recuded
-##    GEFS-aerosol output (suitable for restrospective run)
-##  Backup GEFS-aerosol reduced output for global_ens_chem_grid2obs
+##    Global-Chemical output (suitable for restrospective run)
+##  Backup Global-Chemical reduced output for global_chem_atmos_grid2obs
 ##    stats step due to insuccficent retention time (at least 6 days)
 ########################################################################
 match_aod_1=":AOTK:"
@@ -151,22 +154,22 @@ match_pm25_3="aerosol_size <2.5e-06"
 declare -a cyc_opt=( 00 06 12 18 )
 let inc=3
 for mdl_cyc in "${cyc_opt[@]}"; do
-    com_gefs=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/${RUN}/pgrb2ap25
-    if [ -d ${com_gefs} ]; then
-        prep_gefs=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
-        mkdir -p ${prep_gefs}
+    com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/chem/pgrb2ap25   ## FOR GEFS-chem
+    if [ -d ${com_gc_mdl} ]; then
+        prep_gc_mdl=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
+        mkdir -p ${prep_gc_mdl}
         let hour_now=0
         let max_hour=120
         while [ ${hour_now} -le ${max_hour} ]; do
             fhr=`printf %3.3d ${hour_now}`
-            mdl_full_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2
+            mdl_full_grib2=${MODELNAME}.chem.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2  ## FOR GEFS-chem
             reduced_rec_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.reduced.grib2
-            check_full_file=${com_gefs}/${mdl_full_grib2}
-            check_reduced_file=${com_gefs}/${reduced_rec_grib2}
+            check_full_file=${com_gc_mdl}/${mdl_full_grib2}
+            check_reduced_file=${com_gc_mdl}/${reduced_rec_grib2}
             if [ -s ${check_reduced_file} ]; then
                 echo "Found file ${check_reduced_file}"
                 if [ ${SENDCOM} = "YES" ]; then
-                    cp -v ${check_reduced_file} ${prep_gefs}
+                    cp -v ${check_reduced_file} ${prep_gc_mdl}
                 fi
             elif [ -s ${check_full_file} ]; then
                 if [ -e extract_aod ]; then /bin/rm -rf extract_aod; fi
@@ -175,15 +178,15 @@ for mdl_cyc in "${cyc_opt[@]}"; do
                 wgrib2 -match "${match_pm25_1}" -match "${match_pm25_2}" -match "${match_pm25_3}" ${check_full_file} -grib extract_pm25
                 cat extract_aod extract_pm25 >> ${reduced_rec_grib2}
                 if [ ${SENDCOM} = "YES" ]; then
-                    cp -v ${reduced_rec_grib2} ${prep_gefs}
+                    cp -v ${reduced_rec_grib2} ${prep_gc_mdl}
                 fi
             else
-                echo "FCST_OUTPUT_MISSING: GEFS-aerosol forecast file ${check_full_file} is missing. The missing GEFS-aerosol forecast file will be skipped"
+                echo "FCST_OUTPUT_MISSING: Global-Chemical forecast file ${check_full_file} is missing. The missing Global-Chemical forecast file will be skipped"
             fi
             ((hour_now+=${inc}))
         done
     else
-        echo "FCST_OUTPUT_MISSING: GEFS-aerosol output directory ${com_gefs} is missing. The missing GEFS-aerosol forecast files will be skipped"
+        echo "FCST_OUTPUT_MISSING: Global-Chemical output directory ${com_gc_mdl} is missing. The missing Global-Chemical forecast files will be skipped"
     fi
 done
 #
