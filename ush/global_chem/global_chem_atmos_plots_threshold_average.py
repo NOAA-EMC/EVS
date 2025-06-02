@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Name: global_chem_atmnos_plots_threshold_average.py
+Name: global_chem_atmos_plots_threshold_average.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a threshold average plot.
@@ -22,8 +22,8 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
 import re
-import global_chem_atmnos_util as gda_util
-from global_chem_atmnos_plots_specs import PlotSpecs
+import global_chem_atmos_util as gda_util
+from global_chem_atmos_plots_specs import PlotSpecs
 
 class ThresholdAverage:
     """

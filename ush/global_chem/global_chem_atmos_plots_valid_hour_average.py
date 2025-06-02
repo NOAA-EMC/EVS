@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Name: global_chem_atmnos_plots_valid_hour_average.py
+Name: global_chem_atmos_plots_valid_hour_average.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a valid hour average plot.
@@ -21,8 +21,8 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
-import global_chem_atmnos_util as gda_util
-from global_chem_atmnos_plots_specs import PlotSpecs
+import global_chem_atmos_util as gda_util
+from global_chem_atmos_plots_specs import PlotSpecs
 
 class ValidHourAverage:
     """
