@@ -13,10 +13,10 @@ export model=evs
 export machine=WCOSS2
 
 # ECF Settings
-export SENDMAIL=NO
+export SENDMAIL=YES
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDDBN=NO
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_hireswarw_grid2obs_stats}
@@ -48,8 +48,8 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 # Developer Settings
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver_2d
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/test/$STEP/$COMPONENT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export vhr=${vhr:-${vhr}}
 export MAILTO="andrew.benjamin@noaa.gov,marcel.caron@noaa.gov"
 
