@@ -22,6 +22,10 @@ suite evs_nco
         edit PROJ 'VERF'
         family prep
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/prep'
+          family global_chem
+            task jevs_global_chem_atmos_grid2obs_prep
+              time 00:05
+          endfamily
           family global_ens
             task jevs_global_ens_atmos_prep
               time 03:00
@@ -29,8 +33,6 @@ suite evs_nco
               time 03:00
             task jevs_global_ens_headline_prep
               trigger :TIME >= 0400 and ./jevs_global_ens_atmos_prep == complete and ./jevs_global_ens_naefs_atmos_prep == complete
-            task jevs_global_ens_chem_grid2obs_prep
-              time 00:05
           endfamily
           family cam
             task jevs_cam_radar_prep_vhr_00
@@ -94,18 +96,18 @@ suite evs_nco
         endfamily    # 00 prep
         family stats
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/stats'
-          family global_ens
+          family global_chem
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_00
-              trigger :TIME >= 0110 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 0110 and ../../../../00/evs/prep/global_ens/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '00'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_00
-              trigger :TIME >= 0210 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 0210 and ../../../../00/evs/prep/global_ens/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '00'
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_03
-              trigger :TIME >= 0410 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 0410 and ../../../../00/evs/prep/global_ens/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '03'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_03
-              trigger :TIME >= 0510 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 0510 and ../../../../00/evs/prep/global_ens/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '03'
           endfamily
           family mesoscale
@@ -594,6 +596,20 @@ suite evs_nco
             task jevs_narre_stats
               time 08:30
           endfamily
+          family global_chem
+            task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_06
+              trigger :TIME >= 0710 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
+              edit VHR '06'
+            task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_06
+              trigger :TIME >= 0810 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
+              edit VHR '06'
+            task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_09
+              trigger :TIME >= 1010 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
+              edit VHR '09'
+            task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_09
+              trigger :TIME >= 1110 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
+              edit VHR '09'
+          endfamily
           family global_ens
             task jevs_global_ens_gefs_atmos_snowfall_stats
               trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_global_ens_atmos_prep == complete
@@ -639,18 +655,6 @@ suite evs_nco
               trigger :TIME >= 1100 and ../../../../00/evs/prep/global_ens/jevs_global_ens_headline_prep == complete
             task jevs_global_ens_wave_grid2obs_stats
               trigger :TIME >= 1000 and ../../../../06/evs/prep/global_ens/jevs_global_ens_wave_grid2obs_prep == complete
-            task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_06
-              trigger :TIME >= 0710 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
-              edit VHR '06'
-            task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_06
-              trigger :TIME >= 0810 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
-              edit VHR '06'
-            task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_09
-              trigger :TIME >= 1010 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
-              edit VHR '09'
-            task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_09
-              trigger :TIME >= 1110 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
-              edit VHR '09'
           endfamily
           family wafs
             task jevs_wafs_atmos_stats
@@ -705,13 +709,10 @@ suite evs_nco
             task jevs_mesoscale_rap_snowfall_stats_vhr_06
               time 06:00
               edit VHR '06'
-            task jevs_mesoscale_sref_cnv_stats
-              time 08:30
             task jevs_mesoscale_sref_precip_stats
               time 09:30
             task jevs_mesoscale_sref_grid2obs_stats
               time 09:30
-               trigger :TIME >= 0930 and ./jevs_mesoscale_sref_cnv_stats == complete
           endfamily
           family cam
             task jevs_cam_nam_firewxnest_grid2obs_stats_vhr_06
@@ -1275,18 +1276,18 @@ suite evs_nco
             task jevs_global_det_gfs_wave_grid2obs_stats
               trigger :TIME >= 1325 and ../../prep/global_det/jevs_global_det_wave_prep == complete
           endfamily
-          family global_ens
+          family global_chem
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_12
-              trigger :TIME >= 1310 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 1310 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '12'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_12
-              trigger :TIME >= 1410 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 1410 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '12'
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_15
-              trigger :TIME >= 1610 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 1610 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '15'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_15
-              trigger :TIME >= 1710 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 1710 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '15'
           endfamily
           family cam
@@ -1901,18 +1902,18 @@ suite evs_nco
             task jevs_global_det_gfs_atmos_wmo_monthly_stats
               trigger :TIME >= 2015 and ./jevs_global_det_atmos_wmo_daily_stats == complete
           endfamily
-          family global_ens
+          family global_chem
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_18
-              trigger :TIME >= 1910 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 1910 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '18'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_18
-              trigger :TIME >= 2010 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 2010 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '18'
             task jevs_global_ens_gefs_chem_grid2obs_airnow_stats_vhr_21
-              trigger :TIME >= 2210 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 2210 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '21'
             task jevs_global_ens_gefs_chem_grid2obs_aeronet_stats_vhr_21
-              trigger :TIME >= 2310 and ../../../../00/evs/prep/global_ens/jevs_global_ens_chem_grid2obs_prep == complete
+              trigger :TIME >= 2310 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '21'
           endfamily
           family cam
