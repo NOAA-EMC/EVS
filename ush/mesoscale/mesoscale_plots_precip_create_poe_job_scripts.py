@@ -39,8 +39,7 @@ if USE_CFP == 'YES':
         for poe_job_file in poe_job_files:
             os.remove(poe_job_file)
     njob, iproc, node = 1, 0, 1
-    while njob <= njob_files:
-        job_filename = f'job{njob}'
+    for job_file in job_files:
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             if iproc >= int(nproc):
                 iproc = 0
@@ -51,7 +50,7 @@ if USE_CFP == 'YES':
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             poe_job.write(f'{iproc-1} {os.path.join(job_dir, job_filename)}\n')
         else:
-            poe_job.write(f'{os.path.join(job_dir, job_filename)}\n')
+            poe_job.write(f'{job_file}\n')
         poe_job.close()
         njob+=1
     poe_job_file = os.path.join(job_dir, f'poe_jobs{node}')

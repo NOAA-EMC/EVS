@@ -64,8 +64,7 @@ elif STEP == 'plots':
 ###        )
     elif VERIF_CASE == "precip":
         completed_jobs_file = os.path.join(
-           RESTART_DIR, 
-           f"completed_jobs_{os.environ['EVAL_PERIOD']}.txt"
+           RESTART_DIR, 'completed_jobs', EVAL_PERIOD, completed_jobs_file_full)
         )
     elif VERIF_CASE == "snowfall":
         completed_jobs_file = os.path.join(

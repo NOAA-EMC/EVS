@@ -88,10 +88,12 @@ fi
 
 # Copy Plots Output to Main Directory
 
-for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
-   cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
-   export err=$?; err_chk
-done
+if [ $ncount_job -gt 0 ]; then
+  for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
+     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
+     export err=$?; err_chk
+  done
+fi
 
 # Tar and Copy output files to EVS COMOUT directory
   find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar --transform='s#.*/##'  -T -
