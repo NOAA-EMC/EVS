@@ -14,7 +14,7 @@
 # set up plot variables
 set -x
 
-small_periods='last31days last90days'
+small_periods='past31days past90days'
 
 inithours='00 12'
 wave_vars='WIND HTSGW PERPW'
@@ -22,8 +22,9 @@ fhrs='000 024 048 072 096 120 144 168 192 216 240 264 288 312 336 360 384'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 region='glb'
 export region=${region}
-export obstype="ndbc_standard"
-ptype='timeseries fhrmean'
+export obtype="sfcshp"
+export obtype2="wave"
+ptype='timeseries lead_average'
 
 for small_period in ${small_periods} ; do
 	for vhr in ${inithours} ; do
@@ -60,10 +61,10 @@ for small_period in ${small_periods} ; do
 				esac
 
 				# Lead average plots
-				imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f240.latlon_0p25_${region}.png
-            			tmp_image=$DATA/images/$imagename
+				imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obtype}.${small_period}.fhrmean_valid${vhr}z_f384.latlon_0p25_${region}.png
+            			tmp_image=$DATA/$obtype/$imagename
 				job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${stats}_lead_average_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
-				job_image=$job_work_dir/images/$imagename
+				job_image=$job_work_dir/$obtype2/$imagename
 				if [[ ! -s $tmp_image ]]; then
 					if [[ -s $job_image ]]; then
 						cp -v $job_image $tmp_image
@@ -73,10 +74,10 @@ for small_period in ${small_periods} ; do
 				fi
 				# Time series plots
 				for fhr in ${fhrs} ; do
-					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.timeseries_valid${vhr}z_f${fhr}.latlon_0p25_${region}.png
-            				tmp_image=$DATA/images/$imagename
+					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obtype}.${small_period}.timeseries_valid${vhr}z_f${fhr}.latlon_0p25_${region}.png
+            				tmp_image=$DATA/$obtype/$imagename
 					job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${fhr}_${stats}_time_series_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
-					job_image=$job_work_dir/images/$imagename
+					job_image=$job_work_dir/$obtype/$imagename
 					if [[ ! -s $tmp_image ]]; then
 						if [[ -s $job_image ]]; then
 							cp -v $job_image $tmp_image

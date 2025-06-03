@@ -49,7 +49,7 @@ for period in ${periods} ; do
         echo "export plot_start_date=${plot_start_date} " >> plot_${wvar}_${vhour}_${stats}_${ptype}_${period}.sh
         echo "export plot_end_date=${VDATE} " >> plot_${wvar}_${vhour}_${stats}_${ptype}_${period}.sh
         echo "export VHOUR=${vhour} " >> plot_${wvar}_${vhour}_${stats}_${ptype}_${period}.sh
-	cho "export job_work_dir=${job_work_dir}" >> plot_${wvar}_${vhour}_${stats}_${ptype}_${period}.sh
+	echo "export job_work_dir=${job_work_dir}" >> plot_${wvar}_${vhour}_${stats}_${ptype}_${period}.sh
         case ${stats} in
           'stats1')
             echo "export METRIC='me, rmse' " >> plot_${wvar}_${vhour}_${stats}_${ptype}_${period}.sh
