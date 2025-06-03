@@ -70,10 +70,10 @@ else:
             # "-prune" prevents recursion into those excluded dirs
             # Other than that, make all directories in current workdir
             cutil.run_shell_command([
-                'find', '.', '-type', 'd', '\\(', '-path', 
+                'find', '.', '\\(', '-path', 
                 '\"*workdirs*\"', '-o', '\\(', '-path', '\"*job*\"', 
                 '!', '-path', '\"*completed_jobs*\"', '\\)', '\\)', 
-                '-prune', '-o', '-exec', 'mkdir', '-p', 
+                '-prune', '-o', '-type', 'd', '-exec', 'mkdir', '-p', 
                 os.path.join(workdir,'{}'), '\\;'
             ])
         if STEP == "prep":
