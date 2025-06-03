@@ -144,7 +144,7 @@ else
     if [ $SENDMAIL = YES ]; then
         export subject="JASON-3 Data Missing for EVS ${COMPONENT}"
         echo "Warning: No JASON-3 data was available for valid date ${VDATEp1}" > mailmsg
-        echo "Missing file is ${input_pb2nc_jason3_file}" >> mailmsg
+        echo "Missing file is ${input_pb2nc_jason3_file2}" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
     fi
