@@ -138,6 +138,7 @@ elif STEP == 'plots':
             f'python '
             + f'{USH_DIR}/{PLOT_TYPE}.py'
         )
+        completed_jobs_file_full = COMPLETED_JOBS_FILE + "_job" + njob + ".txt"
         job_cmd_list_iterative.append(
             f"python -c "
             + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
