@@ -52,7 +52,8 @@ elif STEP == 'plots':
     SAVE_DIR = os.environ['SAVE_DIR']
     njob = os.environ['njob']
     COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
-    working_dir = os.path.join(DATA, VERIF_CASE, EVAL_PERIOD)
+    working_dir = os.path.join(DATA, VERIF_CASE, 'out')
+    restart_full = os.path.join(RESTART_DIR, '*')
     completed_jobs_file_full = COMPLETED_JOBS_FILE + "_job" + njob + ".txt"
 ##    completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
     if VERIF_CASE == "grid2obs":
@@ -80,7 +81,8 @@ elif STEP == 'plots':
             print(f"Copying restart directory {RESTART_DIR} "
                 +f"into working directory {working_dir}")
             cutil.run_shell_command(
-                ['cp', '-rpv', RESTART_DIR, working_dir]
+#                ['cp', '-rpv', RESTART_DIR, working_dir]
+                ['cp', '-rpv', restart_full, working_dir]
             )
 
 
