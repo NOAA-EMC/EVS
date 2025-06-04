@@ -41,7 +41,7 @@ echo 'Copying *.stat files :'
 echo '-----------------------------'
 
 mkdir -p ${DATA}/stats
-
+mkdir -p ${DATA}/job_work_dir
 plot_start_date=${PDYm90}
 plot_end_date=${VDATE}
 
@@ -100,10 +100,17 @@ else
   export err=$?; err_chk
 fi
 
+
+####################
+# copy all the jobs files
+# #####################
+${USHevs}/${COMPONENT}/global_ens_wave_plots_copy_plots.sh
+export err=$?; err_chk
+
 ###########################################
 # Cat the plotting log files
 ###########################################
-log_dir=$DATA
+log_dir=$DATA/job_work_dir/*/logs
 log_file_count=$(find $log_dir/*.out -type f |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
     for log_file in $log_dir/*.out; do
