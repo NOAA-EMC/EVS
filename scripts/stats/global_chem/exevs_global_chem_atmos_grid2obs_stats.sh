@@ -11,7 +11,7 @@
 ###   01/16/2024   Ho-Chun Huang  consolidate exevs_global_ens_chem_grid2obs scripts
 ###   04/30/2025   Ho-Chun Huang  Remove email function for missing 
 ###                               pre-processed forecast output
-###   01/16/2024   Ho-Chun Huang  mv from global_ens to global_chem
+###   06/04/2025   Ho-Chun Huang  mv from global_ens to global_chem
 ###
 ########################################################################
 set -x
@@ -34,7 +34,6 @@ export config_common=${PARMevs}/metplus_config/machine.conf
 
 export METPLUS_PATH
 
-## grid2obs_list="aeronet airnow"
 grid2obs_list="${DATA_TYPE}"
 
 export init_cyc="00 06 12 18"
@@ -115,7 +114,6 @@ for ObsType in ${grid2obs_list}; do
             echo "PREP_OUTPUT_MISSING: Pre-processed Global-Chemical output ${fcst_file} is missing. The missing Global-Chemical forecast file will be skipped"
           fi 
         fi 
-        ## ((ihr++))
         let "ihr=ihr+3"
       done
       if [ -s ${recorded_temp_list} ]; then
