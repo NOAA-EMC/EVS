@@ -19,12 +19,6 @@ source $HOMEevs/versions/run.ver
 evs_ver_2d=$(echo ${evs_ver} | cut -d'.' -f1-2)
 
 ############################################################
-## Load modules
-############################################################
-############################################################
-## Specify environment variables
-############################################################
-############################################################
 # Load modules
 ############################################################
 module reset
@@ -34,7 +28,7 @@ module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/global_chem/global_chem_stats.sh
 
 ############################################################
-# set some variables
+## Specify environment variables
 ############################################################
 export KEEPDATA=NO
 export SENDMAIL=YES
