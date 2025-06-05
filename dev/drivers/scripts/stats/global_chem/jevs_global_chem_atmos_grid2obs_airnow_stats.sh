@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_gefs_chem_grid2obs_airnow_stats
+#PBS -N jevs_global_chem_atmos_grid2obs_airnow_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -19,12 +19,6 @@ source $HOMEevs/versions/run.ver
 evs_ver_2d=$(echo ${evs_ver} | cut -d'.' -f1-2)
 
 ############################################################
-## Load modules
-############################################################
-############################################################
-## Specify environment variables
-############################################################
-############################################################
 # Load modules
 ############################################################
 
@@ -32,10 +26,10 @@ module reset
 
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/dev/modulefiles/global_ens/global_ens_stats.sh
+source $HOMEevs/dev/modulefiles/global_chem/global_chem_stats.sh
 
 ############################################################
-# set some variables
+## Specify environment variables
 ############################################################
 export KEEPDATA=NO
 export SENDMAIL=YES
@@ -44,8 +38,8 @@ export SENDDBN=NO
 export envir=prod
 export NET=${NET:-evs}
 export STEP=${STEP:-stats}
-export COMPONENT=${COMPONENT:-global_ens}
-export RUN=${RUN:-chem}
+export COMPONENT=${COMPONENT:-global_chem}
+export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export MODELNAME=${MODELNAME:-gefs}
 export modsys=${modsys:-gefs}
@@ -60,7 +54,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${DATA_TYPE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${DATA_TYPE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 ############################################################
@@ -73,9 +67,9 @@ if [ -z "$MAILTO" ]; then
 else
     export vhr
     echo "vhr = ${vhr}"
-    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
+    ${HOMEevs}/jobs/JEVS_GLOBAL_CHEM_STATS
 fi
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics using AirNOW PM2.5
-##          for the GEFS-Aerosol model.
+##          for the Global Chemistry model.
 #######################################################################
