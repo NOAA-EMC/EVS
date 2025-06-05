@@ -86,10 +86,12 @@ else
 fi
 
 # Copy Prep Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/data/workdirs/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/data/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
