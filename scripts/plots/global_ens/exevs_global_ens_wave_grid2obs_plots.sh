@@ -123,7 +123,7 @@ fi
 #######################
 # Gather all the files 
 #######################
-periods='PAST31DAYS PAST90DAYS'
+periods='LAST31DAYS LAST90DAYS'
 if [ $gather = yes ] ; then
   echo "copying all images into one directory"
   for FILE in ${DATA}/wave/*png ; do
@@ -135,9 +135,9 @@ if [ $gather = yes ] ; then
   echo "copied $nc plots"
   for period in ${periods} ; do
     period_lower=$(echo ${period,,})
-    if [ ${period} = 'PAST31DAYS' ] ; then
+    if [ ${period} = 'LAST31DAYS' ] ; then
       period_out='last31days'
-    elif [ ${period} = 'PAST90DAYS' ] ; then
+    elif [ ${period} = 'LAST90DAYS' ] ; then
       period_out='last90days'
     fi
     # check to see if the plots are there
