@@ -46,7 +46,7 @@ export err=$?; err_chk
 
 # Run All CAM precip/plots Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/plotting_job_scripts/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/plotting_job_scripts/job* |wc -l)
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/plotting_job_scripts/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
     ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/plotting_job_scripts/poe* |wc -l)

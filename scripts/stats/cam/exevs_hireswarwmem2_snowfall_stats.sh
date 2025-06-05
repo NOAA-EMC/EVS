@@ -89,7 +89,7 @@ export err=$?; err_chk
 
 # Run All HiRes Window ARW2 snowfall/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
     ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
@@ -181,7 +181,7 @@ export err=$?; err_chk
 
 # Run All HiRes Window ARW 2 snowfall/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
     ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
@@ -248,7 +248,7 @@ export err=$?; err_chk
 
 # Run All HiRes Window ARW 2 snowfall/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
     ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
@@ -312,7 +312,7 @@ export err=$?; err_chk
 
 # Run All HiRes Window ARW 2 snowfall/stats Gather 2 Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
     ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
@@ -391,7 +391,7 @@ if [ "$vhr" -ge "$last_cyc" ]; then
 
         # Run All HiRes Window ARW 2 snowfall/stats Gather 3 Jobs
         chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-        ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+        ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
         nc=1
         if [ $USE_CFP = YES ]; then
             ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)

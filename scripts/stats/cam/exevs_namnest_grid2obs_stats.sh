@@ -83,7 +83,7 @@ export err=$?; err_chk
 
 # Run All NAM Nest grid2obs/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
     ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
@@ -167,7 +167,7 @@ export err=$?; err_chk
 
 # Run All NAM Nest grid2obs/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
     ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
@@ -240,7 +240,7 @@ export err=$?; err_chk
 
 # Run All NAM Nest grid2obs/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
     ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
@@ -311,7 +311,7 @@ export err=$?; err_chk
 
 # Run All NAM Nest grid2obs/stats Gather 2 Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
     ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
@@ -393,7 +393,7 @@ if [ "$vhr" -ge "$last_cyc" ]; then
 
         # Run All NAM Nest grid2obs/stats Gather 3 Jobs
         chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
-        ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* |wc -l)
+        ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
         nc=1
         if [ $USE_CFP = YES ]; then
             ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
