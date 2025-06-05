@@ -16,7 +16,7 @@ naefs_ihour=$2
 fhr_beg=$3
 fhr_end=$4
 
-export vday=${INITDATE:-$PDYm2}     # for ensemble, use past-2 day as validation day
+export vday=${INITDATE:-$PDYm2}    #for ensemble, use past-2 day as validation day
 export vdate=${vdate:-$vday$ihour}
 export WORKtask=$WORK/get_${modnam}_${naefs_ihour}z_f${fhr_beg}_to_f${fhr_end}
 
@@ -59,9 +59,9 @@ if [ $modnam = gefs_bc ] ; then
           cat $WORKtask/grabgefs.${ihour}.${mb}.${hhh} >> $WORKtask/gefs.upper.${ihour}.${mb}.${hhh}
 	  $WGRIB2 $gefs_bc | grep "TMP:2 m" | $WGRIB2 -i $gefs_bc -grib $WORKtask/grabgefs.${ihour}.${mb}.${hhh}
 	  cat $WORKtask/grabgefs.${ihour}.${mb}.${hhh} >> $WORKtask/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs_bc | grep "UGRD:10 m" | $WGRIB2 -i $gefs_bc -grib $WORKtask/grabgefs.${ihour}.${mb}.${hhh}
+          $WGRIB2 $gefs_bc | grep "UGRD:10 m above ground" | $WGRIB2 -i $gefs_bc -grib $WORKtask/grabgefs.${ihour}.${mb}.${hhh}
           cat $WORKtask/grabgefs.${ihour}.${mb}.${hhh} >> $WORKtask/gefs.upper.${ihour}.${mb}.${hhh}
-          $WGRIB2 $gefs_bc | grep "VGRD:10 m" | $WGRIB2 -i $gefs_bc -grib $WORKtask/grabgefs.${ihour}.${mb}.${hhh}
+          $WGRIB2 $gefs_bc | grep "VGRD:10 m above ground" | $WGRIB2 -i $gefs_bc -grib $WORKtask/grabgefs.${ihour}.${mb}.${hhh}
           cat $WORKtask/grabgefs.${ihour}.${mb}.${hhh} >> $WORKtask/gefs.upper.${ihour}.${mb}.${hhh}
           $WGRIB2 $WORKtask/gefs.upper.${ihour}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/gefs_bc.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
           if [ $SENDCOM="YES" ] ; then
@@ -125,9 +125,9 @@ if [ $modnam = cmce_bc ] ; then
           cat $WORKtask/grabcmce.${ihour}.${mb}.${h3} >> $WORKtask/cmce.upper.${ihour}.${mb}.${h3}
 	  $WGRIB2 $cmce_bc | grep "TMP:2 m" | $WGRIB2 -i $cmce_bc -grib $WORKtask/grabcmce.${ihour}.${mb}.${h3}
 	  cat $WORKtask/grabcmce.${ihour}.${mb}.${h3} >> $WORKtask/cmce.upper.${ihour}.${mb}.${h3}
-          $WGRIB2 $cmce_bc | grep "UGRD:10 m" | $WGRIB2 -i $cmce_bc -grib $WORKtask/grabcmce.${ihour}.${mb}.${h3}
+          $WGRIB2 $cmce_bc | grep "UGRD:10 m above ground" | $WGRIB2 -i $cmce_bc -grib $WORKtask/grabcmce.${ihour}.${mb}.${h3}
           cat $WORKtask/grabcmce.${ihour}.${mb}.${h3} >> $WORKtask/cmce.upper.${ihour}.${mb}.${h3}
-          $WGRIB2 $cmce_bc | grep "VGRD:10 m" | $WGRIB2 -i $cmce_bc -grib $WORKtask/grabcmce.${ihour}.${mb}.${h3}
+          $WGRIB2 $cmce_bc | grep "VGRD:10 m above ground" | $WGRIB2 -i $cmce_bc -grib $WORKtask/grabcmce.${ihour}.${mb}.${h3}
           cat $WORKtask/grabcmce.${ihour}.${mb}.${h3} >> $WORKtask/cmce.upper.${ihour}.${mb}.${h3}
 	  #****************************************************************************
           # Use WGRIB2 to reverse N-S grid direction and convert 0.5x0.5 deg to 1x1 deg
