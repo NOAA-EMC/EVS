@@ -75,10 +75,12 @@ else
 fi
 
 # Copy Plots Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 # Cat the plotting log files
 log_dir="$DATA/$VERIF_CASE/out/logs"

@@ -2,6 +2,7 @@
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the sref precip plotting python script
 # Last updated: 
+#                03/30/2025, Update restart, Binbin Zhou Lynker@EMC/NCEP
 #                04/10/2024, Add restart capability, Binbin Zhou Lynker@EMC/NCEP
 #                10/27/2023, Binbin Zhou Lynker@EMC/NCEP
 # ******************************************************************************
@@ -14,11 +15,15 @@ cd $DATA/scripts
 export output_base_dir=$DATA/stat_archive
 mkdir -p $output_base_dir
 
-restart=$COMOUTplots/restart/$last_days/sref_precip_plots
-if [ ! -d  $restart ] ; then
-  mkdir -p $restart
-fi
+export all_plots=$DATA/plots/all_plots
+mkdir -p $all_plots
 
+if [ $SENDCOM = YES ] ; then
+ restart=$COMOUTplots/restart/$last_days/sref_precip_plots
+ if [ ! -d  $restart ] ; then
+  mkdir -p $restart
+ fi
+fi
 
 export eval_period='TEST'
 
@@ -26,6 +31,7 @@ export interp_pnts=''
 
 export init_end=$VDATE
 export valid_end=$VDATE
+export obsv=" - Validation: CCPA"
 
 model_list='GEFS SREF'
           
@@ -62,13 +68,6 @@ export fcst_valid_hours="0,3  6,9  12,15 18,21"
 valid_time='valid00z_03z_06z_09z_12z_15z_18z_21z'
 init_time='init00_to_21z'
 
-export plot_dir=$DATA/out/precip/${valid_beg}-${valid_end}
-#For restart:
-if [ ! -d $plot_dir ] ; then
- mkdir -p $plot_dir
-fi
-
-
 verif_case=precip
 verif_type=ccpa 
 
@@ -102,7 +101,7 @@ for stats in  ets fbias fss ; do
   line_tp='ctc'
   score_types='lead_average threshold_average'
   export interp_pnts=''
-elif [ $stats = fss ] ; then
+ elif [ $stats = fss ] ; then
   stat_list='fss'
   score_types='lead_average'
   line_tp='nbrcnt'
@@ -178,6 +177,7 @@ elif [ $stats = fss ] ; then
         mkdir -p $save_dir/data
 
 	echo "#!/bin/ksh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	echo "set -x" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 	echo "export save_dir=$save_dir" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 	echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 	echo "export prune_dir=$save_dir/data" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
@@ -225,9 +225,23 @@ elif [ $stats = fss ] ; then
          #tar all files and save for restart:
          ####################################################################
          echo "if [ ${score_type} = lead_average ] ; then" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
-	 echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png $restart ; >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed ; fi " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo " if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png ] ; then" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "   cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png $all_plots" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "   >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "   if [ $SENDCOM = YES ] ; then" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "    cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png $restart" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "    cp -v ${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "   fi" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo " fi" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
          echo "else" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
-	 echo "  if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png ] ; then cp ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png $restart ; >$restart/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed ; fi " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo " if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png ] ; then" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "    cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png $all_plots" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "    >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "   if [ $SENDCOM = YES ] ; then" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "     cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png $restart" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh 
+	 echo "     cp -v ${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.completed $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo "   fi" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
+	 echo " fi" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 	 echo "fi" >>  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh 
@@ -235,9 +249,13 @@ elif [ $stats = fss ] ; then
 
         else 
       
-	 #For restart: copy existing png files from pevious runs
-	 cp $restart/${score_type}*${stats}*.png ${plot_dir}/. 
-       
+	 #Copy png files from restart
+	 if [ ${score_type} = lead_average ] && [ -s $restart/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png ] ; then 
+	  cp $restart/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_*ge${thresh}.png $all_plots
+         elif [ ${score_type} = threshold_average ] && [ -s $restart/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png ] ; then
+          cp $restart/${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png $all_plots
+	 fi
+
 	fi 
 
        done #end of thresh
@@ -260,18 +278,13 @@ chmod +x run_all_poe.sh
 #***************************************************************************
 # Run the POE script in parallel or in sequence order to generate png files
 # **************************************************************************
-if [ $run_mpi = yes ] ; then
-   mpiexec -np 100 -ppn 100 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
-   export err=$?; err_chk
-else
-  ${DATA}/scripts/run_all_poe.sh
-  export err=$?; err_chk
-fi
+mpiexec -np 60 -ppn 60 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
+export err=$?; err_chk
 
 #**************************************************
 # Change plot file names to meet the EVS standard
 #**************************************************
-cd $restart
+cd $all_plots
 
 for valid in 00z_03z 06z_09z 12z_15z 18z_21z ; do
 for stats in  ets fbias fss  ; do
@@ -301,17 +314,18 @@ for stats in  ets fbias fss  ; do
     if [ $score_type = lead_average ] ; then
       if [ $stats = ets ] || [ $stats = fbias ] ; then
        if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
+         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}_${thresh}.apcp_6a.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
        fi
       elif [ $stats = fss ] ; then
        if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
+         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}_${thresh}.apcp_6a.last${last_days}days.${scoretype}_valid${valid}.buk_conus.png
        fi
       fi
     elif [ $score_type = threshold_average ] ; then
-	 for lead in f24 f36 f48 f60 f72 f84 ; do 
-	   if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png ] ; then
-             mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png evs.sref.${stats}.apcp_6a.last${last_days}days.${scoretype}_valid${valid}_${lead}.buk_conus.png
+	 for lead in 24 36 48 60 72 84 ; do 
+
+	   if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png ] ; then
+             mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_f${lead}.png evs.sref.${stats}.apcp_6a.last${last_days}days.${scoretype}_valid${valid}_f0${lead}.buk_conus.png
 	   fi
 	 done
     fi	 

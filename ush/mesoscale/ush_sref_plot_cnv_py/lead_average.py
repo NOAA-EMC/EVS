@@ -30,6 +30,7 @@ import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 SETTINGS_DIR = os.environ['USH_DIR']
+valid_src = os.environ['obsv']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
 from plotter import Plotter
@@ -656,6 +657,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         connect_points = True
     else:
         connect_points = False
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -698,12 +700,13 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     y_vals_metric_min = np.nanmin(y_vals_metric1)
                     y_vals_metric_max = np.nanmax(y_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
             else:
                 if math.isinf(y_mod_min):
                     y_mod_min = y_vals_metric_min
+                    n_mods+=1
                 else:
                     y_mod_min = np.nanmin([y_mod_min, y_vals_metric_min])
                 if math.isinf(y_mod_max):
@@ -1120,6 +1123,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
         else:
             title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
+    title2 += f'{valid_src}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])

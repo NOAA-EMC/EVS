@@ -33,7 +33,7 @@ if [ $missing -eq 4  ] ; then
   fi
 
 else
-  echo "Continue check CCAP files...." 
+  echo "Continue check CCPA files...." 
 fi
 
 missing=0
