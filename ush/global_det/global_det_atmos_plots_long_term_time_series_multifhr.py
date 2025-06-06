@@ -161,7 +161,7 @@ class LongTermTimeSeriesMultiFhr:
             var_units = 'kt'
         elif self.var_name == 'APCP':
             var_units = self.var_thresh[-2:]
-            ob_name ="24hrCCPA"
+            ob_name ="CCPA"
         if self.model_group == 'gfs_4cycles':
             model_hour = 'init 00Z, 06Z, 12Z, 18Z'
         elif self.var_name == 'APCP':
