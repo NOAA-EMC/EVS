@@ -1154,7 +1154,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
             os.path.join(
                 restart_dir,
                 f'{str(plot_group).lower()}',
-                f'{str(time_period_savename).lower()}',
+##                f'{str(time_period_savename).lower()}',
                 save_name+'.png'
             )
         )

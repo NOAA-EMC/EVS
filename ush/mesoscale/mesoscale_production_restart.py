@@ -58,13 +58,13 @@ elif STEP == 'plots':
 ##    completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
     if VERIF_CASE == "grid2obs":
         completed_jobs_file = os.path.join(
-           RESTART_DIR, 'completed_jobs', EVAL_PERIOD, completed_jobs_file_full)
+           RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
         print(completed_jobs_file)
 ##           f"completed_jobs_{os.environ['EVAL_PERIOD']}.txt"
 ###        )
     elif VERIF_CASE == "precip":
         completed_jobs_file = os.path.join(
-           RESTART_DIR, 'completed_jobs', EVAL_PERIOD, completed_jobs_file_full)
+           RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
     elif VERIF_CASE == "snowfall":
         completed_jobs_file = os.path.join(
            RESTART_DIR, 'completed_jobs', EVAL_PERIOD, completed_jobs_file_full)

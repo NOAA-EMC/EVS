@@ -82,7 +82,7 @@ else:
             EVAL_PERIOD = os.environ['EVAL_PERIOD']
             COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
             completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_name + ".txt"
-            completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', EVAL_PERIOD, completed_jobs_file_full)
+            completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
             if not os.path.exists(completed_jobs_file):
               workdir = os.path.join(workdirs, job_name)
               if not os.path.exists(workdir):

@@ -104,7 +104,7 @@ if STEP == 'stats':
 if STEP == 'plots':
   completed_jobs_base_dir = os.path.join(DATA, VERIF_CASE, 'completed_jobs', EVAL_PERIOD)
   completed_jobs_list = [completed_jobs_base_dir]
-  completed_jobs_base_restart_dir = os.path.join(RESTART_DIR, 'completed_jobs', EVAL_PERIOD)
+  completed_jobs_base_restart_dir = os.path.join(RESTART_DIR, 'completed_jobs')
   completed_jobs_restart_list = [completed_jobs_base_restart_dir]
 if VERIF_CASE == 'precip':
     if STEP == 'prep':
@@ -424,12 +424,12 @@ elif STEP == 'plots':
         for plot_group in ['cape', 'ceil_vis','sfc_upper']:
 ###            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'out', str(plot_group).lower(), 
-                    str(eval_period).lower()
+                    working_output_base_dir, 'out', str(plot_group).lower()  
+###                    str(eval_period).lower()
                 ))
                 COMOUT_dir_list.append(os.path.join(
-                    RESTART_DIR, str(plot_group).lower(),
-                    str(eval_period).lower()
+                    RESTART_DIR, str(plot_group).lower() 
+###                    str(eval_period).lower()
                 ))
     if VERIF_CASE == 'precip':
         working_output_base_dir = os.path.join(
@@ -460,13 +460,13 @@ elif STEP == 'plots':
         for plot_group in ['precip']:
 ###            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'out', str(plot_group).lower(), 
-                    str(eval_period).lower()
+                    working_output_base_dir, 'out', str(plot_group).lower()  
+###                    str(eval_period).lower()
                 ))
                 if not str(eval_period).lower() == 'na' :
                     COMOUT_dir_list.append(os.path.join(
-                        RESTART_DIR, str(plot_group).lower(),
-                        str(eval_period).lower()
+                        RESTART_DIR, str(plot_group).lower() 
+##                        str(eval_period).lower()
                     ))
     elif VERIF_CASE == 'snowfall':
         working_output_base_dir = os.path.join(
