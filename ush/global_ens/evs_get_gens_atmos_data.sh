@@ -201,7 +201,7 @@ if [ $modnam = gefs ] ; then
     # Upper from CVC
     if [ -e ${pat1} ]; then rm ${pat1}; fi
     >${pat1}
-    echo "DPT:2 m" >> ${pat1}
+    echo "DPT:2 m above ground" >> ${pat1}
     echo "VIS:surface" >> ${pat1}
     echo "CAPE:surface" >> ${pat1}
     echo "HGT:cloud ceiling" >> ${pat1}

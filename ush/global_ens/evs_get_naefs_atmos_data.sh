@@ -57,7 +57,7 @@ if [ $modnam = gefs_bc ] ; then
 	  cat $WORKtask/grabgefs.${ihour}.${mb}.${hhh} >> $WORKtask/gefs.upper.${ihour}.${mb}.${hhh}
           $WGRIB2 $gefs_bc | grep "TMP:850 mb" | $WGRIB2 -i $gefs_bc -grib $WORKtask/grabgefs.${ihour}.${mb}.${hhh}
           cat $WORKtask/grabgefs.${ihour}.${mb}.${hhh} >> $WORKtask/gefs.upper.${ihour}.${mb}.${hhh}
-	  $WGRIB2 $gefs_bc | grep "TMP:2 m" | $WGRIB2 -i $gefs_bc -grib $WORKtask/grabgefs.${ihour}.${mb}.${hhh}
+	  $WGRIB2 $gefs_bc | grep "TMP:2 m above ground" | $WGRIB2 -i $gefs_bc -grib $WORKtask/grabgefs.${ihour}.${mb}.${hhh}
 	  cat $WORKtask/grabgefs.${ihour}.${mb}.${hhh} >> $WORKtask/gefs.upper.${ihour}.${mb}.${hhh}
           $WGRIB2 $gefs_bc | grep "UGRD:10 m above ground" | $WGRIB2 -i $gefs_bc -grib $WORKtask/grabgefs.${ihour}.${mb}.${hhh}
           cat $WORKtask/grabgefs.${ihour}.${mb}.${hhh} >> $WORKtask/gefs.upper.${ihour}.${mb}.${hhh}
@@ -123,7 +123,7 @@ if [ $modnam = cmce_bc ] ; then
 	  cat $WORKtask/grabcmce.${ihour}.${mb}.${h3} >> $WORKtask/cmce.upper.${ihour}.${mb}.${h3}
           $WGRIB2 $cmce_bc | grep "TMP:850 mb" | $WGRIB2 -i $cmce_bc -grib $WORKtask/grabcmce.${ihour}.${mb}.${h3}
           cat $WORKtask/grabcmce.${ihour}.${mb}.${h3} >> $WORKtask/cmce.upper.${ihour}.${mb}.${h3}
-	  $WGRIB2 $cmce_bc | grep "TMP:2 m" | $WGRIB2 -i $cmce_bc -grib $WORKtask/grabcmce.${ihour}.${mb}.${h3}
+	  $WGRIB2 $cmce_bc | grep "TMP:2 m above ground" | $WGRIB2 -i $cmce_bc -grib $WORKtask/grabcmce.${ihour}.${mb}.${h3}
 	  cat $WORKtask/grabcmce.${ihour}.${mb}.${h3} >> $WORKtask/cmce.upper.${ihour}.${mb}.${h3}
           $WGRIB2 $cmce_bc | grep "UGRD:10 m above ground" | $WGRIB2 -i $cmce_bc -grib $WORKtask/grabcmce.${ihour}.${mb}.${h3}
           cat $WORKtask/grabcmce.${ihour}.${mb}.${h3} >> $WORKtask/cmce.upper.${ihour}.${mb}.${h3}
