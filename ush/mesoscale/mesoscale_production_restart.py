@@ -67,7 +67,7 @@ elif STEP == 'plots':
            RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
     elif VERIF_CASE == "snowfall":
         completed_jobs_file = os.path.join(
-           RESTART_DIR, 'completed_jobs', EVAL_PERIOD, completed_jobs_file_full)
+           RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
     else:
            completed_jobs_file = os.path.join(RESTART_DIR, f'completed_jobs.txt')
     if os.path.exists(RESTART_DIR):
