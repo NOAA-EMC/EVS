@@ -490,8 +490,6 @@ class PlotSpecs:
         if ob_name in list(obs_plot_name_dict.keys()):
             obs_plot_name = obs_plot_name_dict[ob_name]
         else:
-            self.logger.debug(f"{ob_name} not recognized, "
-                              +f"using {ob_name} on plot")
             obs_plot_name = ob_name
         return obs_plot_name
 
