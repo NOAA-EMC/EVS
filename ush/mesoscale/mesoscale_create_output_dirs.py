@@ -497,12 +497,12 @@ elif STEP == 'plots':
         for plot_group in ['snowfall']:
 ##            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'out', str(plot_group).lower(),
+                    working_output_base_dir, 'out', str(plot_group).lower() 
 ##                    str(eval_period).lower()
                 ))
                 COMOUT_dir_list.append(os.path.join(
-                    RESTART_DIR, str(plot_group).lower(),
-                    str(eval_period).lower()
+                    RESTART_DIR, str(plot_group).lower() 
+##                    str(eval_period).lower()
                 ))
     elif VERIF_CASE == 'headline':
         working_output_base_dir = os.path.join(
