@@ -54,9 +54,6 @@ def check_URL_HEADER(URL_HEADER):
                      + f" alphanumeric characters, hyphen, and/or underscore."
                      + f" Check the plotting configuration file.")
         #sys.exit(1)
-    if not URL_HEADER:
-        print(f"The provided URL_HEADER is empty. Plot file names will"
-                     + f" not include a header.")
     return URL_HEADER
 
 # USH_DIR
