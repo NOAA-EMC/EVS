@@ -31,6 +31,7 @@ export interp_pnts=''
 
 export init_end=$VDATE
 export valid_end=$VDATE
+export obsv=" - Validation: CCPA"
 
 model_list='GEFS SREF'
           

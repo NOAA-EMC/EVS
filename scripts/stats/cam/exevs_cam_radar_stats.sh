@@ -110,10 +110,12 @@ fi
 ###################################################################
 # Copy child output to main output directory
 ###################################################################
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/workdirs/*; do
     cp -ruv ${CHILD_DIR}/* ${DATA}/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 
 ###################################################################
