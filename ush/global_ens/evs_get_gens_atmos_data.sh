@@ -103,8 +103,8 @@ if [ $modnam = cmcanl ]; then
   done
   echo "HGT:" >> ${pat}
   echo "TMP:" >> ${pat}
-  echo "UGRD:10 m" >> ${pat}
-  echo "VGRD:10 m" >> ${pat}
+  echo "UGRD:10 m above ground" >> ${pat}
+  echo "VGRD:10 m above ground" >> ${pat}
   # Surface
   echo "PRMSL:" >> ${pat}
   echo "RH:" >> ${pat}
@@ -188,8 +188,8 @@ if [ $modnam = gefs ] ; then
     # Upper air
     echo "HGT:" >> ${pat0}
     echo "TMP:" >> ${pat0} 
-    echo "UGRD:10 m" >> ${pat0}
-    echo "VGRD:10 m" >> ${pat0}
+    echo "UGRD:10 m above ground" >> ${pat0}
+    echo "VGRD:10 m above ground" >> ${pat0}
     echo "RH:" >> ${pat0}
     # Surface
     echo "TCDC:" >> ${pat0}
@@ -201,7 +201,7 @@ if [ $modnam = gefs ] ; then
     # Upper from CVC
     if [ -e ${pat1} ]; then rm ${pat1}; fi
     >${pat1}
-    echo "DPT:2 m" >> ${pat1}
+    echo "DPT:2 m above ground" >> ${pat1}
     echo "VIS:surface" >> ${pat1}
     echo "CAPE:surface" >> ${pat1}
     echo "HGT:cloud ceiling" >> ${pat1}
@@ -303,8 +303,8 @@ if [ $modnam = cmce ] ; then
   # Upper air
   echo "HGT:" >> ${pat}
   echo "TMP:" >> ${pat}
-  echo "UGRD:10 m" >> ${pat}
-  echo "VGRD:10 m" >> ${pat}
+  echo "UGRD:10 m above ground" >> ${pat}
+  echo "VGRD:10 m above ground" >> ${pat}
   echo "RH:" >> ${pat}
   # Surface
   echo "TCDC:local level" >> ${pat}
