@@ -1,7 +1,7 @@
 #!/bin/bash
-#
 #######################################################
 set -x
+
 ##################################################
 ### SENDCOM  - Copy Files From TMPDIR to $COMOUT
 ### SENDDBN  - Issue DBNet Client Calls 

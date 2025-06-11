@@ -307,8 +307,6 @@ class PerformanceDiagram:
         )
         cbar = plt.colorbar(CFCSI, orientation='vertical', cax=cbar_ax,
                             ticks=CFCSI.levels)
-        #cbar.dividers.set_color('black')
-        #cbar.dividers.set_linewidth(2)
         cbar.set_label(CSI_plot_name)
         f = lambda m,c,ls,lw,ms,mec: plt.plot(
             [], [], marker=m, mec=mec, mew=2.,

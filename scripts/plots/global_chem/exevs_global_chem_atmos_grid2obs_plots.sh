@@ -27,9 +27,6 @@ export err=$?; err_chk
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
-## mdl_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1}' )
-## export modelid=${MODELNAME}${mdl_ver_id}
-
 ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
 export ObsType
 
@@ -37,7 +34,7 @@ IFS=' ' read -ra obstype_list <<< "${g2op_type_list}"
 IFS=' ' read -ra obsvar_list <<< "${g2op_obsvar_list}"
 let num_obstype=${#obstype_list[@]}
 if [ ${num_obstype} -lt 1 ]; then
-    echo "ERROR :: number of variable to be plotted is zero"
+    echo "WARNING: There is no variable to be plotted ${g2op_type_list}, program exit"
     exit
 fi
 
@@ -51,11 +48,11 @@ while [ ${iobstype} -lt ${num_obstype} ]; do
 done
 
 if [ "${varid}" == "undefined" ]; then
-    echo "ERROR :: can not find observation index for variable ${ObsType}"
+    echo "WARNING: can not find observation index for variable ${ObsType}, program exit"
     exit
 fi
 
-# Bring in all stats files, and change into display name
+# Bring in all stats files, and rename files to include display name
 # for different models or types of solution defined in ${config}
 
 IFS=' ' read -ra mdl_list <<< "${model_list}"
@@ -96,7 +93,7 @@ diff_seconds=$(expr ${end_date_seconds} - ${start_date_seconds})
 diff_days=$(expr ${diff_seconds} \/ 86400)
 total_days=$(expr ${diff_days} + 1)
 if [ "${NDAYS}" != "${total_days}" ]; then
-    echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation"
+    echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation, program exit"
     exit
 fi
 
