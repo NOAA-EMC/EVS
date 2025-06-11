@@ -58,22 +58,14 @@ while [ ${imdl} -lt ${num_mdl} ]; do
     biasc=$( echo ${mdl_list[${imdl}]} | awk -F"_" '{print $2}' )
     idir=${mdl_idir_list[${imdl}]}
     for ivar in "${obstype_list[@]}"; do
-        #
-        ## the time stamp of aqm daily variable is valided at 11Z (ozmax8)
-        ## and 04z (pamve) of next day from initial start date.  To get
-	## the valid-time at 04Z and 11Z of date=VDATE_START for forecast
-	## day1,day2, and day3, the stat of previous days also need
-        ## to be copied
-        #
-        if [ "${ivar}" == "ozmax8" ]  || [ "${ivar}" == "pmave" ]; then  ## get 3 additional day's stat
-            cdate=${VDATE_START}"00"
-            NOW=$( ${NDATE} -24 ${cdate} | cut -c1-8 )
-	    echo "variable = ${ivar} old_start_date = ${VDATE_START} new_start_date = ${NOW}"
+        if [ "${ivar}" == "abiaod" ]; then
+	    fileid="abi_joinaodc"
         else
-            NOW=${VDATE_START}
+	    fileid="abi_joinaodc"    ## default
 	fi
+        NOW=${VDATE_START}
         while [ ${NOW} -le ${VDATE_END} ]; do
-            cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ivar}.v${NOW}.stat
+            cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${fileid}.v${NOW}.stat
             sedfile=${modelid}_${biasc}_${ivar}.v${NOW}.stat
             if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
                 cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
