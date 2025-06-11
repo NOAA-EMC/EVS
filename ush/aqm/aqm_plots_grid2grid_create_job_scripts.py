@@ -63,7 +63,7 @@ dont_write_env_var_list = [
 #### Base/Common Plotting Information
 ################################################
 base_plot_jobs_info_dict = {
-    abiaod': {
+    'abiaod': {
         'AOD': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                              'CONUS_South', 'CONUS_West',
                              'Appalachia', 'CPlains', 'DeepSouth',
