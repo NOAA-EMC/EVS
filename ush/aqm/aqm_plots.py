@@ -267,7 +267,6 @@ elif JOB_GROUP == 'filter_stats':
     for filter_info in list(itertools.product(valid_hrs, fhrs)):
         date_info_dict['valid_hr_start'] = str(filter_info[0])
         date_info_dict['valid_hr_end'] = str(filter_info[0])
-        ## date_info_dict['valid_hr_inc'] = '24'
         date_info_dict['valid_hr_inc'] = '1'
         date_info_dict['forecast_hour'] = str(filter_info[1])
         init_hr = gda_util.get_init_hour(
@@ -472,10 +471,6 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = True
             else:
                 make_ts = False
-            ## if plot_info_dict['stat'] == 'FBAR_OBAR' \
-            ##         and str(date_info_dict['forecast_hour']) not in \
-            ##         [ '24', '48', '72' ]:
-            ##     make_ts = False
             if make_ts:
                 plot_ts = gdap_ts.TimeSeries(logger, job_input_dir+'/..',
                                              job_work_dir, model_info_dict,

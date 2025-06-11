@@ -1641,10 +1641,6 @@ def check_plot_files(job_dict):
                 )
             # Check for plots
             if plot_dict['plot'] == 'time_series':
-                ## if plot_dict['stat'] == 'FBAR_OBAR' \
-                ##         and str(plot_dict['forecast_hour']) not in \
-                ##         ['24', '48', '72']:
-                ##     continue
                 if init_hr not in init_hrs:
                     continue
                 plot_check = plot_specs.get_savefig_name(
@@ -2872,7 +2868,6 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                 obs_var_thresh_symbol = obs_var_thresh
                 obs_vat_thresh_letter = obs_var_thresh
             if os.path.exists(condensed_model_file):
-                # global_det version remove this logger.info
                 logger.info(f"Filtering file {condensed_model_file} for "
                             +f"MODEL: {model_dict['name']}, DESC: {grid} "
                             +f"FCST_VAR: {fcst_var_name}, "
