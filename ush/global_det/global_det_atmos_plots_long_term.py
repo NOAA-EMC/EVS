@@ -227,6 +227,7 @@ yyyymm_acc_plot_info_dict = {
     'obs_var_name': 'HGT',
     'obs_var_level': 'P500',
     'obs_var_thresh': 'NA',
+    'ob_name':'gfs_anl' 
 }
 yyyymm_acc_date_info_dict = {
     'date_type': 'VALID',
