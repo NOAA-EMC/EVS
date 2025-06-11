@@ -313,7 +313,7 @@ class ThresholdAverage:
                     f"{thresh[0:2]}{str(convert_thresh_K_to_F)}"
                 )
             ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK' ]:
+        elif self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'AOD' ]:
             convert_thresh_list = []
             for thresh in self.plot_info_dict['fcst_var_threshs']:
                 convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")

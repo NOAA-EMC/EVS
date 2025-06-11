@@ -202,7 +202,7 @@ class PlotSpecs:
             'PMTF/L1': 'Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
             'PMAVE/A23': '24hr-Average Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
             'AOTK/L0': 'Aerosol Optical Depth at 550nm',
-            'AOD/L1': 'Aerosol Optical Depth at 550nm',
+            'AOD/L0': 'Aerosol Optical Depth at 550nm',
             'APCP/A24': '24 hour Accumulated Precipitation',
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
