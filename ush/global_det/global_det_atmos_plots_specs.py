@@ -248,8 +248,8 @@ class PlotSpecs:
         """
         var_name_level = var_name+'/'+var_level
         var_plot_name_dict = {
-            'APCP/A24': '24 hour Accumulated Precipitation',
-            'APCP_A24/A24': '24 hour Accumulated Precipitation',
+            'APCP/A24': '24-hr Accumulated Precipitation',
+            'APCP_A24/A24': '24-hr Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
             'CFRZR/L0': 'Precipitation Type - Freezing Rain',
@@ -335,7 +335,7 @@ class PlotSpecs:
             'RH/P925': '925 hPa Relative Humidity',
             'RH/P1000': '1000 hPa Relative Humidity',
             'RH/Z2': '2 meter Relative Humidity',
-            'SNOD_A24/Z0': '24 hour Snow Accumulation (derived from SNOD)',
+            'SNOD_A24/Z0': '24-hr Snow Accumulation (SNOD)',
             'SOILW/Z0.1-0': '0.1-0 meter Volumetric Soil Moisture Content',
             'SPFH/all': 'Specific Humidity - All Levels',
             'SPFH/trop': 'Specific Humidity - Troposphere',
@@ -456,7 +456,7 @@ class PlotSpecs:
             'VGRD/P1000': '1000 hPa V-Component of Wind',
             'VGRD/Z10': '10 meter V-Component of Wind',
             'WEASD/Z0': 'Water Equivalent of Accumulated Snow Depth',
-            'WEASD_A24/Z0': '24 hour Snow Accumulation (derived from WEASD)',
+            'WEASD_A24/Z0': '24-hr Snow Accumulation (WEASD)',
             'WNDSHR/P850-P200': 'Wind Shear (850-200 hPa)'
         }
         if var_name_level in list(var_plot_name_dict.keys()):
@@ -466,6 +466,32 @@ class PlotSpecs:
                               +f"using {var_name_level} on plot")
             var_plot_name = var_name_level
         return var_plot_name
+
+    def get_obs_plot_name(self, ob_name):
+        """! Get the full obs source name that will be
+             displayed on the plot
+             Args:
+                 ob_name - abbreviated obs source name (string)
+             Returns:
+                 obs_plot_name - full obs source name that
+                                 will be displayed on the plot
+                                 (string)
+        """
+        obs_plot_name_dict = {
+            'ecmwf': 'ECMWF Anl',
+            'gfs': 'GFS Anl',
+            'gfs_anl': "Model's Own Anl.",
+            '24hrCCPA': 'CCPA',
+            '24hrNOHRSC': 'NOHRSC',
+            'osi_saf': 'OSI-SAF',
+            'ghrsst_ospo': 'GHRSST-OSPO',
+            'ADPSFC': 'METARS'
+        }
+        if ob_name in list(obs_plot_name_dict.keys()):
+            obs_plot_name = obs_plot_name_dict[ob_name]
+        else:
+            obs_plot_name = ob_name
+        return obs_plot_name
 
     def get_vx_mask_plot_name(self, vx_mask):
         """! Get the full verification masking information that will
@@ -692,8 +718,11 @@ class PlotSpecs:
                 plot_title = plot_title+' ('+str(thresh_in)+' in)'
         if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
             plot_title = (plot_title+' '
-                          +'Neighborhood Points: '
+                          +'Neighborhood Pts: '
                           +plot_info_dict['interp_points'])
+        plot_title = (plot_title+' - '
+                      +'Validation: '
+                      +self.get_obs_plot_name(plot_info_dict['ob_name']))
         plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
                                                 date_info_dict['start_date'],
