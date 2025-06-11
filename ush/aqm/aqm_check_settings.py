@@ -101,11 +101,11 @@ evs_aqm_settings_dict['shared'] = [
 ]
 evs_aqm_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
 evs_aqm_settings_dict['RUN_GRID2GRID_PLOTS'] = [
-    'g2gp_model_plot_name_list', 'g2gp_type_list',
+    'g2gp_model_plot_name_list', 'g2gp_type_list', 'g2gp_src_list',
     'g2gp_event_equalization'
 ]
 evs_aqm_settings_dict['RUN_GRID2OBS_PLOTS'] = [
-    'g2op_model_plot_name_list', 'g2op_type_list',
+    'g2op_model_plot_name_list', 'g2op_type_list', 'g2op_src_list',
     'g2op_event_equalization'
 ]
 

@@ -62,6 +62,7 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2op_model_plot_name_list="raw bc"
     export g2op_type_list="ozmax8 pmave"
+    export g2op_src_list="airnow airnow"
     export g2op_event_equalization="YES"
     export g2op_ozmax8_init_hr_list="06 12"
     export g2op_ozmax8_valid_hr_list="11"

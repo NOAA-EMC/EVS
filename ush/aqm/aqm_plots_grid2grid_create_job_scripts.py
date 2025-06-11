@@ -43,6 +43,8 @@ restart_mode = os.environ['restart_mode']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
+VERIF_CASE_STEP_src_list = (os.environ[VERIF_CASE_STEP_abbrev+'_src_list'] \
+                             .split(' '))
 PBS_NODEFILE = os.environ['PBS_NODEFILE']
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 
@@ -209,6 +211,7 @@ if JOB_GROUP == 'tar_images':
 
 model_list = os.environ['model_list'].split(' ')
 for verif_type in VERIF_CASE_STEP_type_list:
+    src_idx=VERIF_CASE_STEP_type_list.index(verif_type)
     print("----> Making job scripts for "+VERIF_CASE_STEP+" "
           +verif_type+" for job group "+JOB_GROUP)
     VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
@@ -228,6 +231,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['NDAYS'] = NDAYS
         job_env_dict['fig_name_label'] = fig_name_label
         job_env_dict['restart_mode'] = restart_mode
+        job_env_dict['obs_src_name'] = VERIF_CASE_STEP_src_list[src_idx]
         job_env_dict['date_type'] = 'VALID'
         if JOB_GROUP in ['make_plots']:
             init_hr_start = int(job_env_dict['init_hr_start'])

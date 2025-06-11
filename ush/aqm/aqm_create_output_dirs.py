@@ -26,6 +26,8 @@ STEP = os.environ['STEP']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
+VERIF_CASE_STEP_src_list = (os.environ[VERIF_CASE_STEP_abbrev+'_src_list'] \
+                             .split(' '))
 model_list = os.environ['model_list'].split(' ')
 model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 start_date = os.environ['start_date']
@@ -92,16 +94,18 @@ if STEP == 'plots':
             f"{RUN}.{end_date_dt:%Y%m%d}")
         )
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+        src_idx=VERIF_CASE_STEP_type_list.index(VERIF_CASE_STEP_type)
+        VERIF_CASE_STEP_src=VERIF_CASE_STEP_src_list[src_idx]
         if SENDCOM == 'NO':
             working_dir_list.append(
                 os.path.join(working_output_base_dir,
                              f"{RUN}.{end_date_dt:%Y%m%d}",
-                             f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
+                             f"{VERIF_CASE}_{VERIF_CASE_STEP_src}_{VERIF_CASE_STEP_type}",
                              dir_name_label)
             )
         if SENDCOM == 'YES':
             output_dir_list.append(
-                os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
+                os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_src}_{VERIF_CASE_STEP_type}",
                              dir_name_label)
             )
 
