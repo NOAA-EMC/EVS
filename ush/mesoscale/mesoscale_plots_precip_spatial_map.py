@@ -18,6 +18,7 @@ import logging
 import sys
 import datetime
 import subprocess
+import shutil
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
