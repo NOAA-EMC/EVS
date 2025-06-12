@@ -588,7 +588,7 @@ class PlotSpecs:
                 if int(forecast_hour) % 24 == 0:
                     forecast_day_list.append(str(int(forecast_day)))
                 else:
-                    if fcst_var in [ "OZMAX8" , "PMAVE" ]:  ## round up
+                    if fcst_var in [ "OZMAX8" , "PMAVE", "AOD" ]:  ## round up
                         forecast_day = int(fday_for_title)
                     forecast_day_list.append(str(forecast_day))
             if len(forecast_hour_list) == 1:
