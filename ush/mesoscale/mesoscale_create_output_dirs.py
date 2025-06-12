@@ -423,14 +423,11 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in ['cape', 'ceil_vis','sfc_upper']:
-###            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower()  
-###                    str(eval_period).lower()
                 ))
                 COMOUT_dir_list.append(os.path.join(
                     RESTART_DIR, str(plot_group).lower() 
-###                    str(eval_period).lower()
                 ))
     if VERIF_CASE == 'precip':
         working_output_base_dir = os.path.join(
@@ -459,15 +456,12 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in ['precip']:
-###            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower()  
-###                    str(eval_period).lower()
                 ))
                 if not str(eval_period).lower() == 'na' :
                     COMOUT_dir_list.append(os.path.join(
                         RESTART_DIR, str(plot_group).lower() 
-##                        str(eval_period).lower()
                     ))
                 COMOUT_dir_list.append(os.path.join(
                     RESTART_DIR, str(plot_group).lower(), 
@@ -500,14 +494,11 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in ['snowfall']:
-##            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower() 
-##                    str(eval_period).lower()
                 ))
                 COMOUT_dir_list.append(os.path.join(
                     RESTART_DIR, str(plot_group).lower() 
-##                    str(eval_period).lower()
                 ))
     elif VERIF_CASE == 'headline':
         working_output_base_dir = os.path.join(

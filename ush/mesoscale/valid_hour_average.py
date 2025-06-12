@@ -1416,7 +1416,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         save_name = f'{save_header}.'+save_name
     save_subdir = os.path.join(
         save_dir, f'{str(plot_group).lower()}'  
-##        f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
         try:
@@ -1432,7 +1431,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             os.path.join(
                 restart_dir,
                 f'{str(plot_group).lower()}',
-##                f'{str(time_period_savename).lower()}',
                 save_name+'.png'
             )
         )
