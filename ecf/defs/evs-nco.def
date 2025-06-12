@@ -506,7 +506,7 @@ suite evs_nco
               time 05:58
           endfamily
           family analyses
-            task jevs_analyses_grid2obs_plots
+            task jevs_analyses_grid2obs_plots_last31days
             time 00:30
           endfamily
         endfamily    # 00 plots
