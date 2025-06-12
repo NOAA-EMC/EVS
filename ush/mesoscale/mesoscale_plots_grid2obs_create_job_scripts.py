@@ -76,7 +76,6 @@ for VERIF_TYPE in graphics[COMPONENT][VERIF_CASE]:
                                                     os.environ['DELETE_INTERMED_TOGGLE'] = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['DELETE_INTERMED_TOGGLE']
                                                     completed_jobs_file_full = COMPLETED_JOBS_FILE + "_job" + njobc + ".txt"
                                                     completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
-                                                    print("in create jobs",completed_jobs_file)
                                                     if not os.path.exists(completed_jobs_file):
                                                        cutil.run_shell_command(['python',f'{USHevs}/{COMPONENT}/{COMPONENT}_{STEP}_{VERIF_CASE}_create_job_script.py'])
                                                     njob+=1
