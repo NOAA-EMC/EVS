@@ -89,8 +89,7 @@ condense_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
 #### abiaod
 for abiaod_job in list(condense_stats_jobs_dict['abiaod'].keys()):
     if abiaod_job == 'AOD':
-        ## abiaod_job_line_types = ['SL1L2', 'CTC' ]
-        abiaod_job_line_types = ['SL1L2']
+        abiaod_job_line_types = ['SL1L2', 'CTC' ]
     else:
         abiaod_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['abiaod'][abiaod_job]['line_types'] = abiaod_job_line_types
