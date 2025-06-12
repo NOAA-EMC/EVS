@@ -469,6 +469,10 @@ elif STEP == 'plots':
                         RESTART_DIR, str(plot_group).lower() 
 ##                        str(eval_period).lower()
                     ))
+                COMOUT_dir_list.append(os.path.join(
+                    RESTART_DIR, str(plot_group).lower(), 
+                    'na'
+                ))
     elif VERIF_CASE == 'snowfall':
         working_output_base_dir = os.path.join(
             DATA, VERIF_CASE
