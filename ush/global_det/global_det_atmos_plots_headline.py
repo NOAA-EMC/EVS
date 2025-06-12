@@ -95,6 +95,7 @@ headline1_plot_info_dict = {
     'obs_var_name': 'HGT',
     'obs_var_level': 'P500',
     'obs_var_thresh': 'NA',
+    'ob_name':'gfs_anl' 
 }
 now = datetime.datetime.now()
 headline1_date_info_dict = {
@@ -201,6 +202,7 @@ headline2_plot_info_dict = {
     'obs_var_name': 'TMP',
     'obs_var_level': 'Z2',
     'obs_var_thresh': 'NA',
+    'ob_name':'ADPSFC'
 }
 headline2_date_info_dict = {
     'date_type': 'VALID',
