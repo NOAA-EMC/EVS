@@ -2,6 +2,19 @@
 ################################################################################
 # Name of Script: exevs_global_ens_wave_grid2obs_plots.sh                       
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                    
+# Samira Ardani / samira.ardani@noaa.gov
+# Updates on 202505:
+# 1- MPMD was addressed for plots job.
+# Updates on 202506:
+# 1- Bugzilla 1606: added changes to .py plotting scripts to ensure that the plot job does not fail because of missing arrays.
+# 2- Bugzilla 1585: fixed the wave scatter index value.
+# 3- Changed subprocess.Popen to subprocess.run for only wave- related ush script.
+# 4- Used split_by_subset to trim prepbufr files to only include needed obs.
+# 5- added time dependency to evs-nco.def for global_ens wave plots job.
+# 6- Updated all image names to be lastXXdays instead of pastXXdays. tar files have lastXXdays for waves plots.
+# 7- added obs name to image title.
+# 8- Updated walltime for global_ens wave prep.
+#
 # Purpose of Script: Run the grid2obs plots for any global wave model           
 #                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NWPS)    
 #                                                                               
