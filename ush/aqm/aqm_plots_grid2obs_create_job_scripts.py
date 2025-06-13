@@ -274,7 +274,6 @@ for ozmax8_job in list(filter_stats_jobs_dict['ozmax8'].keys()):
             (filter_stats_jobs_dict['ozmax8'][f"{ozmax8_job}_Thresh"]\
              ['obs_var_dict']['threshs']) = [
                  'gt50',  'gt60', 'gt65', 'gt70', 'gt75', 'gt85'
-                 'gt125', 'gt150'
              ]
 #### pmave
 for pmave_job in list(filter_stats_jobs_dict['pmave'].keys()):
