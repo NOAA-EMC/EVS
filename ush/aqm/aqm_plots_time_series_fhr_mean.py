@@ -279,7 +279,7 @@ class TimeSeriesFhrMean:
                 right_logo_img_array, right_logo_xpixel_loc,
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
-        model_plot_settings_dict = plot_specs_ts.get_model_plot_settings_markevery24()
+        model_plot_settings_dict = plot_specs_ts.get_model_plot_settings_linemarker()
         model_idx_list = (
             stat_df.index.get_level_values(0).unique().tolist()
         )

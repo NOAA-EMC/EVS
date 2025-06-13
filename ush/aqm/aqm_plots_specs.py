@@ -1431,7 +1431,7 @@ class PlotSpecs:
         }
         return forecast_hour_plot_settings_dict
 
-    def get_model_plot_settings_markevery24(self):
+    def get_model_plot_settings_linemarker(self):
         """! Get dictionary plot settings for models
 
              Args:
@@ -1442,35 +1442,35 @@ class PlotSpecs:
                                             (strings)
         """
         model_plot_settings_dict = {
-            'model1': {'color': '#000000', 'markevery': 24,
-                       'marker': 'o', 'markersize': 6,
+            'model1': {'color': '#000000', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 3},
-            'model2': {'color': '#fb2020', 'markevery': 24,
-                       'marker': '^', 'markersize': 7,
+            'model2': {'color': '#fb2020', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'model3': {'color': '#1e3cff', 'markevery': 24,
-                       'marker': 'X', 'markersize': 7,
+            'model3': {'color': '#1e3cff', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'model4': {'color': '#00dc00', 'markevery': 24,
-                       'marker': 'P', 'markersize': 7,
+            'model4': {'color': '#00dc00', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'model5': {'color': '#e69f00', 'markevery': 24,
-                       'marker': 'o', 'markersize': 6,
+            'model5': {'color': '#e69f00', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'model6': {'color': '#56b4e9', 'markevery': 24,
-                       'marker': 'o', 'markersize': 6,
+            'model6': {'color': '#56b4e9', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'model7': {'color': '#696969', 'markevery': 24,
-                       'marker': 's', 'markersize': 6,
+            'model7': {'color': '#696969', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'model8': {'color': '#8400c8', 'markevery': 24,
-                       'marker': 'D', 'markersize': 6,
+            'model8': {'color': '#8400c8', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'model9': {'color': '#d269c1', 'markevery': 24,
-                       'marker': 's', 'markersize': 6,
+            'model9': {'color': '#d269c1', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'model10': {'color': '#f0e492', 'markevery': 24,
-                        'marker': 'o', 'markersize': 6,
+            'model10': {'color': '#f0e492', 'markevery': None,
+                       'marker': 'None', 'markersize': 0,
                         'linestyle': 'solid', 'linewidth': 1.5},
             'prod_raw': {'color': '#1e3cff', 'markevery': None,
                          'marker': 'None', 'markersize': 0,
@@ -1485,7 +1485,7 @@ class PlotSpecs:
                        'marker': 'None', 'markersize': 0,
                        'linestyle': '--', 'linewidth': 2},
             'obsdot': {'color': '#000000', 'markevery': None,
-                       'marker': 'o', 'markersize': 12,
+                       'marker': 'o', 'markersize': 6,
                        'linestyle': 'None', 'linewidth': 0},
             'obs': {'color': '#aaaaaa', 'markevery': None,
                     'marker': 'None', 'markersize': 0,
