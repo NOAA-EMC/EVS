@@ -7,7 +7,6 @@ import subprocess
 import shutil
 import sys
 import netCDF4 as netcdf
-import numpy as np
 import glob
 import pandas as pd
 from time import sleep
@@ -1028,11 +1027,11 @@ def initalize_job_env_dict(verif_type, group,
     """
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMOUT',
-        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT'
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'WORK', 'WORKtask'
     ]
     if group in ['reformat', 'generate', 'gather']:
         os.environ['MET_TMP_DIR'] = os.path.join(
-            os.environ['DATA'],
+            os.environ['WORKtask'],
             os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
             'METplus_output', 'tmp'
         )

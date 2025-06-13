@@ -263,7 +263,25 @@ if [ "$data" = "apcp24h_conus" ] ; then
       export modelpath=${COMHREF}/href.${fyyyymmdd}/ensprod
       export prod 
 
-      for prod in mean avrg pmmn lpmm ; do
+      typeset -Z2 fhr_3
+      typeset -Z2 fhr_6
+      typeset -Z2 fhr_9
+      typeset -Z2 fhr_12
+      typeset -Z2 fhr_15
+      typeset -Z2 fhr_18
+      typeset -Z2 fhr_21
+      fhr_3=$((fhr-3))
+      fhr_6=$((fhr-6))
+      fhr_9=$((fhr-9))
+      fhr_12=$((fhr-12))
+      fhr_15=$((fhr-15))
+      fhr_18=$((fhr-18))
+      fhr_21=$((fhr-21))
+
+     for prod in mean avrg pmmn lpmm ; do
+
+      if [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_3}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_6}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_9}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_12}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_15}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_18}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_21}.grib2 ] ; then
+
 
       #####################################################################################################################
       # Restart: first check if href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists 
@@ -292,7 +310,9 @@ if [ "$data" = "apcp24h_conus" ] ; then
          fi
        fi
 
-      done
+      fi
+
+     done
    done
 fi
 
@@ -321,7 +341,25 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       export modelpath=${COMHREF}/href.${fyyyymmdd}/ensprod
       export prod
 
-      for prod in mean avrg pmmn lpmm ; do
+      typeset -Z2 fhr_3
+      typeset -Z2 fhr_6
+      typeset -Z2 fhr_9
+      typeset -Z2 fhr_12
+      typeset -Z2 fhr_15
+      typeset -Z2 fhr_18
+      typeset -Z2 fhr_21
+      fhr_3=$((fhr-3))
+      fhr_6=$((fhr-6))
+      fhr_9=$((fhr-9))
+      fhr_12=$((fhr-12))
+      fhr_15=$((fhr-15))
+      fhr_18=$((fhr-18))
+      fhr_21=$((fhr-21))
+
+    for prod in mean avrg pmmn lpmm ; do
+
+     if [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_3}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_6}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_9}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_12}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_15}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_18}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_21}.grib2 ] ; then
+
       #################################################################################################
       # Restart: first check if href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists
       #    in the $COMOUTrestart directory, if not, run METplus to create it
@@ -342,7 +380,10 @@ if [ "$data" = "apcp24h_alaska" ] ; then
 	 [[ ! -d $WORK/href.${fyyyymmdd} ]] && mkdir -p $WORK/href.${fyyyymmdd}
          cp  $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc
        fi
-      done
+
+      fi
+ 
+    done
    done
 fi
 

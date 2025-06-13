@@ -91,10 +91,10 @@ if(domain == "atlantic"):
       lon  = float(hits[i,32]) + 360.
       print(lat)
       print(lon)
-      plt.scatter(lon, lat,transform=ccrs.PlateCarree(), marker='o', color='green',s=12, facecolor='none')
+      plt.scatter(lon, lat,transform=ccrs.PlateCarree(), marker='o', color='#2489FE',s=12, facecolor='none')
 
-    plt.scatter(346, 47,transform=ccrs.PlateCarree(), marker='o', color='green',s=12, facecolor='none')
-    plt.annotate("Hits ("+str(numhits)+")", (0,0), (286,185), xycoords='axes fraction', textcoords='offset points', va='top', color='Green', fontsize=6.5)
+    plt.scatter(346, 47,transform=ccrs.PlateCarree(), marker='o', color='#2489FE',s=12, facecolor='none')
+    plt.annotate("Hits ("+str(numhits)+")", (0,0), (286,185), xycoords='axes fraction', textcoords='offset points', va='top', color='#2489FE', fontsize=6.5)
 
 #    plt.title(f"Atlantic TC Genesis Hits")
     TCGENdays = os.environ['TCGENdays']
