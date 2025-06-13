@@ -32,6 +32,7 @@ export interp_pnts=''
 
 export init_end=$VDATE
 export valid_end=$VDATE
+export obsv
 
 model_list='GEFS SREF'
           
@@ -117,16 +118,22 @@ for fcst_valid_hour in $fcst_valid_hours ; do
 	    
        if [ $VAR = TMP2m ] || [ $VAR = DPT2m ] || [ $VAR = RH2m ] ; then 
           FCST_LEVEL_values="Z2"
+	  obsv=" - Validation: METAR"
        elif [ $VAR = UGRD10m ] || [ $VAR = VGRD10m ] ; then
           FCST_LEVEL_values="Z10"
+	  obsv=" - Validation: METAR"
        elif [ $VAR = PRMSL ] || [ $VAR = CAPEsfc ] || [ $VAR = TCDC ] ; then
           FCST_LEVEL_values="L0"
+	  obsv=" - Validation: METAR"
        elif [ $VAR = UGRD ] || [ $VAR = VGRD ] ; then
 	  FCST_LEVEL_values="P850 P500 P250"
+	  obsv=" - Validation: RAOB"
        elif [ $VAR = TMP ] ; then
 	  FCST_LEVEL_values="P850 P500"
+	  obsv=" - Validation: RAOB"
        elif [ $VAR = HGT ] ; then
 	  FCST_LEVEL_values="P500 P700"
+	  obsv=" - Validation: RAOB"
        fi
       
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
