@@ -193,11 +193,13 @@ match_pm25_1="MASSDEN"
 match_pm25_2="8 m above ground"
 match_pm25_3="aerosol=Missing"
 match_pm25_4="aerosol_size <2.5e-06"
+match_pm25_sp="aerosol=Total Aerosol"
 #
 match_pm10_1="MASSDEN"
 match_pm10_2="8 m above ground"
 match_pm10_3="aerosol=Missing"
 match_pm10_4="aerosol_size <1e-05"
+match_pm10_sp="aerosol=Total Aerosol"
 #
 declare -a cyc_opt=( 00 06 12 18 )
 let inc=1
@@ -249,7 +251,23 @@ for mdl_cyc in "${cyc_opt[@]}"; do
                 if [ -e extract_pm10 ]; then /bin/rm -rf extract_pm10; fi
                 wgrib2 -match "${match_aod_1}" -match "${match_aod_2}" ${check_full_file} -grib extract_aod
                 wgrib2 -match "${match_pm25_1}" -match "${match_pm25_2}" -match "${match_pm25_3}" -match "${match_pm25_4}" ${check_full_file} -grib extract_pm25
+		wgrib2 extract_pm25 > extract_pm25_rec
+		number_of_record=$(wc -l extract_pm25_rec | awk -F" " '{print $1}')
+		if [ "${number_of_record}" == "0" ]; then
+                    wgrib2 -match "${match_pm25_1}" -match "${match_pm25_2}" -match "${match_pm25_sp}" -match "${match_pm25_4}" ${check_full_file} -grib extract_pm25
+		fi
+		wgrib2 extract_pm25 > extract_pm25_rec
+		number_of_record=$(wc -l extract_pm25_rec | awk -F" " '{print $1}')
+		echo "DEBUG: Number of extracted record is ${number_of_record} for file extract_pm25"
                 wgrib2 -match "${match_pm10_1}" -match "${match_pm10_2}" -match "${match_pm10_3}" -match "${match_pm10_4}" ${check_full_file} -grib extract_pm10
+		wgrib2 extract_pm10 > extract_pm10_rec
+		number_of_record=$(wc -l extract_pm10_rec | awk -F" " '{print $1}')
+		if [ "${number_of_record}" == "0" ]; then
+                    wgrib2 -match "${match_pm10_1}" -match "${match_pm10_2}" -match "${match_pm10_sp}" -match "${match_pm10_4}" ${check_full_file} -grib extract_pm10
+		fi
+		wgrib2 extract_pm10 > extract_pm10_rec
+		number_of_record=$(wc -l extract_pm10_rec | awk -F" " '{print $1}')
+		echo "DEBUG: Number of extracted record is ${number_of_record} for file extract_pm10"
                 cat extract_pm25 extract_pm10 extract_aod > ${reduced_rec_grib2}
                 if [ ${SENDCOM} = "YES" ]; then
                     cp -v ${reduced_rec_grib2} ${prep_rrfs}
