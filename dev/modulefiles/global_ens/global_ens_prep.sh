@@ -20,6 +20,7 @@ module load cfp/${cfp_ver}
 module load cdo/${cdo_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
+module load bufr/${bufr_ver}
 
 module list
 
