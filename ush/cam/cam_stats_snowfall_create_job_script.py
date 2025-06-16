@@ -360,7 +360,7 @@ if VERIF_CASE == 'snowfall':
                         + 'model=\\\"${MODELNAME}\\\", '
                         + 'var_name=\\\"${VAR_NAME}\\\", '
                         + 'acc=\\\"${ACC}\\\", '
-                        + 'nbrhd=\\\"${BOOL_NBRHD}\\\"'
+                        + 'nbrhd=\\\"${BOOL_NBRHD}\\\", '
                         + 'nbrhd_pt=\\\"${NBRHD_WIDTH}\\\"'
                         + ')\"'
                     )

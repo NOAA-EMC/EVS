@@ -313,7 +313,7 @@ if VERIF_CASE == 'precip':
                         + 'fhr=\\\"${FHR}\\\", '
                         + 'model=\\\"${MODELNAME}\\\", '
                         + 'acc=\\\"${ACC}\\\", '
-                        + 'nbrhd=\\\"${BOOL_NBRHD}\\\"'
+                        + 'nbrhd=\\\"${BOOL_NBRHD}\\\", '
                         + 'nbrhd_pt=\\\"${NBRHD_WIDTH}\\\"'
                         + ')\"'
                     )
