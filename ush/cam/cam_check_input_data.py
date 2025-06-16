@@ -58,7 +58,7 @@ if proceed:
             COMINobsproc = os.environ['COMINobsproc']
             COMINnam = os.environ['COMINnam']
         elif VERIF_CASE == 'snowfall':
-            DCOMINsnow = os.environ['DCOMINsnow']
+            DCOMINnohrsc = os.environ['DCOMINnohrsc']
             OBS_ACC = os.environ['OBS_ACC']
             ACC = os.environ['ACC']
         elif VERIF_CASE == 'precip':
@@ -666,7 +666,7 @@ if proceed:
                 ))
         elif VERIF_CASE == 'snowfall':
             gen_templates.append(os.path.join(
-                DCOMINsnow,
+                DCOMINnohrsc,
                 '{VDATE}',
                 'wgrbbul',
                 'nohrsc_snowfall',
