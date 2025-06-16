@@ -345,8 +345,8 @@ class LongTermUsefulForecastDays:
                     +f"({var_units}){var_thresh_for_title}{nbrhd_for_title}, "
                     +f"{self.vx_grid}/"
                     +plot_specs_ts.get_vx_mask_plot_name(self.vx_mask)+'\n'
-                    +f"valid {dates_for_title} {model_hour}\n"
-                    +f"Dotted Line: {self.time_range.title()} Mean, "
+                    +f"valid {dates_for_title} {model_hour}, Validation: Model's Own Anl.\n"
+                    +f"Dashed Line: {self.time_range.title()} Mean, "
                     +f"Solid Line: {run_length_running_mean} "
                     +f"{self.time_range.replace('ly','').title()} Running Mean"
                 )
@@ -384,7 +384,7 @@ class LongTermUsefulForecastDays:
                             run_length_model_group_useful_fday_df\
                             .loc[(model)][[ufd_thresh]].to_numpy(dtype=float)
                         ),
-                        fmt='.', linewidth=1, markersize=0,
+                        fmt='--', linewidth=1, markersize=0,
                         color=ufd_stat_threshold_colors_dict[ufd_thresh],
                     )
                     ax.plot_date(
@@ -477,8 +477,8 @@ class LongTermUsefulForecastDays:
                     +f"({var_units}){var_thresh_for_title}{nbrhd_for_title}, "
                     +f"{self.vx_grid}/"
                     +plot_specs_ts.get_vx_mask_plot_name(self.vx_mask)+'\n'
-                    +f"valid {dates_for_title} {model_hour}\n"
-                    +f"Dotted Line: {self.time_range.title()} Mean, "
+                    +f"valid {dates_for_title} {model_hour}, Validation: Model's Own Anl.\n"
+                    +f"Dashed Line: {self.time_range.title()} Mean, "
                     +f"Solid Line: {run_length_running_mean} "
                     +f"{self.time_range.replace('ly','').title()} Running Mean"
                 )
@@ -520,7 +520,7 @@ class LongTermUsefulForecastDays:
                             run_length_model_group_useful_fday_df\
                             .loc[(model)][[ufd_thresh]].to_numpy(dtype=float)
                         ),
-                        fmt='.', linewidth=1, markersize=0,
+                        fmt='--', linewidth=1, markersize=0,
                         color=model_plot_settings_dict['color'],
                     )
                     if ufd_thresh == ufd_two_thresh[0]:

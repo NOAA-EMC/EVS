@@ -543,6 +543,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         labels = []
     handles = []
     labels = []
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -585,9 +586,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     y_vals_metric_min = np.nanmin(y_vals_metric1)
                     y_vals_metric_max = np.nanmax(y_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
+                n_mods+=1
             else:
                 if math.isinf(y_mod_min):
                     y_mod_min = y_vals_metric_min
@@ -987,7 +989,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             title2 = f'{level_string}{var_long_name} (unitless)'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}')
+              + f'{date_start_string} to {date_end_string}, '
+              + f'Validation: {str(obtype).upper()} ')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=20

@@ -506,7 +506,7 @@ suite evs_nco
               time 05:58
           endfamily
           family analyses
-            task jevs_analyses_grid2obs_plots
+            task jevs_analyses_grid2obs_plots_last31days
             time 00:30
           endfamily
         endfamily    # 00 plots
@@ -1165,7 +1165,7 @@ suite evs_nco
           endfamily
           family global_ens
             task jevs_global_ens_wave_grid2obs_plots
-              trigger ../../../../06/evs/stats/global_ens/jevs_global_ens_wave_grid2obs_stats == complete
+              trigger :TIME >= 1130 and ../../../../06/evs/stats/global_ens/jevs_global_ens_wave_grid2obs_stats == complete
           endfamily
         endfamily    # 06 plots
       endfamily  # evs
