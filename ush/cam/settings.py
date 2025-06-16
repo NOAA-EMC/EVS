@@ -824,6 +824,13 @@ class Reference():
         keys and values, not forgetting to include a comma at the end of any 
         new lines.
         '''
+        self.verif_type_translator = {'ccpa': 'CCPA',
+                                      'mrms': 'MRMS',
+                                      'nohrsc': 'NOHRSC',
+                                      'raob': 'RAOB',
+                                      'metar': 'METAR',
+                                      'lsr': 'Local Storm Reports (LSR)',
+        }
         self.variable_translator = {'TMP': 'Temperature',
                                     'TMP_Z0_mean': 'Temperature',
                                     'HGT': 'Geopotential Height',
