@@ -16,11 +16,12 @@
 import os
 import re
 from datetime import datetime, timedelta as td
-from mesoscale_plots_grid2obs_graphx_defs import graphics as graphics_g2o
-from mesoscale_plots_precip_graphx_defs import graphics as graphics_pcp
-from mesoscale_plots_headline_graphx_defs import graphics as graphics_hdl
-from mesoscale_plots_snowfall_graphx_defs import graphics as graphics_sno
 import mesoscale_util as cutil
+if os.environ['STEP'] == 'plots':
+    from mesoscale_plots_grid2obs_graphx_defs import graphics as graphics_g2o
+    from mesoscale_plots_precip_graphx_defs import graphics as graphics_pcp
+    from mesoscale_plots_headline_graphx_defs import graphics as graphics_hdl
+    from mesoscale_plots_snowfall_graphx_defs import graphics as graphics_sno
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
