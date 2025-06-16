@@ -47,7 +47,6 @@ then
 	fi
 
 	DATE=${VDATE}${vhr}
-        let "vhrp1=vhr+1"
 	ENDDATE=`$NDATE -23 $DATE`
         while [ $DATE -ge $ENDDATE ]; do
         echo $DATE > curdate
