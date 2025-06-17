@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_create_output_dirs.py
+Name: global_chem_atmos_create_output_dirs.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This creates the base directories and their subdirectories.
-Run By: scripts/plots/global_ens/exevs_global_ens_chem_grid2obs_plots.sh
+Run By: scripts/plots/global_chem/exevs_global_chem_atmos_grid2obs_plots.sh
 '''
 
 import os
 import datetime
-import global_ens_chem_util as gda_util
+import global_chem_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
