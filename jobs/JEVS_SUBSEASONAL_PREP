@@ -58,7 +58,7 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 
-export INITDATE=$PDYm2
+export INITDATE=${INITDATE:-$PDYm2}
 
 #################################################
 # Set up the INPUT and OUTPUT directories
