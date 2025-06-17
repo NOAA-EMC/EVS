@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_plots_lead_average.py
+Name: global_chem_atmos_plots_valid_hour_average.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
-Abstract: This script generates a lead average plot.
-          (x-axis: forecast hour; y-axis: statistics value)
-          (EVS Graphics Naming Convention: fhrmean)
+Abstract: This script generates a valid hour average plot.
+          (x-axis: valid hour; y-axis: statistics value)
+          (EVS Graphics Naming Convention: vhrmean)
 '''
 
 import sys
@@ -20,17 +20,17 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
-import global_ens_chem_util as gda_util
-from global_ens_chem_plots_specs import PlotSpecs
+import global_chem_atmos_util as gda_util
+from global_chem_atmos_plots_specs import PlotSpecs
 
-class LeadAverage:
+class ValidHourAverage:
     """
-    Make a lead average graphic
+    Make a valid hour average graphic
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
-        """! Initialize LeadAverage class
+        """! Initialize ValidHourAverage class
 
              Args:
                  logger          - logger object
@@ -53,14 +53,14 @@ class LeadAverage:
         self.met_info_dict = met_info_dict
         self.logo_dir = logo_dir
 
-    def make_lead_average(self):
-        """! Make the lead average graphic
+    def make_valid_hour_average(self):
+        """! Make the valid hour average graphic
 
              Args:
 
              Returns:
         """
-        self.logger.info("Plot Type: Lead Average")
+        self.logger.info(f"Plot Type: Valid Hour Average")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -71,77 +71,104 @@ class LeadAverage:
                           +f"{self.plot_info_dict}")
         # Check stat
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
-            self.logger.error("Cannot make lead_average for stat "
+            self.logger.error("Cannot make valid_hour_average for stat "
                               +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
-        # Make dataframe for all forecast hours
-        self.logger.info("Building dataframe for all forecast hours")
-        self.logger.info(f"Reading in model stat files from {self.input_dir}")
+        # Make dataframe for all valid hour
+        self.logger.info("Building dataframe for all valid hours")
         fcst_units = []
-        for forecast_hour in self.date_info_dict['forecast_hours']:
-            self.logger.info(f"Building data for forecast hour {forecast_hour}")
-            # Get dates to plot
-            self.logger.debug("Making valid and init date arrays")
-            valid_dates, init_dates = gda_util.get_plot_dates(
-                self.logger,
-                self.date_info_dict['date_type'],
-                self.date_info_dict['start_date'],
-                self.date_info_dict['end_date'],
-                self.date_info_dict['valid_hr_start'],
-                self.date_info_dict['valid_hr_end'],
-                self.date_info_dict['valid_hr_inc'],
-                self.date_info_dict['init_hr_start'],
-                self.date_info_dict['init_hr_end'],
-                self.date_info_dict['init_hr_inc'],
-                forecast_hour
-            )
-            format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
-                                  for d in range(len(valid_dates))]
-            format_init_dates = [init_dates[d].strftime('%Y%m%d_%H%M%S') \
-                                 for d in range(len(init_dates))]
-            if self.date_info_dict['date_type'] == 'VALID':
-                self.logger.debug("Based on date information, plot will display "
-                                  +"valid dates "+', '.join(format_valid_dates)+" "
-                                  +"for forecast hour "
-                                  +f"{forecast_hour} with initialization dates "
-                                  +', '.join(format_init_dates))
-                plot_dates = valid_dates
-            elif self.date_info_dict['date_type'] == 'INIT':
-                self.logger.debug("Based on date information, plot will display "
-                                  +"initialization dates "
-                                  +', '.join(format_init_dates)+" "
-                                  +"for forecast hour "
-                                  +f"{forecast_hour} with valid dates "
-                                  +', '.join(format_valid_dates))
-                plot_dates = init_dates
-            # Read in data
-            all_model_df = gda_util.build_df(
-                'make_plots', self.logger, self.input_dir, self.output_dir,
-                self.model_info_dict, self.met_info_dict,
-                self.plot_info_dict['fcst_var_name'],
-                self.plot_info_dict['fcst_var_level'],
-                self.plot_info_dict['fcst_var_thresh'],
-                self.plot_info_dict['obs_var_name'],
-                self.plot_info_dict['obs_var_level'],
-                self.plot_info_dict['obs_var_thresh'],
-                self.plot_info_dict['line_type'],
-                self.plot_info_dict['grid'],
-                self.plot_info_dict['vx_mask'],
-                self.plot_info_dict['interp_method'],
-                self.plot_info_dict['interp_points'],
-                self.date_info_dict['date_type'],
-                plot_dates, format_valid_dates,
-                str(forecast_hour)
-            )
-            fcst_units.extend(
-                all_model_df['FCST_UNITS'].values.astype('str').tolist()
-            )
+        valid_hours = np.arange(
+            int(self.date_info_dict['valid_hr_start']),
+            int(self.date_info_dict['valid_hr_end'])\
+            +int(self.date_info_dict['valid_hr_inc']),
+            int(self.date_info_dict['valid_hr_inc'])
+        )
+        self.logger.info("Reading in model stat files "
+                         +f"from {self.input_dir}")
+        for valid_hour in valid_hours:
+            self.logger.debug(f"Building data for valid hour {valid_hour}")
+            for forecast_hour in self.date_info_dict['forecast_hours']:
+                self.logger.debug(f"Building data for forecast hour {forecast_hour}")
+                # Get dates to plot
+                self.logger.debug("Making valid and init date arrays")
+                valid_dates, init_dates = gda_util.get_plot_dates(
+                    self.logger,
+                    self.date_info_dict['date_type'],
+                    self.date_info_dict['start_date'],
+                    self.date_info_dict['end_date'],
+                    str(valid_hour),
+                    str(valid_hour),
+                    '24',
+                    self.date_info_dict['init_hr_start'],
+                    self.date_info_dict['init_hr_end'],
+                    self.date_info_dict['init_hr_inc'],
+                    forecast_hour
+                )
+                format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
+                                      for d in range(len(valid_dates))]
+                format_init_dates = [init_dates[d].strftime('%Y%m%d_%H%M%S') \
+                                     for d in range(len(init_dates))]
+                if self.date_info_dict['date_type'] == 'VALID':
+                    self.logger.debug("Based on date information, "
+                                      +"plot will display valid dates "
+                                      +', '.join(format_valid_dates)+" "
+                                      +"for forecast hour "
+                                      +f"{forecast_hour} with "
+                                      +"initialization dates "
+                                      +', '.join(format_init_dates))
+                    plot_dates = valid_dates
+                elif self.date_info_dict['date_type'] == 'INIT':
+                    self.logger.debug("Based on date information, "
+                                      +"plot will display "
+                                      +"initialization dates "
+                                      +', '.join(format_init_dates)+" "
+                                      +"for forecast hour "
+                                      +f"{forecast_hour} with valid dates "
+                                      +', '.join(format_valid_dates))
+                    plot_dates = init_dates
+                # Read in data
+                all_model_df = gda_util.build_df(
+                    'make_plots', self.logger, self.input_dir, self.output_dir,
+                    self.model_info_dict, self.met_info_dict,
+                    self.plot_info_dict['fcst_var_name'],
+                    self.plot_info_dict['fcst_var_level'],
+                    self.plot_info_dict['fcst_var_thresh'],
+                    self.plot_info_dict['obs_var_name'],
+                    self.plot_info_dict['obs_var_level'],
+                    self.plot_info_dict['obs_var_thresh'],
+                    self.plot_info_dict['line_type'],
+                    self.plot_info_dict['grid'],
+                    self.plot_info_dict['vx_mask'],
+                    self.plot_info_dict['interp_method'],
+                    self.plot_info_dict['interp_points'],
+                    self.date_info_dict['date_type'],
+                    plot_dates, format_valid_dates,
+                    str(forecast_hour)
+                )
+                fcst_units.extend(
+                    all_model_df['FCST_UNITS'].values.astype('str').tolist()
+                )
+                model_idx_list = (
+                    all_model_df.index.get_level_values(0).unique().tolist()
+                )
+                all_model_df.rename(
+                    index=lambda s: s+'f'+str(forecast_hour).zfill(3),
+                    level=1, inplace=True
+                )
+                if forecast_hour \
+                        == self.date_info_dict['forecast_hours'][0]:
+                    all_forecast_hour_all_model_df = all_model_df
+                else:
+                    all_forecast_hour_all_model_df = pd.concat(
+                        [all_forecast_hour_all_model_df,all_model_df]
+                    )
             # Calculate statistic mean and 95% confidence intervals
             self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
                              +f"from line type {self.plot_info_dict['line_type']} "
                              +"average and 95% confidence intervals")
             stat_df, stat_array = gda_util.calculate_stat(
-                self.logger, all_model_df, self.plot_info_dict['line_type'],
+                self.logger, all_forecast_hour_all_model_df,
+                self.plot_info_dict['line_type'],
                 self.plot_info_dict['stat']
             )
             model_idx_list = (
@@ -155,18 +182,16 @@ class LeadAverage:
                 for model_idx in model_idx_list:
                     model_idx_num = model_idx_list.index(model_idx)
                     stat_df.loc[model_idx] = stat_array[model_idx_num,:]
-                    all_model_df.loc[model_idx] = (
-                        all_model_df.loc[model_idx].where(
+                    all_forecast_hour_all_model_df.loc[model_idx] = (
+                        all_forecast_hour_all_model_df.loc[model_idx].where(
                             stat_df.loc[model_idx].notna()
                     ).values)
-            if forecast_hour == self.date_info_dict['forecast_hours'][0]:
-                forecast_hours_avg_df = pd.DataFrame(
-                    np.nan, model_idx_list,
-                    columns=self.date_info_dict['forecast_hours']
+            if valid_hour == valid_hours[0]:
+                valid_hours_avg_df = pd.DataFrame(
+                    np.nan, model_idx_list, columns=valid_hours
                 )
-                forecast_hours_ci_df = pd.DataFrame(
-                    np.nan, model_idx_list,
-                    columns=self.date_info_dict['forecast_hours']
+                valid_hours_ci_df = pd.DataFrame(
+                    np.nan, model_idx_list, columns=valid_hours
                 )
             for model_idx in model_idx_list:
                 model_idx_num = model_idx_list.index(model_idx)
@@ -177,15 +202,15 @@ class LeadAverage:
                     calc_avg_df = stat_df.loc[model_idx]
                 else:
                     avg_method = 'aggregation'
-                    calc_avg_df = all_model_df.loc[model_idx]
-                model_idx_forecast_hour_avg = gda_util.calculate_average(
+                    calc_avg_df = all_forecast_hour_all_model_df.loc[model_idx]
+                model_idx_valid_hour_avg = gda_util.calculate_average(
                     self.logger, avg_method, self.plot_info_dict['line_type'],
                     self.plot_info_dict['stat'], calc_avg_df
                 )
-                if not np.isnan(model_idx_forecast_hour_avg) \
-                        and not np.ma.is_masked(model_idx_forecast_hour_avg):
-                    forecast_hours_avg_df.loc[model_idx, forecast_hour] = (
-                        model_idx_forecast_hour_avg
+                if not np.isnan(model_idx_valid_hour_avg) \
+                        and not np.ma.is_masked(model_idx_valid_hour_avg):
+                    valid_hours_avg_df.loc[model_idx, valid_hour] = (
+                        model_idx_valid_hour_avg
                     )
                 if model_idx == model_idx_list[0]:
                     model1_stat_df = stat_df.loc[model_idx]
@@ -197,12 +222,6 @@ class LeadAverage:
                                 -np.ma.count_masked(model_idx_model1_diff))
                     model_idx_model1_diff_mean = np.mean(model_idx_model1_diff)
                     model_idx_model1_diff_std = np.std(model_idx_model1_diff)
-                    ##Null Hypothesis: mean(M1-M2)=0,
-                    ##M1-M2 follows normal distribution.
-                    ##plot the 5% conf interval of difference of means
-                    ##F*SD/sqrt(N-1),
-                    ##F=1.96 for infinite samples, F=2.0 for nsz=60,
-                    ##F=2.042 for nsz=30, F=2.228 for nsz=10
                     if nsamples > 1:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
@@ -217,36 +236,23 @@ class LeadAverage:
                             ci = 2.228 * model_idx_model1_diff_mean_std_err
                     else:
                         ci = np.nan
-                    forecast_hours_ci_df.loc[model_idx, forecast_hour] = ci
-                    #from scipy import stats
-                    #scipy_ci = stats.t.interval(
-                    #    alpha=0.95,
-                    #    df=len(np.ma.compressed(model_idx_model1_diff))-1,
-                    #    loc=0,
-                    #    scale=stats.sem(np.ma.compressed(model_idx_model1_diff))
-                    #)
+                    valid_hours_ci_df.loc[model_idx, valid_hour] = ci
         # Set up plot
         self.logger.info(f"Setting up plot")
-        plot_specs_la = PlotSpecs(self.logger, 'lead_average')
-        plot_specs_la.set_up_plot()
-        n_xticks = 17
-        if len(self.date_info_dict['forecast_hours']) <= n_xticks:
-            xticks = self.date_info_dict['forecast_hours']
+        plot_specs_vha = PlotSpecs(self.logger, 'valid_hour_average')
+        plot_specs_vha.set_up_plot()
+        n_xticks = 8
+        if len(valid_hours) < n_xticks:
+            xtick_intvl = 1
         else:
-            xticks = []
-            for fhr in self.date_info_dict['forecast_hours']:
-                if int(fhr) % 24 == 0:
-                    xticks.append(fhr)
-            if len(xticks) > n_xticks:
-                xtick_intvl = int(len(xticks)/n_xticks)
-                xticks = xticks[::xtick_intvl]
+            xtick_intvl = int(len(valid_hours)/n_xticks)
         stat_min_max_dict = {
             'ax1_stat_min': np.ma.masked_invalid(np.nan),
             'ax1_stat_max': np.ma.masked_invalid(np.nan),
             'ax2_stat_min': np.ma.masked_invalid(np.nan),
             'ax2_stat_max': np.ma.masked_invalid(np.nan)
         }
-        stat_plot_name = plot_specs_la.get_stat_plot_name(
+        stat_plot_name = plot_specs_vha.get_stat_plot_name(
              self.plot_info_dict['stat']
         )
         fcst_units = np.unique(fcst_units)
@@ -257,7 +263,7 @@ class LeadAverage:
         elif len(fcst_units) == 0:
             self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
-        plot_title = plot_specs_la.get_plot_title(
+        plot_title = plot_specs_vha.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
@@ -268,9 +274,9 @@ class LeadAverage:
                 plot_left_logo_path
             )
             left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
-                plot_specs_la.get_logo_location(
-                    'left', plot_specs_la.fig_size[0],
-                    plot_specs_la.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_vha.get_logo_location(
+                    'left', plot_specs_vha.fig_size[0],
+                    plot_specs_vha.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
         else:
@@ -283,31 +289,30 @@ class LeadAverage:
                 plot_right_logo_path
             )
             right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
-                plot_specs_la.get_logo_location(
-                    'right', plot_specs_la.fig_size[0],
-                    plot_specs_la.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_vha.get_logo_location(
+                    'right', plot_specs_vha.fig_size[0],
+                    plot_specs_vha.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
         else:
             plot_right_logo = False
             self.logger.debug(f"{plot_right_logo_path} does not exist")
-        image_name = plot_specs_la.get_savefig_name(
+        image_name = plot_specs_vha.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         # Make plot
         self.logger.info(f"Making plot")
         fig, (ax1, ax2) = plt.subplots(2,1,
-                                       figsize=(plot_specs_la.fig_size[0],
-                                                plot_specs_la.fig_size[1]),
+                                       figsize=(plot_specs_vha.fig_size[0],
+                                                plot_specs_vha.fig_size[1]),
                                        sharex=True)
         fig.suptitle(plot_title)
         ax1.grid(True)
         ax1.set_ylabel(stat_plot_name)
         ax2.grid(True)
-        ax2.set_xlabel('Forecast Hour')
-        ax2.set_xlim([self.date_info_dict['forecast_hours'][0],
-                      self.date_info_dict['forecast_hours'][-1]])
-        ax2.set_xticks(xticks)
+        ax2.set_xlabel('Valid Hour')
+        ax2.set_xlim([valid_hours[0], valid_hours[-1]])
+        ax2.set_xticks(valid_hours[::xtick_intvl])
         ax2.set_ylabel('Difference')
         ax2.set_title('Difference from '
                       +self.model_info_dict['model1']['plot_name'], loc='left')
@@ -332,19 +337,15 @@ class LeadAverage:
                 right_logo_img_array, right_logo_xpixel_loc,
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
-        model_plot_settings_dict = plot_specs_la.get_model_plot_settings()
+        model_plot_settings_dict = plot_specs_vha.get_model_plot_settings()
         model_idx_list = (
-            forecast_hours_avg_df.index.get_level_values(0).unique().tolist()
+            valid_hours_avg_df.index.get_level_values(0).unique().tolist()
         )
         ci_bar_max_widths = np.append(
-            np.diff(self.date_info_dict['forecast_hours']),
-            self.date_info_dict['forecast_hours'][-1]
-            -self.date_info_dict['forecast_hours'][-2]
+            np.diff(valid_hours), valid_hours[-1]-valid_hours[-2]
         )/1.5
         ci_bar_min_widths = np.append(
-            np.diff(self.date_info_dict['forecast_hours']),
-            self.date_info_dict['forecast_hours'][-1]
-            -self.date_info_dict['forecast_hours'][-2]
+            np.diff(valid_hours), valid_hours[-1]-valid_hours[-2]
         )/len(list(self.model_info_dict.keys()))
         ci_bar_intvl_widths = (
             (ci_bar_max_widths-ci_bar_min_widths)
@@ -355,7 +356,7 @@ class LeadAverage:
             model_num_name = model_idx.split('/')[1]
             model_num_plot_name = model_idx.split('/')[2]
             model_num_obs_name = self.model_info_dict[model_num]['obs_name']
-            model_num_data = forecast_hours_avg_df.loc[model_idx]
+            model_num_data = valid_hours_avg_df.loc[model_idx]
             if model_num_name in list(model_plot_settings_dict.keys()):
                 model_num_plot_settings_dict = (
                     model_plot_settings_dict[model_num_name]
@@ -364,24 +365,22 @@ class LeadAverage:
                 model_num_plot_settings_dict = (
                     model_plot_settings_dict[model_num]
                 )
+            self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                              +f"{model_num_plot_name}]")
             masked_model_num_data = np.ma.masked_invalid(model_num_data)
             if model_num == 'model1':
                  model1_masked_model_num_data = masked_model_num_data
-                 model1_name = model_num_name
-                 model1_plot_name = model_num_plot_name
             model_num_npts = (
                 len(masked_model_num_data)
                 - np.ma.count_masked(masked_model_num_data)
             )
-            masked_forecast_hours = np.ma.masked_where(
+            masked_valid_hours = np.ma.masked_where(
                 np.ma.getmask(masked_model_num_data),
-                forecast_hours_avg_df.columns.values.tolist()
+                valid_hours_avg_df.columns.values.tolist()
             )
-            self.logger.debug(f"Plotting {model_num} [{model_num_name},"
-                              +f"{model_num_plot_name}]")
             if model_num_npts != 0:
                 ax1.plot(
-                    np.ma.compressed(masked_forecast_hours),
+                    np.ma.compressed(masked_valid_hours),
                     np.ma.compressed(masked_model_num_data),
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
@@ -414,17 +413,19 @@ class LeadAverage:
                 len(masked_model_num_model1_diff_data)
                 - np.ma.count_masked(masked_model_num_model1_diff_data)
             )
-            masked_diff_forecast_hours = np.ma.masked_where(
+            masked_diff_valid_hours = np.ma.masked_where(
                 np.ma.getmask(masked_model_num_model1_diff_data),
-                forecast_hours_avg_df.columns.values.tolist()
+                valid_hours_avg_df.columns.values.tolist()
             )
-            self.logger.debug(f"Plotting {model_num} [{model_num_name},"
-                              +f"{model_num_plot_name}] difference from "
-                              +f"model1 [{model1_name},"
-                              +f"{model1_plot_name}]")
             if model_num_diff_npts != 0:
+                self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                                  +f"{model_num_plot_name}] difference from "
+                                  +"model1 ["
+                                  +f"{self.model_info_dict['model1']['name']},"
+                                  +self.model_info_dict['model1']['plot_name']
+                                  +"]")
                 ax2.plot(
-                    np.ma.compressed(masked_diff_forecast_hours),
+                    np.ma.compressed(masked_diff_valid_hours),
                     np.ma.compressed(masked_model_num_model1_diff_data),
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
@@ -449,13 +450,14 @@ class LeadAverage:
             else:
                 self.logger.debug(f"{model_num} [{model_num_name},"
                                   +f"{model_num_plot_name}] difference from "
-                                  +f"model1 [{model1_name},{model1_plot_name}] "
-                                  +"has no points")
-                                  
+                                  +"model1 ["
+                                  +f"{self.model_info_dict['model1']['name']},"
+                                  +self.model_info_dict['model1']['plot_name']
+                                  +"] has no points")
             if model_num == 'model1':
                 ax2.plot(
-                    forecast_hours_avg_df.columns.values.tolist(),
-                    np.zeros_like(forecast_hours_avg_df.columns.values.tolist()),
+                    valid_hours_avg_df.columns.values.tolist(),
+                    np.zeros_like(valid_hours_avg_df.columns.values.tolist()),
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
@@ -466,22 +468,24 @@ class LeadAverage:
                 )
             if model_num != 'model1':
                 masked_model_num_model1_diff_ci_data = np.ma.masked_invalid(
-                    forecast_hours_ci_df.loc[model_idx]
+                    valid_hours_ci_df.loc[model_idx]
                 )
                 model_num_ci_npts = (
                     len(masked_model_num_model1_diff_ci_data)
                     - np.ma.count_masked(masked_model_num_model1_diff_ci_data)
                 )
-                masked_ci_forecast_hours = np.ma.masked_where(
+                masked_ci_valid_hours = np.ma.masked_where(
                     np.ma.getmask(masked_model_num_model1_diff_ci_data),
-                    forecast_hours_ci_df.columns.values.tolist()
+                    valid_hours_ci_df.columns.values.tolist()
                 )
                 self.logger.debug(f"Plotting {model_num} ["
                                   +f"{model_num_name},"
                                   +f"{model_num_plot_name}] difference "
-                                  +f"from model1 [{model1_name},"
-                                  +f"{model1_plot_name}] "
-                                  +"confidence intervals")
+                                  +"from mode1 ["
+                                  +self.model_info_dict['model1']['name']
+                                  +","
+                                  +self.model_info_dict['model1']['plot_name']
+                                  +"] confidence intervals")
                 if model_num_ci_npts != 0:
                     ci_min = masked_model_num_model1_diff_ci_data.min()
                     ci_max = masked_model_num_model1_diff_ci_data.max()
@@ -493,8 +497,8 @@ class LeadAverage:
                             or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
                         if not np.ma.is_masked(ci_max):
                             stat_min_max_dict['ax2_stat_max'] = ci_max
-                    cmasked_ci_forecast_hours = np.ma.compressed(
-                        masked_ci_forecast_hours
+                    cmasked_ci_valid_hours = np.ma.compressed(
+                        masked_ci_valid_hours
                     )
                     cmasked_model_num_model1_diff_ci_data = np.ma.compressed(
                         masked_model_num_model1_diff_ci_data
@@ -511,26 +515,28 @@ class LeadAverage:
                             ci_bar_intvl_widths
                         )
                     )
-                    for fhr_idx in range(len(cmasked_ci_forecast_hours)):
-                        fhr = cmasked_ci_forecast_hours[fhr_idx]
-                        fhr_ci = (
-                            cmasked_model_num_model1_diff_ci_data[fhr_idx]
+                    for vhr_idx in range(len(cmasked_ci_valid_hours)):
+                        vhr = cmasked_ci_valid_hours[vhr_idx]
+                        vhr_ci = (
+                            cmasked_model_num_model1_diff_ci_data[vhr_idx]
                         )
-                        ax2.bar(fhr, 2*np.absolute(fhr_ci),
-                                bottom=-1*np.absolute(fhr_ci),
-                                width=(cmasked_ci_bar_max_widths[fhr_idx]
-                                       -(cmasked_ci_bar_intvl_widths[fhr_idx]
+                        ax2.bar(vhr, 2*np.absolute(vhr_ci),
+                                bottom=-1*np.absolute(vhr_ci),
+                                width=(cmasked_ci_bar_max_widths[vhr_idx]
+                                       -(cmasked_ci_bar_intvl_widths[vhr_idx]
                                        *model_idx_list.index(model_idx))),
                                 color = 'None',
                                 edgecolor=model_num_plot_settings_dict['color'],
                                 linewidth=1)
                 else:
-                    self.logger.debug(f"{model_num}: ["
+                    self.logger.debug(f"{model_num} ["
                                       +f"{model_num_name},"
                                       +f"{model_num_plot_name}] difference "
-                                      +f"from model1 [{model1_name},"
-                                      +f"{model1_plot_name}] "
-                                      +"confidence intervals has no points")
+                                      +"from mode1 ["
+                                      +self.model_info_dict['model1']['name']
+                                      +","
+                                      +self.model_info_dict['model1']['plot_name']
+                                      +"] confidence intervals has no points")
         subplot_num = 1
         for ax in fig.get_axes():
             stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
@@ -586,11 +592,11 @@ class LeadAverage:
             stat_min = stat_min_max_dict['ax1_stat_min']
             stat_max = stat_min_max_dict['ax1_stat_max']
             legend = ax1.legend(
-                bbox_to_anchor=(plot_specs_la.legend_bbox[0],
-                                plot_specs_la.legend_bbox[1]),
-                loc = plot_specs_la.legend_loc,
-                ncol = plot_specs_la.legend_ncol,
-                fontsize = plot_specs_la.legend_font_size
+                bbox_to_anchor=(plot_specs_vha.legend_bbox[0],
+                                plot_specs_vha.legend_bbox[1]),
+                loc = plot_specs_vha.legend_loc,
+                ncol = plot_specs_vha.legend_ncol,
+                fontsize = plot_specs_vha.legend_font_size
             )
             plt.draw()
             inv = ax1.transData.inverted()
@@ -610,11 +616,11 @@ class LeadAverage:
                     )
                     ax1.set_ylim([y_axis_min, y_axis_max])
                     legend = ax1.legend(
-                        bbox_to_anchor=(plot_specs_la.legend_bbox[0],
-                                        plot_specs_la.legend_bbox[1]),
-                        loc = plot_specs_la.legend_loc,
-                        ncol = plot_specs_la.legend_ncol,
-                        fontsize = plot_specs_la.legend_font_size
+                        bbox_to_anchor=(plot_specs_vha.legend_bbox[0],
+                                        plot_specs_vha.legend_bbox[1]),
+                        loc = plot_specs_vha.legend_loc,
+                        ncol = plot_specs_vha.legend_ncol,
+                        fontsize = plot_specs_vha.legend_font_size
                     )
                     plt.draw()
                     inv = ax1.transData.inverted()
@@ -693,9 +699,10 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = LeadAverage(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
-                    DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT, LOGO_DIR)
-    p.make_lead_average()
+    p = ValidHourAverage(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
+                         DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT,
+                         LOGO_DIR)
+    p.make_valid_hour_average()
 
 if __name__ == "__main__":
     main()
