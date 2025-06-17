@@ -210,7 +210,8 @@ for pmave_job in list(condense_stats_jobs_dict['pmave_headline'].keys()):
 #### aeronetaod
 for aeronetaod_job in list(condense_stats_jobs_dict['aeronetaod'].keys()):
     if aeronetaod_job == 'AOD':
-        aeronetaod_job_line_types = ['SL1L2', 'CTC' ]
+        ## aeronetaod_job_line_types = ['SL1L2', 'CTC' ]
+        aeronetaod_job_line_types = ['SL1L2']
     else:
         aeronetaod_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['aeronetaod'][aeronetaod_job]['line_types'] = aeronetaod_job_line_types
