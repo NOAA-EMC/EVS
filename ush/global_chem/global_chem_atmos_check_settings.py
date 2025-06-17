@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_check_settings.py
+Name: global_chem_atmos_check_settings.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This does a check on the run's configuration
-          settings for global_ens chem plots jobs.
-Run By: scripts/plots/global_ens/exevs_global_ens_chem_grid2obs_plots.sh
+          settings for global_chem plots jobs.
+Run By: scripts/plots/global_chem/exevs_global_chem_atmos_grid2obs_plots.sh
 '''
 
 import sys
@@ -73,9 +73,9 @@ for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         sys.exit(1)
 
 # Set up setting names
-evs_global_ens_chem_settings_dict = {}
+evs_global_chem_atmos_settings_dict = {}
 if evs_run_mode == 'production':
-    evs_global_ens_chem_settings_dict['evs'] = [
+    evs_global_chem_atmos_settings_dict['evs'] = [
         'HOMEevs', 'config', 'NET', 'RUN', 'COMPONENT', 'STEP',
         'VERIF_CASE', 'envir', 'evs_run_mode', 'job', 'jobid',
         'pid', 'OUTPUTROOT', 'DATA', 'machine', 'nproc', 'USE_CFP',
@@ -84,7 +84,7 @@ if evs_run_mode == 'production':
         'DCOMROOT', 'VERIF_CASE_STEP_abbrev'
     ]
 else:
-    evs_global_ens_chem_settings_dict['evs'] = [
+    evs_global_chem_atmos_settings_dict['evs'] = [
         'HOMEevs', 'config', 'NET', 'RUN', 'COMPONENT', 'STEP',
         'VERIF_CASE', 'envir', 'evs_run_mode', 'job', 'jobid',
         'pid', 'OUTPUTROOT', 'DATA', 'machine', 'ACCOUNT',
@@ -94,17 +94,17 @@ else:
         'METviewer_AWS_scripts_dir', 'DATAROOT', 'COMROOT', 'COMIN', 'COMOUT',
         'VERIF_CASE_STEP_abbrev'
 ]
-evs_global_ens_chem_settings_dict['shared'] = [
+evs_global_chem_atmos_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
     'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM',
     'model_evs_stats_dir_list', 'restart_mode', 'fig_name_label'
 ]
-evs_global_ens_chem_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
-evs_global_ens_chem_settings_dict['RUN_GRID2GRID_PLOTS'] = [
+evs_global_chem_atmos_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
+evs_global_chem_atmos_settings_dict['RUN_GRID2GRID_PLOTS'] = [
     'g2gp_model_plot_name_list', 'g2gp_type_list',
     'g2gp_event_equalization'
 ]
-evs_global_ens_chem_settings_dict['RUN_GRID2OBS_PLOTS'] = [
+evs_global_chem_atmos_settings_dict['RUN_GRID2OBS_PLOTS'] = [
     'g2op_model_plot_name_list', 'g2op_type_list',
     'g2op_event_equalization'
 ]
@@ -125,14 +125,14 @@ env_check_group_list = ['evs', 'shared', 'modules',
                         'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()]
 for env_check_group in env_check_group_list:
     env_var_check_list = (
-        evs_global_ens_chem_settings_dict[env_check_group]
+        evs_global_chem_atmos_settings_dict[env_check_group]
     )
     for env_var_check in env_var_check_list:
         if not env_var_check in os.environ:
             if env_check_group == 'modules':
                 print("FATAL ERROR: "+env_var_check+" not set in environment, "
                       +"review modules loaded in "
-                      +"global_ens_chem_load_modules.sh")
+                      +"global_chem_atmos_load_modules.sh")
             elif env_check_group == 'evs':
                 print("FATAL ERROR: "+env_var_check+" was not set in environment, "
                       +"was not set through previous EVS scripts")
