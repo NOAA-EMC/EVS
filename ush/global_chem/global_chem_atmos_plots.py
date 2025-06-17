@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_plots.py
+Name: global_chem_atmos_plots.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This is the driver script for creating plots.
 Run By: individual plotting job scripts generated through
-        ush/global_ens/global_ens_chem_plots_grid2obs_create_job_scripts.py
+        ush/global_chem/global_chem_atmos_plots_grid2obs_create_job_scripts.py
 '''
 
 import os
@@ -15,8 +15,8 @@ import datetime
 import glob
 import itertools
 import shutil
-import global_ens_chem_util as gda_util
-from global_ens_chem_plots_specs import PlotSpecs
+import global_chem_atmos_util as gda_util
+from global_chem_atmos_plots_specs import PlotSpecs
 
 print("BEGIN: "+os.path.basename(__file__))
 
@@ -389,7 +389,7 @@ elif JOB_GROUP == 'make_plots':
     plot_info_dict = original_plot_info_dict.copy()
     met_info_dict = original_met_info_dict.copy()
     if plot == 'time_series':
-        import global_ens_chem_plots_time_series as gdap_ts
+        import global_chem_atmos_plots_time_series as gdap_ts
         for ts_info in \
                 list(itertools.product(valid_hrs, fhrs, var_info)):
             date_info_dict['valid_hr_start'] = str(ts_info[0])
@@ -444,7 +444,7 @@ elif JOB_GROUP == 'make_plots':
                     gda_util.copy_file(job_work_image_name,
                                        job_COMOUT_image_name)
     elif plot == 'lead_average':
-        import global_ens_chem_plots_lead_average as gdap_la
+        import global_chem_atmos_plots_lead_average as gdap_la
         for la_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(la_info[0])
             date_info_dict['valid_hr_end'] = str(la_info[0])
@@ -496,7 +496,7 @@ elif JOB_GROUP == 'make_plots':
                     gda_util.copy_file(job_work_image_name,
                                        job_COMOUT_image_name)
     elif plot == 'valid_hour_average':
-        import global_ens_chem_plots_valid_hour_average as gdap_vha
+        import global_chem_atmos_plots_valid_hour_average as gdap_vha
         for vha_info in list(itertools.product(var_info)):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
@@ -553,7 +553,7 @@ elif JOB_GROUP == 'make_plots':
                     gda_util.copy_file(job_work_image_name,
                                        job_COMOUT_image_name)
     elif plot == 'threshold_average':
-        import global_ens_chem_plots_threshold_average as gdap_ta
+        import global_chem_atmos_plots_threshold_average as gdap_ta
         for ta_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(ta_info[0])
             date_info_dict['valid_hr_end'] = str(ta_info[0])
@@ -617,7 +617,7 @@ elif JOB_GROUP == 'make_plots':
                         gda_util.copy_file(job_work_image_name,
                                            job_COMOUT_image_name)
     elif plot == 'performance_diagram':
-        import global_ens_chem_plots_performance_diagram as gdap_pd
+        import global_chem_atmos_plots_performance_diagram as gdap_pd
         for pd_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(pd_info[0])
             date_info_dict['valid_hr_end'] = str(pd_info[0])

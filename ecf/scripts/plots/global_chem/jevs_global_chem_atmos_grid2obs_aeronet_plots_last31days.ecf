@@ -1,9 +1,9 @@
-#PBS -N evs_global_ens_chem_gefs_grid2obs_airnow_plots_last90days
+#PBS -N evs_global_chem_atmos_grid2obs_aeronet_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:25:00
+#PBS -l walltime=00:15:00
 #PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=275GB
 #PBS -l debug=true
 
@@ -15,7 +15,7 @@ export model=evs
 ## Load modules
 ############################################################
 set -x
-export COMPONENT=global_ens
+export COMPONENT=global_chem
 export STEP=plots
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
@@ -54,17 +54,16 @@ fi
 export nproc=128
 export USE_CFP=YES
 
-export envir=prod
 export NET=evs
-export RUN=chem
+export RUN=atmos
 export VERIF_CASE=grid2obs
-export DATA_TYPE=airnow
-export NDAYS=90
+export DATA_TYPE=aeronet
+export NDAYS=31
 
 ######################################################################
 # Execute j-job
 ######################################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_CHEM_PLOTS
 
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"

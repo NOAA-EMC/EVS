@@ -1,13 +1,15 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_ens_chem_gefs_grid2obs_plots.sh
+# Name of Script: exevs_global_chem_atmos_grid2obs_plots.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
 # Original Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
 # Original Author: Mallory Row / Mallory.Row@noaa.gov
-# Purpose of Script: This script is run for the global_ens_chem_gefs plots step
+# Purpose of Script: This script is run for the global_chem_atmos plots step
 #                    for the grid-to-obs verification. It uses EMC-developed
 #                    python scripts to do the plotting.
+#                    
+#    05/22/2025  Ho-Chun Huang    move from global_ens to global_chem
 ###############################################################################
 
 set -x
@@ -25,9 +27,6 @@ export err=$?; err_chk
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
-gefs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1}' )
-export modelid=${MODELNAME}${gefs_ver_id}
-
 ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
 export ObsType
 
@@ -35,7 +34,7 @@ IFS=' ' read -ra obstype_list <<< "${g2op_type_list}"
 IFS=' ' read -ra obsvar_list <<< "${g2op_obsvar_list}"
 let num_obstype=${#obstype_list[@]}
 if [ ${num_obstype} -lt 1 ]; then
-    echo "ERROR :: number of variable to be plotted is zero"
+    echo "WARNING: There is no variable to be plotted ${g2op_type_list}, program exit"
     exit
 fi
 
@@ -49,11 +48,11 @@ while [ ${iobstype} -lt ${num_obstype} ]; do
 done
 
 if [ "${varid}" == "undefined" ]; then
-    echo "ERROR :: can not find observation index for variable ${ObsType}"
+    echo "WARNING: can not find observation index for variable ${ObsType}, program exit"
     exit
 fi
 
-# Bring in all stats files, and change into display name
+# Bring in all stats files, and rename files to include display name
 # for different models or types of solution defined in ${config}
 
 IFS=' ' read -ra mdl_list <<< "${model_list}"
@@ -94,7 +93,7 @@ diff_seconds=$(expr ${end_date_seconds} - ${start_date_seconds})
 diff_days=$(expr ${diff_seconds} \/ 86400)
 total_days=$(expr ${diff_days} + 1)
 if [ "${NDAYS}" != "${total_days}" ]; then
-    echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation"
+    echo "ERROR: input information inconsistent between NDAYS ${NDAYS} and VDATE_END computation, program exit"
     exit
 fi
 
@@ -146,7 +145,7 @@ for group in "${proc_list[@]}"; do
             nc=$((nc+1))
         done
     fi
-    python ${USHevs}/global_ens/global_ens_chem_copy_job_dir_output.py
+    python ${USHevs}/${COMPONENT}/${COMPONENT}_${RUN}_copy_job_dir_output.py
     export err=$?; err_chk
     # Cat the plotting log files
     if [ "${JOB_GROUP}" = "make_plots" ] || [ "${JOB_GROUP}" = "tar_images" ]; then
