@@ -14,7 +14,7 @@
 # set up plot variables
 set -x
 
-small_periods='past31days past90days'
+small_periods='last31days last90days'
 
 inithours='00 12'
 wave_vars='WIND HTSGW PERPW'

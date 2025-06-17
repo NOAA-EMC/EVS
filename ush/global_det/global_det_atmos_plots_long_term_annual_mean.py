@@ -292,7 +292,8 @@ class LongTermAnnualMean:
                 +plot_specs_ltam.get_vx_mask_plot_name(self.vx_mask)+'\n'
                 +plot_specs_ltam.get_var_plot_name(self.var_name,
                                                    self.var_level)+" "
-                +f"({var_units}){var_thresh_for_title}{nbrhd_for_title}\n"
+                +f"({var_units}){var_thresh_for_title}{nbrhd_for_title}"
+                +' - '+"Validation: Model's Own Anl."+'\n'
                 +f"valid {run_length_date_dt_list[0]:%Y}-"
                 +f"{run_length_date_dt_list[-1]:%Y}, {model_hour}"
             )

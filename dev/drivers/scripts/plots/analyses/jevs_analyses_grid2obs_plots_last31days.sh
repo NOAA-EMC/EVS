@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_analyses_grid2obs_plots
+#PBS -N jevs_analyses_grid2obs_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -46,7 +46,7 @@ export mod_ver=${rtma_ver}
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}_last31days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 

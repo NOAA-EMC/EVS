@@ -155,11 +155,13 @@ class LongTermTimeSeriesMultiFhr:
                      .unique().tolist())
         if self.var_name == 'HGT':
             var_units = 'gpm'
+            ob_name = "Model's Own Anl." 
         elif self.var_name == 'UGRD_VGRD':
             #var_units = 'm/s'
             var_units = 'kt'
         elif self.var_name == 'APCP':
             var_units = self.var_thresh[-2:]
+            ob_name ="CCPA"
         if self.model_group == 'gfs_4cycles':
             model_hour = 'init 00Z, 06Z, 12Z, 18Z'
         elif self.var_name == 'APCP':
@@ -301,7 +303,8 @@ class LongTermTimeSeriesMultiFhr:
                 +plot_specs_lttsmf.get_vx_mask_plot_name(self.vx_mask)+'\n'
                 +plot_specs_lttsmf.get_var_plot_name(self.var_name,
                                                      self.var_level)+" "
-                +f"({var_units}){var_thresh_for_title}{nbrhd_for_title}\n"
+                +f"({var_units}){var_thresh_for_title}{nbrhd_for_title}"
+                +' - '+'Validation: '+f"{ob_name}"+'\n'
                 +f"valid {dates_for_title} {model_hour}, "
                 +'Forecast Days '+','.join(self.forecast_day_list)+' '
                 +'(Hours '

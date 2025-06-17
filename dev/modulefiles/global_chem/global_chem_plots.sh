@@ -17,10 +17,12 @@ module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
 module load cray-pals/${craypals_ver}
 module load cfp/${cfp_ver}
-module load cdo/${cdo_ver}
+module load imagemagick/${imagemagick_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
-module load bufr/${bufr_ver}
+
+export SIPHONROOT=${UTILROOT}/fakedbn
+export DBNROOT=$SIPHONROOT
 
 module list
 
