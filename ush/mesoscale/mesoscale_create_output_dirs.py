@@ -76,8 +76,9 @@ elif VERIF_CASE == "grid2obs":
         eval_period = EVAL_PERIOD
 elif VERIF_CASE == "headline":
     if STEP == 'plots':
-        all_eval_periods = cutil.get_all_eval_periods(graphics_hdl)
         COMOUTplots = os.environ['COMOUTplots']
+        EVAL_PERIOD = os.environ['EVAL_PERIOD']
+        eval_period = EVAL_PERIOD
 elif VERIF_CASE == "snowfall":
     if STEP == 'prep':
         pass
@@ -527,14 +528,11 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in ['sfc_upper']:
-            for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'out', str(plot_group).lower(), 
-                    str(eval_period).lower()
+                    working_output_base_dir, 'out', str(plot_group).lower()  
                 ))
                 COMOUT_dir_list.append(os.path.join(
-                    RESTART_DIR, str(plot_group).lower(),
-                    str(eval_period).lower()
+                    RESTART_DIR, str(plot_group).lower() 
                 ))
 # Create working output and COMOUT directories
 for working_dir in working_dir_list:
