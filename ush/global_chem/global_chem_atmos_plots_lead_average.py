@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_plots_threshold_average.py
+Name: global_chem_atmos_plots_lead_average.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
-Abstract: This script generates a threshold average plot.
-          (x-axis: threshold value; y-axis: statistics value)
-          (EVS Graphics Naming Convention: threshmean)
+Abstract: This script generates a lead average plot.
+          (x-axis: forecast hour; y-axis: statistics value)
+          (EVS Graphics Naming Convention: fhrmean)
 '''
 
 import sys
@@ -15,24 +15,22 @@ import datetime
 import glob
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
-#pd.plotting.register_matplotlib_converters()
 import numpy as np
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
-import re
-import global_ens_chem_util as gda_util
-from global_ens_chem_plots_specs import PlotSpecs
+import global_chem_atmos_util as gda_util
+from global_chem_atmos_plots_specs import PlotSpecs
 
-class ThresholdAverage:
+class LeadAverage:
     """
-    Make a threshold average graphic
+    Make a lead average graphic
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
-        """! Initialize ThresholdAverage class
+        """! Initialize LeadAverage class
 
              Args:
                  logger          - logger object
@@ -55,14 +53,14 @@ class ThresholdAverage:
         self.met_info_dict = met_info_dict
         self.logo_dir = logo_dir
 
-    def make_threshold_average(self):
-        """! Make the threshold average graphic
+    def make_lead_average(self):
+        """! Make the lead average graphic
 
              Args:
 
              Returns:
         """
-        self.logger.info(f"Plot Type: Threshold Average")
+        self.logger.info("Plot Type: Lead Average")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -73,66 +71,59 @@ class ThresholdAverage:
                           +f"{self.plot_info_dict}")
         # Check stat
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
-            self.logger.error("Cannot make threshold_average for stat "
+            self.logger.error("Cannot make lead_average for stat "
                               +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
-        # Get dates to plot
-        self.logger.debug("Making valid and init date arrays")
-        valid_dates, init_dates = gda_util.get_plot_dates(
-            self.logger,
-            self.date_info_dict['date_type'],
-            self.date_info_dict['start_date'],
-            self.date_info_dict['end_date'],
-            self.date_info_dict['valid_hr_start'],
-            self.date_info_dict['valid_hr_end'],
-            self.date_info_dict['valid_hr_inc'],
-            self.date_info_dict['init_hr_start'],
-            self.date_info_dict['init_hr_end'],
-            self.date_info_dict['init_hr_inc'],
-            self.date_info_dict['forecast_hour']
-        )
-        format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
-                              for d in range(len(valid_dates))]
-        format_init_dates = [init_dates[d].strftime('%Y%m%d_%H%M%S') \
-                             for d in range(len(init_dates))]
-        if self.date_info_dict['date_type'] == 'VALID':
-            self.logger.debug("Based on date information, plot will display "
-                              +"valid dates "+', '.join(format_valid_dates)+" "
-                              +"for forecast hour "
-                              +f"{self.date_info_dict['forecast_hour']} "
-                              +"with initialization dates "
-                              +', '.join(format_init_dates))
-            plot_dates = valid_dates
-        elif self.date_info_dict['date_type'] == 'INIT':
-            self.logger.debug("Based on date information, plot will display "
-                              +"initialization dates "
-                              +', '.join(format_init_dates)+" "
-                              +"for forecast hour "
-                              +f"{self.date_info_dict['forecast_hour']} "
-                              +"with valid dates "
-                              +', '.join(format_valid_dates))
-            plot_dates = init_dates
-        # Make dataframe for all thresholds
+        # Make dataframe for all forecast hours
+        self.logger.info("Building dataframe for all forecast hours")
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
-        self.logger.info("Building dataframe for all thresholds")
-        # Make dataframe for all thresholds
         fcst_units = []
-        for fcst_var_thresh in self.plot_info_dict['fcst_var_threshs']:
-            self.logger.debug("Building data for forecast threshold "
-                              +f"{fcst_var_thresh}")
-            fcst_var_thresh_idx = (self.plot_info_dict['fcst_var_threshs']\
-                                   .index(fcst_var_thresh))
-            obs_var_thresh = (self.plot_info_dict['obs_var_threshs']\
-                              [fcst_var_thresh_idx])
+        for forecast_hour in self.date_info_dict['forecast_hours']:
+            self.logger.info(f"Building data for forecast hour {forecast_hour}")
+            # Get dates to plot
+            self.logger.debug("Making valid and init date arrays")
+            valid_dates, init_dates = gda_util.get_plot_dates(
+                self.logger,
+                self.date_info_dict['date_type'],
+                self.date_info_dict['start_date'],
+                self.date_info_dict['end_date'],
+                self.date_info_dict['valid_hr_start'],
+                self.date_info_dict['valid_hr_end'],
+                self.date_info_dict['valid_hr_inc'],
+                self.date_info_dict['init_hr_start'],
+                self.date_info_dict['init_hr_end'],
+                self.date_info_dict['init_hr_inc'],
+                forecast_hour
+            )
+            format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
+                                  for d in range(len(valid_dates))]
+            format_init_dates = [init_dates[d].strftime('%Y%m%d_%H%M%S') \
+                                 for d in range(len(init_dates))]
+            if self.date_info_dict['date_type'] == 'VALID':
+                self.logger.debug("Based on date information, plot will display "
+                                  +"valid dates "+', '.join(format_valid_dates)+" "
+                                  +"for forecast hour "
+                                  +f"{forecast_hour} with initialization dates "
+                                  +', '.join(format_init_dates))
+                plot_dates = valid_dates
+            elif self.date_info_dict['date_type'] == 'INIT':
+                self.logger.debug("Based on date information, plot will display "
+                                  +"initialization dates "
+                                  +', '.join(format_init_dates)+" "
+                                  +"for forecast hour "
+                                  +f"{forecast_hour} with valid dates "
+                                  +', '.join(format_valid_dates))
+                plot_dates = init_dates
+            # Read in data
             all_model_df = gda_util.build_df(
                 'make_plots', self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],
                 self.plot_info_dict['fcst_var_level'],
-                fcst_var_thresh,
+                self.plot_info_dict['fcst_var_thresh'],
                 self.plot_info_dict['obs_var_name'],
                 self.plot_info_dict['obs_var_level'],
-                obs_var_thresh,
+                self.plot_info_dict['obs_var_thresh'],
                 self.plot_info_dict['line_type'],
                 self.plot_info_dict['grid'],
                 self.plot_info_dict['vx_mask'],
@@ -140,7 +131,7 @@ class ThresholdAverage:
                 self.plot_info_dict['interp_points'],
                 self.date_info_dict['date_type'],
                 plot_dates, format_valid_dates,
-                self.date_info_dict['forecast_hour']
+                str(forecast_hour)
             )
             fcst_units.extend(
                 all_model_df['FCST_UNITS'].values.astype('str').tolist()
@@ -168,14 +159,14 @@ class ThresholdAverage:
                         all_model_df.loc[model_idx].where(
                             stat_df.loc[model_idx].notna()
                     ).values)
-            if fcst_var_thresh == self.plot_info_dict['fcst_var_threshs'][0]:
-                threshs_avg_df = pd.DataFrame(
+            if forecast_hour == self.date_info_dict['forecast_hours'][0]:
+                forecast_hours_avg_df = pd.DataFrame(
                     np.nan, model_idx_list,
-                    columns=self.plot_info_dict['fcst_var_threshs']
+                    columns=self.date_info_dict['forecast_hours']
                 )
-                threshs_ci_df = pd.DataFrame(
+                forecast_hours_ci_df = pd.DataFrame(
                     np.nan, model_idx_list,
-                    columns=self.plot_info_dict['fcst_var_threshs']
+                    columns=self.date_info_dict['forecast_hours']
                 )
             for model_idx in model_idx_list:
                 model_idx_num = model_idx_list.index(model_idx)
@@ -187,14 +178,14 @@ class ThresholdAverage:
                 else:
                     avg_method = 'aggregation'
                     calc_avg_df = all_model_df.loc[model_idx]
-                model_idx_thresh_avg = gda_util.calculate_average(
+                model_idx_forecast_hour_avg = gda_util.calculate_average(
                     self.logger, avg_method, self.plot_info_dict['line_type'],
                     self.plot_info_dict['stat'], calc_avg_df
                 )
-                if not np.isnan(model_idx_thresh_avg) \
-                        and not np.ma.is_masked(model_idx_thresh_avg):
-                    threshs_avg_df.loc[model_idx, fcst_var_thresh] = (
-                        model_idx_thresh_avg
+                if not np.isnan(model_idx_forecast_hour_avg) \
+                        and not np.ma.is_masked(model_idx_forecast_hour_avg):
+                    forecast_hours_avg_df.loc[model_idx, forecast_hour] = (
+                        model_idx_forecast_hour_avg
                     )
                 if model_idx == model_idx_list[0]:
                     model1_stat_df = stat_df.loc[model_idx]
@@ -220,25 +211,29 @@ class ThresholdAverage:
                             ci = 2.228 * model_idx_model1_diff_mean_std_err
                     else:
                         ci = np.nan
-                    threshs_ci_df.loc[model_idx, fcst_var_thresh] = ci
+                    forecast_hours_ci_df.loc[model_idx, forecast_hour] = ci
         # Set up plot
         self.logger.info(f"Setting up plot")
-        plot_specs_ta = PlotSpecs(self.logger, 'threshold_average')
-        plot_specs_ta.set_up_plot()
-        n_xticks = 7
-        xticks = np.arange(0, len(self.plot_info_dict['fcst_var_threshs']),
-                           1)
-        if len(xticks) < n_xticks:
-            xtick_intvl = 1
+        plot_specs_la = PlotSpecs(self.logger, 'lead_average')
+        plot_specs_la.set_up_plot()
+        n_xticks = 17
+        if len(self.date_info_dict['forecast_hours']) <= n_xticks:
+            xticks = self.date_info_dict['forecast_hours']
         else:
-            xtick_intvl = int(len(xticks)/n_xticks)
+            xticks = []
+            for fhr in self.date_info_dict['forecast_hours']:
+                if int(fhr) % 24 == 0:
+                    xticks.append(fhr)
+            if len(xticks) > n_xticks:
+                xtick_intvl = int(len(xticks)/n_xticks)
+                xticks = xticks[::xtick_intvl]
         stat_min_max_dict = {
             'ax1_stat_min': np.ma.masked_invalid(np.nan),
             'ax1_stat_max': np.ma.masked_invalid(np.nan),
             'ax2_stat_min': np.ma.masked_invalid(np.nan),
             'ax2_stat_max': np.ma.masked_invalid(np.nan)
         }
-        stat_plot_name = plot_specs_ta.get_stat_plot_name(
+        stat_plot_name = plot_specs_la.get_stat_plot_name(
              self.plot_info_dict['stat']
         )
         fcst_units = np.unique(fcst_units)
@@ -249,7 +244,7 @@ class ThresholdAverage:
         elif len(fcst_units) == 0:
             self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
-        plot_title = plot_specs_ta.get_plot_title(
+        plot_title = plot_specs_la.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
@@ -260,9 +255,9 @@ class ThresholdAverage:
                 plot_left_logo_path
             )
             left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
-                plot_specs_ta.get_logo_location(
-                    'left', plot_specs_ta.fig_size[0],
-                    plot_specs_ta.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_la.get_logo_location(
+                    'left', plot_specs_la.fig_size[0],
+                    plot_specs_la.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
         else:
@@ -275,61 +270,31 @@ class ThresholdAverage:
                 plot_right_logo_path
             )
             right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
-                plot_specs_ta.get_logo_location(
-                    'right', plot_specs_ta.fig_size[0],
-                    plot_specs_ta.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_la.get_logo_location(
+                    'right', plot_specs_la.fig_size[0],
+                    plot_specs_la.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
         else:
             plot_right_logo = False
             self.logger.debug(f"{plot_right_logo_path} does not exist")
-        image_name = plot_specs_ta.get_savefig_name(
+        image_name = plot_specs_la.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         # Make plot
         self.logger.info(f"Making plot")
         fig, (ax1, ax2) = plt.subplots(2,1,
-                                       figsize=(plot_specs_ta.fig_size[0],
-                                                plot_specs_ta.fig_size[1]),
+                                       figsize=(plot_specs_la.fig_size[0],
+                                                plot_specs_la.fig_size[1]),
                                        sharex=True)
-        if self.plot_info_dict['fcst_var_name'] == 'DPT' \
-                and self.plot_info_dict['fcst_var_level'] == 'Z2':
-            plot_title = plot_title.replace('2 meter Dewpoint (K)',
-                                            '2 meter Dewpoint (F)')
         fig.suptitle(plot_title)
         ax1.grid(True)
         ax1.set_ylabel(stat_plot_name)
         ax2.grid(True)
-        ax2.set_xlabel('Threshold')
-        ax2.set_xlim([xticks[0], xticks[-1]])
-        ax2.set_xticks(xticks[::xtick_intvl])
-        if self.plot_info_dict['fcst_var_name'] == 'DPT' \
-                and self.plot_info_dict['fcst_var_level'] == 'Z2':
-            convert_thresh_list = []
-            for thresh in self.plot_info_dict['fcst_var_threshs']:
-                convert_thresh_K_to_F = round(
-                    round((((float(thresh[2:])-273.15)*9)/5)+32)
-                )
-                convert_thresh_list.append(
-                    f"{thresh[0:2]}{str(convert_thresh_K_to_F)}"
-                )
-            ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] == 'AOTK':
-            convert_thresh_list = []
-            for thresh in self.plot_info_dict['fcst_var_threshs']:
-                convert_thresh_sign = thresh.replace("ge","$\u2265$")
-                convert_thresh_list.append(convert_thresh_sign)
-            ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] == 'PMTF':
-            convert_thresh_list = []
-            for thresh in self.plot_info_dict['fcst_var_threshs']:
-                convert_thresh_sign = thresh.replace("gt","$\u003E$")
-                convert_thresh_list.append(convert_thresh_sign)
-            ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        else:
-            ax2.set_xticklabels(
-                self.plot_info_dict['fcst_var_threshs'][::xtick_intvl]
-            )
+        ax2.set_xlabel('Forecast Hour')
+        ax2.set_xlim([self.date_info_dict['forecast_hours'][0],
+                      self.date_info_dict['forecast_hours'][-1]])
+        ax2.set_xticks(xticks)
         ax2.set_ylabel('Difference')
         ax2.set_title('Difference from '
                       +self.model_info_dict['model1']['plot_name'], loc='left')
@@ -354,17 +319,19 @@ class ThresholdAverage:
                 right_logo_img_array, right_logo_xpixel_loc,
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
-        model_plot_settings_dict = plot_specs_ta.get_model_plot_settings()
+        model_plot_settings_dict = plot_specs_la.get_model_plot_settings()
         model_idx_list = (
-            threshs_avg_df.index.get_level_values(0).unique().tolist()
+            forecast_hours_avg_df.index.get_level_values(0).unique().tolist()
         )
         ci_bar_max_widths = np.append(
-            np.diff(xticks),
-            xticks[-1]-xticks[-2]
+            np.diff(self.date_info_dict['forecast_hours']),
+            self.date_info_dict['forecast_hours'][-1]
+            -self.date_info_dict['forecast_hours'][-2]
         )/1.5
         ci_bar_min_widths = np.append(
-            np.diff(xticks),
-            xticks[-1]-xticks[-2]
+            np.diff(self.date_info_dict['forecast_hours']),
+            self.date_info_dict['forecast_hours'][-1]
+            -self.date_info_dict['forecast_hours'][-2]
         )/len(list(self.model_info_dict.keys()))
         ci_bar_intvl_widths = (
             (ci_bar_max_widths-ci_bar_min_widths)
@@ -375,7 +342,7 @@ class ThresholdAverage:
             model_num_name = model_idx.split('/')[1]
             model_num_plot_name = model_idx.split('/')[2]
             model_num_obs_name = self.model_info_dict[model_num]['obs_name']
-            model_num_data = threshs_avg_df.loc[model_idx]
+            model_num_data = forecast_hours_avg_df.loc[model_idx]
             if model_num_name in list(model_plot_settings_dict.keys()):
                 model_num_plot_settings_dict = (
                     model_plot_settings_dict[model_num_name]
@@ -387,24 +354,21 @@ class ThresholdAverage:
             masked_model_num_data = np.ma.masked_invalid(model_num_data)
             if model_num == 'model1':
                  model1_masked_model_num_data = masked_model_num_data
+                 model1_name = model_num_name
+                 model1_plot_name = model_num_plot_name
             model_num_npts = (
                 len(masked_model_num_data)
                 - np.ma.count_masked(masked_model_num_data)
             )
-            thresh_values = np.asarray(
-                [x for x in \
-                         range(0,len(threshs_avg_df.columns.values.tolist()))],
-                dtype=float
-            )
-            masked_thresh_values = np.ma.masked_where(
+            masked_forecast_hours = np.ma.masked_where(
                 np.ma.getmask(masked_model_num_data),
-                thresh_values
+                forecast_hours_avg_df.columns.values.tolist()
             )
+            self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                              +f"{model_num_plot_name}]")
             if model_num_npts != 0:
-                self.logger.debug(f"Plotting {model_num} [{model_num_name},"
-                                  +f"{model_num_plot_name}]")
                 ax1.plot(
-                    np.ma.compressed(masked_thresh_values),
+                    np.ma.compressed(masked_forecast_hours),
                     np.ma.compressed(masked_model_num_data),
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
@@ -437,19 +401,17 @@ class ThresholdAverage:
                 len(masked_model_num_model1_diff_data)
                 - np.ma.count_masked(masked_model_num_model1_diff_data)
             )
-            masked_diff_thresh_values = np.ma.masked_where(
+            masked_diff_forecast_hours = np.ma.masked_where(
                 np.ma.getmask(masked_model_num_model1_diff_data),
-                thresh_values
+                forecast_hours_avg_df.columns.values.tolist()
             )
+            self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                              +f"{model_num_plot_name}] difference from "
+                              +f"model1 [{model1_name},"
+                              +f"{model1_plot_name}]")
             if model_num_diff_npts != 0:
-                self.logger.debug(f"Plotting {model_num} [{model_num_name},"
-                                  +f"{model_num_plot_name}] difference from "
-                                  +f"model1 ["
-                                  +f"{self.model_info_dict['model1']['name']},"
-                                  +self.model_info_dict['model1']['plot_name']
-                                  +"]")
                 ax2.plot(
-                    np.ma.compressed(masked_diff_thresh_values),
+                    np.ma.compressed(masked_diff_forecast_hours),
                     np.ma.compressed(masked_model_num_model1_diff_data),
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
@@ -474,14 +436,13 @@ class ThresholdAverage:
             else:
                 self.logger.debug(f"{model_num} [{model_num_name},"
                                   +f"{model_num_plot_name}] difference from "
-                                  +f"model1 ["
-                                  +f"{self.model_info_dict['model1']['name']},"
-                                  +self.model_info_dict['model1']['plot_name']
-                                  +"] has no points")
+                                  +f"model1 [{model1_name},{model1_plot_name}] "
+                                  +"has no points")
+                                  
             if model_num == 'model1':
                 ax2.plot(
-                    thresh_values,
-                    np.zeros_like(thresh_values),
+                    forecast_hours_avg_df.columns.values.tolist(),
+                    np.zeros_like(forecast_hours_avg_df.columns.values.tolist()),
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
@@ -492,23 +453,22 @@ class ThresholdAverage:
                 )
             if model_num != 'model1':
                 masked_model_num_model1_diff_ci_data = np.ma.masked_invalid(
-                    threshs_ci_df.loc[model_idx]
+                    forecast_hours_ci_df.loc[model_idx]
                 )
                 model_num_ci_npts = (
                     len(masked_model_num_model1_diff_ci_data)
                     - np.ma.count_masked(masked_model_num_model1_diff_ci_data)
                 )
-                masked_ci_thresh_values = np.ma.masked_where(
+                masked_ci_forecast_hours = np.ma.masked_where(
                     np.ma.getmask(masked_model_num_model1_diff_ci_data),
-                    thresh_values
+                    forecast_hours_ci_df.columns.values.tolist()
                 )
                 self.logger.debug(f"Plotting {model_num} ["
                                   +f"{model_num_name},"
                                   +f"{model_num_plot_name}] difference "
-                                  +"from model1 ["
-                                  +f"{self.model_info_dict['model1']['name']},"
-                                  +self.model_info_dict['model1']['plot_name']
-                                  +"] confidence intervals")
+                                  +f"from model1 [{model1_name},"
+                                  +f"{model1_plot_name}] "
+                                  +"confidence intervals")
                 if model_num_ci_npts != 0:
                     ci_min = masked_model_num_model1_diff_ci_data.min()
                     ci_max = masked_model_num_model1_diff_ci_data.max()
@@ -520,8 +480,8 @@ class ThresholdAverage:
                             or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
                         if not np.ma.is_masked(ci_max):
                             stat_min_max_dict['ax2_stat_max'] = ci_max
-                    cmasked_ci_thresh_values = np.ma.compressed(
-                        masked_ci_thresh_values
+                    cmasked_ci_forecast_hours = np.ma.compressed(
+                        masked_ci_forecast_hours
                     )
                     cmasked_model_num_model1_diff_ci_data = np.ma.compressed(
                         masked_model_num_model1_diff_ci_data
@@ -538,27 +498,26 @@ class ThresholdAverage:
                             ci_bar_intvl_widths
                         )
                     )
-                    for thresh_idx in range(len(cmasked_ci_thresh_values)):
-                        thresh = cmasked_ci_thresh_values[thresh_idx]
-                        thresh_ci = (
-                            cmasked_model_num_model1_diff_ci_data[thresh_idx]
+                    for fhr_idx in range(len(cmasked_ci_forecast_hours)):
+                        fhr = cmasked_ci_forecast_hours[fhr_idx]
+                        fhr_ci = (
+                            cmasked_model_num_model1_diff_ci_data[fhr_idx]
                         )
-                        ax2.bar(thresh, 2*np.absolute(thresh_ci),
-                                bottom=-1*np.absolute(thresh_ci),
-                                width=(cmasked_ci_bar_max_widths[thresh_idx]
-                                       -(cmasked_ci_bar_intvl_widths[thresh_idx]
+                        ax2.bar(fhr, 2*np.absolute(fhr_ci),
+                                bottom=-1*np.absolute(fhr_ci),
+                                width=(cmasked_ci_bar_max_widths[fhr_idx]
+                                       -(cmasked_ci_bar_intvl_widths[fhr_idx]
                                        *model_idx_list.index(model_idx))),
                                 color = 'None',
                                 edgecolor=model_num_plot_settings_dict['color'],
                                 linewidth=1)
                 else:
-                    self.logger.debug(f"{model_num} ["
+                    self.logger.debug(f"{model_num}: ["
                                       +f"{model_num_name},"
                                       +f"{model_num_plot_name}] difference "
-                                      +"from model1 ["
-                                      +f"{self.model_info_dict['model1']['name']},"
-                                      +self.model_info_dict['model1']['plot_name']
-                                      +"] confidence intervals has no points")
+                                      +f"from model1 [{model1_name},"
+                                      +f"{model1_plot_name}] "
+                                      +"confidence intervals has no points")
         subplot_num = 1
         for ax in fig.get_axes():
             stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
@@ -566,14 +525,14 @@ class ThresholdAverage:
             preset_y_axis_tick_min = ax.get_yticks()[0]
             preset_y_axis_tick_max = ax.get_yticks()[-1]
             preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]
-            if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
+            if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
                 y_axis_tick_inc = 0.1
             else:
                 y_axis_tick_inc = preset_y_axis_tick_inc
             if np.ma.is_masked(stat_min):
                 y_axis_min = preset_y_axis_tick_min
             else:
-                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
                     y_axis_min = round(stat_min,1) - y_axis_tick_inc
                 else:
                     y_axis_min = preset_y_axis_tick_min
@@ -582,7 +541,7 @@ class ThresholdAverage:
             if np.ma.is_masked(stat_max):
                 y_axis_max = preset_y_axis_tick_max
             else:
-                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
                     y_axis_max = 1
                 else:
                     y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
@@ -614,11 +573,11 @@ class ThresholdAverage:
             stat_min = stat_min_max_dict['ax1_stat_min']
             stat_max = stat_min_max_dict['ax1_stat_max']
             legend = ax1.legend(
-                bbox_to_anchor=(plot_specs_ta.legend_bbox[0],
-                                plot_specs_ta.legend_bbox[1]),
-                loc = plot_specs_ta.legend_loc,
-                ncol = plot_specs_ta.legend_ncol,
-                fontsize = plot_specs_ta.legend_font_size
+                bbox_to_anchor=(plot_specs_la.legend_bbox[0],
+                                plot_specs_la.legend_bbox[1]),
+                loc = plot_specs_la.legend_loc,
+                ncol = plot_specs_la.legend_ncol,
+                fontsize = plot_specs_la.legend_font_size
             )
             plt.draw()
             inv = ax1.transData.inverted()
@@ -638,11 +597,11 @@ class ThresholdAverage:
                     )
                     ax1.set_ylim([y_axis_min, y_axis_max])
                     legend = ax1.legend(
-                        bbox_to_anchor=(plot_specs_ta.legend_bbox[0],
-                                        plot_specs_ta.legend_bbox[1]),
-                        loc = plot_specs_ta.legend_loc,
-                        ncol = plot_specs_ta.legend_ncol,
-                        fontsize = plot_specs_ta.legend_font_size
+                        bbox_to_anchor=(plot_specs_la.legend_bbox[0],
+                                        plot_specs_la.legend_bbox[1]),
+                        loc = plot_specs_la.legend_loc,
+                        ncol = plot_specs_la.legend_ncol,
+                        fontsize = plot_specs_la.legend_font_size
                     )
                     plt.draw()
                     inv = ax1.transData.inverted()
@@ -677,7 +636,7 @@ def main():
         'init_hr_start': 'INIT_HR_START',
         'init_hr_end': 'INIT_HR_END',
         'init_hr_inc': 'INIT_HR_INC',
-        'forecast_hour': 'FORECAST_HOUR'
+        'forecast_hours': ['FORECAST_HOURS']
     }
     PLOT_INFO_DICT = {
         'line_type': 'LINE_TYPE',
@@ -689,10 +648,10 @@ def main():
         'interp_points': 'INTERP_POINTS',
         'fcst_var_name': 'FCST_VAR_NAME',
         'fcst_var_level': 'FCST_VAR_LEVEL',
-        'fcst_var_threshs': ['FCST_VAR_THRESHS'],
+        'fcst_var_thresh': 'FCST_VAR_THRESH',
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
-        'obs_var_threshs': ['OBS_VAR_THRESHS'],
+        'obs_var_thresh': 'OBS_VAR_THRESH',
         'fig_name_label': 'FIG_NAME_LABEL',
     }
     MET_INFO_DICT = {
@@ -721,10 +680,9 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = ThresholdAverage(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
-                         DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT,
-                         LOGO_DIR)
-    p.make_threshold_average()
+    p = LeadAverage(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
+                    DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT, LOGO_DIR)
+    p.make_lead_average()
 
 if __name__ == "__main__":
     main()
