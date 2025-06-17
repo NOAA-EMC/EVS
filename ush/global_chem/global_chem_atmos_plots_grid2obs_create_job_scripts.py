@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_plots_grid2obs_create_job_scripts.py
+Name: global_chem_atmos_plots_grid2obs_create_job_scripts.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
           jobs scripts contain all the necessary environment variables
           and commands to needed to run them.
-Run By: scripts/plots/global_ens/exevs_global_ens_chem_grid2obs_plots.sh
+Run By: scripts/plots/global_chem/exevs_global_chem_atmos_grid2obs_plots.sh
 '''
 
 import sys
@@ -17,7 +17,7 @@ import itertools
 import numpy as np
 import subprocess
 import copy
-import global_ens_chem_util as gda_util
+import global_chem_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
@@ -457,7 +457,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 if write_job_cmds:
                     gda_util.make_dir(job_env_dict['job_work_dir'])
                     job.write(
-                        gda_util.python_command('global_ens_chem_plots.py',[])
+                        gda_util.python_command('global_chem_atmos_plots.py',[])
                         +'\n'
                     )
                     job.write('export err=$?; err_chk'+'\n')
@@ -545,13 +545,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         ['fcst_var_dict']['levels']\
                         .index(plot_loop_info[2])]
                     )
-                    run_global_ens_chem_plots = ['plots']
+                    run_global_chem_atmos_plots = ['plots']
                     if evs_run_mode == 'production' and \
                             verif_type in ['aeronet', 'airnow'] and \
                             job_env_dict['plot'] in \
                             ['lead_average']:
-                        run_global_ens_chem_plots.append('plots_tof120')
-                    for run_global_ens_chem_plot in run_global_ens_chem_plots:
+                        run_global_chem_atmos_plots.append('plots_tof120')
+                    for run_global_chem_atmos_plot in run_global_chem_atmos_plots:
                         # Set up output directories
                         njobs+=1
                         job_env_dict['job_id'] = 'job'+str(njobs)
@@ -588,7 +588,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             if name not in dont_write_env_var_list:
                                 job.write('export '+name+'="'+value+'"\n')
                         job.write('\n')
-                        if run_global_ens_chem_plot == 'plots_tof120':
+                        if run_global_chem_atmos_plot == 'plots_tof120':
                             fhrs_tof120 = []
                             for fhr in job_env_dict['fhr_list'].split(', '):
                                 if int(fhr) <= 120:
@@ -599,7 +599,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             )
                         if write_job_cmds:
                             job.write(
-                                gda_util.python_command('global_ens_chem_plots.py',
+                                gda_util.python_command('global_chem_atmos_plots.py',
                                                         [])+'\n'
                             )
                             job.write('export err=$?; err_chk'+'\n')
@@ -655,7 +655,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 if write_job_cmds:
                     job.write(
-                        gda_util.python_command('global_ens_chem_plots.py', [])
+                        gda_util.python_command('global_chem_atmos_plots.py', [])
                         +'\n'
                     )
                     job.write('export err=$?; err_chk'+'\n')
