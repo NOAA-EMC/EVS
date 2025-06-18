@@ -79,7 +79,7 @@ elif [ $VERIF_CASE = severe ] ; then
    export INITDATE=${INITDATE:-$PDYm1}
 
    # Set verification date for severe job
-   export VDATE=${VDATE:-$PDYm7}
+   export VDATE=$(finddate.sh $INITDATE d-6)
   
    # Set correct date for SPC report data (must be relative to VDATE) 
    export REP_DATE=$(finddate.sh $VDATE d-1)
