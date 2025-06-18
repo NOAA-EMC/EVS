@@ -126,6 +126,30 @@ else
     fi
 fi
 
+echo 'Getting JASON-3 pb2nc previous day file'
+export VDATEp1=$(date -d "${VDATE} -24 hours" +"%Y%m%d")
+input_pb2nc_jason3_file2=$COMIN/prep/${COMPONENT}/wave.${VDATEp1}/jason3/jason3.${VDATEp1}.nc
+tmp_pb2nc_jason3_file2=${DATA}/ncfiles/jason3.${VDATEp1}.nc
+
+if [[ $input_pb2nc_jason3_file2 == *"/com/"* ]] || [[ $input_pb2nc_jason3_file2 == *"/dcom/"* ]]; then
+	    alert_word="WARNING"
+    else
+	        alert_word="NOTE"
+fi
+if [[ -s $input_pb2nc_jason3_file2 ]]; then
+    echo "Copying $input_pb2nc_jason3_file2 to $tmp_pb2nc_jason3_file2"
+    cp -v $input_pb2nc_jason3_file2 $tmp_pb2nc_jason3_file2
+else
+    echo "${alert_word}: ${input_pb2nc_jason3_file2} does not exist"
+    if [ $SENDMAIL = YES ]; then
+        export subject="JASON-3 Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No JASON-3 data was available for valid date ${VDATEp1}" > mailmsg
+        echo "Missing file is ${input_pb2nc_jason3_file2}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $MAILTO
+    fi
+fi
+
 
 ####################
 # quick error check
