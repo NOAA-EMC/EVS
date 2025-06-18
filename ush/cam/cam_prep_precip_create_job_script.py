@@ -26,7 +26,7 @@ MODELNAME = os.environ['MODELNAME']
 METPLUS_PATH = os.environ['METPLUS_PATH']
 MET_ROOT = os.environ['MET_ROOT']
 DATA = os.environ['DATA']
-VDATE = os.environ['VDATE']
+INITDATE = os.environ['INITDATE']
 VHOUR_LIST = os.environ['VHOUR_LIST']
 njob = os.environ['njob']
 COMPONENT = os.environ['COMPONENT']
@@ -47,17 +47,17 @@ if STEP == 'prep':
         if VERIF_CASE == 'precip':
             if OBSNAME == 'ccpa':
                 for VHOUR in re.split(r'[\s,]+', VHOUR_LIST):
-                    VDATEHOUR = datetime.strptime(f'{VDATE}{VHOUR}','%Y%m%d%H')
+                    INITDATEHOUR = datetime.strptime(f'{INITDATE}{VHOUR}','%Y%m%d%H')
                     subtract_hours_inc=int(OBS_ACC)
                     subtract_hours=0
                     max_subtract_hours=int(ACC)
                     while subtract_hours < max_subtract_hours:
-                        VDATEHOURm = VDATEHOUR - td(hours=subtract_hours)
-                        VDATEm = VDATEHOURm.strftime('%Y%m%d')
-                        VHOURm = VDATEHOURm.strftime('%H')
+                        INITDATEHOURm = INITDATEHOUR - td(hours=subtract_hours)
+                        INITDATEm = INITDATEHOURm.strftime('%Y%m%d')
+                        VHOURm = INITDATEHOURm.strftime('%H')
                         COMOUTobs = os.path.join(
                             DATA, VERIF_CASE, 'data', 'workdirs', f'job{njob}', 
-                            'ccpa', f'ccpa.{VDATEm}'
+                            'ccpa', f'ccpa.{INITDATEm}'
                         )
                         if not os.path.isfile(os.path.join(
                                 COMOUTobs, 
@@ -67,16 +67,16 @@ if STEP == 'prep':
                                 + f" fi"
                             )
                             if int(VHOURm) > 18:
-                                VDATEmp1 = (
-                                    VDATEHOURm + td(days=1)
+                                INITDATEmp1 = (
+                                    INITDATEHOURm + td(days=1)
                                 ).strftime('%Y%m%d')
                                 infiles=os.path.join(
-                                    COMINobs, f'ccpa.{VDATEmp1}', '*', 
+                                    COMINobs, f'ccpa.{INITDATEmp1}', '*', 
                                     f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2'
                                 )
                             else:
                                 infiles=os.path.join(
-                                    COMINobs, f'ccpa.{VDATEm}', '*', 
+                                    COMINobs, f'ccpa.{INITDATEm}', '*', 
                                     f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2'
                                 )
                             if not glob.glob(infiles):
@@ -99,19 +99,19 @@ if STEP == 'prep':
                         subtract_hours+=subtract_hours_inc
             elif OBSNAME == 'mrms':
                 for VHOUR in re.split(r'[\s,]+', VHOUR_LIST):
-                    VDATEHOUR = datetime.strptime(f'{VDATE}{VHOUR}','%Y%m%d%H')
+                    INITDATEHOUR = datetime.strptime(f'{INITDATE}{VHOUR}','%Y%m%d%H')
                     subtract_hours_inc=int(OBS_ACC)
                     subtract_hours=0
                     max_subtract_hours=int(ACC)
                     while subtract_hours < max_subtract_hours:
-                        VDATEHOURm = VDATEHOUR - td(hours=subtract_hours)
-                        VDATEm = VDATEHOURm.strftime('%Y%m%d')
-                        VHOURm = VDATEHOURm.strftime('%H')
-                        VMINm = VDATEHOURm.strftime('%M')
-                        VSECm = VDATEHOURm.strftime('%S')
+                        INITDATEHOURm = INITDATEHOUR - td(hours=subtract_hours)
+                        INITDATEm = INITDATEHOURm.strftime('%Y%m%d')
+                        VHOURm = INITDATEHOURm.strftime('%H')
+                        VMINm = INITDATEHOURm.strftime('%M')
+                        VSECm = INITDATEHOURm.strftime('%S')
                         COMOUTobs = os.path.join(
                             DATA, VERIF_CASE, 'data', 'workdirs', f'job{njob}', 
-                            'mrms', f'mrms.{VDATEm}'
+                            'mrms', f'mrms.{INITDATEm}'
                         )
                         outfilename=f'mrms.t{VHOURm}z.{OBS_ACC}h.{NEST}.gb2'
                         if not os.path.isfile(os.path.join(
@@ -127,7 +127,7 @@ if STEP == 'prep':
                                     'MultiSensorQPE', 
                                     (
                                         f'MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
-                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                        + f'{INITDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
                                     )
                                 )
                             elif NEST == 'pr':
@@ -136,7 +136,7 @@ if STEP == 'prep':
                                     'MultiSensorQPE', 
                                     (
                                         f'MRMS_MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
-                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                        + f'{INITDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
                                     )
                                 )
                             elif NEST == 'hi':
@@ -145,7 +145,7 @@ if STEP == 'prep':
                                     'MultiSensorQPE', 
                                     (
                                         f'MRMS_MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
-                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                        + f'{INITDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
                                     )
                                 )
                             elif NEST == 'gu':
@@ -154,7 +154,7 @@ if STEP == 'prep':
                                     'MultiSensorQPE', 
                                     (
                                         f'MRMS_MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
-                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                        + f'{INITDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
                                     )
                                 )
                             else:
@@ -168,7 +168,7 @@ if STEP == 'prep':
                                     'MultiSensorQPE', 
                                     (
                                         f'MRMS_MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
-                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                        + f'{INITDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
                                     )
                                 )
                             infilepath=os.path.join(COMINobs, infilename)
