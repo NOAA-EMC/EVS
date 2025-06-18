@@ -270,13 +270,11 @@ for ozmax8_job in list(filter_stats_jobs_dict['ozmax8'].keys()):
         if ozmax8_job == 'OZMAX8':
             (filter_stats_jobs_dict['ozmax8'][f"{ozmax8_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
-                 'gt50',  'gt60', 'gt65', 'gt70', 'gt75', 'gt85', 'gt105',
-                 'gt125', 'gt150'
+                 'gt50',  'gt60', 'gt65', 'gt70', 'gt75', 'gt85'
              ]
             (filter_stats_jobs_dict['ozmax8'][f"{ozmax8_job}_Thresh"]\
              ['obs_var_dict']['threshs']) = [
-                 'gt50',  'gt60', 'gt65', 'gt70', 'gt75', 'gt85', 'gt105',
-                 'gt125', 'gt150'
+                 'gt50',  'gt60', 'gt65', 'gt70', 'gt75', 'gt85'
              ]
 #### pmave
 for pmave_job in list(filter_stats_jobs_dict['pmave'].keys()):
@@ -302,13 +300,13 @@ for pmave_job in list(filter_stats_jobs_dict['pmave'].keys()):
         if pmave_job == 'PMAVE':
             (filter_stats_jobs_dict['pmave'][f"{pmave_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
-                 'gt5',  'gt10', 'gt12', 'gt15', 'gt20', 'gt25', 'gt35',
-                 'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
+                 'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt35',
+                 'gt40', 'gt50', 'gt60'
              ]
             (filter_stats_jobs_dict['pmave'][f"{pmave_job}_Thresh"]\
              ['obs_var_dict']['threshs']) = [
-                 'gt5',  'gt10', 'gt12', 'gt15', 'gt20', 'gt25', 'gt35',
-                 'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
+                 'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt35',
+                 'gt40', 'gt50', 'gt60'
              ]
 #### ozmax8_headline
 for ozmax8_job in list(filter_stats_jobs_dict['ozmax8_headline'].keys()):
@@ -387,12 +385,12 @@ for aeronetaod_job in list(filter_stats_jobs_dict['aeronetaod'].keys()):
         if aeronetaod_job == 'AOD':
             (filter_stats_jobs_dict['aeronetaod'][f"{aeronetaod_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
-                 'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
+                 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
                  'ge1.5', 'ge2.0'
              ]
             (filter_stats_jobs_dict['aeronetaod'][f"{aeronetaod_job}_Thresh"]\
              ['obs_var_dict']['threshs']) = [
-                 'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
+                 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
                  'ge1.5', 'ge2.0'
              ]
 if JOB_GROUP == 'filter_stats':
