@@ -85,7 +85,7 @@ issuance_times = [day1_PDY, day2_PDY, day3_PDY]
 # Add SPC mask files to list if outlook(s) exists
 
 for DAY in range(1,4):
-    search_path = OTLK_DIR+'/'+RUN+'.'+issuance_times[DAY-1]+'/spc_otlk.'+issuance_times[DAY-1]+'/spc_otlk.day'+str(DAY)+'*'+vx_grid+'.nc'
+    search_path = OTLK_DIR+'/'+RUN+'.'+issuance_times[DAY-1]+'/spc_otlk'+'/spc_otlk.day'+str(DAY)+'*'+vx_grid+'.nc'
     file_list = [f for f in glob.glob(search_path)]
 
     for mask in file_list:

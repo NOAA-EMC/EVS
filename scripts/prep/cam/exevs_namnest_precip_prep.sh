@@ -100,11 +100,11 @@ for NEST in "conus" "ak" "pr" "hi"; do
     if [ $SENDCOM = YES ]; then
         for OBS_DIR_PATH in $DATA/$VERIF_CASE/data/$VERIF_TYPE/*; do
             OBS_DIR=$(echo ${OBS_DIR_PATH##*/})
-            mkdir -p $COMOUT/$RUN.$INITDATE/$OBS_DIR
+            mkdir -p $COMOUT/$OBS_DIR
             if [ ! -z "$(ls -A $OBS_DIR_PATH)" ]; then
                 for FILE in $OBS_DIR_PATH/*; do
                     if [ -s "$FILE" ]; then
-                       cp -v $FILE $COMOUT/$RUN.$INITDATE/$OBS_DIR/.
+                       cp -v $FILE $COMOUT/$OBS_DIR/.
                     fi
                 done
             fi

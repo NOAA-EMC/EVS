@@ -208,9 +208,9 @@ i=1
       export err=$?; err_chk
 
       if [ $SENDCOM = YES ]; then
-         mkdir -p $COMOUT/${modsys}.${INITDATE}
+         mkdir -p $COMOUT/${RUN}.${INITDATE}/${modsys}
          for FILE in $DATA/sspf/${modsys}.${INITDATE}/*; do
-            cp -v $FILE $COMOUT/${modsys}.${INITDATE}
+            cp -v $FILE $COMOUT/${RUN}.${INITDATE}/${modsys}
          done
       fi
 

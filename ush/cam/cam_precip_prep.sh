@@ -21,7 +21,7 @@ if [ $STEP == "prep" ]; then
                     INITDATEHOURm=$($NDATE -$subtract_hours $INITDATE$VHOUR)
                     INITDATEm=${INITDATEHOURm:0:8}
                     VHOURm=${INITDATEHOURm:8:10}
-                    export COMOUTobs="${DATA}/ccpa.$INITDATEm"
+                    export COMOUTobs="${DATA}/$RUN.$INITDATEm/ccpa"
                     if [ ! -f $COMOUTobs/ccpa.t${VHOURm}z.${OBS_ACC}h.hrap.conus.gb2 ]; then
                         if [ ! -d $COMOUTobs ]; then
                             mkdir -p $COMOUTobs

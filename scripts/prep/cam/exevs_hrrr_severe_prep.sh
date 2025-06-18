@@ -124,15 +124,15 @@ i=1
 
       # Copy final output to $COMOUT
       if [ $SENDCOM = YES ]; then
-         mkdir -p $COMOUT/${modsys}.${INITDATE}
+         mkdir -p $COMOUT/${RUN}.${INITDATE}/${modsys}
          for FILE in $DATA/pcp_combine/${modsys}.${INITDATE}/*; do
             if [ -s "$FILE" ]; then
-               cp -v $FILE $COMOUT/${modsys}.${INITDATE}
+               cp -v $FILE $COMOUT/${RUN}.${INITDATE}/${modsys}
             fi
          done
          for FILE in $DATA/sspf/${modsys}.${INITDATE}/*; do
             if [ -s "$FILE" ]; then
-               cp -v $FILE $COMOUT/${modsys}.${INITDATE}
+               cp -v $FILE $COMOUT/${RUN}.${INITDATE}/${modsys}
             fi
          done
       fi

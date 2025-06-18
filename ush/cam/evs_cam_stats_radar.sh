@@ -242,7 +242,7 @@ fi
 
 
 export obs_file=mrms.${VDATE}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_${VDATE}-${vhr}0000.${VERIF_GRID}.nc
-export OBS_INPUT_TEMPLATE=${RUN}.{valid?fmt=%Y%m%d}/mrms.{valid?fmt=%Y%m%d}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_{valid?fmt=%Y%m%d}-{valid?fmt=%H}0000.${VERIF_GRID}.nc
+export OBS_INPUT_TEMPLATE=${RUN}.{valid?fmt=%Y%m%d}/mrms/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_{valid?fmt=%Y%m%d}-{valid?fmt=%H}0000.${VERIF_GRID}.nc
 
 if [ -s $EVSINmrms/${obs_file} ]; then
    obs_found=1
