@@ -386,7 +386,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                          verif_case=None, verif_type=None, vx_mask=None, 
                          job_type=None, var_name=None, vhour=None, fhr=None, 
                          fhr_start=None, fhr_end=None, fhr_incr=None, 
-                         njob=None, acc=None, nbrhd=None):
+                         njob=None, acc=None, nbrhd=None, nbrhd_pt=None):
     sub_dirs_in = []
     sub_dirs_out = []
     copy_files = []
