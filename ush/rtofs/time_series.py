@@ -761,8 +761,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         np.digitize(y_range, y_range_categories[:-1])
     ]
     margin = np.ceil(y_max) -np.floor(y_min)
-    ylim_min = (np.floor(y_min/round_to_nearest)*round_to_nearest)- 0.5 * margin
-    ylim_max = (np.ceil(y_max/round_to_nearest)*round_to_nearest) + 0.5 * margin
+    ylim_min = (np.floor(y_min/round_to_nearest)*round_to_nearest) - 0.1 *margin
+    ylim_max = (np.ceil(y_max/round_to_nearest)*round_to_nearest) + 0.1 * margin
 
     if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
         ylim_min = float(
