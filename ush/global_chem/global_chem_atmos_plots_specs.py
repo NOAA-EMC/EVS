@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_plots_specs.py
+Name: global_chem_atmos_plots_specs.py
 Original Author: : Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script defines plotting related settings.
@@ -11,7 +11,7 @@ import datetime
 import sys
 import os
 import numpy as np
-import global_ens_chem_util as gda_util
+import global_chem_atmos_util as gda_util
 
 class PlotSpecs:
     def __init__(self, logger, plot_type):
@@ -748,7 +748,7 @@ class PlotSpecs:
                  image_path - full path of the name the plot will
                               be saved as (string)
         """
-        component_savefig_name = 'global_ens_chem'
+        component_savefig_name = 'global_chem_atmos'
         if plot_info_dict['stat'] == 'PERFDIAG':
             metric_savefig_name = 'ctc'
         else:
