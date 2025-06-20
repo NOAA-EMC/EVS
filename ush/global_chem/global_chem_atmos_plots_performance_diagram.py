@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_plots_performance_diagram.py
+Name: global_chem_atmos_plots_performance_diagram.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a performance_diagram plot.
@@ -20,8 +20,8 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
-import global_ens_chem_util as gda_util
-from global_ens_chem_plots_specs import PlotSpecs
+import global_chem_atmos_util as gda_util
+from global_chem_atmos_plots_specs import PlotSpecs
 
 class PerformanceDiagram:
     """
@@ -307,8 +307,6 @@ class PerformanceDiagram:
         )
         cbar = plt.colorbar(CFCSI, orientation='vertical', cax=cbar_ax,
                             ticks=CFCSI.levels)
-        #cbar.dividers.set_color('black')
-        #cbar.dividers.set_linewidth(2)
         cbar.set_label(CSI_plot_name)
         f = lambda m,c,ls,lw,ms,mec: plt.plot(
             [], [], marker=m, mec=mec, mew=2.,

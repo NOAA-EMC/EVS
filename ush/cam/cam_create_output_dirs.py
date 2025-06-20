@@ -641,7 +641,7 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots, VERIF_CASE
         ))
-        for plot_group in ['precip']:
+        for plot_group in ['snowfall']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
@@ -678,7 +678,7 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in [
-                'cape', 'ceil_vis', 'precip', 'sfc_upper'
+                'sfc_upper'
             ]:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(

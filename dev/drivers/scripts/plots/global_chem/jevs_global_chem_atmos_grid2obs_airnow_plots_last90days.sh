@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_chem_gefs_grid2obs_aeronet_plots_last90days
+#PBS -N jevs_global_chem_atmos_grid2obs_airnow_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -23,14 +23,14 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 export SENDCOM=YES
 export KEEPDATA=NO
 export SENDDBN=NO
-export job=${PBS_JOBNAME:-jevs_global_ens_chem_grid2obs_aeronet_plots_90days}
+export job=${PBS_JOBNAME:-jevs_global_chem_atmos_grid2obs_airnow_plots_last90days}
 export jobid=${job}.${PBS_JOBID:-$$}
 export vhr=00
 
 source ${HOMEevs}/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
-source $HOMEevs/dev/modulefiles/global_ens/global_ens_plots.sh
+source $HOMEevs/dev/modulefiles/global_chem/global_chem_plots.sh
 
 evs_ver_2d=$(echo ${evs_ver} | cut -d'.' -f1-2)
 
@@ -41,10 +41,10 @@ export nproc=128
 export envir=prod
 export NET=evs
 export STEP=plots
-export COMPONENT=global_ens
-export RUN=chem
+export COMPONENT=global_chem
+export RUN=atmos
 export VERIF_CASE=grid2obs
-export DATA_TYPE=aeronet
+export DATA_TYPE=airnow
 export NDAYS=90
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
@@ -55,9 +55,9 @@ export VDATE_END=$(finddate.sh ${today} d-4)
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END}
 
 # CALL executable job script here
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_CHEM_PLOTS
 
 ######################################################################
-# Purpose: This does the plotting work for the global ensemble chem
-#          grid-to-observations aeronet for last 90 days
+# Purpose: This does the plotting work for the global chemistry
+#          grid-to-observations airnow for last 90 days
 ######################################################################

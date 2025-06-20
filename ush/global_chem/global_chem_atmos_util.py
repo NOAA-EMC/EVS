@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 '''
-Name: global_ens_chem_util.py
+Name: global_chem_atmos_util.py
 Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
-Abstract: This contains many functions used across global_ens chem.
+Abstract: This contains many functions used across global_chem.
 '''
 
 import os
@@ -434,7 +434,7 @@ def check_plot_files(job_dict):
         )
         fhrs = [int(i) for i in job_dict['fhr_list'].split(', ')]
     if job_dict['JOB_GROUP'] == 'make_plots':
-        from global_ens_chem_plots_specs import PlotSpecs
+        from global_chem_atmos_plots_specs import PlotSpecs
         plot_specs = PlotSpecs('NA', job_dict['plot'])
         fcst_var_prod = list(
             itertools.product([job_dict['fcst_var_name']],
@@ -1098,7 +1098,7 @@ def get_daily_stat_file(model_name, source_stats_base_dir,
     """! Link model daily stat files
          Args:
              model_name                - name of model (string)
-             source_stats_base_dir     - full path to stats/global_ens_chem
+             source_stats_base_dir     - full path to stats/global_chem_atmos
                                          source directory (string)
              dest_model_name_stats_dir - full path to model
                                          destintion directory (string)

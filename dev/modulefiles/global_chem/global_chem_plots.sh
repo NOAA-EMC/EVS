@@ -1,7 +1,4 @@
-#!/bin/bash
-## modulefile for EVS aqm component plots
-#
-
+set -x
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 export HPC_OPT=/apps/ops/para/libs
 module use /apps/dev/modulefiles
@@ -15,6 +12,7 @@ module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
 module load jasper/${jasper_ver}
+module load udunits/${udunits_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
 module load cray-pals/${craypals_ver}
@@ -29,3 +27,4 @@ export DBNROOT=$SIPHONROOT
 module list
 
 set -x
+
