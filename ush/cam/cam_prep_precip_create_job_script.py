@@ -20,6 +20,7 @@ print(f"BEGIN: {os.path.basename(__file__)}")
 
 # Read in environment variables
 STEP = os.environ['STEP']
+RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 MODELNAME = os.environ['MODELNAME']
@@ -57,13 +58,13 @@ if STEP == 'prep':
                         VHOURm = INITDATEHOURm.strftime('%H')
                         COMOUTobs = os.path.join(
                             DATA, VERIF_CASE, 'data', 'workdirs', f'job{njob}', 
-                            'ccpa', f'ccpa.{INITDATEm}'
+                            'ccpa', f'{RUN}.{INITDATEm}', 'ccpa'
                         )
                         if not os.path.isfile(os.path.join(
                                 COMOUTobs, 
                                 f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2')):
                             job_cmd_list.append(
-                                f"if [ ! -d \"{COMOUTobs}\" ]; then mkdir \"{COMOUTobs}\";"
+                                f"if [ ! -d \"{COMOUTobs}\" ]; then mkdir -p \"{COMOUTobs}\";"
                                 + f" fi"
                             )
                             if int(VHOURm) > 18:
@@ -111,14 +112,14 @@ if STEP == 'prep':
                         VSECm = INITDATEHOURm.strftime('%S')
                         COMOUTobs = os.path.join(
                             DATA, VERIF_CASE, 'data', 'workdirs', f'job{njob}', 
-                            'mrms', f'mrms.{INITDATEm}'
+                            'mrms', f'{RUN}.{INITDATEm}', 'mrms'
                         )
                         outfilename=f'mrms.t{VHOURm}z.{OBS_ACC}h.{NEST}.gb2'
                         if not os.path.isfile(os.path.join(
                                 COMOUTobs,
                                 outfilename)):
                             job_cmd_list.append(
-                                f"if [ ! -d \"{COMOUTobs}\" ]; then mkdir \"{COMOUTobs}\";"
+                                f"if [ ! -d \"{COMOUTobs}\" ]; then mkdir -p \"{COMOUTobs}\";"
                                 + f" fi"
                             )
                             if NEST == 'ak':
