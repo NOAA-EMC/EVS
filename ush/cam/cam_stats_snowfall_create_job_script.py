@@ -471,6 +471,7 @@ else:
     if not iterative_first:
         for cmd in job_cmd_list:
             job.write(f'{cmd}\n')
+            job.write(f'export err=$?; err_chk'+'\n')
     for name_list, values in job_iterate_over_env_lists_dict.items():
         name = name_list.replace('_LIST','')
         items = ' '.join([f'\"{item}\"' for item in values['list_items']])
@@ -501,12 +502,14 @@ else:
             job.write(f'{indent}fi\n')
     for cmd in job_cmd_list_iterative:
         job.write(f'{indent}{cmd}\n')
+        job.write(f'{indent}export err=$?; err_chk'+'\n')
     for name_list, value_list in job_iterate_over_env_lists_dict.items():
         indent = indent[indent_width:]
         job.write(f'{indent}done\n')
     if iterative_first:
         for cmd in job_cmd_list:
             job.write(f'{cmd}\n')
+            job.write(f'export err=$?; err_chk'+'\n')
     job.close()
 
 print(f"END: {os.path.basename(__file__)}")
