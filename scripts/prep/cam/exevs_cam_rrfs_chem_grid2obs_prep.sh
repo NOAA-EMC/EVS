@@ -191,13 +191,13 @@ match_aod_2="entire atmosphere"
 #
 match_pm25_1="MASSDEN"
 match_pm25_2="8 m above ground"
-match_pm25_3="aerosol=Missing"
+match_pm25_3="aerosol=Total Aerosol"
 match_pm25_4="aerosol_size <2.5e-06"
 match_pm25_sp="aerosol=Total Aerosol"
 #
 match_pm10_1="MASSDEN"
 match_pm10_2="8 m above ground"
-match_pm10_3="aerosol=Missing"
+match_pm10_3="aerosol=Total Aerosol"
 match_pm10_4="aerosol_size <1e-05"
 match_pm10_sp="aerosol=Total Aerosol"
 #
