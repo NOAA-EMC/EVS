@@ -158,7 +158,8 @@ for NEST in $NEST_LIST; do
                     # Create Output Directories
                     python $USHevs/cam/cam_create_output_dirs.py
                     export err=$?; err_chk
-                    
+                   
+                    all_fhrs="" 
                     for FHR_GROUP in $FHR_GROUP_LIST; do
                         export FHR_GROUP=$FHR_GROUP
                         TARGET_FHR_END="FHR_END_${FHR_GROUP}"
@@ -169,15 +170,21 @@ for NEST in $NEST_LIST; do
 
                         for FHR in `seq ${FHR_START} ${FHR_INCR} ${FHR_END}`; do
                             export FHR=$(printf "%02d" $FHR)
+                            all_fhrs="$all_fhrs $FHR"
+                        done
+                    done
+                    unique_fhrs=$(echo $all_fhrs | tr ' ' '\n' | sort -n | uniq)
 
-                            for NBRHD_WIDTH in $NBRHD_WIDTHS; do
-                                export NBRHD_WIDTH=${NBRHD_WIDTH}
+                    for FHR in $unique_fhrs; do
+                        export FHR
 
-                                # Create Generate Job Script 
-                                python $USHevs/cam/cam_stats_snowfall_create_job_script.py
-                                export err=$?; err_chk
-                                export njob=$((njob+1))
-                            done
+                        for NBRHD_WIDTH in $NBRHD_WIDTHS; do
+                            export NBRHD_WIDTH=${NBRHD_WIDTH}
+
+                            # Create Generate Job Script 
+                            python $USHevs/cam/cam_stats_snowfall_create_job_script.py
+                            export err=$?; err_chk
+                            export njob=$((njob+1))
                         done
                     done
                 done
