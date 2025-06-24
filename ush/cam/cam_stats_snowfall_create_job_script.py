@@ -62,11 +62,10 @@ elif job_type == 'generate':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
     VHOUR = os.environ['VHOUR']
-    FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
-    FHR_END_SHORT = os.environ['FHR_END_SHORT']
-    FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
-    FHR_END_FULL = os.environ['FHR_END_FULL']
-    FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
+    FHR = os.environ['FHR']
+    FHR_GROUP = os.environ['FHR_GROUP']
+    FHR_END = os.environ['FHR_END']
+    FHR_INCR = os.environ['FHR_INCR']
     MIN_IHOUR = os.environ['MIN_IHOUR']
     COMINobs = os.environ['COMINobs']
     MASK_POLY_LIST = os.environ['MASK_POLY_LIST']
@@ -112,7 +111,7 @@ if VERIF_CASE == 'snowfall':
         BOOL_NBRHD = os.environ['BOOL_NBRHD']
         OUTPUT_FLAG_NBRHD = os.environ['OUTPUT_FLAG_NBRHD']
         OUTPUT_FLAG_CATEG = os.environ['OUTPUT_FLAG_CATEG']
-        NBRHD_WIDTHS = os.environ['NBRHD_WIDTHS']
+        NBRHD_WIDTH = os.environ['NBRHD_WIDTH']
         GRID = os.environ['GRID']
         VAR_NAME = os.environ['VAR_NAME']
         OBS_ACC = cutil.get_obs_accums(
@@ -250,11 +249,10 @@ elif job_type == 'generate':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
-    job_env_vars_dict['FHR_GROUP_LIST'] = FHR_GROUP_LIST
-    job_env_vars_dict['FHR_END_SHORT'] = FHR_END_SHORT
-    job_env_vars_dict['FHR_INCR_SHORT'] = FHR_INCR_SHORT
-    job_env_vars_dict['FHR_END_FULL'] = FHR_END_FULL
-    job_env_vars_dict['FHR_INCR_FULL'] = FHR_INCR_FULL
+    job_env_vars_dict['FHR'] = FHR
+    job_env_vars_dict['FHR_GROUP'] = FHR_GROUP
+    job_env_vars_dict['FHR_END'] = FHR_END
+    job_env_vars_dict['FHR_INCR'] = FHR_INCR
     job_env_vars_dict['MIN_IHOUR'] = MIN_IHOUR
     job_env_vars_dict['COMINobs'] = COMINobs
     job_env_vars_dict['FCST_VAR_NAME'] = FCST_VAR_NAME
@@ -267,10 +265,6 @@ elif job_type == 'generate':
     job_env_vars_dict['OBS_VAR_OPTIONS'] = OBS_VAR_OPTIONS
     job_env_vars_dict['MASK_POLY_LIST'] = MASK_POLY_LIST
     job_env_vars_dict['VAR_NAME'] = VAR_NAME
-    job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
-        'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
-        'exports': ['FHR_END','FHR_INCR']
-    }
 elif job_type == 'gather':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['NEST'] = NEST
@@ -300,17 +294,8 @@ if VERIF_CASE == 'snowfall':
         job_env_vars_dict['BOOL_NBRHD'] = BOOL_NBRHD
         job_env_vars_dict['OUTPUT_FLAG_NBRHD'] = OUTPUT_FLAG_NBRHD
         job_env_vars_dict['OUTPUT_FLAG_CATEG'] = OUTPUT_FLAG_CATEG
-        job_env_vars_dict['NBRHD_WIDTHS'] = NBRHD_WIDTHS
+        job_env_vars_dict['NBRHD_WIDTH'] = NBRHD_WIDTH
         job_env_vars_dict['GRID'] = GRID
-        job_dependent_vars['FHR_START'] = {
-            'exec_value': '',
-            'bash_value': (
-                '$(python -c \"import cam_util; print(cam_util.get_fhr_start('
-                + '\'${VHOUR}\',\'${ACC}\',\'${FHR_INCR}\',\'${MIN_IHOUR}\'))\")'
-            ),
-            'bash_conditional': '',
-            'bash_conditional_value': ''
-        }
 
 # Make a list of commands needed to run this particular job
 metplus_launcher = 'run_metplus.py'
@@ -356,12 +341,12 @@ if VERIF_CASE == 'snowfall':
         if job_type == 'generate':
             if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                 if OBS_ACC is not None:
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
                         + f'GridStat_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -371,13 +356,12 @@ if VERIF_CASE == 'snowfall':
                         + 'met_tool=\\\"grid_stat\\\", '
                         + 'vdate=\\\"${VDATE}\\\", '
                         + 'vhour=\\\"${VHOUR}\\\", '
-                        + 'fhr_start=\\\"${FHR_START}\\\", '
-                        + 'fhr_end=\\\"${FHR_END}\\\", '
-                        + 'fhr_incr=\\\"${FHR_INCR}\\\", '
+                        + 'fhr=\\\"${FHR}\\\", '
                         + 'model=\\\"${MODELNAME}\\\", '
                         + 'var_name=\\\"${VAR_NAME}\\\", '
                         + 'acc=\\\"${ACC}\\\", '
-                        + 'nbrhd=\\\"${BOOL_NBRHD}\\\"'
+                        + 'nbrhd=\\\"${BOOL_NBRHD}\\\", '
+                        + 'nbrhd_pt=\\\"${NBRHD_WIDTH}\\\"'
                         + ')\"'
                     )
                     job_cmd_list.append(
@@ -487,6 +471,7 @@ else:
     if not iterative_first:
         for cmd in job_cmd_list:
             job.write(f'{cmd}\n')
+            job.write(f'export err=$?; err_chk'+'\n')
     for name_list, values in job_iterate_over_env_lists_dict.items():
         name = name_list.replace('_LIST','')
         items = ' '.join([f'\"{item}\"' for item in values['list_items']])
@@ -517,12 +502,14 @@ else:
             job.write(f'{indent}fi\n')
     for cmd in job_cmd_list_iterative:
         job.write(f'{indent}{cmd}\n')
+        job.write(f'{indent}export err=$?; err_chk'+'\n')
     for name_list, value_list in job_iterate_over_env_lists_dict.items():
         indent = indent[indent_width:]
         job.write(f'{indent}done\n')
     if iterative_first:
         for cmd in job_cmd_list:
             job.write(f'{cmd}\n')
+            job.write(f'export err=$?; err_chk'+'\n')
     job.close()
 
 print(f"END: {os.path.basename(__file__)}")
