@@ -7,7 +7,7 @@
 # FCST_VALID_HOUR is defined only for plotting python scripts under ush/wafs/
 
 # STAT_ANALYSIS_OUTPUT_DIR is defined for METplus and created by METplus
-export STAT_ANALYSIS_OUTPUT_DIR=$DATA/${OBSERVATION}_${RESOLUTION}_${CENTER}_stat
+export STAT_ANALYSIS_OUTPUT_DIR=$DATA/${OBSERVATION}_${RESOLUTION}_${CENTER}_${VAR}_stat
 
 if [ $OBSERVATION = "GCIP" ] ; then
     export FHOURS=${FHOURS:-"06 09 12 15 18 21 24 27 30 33 36"}

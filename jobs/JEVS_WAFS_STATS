@@ -49,8 +49,8 @@ export VERIF_CASE=${VERIF_CASE:-grid2grid}
 
 # WAFS is the general MODELNAME for data structure
 # while the center (us/uk/blend or gfs) will be the actual MODEL
-# parm/metplus_config/stats/wafs/atmos/GridStat_fcstWAFS_obsGCIP.conf
-# parm/metplus_config/stats/wafs/atmos/StatAnalysis_fcstWAFS_obsGCIP_GatherbyDay.conf
+# parm/metplus_config/stats/wafs/atmos/GridStat_fcstWAFS_obsGCIPicesev.conf
+# parm/metplus_config/stats/wafs/atmos/StatAnalysis_fcstWAFS_obsGCIPicesev_GatherbyDay.conf
 export MODELNAME=${MODELNAME:-wafs}
 
 ############################################
