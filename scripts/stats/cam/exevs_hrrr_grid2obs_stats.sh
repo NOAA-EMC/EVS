@@ -54,7 +54,7 @@ for NEST in $NEST_LIST; do
             # Preprocess Prepbufr Data
             python $USHevs/cam/cam_stats_grid2obs_preprocess_prepbufr.py
             export err=$?; err_chk
-     
+            
             # Create Reformat Job Script 
             python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
             export err=$?; err_chk
@@ -145,11 +145,30 @@ for NEST in $NEST_LIST; do
                 # Create Output Directories
                 python $USHevs/cam/cam_create_output_dirs.py
                 export err=$?; err_chk
-         
-                # Create Generate Job Script 
-                python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-                export err=$?; err_chk
-                export njob=$((njob+1))
+        
+                all_fhrs="" 
+                for FHR_GROUP in $FHR_GROUP_LIST; do
+                    export FHR_GROUP=$FHR_GROUP
+                    TARGET_FHR_END="FHR_END_${FHR_GROUP}"
+                    TARGET_FHR_INCR="FHR_INCR_${FHR_GROUP}"
+                    export FHR_END=${!TARGET_FHR_END}
+                    export FHR_INCR=${!TARGET_FHR_INCR}
+                    export FHR_START=$(python -c "import cam_util; print(cam_util.get_fhr_start('${VHOUR}',0,'${FHR_INCR}','${MIN_IHOUR}'))")
+                
+                    for FHR in `seq ${FHR_START} ${FHR_INCR} ${FHR_END}`; do
+                        export FHR=$(printf "%02d" $FHR)
+                        all_fhrs="$all_fhrs $FHR"
+                    done
+                done
+                unique_fhrs=$(echo $all_fhrs | tr ' ' '\n' | sort -n | uniq)
+
+                for FHR in $unique_fhrs; do
+                    export FHR
+                      
+                    python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+                    export err=$?; err_chk
+                    export njob=$((njob+1))
+                done
             done
         done
     done 

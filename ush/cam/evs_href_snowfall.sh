@@ -62,7 +62,7 @@ for obsv in 6h 24h  ; do
 	    iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
 
 	    input_fcst=$COMINhref/href.${iday}/verf_g2g/href.*.t${ihr}z.conus.f${fhr}
-            input_obsv=$DCOMINsnow/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_${obsv}_${VDATE}${vhr}_grid184.grb2
+            input_obsv=$DCOMINnohrsc/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_${obsv}_${VDATE}${vhr}_grid184.grb2
 
 	   if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 

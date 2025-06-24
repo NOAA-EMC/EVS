@@ -35,7 +35,7 @@ export verify='precip'
 
 export COMHREF=$COMINhref
 export COMCCPA=$COMINccpa
-export COMSNOW=$DCOMINsnow
+export COMSNOW=$DCOMINnohrsc
 export COMMRMS=$DCOMINmrms
 
 export PRECIP_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/precip
