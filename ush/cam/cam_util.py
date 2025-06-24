@@ -937,7 +937,7 @@ def get_ccpa_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
             use_vh = use_vdate.strftime('%H')
             template = os.path.join(
                 indir, 
-                'ccpa.{VDATE}',
+                'atmos.{VDATE}','ccpa',
                 'ccpa.t{VHOUR}z.' + f'{obs_acc}h.hrap.{nest}.gb2'
             )
             ccpa_paths.append(fname_constructor(
@@ -994,7 +994,7 @@ def get_mrms_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
             use_vh = use_vdate.strftime('%H')
             template = os.path.join(
                 indir, 
-                'mrms.{VDATE}',
+                'atmos.{VDATE}','mrms',
                 'mrms.t{VHOUR}z.' + f'{obs_acc}h.{nest}.gb2'
             )
             mrms_paths.append(fname_constructor(
