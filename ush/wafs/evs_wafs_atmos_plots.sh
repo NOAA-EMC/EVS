@@ -89,7 +89,7 @@ for RESOLUTION in $resolutions ; do
 	n=0
 	while [[ $n -le $NDAYS ]] ; do
 	    day=`date -d "$VDATE - $n days" +%Y%m%d`
-	    if [ $NDAYS -gt 90 ] ; then
+	    if [ $VDATE -ne $PDYm1 ] ; then
 		yyyy=`echo $day | cut -c 1-4`
 		sourcefile=$COMIN/$yyyy/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    else

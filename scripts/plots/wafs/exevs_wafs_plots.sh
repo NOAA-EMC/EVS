@@ -17,26 +17,30 @@ for observation in $OBSERVATIONS ; do
     if [ $observation = "GCIP" ] ; then
 	loopFHOURS="06 09 12 15 18 21 24 27 30 33 36"
 	plot_types="roc_curve fbias"
+	resolutions="0P25"
     elif [ $observation = "GFS" ] ; then
 	# Need to use more CPUs to break down plotting of each forecast hour
 	# It takes too long for each plotting over years (10 minutes/6 years)
 	loopFHOURS="06 12 18 24 30 36"
 	plot_types="time_series"
+	resolutions="1P25"
     fi
     for ndays in $DAYS_LIST ; do
 	if [ $ndays -le 90 ] ; then
 	    loopFHOURS="all"
 	fi
-	for subregion in $VX_MASK_ALL ; do
-	    for hh in $loopFHOURS ; do
-		for plot_type in $plot_types ; do
-		    if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
-			echo $ic $USHevs/evs_wafs_atmos_plots.sh $observation $ndays $subregion $hh $plot_type >> wafs_plots.cmdfile
-		    else
-			echo $USHevs/evs_wafs_atmos_plots.sh $observation $ndays $subregion $hh $plot_type >> wafs_plots.cmdfile
-			export MP_PGMMODEL=mpmd
-		    fi
-		    ic=$(( ic + 1 ))
+	for resolution in $resolutions ; do
+	    for subregion in $VX_MASK_ALL ; do
+		for hh in $loopFHOURS ; do
+		    for plot_type in $plot_types ; do
+			if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
+			    echo $ic $USHevs/evs_wafs_atmos_plots.sh $observation $ndays $subregion $hh $plot_type $resolution >> wafs_plots.cmdfile
+			else
+			    echo $USHevs/evs_wafs_atmos_plots.sh $observation $ndays $subregion $hh $plot_type $resolution >> wafs_plots.cmdfile
+			    export MP_PGMMODEL=mpmd
+			fi
+			ic=$(( ic + 1 ))
+		    done
 		done
 	    done
 	done

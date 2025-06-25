@@ -2073,7 +2073,7 @@ class Reference():
             },
             'wafs_analysis': {
                 'CTC': {
-                    'plot_stats_list': ('bias, ets, fss, csi, fbias, fbar,'
+                    'plot_stats_list': ('hit, falarm, miss, reject, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [

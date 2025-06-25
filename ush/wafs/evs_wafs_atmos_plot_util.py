@@ -611,6 +611,14 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Probability of False Detection'
    elif stat == 'farate':
       stat_plot_name = 'False Alarm Rate'
+   elif stat == 'hit':
+      stat_plot_name = 'hit count'
+   elif stat == 'falarm':
+      stat_plot_name = 'false alarm count'
+   elif stat == 'miss':
+      stat_plot_name = 'miss count'
+   elif stat == 'reject':
+      stat_plot_name = 'rejection count'
    elif stat == 'podn':
       stat_plot_name = 'Probability of Detection of the Non-Event'
    elif stat == 'faratio':
@@ -1482,6 +1490,18 @@ def calculate_stat(logger, model_data, stat):
    elif stat == 'pofd' or stat == 'farate':
       if line_type == 'CTC':
          stat_values = fy_on/(fy_on + fn_on)
+   elif stat == 'hit':
+      if line_type == 'CTC':
+         stat_values = fy_oy
+   elif stat == 'falarm':
+      if line_type == 'CTC':
+         stat_values = fy_on
+   elif stat == 'miss':
+      if line_type == 'CTC':
+         stat_values = fn_oy
+   elif stat == 'reject':
+      if line_type == 'CTC':
+         stat_values = fn_on
    elif stat == 'podn':
       if line_type == 'CTC':
          stat_values = fn_on/(fy_on + fn_on)
