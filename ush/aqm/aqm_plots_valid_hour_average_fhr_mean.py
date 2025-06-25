@@ -397,9 +397,11 @@ class ValidHourAverageFhrMean:
                 valid_hours_avg_df.columns.values.tolist()
             )
             if model_num_npts != 0:
+                ##  np.ma.compressed(masked_valid_hours),
+                ##  np.ma.compressed(masked_model_num_data),
                 ax1.plot(
-                    np.ma.compressed(masked_valid_hours),
-                    np.ma.compressed(masked_model_num_data),
+                    masked_valid_hours,
+                    masked_model_num_data,
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
@@ -442,9 +444,11 @@ class ValidHourAverageFhrMean:
                                   +f"{self.model_info_dict['model1']['name']},"
                                   +self.model_info_dict['model1']['plot_name']
                                   +"]")
+                ##  np.ma.compressed(masked_diff_valid_hours),
+                ##  np.ma.compressed(masked_model_num_model1_diff_data),
                 ax2.plot(
-                    np.ma.compressed(masked_diff_valid_hours),
-                    np.ma.compressed(masked_model_num_model1_diff_data),
+                    masked_diff_valid_hours,
+                    masked_model_num_model1_diff_data,
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],

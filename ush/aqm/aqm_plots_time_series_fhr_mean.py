@@ -367,9 +367,11 @@ class TimeSeriesFhrMean:
                         obar_model_num_avg_label = format(
                             round(obar_model_num_avg, 3), '.3f'
                         )
+                ##  np.ma.compressed(masked_plot_dates),
+                ##  np.ma.compressed(masked_model_num_data),
                 ax.plot_date(
-                    np.ma.compressed(masked_plot_dates),
-                    np.ma.compressed(masked_model_num_data),
+                    masked_plot_dates,
+                    masked_model_num_data,
                     fmt=model_num_plot_settings_dict['marker'],
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
@@ -396,9 +398,11 @@ class TimeSeriesFhrMean:
                         obs_plot_settings_dict = (
                             model_plot_settings_dict['obs']
                         )
+                        ##  np.ma.compressed(obar_masked_plot_dates),
+                        ##  np.ma.compressed(obar_masked_model_num_data),
                         ax.plot_date(
-                            np.ma.compressed(obar_masked_plot_dates),
-                            np.ma.compressed(obar_masked_model_num_data),
+                            obar_masked_plot_dates,
+                            obar_masked_model_num_data,
                             fmt = obs_plot_settings_dict['marker'],
                             color = obs_plot_settings_dict['color'],
                             linestyle = obs_plot_settings_dict['linestyle'],

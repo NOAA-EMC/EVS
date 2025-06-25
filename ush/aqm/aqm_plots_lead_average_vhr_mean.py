@@ -376,9 +376,11 @@ class LeadAverageVhrMean:
             self.logger.debug(f"Plotting {model_num} [{model_num_name},"
                               +f"{model_num_plot_name}]")
             if model_num_npts != 0:
+                ##  np.ma.compressed(masked_forecast_hours),
+                ##  np.ma.compressed(masked_model_num_data),
                 ax1.plot(
-                    np.ma.compressed(masked_forecast_hours),
-                    np.ma.compressed(masked_model_num_data),
+                    masked_forecast_hours,
+                    masked_model_num_data,
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
@@ -419,9 +421,11 @@ class LeadAverageVhrMean:
                               +f"model1 [{model1_name},"
                               +f"{model1_plot_name}]")
             if model_num_diff_npts != 0:
+                ##  np.ma.compressed(masked_diff_forecast_hours),
+                ##  np.ma.compressed(masked_model_num_model1_diff_data),
                 ax2.plot(
-                    np.ma.compressed(masked_diff_forecast_hours),
-                    np.ma.compressed(masked_model_num_model1_diff_data),
+                    masked_diff_forecast_hours,
+                    masked_model_num_model1_diff_data,
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
