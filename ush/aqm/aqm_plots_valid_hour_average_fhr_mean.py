@@ -397,8 +397,6 @@ class ValidHourAverageFhrMean:
                 valid_hours_avg_df.columns.values.tolist()
             )
             if model_num_npts != 0:
-                ##  np.ma.compressed(masked_valid_hours),
-                ##  np.ma.compressed(masked_model_num_data),
                 ax1.plot(
                     masked_valid_hours,
                     masked_model_num_data,
@@ -444,8 +442,6 @@ class ValidHourAverageFhrMean:
                                   +f"{self.model_info_dict['model1']['name']},"
                                   +self.model_info_dict['model1']['plot_name']
                                   +"]")
-                ##  np.ma.compressed(masked_diff_valid_hours),
-                ##  np.ma.compressed(masked_model_num_model1_diff_data),
                 ax2.plot(
                     masked_diff_valid_hours,
                     masked_model_num_model1_diff_data,
