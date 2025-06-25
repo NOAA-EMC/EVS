@@ -39,22 +39,37 @@ elif [ $OBSERVATION = "GFS" ] ; then
     
     if [ $RESOLUTION = "1P25" ] ; then
         export REGRID=G045
-	if [[ $WDIR = 'yes' ]] ; then
-            export VAR_NAME=${VAR_NAME_GFS:-"TMP, WIND, WIND80, WDIR"} # For plotting only
-	else
-            export VAR_NAME=${VAR_NAME_GFS:-"TMP, WIND, WIND80"} # For plotting only
-	fi
 	export VAR_LEVELS="P850, P700, P600, P500, P400, P300, P250, P200, P150, P100"
 
-	export VAR1_NAME=TMP
-	export VAR1_LEVELS_FCST="$VAR_LEVELS"
-	export VAR1_LEVELS_OBS="$VAR_LEVELS"
+	if [[ $VAR = 'wdir' ]] ; then
+	    # For stat $PARMevs/GridStat_fcstWAFS_obs${OBSERVATION}${VAR}.conf
+	    export VAR1_NAME=UGRD
+	    export VAR2_NAME=VGRD
 
-	export VAR2_NAME=WIND
-	export VAR2_LEVELS_FCST="$VAR_LEVELS"
-	export VAR2_LEVELS_OBS="$VAR_LEVELS"
-	# 80 knots == 41.155556 m/s
-	export VAR2_OPTIONS_FCST="cnt_thresh = [ NA, >=41.155556 ]; cnt_logic = INTERSECTION"
-	export VAR2_OPTIONS_OBS="cnt_thresh = [ NA, NA ]; cnt_logic = INTERSECTION"
+	    # 10 knots == 5.14444 m/s
+	    export VAR_OPTIONS_FCST="wind_thresh = [ >=5.14444 ]; wind_logic = INTERSECTION"
+#	    export VAR_OPTIONS_OBS="wind_thresh = [ NA ]; wind_logic = INTERSECTION"
+	    export VAR_OPTIONS_OBS="$VAR_OPTIONS_FCST"
+
+	    # For plot
+            export VAR_NAME=${VAR_NAME_GFS:-"UGRD_VGRD"}
+
+	elif [[ $VAR = 'uvt' ]] ; then
+	    # For stat $PARMevs/GridStat_fcstWAFS_obs${OBSERVATION}${VAR}.conf
+	    export VAR1_NAME=TMP
+	    export VAR1_LEVELS_FCST="$VAR_LEVELS"
+	    export VAR1_LEVELS_OBS="$VAR_LEVELS"
+
+	    export VAR2_NAME=WIND
+	    export VAR2_LEVELS_FCST="$VAR_LEVELS"
+	    export VAR2_LEVELS_OBS="$VAR_LEVELS"
+	    # 80 knots == 41.155556 m/s
+	    export VAR2_OPTIONS_FCST="cnt_thresh = [ NA, >=41.155556 ]; cnt_logic = INTERSECTION"
+	    export VAR2_OPTIONS_OBS="cnt_thresh = [ NA, NA ]; cnt_logic = INTERSECTION"
+
+	    # For plot
+            export VAR_NAME=${VAR_NAME_GFS:-"TMP, WIND, WIND80"}
+	fi
+
     fi
 fi
