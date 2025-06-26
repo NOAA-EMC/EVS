@@ -87,6 +87,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         return None
 
     fig, ax = plotter.get_plots(num)  
+    verif_type_translator = reference.verif_type_translator
     variable_translator = reference.variable_translator
     domain_translator = reference.domain_translator
     model_settings = model_colors.model_settings
@@ -887,8 +888,13 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
     else:
         title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
+    if verif_type in verif_type_translator:
+        verif_type_long_name = verif_type_translator[verif_type]
+    else:
+        verif_type_long_name = verif_type
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}, {frange_string}')
+              + f'{date_start_string} to {date_end_string}, {frange_string}, '
+              + f'Validation: {verif_type_long_name}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=23
