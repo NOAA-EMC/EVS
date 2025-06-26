@@ -309,8 +309,10 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 
 	if [ $file_check_atlantic -eq 0 ] && [ $file_check_indian -eq 0 ] && [ $file_check_pacific -eq 0 ] ; then
 		tmp_argo_file=$DATA/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
+		tmp_argo_file_filtered=$DATA/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}_filtered.nc
 		output_argo_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
-		if [ ! -s $output_argo_file ]; then
+		output_argo_file_filtered=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}_filtered.nc
+		if [ ! -s $output_argo_file ] ; then
 			run_metplus.py -c $PARMevs/metplus_config/machine.conf \
 			-c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsARGO.conf
 			export err=$?; err_chk
@@ -320,9 +322,18 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 				fi
 			fi
 		else
-			echo "RESTART: $output_argo_file exists; Copying to $tmp_argo_file"
+			echo "RESTART: $output_argo_file exist; Copying to $tmp_argo_file"
 			cp -v $output_argo_file $tmp_argo_file
 		fi
+		if [ -s $output_argo_file ] && [ ! -s $output_argo_file_filtered ]; then
+			python ${USHevs}/${COMPONENT}/rtofs_prep_qc_argo.py
+			export err=$?; err_chk
+			if [ $SENDCOM = YES ]; then 
+				if [ -s $tmp_argo_file_filtered ] ; then
+					cp -v $tmp_argo_file_filtered $output_argo_file_filtered
+				fi
+			fi
+		fi	
 	else
 		echo "WARNING:  Corrupted validation file: ARGO ${ftype} is corrupted for valid date $INITDATE. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc and not run."
 		if [ $SENDMAIL = YES ] ; then
