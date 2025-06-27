@@ -53,6 +53,8 @@ elif [ $OBSERVATION = "GFS" ] ; then
 
 	    # For plot
             export VAR_NAME=${VAR_NAME_GFS:-"UGRD_VGRD"}
+	    export VAR1_LEVELS_FCST="$VAR_LEVELS"
+	    export VAR1_LEVELS_OBS="$VAR_LEVELS"
 
 	elif [[ $VAR = 'uvt' ]] ; then
 	    # For stat $PARMevs/GridStat_fcstWAFS_obs${OBSERVATION}${VAR}.conf
