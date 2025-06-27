@@ -30,7 +30,6 @@ export verif_profile='yes'
 export verif_product='yes'
 export gather=${gather:-'yes'}
 export verify=$VERIF_CASE
-export run_mpi=${run_mpi:-'yes'}
 
 #*************************************
 #check input data are available:
@@ -126,13 +125,8 @@ chmod 775 $DATA/scripts/run_href_all_grid2obs_poe
 # Run the POE script to generate small stat files
 #*************************************************
 if [ -s $DATA/scripts/run_href_all_grid2obs_poe ] ; then
- if [ $run_mpi = yes ] ; then
     mpiexec -np 72 -ppn 72 --cpu-bind verbose,depth cfp  ${DATA}/scripts/run_href_all_grid2obs_poe
     export err=$?; err_chk
- else
-    ${DATA}/scripts/run_href_all_grid2obs_poe
-    export err=$?; err_chk
- fi
 fi
 
 #******************************************************************

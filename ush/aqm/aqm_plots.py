@@ -41,6 +41,7 @@ date_type = os.environ['date_type']
 NDAYS = os.environ['NDAYS']
 fig_name_label = os.environ['fig_name_label']
 dir_name_label = fig_name_label
+obs_src_name=os.environ['OBS_SRC']
 restart_mode = os.environ['restart_mode']
 plot_verbosity = os.environ['plot_verbosity']
 VERIF_TYPE = os.environ['VERIF_TYPE']
@@ -266,7 +267,6 @@ elif JOB_GROUP == 'filter_stats':
     for filter_info in list(itertools.product(valid_hrs, fhrs)):
         date_info_dict['valid_hr_start'] = str(filter_info[0])
         date_info_dict['valid_hr_end'] = str(filter_info[0])
-        ## date_info_dict['valid_hr_inc'] = '24'
         date_info_dict['valid_hr_inc'] = '1'
         date_info_dict['forecast_hour'] = str(filter_info[1])
         init_hr = gda_util.get_init_hour(
@@ -434,6 +434,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for ts_info in \
                 list(itertools.product(valid_hrs, fhrs, var_info)):
             date_info_dict['valid_hr_start'] = str(ts_info[0])
@@ -470,10 +471,6 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = True
             else:
                 make_ts = False
-            ## if plot_info_dict['stat'] == 'FBAR_OBAR' \
-            ##         and str(date_info_dict['forecast_hour']) not in \
-            ##         [ '24', '48', '72' ]:
-            ##     make_ts = False
             if make_ts:
                 plot_ts = gdap_ts.TimeSeries(logger, job_input_dir+'/..',
                                              job_work_dir, model_info_dict,
@@ -493,6 +490,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for ts_info in list(var_info):
             logger.info(f"aqm_plots.py {ts_info}")
             date_info_dict['valid_hr_start'] = valid_hr_start
@@ -563,6 +561,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for la_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(la_info[0])
             date_info_dict['valid_hr_end'] = str(la_info[0])
@@ -617,6 +616,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for la_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
@@ -683,6 +683,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for vha_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
@@ -742,6 +743,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for vhafm_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
@@ -837,6 +839,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for ta_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(ta_info[0])
             date_info_dict['valid_hr_end'] = str(ta_info[0])
@@ -943,6 +946,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for pd_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(pd_info[0])
             date_info_dict['valid_hr_end'] = str(pd_info[0])

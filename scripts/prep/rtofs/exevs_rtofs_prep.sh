@@ -18,6 +18,12 @@
 # 03/2025: 
 # 1- $COMOUT name changes and the adjustment to other scripts in stats scripts, ush, parm, etc.
 # 2- Updated the ecf scripts names and adjustments in defs. 
+# 04/2025:
+# 1- Updated the file checks to ensure that dcom files are not corrupted before using them. 
+# New approach uses ncdump (added script in ush directory: rtofs_check_nc.py) instead of checking the file size.
+# 2- Updated the WARNING messages for corrupted files.
+# 3- Adjusted the end on RTOFS plots with the date in .tar files (ush/settings.py).
+
 #############################################################################################
 
 set -x
@@ -47,11 +53,10 @@ for lead in ${leads}; do
 			fi
                 fi
             else
-                echo "WARNING: ${input_rtofs_file} does not exist"
+                echo "WARNING: ${input_rtofs_file} does not exist. The missing file is ${input_rtofs_file}. METplus will not run."
                 if [ $SENDMAIL = YES ] ; then
                     export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "Warning: No RTOFS forecast was available for ${INITDATE}${lead}" > mailmsg
-                    echo "Missing file is ${input_rtofs_file}" >> mailmsg
+                    echo "WARNING: No RTOFS forecast was available for ${INITDATE}${lead}. Missing file is: ${input_rtofs_file}. METplus will not run." > mailmsg
                     echo "Job ID: $jobid" >> mailmsg
                     cat mailmsg | mail -s "$subject" $MAILTO
                 fi
@@ -76,11 +81,10 @@ for lead in ${leads}; do
 			fi
                 fi
             else
-                echo "WARNING: ${input_rtofs_file} does not exist"
+                echo "WARNING: ${input_rtofs_file} does not exist. Missing file is: ${input_rtofs_file}. METplus will not run."
                 if [ $SENDMAIL = YES ] ; then
                     export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "Warning: No RTOFS forecast was available for ${INITDATE}${lead}" > mailmsg
-                    echo "Missing file is ${input_rtofs_file}" >> mailmsg
+                    echo "WARNING: No RTOFS forecast was available for ${INITDATE}${lead}. Missing file is: ${input_rtofs_file}. METplus will not run." > mailmsg
                     echo "Job ID: $jobid" >> mailmsg
                     cat mailmsg | mail -s "$subject" $MAILTO
                 fi
@@ -162,7 +166,6 @@ done
 ##########################
 #  process obs data
 ##########################
-min_size=2404
 # convert OSI-SAF data into lat-lon grid
 export OBTYPE=osisaf
 if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE ]; then
@@ -175,19 +178,33 @@ for ftype in nh sh; do
 	tmp_osisaf_file=$DATA/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	output_osisaf_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	if [ -s $input_osisaf_file ]; then
-    		actual_size_osisaf=$(wc -c <"$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc")
+		python $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file"
+		export err=$?; err_chk
+		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file")
+		echo "$file_check"
+		if [ "$file_check" -eq 0 ]; then
+			echo "$input_osisaf_file is valid."
+		elif [ "$file_check" -eq 1 ]; then
+			echo "WARNING:  Corrupted validation file: OSI-SAF ${ftype} is corrupted for valid date $INITDATE. METplus will skip ${input_osisaf_file} and not run."
+			if [ $SENDMAIL = YES ] ; then
+				export subject="OSI-SAF Data is corrupted for EVS RTOFS"
+		    		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. Corrupted file is $input_osisaf_file. METplus will not run." > mailmsg
+		    		cat mailmsg | mail -s "$subject" $MAILTO
+	    	fi
+		fi
     	fi
-    	if [[ ! -s $input_osisaf_file || $actual_size_osisaf -lt $min_size ]]; then
-	    	echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
-	    	if [ $SENDMAIL = YES ] ; then
+	if [ ! -s $input_osisaf_file ]; then
+		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. $input_osisaf_file does not exist. METplus will not run."
+		if [ $SENDMAIL = YES ] ; then
 			export subject="OSI-SAF Data Missing for EVS RTOFS"
-		    	echo "Warning: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
-		    	echo "Missing file is $input_osisaf_file" >> mailmsg
+		    	echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. Missing file is: $input_osisaf_file. METplus will not run." > mailmsg
 		    	cat mailmsg | mail -s "$subject" $MAILTO
 	    	fi
     	fi
+
+
     	if [ ! -s $output_osisaf_file ]; then
-        	if [ -s $input_osisaf_file ]; then
+        	if [[ -s $input_osisaf_file && $file_check -eq 0 ]]; then
             		cdo remapbil,$osi_saf_grid_file $input_osisaf_file $tmp_osisaf_file
             		export err=$?; err_chk
             		if [ $SENDCOM = "YES" ]; then
@@ -196,11 +213,10 @@ for ftype in nh sh; do
 				fi
             		fi
         	else
-			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE."
+			echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. $input_osisaf_file can be missing or corrupted. METplus will not run."
             		if [ $SENDMAIL = YES ] ; then
                 		export subject="OSI-SAF Data Missing for EVS RTOFS"
-                		echo "Warning: No OSI-SAF ${ftype} data was available for valid date $INITDATE." > mailmsg
-                		echo "Missing file is $input_osisaf_file" >> mailmsg
+                		echo "WARNING: No OSI-SAF ${ftype} data was available for valid date $INITDATE. Missing file is $input_osisaf_file. METplus will not run." > mailmsg
                 		cat mailmsg | mail -s "$subject" $MAILTO
             		fi
         	fi
@@ -242,11 +258,10 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 
    	 fi
 else
-	echo "WARNING: No NDBC data was available for valid date $INITDATE."	
+	echo "WARNING: No NDBC data was available for valid date $INITDATE. $DCOMROOT/$INITDATE/validation_data/marine/buoy/ is empty or does not exist. METplus will not run. "	
   	if [ $SENDMAIL = YES ] ; then
     		export subject="NDBC Data Missing for EVS RTOFS"
-    		echo "Warning: No NDBC data was available for valid date $INITDATE." > mailmsg
-    		echo "Missing files are located at $DCOMROOT/$INITDATE/validation_data/marine/buoy" >> mailmsg
+    		echo "WARNING: No NDBC data was available for valid date $INITDATE. Missing file is $DCOMROOT/$INITDATE/validation_data/marine/buoy. METplus will not run." > mailmsg
     		cat mailmsg | mail -s "$subject" $MAILTO
   	fi
 fi
@@ -257,10 +272,42 @@ if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE ]; then
 fi
 mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
 if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc ] && [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc ] && [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc ]; then
-	actual_size_argo_atlantic=$(wc -c <"$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc")
-	actual_size_argo_indian=$(wc -c <"$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc")
-	actual_size_argo_pacific=$(wc -c <"$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc")
-	if [ $actual_size_argo_atlantic -gt $min_size ] && [ $actual_size_argo_indian -gt $min_size ] && [ $actual_size_argo_pacific -gt $min_size ] ; then
+	
+	# check atlantic:
+	python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc"
+	export err=$?; err_chk
+	file_check_atlantic=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc")
+	echo "$file_check_atlantic"
+	if [ "$file_check_atlantic" -eq 0 ]; then
+		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc is valid."
+	elif [ "$file_check_atlantic" -eq 1 ]; then
+		echo "WARNING: Corrupted validation file: $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc is corrupted for valid date ${INITDATE}. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc and not run"
+	fi
+
+        # check indian
+	python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc"
+	export err=$?; err_chk
+	file_check_indian=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc")
+	echo "$file_check_indian"
+	if [ "$file_check_indian" -eq 0 ]; then
+		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is valid."
+	elif [ "$file_check_atlantic" -eq 1 ]; then
+		echo "WARNING: Corrupted validation file: $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is corrupted for valid date ${INITDATE}. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc and not run."
+	fi
+	
+	# check pacific
+	python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc"
+	export err=$?; err_chk
+	file_check_pacific=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc")
+	echo "$file_check_pacific"
+	if [ "$file_check_pacific" -eq 0 ]; then
+		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is valid."
+	elif [ "$file_check_atlantic" -eq 1 ]; then
+		echo "WARNING: Corrupted validation file: $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is corrupted for valid date ${INITDATE}. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc and not run."
+
+	fi
+
+	if [ $file_check_atlantic -eq 0 ] && [ $file_check_indian -eq 0 ] && [ $file_check_pacific -eq 0 ] ; then
 		tmp_argo_file=$DATA/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
 		output_argo_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
 		if [ ! -s $output_argo_file ]; then
@@ -277,18 +324,19 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 			cp -v $output_argo_file $tmp_argo_file
 		fi
 	else
+		echo "WARNING:  Corrupted validation file: ARGO ${ftype} is corrupted for valid date $INITDATE. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc and not run."
 		if [ $SENDMAIL = YES ] ; then
-			export subject="Argo Data Missing for EVS RTOFS"
-			echo "Warning: No Argo data was available for valid date $INITDATE." > mailmsg
-			echo "Missing file is $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc, $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc, and/or $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc" >> mailmsg
+			export subject="Argo Data is corrupted for EVS RTOFS"
+			echo "WARNING: No Argo data was available for valid date $INITDATE." > mailmsg
+			echo "Corrupted file is $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc, $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc, and/or $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc" >> mailmsg
 			cat mailmsg | mail -s "$subject" $MAILTO
 		fi
 	fi
 else
-	echo "WARNING: No Argo data was available for valid date $INITDATE."
+	echo "WARNING: No Argo data was available for valid date $INITDATE. $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc and $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc do not exist. METplus will not run. "
 	if [ $SENDMAIL = YES ] ; then
 		export subject="Argo Data Missing for EVS RTOFS"
-		echo "Warning: No Argo data was available for valid date $INITDATE." > mailmsg
+		echo "WARNING: No Argo data was available for valid date $INITDATE." > mailmsg
 		echo "Missing file is $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc, $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc, and/or $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc" >> mailmsg
 		cat mailmsg | mail -s "$subject" $MAILTO
 	fi

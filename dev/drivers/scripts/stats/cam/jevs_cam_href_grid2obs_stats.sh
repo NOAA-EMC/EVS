@@ -3,7 +3,7 @@
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=01:10:00
+#PBS -l walltime=01:15:00
 #PBS -l place=vscatter,select=1:ncpus=72:mem=300GB
 #PBS -l debug=true
 
@@ -30,7 +30,6 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export vhr=00
 
-export run_mpi=yes
 export gather=yes
 
 

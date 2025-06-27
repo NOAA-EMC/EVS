@@ -56,7 +56,6 @@ export RUN="atmos"
 export VERIF_CASE="grid2obs_cape"
 export MODELNAME=href
 export last_days=90
-export run_mpi=yes
 
 ############################################################
 # Execute j-job

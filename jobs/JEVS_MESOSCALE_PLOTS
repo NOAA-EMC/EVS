@@ -75,10 +75,13 @@ if [ $MODELNAME = sref ] ; then
 else
     if [ $VERIF_CASE = grid2obs ]; then
         export VDATE=${VDATE:-$PDYm1}
+	export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
     elif [ $VERIF_CASE = precip ]; then
         export VDATE=${VDATE:-$PDYm1}
+	export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
     elif [ $VERIF_CASE = snowfall ]; then
         export VDATE=${VDATE:-$PDYm1}
+	export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
     elif [ $VERIF_CASE = headline ]; then
         export VDATE=${VDATE:-$PDYm1}
     else

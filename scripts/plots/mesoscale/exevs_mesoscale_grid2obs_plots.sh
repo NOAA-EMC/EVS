@@ -92,13 +92,13 @@ for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
 done
 
 # Tar and Copy output files to EVS COMOUT directory
-  find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##'  -T -
+  find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar --transform='s#.*/##'  -T -
 
 if [ $SENDCOM = YES ]; then
-    cp -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
+    cp -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar ${COMOUTplots}/.
 fi
 
 if [ $SENDDBN = YES ]; then
-	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar 
+	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar 
 fi
 

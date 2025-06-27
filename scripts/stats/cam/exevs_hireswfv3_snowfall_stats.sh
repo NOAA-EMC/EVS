@@ -88,13 +88,13 @@ python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
 # Run All HiRes Window FV3 snowfall/stats Reformat Jobs
-chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
     while [ $nc -le $ncount_poe ]; do
-        poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+        poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
@@ -112,17 +112,22 @@ if [ $USE_CFP = YES ]; then
     done
 else
     while [ $nc -le $ncount_job ]; do
-        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-        export err=$?; err_chk
+        job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+        if [ -f "$job_file" ]; then
+            $job_file
+            export err=$?; err_chk
+        fi
         nc=$((nc+1))
     done
 fi
 
 # Copy Reformat Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 # Generate MET Data
 export job_type="generate"
@@ -154,10 +159,27 @@ for NEST in $NEST_LIST; do
                     python $USHevs/cam/cam_create_output_dirs.py
                     export err=$?; err_chk
                     
-                    # Create Generate Job Script 
-                    python $USHevs/cam/cam_stats_snowfall_create_job_script.py
-                    export err=$?; err_chk
-                    export njob=$((njob+1))
+                    # Create Generate Job Script
+                    for FHR_GROUP in $FHR_GROUP_LIST; do
+                        export FHR_GROUP=$FHR_GROUP
+                        TARGET_FHR_END="FHR_END_${FHR_GROUP}"
+                        TARGET_FHR_INCR="FHR_INCR_${FHR_GROUP}"
+                        export FHR_END=${!TARGET_FHR_END}
+                        export FHR_INCR=${!TARGET_FHR_INCR}
+                        export FHR_START=$(python -c "import cam_util; print(cam_util.get_fhr_start('${VHOUR}','${ACC}','${FHR_INCR}','${MIN_IHOUR}'))")
+
+                        for FHR in `seq ${FHR_START} ${FHR_INCR} ${FHR_END}`; do
+                            export FHR=$(printf "%02d" $FHR)
+
+                            for NBRHD_WIDTH in $NBRHD_WIDTHS; do
+                                export NBRHD_WIDTH=${NBRHD_WIDTH}
+
+                                python $USHevs/cam/cam_stats_snowfall_create_job_script.py
+                                export err=$?; err_chk
+                                export njob=$((njob+1))
+                            done
+                        done
+                    done
                 done
             done
         done
@@ -175,13 +197,13 @@ python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
 # Run All HiRes Window FV3 snowfall/stats Generate Jobs
-chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
     while [ $nc -le $ncount_poe ]; do
-        poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+        poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
@@ -199,17 +221,22 @@ if [ $USE_CFP = YES ]; then
     done
 else
     while [ $nc -le $ncount_job ]; do
-        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-        export err=$?; err_chk
+        job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+        if [ -f "$job_file" ]; then
+            $job_file
+            export err=$?; err_chk
+        fi
         nc=$((nc+1))
     done
 fi
 
 # Copy Generate Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 export job_type="gather"
 export njob=1
@@ -237,13 +264,13 @@ python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
 # Run All HiRes Window FV3 snowfall/stats Gather Jobs
-chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
     while [ $nc -le $ncount_poe ]; do
-        poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+        poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
@@ -261,17 +288,22 @@ if [ $USE_CFP = YES ]; then
     done
 else
     while [ $nc -le $ncount_job ]; do
-        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-        export err=$?; err_chk
+        job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+        if [ -f "$job_file" ]; then
+            $job_file
+            export err=$?; err_chk
+        fi
         nc=$((nc+1))
     done
 fi
 
 # Copy Gather Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 export job_type="gather2"
 export njob=1
@@ -296,13 +328,13 @@ python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
 # Run All HiRes Window FV3 snowfall/stats Gather 2 Jobs
-chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
     while [ $nc -le $ncount_poe ]; do
-        poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+        poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
@@ -320,17 +352,22 @@ if [ $USE_CFP = YES ]; then
     done
 else
     while [ $nc -le $ncount_job ]; do
-        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-        export err=$?; err_chk
+        job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+        if [ -f "$job_file" ]; then
+            $job_file
+            export err=$?; err_chk
+        fi
         nc=$((nc+1))
     done
 fi
 
 # Copy Gather 2 Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 # Copy files to desired location
 #all commands to copy output files into the correct EVS COMOUT directory
@@ -370,13 +407,13 @@ if [ "$vhr" -ge "$last_cyc" ]; then
         export err=$?; err_chk
 
         # Run All HiRes Window FV3 snowfall/stats Gather 3 Jobs
-        chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-        ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
+        chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
+        ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
         nc=1
         if [ $USE_CFP = YES ]; then
-            ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+            ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe* |wc -l)
             while [ $nc -le $ncount_poe ]; do
-                poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+                poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/poe_jobs${nc}
                 chmod 775 $poe_script
                 export MP_PGMMODEL=mpmd
                 export MP_CMDFILE=${poe_script}
@@ -394,16 +431,21 @@ if [ "$vhr" -ge "$last_cyc" ]; then
             done
         else
             while [ $nc -le $ncount_job ]; do
-                ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-                export err=$?; err_chk
+                job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
+                if [ -f "$job_file" ]; then
+                    $job_file
+                    export err=$?; err_chk
+                fi
                 nc=$((nc+1))
             done
         fi
 
         # Copy Gather 3 Output to Main Directory
+        shopt -s nullglob
         for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
             cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
             export err=$?; err_chk
         done
+        shopt -u nullglob
     fi
 fi

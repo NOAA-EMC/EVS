@@ -13,8 +13,6 @@ export regrid='NONE'
 #*******************************************
 # Build POE script to collect sub-jobs
 # ******************************************
->run_all_sref_cnv_poe.sh
-
 export model=sref
 
 for  obsv in prepbufr ; do 
@@ -35,7 +33,6 @@ for  obsv in prepbufr ; do
     cp -r $COMOUTrestart/prepbufr.${VDATE} $WORK/.
   fi
 
-
   #*******************************************************
   # Build sub-jobs
   # First check if the sub-task has been done in the previous run
@@ -45,10 +42,11 @@ for  obsv in prepbufr ; do
   #*****************************************************
 
   cd $WORK/scripts
+  >run_all_sref_cnv_poe.sh
   for vhr in 00 06 12 18 ; do 
    for fhr in 03 09 15 21 27 33 39 45 51 57 63 69 75 81 87 ; do
     
-       >run_sref_cnv_${fhr}_${vhr}.sh
+    >run_sref_cnv_${fhr}_${vhr}.sh
 
     if [ ! -e $COMOUTrestart/run_sref_cnv_${fhr}_${vhr}.completed ] ; then
 
@@ -57,6 +55,7 @@ for  obsv in prepbufr ; do
      input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${vhr}z.grid212.nc"
 
        echo  "#!/bin/ksh" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo  "set -x" >> run_sref_cnv_${fhr}_${vhr}.sh
        echo  "export output_base=$WORK/grid2obs/run_sref_cnv_${fhr}_${vhr}" >> run_sref_cnv_${fhr}_${vhr}.sh 
        echo  "export domain=CONUS"  >> run_sref_cnv_${fhr}_${vhr}.sh 
   
@@ -102,16 +101,20 @@ for  obsv in prepbufr ; do
        #echo "rm \$output_base/stat/*SREFarw*.stat ">> run_sref_cnv_${fhr}_${vhr}.sh
        #echo "rm \$output_base/stat/*SREFnmb*.stat ">> run_sref_cnv_${fhr}_${vhr}.sh
 
-       echo "if [ -s \$output_base/stat/*CNV*.stat ] ; then" >> run_sref_cnv_${fhr}_${vhr}.sh
-       echo " cp \$output_base/stat/*CNV*.stat $COMOUTsmall" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo "if [ -s \$output_base/stat/point_stat*FHR${fhr}_CNV_${fhr}0000L_*${vhr}0000V.stat ] ; then" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo " cp \$output_base/stat/point_stat*FHR${fhr}_CNV_${fhr}0000L_*${vhr}0000V.stat $all_stats" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo " [[ $SENDCOM = YES ]] && cp \$output_base/stat/point_stat*FHR${fhr}_CNV_${fhr}0000L_*${vhr}0000V.stat $COMOUTsmall" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo " >\$output_base/stat/run_sref_cnv_${fhr}_${vhr}.completed" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo " [[ $SENDCOM = YES ]] && cp \$output_base/stat/run_sref_cnv_${fhr}_${vhr}.completed $COMOUTrestart" >> run_sref_cnv_${fhr}_${vhr}.sh
        echo "fi" >> run_sref_cnv_${fhr}_${vhr}.sh
 
-       #For restart: 
-       echo "[[ \$? = 0 ]] && >$COMOUTrestart/run_sref_cnv_${fhr}_${vhr}.completed" >> run_sref_cnv_${fhr}_${vhr}.sh
-      
        chmod +x run_sref_cnv_${fhr}_${vhr}.sh
        echo "${DATA}/scripts/run_sref_cnv_${fhr}_${vhr}.sh" >> run_all_sref_cnv_poe.sh
 
+    else
+       if [ -s $COMOUTsmall/point_stat*FHR${fhr}_CNV_${fhr}0000L_*${vhr}0000V.stat ] ; then
+	 cp $COMOUTsmall/point_stat*FHR${fhr}_CNV_${fhr}0000L_*${vhr}0000V.stat $all_stats
+       fi	 
     fi # check restart for the sub-job
 
    done 
@@ -122,16 +125,10 @@ done
 #***************************************************
 # Run POE script to get small stat files
 #*************************************************
-chmod 775 run_all_sref_cnv_poe.sh
-if [ $run_mpi = yes ] ; then
-   mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_cnv_poe.sh
-else
-   ${DATA}/scripts/run_all_sref_cnv_poe.sh
-fi 
-export err=$?; err_chk
-
-if [ $? = 0 ] ; then
-  >$COMOUTrestart/evs_sref_cnv.completed 
-fi 
-
+if [ -s ${DATA}/scripts/run_all_sref_cnv_poe.sh ] ; then 
+ chmod 775 run_all_sref_cnv_poe.sh
+ mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_cnv_poe.sh
+ export err=$?; err_chk
+ >$COMOUTrestart/evs_sref_cnv.completed
+fi
 

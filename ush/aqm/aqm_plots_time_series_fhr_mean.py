@@ -279,7 +279,7 @@ class TimeSeriesFhrMean:
                 right_logo_img_array, right_logo_xpixel_loc,
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
-        model_plot_settings_dict = plot_specs_ts.get_model_plot_settings()
+        model_plot_settings_dict = plot_specs_ts.get_model_plot_settings_linemarker()
         model_idx_list = (
             stat_df.index.get_level_values(0).unique().tolist()
         )
@@ -375,6 +375,7 @@ class TimeSeriesFhrMean:
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
                     markersize = model_num_plot_settings_dict['markersize'],
+                    markevery  = model_num_plot_settings_dict['markevery'],
                     label = (model_num_plot_name+' '+model_num_avg_label+' '
                              +model_num_npts_label+' days'),
                     zorder = (len(list(self.model_info_dict.keys()))
@@ -404,6 +405,7 @@ class TimeSeriesFhrMean:
                             linestyle = obs_plot_settings_dict['linestyle'],
                             linewidth = obs_plot_settings_dict['linewidth'],
                             markersize = obs_plot_settings_dict['markersize'],
+                            markevery = obs_plot_settings_dict['markevery'],
                             label = ('obs '+obar_model_num_avg_label+' '
                                      +obar_model_num_npts_label+' days'),
                             zorder = 4

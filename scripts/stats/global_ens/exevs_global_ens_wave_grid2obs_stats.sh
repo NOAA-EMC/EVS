@@ -3,13 +3,26 @@
 # Name of Script: exevs_global_ens_wave_grid2obs_stats.sh                       
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                    
 # Mallory Row / Mallory.Row@noaa.gov
+# Samira Ardani / samira.ardani@noaa.gov
+# Updates on 202505: 
+# 1- MPMD was addressed for global_ens wave stats jobs.
+# Updates on 202506:
+# 1- Bugzilla 1606: added changes to .py plotting scripts to ensure that the plot job does not fail because of missing arrays.
+# 2- Bugzilla 1585: fixed the wave scatter index value.
+# 3- Changed subprocess.Popen to subprocess.run for only wave- related ush script.
+# 4- Used split_by_subset to trim prepbufr files to only include needed obs.
+# 5- added time dependency to evs-nco.def for global_ens wave plots job.
+# 6- Updated all image names to be lastXXdays instead of pastXXdays. tar files have lastXXdays for waves plots.
+# 7- added obs name to image title.
+# 8- Updated walltime for global_ens wave prep.
+#
 # Purpose of Script: Run the grid2obs stats for any global wave model           
 #                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NWPS)    
 #                                                                               
 # Usage:                                                                        
 #  Parameters: None                                                             
 #  Input files:                                                                 
-#     gdas.${validdate}.nc                                                      
+#     gdas.SFCSHP.${validdate}.nc                                                      
 #  Output files:                                                                
 #     point_stat_fcstGEFS_obsGDAS_climoERA5_${lead}L_$VDATE_${valid}V.stat      
 #  User controllable options: None                                              
@@ -34,12 +47,13 @@ echo '-------------'
 echo ' '
 
 mkdir -p ${DATA}/gribs
-mkdir -p ${DATA}/ncfiles
+mkdir -p ${DATA}/SFCSHP
 mkdir -p ${DATA}/all_stats
 mkdir -p ${DATA}/jobs
 #mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
+mkdir -p ${DATA}/job_work_dir
 
 validhours='0 6 12 18'
 
@@ -84,12 +98,14 @@ for vhour in ${validhours} ; do
         match_fhr=$(printf "%02d" "${match_hr}")
         flead=$(printf "%03d" "${fhr}")
         flead2=$(printf "%02d" "${fhr}")
-        EVSgdasncfilename=${EVSINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${vhour2}.nc 
-        DATAgdasncfilename=${DATA}/ncfiles/gdas.${VDATE}${vhour2}.nc
+        EVSgdasncfilename=${EVSINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${VDATE}${vhour2}.nc 
+        DATAgdasncfilename=${DATA}/SFCSHP/gdas.SFCSHP.${VDATE}${vhour2}.nc
         EVSmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
         DATAmodelfilename=$DATA/gribs/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
         DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhour2}0000V.stat
         COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhour2}0000V.stat
+	job_work_dir=$DATA/job_work_dir/PointStat_obsGDAS_valid${VDATE}${vhour2}_f${flead}
+	job_stat_file=$job_work_dir/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhour2}0000V.stat
         if [[ -s $COMOUTstatfilename ]]; then
             cp -v $COMOUTstatfilename $DATAstatfilename
         else
@@ -114,10 +130,11 @@ for vhour in ${validhours} ; do
                     echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     echo "export VHOUR=${vhour2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+		    echo "export job_work_dir=${job_work_dir}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     if [ $SENDCOM = YES ]; then
-                        echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                        echo "if [ -f $job_stat_file ]; then cp -v $job_stat_file $COMOUTstatfilename; fi" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     fi
 
                     chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
@@ -128,6 +145,7 @@ for vhour in ${validhours} ; do
         fi
     done
 done
+
 
 #######################
 # Run the command file 
@@ -143,6 +161,24 @@ if [[ -s ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh ]]; then
     fi
 fi
 
+
+##########################
+# copy all the jobs files
+##########################
+
+for vhr in ${validhours} ; do
+	vhr2=$(printf "%02d" "${vhr}")
+	for lead in ${lead_hours} ; do
+		flead=$(printf "%03d" "${lead}")
+		flead2=$(printf "%02d" "${lead}")
+		job_stat_file=$DATA/job_work_dir/PointStat_obsGDAS_valid${VDATE}${vhr2}_f${flead}/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+		DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+		if [ -s $job_stat_file ]; then
+			cp -v $job_stat_file $DATAstatfilename
+		fi
+	done
+done
+
 #######################
 # Gather all the files 
 #######################
@@ -152,18 +188,19 @@ if [ $gather = yes ] ; then
   if [ "${nc}" != '0' ]; then
       echo " Found ${nc} ${DATA}/all_stats/*stat files for ${VDATE}"
       mkdir -p ${DATA}/stats
+      export job_work_dir=$DATA/job_work_dir/StatAnalysis_${VDATE}
       # Use StatAnalysis to gather the small stat files into one file
       run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstGEFS_obsGDAS.conf
       export err=$?; err_chk
       if [ $SENDCOM = YES ]; then
-          if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-              cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+          if [ -s ${job_work_dir}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+              cp -v ${job_work_dir}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
           else
-              echo "WARNING: DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+              echo "WARNING: DOES NOT EXIST ${job_work_dir}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
           fi
       fi
   else
-      echo "WARNING: NO SMALL STAT FILES FOUND IN ${DATA}/all_stats, not running StatAnalysis"
+      echo "NOTE: NO SMALL STAT FILES FOUND IN ${DATA}/all_stats, not running StatAnalysis"
   fi
 fi
 echo ' '

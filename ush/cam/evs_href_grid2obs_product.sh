@@ -115,7 +115,7 @@ for prod in mean prob ; do
        echo  "export err=\$?; err_chk" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh 
 
        echo " if [ \$? = 0 ] ; then" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
-       echo "  >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "  echo completed >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "  cp -v \$output_base/stat/\${MODEL}/*.stat $all_stats" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
        echo  " if [ $SENDCOM = YES ] ; then " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
@@ -207,7 +207,7 @@ for prod in mean prob ; do
        echo  "export err=\$?; err_chk" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
        echo " if [ \$? = 0 ] ; then" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
-       echo "  >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo "  echo completed >\$output_base/stat/\${MODEL}/run_href_${model}.${dom}.${valid_run}.${fhr}_product.completed" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "  cp \$output_base/stat/\${MODEL}/*.stat $all_stats" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "  if [ $SENDCOM = YES ] ; then " >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo "    mkdir -p $COMOUTsmall/run_href_${model}.${dom}.${valid_run}.${fhr}.product" >> run_href_${model}.${dom}.${valid_run}.${fhr}.product.sh

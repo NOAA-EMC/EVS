@@ -157,7 +157,7 @@ for dom in CONUS Alaska ; do
 	 echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_SFC.conf " >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 	 echo "  if [ \$? = 0 ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
-	 echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}system.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh 
+	 echo "    echo completed >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}system.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh 
 	 echo "    cp \$output_base/stat/\${MODEL}/ensemble_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 	 echo "    if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 	 echo "      mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_system" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
@@ -174,7 +174,7 @@ for dom in CONUS Alaska ; do
 	 echo " ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_SFC_prob.conf " >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 	 echo "  if [ \$? = 0 ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
-	 echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}system.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
+	 echo "    echo completed >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}system.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 	 echo "    cp \$output_base/stat/\${MODEL}/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 	 echo "    if [ $SENDCOM = YES ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 	 echo "      [[ ! -d $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_system ]] && mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_system" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
@@ -186,7 +186,7 @@ for dom in CONUS Alaska ; do
 	 echo " cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_system/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 
-         echo " [[ \$? = 0 ]] && >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_system.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
+         echo " [[ \$? = 0 ]] && echo completed >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_system.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 
 	 echo "if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          #Mark that all of the 3 METplus processes for this task have been  completed for next restart run:
@@ -295,7 +295,7 @@ for dom in CONUS Alaska ; do
          echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_SFC.conf " >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "  if [ \$? = 0 ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
-         echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}system.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
+         echo "    echo completed >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}system.EnsembleStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "    cp \$output_base/stat/\${MODEL}/ensemble_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "    if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "      mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_system" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
@@ -312,7 +312,7 @@ for dom in CONUS Alaska ; do
 	 echo " ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_SFC_prob.conf " >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "  export err=\$?; err_chk" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "  if [ \$? = 0 ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
-         echo "    >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}system.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
+         echo "    echo completed >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}system.PointStat.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 	 echo "    cp \$output_base/stat/\${MODEL}/point_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          echo "    if [ $SENDCOM = YES ] ; then " >> run_href_${domain}.${valid_at}.${fhr}_system.sh         
 	 echo "      [[ ! -d $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_system ]] && mkdir -p $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_system" >> run_href_${domain}.${valid_at}.${fhr}_system.sh         
@@ -324,7 +324,7 @@ for dom in CONUS Alaska ; do
 	 echo " cp $COMOUTsmall/run_href_${domain}.${valid_at}.${fhr}_system/ensemble_stat*.stat $all_stats" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 	 echo "fi" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 
-         echo " [[ \$? = 0 ]] && >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_system.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
+         echo " [[ \$? = 0 ]] && echo completed >\$output_base/stat/\${MODEL}/run_href_${domain}.${valid_at}.${fhr}_system.completed" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
 
          echo "if [ $SENDCOM = YES ] ; then" >> run_href_${domain}.${valid_at}.${fhr}_system.sh
          #Mark that all of the 3 METplus processes for this task have been  completed for next restart run:

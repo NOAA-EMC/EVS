@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=2:ncpus=33:mem=40GB
+#PBS -l walltime=00:25:00
+#PBS -l place=vscatter,select=1:ncpus=66:mem=40GB
 #PBS -l debug=true
 
 export model=evs 
@@ -56,7 +56,6 @@ export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="grid2obs_ecnt"
 export MODELNAME=href
-export run_mpi=yes
 
 ############################################################
 # Execute j-job

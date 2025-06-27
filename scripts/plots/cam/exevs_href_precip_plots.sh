@@ -69,7 +69,7 @@ verif_type=ccpa
 > run_all_poe.sh
 
 for VX_MASK_LIST in $VX_MASK_LISTs ; do
- 	
+
   domain=`echo $VX_MASK_LIST | tr '[A-Z]' '[a-z]'`
 
 for stats in ets_fbias ratio_pod_csi fss ; do 
@@ -163,6 +163,12 @@ for stats in ets_fbias ratio_pod_csi fss ; do
         echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
 
+	if [ $VX_MASK_LIST = Alaska ] ; then
+	   echo "export obsv=\" - Validation: MRMS\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+        else
+           echo "export obsv=\" - Validation: CCPA\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+        fi
+
         if [ $score_type = valid_hour_average ] ; then
           echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
         else
@@ -202,7 +208,7 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
 	 echo "if [ -s ${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png ] ; then " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 	 echo "  cp -v ${plot_dir}/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png $all_plots" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
-	 echo "  >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+	 echo "  echo completed >${plot_dir}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.completed" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 	 #Copy files to restart directory
          echo "  if [ $SENDCOM = YES ] ; then" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 	 echo "    cp -v $all_plots/${score_type}_regional_${domain}_valid_${fcst_valid_hour}z_*${var}*.png $restart" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
@@ -239,11 +245,7 @@ chmod +x run_all_poe.sh
 #***************************************************************************
 # Run the POE script in parallel or in sequence order to generate png files
 #**************************************************************************
-if [ $run_mpi = yes ] ; then
-   mpiexec -np 304 -ppn 76 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
-else
-  ${DATA}/scripts/run_all_poe.sh
-fi
+mpiexec -np 304 -ppn 76 --cpu-bind verbose,depth cfp ${DATA}/scripts/run_all_poe.sh
 export err=$?; err_chk
 
 #**************************************************

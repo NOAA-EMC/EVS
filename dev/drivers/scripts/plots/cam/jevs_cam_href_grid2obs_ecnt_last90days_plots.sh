@@ -3,8 +3,8 @@
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=2:ncpus=33:mem=100GB
+#PBS -l walltime=00:40:00
+#PBS -l place=vscatter,select=1:ncpus=66:mem=100GB
 #PBS -l debug=true
 
 set -x
@@ -35,7 +35,6 @@ export SENDDBN=NO
 export vhr=00
 export last_days=90
 
-export run_mpi=yes
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d

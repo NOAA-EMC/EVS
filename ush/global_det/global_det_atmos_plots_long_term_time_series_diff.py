@@ -330,7 +330,8 @@ class LongTermTimeSeriesDiff:
                     +plot_specs_lttsd.get_vx_mask_plot_name(self.vx_mask)+'\n'
                     +plot_specs_lttsd.get_var_plot_name(self.var_name,
                                                         self.var_level)+" "
-                    +f"({var_units}){var_thresh_for_title}{nbrhd_for_title}\n"
+                    +f"({var_units}){var_thresh_for_title}{nbrhd_for_title}"
+                    +' - '+"Validation: Model's Own Anl."+'\n'
                     +f"valid {dates_for_title} {model_hour}, "
                     +f"Forecast Day {forecast_day} (Hour {forecast_hour})\n"
                     +f"{run_length_running_mean} "

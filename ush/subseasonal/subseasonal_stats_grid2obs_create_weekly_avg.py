@@ -166,10 +166,13 @@ while valid_hr <= int(valid_hr_end):
             for weekly_avg_file in weekly_avg_file_list:
                 with open(weekly_avg_file, 'r') as infile:
                     input_file_header = infile.readline()
-                weekly_avg_file_df = pd.read_csv(weekly_avg_file, sep=" ", skiprows=1,
-                                                skipinitialspace=True, header=None,
-                                                names=MET_MPR_column_list,
-                                                na_filter=False, dtype=str)
+                weekly_avg_file_df = pd.read_csv(weekly_avg_file, sep=" ",
+                                                 skiprows=1,
+                                                 skipinitialspace=True,
+                                                 header=None,
+                                                 names=MET_MPR_column_list,
+                                                 na_filter=False, dtype=str,
+                                                 on_bad_lines='warn')
                 all_weekly_avg_df = pd.concat(
                     [all_weekly_avg_df, weekly_avg_file_df], ignore_index=True
                 )

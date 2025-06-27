@@ -19,8 +19,6 @@ import global_ens_atmos_util as gea_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
-
-
 # Read in common environment variables
 DCOMINghrsst = os.environ['DCOMINghrsst']
 COMOUTgefs = os.environ['COMOUTgefs']
@@ -33,7 +31,7 @@ daily_source_file=os.path.join(DCOMINghrsst,vdaym1,'validation_data','marine','g
 daily_dest_file = os.path.join(COMOUTgefs, 'ghrsst.t00z.nc')
 
 # Temporary file name
-daily_prepped_file = os.path.join(os.getcwd(), 'atmos.'+daily_source_file.rpartition('/')[2])
+daily_prepped_file = os.path.join(os.getcwd(), 'get_ghrsst/'+daily_source_file.rpartition('/')[2])
 
 # Prep daily file
 if os.path.exists(daily_source_file):
@@ -52,11 +50,3 @@ if SENDCOM == 'YES':
     gea_util.copy_file(daily_prepped_file, daily_dest_file)
 print("END: "+os.path.basename(__file__))
 
-
-
-
-
-
-
-
-                                                                                                                    

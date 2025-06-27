@@ -62,7 +62,7 @@ for obsv in 6h 24h  ; do
 	    iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
 
 	    input_fcst=$COMINhref/href.${iday}/verf_g2g/href.*.t${ihr}z.conus.f${fhr}
-            input_obsv=$DCOMINsnow/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_${obsv}_${VDATE}${vhr}_grid184.grb2
+            input_obsv=$DCOMINnohrsc/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_${obsv}_${VDATE}${vhr}_grid184.grb2
 
 	   if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
@@ -138,7 +138,7 @@ for obsv in 6h 24h  ; do
 
 	    #Mark job is completed
             echo "for FILEn in \$output_base/stat/\${MODEL}/*_stat_\${MODEL}_${obsv}_*_${fhr}0000L_${VDATE}_${vhr}0000V.stat; do if [ -f \"\$FILEn\" ]; then cp -v \$FILEn $all_stats/HREF_SNOW; fi; done" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
-            echo " [[ \$? = 0 ]] && >\$output_base/stat/HREF_SNOW/run_href_snow${obsv}.${fhr}.${vhr}.completed" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
+            echo " [[ \$? = 0 ]] && echo completed >\$output_base/stat/HREF_SNOW/run_href_snow${obsv}.${fhr}.${vhr}.completed" >> run_href_snow${obsv}.${fhr}.${vhr}.sh
 
             #Send restart files to COMOUT 
 	    echo "if [ $SENDCOM = YES ] && [ \$? = 0 ] ; then" >> run_href_snow${obsv}.${fhr}.${vhr}.sh

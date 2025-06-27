@@ -126,7 +126,7 @@ if [ "$data" = "ccpa01h03h" ] ; then
 
    #For restart
    if [ -s $ccpadir/*.grib2 ] ; then
-    >$ccpadir/ccpa01h03h.completed
+    echo ccpa01h03h.completed >$ccpadir/ccpa01h03h.completed
     if [ $SENDCOM = YES ] ; then
      cp $ccpadir/*01h*.grib2 $COMOUTrestart/prepare
      cp $ccpadir/*03h*.grib2 $COMOUTrestart/prepare
@@ -201,7 +201,7 @@ if [ "$data" = "ccpa24h" ] ; then
          fi 
 	 #For restart:
 	 if [ -s $WORK/ccpa.${vday}/*24h*.nc ] ; then
-	   >$WORK/ccpa.${vday}/ccpa24h.completed
+	   echo ccpa24h.completed >$WORK/ccpa.${vday}/ccpa24h.completed
 	   if [ $SENDCOM = YES ] ; then 
 	    cp $WORK/ccpa.${vday}/*24h*.nc  $COMOUTrestart/prepare
             cp $WORK/ccpa.${vday}/ccpa24h.completed $COMOUTrestart/prepare
@@ -263,7 +263,25 @@ if [ "$data" = "apcp24h_conus" ] ; then
       export modelpath=${COMHREF}/href.${fyyyymmdd}/ensprod
       export prod 
 
-      for prod in mean avrg pmmn lpmm ; do
+      typeset -Z2 fhr_3
+      typeset -Z2 fhr_6
+      typeset -Z2 fhr_9
+      typeset -Z2 fhr_12
+      typeset -Z2 fhr_15
+      typeset -Z2 fhr_18
+      typeset -Z2 fhr_21
+      fhr_3=$((fhr-3))
+      fhr_6=$((fhr-6))
+      fhr_9=$((fhr-9))
+      fhr_12=$((fhr-12))
+      fhr_15=$((fhr-15))
+      fhr_18=$((fhr-18))
+      fhr_21=$((fhr-21))
+
+     for prod in mean avrg pmmn lpmm ; do
+
+      if [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_3}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_6}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_9}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_12}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_15}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_18}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.conus.${prod}.f${fhr_21}.grib2 ] ; then
+
 
       #####################################################################################################################
       # Restart: first check if href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists 
@@ -292,7 +310,9 @@ if [ "$data" = "apcp24h_conus" ] ; then
          fi
        fi
 
-      done
+      fi
+
+     done
    done
 fi
 
@@ -313,7 +333,7 @@ if [ "$data" = "apcp24h_alaska" ] ; then
    obsv_vcyc=${vday}${vcyc}
 
    export fhr
-   for fhr in 30 ; do  #since Alaska run only at 06Z, only 30fhr fcst can be validated at 12Z 
+   for fhr in 30 42 ; do  #since Alaska run only at 06Z and 18Z, only 30fhr and 42fhr fcsts can be validated at 12Z 
       fcst_time=`$NDATE -$fhr $obsv_vcyc`
       fyyyymmdd=${fcst_time:0:8}
       export fcyc=${fcst_time:8:2} #Alaska only has 06 cycle run 
@@ -321,7 +341,25 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       export modelpath=${COMHREF}/href.${fyyyymmdd}/ensprod
       export prod
 
-      for prod in mean avrg pmmn lpmm ; do
+      typeset -Z2 fhr_3
+      typeset -Z2 fhr_6
+      typeset -Z2 fhr_9
+      typeset -Z2 fhr_12
+      typeset -Z2 fhr_15
+      typeset -Z2 fhr_18
+      typeset -Z2 fhr_21
+      fhr_3=$((fhr-3))
+      fhr_6=$((fhr-6))
+      fhr_9=$((fhr-9))
+      fhr_12=$((fhr-12))
+      fhr_15=$((fhr-15))
+      fhr_18=$((fhr-18))
+      fhr_21=$((fhr-21))
+
+    for prod in mean avrg pmmn lpmm ; do
+
+     if [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_3}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_6}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_9}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_12}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_15}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_18}.grib2 ] && [ -s $modelpath/href.t${fcyc}z.ak.${prod}.f${fhr_21}.grib2 ] ; then
+
       #################################################################################################
       # Restart: first check if href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists
       #    in the $COMOUTrestart directory, if not, run METplus to create it
@@ -342,7 +380,10 @@ if [ "$data" = "apcp24h_alaska" ] ; then
 	 [[ ! -d $WORK/href.${fyyyymmdd} ]] && mkdir -p $WORK/href.${fyyyymmdd}
          cp  $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc
        fi
-      done
+
+      fi
+ 
+    done
    done
 fi
 
@@ -413,7 +454,7 @@ if [ "$data" = "prepbufr" ] ; then
       if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
          cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday}
 	 #Save restart files 
-	 >${WORK}/pb2nc/prepbufr_nc/rap_prepbufr.completed
+	 echo rap_prepbufr.completed >${WORK}/pb2nc/prepbufr_nc/rap_prepbufr.completed
 	 if [ $SENDCOM = YES ] ; then
            cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare
 	   cp ${WORK}/pb2nc/prepbufr_nc/rap_prepbufr.completed $COMOUTrestart/prepare
@@ -496,7 +537,7 @@ if [ "$data" = "gfs_prepbufr" ] ; then
 
       #For restart
       if [ -s ${WORK}/pb2nc/prepbufr_nc/*.nc ] ; then
-	>${WORK}/pb2nc/prepbufr_nc/gfs_prepbufr.completed
+	echo gfs_prepbufr.completed >${WORK}/pb2nc/prepbufr_nc/gfs_prepbufr.completed
 	if [ $SENDCOM = YES ] ; then
          cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTrestart/prepare
          cp ${WORK}/pb2nc/prepbufr_nc/gfs_prepbufr.completed $COMOUTrestart/prepare

@@ -82,14 +82,22 @@ if(domain == "westpac"):
       lon  = float(hits[i,32]) + 360.
       print(lat)
       print(lon)
-      plt.scatter(lon, lat,transform=ccrs.PlateCarree(), marker='s', color='red',s=12, facecolor='none')
+      plt.scatter(lon, lat,transform=ccrs.PlateCarree(), marker='x', color='#B42221',s=12)
 
-    plt.scatter(160, 47,transform=ccrs.PlateCarree(), marker='s', color='red',s=12, facecolor='none')
-    plt.annotate("False alarms ("+str(numhits)+")", (0,0), (272,230), xycoords='axes fraction', textcoords='offset points', va='top', color='Red', fontsize=6.5)
+    plt.scatter(160, 47,transform=ccrs.PlateCarree(), marker='x', color='#B42221',s=12)
+    plt.annotate("False alarms ("+str(numhits)+")", (0,0), (272,230), xycoords='axes fraction', textcoords='offset points', va='top', color='#B42221', fontsize=6.5)
 
 #    plt.title(f"West Pacific TC Genesis False Alarms")
     TCGENdays = os.environ['TCGENdays']
-    plt.title(TCGENdays)
+    modelname = os.environ['modelname']
+    if modelname == 'gfs':
+        formal_model = 'GFS'
+    elif modelname == 'ecmwf':
+        formal_model = 'ECMWF'
+    elif modelname == 'cmc':
+        formal_model = 'CMC'
+
+    plt.title(""+str(formal_model)+" "+str(TCGENdays)+"")
 ####################################################################
 ##The plt is saved as png and converted to gif in the bash script.
 

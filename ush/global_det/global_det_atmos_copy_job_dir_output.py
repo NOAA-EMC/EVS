@@ -113,6 +113,4 @@ if copy_from_job_to_DATA:
             gda_util.copy_file(output_file_JOB, output_file_DATA)
         else:
             print(f"WARNING: {output_file_DATA} exists")
-else:
-     print(f"NOTE: Not copying files to common DATA directory for {JOB_GROUP}")
 print("END: "+os.path.basename(__file__))

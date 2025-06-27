@@ -116,7 +116,9 @@ if [ $verify = upper ] ; then
 
   #*****************************************************************
   # Check if all stats sub-tasks are completed in the previous runs
-  if [ ! -s $COMOUTsmall/stats_completed ] ; then
+  if [ ! -s $COMOUTsmall/completed/stats_completed ] ; then
+  mkdir -p $COMOUTsmall/completed
+  mkdir -p $WORK/completed
 
   # Check if restart directory exists
   if [ -d $COMOUTsmall/restart/grid2grid ] ; then
@@ -209,7 +211,7 @@ if [ $verify = upper ] ; then
         for lead_hr in ${lead_arr[@]}; do
           # Check for restart: check if the single sub-task is completed in the previous run
 	  # If this task has been completed in the previous run, then skip it
-	  if [ ! -e $COMOUTsmall/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed ] ; then
+	  if [ ! -e $COMOUTsmall/completed/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed ] ; then
 	    echo "export lead=${lead_hr}" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 
             if [ $metplus_job = GenEnsProd ] || [ $metplus_job = EnsembleStat ]; then
@@ -225,14 +227,14 @@ if [ $verify = upper ] ; then
             fi
 
 	    # Indicate sub-task is completed for restart 
-	    echo ">$WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
-            echo "echo "${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g task is completed" >> $WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+	    echo ">$WORK/completed/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+            echo "echo "${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g task is completed" >> $WORK/completed/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 
             # Save files for restart
 	    echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	    echo "  if [ -d $WORK/grid2grid/run_${modnam}_valid_at_t${vhour}z_${fhr}/stat/${modnam} ] ; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
             echo "    mkdir -p $COMOUTsmall/restart/grid2grid/run_${modnam}_valid_at_t${vhour}z_${fhr}/stat" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
-            echo "    cp -f $WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+            echo "    cp -f $WORK/completed/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_hr}_${metplus_job}_g2g.completed $COMOUTsmall/completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	    echo "    cp -rfu $WORK/grid2grid/run_${modnam}_valid_at_t${vhour}z_${fhr}/stat/${modnam} $COMOUTsmall/restart/grid2grid/run_${modnam}_valid_at_t${vhour}z_${fhr}/stat" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	    echo "  fi" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	    echo "fi" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
@@ -255,20 +257,20 @@ if [ $verify = upper ] ; then
           for lead_SFC in ${lead_SFC_arr[@]}; do
             # Check for restart: check if the single sub-task is completed in the previous run
 	    # If this task has been completed in the previous run, then skip it
-	    if [ ! -e $COMOUTsmall/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed ] ; then
+	    if [ ! -e $COMOUTsmall/completed/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed ] ; then
 	      echo "export lead=${lead_SFC}" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	      echo "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsModelAnalysis_climoERA5_mean_SFC.conf " >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
               echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 
               # Indicate sub-task is completed for restart
-	      echo ">$WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
-              echo "echo "${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g task is completed" >> $WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+	      echo ">$WORK/completed/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+              echo "echo "${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g task is completed" >> $WORK/completed/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 
               # Save files for restart
 	      echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	      echo "  if [ -d $WORK/grid2grid/run_${modnam}_valid_at_t${vhour}z_${fhr}/stat/${modnam} ] ; then" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	      echo "    mkdir -p $COMOUTsmall/restart/grid2grid/run_${modnam}_valid_at_t${vhour}z_${fhr}/stat" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
-              echo "    cp -f $WORK/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+              echo "    cp -f $WORK/completed/run_${modnam}_valid_at_t${vhour}z_${fhr}_${lead_SFC}_${metplus_job}_g2g.completed $COMOUTsmall/completed" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	      echo "    cp -rfu $WORK/grid2grid/run_${modnam}_valid_at_t${vhour}z_${fhr}/stat/${modnam} $COMOUTsmall/restart/grid2grid/run_${modnam}_valid_at_t${vhour}z_${fhr}/stat" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	      echo "  fi" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
 	      echo "fi" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
@@ -323,10 +325,10 @@ if [ $verify = upper ] ; then
   done # end of metplus_jobs loop
 
   # Indicate all tasks are completed
-  >$WORK/stats_completed
-  echo "All stats are completed" >> $WORK/stats_completed
+  >$WORK/completed/stats_completed
+  echo "All stats are completed" >> $WORK/completed/stats_completed
   if [ $SENDCOM = YES ] ; then
-    cp -f $WORK/stats_completed $COMOUTsmall
+    cp -f $WORK/completed/stats_completed $COMOUTsmall/completed
   fi
 
   fi # end of check restart for all tasks
@@ -379,7 +381,9 @@ if [ $verify = precip ] ; then
 
   #*****************************************************************
   # Check if all stats sub-tasks are completed in the previous runs
-  if [ ! -s $COMOUTsmall_precip/stats_completed ] ; then
+  if [ ! -s $COMOUTsmall_precip/completed/stats_completed ] ; then
+  mkdir -p $COMOUTsmall_precip/completed
+  mkdir -p $WORK/completed
 
   # Check if restart directory exists
   if [ -d $COMOUTsmall_precip/restart/grid2grid ] ; then
@@ -488,7 +492,7 @@ if [ $verify = precip ] ; then
         for lead_hr in ${lead_arr[@]}; do
         # Check for restart: check if the single sub-task is completed in the previous run
 	# If this task has been completed in the previous run, then skip it
-	if [ ! -e $COMOUTsmall_precip/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed ] ; then
+	if [ ! -e $COMOUTsmall_precip/completed/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed ] ; then
         echo "export lead=${lead_hr}" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
 
 	if [ $metplus_job = GenEnsProd ] || [ $metplus_job = EnsembleStat ]; then
@@ -512,14 +516,14 @@ if [ $verify = precip ] ; then
         fi
 
         # Indicate sub-task is completed for restart
-	echo ">$WORK/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
-        echo "echo "${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job} task is completed" >> $WORK/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+	echo ">$WORK/completed/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+        echo "echo "${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job} task is completed" >> $WORK/completed/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
 
 	# Save files for restart
 	echo "if [ $SENDCOM = YES ] ; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
         echo "  if [ -d $WORK/grid2grid/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z/stat/${modnam} ] ; then" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
         echo "    mkdir -p $COMOUTsmall_precip/restart/grid2grid/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z/stat" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
-        echo "    cp -f $WORK/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+        echo "    cp -f $WORK/completed/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_fhr${lead_hr}_${metplus_job}.completed $COMOUTsmall_precip/completed" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
 	echo "    cp -rfu $WORK/grid2grid/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z/stat/${modnam} $COMOUTsmall_precip/restart/grid2grid/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z/stat" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
         echo "  fi" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
 	echo "fi" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
@@ -587,10 +591,10 @@ if [ $verify = precip ] ; then
   done # end of metplus_jobs loop
 
   # Indicate all tasks are completed
-  >$WORK/stats_completed
-  echo "All stats are completed" >> $WORK/stats_completed
+  >$WORK/completed/stats_completed
+  echo "All stats are completed" >> $WORK/completed/stats_completed
   if [ $SENDCOM = YES ] ; then
-    cp -f $WORK/stats_completed $COMOUTsmall_precip
+    cp -f $WORK/completed/stats_completed $COMOUTsmall_precip/completed
   fi
 
   fi # end of check restart for all tasks

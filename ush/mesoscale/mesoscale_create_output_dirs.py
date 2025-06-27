@@ -16,11 +16,12 @@
 import os
 import re
 from datetime import datetime, timedelta as td
-from mesoscale_plots_grid2obs_graphx_defs import graphics as graphics_g2o
-from mesoscale_plots_precip_graphx_defs import graphics as graphics_pcp
-from mesoscale_plots_headline_graphx_defs import graphics as graphics_hdl
-from mesoscale_plots_snowfall_graphx_defs import graphics as graphics_sno
 import mesoscale_util as cutil
+if os.environ['STEP'] == 'plots':
+    from mesoscale_plots_grid2obs_graphx_defs import graphics as graphics_g2o
+    from mesoscale_plots_precip_graphx_defs import graphics as graphics_pcp
+    from mesoscale_plots_headline_graphx_defs import graphics as graphics_hdl
+    from mesoscale_plots_snowfall_graphx_defs import graphics as graphics_sno
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
@@ -485,7 +486,7 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots, VERIF_CASE
         ))
-        for plot_group in ['precip']:
+        for plot_group in ['snowfall']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 

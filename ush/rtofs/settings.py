@@ -105,9 +105,9 @@ class Presets():
             },
             'last60days': {
                 'valid_beg': (datetime.now()-td(days=60)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
+                'valid_end': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=60)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
+                'init_end': (datetime.now()-td(days=3)).strftime('%Y%m%d')
             },
             'last30days': {
                 'valid_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
