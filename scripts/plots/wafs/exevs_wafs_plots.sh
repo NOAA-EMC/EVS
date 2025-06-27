@@ -67,13 +67,17 @@ export err=$?; err_chk
 
 cd $DATAplot
 for ndays in $DAYS_LIST ; do
+    cp $DATA/html/* .
     eval_period="last${ndays}days"
     tarball=$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar
     tar -cvf $tarball *${eval_period}*png
-
+    tarball_html=$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.html.tar
+    tar -cvf $tarball_html *${eval_period}*html
+    
     if [ -s $tarball ]; then
 	if [ $SENDCOM = "YES" ]; then
 	    cp -v $tarball $COMOUT/.
+	    cp -v $tarball_html $COMOUT/.
 	fi
 	if [ $SENDDBN = YES ] ; then     
 	    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$tarball
