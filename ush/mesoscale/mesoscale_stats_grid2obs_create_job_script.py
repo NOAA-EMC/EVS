@@ -531,10 +531,10 @@ elif STEP == 'stats':
                       )
                    completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                    job_cmd_list_iterative.append(
-                       "python -c "
+                       f"if [ $FHR == $FHR_END ]; then python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
                        + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
-                       + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                       + f"\"job{njob}\", job_type=\"{job_type}\")'; fi"
                    )
                    completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
                    completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
