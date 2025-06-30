@@ -68,6 +68,7 @@ DELETE_INTERMED_TOGGLE = os.environ['DELETE_INTERMED_TOGGLE']
 PYTHONDONTWRITEBYTECODE = os.environ['PYTHONDONTWRITEBYTECODE']
 njob = os.environ['njob']
 COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
+COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {
@@ -123,7 +124,8 @@ if STEP == 'prep':
 elif STEP == 'stats':
     pass
 elif STEP == 'plots':
-    if f'job{njob}' in mutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+    completed_jobs_file_full = COMPLETED_JOBS_FILE + "_job" + njob + ".txt"
+    if f'job{njob}' in mutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
         job_cmd_list_iterative.append(
             f'#jobs were restarted, and the following command has already run successfully'
         )
@@ -136,11 +138,18 @@ elif STEP == 'plots':
             f'python '
             + f'{USH_DIR}/{PLOT_TYPE}.py'
         )
+        completed_jobs_file_full = COMPLETED_JOBS_FILE + "_job" + njob + ".txt"
         job_cmd_list_iterative.append(
             f"python -c "
             + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
-            + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+            + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
             + f"\"job{njob}\")'"
+        )
+
+        completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
+        completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
+        job_cmd_list_iterative.append(
+            f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
         )
 
 # Write job script
