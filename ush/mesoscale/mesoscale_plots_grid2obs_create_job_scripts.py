@@ -14,6 +14,9 @@ STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
 njob = os.environ['njob']
 eval_period = os.environ['EVAL_PERIOD']
+COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
+COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
+RESTART_DIR = os.environ['RESTART_DIR']
 for VERIF_TYPE in graphics[COMPONENT][VERIF_CASE]:
     for MODELS in graphics[COMPONENT][VERIF_CASE][VERIF_TYPE]:
         for PLOT_TYPE in graphics[COMPONENT][VERIF_CASE][VERIF_TYPE][MODELS]:
@@ -45,6 +48,7 @@ for VERIF_TYPE in graphics[COMPONENT][VERIF_CASE]:
                                         for lev_idx, FCST_LEVEL in enumerate(plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_LEVELs']):
                                             for thresh_idx, FCST_THRESH in enumerate(plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_THRESHs']):
                                                 for INTERP_PNTS in plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['INTERP_PNTSs']:
+                                                    njobc = str(njob)
                                                     njob = int(njob)
                                                     os.environ['VERIF_TYPE'] = VERIF_TYPE
                                                     os.environ['MODELS'] = MODELS
@@ -70,7 +74,10 @@ for VERIF_TYPE in graphics[COMPONENT][VERIF_CASE]:
                                                     os.environ['CONFIDENCE_INTERVALS'] = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['CONFIDENCE_INTERVALS']
                                                     os.environ['INTERP_PNTS'] = INTERP_PNTS
                                                     os.environ['DELETE_INTERMED_TOGGLE'] = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['DELETE_INTERMED_TOGGLE']
-                                                    cutil.run_shell_command(['python',f'{USHevs}/{COMPONENT}/{COMPONENT}_{STEP}_{VERIF_CASE}_create_job_script.py'])
+                                                    completed_jobs_file_full = COMPLETED_JOBS_FILE + "_job" + njobc + ".txt"
+                                                    completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
+                                                    if not os.path.exists(completed_jobs_file):
+                                                       cutil.run_shell_command(['python',f'{USHevs}/{COMPONENT}/{COMPONENT}_{STEP}_{VERIF_CASE}_create_job_script.py'])
                                                     njob+=1
                                                     os.environ['njob'] = str(njob)
 sys.exit(0)
