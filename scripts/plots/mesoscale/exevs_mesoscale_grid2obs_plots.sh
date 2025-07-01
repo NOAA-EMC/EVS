@@ -96,7 +96,8 @@ if [ $ncount_job -gt 0 ]; then
 fi
 
 # Tar and Copy output files to EVS COMOUT directory
-  find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar --transform='s#.*/##'  -T -
+##  find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar --transform='s#.*/##'  -T -
+tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar  ${DATA}/${VERIF_CASE}/out/sfc_upper/${EVAL_PERIOD}/*.png ${DATA}/${VERIF_CASE}/out/cape/${EVAL_PERIOD}/*.png ${DATA}/${VERIF_CASE}/out/ceil_vis/${EVAL_PERIOD}/*.png --transform='s#.*/##'  -T -
 
 if [ $SENDCOM = YES ]; then
     cp -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar ${COMOUTplots}/.
