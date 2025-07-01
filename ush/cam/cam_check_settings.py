@@ -38,23 +38,23 @@ evs_cam_settings_dict['evs'] = [
     'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
     'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE',
     'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
-    'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 
+    'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 
     'FIXevs'
 ]
 evs_cam_settings_dict['shared'] = []
 evs_cam_settings_dict['modules'] = ['METPLUS_PATH', 'MET_ROOT']
 evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT',
-        'NEST','URL_HEAD',
+        'NEST','URL_HEAD','INITDATE'
         ]
-evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR', 'bufr_ROOT']
+evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR', 'bufr_ROOT','VDATE']
 evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = [
         'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
         'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE',
-        'COMOUTplots','RESTART_DIR'
+        'COMOUTplots','RESTART_DIR','VDATE'
         ]
 evs_cam_settings_dict['RUN_PRECIP_PREP'] = [
-        'VERIF_TYPE', 'VHOUR_LIST', 'COMINobs', 'OBSNAME', 'OBS_ACC', 'ACC'
+        'VERIF_TYPE', 'VHOUR_LIST', 'COMINobs', 'OBSNAME', 'OBS_ACC', 'ACC','INITDATE'
         ]
 evs_cam_settings_dict['RUN_PRECIP_STATS'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT','MET_CONFIG_OVERRIDES', 
@@ -63,18 +63,18 @@ evs_cam_settings_dict['RUN_PRECIP_STATS'] = [
         'OBSNAME','MIN_IHOUR','MODEL_ACC','OBS_ACC','ACC','BOOL_NBRHD','FCST_LEV',
         'FCST_THRESH','OBS_LEV','OBS_THRESH','OUTPUT_FLAG_NBRHD',
         'OUTPUT_FLAG_CATEG','NBRHD_WIDTHS','GRID','MODEL_INPUT_TEMPLATE',
-        'MASK_POLY_LIST','RESTART_DIR'
+        'MASK_POLY_LIST','RESTART_DIR','VDATE'
         ]
-evs_cam_settings_dict['RUN_PRECIP_PLOTS'] = ['COMOUTplots','RESTART_DIR']
-evs_cam_settings_dict['RUN_SNOWFALL_PREP'] = []
-evs_cam_settings_dict['RUN_SNOWFALL_STATS'] = ['RESTART_DIR']
-evs_cam_settings_dict['RUN_SNOWFALL_PLOTS'] = ['COMOUTplots','RESTART_DIR']
-evs_cam_settings_dict['RUN_HEADLINE_PREP'] = []
-evs_cam_settings_dict['RUN_HEADLINE_STATS'] = []
+evs_cam_settings_dict['RUN_PRECIP_PLOTS'] = ['COMOUTplots','RESTART_DIR','VDATE']
+evs_cam_settings_dict['RUN_SNOWFALL_PREP'] = ['INITDATE']
+evs_cam_settings_dict['RUN_SNOWFALL_STATS'] = ['RESTART_DIR','VDATE']
+evs_cam_settings_dict['RUN_SNOWFALL_PLOTS'] = ['COMOUTplots','RESTART_DIR','VDATE']
+evs_cam_settings_dict['RUN_HEADLINE_PREP'] = ['INITDATE']
+evs_cam_settings_dict['RUN_HEADLINE_STATS'] = ['VDATE']
 evs_cam_settings_dict['RUN_HEADLINE_PLOTS'] = [
         'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
         'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE',
-        'COMOUTplots','RESTART_DIR']
+        'COMOUTplots','RESTART_DIR','VDATE']
 
 # Check for existence of required env vars, by group in the dictionary
 env_group_list = [
@@ -96,7 +96,10 @@ for env_group in env_group_list:
             sys.exit(1)
 
 # Check for invalid date and time configurations
-date_name_list = ['VDATE']
+if STEP.upper() == 'PREP':
+    date_name_list = ['INITDATE']
+else:
+    date_name_list = ['VDATE']
 for date_name in date_name_list:
     date = os.environ[date_name]
     if len(date) != 8:
