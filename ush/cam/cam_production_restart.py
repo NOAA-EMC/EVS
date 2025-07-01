@@ -49,21 +49,10 @@ elif STEP == 'plots':
     RESTART_DIR = os.environ['RESTART_DIR']
     COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
     working_dir = os.path.join(DATA, VERIF_CASE, 'out')
-    if VERIF_CASE == "grid2obs":
-        completed_jobs_dir = os.path.join(
-            RESTART_DIR, 
-            COMPLETED_JOBS_DIR
-        )
-    elif VERIF_CASE == "precip":
-        completed_jobs_dir = os.path.join(
-            RESTART_DIR, 
-            COMPLETED_JOBS_DIR
-        )
-    else:
-        completed_jobs_dir = os.path.join(
-            RESTART_DIR, 
-            COMPLETED_JOBS_DIR
-        )
+    completed_jobs_dir = os.path.join(
+        RESTART_DIR, 
+        COMPLETED_JOBS_DIR
+    )
     if os.path.exists(completed_jobs_dir):
         if any(p.is_file() for p in Path(completed_jobs_dir).rglob('*')):
             print(f"Copying restart directory {RESTART_DIR} "
