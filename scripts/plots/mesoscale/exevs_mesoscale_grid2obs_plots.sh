@@ -35,8 +35,10 @@ if [ $evs_run_mode = production ]; then
 fi
 
 # Create Job Script 
-python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_job_scripts.py
+if [ ! -e ${RESTART_DIR}/completed_jobs/${EVAL_PERIOD}/completed_jobs.txt_${EVAL_PERIOD}_job${njob}.txt ]; then
+    python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_job_scripts.py
     export err=$?; err_chk
+fi
 
 export njob=$((njob+1))
 
@@ -44,12 +46,12 @@ export njob=$((njob+1))
 if [ $USE_CFP = YES ]; then
     python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_poe_job_scripts.py
     export err=$?; err_chk
-
 fi
 
 # Create Working Directories
 python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
 export err=$?; err_chk
+
 
 # Run All Mesoscale grid2obs/plots Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/plotting_job_scripts/*
@@ -86,10 +88,12 @@ fi
 
 # Copy Plots Output to Main Directory
 
-for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
-   cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
-   export err=$?; err_chk
-done
+if [ $ncount_job -gt 0 ]; then
+  for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
+     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
+     export err=$?; err_chk
+  done
+fi
 
 # Tar and Copy output files to EVS COMOUT directory
   find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar --transform='s#.*/##'  -T -
