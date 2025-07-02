@@ -281,13 +281,13 @@ elif job_type == 'generate':
             'bash_conditional': '[[ ${VHOUR} -lt 12 ]]',
             'bash_conditional_value': '"' + ', '.join(
                 glob.glob(os.path.join(
-                    EVSINspcotlk,f'spc_otlk.*',
+                    EVSINspcotlk,f'{RUN}.*',f'spc_otlk',
                     f'spc_otlk.*.v*-{VDATE}12.3km*'
                 ))
             ) + '"',
             'bash_conditional_else_value': '"' + ', '.join(
                 glob.glob(os.path.join(
-                    EVSINspcotlk,f'spc_otlk.*',
+                    EVSINspcotlk,f'{RUN}.*',f'spc_otlk',
                     f'spc_otlk.*.v{VDATE}*3km*'
                 ))
             ) + '"'
@@ -395,9 +395,9 @@ elif STEP == 'stats':
                         )
             elif NEST == 'spc_otlk':
                 if int(VHOUR) < 12:
-                    spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'spc_otlk.*',f'spc_otlk.*.v*-{VDATE}12.3km*')))
+                    spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'{RUN}.*',f'spc_otlk',f'spc_otlk.*.v*-{VDATE}12.3km*')))
                 else:
-                    spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'spc_otlk.*',f'spc_otlk.*.v{VDATE}*3km*')))
+                    spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'{RUN}.*',f'spc_otlk',f'spc_otlk.*.v{VDATE}*3km*')))
                 if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                     if spc_otlk_avail:
                         if obs_avail:
@@ -596,9 +596,9 @@ elif STEP == 'stats':
                             )
             elif NEST == 'spc_otlk':
                 if int(VHOUR) < 12:
-                    spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'spc_otlk.*',f'spc_otlk.*.v*-{VDATE}12.3km*')))
+                    spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'{RUN}.*',f'spc_otlk',f'spc_otlk.*.v*-{VDATE}12.3km*')))
                 else:
-                    spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'spc_otlk.*',f'spc_otlk.*.v{VDATE}*3km*')))
+                    spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'{RUN}.*',f'spc_otlk',f'spc_otlk.*.v{VDATE}*3km*')))
                 if VAR_NAME == 'PTYPE':
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if spc_otlk_avail:

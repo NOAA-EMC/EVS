@@ -21,9 +21,9 @@ day1=`$NDATE -24 ${VDATE}00 |cut -c1-8`
 day2=`$NDATE -48 ${VDATE}00 |cut -c1-8`
 day3=`$NDATE -72 ${VDATE}00 |cut -c1-8`
 
-mask_day1=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day1
-mask_day2=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day2
-mask_day3=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day3
+mask_day1=${EVSINspcotlk:0:$index}/cam/$RUN.$day1/spc_otlk
+mask_day2=${EVSINspcotlk:0:$index}/cam/$RUN.$day2/spc_otlk
+mask_day3=${EVSINspcotlk:0:$index}/cam/$RUN.$day3/spc_otlk
 
 write_job_cards=yes
 if ([ ! -d  $mask_day1 ] || (! ls $mask_day1/spc_otlk.day1_*G227.nc 1> /dev/null 2>&1)) \

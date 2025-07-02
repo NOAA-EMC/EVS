@@ -67,28 +67,25 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh 8
 . ./PDY
 
-if [ $VERIF_CASE = grid2obs ] ; then
-   export VDATE=${VDATE:-$PDYm1}
-
-elif [ $VERIF_CASE = precip ] ; then
-   export VDATE=${VDATE:-$PDYm1}
+if [ $VERIF_CASE = precip ] ; then
+   export INITDATE=${INITDATE:-$PDYm1}
  
 elif [ $VERIF_CASE = radar ] ; then
-   export VDATE=${VDATE:-$PDYm1}
+   export INITDATE=${INITDATE:-$PDYm1}
  
 elif [ $VERIF_CASE = severe ] ; then
 
+   # Set initialization date (only for forecast prep step)
+   export INITDATE=${INITDATE:-$PDYm1}
+
    # Set verification date for severe job
-   export VDATE=${VDATE:-$PDYm7}
+   export VDATE=$(finddate.sh $INITDATE d-6)
   
    # Set correct date for SPC report data (must be relative to VDATE) 
    export REP_DATE=$(finddate.sh $VDATE d-1)
 
    # Set correct date for SPC outlook data 
-   export OTLK_DATE=${OTLK_DATE:-$PDYm1}
-
-   # Set initialization date (only for forecast prep step)
-   export IDATE=${IDATE:-$PDYm1}
+   export OTLK_DATE=${OTLK_DATE:-$INITDATE}
 
 else
 
@@ -119,13 +116,11 @@ export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 
 mkdir -p $COMOUT
 
-export COMOUTmrms=${COMOUT}/mrms.${VDATE}
+export COMOUTmrms=${COMOUT}/${RUN}.${INITDATE}/mrms
 
 if [ $VERIF_CASE = severe ] ; then
-   export COMOUTlsr=${COMOUT}/spc_lsr.${REP_DATE}
-   export COMOUTotlk=${COMOUT}/spc_otlk.${OTLK_DATE}
-elif [ $VERIF_CASE = grid2obs ] ; then
-   export mPINGToken=${mPINGToken:-9999}
+   export COMOUTlsr=${COMOUT}/${RUN}.${REP_DATE}/spc_lsr
+   export COMOUTotlk=${COMOUT}/${RUN}.${OTLK_DATE}/spc_otlk
 fi
 
 
