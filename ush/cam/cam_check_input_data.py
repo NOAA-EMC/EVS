@@ -437,7 +437,10 @@ if proceed:
         print(f"WARNING: The following forecasts were not found:")
         for missing_fcst_path in missing_fcst_paths:
             print(missing_fcst_path)
-        if send_mail and str(SENDMAIL) == "YES":
+        # Only send mail if missing file is from dcom
+        dcom_missing_fcst_paths = [p for p in missing_fcst_paths if '/dcom/' in p or '\\dcom\\' in p]
+        dcom_missing_fcst_files = [f for f, p in zip(missing_fcst_files, missing_fcst_paths) if '/dcom/' in p or '\\dcom\\' in p]
+        if dcom_missing_fcst_paths and send_mail and str(SENDMAIL) == "YES":
             if 'MAILTO' in os.environ:
                MAILTO = os.environ['MAILTO']
             else:
@@ -448,7 +451,7 @@ if proceed:
             missing_data_flag+=1
             data_info = [
                 cutil.get_data_type(fname) 
-                for fname in missing_fcst_files
+                for fname in dcom_missing_fcst_files
             ]
             fcst_names = []
             unk_names = []
@@ -459,12 +462,12 @@ if proceed:
             for i, info in enumerate(data_info):
                 if info[1] == "fcst":
                     fcst_names.append(info[0])
-                    fcst_fnames.append(missing_fcst_files[i])
-                    fcst_pnames.append(missing_fcst_paths[i])
+                    fcst_fnames.append(dcom_missing_fcst_files[i])
+                    fcst_pnames.append(dcom_missing_fcst_paths[i])
                 elif info[1] == "unk":
                     unk_names.append(info[0])
-                    unk_fnames.append(missing_fcst_files[i])
-                    unk_pnames.append(missing_fcst_paths[i])
+                    unk_fnames.append(dcom_missing_fcst_files[i])
+                    unk_pnames.append(dcom_missing_fcst_paths[i])
                 else:
                     print(f"FATAL ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
@@ -562,7 +565,10 @@ if proceed:
         print(f"WARNING: The following analyses were not found:")
         for missing_anl_path in missing_anl_paths:
             print(missing_anl_path)
-        if send_mail and str(SENDMAIL) == "YES":
+        # Only send mail if missing file is from dcom
+        dcom_missing_anl_paths = [p for p in missing_anl_paths if '/dcom/' in p or '\\dcom\\' in p]
+        dcom_missing_anl_files = [f for f, p in zip(missing_anl_files, missing_anl_paths) if '/dcom/' in p or '\\dcom\\' in p]
+        if dcom_missing_anl_paths and send_mail and str(SENDMAIL) == "YES":
             if 'MAILTO' in os.environ:
                MAILTO = os.environ['MAILTO']
             else:
@@ -573,7 +579,7 @@ if proceed:
             missing_data_flag+=1
             data_info = [
                 cutil.get_data_type(fname) 
-                for fname in missing_anl_files
+                for fname in dcom_missing_anl_files
             ]
             anl_names = []
             unk_names = []
@@ -584,12 +590,12 @@ if proceed:
             for i, info in enumerate(data_info):
                 if info[1] == "anl":
                     anl_names.append(info[0])
-                    anl_fnames.append(missing_anl_files[i])
-                    anl_pnames.append(missing_anl_paths[i])
+                    anl_fnames.append(dcom_missing_anl_files[i])
+                    anl_pnames.append(dcom_missing_anl_paths[i])
                 elif info[1] == "unk":
                     unk_names.append(info[0])
-                    unk_fnames.append(missing_anl_files[i])
-                    unk_pnames.append(missing_anl_paths[i])
+                    unk_fnames.append(dcom_missing_anl_files[i])
+                    unk_pnames.append(dcom_missing_anl_paths[i])
                 else:
                     print(f"FATAL ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
@@ -748,7 +754,10 @@ if proceed:
         print(f"WARNING: The following input data were not found:")
         for missing_gen_path in missing_gen_paths:
             print(missing_gen_path)
-        if send_mail and str(SENDMAIL) == "YES":
+        # Only send mail if missing file is from dcom
+        dcom_missing_gen_paths = [p for p in missing_gen_paths if '/dcom/' in p or '\\dcom\\' in p]
+        dcom_missing_gen_files = [f for f, p in zip(missing_gen_files, missing_gen_paths) if '/dcom/' in p or '\\dcom\\' in p]
+        if dcom_missing_gen_paths and send_mail and str(SENDMAIL) == "YES":
             if 'MAILTO' in os.environ:
                MAILTO = os.environ['MAILTO']
             else:
@@ -759,7 +768,7 @@ if proceed:
             missing_data_flag+=1
             data_info = [
                 cutil.get_data_type(fname) 
-                for fname in missing_gen_files
+                for fname in dcom_missing_gen_files
             ]
             gen_names = []
             unk_names = []
@@ -770,12 +779,12 @@ if proceed:
             for i, info in enumerate(data_info):
                 if info[1] == "gen":
                     gen_names.append(info[0])
-                    gen_fnames.append(missing_gen_files[i])
-                    gen_pnames.append(missing_gen_paths[i])
+                    gen_fnames.append(dcom_missing_gen_files[i])
+                    gen_pnames.append(dcom_missing_gen_paths[i])
                 elif info[1] == "unk":
                     unk_names.append(info[0])
-                    unk_fnames.append(missing_gen_files[i])
-                    unk_pnames.append(missing_gen_paths[i])
+                    unk_fnames.append(dcom_missing_gen_files[i])
+                    unk_pnames.append(dcom_missing_gen_paths[i])
                 else:
                     print(f"FATAL ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
