@@ -13,7 +13,6 @@ set -x
 
 # set up plot variables
 
-#periods='LAST31DAYS LAST90DAYS'
 periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
 
 inithours='00 12'
