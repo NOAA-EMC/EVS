@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
+#PBS -l walltime=00:15:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=16:ompthreads=1:mem=35GB
 #PBS -l debug=true
 
@@ -54,6 +54,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export vhr=${vhr:-${vhr}}
+export EVAL_PERIOD=last90days
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_MESOSCALE_PLOTS

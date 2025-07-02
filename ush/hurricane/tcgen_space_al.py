@@ -86,7 +86,7 @@ if(domain == "atlantic"):
     for i in range(len(hits)):
       lat  = float(hits[i,31])
       lon  = float(hits[i,32]) + 360.
-      plt.scatter(lon, lat,transform=ccrs.PlateCarree(), marker='o', color='green',s=12, facecolor='none')
+      plt.scatter(lon, lat,transform=ccrs.PlateCarree(), marker='o', color='#2489FE',s=12, facecolor='none')
 
     falsefile = os.environ['falsefile']
     fals  = np.loadtxt(falsefile,dtype=str)
@@ -96,15 +96,23 @@ if(domain == "atlantic"):
     for i in range(len(fals)):
       lat1  = float(fals[i,31])
       lon1  = float(fals[i,32]) + 360.
-      plt.scatter(lon1, lat1,transform=ccrs.PlateCarree(), marker='s', color='red',s=12, facecolor='none')
+      plt.scatter(lon1, lat1,transform=ccrs.PlateCarree(), marker='x', color='#B42221',s=12)
 
-    plt.scatter(346, 47.5,transform=ccrs.PlateCarree(), marker='o', color='green',s=12, facecolor='none')   
-    plt.scatter(346, 45,transform=ccrs.PlateCarree(), marker='s', color='red',s=12, facecolor='none')
-    plt.annotate("Hits ("+str(numhits)+")", (0,0), (286,186), xycoords='axes fraction', textcoords='offset points', va='top', color='Green', fontsize=6.5)
-    plt.annotate("False alarms ("+str(numfals)+")", (0,0), (286,177), xycoords='axes fraction', textcoords='offset points', va='top', color='Red', fontsize=6.5)
+    plt.scatter(346, 47.5,transform=ccrs.PlateCarree(), marker='o', color='#2489FE',s=12, facecolor='none')   
+    plt.scatter(346, 45,transform=ccrs.PlateCarree(), marker='x', color='#B42221',s=12)
+    plt.annotate("Hits ("+str(numhits)+")", (0,0), (286,186), xycoords='axes fraction', textcoords='offset points', va='top', color='#2489FE', fontsize=6.5)
+    plt.annotate("False alarms ("+str(numfals)+")", (0,0), (286,177), xycoords='axes fraction', textcoords='offset points', va='top', color='#B42221', fontsize=6.5)
 
     TCGENdays = os.environ['TCGENdays']
-    plt.title(TCGENdays)
+    modelname = os.environ['modelname']
+    if modelname == 'gfs':
+        formal_model = 'GFS'
+    elif modelname == 'ecmwf':
+        formal_model = 'ECMWF'
+    elif modelname == 'cmc':
+        formal_model = 'CMC'
+                 
+    plt.title(""+str(formal_model)+" "+str(TCGENdays)+"")             
 ####################################################################
 ##The plt is saved as png and converted to gif in the bash script.
 

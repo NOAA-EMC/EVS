@@ -768,7 +768,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         linewidth=.5, c='black', zorder=0
     )
 
-    fig.subplots_adjust(bottom=.15, right=.77, left=.23, wspace=0, hspace=0)
+    fig.subplots_adjust(bottom=.15, right=.77, left=.23, top=0.85, wspace=0, hspace=0)
     cax = fig.add_axes([.775, .2, .01, .725])
     cbar_ticks = [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.]
     cb = plt.colorbar(
@@ -784,6 +784,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         [f'{cbar_tick:.1f}' for cbar_tick in cbar_ticks], 
         fontdict={'fontsize': 12}
     )
+    # Adjust colorbar position
+    pos = cb.ax.get_position()
+    cb.ax.set_position([pos.x0, pos.y0 - 0.03, pos.width, pos.height * 0.9])
+
     cax.hlines([0, 1], 0, 1, colors='black', linewidth=4)
     cb.set_label(f'{metric_long_names[2]}')
 
@@ -863,7 +867,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     else:
         title2 = (f'{level_string}{var_long_name} ({units}), {domain_string}')
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}, {frange_string}')
+              + f'{date_start_string} to {date_end_string}, {frange_string}, ' 
+              + f'Validation: {str(obtype).upper()} ')
     title_center = '\n'.join([title1, title2, title3])
     ax.set_title(title_center, loc=plotter.title_loc, pad=None) 
     logger.info("... Plotting complete.")
@@ -872,9 +877,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_left:
         if os.path.exists(path_logo_left):
             left_logo_arr = mpimg.imread(path_logo_left)
-            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.8)
+            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*1.)
             ab_left = AnnotationBbox(
-                left_image_box, xy=(0.,1.), xycoords='axes fraction',
+                left_image_box, xy=(0.,1.07), xycoords='axes fraction',
                 xybox=(0, 3), boxcoords='offset points', frameon = False,
                 box_alignment=(0,0)
             )
@@ -887,9 +892,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_right:
         if os.path.exists(path_logo_right):
             right_logo_arr = mpimg.imread(path_logo_right)
-            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.8)
+            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*1.)
             ab_right = AnnotationBbox(
-                right_image_box, xy=(1.,1.), xycoords='axes fraction',
+                right_image_box, xy=(1.,1.07), xycoords='axes fraction',
                 xybox=(0, 3), boxcoords='offset points', frameon = False,
                 box_alignment=(1,0)
             )

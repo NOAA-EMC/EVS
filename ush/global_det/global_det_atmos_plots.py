@@ -169,6 +169,7 @@ if JOB_GROUP != 'tar_images':
     original_plot_info_dict = {
         'line_type': line_type,
         'vx_mask': vx_mask,
+        'ob_name': obs_list[0]
     }
 else:
     original_plot_info_dict = {}

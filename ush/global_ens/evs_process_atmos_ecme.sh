@@ -1,12 +1,11 @@
 #!/bin/ksh
-#***********************************************************************************
-# Purpose:  Process/prepare ECM analysis data files and ECME ensemble member files
+#*************************************************************************
+# Purpose: Process/prepare ECME analysis files and ensemble member files
 #  
-#  Last update: 11/16/2023, by Binbin Zhou (Lynker@NCPE/EMC)
-#***********************************************************************************         
+# Updated: 05/21/2025 by L. Gwen Chen (lichuan.chen@noaa.gov)
+#          11/16/2023 by Binbin Zhou, Lynker@EMC/NCEP
+#************************************************************************* 
 set -x
-
-cd $WORK
 
 #########################################################
 # !!! DEFINE MAXIMUM NUMBER OF PERTURBATION RECORDS
@@ -17,9 +16,11 @@ CDATE=$1  #day+running init hour
 ihour=$2
 inithour=t${ihour}z
 
-#####################################################################
-# Set date variables to process CDATE data  
-#####################################################################
+cd $WORKtask
+
+#########################################################
+# Set date variables to process CDATE data
+#########################################################
 tdate=`$NDATE 0 $CDATE | cut -c1-8`
 cent=`echo $tdate | cut -c1-2 `
 yy=`  echo $tdate | cut -c3-4 `
@@ -35,14 +36,13 @@ yyyymmddhh=${yyyymmdd}${ihour}
 ymdh=${indate}${ihour}
 imdh=${mm}${dd}${ihour}
 hh=${ihour}
-echo " Date to copy is $indate"
+echo "Date to copy is $indate"
 yymmddhh=${yy}${mm}${dd}${hh}
 
 get_ecme='yes'
 
 if [ $get_ecme = 'yes' ] ; then
-
-tmpDir=$WORK/ecmetmp
+tmpDir=$WORKtask/ecmetmp
 mkdir -p $tmpDir
 
 #**********************************************
@@ -80,82 +80,81 @@ for n in 1 2 12 13 14 15 ; do
   echo "${VAR[$n]}" >> ${pat}
 done
 
-#***********************************************************************************
-# Retrieve requried fields from  ECME's DCD analysis data files (grib1) in DCOM
-#************************************************************************************
+#*************************************************************************
+# Retrieve required fields from ECME's DCD analysis files (grib1) in DCOM
+#*************************************************************************
 hourix=0
 while [ ${hourix} -lt 31 ]; do
   # Get DCD files
   let hourinc=hourix*12
-  vymdh=` ${NDATE} ${hourinc} ${ymdh}`
-  vmdh=`  echo ${vymdh} | cut -c5-10`
-  vhour=` ${NHOUR} ${vymdh} ${ymdh}`
+  vymdh=`${NDATE} ${hourinc} ${ymdh}`
+  vmdh=` echo ${vymdh} | cut -c5-10`
+  vhour=`${NHOUR} ${vymdh} ${ymdh}`
   if [ ${hourix} = 0 ] ; then
     DCD=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/DCD${imdh}00${vmdh}001
     if [ -s $DCD ] ; then
-      >$WORK/ecmanl.t${ihour}z.grid3.f000.grib1
-      chmod 640 $WORK/ecmanl.t${ihour}z.grid3.f000.grib1
-      chgrp rstprod $WORK/ecmanl.t${ihour}z.grid3.f000.grib1
-        $WGRIB $DCD|grep --file=${pat0}|$WGRIB -i -grib $DCD -o x
-       chmod 640 x
-       chgrp rstprod x
-       cat x >> $WORK/ecmanl.t${ihour}z.grid3.f000.grib1
+      >$WORKtask/ecmanl.t${ihour}z.grid3.f000.grib1
+      chmod 640 $WORKtask/ecmanl.t${ihour}z.grid3.f000.grib1
+      chgrp rstprod $WORKtask/ecmanl.t${ihour}z.grid3.f000.grib1
+      $WGRIB $DCD | grep --file=${pat0} | $WGRIB -i -grib $DCD -o x
+      chmod 640 x
+      chgrp rstprod x
+      cat x >> $WORKtask/ecmanl.t${ihour}z.grid3.f000.grib1
       if [[ $SENDCOM="YES" ]]; then
-          if [ -s $WORK/ecmanl.t${ihour}z.grid3.f000.grib1 ]; then
-              cp -v $WORK/ecmanl.t${ihour}z.grid3.f000.grib1 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
-          fi
-          chmod 640 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
-          chgrp rstprod $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
+        if [ -s $WORKtask/ecmanl.t${ihour}z.grid3.f000.grib1 ]; then
+          cp -v $WORKtask/ecmanl.t${ihour}z.grid3.f000.grib1 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
+        fi
+        chmod 640 $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
+        chgrp rstprod $COMOUTecme/ecmanl.t${ihour}z.grid3.f000.grib1
       fi
     else
       echo "WARNING: $DCD is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="ECME Data Missing for EVS ${COMPONENT}"
-        echo "Warning:  No ECME data for ${ymdh}" > mailmsg
-        echo "Missing file is $DCD"  >> mailmsg
+        echo "Warning: No ECME data for ${ymdh}" > mailmsg
+        echo "Missing file is $DCD" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
       fi
     fi 
   fi 
 
-
-  #******************************************************************
-  # Retrieve requried fields from ECME member files E1E in DCOM
-  #******************************************************************
+  #*************************************************************
+  # Retrieve required fields from ECME member files E1E in DCOM
+  #*************************************************************
   E1E=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
   if [ ! -s $E1E ]; then
     echo "WARNING: $E1E is not available"
     if [ $SENDMAIL = YES ]; then
-        export subject="ECME Data Missing for EVS ${COMPONENT}"
-        echo "Warning:  No ECME data for ${ymdh}" > mailmsg
-        echo "Missing files are in $E1E"  >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $MAILTO
-      fi
+      export subject="ECME Data Missing for EVS ${COMPONENT}"
+      echo "Warning: No ECME data for ${ymdh}" > mailmsg
+      echo "Missing files are in $E1E" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $MAILTO
+    fi
   else 
     >E1E.${hourinc}
     chmod 640 E1E.${hourinc}
     chgrp rstprod E1E.${hourinc}
-        $WGRIB $E1E|grep --file=${pat}|$WGRIB -i -grib $E1E -o x
-       chmod 640 x
-       chgrp rstprod x
-       cat x >> E1E.${hourinc}
+    $WGRIB $E1E | grep --file=${pat} | $WGRIB -i -grib $E1E -o x
+    chmod 640 x
+    chgrp rstprod x
+    cat x >> E1E.${hourinc}
     h3=${hourinc}
     typeset -Z3 h3
     mbr=1
-     while [ ${mbr} -le 50 ]; do
+    while [ ${mbr} -le 50 ]; do
       m2=$mbr
       typeset -Z2 m2
-      $WGRIB E1E.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E.${hourinc} -o $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
-      chmod 640 $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
-      chgrp rstprod $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+      $WGRIB E1E.${hourinc} | grep "forecast $mbr:" | $WGRIB -i -grib E1E.${hourinc} -o $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+      chmod 640 $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+      chgrp rstprod $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       if [[ $SENDCOM="YES" ]]; then
-          if [ -s ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 ]; then
-              cp -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
-          fi
-          chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
-          chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+        if [ -s $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 ]; then
+          cp -v $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+        fi
+        chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+        chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       fi
       mbr=$((mbr+1))
     done
@@ -164,61 +163,60 @@ while [ ${hourix} -lt 31 ]; do
   let hourix=hourix+1
 done 
 
-#******************************************************************
-#  Retrieve requried fields from ECME member files E1E in DCOM
-#******************************************************************
+#*************************************************************
+# Retrieve required fields from ECME member files E1E in DCOM
+#*************************************************************
 hourix=0
 while [ ${hourix} -lt 31 ]; do
   let hourinc=hourix*12
-  vymdh=` ${NDATE} ${hourinc} ${ymdh}`
-  vmdh=`  echo ${vymdh} | cut -c5-10`
-  vhour=` ${NHOUR} ${vymdh} ${ymdh}`
+  vymdh=`${NDATE} ${hourinc} ${ymdh}`
+  vmdh=` echo ${vymdh} | cut -c5-10`
+  vhour=`${NHOUR} ${vymdh} ${ymdh}`
   E1E=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
   if [ -s $E1E ]; then
     >E1E_apcp.${hourinc}
     chmod 640 E1E_apcp.${hourinc}
     chgrp rstprod E1E_apcp.${hourinc}
     for n in 20 21 ; do
-       $WGRIB $E1E|grep "${VAR[$n]}"|$WGRIB -i -grib $E1E -o x
-       chmod 640 x
-       chgrp rstprod x
-       cat x >> E1E_apcp.${hourinc}
+      $WGRIB $E1E | grep "${VAR[$n]}" | $WGRIB -i -grib $E1E -o x
+      chmod 640 x
+      chgrp rstprod x
+      cat x >> E1E_apcp.${hourinc}
     done
     h3=${hourinc}
     typeset -Z3 h3
     mbr=1
-     while [ ${mbr} -le 50 ]; do
+    while [ ${mbr} -le 50 ]; do
       m2=$mbr
       typeset -Z2 m2
-      $WGRIB E1E_apcp.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_apcp.${hourinc} -o $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
-      chmod 640 $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
-      chgrp rstprod $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+      $WGRIB E1E_apcp.${hourinc} | grep "forecast $mbr:" | $WGRIB -i -grib E1E_apcp.${hourinc} -o $WORKtask/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+      chmod 640 $WORKtask/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+      chgrp rstprod $WORKtask/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
       if [[ $SENDCOM="YES" ]]; then
-        if [ -s $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 ]; then
-            cp -v $WORK/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+        if [ -s $WORKtask/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 ]; then
+          cp -v $WORKtask/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
         fi
         chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
         chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
       fi
       mbr=$((mbr+1))
-     done
-     rm E1E_apcp.${hourinc}
+    done
+    rm E1E_apcp.${hourinc}
   else
-     echo "WARNING: $E1E is not available"
-        if [ $SENDMAIL = YES ]; then
-            export subject="ECME Data Missing for EVS ${COMPONENT}"
-            echo "Warning:  No ECME data for ${ymdh}" > mailmsg
-            echo "Missing files are in $E1E"  >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $MAILTO
-        fi
+    echo "WARNING: $E1E is not available"
+    if [ $SENDMAIL = YES ]; then
+      export subject="ECME Data Missing for EVS ${COMPONENT}"
+      echo "Warning: No ECME data for ${ymdh}" > mailmsg
+      echo "Missing files are in $E1E" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $MAILTO
+    fi
   fi
   let hourix=hourix+1
 done
 
-
 #***********************************************************************
-#  Retrieve requried upper air fields from ECME member files E1E in DCOM
+# Retrieve required upper air fields from ECME member files E1E in DCOM
 #***********************************************************************
 VAR[1]=':U:kpds5=131:kpds6=100'
 VAR[2]=':V:kpds5=132:kpds6=100'
@@ -233,57 +231,56 @@ if [ -e ${pat2} ]; then rm ${pat2}; fi
 >${pat2}
 for n in 1 2 3 4 5 ; do
   for level in 50 100 200 300 400 500 700 850 925 1000 ; do
-   echo "${VAR[$n]}:kpds7=${level}" >> ${pat2}
+    echo "${VAR[$n]}:kpds7=${level}" >> ${pat2}
   done
 done
 
 hourix=0
 while [ ${hourix} -lt 31 ]; do
   let hourinc=hourix*12
-  vymdh=` ${NDATE} ${hourinc} ${ymdh}`
-  vmdh=`  echo ${vymdh} | cut -c5-10`
-  vhour=` ${NHOUR} ${vymdh} ${ymdh}`
+  vymdh=`${NDATE} ${hourinc} ${ymdh}`
+  vmdh=` echo ${vymdh} | cut -c5-10`
+  vhour=`${NHOUR} ${vymdh} ${ymdh}`
   E1E=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
   if [ -s $E1E ]; then
     >E1E_vertical.${hourinc}
     chmod 640 E1E_vertical.${hourinc}
     chgrp rstprod E1E_vertical.${hourinc}
-        $WGRIB $E1E|grep --file=${pat2}|$WGRIB -i -grib $E1E -o x
-        chmod 640 x
-        chgrp rstprod x
-        cat x >> E1E_vertical.${hourinc}
+    $WGRIB $E1E | grep --file=${pat2} | $WGRIB -i -grib $E1E -o x
+    chmod 640 x
+    chgrp rstprod x
+    cat x >> E1E_vertical.${hourinc}
     h3=${hourinc}
     typeset -Z3 h3
     mbr=1
-     while [ ${mbr} -le 50 ]; do
+    while [ ${mbr} -le 50 ]; do
       m2=$mbr
       typeset -Z2 m2
-      $WGRIB E1E_vertical.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_vertical.${hourinc} -o E1E_vertical.${hourinc}.mbr${mbr}
-      chmod 640 E1E_vertical.${hourinc}.mbr${mbr}
-      chgrp rstprod E1E_vertical.${hourinc}.mbr${mbr}
-      cat E1E_vertical.${hourinc}.mbr${mbr} >> $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
-      chmod 640 $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
-      chgrp rstprod $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+      $WGRIB E1E_vertical.${hourinc} | grep "forecast $mbr:" | $WGRIB -i -grib E1E_vertical.${hourinc} -o $WORKtask/E1E_vertical.${hourinc}.mbr${mbr}
+      chmod 640 $WORKtask/E1E_vertical.${hourinc}.mbr${mbr}
+      chgrp rstprod $WORKtask/E1E_vertical.${hourinc}.mbr${mbr}
+      cat $WORKtask/E1E_vertical.${hourinc}.mbr${mbr} >> $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+      chmod 640 $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+      chgrp rstprod $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       if [[ $SENDCOM="YES" ]]; then
-          if [ -s $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 ]; then
-              cp -v $WORK/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
-          fi
-          chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
-          chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+        if [ -s $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 ]; then
+          cp -v $WORKtask/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+        fi
+        chmod 640 $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+        chgrp rstprod $COMOUTecme/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
       fi
       mbr=$((mbr+1))
-     done
-     rm E1E_vertical.${hourinc}*
+    done
+    rm E1E_vertical.${hourinc}*
   else
-     echo "WARNING: $E1E is not available"
-        if [ $SENDMAIL = YES ]; then
-            export subject="ECME Data Missing for EVS ${COMPONENT}"
-            echo "Warning:  No ECME data for ${ymdh}" > mailmsg
-            echo "Missing files are in $E1E"  >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $MAILTO
-        fi
- 
+    echo "WARNING: $E1E is not available"
+    if [ $SENDMAIL = YES ]; then
+      export subject="ECME Data Missing for EVS ${COMPONENT}"
+      echo "Warning: No ECME data for ${ymdh}" > mailmsg
+      echo "Missing files are in $E1E" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $MAILTO
+    fi
   fi
   let hourix=hourix+1
 done

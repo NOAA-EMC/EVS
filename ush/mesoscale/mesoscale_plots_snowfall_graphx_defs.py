@@ -13,7 +13,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -84,7 +84,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -127,7 +127,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -198,7 +198,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -241,7 +241,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -312,7 +312,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -355,7 +355,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -426,7 +426,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -469,7 +469,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -540,7 +540,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -583,7 +583,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -654,7 +654,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -697,7 +697,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -768,7 +768,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -811,7 +811,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -882,7 +882,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -925,7 +925,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -996,7 +996,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -1039,7 +1039,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -1110,7 +1110,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{

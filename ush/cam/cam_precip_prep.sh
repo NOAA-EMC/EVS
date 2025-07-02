@@ -18,15 +18,15 @@ if [ $STEP == "prep" ]; then
                 subtract_hours=0
                 max_subtract_hours=$(echo $ACC | sed 's/^0*//')
                 while [ $subtract_hours -lt $max_subtract_hours ]; do
-                    VDATEHOURm=$($NDATE -$subtract_hours $VDATE$VHOUR)
-                    VDATEm=${VDATEHOURm:0:8}
-                    VHOURm=${VDATEHOURm:8:10}
-                    export COMOUTobs="${DATA}/ccpa.$VDATEm"
+                    INITDATEHOURm=$($NDATE -$subtract_hours $INITDATE$VHOUR)
+                    INITDATEm=${INITDATEHOURm:0:8}
+                    VHOURm=${INITDATEHOURm:8:10}
+                    export COMOUTobs="${DATA}/$RUN.$INITDATEm/ccpa"
                     if [ ! -f $COMOUTobs/ccpa.t${VHOURm}z.${OBS_ACC}h.hrap.conus.gb2 ]; then
                         if [ ! -d $COMOUTobs ]; then
                             mkdir -p $COMOUTobs
                         fi
-                        infile=$COMINobs/ccpa.$VDATEm/*/ccpa.t${VHOURm}z.${OBS_ACC}h.hrap.conus.gb2
+                        infile=$COMINobs/ccpa.$INITDATEm/*/ccpa.t${VHOURm}z.${OBS_ACC}h.hrap.conus.gb2
                         if [ -f $infile ]; then
                             cp $infile $COMOUTobs/.
                         else

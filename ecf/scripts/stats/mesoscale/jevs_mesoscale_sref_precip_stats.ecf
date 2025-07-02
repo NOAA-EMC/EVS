@@ -52,7 +52,6 @@ export RUN=atmos
 export NET=evs
 export VERIF_CASE=precip
 export MODELNAME=sref
-export run_mpi=yes
 
 ############################################################
 # Execute j-job

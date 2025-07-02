@@ -85,24 +85,26 @@ else
 fi
 
 # Copy Prep Output to Main Directory
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/${VERIF_CASE}/data/workdirs/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/data/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 for NEST in "conus" "ak"; do
     export NEST=$NEST
-    source $config
+    source "$config"
     # Copy files to desired location
     #all commands to copy output files into the correct EVS COMOUT directory
-    if [ $SENDCOM = YES ]; then
+    if [ "$SENDCOM" = "YES" ]; then
         for OBS_DIR_PATH in $DATA/$VERIF_CASE/data/$VERIF_TYPE/*; do
             OBS_DIR=$(echo ${OBS_DIR_PATH##*/})
-            mkdir -p $COMOUT/$OBS_DIR
-            if [ ! -z "$(ls -A $OBS_DIR_PATH)" ]; then
-                for FILE in $OBS_DIR_PATH/*; do
-                    if [ -s "$FILE" ]; then
-                       cp -v $FILE $COMOUT/$OBS_DIR/.
+            mkdir -p "$COMOUT/$OBS_DIR"
+            if [ ! -z "$(ls -A $OBS_DIR_PATH 2>/dev/null)" ]; then
+                for SUBDIR in "$OBS_DIR_PATH"/*; do
+                    if [ -d "$SUBDIR" ] && [ -n "$(ls -A "$SUBDIR" 2>/dev/null)" ]; then
+                       cp -vr "$SUBDIR" "$COMOUT/$OBS_DIR/."
                     fi
                 done
             fi

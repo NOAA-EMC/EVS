@@ -136,7 +136,7 @@ def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
             lmf.write("#!/bin/bash\n")
             lmf.write(f'export subject="F{fhr} {model.upper()} Forecast '
                       +'Data Missing for EVS subseasonal"\n')
-            lmf.write(f'echo "Warning: No {model.upper()} forecast was '
+            lmf.write(f'echo "WARNING: No {model.upper()} forecast was '
                       +f'available for {init_dt:%Y%m%d%H}f{fhr}" '
                       +'> mailmsg\n')
             lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
@@ -160,14 +160,14 @@ def log_missing_file_obs(log_missing_file, missing_file, obs, valid_dt):
                 lmf.write(f'export subject="{obs.upper()} prepbufr Data '
                           +'Missing for '
                           +'EVS subseasonal"\n')
-                lmf.write(f'echo "Warning: No {obs.upper()} prepbufr data '
+                lmf.write(f'echo "WARNING: No {obs.upper()} prepbufr data '
                           +f'was available for '
                           +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
             else:
                 lmf.write(f'export subject="{obs.upper()} Analysis Data '
                           +'Missing for '
                           +'EVS subseasonal"\n')
-                lmf.write(f'echo "Warning: No {obs.upper()} Analysis data '
+                lmf.write(f'echo "WARNING: No {obs.upper()} Analysis data '
                           +f'was available for '
                           +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
             lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')

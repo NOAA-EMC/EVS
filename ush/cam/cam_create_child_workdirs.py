@@ -28,7 +28,7 @@ if STEP == 'prep':
     )
 elif STEP == 'stats':
     jobdir = os.path.join(
-        DATA, VERIF_CASE, STEP, 'METplus_job_scripts', job_type
+        DATA, VERIF_CASE, 'METplus_job_scripts', job_type
     )
     outdir = os.path.join(
         DATA, VERIF_CASE, 'METplus_output'
@@ -38,7 +38,7 @@ elif STEP == 'stats':
     )
 elif STEP == 'plots':
     jobdir = os.path.join(
-        DATA, VERIF_CASE, STEP, 'plotting_job_scripts'
+        DATA, VERIF_CASE, 'plotting_job_scripts'
     )
     outdir = os.path.join(
         DATA, VERIF_CASE, 'out'
@@ -66,10 +66,15 @@ else:
             workdir = os.path.join(workdirs, job_name)
             if not os.path.exists(workdir):
                 os.makedirs(workdir)
+            # Exclude "workdirs" and "job" unless it's "completed_jobs"
+            # "-prune" prevents recursion into those excluded dirs
+            # Other than that, make all directories in current workdir
             cutil.run_shell_command([
-                'find', '.', '-type', 'd', '-not', '-path', 
-                '\"*workdirs*\"', '-not', '-path', '\"*job*\"', '-exec', 
-                'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
+                'find', '.', '\\(', '-path', 
+                '\"*workdirs*\"', '-o', '\\(', '-path', '\"*job*\"', 
+                '!', '-path', '\"*completed_jobs*\"', '\\)', '\\)', 
+                '-prune', '-o', '-type', 'd', '-exec', 'mkdir', '-p', 
+                os.path.join(workdir,'{}'), '\\;'
             ])
         if STEP == "prep":
             print(

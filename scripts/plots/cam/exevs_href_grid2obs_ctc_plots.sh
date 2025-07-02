@@ -133,18 +133,18 @@ for stats in $stats_list ; do
     for VAR in $VARs ; do 
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
-	
+
        if [ $VAR = CAPEsfc ] ; then 
 	  new_var=cape
        elif [ $VAR = MLCAPE ] ; then
 	  new_var=mlcape
        elif [ $VAR = VISsfc ] ; then
-	  new_var=vis
+     	  new_var=vis
        elif [ $VAR = HGTcldceil ] ; then
           new_var=hgtcldceil
        elif [ $VAR = TCDC ] ; then
           new_var=tcdc
-       fi
+       fi	  
 
        if [ $VAR = CAPEsfc ] || [ $VAR = VISsfc ] || [ $VAR = HGTcldceil ] || [ $VAR = TCDC ] ; then
           FCST_LEVEL_values="L0"
@@ -210,6 +210,13 @@ for stats in $stats_list ; do
 	echo "export save_dir=$save_dir" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
         echo "export log_metplus=$save_dir/log_verif_plotting_job.out" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
 	echo "export prune_dir=$save_dir/data" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+
+        if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then
+          echo "export obsv=\" - Validation: RAOB\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+        elif [ $VAR = VISsfc ] || [ $VAR = HGTcldceil ] || [ $VAR = TCDC ] ; then
+          echo "export obsv=\" - Validation: METAR\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh
+        fi
+
 
 	if [ $score_type = lead_average ] ; then
            echo "export PLOT_TYPE=lead_average_valid" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh

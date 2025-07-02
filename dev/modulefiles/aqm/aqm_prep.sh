@@ -18,6 +18,8 @@ module load prod_util/${prod_util_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 
+module load netcdf/${netcdf_ver}
+
 module list
 
 set -x

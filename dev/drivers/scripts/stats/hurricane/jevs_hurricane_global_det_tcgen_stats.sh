@@ -5,7 +5,7 @@
 #PBS -q dev
 #PBS -l select=1:ncpus=1:mem=4GB
 ##PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
-#PBS -l walltime=00:30:00
+#PBS -l walltime=00:10:00
 #PBS -l debug=true
 
 set -x
@@ -33,14 +33,14 @@ module load prod_envir/${prod_envir_ver}
 source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
-export PDY=20231231
+export PDY=20241231
 
 #Define the directories of your TC genesis data and A/Bdeck files
-export COMINgenesis=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/TCgen
-export COMINadeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/adeck
-export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
-export COMINadeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/adeck
-export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2023/bdeck
+export COMINgenesis=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/TCgen
+export COMINadeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/adeck
+export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
+export COMINadeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/adeck
+export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/$USER/evs_tc_2024/bdeck
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d

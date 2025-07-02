@@ -8,6 +8,7 @@
 # =============================================================================
 
 import os
+from pathlib import Path
 from collections.abc import Iterable
 import numpy as np
 import subprocess
@@ -319,29 +320,85 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                                           filled_file_format_chunk)
     return filled_file_format
 
-def get_completed_jobs(completed_jobs_file):
-    completed_jobs = set()
-    if os.path.exists(completed_jobs_file):
-        with open(completed_jobs_file, 'r') as f:
-            completed_jobs = set(f.read().splitlines())
+def get_completed_jobs(completed_jobs_dir, job_type=''):
+    """
+    Returns a set of job names (e.g., 'job1', 'job2') that are marked complete
+    in completed_jobs_dir.
+    """
+    if not job_type:
+        job_dir = Path(completed_jobs_dir)
+    else:
+        job_dir = Path(completed_jobs_dir) / job_type
+
+    if job_dir.is_dir():
+        completed_jobs = {
+            p.name for p in job_dir.iterdir() 
+            if p.is_file() and p.name.startswith("job")
+        }
+    else:
+        completed_jobs = {}
+
     return completed_jobs
 
-def mark_job_completed(completed_jobs_file, job_name, job_type=""):
-    with open(completed_jobs_file, 'a') as f:
+def mark_job_completed(restart_dir, data_dir, verif_case, 
+                       completed_jobs_dirname, job_name, job_type=''):
+    """
+    Marks a job as completed by creating a blank file at:
+        data_dir/verif_case/completed_jobs_dirname[/job_type]/job_name
+    If SENDCOM is set, copies the file to:
+        restart_dir/completed_jobs_dirname[/job_type]/job_name
+    """ 
+
+    SENDCOM = os.environ.get('SENDCOM')
+    if SENDCOM is None:
+        e = f"FATAL ERROR: SENDCOM is not defined in the job card for {job_name}"
         if job_type:
-            f.write(job_type + "_" + job_name + "\n")
-        else:
-            f.write(job_name + "\n")
+            e+=f" (type: {job_type})"
+        raise ValueError(e)
+
+    restart_out = Path(restart_dir) / completed_jobs_dirname
+    data_out = Path(data_dir) / verif_case
+    if job_type:
+        restart_out = restart_out / job_type
+        data_out = data_out / 'METplus_output' / 'workdirs' / job_type / job_name / completed_jobs_dirname / job_type
+    else:
+        data_out = data_out / 'out' / 'workdirs' / job_name / completed_jobs_dirname
+
+    if not data_out.is_dir():
+        e = f"FATAL ERROR: Completed jobs directory does not exist: {data_out}"
+        raise FileNotFoundError(e)
+
+    job_file = data_out / job_name
+
+    # Create an empty file to mark completion
+    job_file.write_text("Completed successfully!\n")
+
+    if SENDCOM == "YES":
+        if not restart_out.is_dir():
+            e = f"FATAL ERROR: Completed jobs directory does not exist: {restart_out}"
+            raise FileNotFoundError(e)
+        run_shell_command(
+            ['cp', '-rpv', str(job_file), str(restart_out / '.')]
+        ) 
 
 def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 
                          run=None, step=None, model=None, vdate=None, vhr=None, 
                          verif_case=None, verif_type=None, vx_mask=None, 
-                         job_type=None, var_name=None, vhour=None, 
+                         job_type=None, var_name=None, vhour=None, fhr=None, 
                          fhr_start=None, fhr_end=None, fhr_incr=None, 
-                         njob=None, acc=None, nbrhd=None):
+                         njob=None, acc=None, nbrhd=None, nbrhd_pt=None):
     sub_dirs_in = []
     sub_dirs_out = []
     copy_files = []
+    SENDCOM = os.environ.get('SENDCOM')
+    if SENDCOM is None:
+        e = f"FATAL ERROR: SENDCOM is not defined in the job card"
+        if njob:
+            e+=f" for job{njob}"
+        if job_type:
+            e+=f" (type: {job_type})"
+        raise ValueError(e)
+
     if met_tool == "ascii2nc":
         check_if_none = [
             data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
@@ -370,7 +427,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
     elif met_tool == 'genvxmask':
         check_if_none = [
             data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
-            vdate, vhour, fhr_start, fhr_end, fhr_incr
+            vdate, vhour
         ]
         if any([var is None for var in check_if_none]):
             e = (f"FATAL ERROR: None encountered as an argument while copying"
@@ -391,14 +448,21 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             met_tool,
             f'{vx_mask}.{vdate}',
         ))
-        for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+        if fhr_start:
+            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+                copy_files.append(f'{vx_mask}_t{vhour}z_f{str(fhr).zfill(2)}.nc')
+        elif fhr:
             copy_files.append(f'{vx_mask}_t{vhour}z_f{str(fhr).zfill(2)}.nc')
+        else:
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" fhr output to COMOUT directory.")
+            raise TypeError(e)
     elif met_tool == 'grid_stat':
         if verif_case == "snowfall":
             check_if_none = [
                 data_dir, restart_dir, verif_case, verif_type, met_tool, 
-                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name, 
-                acc, nbrhd
+                vdate, vhour, model, var_name, 
+                acc, nbrhd, nbrhd_pt
             ]
             if any([var is None for var in check_if_none]):
                 e = (f"FATAL ERROR: None encountered as an argument while copying"
@@ -419,15 +483,25 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 met_tool,
                 f'{model}.{vdate}'
             ))
-            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+            if fhr_start:
+                for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+                    copy_files.append(
+                        f'{met_tool}_{model}_{var_name}*{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}{nbrhd_pt}*_'
+                        + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
+                    )
+            elif fhr:
                 copy_files.append(
-                    f'{met_tool}_{model}_{var_name}*{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
+                    f'{met_tool}_{model}_{var_name}*{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}{nbrhd_pt}*_'
                     + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
                 )
+            else:
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" fhr output to COMOUT directory.")
+                raise TypeError(e)
         else:
             check_if_none = [
                 data_dir, restart_dir, verif_case, verif_type, met_tool, 
-                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc, nbrhd
+                vdate, vhour, model, acc, nbrhd, nbrhd_pt
             ]
             if any([var is None for var in check_if_none]):
                 e = (f"FATAL ERROR: None encountered as an argument while copying"
@@ -448,15 +522,25 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 met_tool,
                 f'{model}.{vdate}'
             ))
-            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+            if fhr_start:
+                for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+                    copy_files.append(
+                        f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}{nbrhd_pt}*_'
+                        + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
+                    )
+            elif fhr:
                 copy_files.append(
-                    f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
+                    f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}{nbrhd_pt}*_'
                     + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
                 )
+            else:
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
+                     + f" fhr output to COMOUT directory.")
+                raise TypeError(e)
     elif met_tool == 'merged_ptype':
         check_if_none = [
             data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
-            vdate, vhour, fhr_start, fhr_end, fhr_incr, model, njob
+            vdate, vhour, model, njob
         ]
         if any([var is None for var in check_if_none]):
             e = (f"FATAL ERROR: None encountered as an argument while copying"
@@ -472,7 +556,17 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             model,
             met_tool,
         ))
-        for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+        if fhr_start:
+            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+                vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
+                idt = vdt - td(hours=int(fhr))
+                idate = idt.strftime('%Y%m%d')
+                ihour = idt.strftime('%H')
+                copy_files.append(
+                    f'{met_tool}_{verif_type}_{vx_mask}_job{njob}_'
+                    + f'init{idate}{ihour}_fhr{str(fhr).zfill(2)}.nc'
+                )
+        elif fhr:
             vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
             idt = vdt - td(hours=int(fhr))
             idate = idt.strftime('%Y%m%d')
@@ -481,6 +575,10 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 f'{met_tool}_{verif_type}_{vx_mask}_job{njob}_'
                 + f'init{idate}{ihour}_fhr{str(fhr).zfill(2)}.nc'
             )
+        else:
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" fhr output to COMOUT directory.")
+            raise TypeError(e)
     elif met_tool == 'pb2nc':
         check_if_none = [
             data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
@@ -590,7 +688,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
     elif met_tool == 'point_stat':
         check_if_none = [
             data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
-            vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name
+            vdate, vhour, model, var_name
         ]
         if any([var is None for var in check_if_none]):
             e = (f"FATAL ERROR: None encountered as an argument while copying"
@@ -611,15 +709,25 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             met_tool,
             f'{model}.{vdate}'
         ))
-        for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+        if fhr_start:
+            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+                copy_files.append(
+                    f'{met_tool}_{model}_{vx_mask}_{var_name}_OBS*_{str(fhr).zfill(2)}0000L_{vdate}_'
+                    + f'{vhour}0000V.stat'
+                )
+        elif fhr:
             copy_files.append(
                 f'{met_tool}_{model}_{vx_mask}_{var_name}_OBS*_{str(fhr).zfill(2)}0000L_{vdate}_'
                 + f'{vhour}0000V.stat'
             )
+        else:
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" fhr output to COMOUT directory.")
+            raise TypeError(e)
     elif met_tool == 'regrid_data_plane':
         check_if_none = [
             data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
-            vdate, vhour, fhr_start, fhr_end, fhr_incr, model, njob
+            vdate, vhour, model, njob
         ]
         if any([var is None for var in check_if_none]):
             e = (f"FATAL ERROR: None encountered as an argument while copying"
@@ -640,11 +748,21 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             met_tool,
             f'{model}.{vdate}'
         ))
-        for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+        if fhr_start:
+            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+                copy_files.append(
+                    f'{met_tool}_{model}_t{vhour}z_{verif_type}_{vx_mask}_job{njob}_'
+                    + f'fhr{str(fhr).zfill(2)}.nc'
+                )
+        elif fhr:
             copy_files.append(
                 f'{met_tool}_{model}_t{vhour}z_{verif_type}_{vx_mask}_job{njob}_'
                 + f'fhr{str(fhr).zfill(2)}.nc'
             )
+        else:
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
+                 + f" fhr output to COMOUT directory.")
+            raise TypeError(e)
     elif met_tool == 'stat_analysis':
         if job_type == 'gather':
             check_if_none = [
@@ -715,9 +833,14 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 print(f"Not copying restart files to restart_directory"
                       + f" {dest_path} because they already exist.")
             else:
-                run_shell_command(
-                    ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
-                )
+                if SENDCOM == "YES":
+                    run_shell_command(
+                        ['cp', '-rpvn', origin_path, os.path.join(dest_path,'.')]
+                    )
+                else:
+                    print(f"Not copying restart files to restart_directory "
+                          + f"{dest_path}.  Set SENDCOM to \"YES\" in the "
+                          + f"driver script to enable copy.")
 
 # Construct a file name given a template
 def fname_constructor(template_str, IDATE="YYYYmmdd", IHOUR="HH", 
@@ -875,7 +998,7 @@ def get_ccpa_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
             use_vh = use_vdate.strftime('%H')
             template = os.path.join(
                 indir, 
-                'ccpa.{VDATE}',
+                'atmos.{VDATE}','ccpa',
                 'ccpa.t{VHOUR}z.' + f'{obs_acc}h.hrap.{nest}.gb2'
             )
             ccpa_paths.append(fname_constructor(
@@ -932,7 +1055,7 @@ def get_mrms_qpe_templates(indir, vdates, obs_acc, target_acc, nest, paths=[]):
             use_vh = use_vdate.strftime('%H')
             template = os.path.join(
                 indir, 
-                'mrms.{VDATE}',
+                'atmos.{VDATE}','mrms',
                 'mrms.t{VHOUR}z.' + f'{obs_acc}h.{nest}.gb2'
             )
             mrms_paths.append(fname_constructor(

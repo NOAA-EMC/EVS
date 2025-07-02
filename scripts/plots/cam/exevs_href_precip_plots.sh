@@ -69,7 +69,7 @@ verif_type=ccpa
 > run_all_poe.sh
 
 for VX_MASK_LIST in $VX_MASK_LISTs ; do
- 	
+
   domain=`echo $VX_MASK_LIST | tr '[A-Z]' '[a-z]'`
 
 for stats in ets_fbias ratio_pod_csi fss ; do 
@@ -162,6 +162,12 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
         echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
+
+	if [ $VX_MASK_LIST = Alaska ] ; then
+	   echo "export obsv=\" - Validation: MRMS\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+        else
+           echo "export obsv=\" - Validation: CCPA\" " >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+        fi
 
         if [ $score_type = valid_hour_average ] ; then
           echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh

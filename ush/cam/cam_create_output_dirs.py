@@ -40,8 +40,21 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 MODELNAME = os.environ['MODELNAME']
-VDATE = os.environ['VDATE']
-vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
+if STEP == 'prep':
+    INITDATE = os.environ['INITDATE']
+    vdate_dt = datetime.strptime(INITDATE, '%Y%m%d')
+elif STEP == 'stats':
+    VDATE = os.environ['VDATE']
+    vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
+    COMOUTsmall = os.environ['COMOUTsmall']
+    RESTART_DIR = os.environ['RESTART_DIR']
+    COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
+    job_type = os.environ['job_type']
+elif STEP == 'plots':
+    VDATE = os.environ['VDATE']
+    vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
+    RESTART_DIR = os.environ['RESTART_DIR']
+    COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
 if VERIF_CASE == "precip":
     if STEP == 'prep':
         FHR_END_FULL = os.environ['FHR_END_FULL']
@@ -102,12 +115,6 @@ elif VERIF_CASE == "headline":
     if STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_hdl)
         COMOUTplots = os.environ['COMOUTplots']
-if STEP == 'stats':
-    COMOUTsmall = os.environ['COMOUTsmall']
-    RESTART_DIR = os.environ['RESTART_DIR']
-    job_type = os.environ['job_type']
-if STEP == 'plots':
-    RESTART_DIR = os.environ['RESTART_DIR']
 
 
 # Define data base directorie
@@ -144,15 +151,27 @@ for data_dir in data_dir_list:
 # Create job script base directory
 job_scripts_dirs = []
 if STEP == 'prep':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'prep_job_scripts'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'prep_job_scripts'))
 if STEP == 'stats':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'reformat'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'generate'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'gather'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'gather2'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'gather3'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'reformat'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'generate'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather3'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'reformat'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'generate'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'gather'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'gather2'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'gather3'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'reformat'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'generate'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather2'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather3'))
 if STEP == 'plots':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'plotting_job_scripts'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'out', COMPLETED_JOBS_DIR))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR))
 for job_scripts_dir in job_scripts_dirs:
     if not os.path.exists(job_scripts_dir):
         print(f"Creating job script directory: {job_scripts_dir}")
@@ -627,7 +646,7 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots, VERIF_CASE
         ))
-        for plot_group in ['precip']:
+        for plot_group in ['snowfall']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
@@ -664,7 +683,7 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in [
-                'cape', 'ceil_vis', 'precip', 'sfc_upper'
+                'sfc_upper'
             ]:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(

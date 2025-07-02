@@ -58,7 +58,7 @@ if proceed:
             COMINobsproc = os.environ['COMINobsproc']
             COMINnam = os.environ['COMINnam']
         elif VERIF_CASE == 'snowfall':
-            DCOMINsnow = os.environ['DCOMINsnow']
+            DCOMINnohrsc = os.environ['DCOMINnohrsc']
             OBS_ACC = os.environ['OBS_ACC']
             ACC = os.environ['ACC']
         elif VERIF_CASE == 'precip':
@@ -654,19 +654,21 @@ if proceed:
         if VERIF_CASE == 'precip':
             if NEST in ['conus', 'subreg']:
                 gen_templates.append(os.path.join(
-                    EVSINccpa, 
-                    'ccpa.{VDATE}',
+                    EVSINccpa,
+                    'atmos.{VDATE}',
+                    'ccpa',
                     'ccpa.t{VHOUR}z.01h.hrap.conus.gb2'
                 ))
             elif NEST in ['ak', 'pr', 'hi']:
                 gen_templates.append(os.path.join(
                     EVSINmrms, 
-                    'mrms.{VDATE}',
+                    'atmos.{VDATE}',
+                    'mrms',
                     'mrms.t{VHOUR}z.01h.'+NEST+'.gb2'
                 ))
         elif VERIF_CASE == 'snowfall':
             gen_templates.append(os.path.join(
-                DCOMINsnow,
+                DCOMINnohrsc,
                 '{VDATE}',
                 'wgrbbul',
                 'nohrsc_snowfall',

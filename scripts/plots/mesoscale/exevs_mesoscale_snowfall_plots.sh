@@ -35,8 +35,10 @@ if [ $evs_run_mode = production ]; then
 fi
 
 # Create Job Script 
-python $USHevs/mesoscale/mesoscale_plots_snowfall_create_job_scripts.py
+if [ ! -e ${RESTART_DIR}/completed_jobs/${EVAL_PERIOD}/completed_jobs.txt_${EVAL_PERIOD}_job${njob}.txt ]; then
+    python $USHevs/mesoscale/mesoscale_plots_snowfall_create_job_scripts.py
     export err=$?; err_chk
+fi
 
 export njob=$((njob+1))
 
@@ -86,20 +88,22 @@ else
 fi
 
 # Copy Plots Output to Main Directory
-for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
-  cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
-  export err=$?; err_chk
-done
+if [ $ncount_job -gt 0 ]; then
+  for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/out/.
+    export err=$?; err_chk
+  done
+fi
 
 # Tar and Copy output files to EVS COMOUT directory
-  find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##' -T -
+  find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar --transform='s#.*/##' -T -
 
 if [ $SENDCOM = YES ]; then
-    cp -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
+    cp -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar ${COMOUTplots}/.
 fi
 
 if [ $SENDDBN = YES ]; then
-        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar
+        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar
 fi
 
 

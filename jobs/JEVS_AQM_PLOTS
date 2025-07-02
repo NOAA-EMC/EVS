@@ -75,7 +75,7 @@ export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export EVSINaqm=${EVSINaqm:-${COMIN}/stats/${COMPONENT}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END})}
 export COMOUTheadline=${COMOUTheadline:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/headline.${VDATE_END})}
-mkdir -m 775 -p $COMOUT $COMOUTheadline
+mkdir -m 775 -p ${COMOUT} ${COMOUTheadline}
 
 export DATA_TYPE=${DATA_TYPE:-hourly}
 export restart_mode=${restart_mode:-YES}

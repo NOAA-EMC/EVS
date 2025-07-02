@@ -1051,7 +1051,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     else:
         title2 = f'{var_long_name} (unitless), {domain_string}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string}'
-              + f' {date_start_string} to {date_end_string}, {frange_string}')
+              + f' {date_start_string} to {date_end_string}, {frange_string}, '
+              + f'Validation: {str(VERIF_TYPE).upper()} ')
     title_center = '\n'.join([title1, title2, title3])
     ax.set_title(title_center) 
     logger.info("... Plotting complete.")
@@ -1136,8 +1137,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     if save_header:
         save_name = f'{save_header}.'+save_name
     save_subdir = os.path.join(
-        save_dir, f'{str(plot_group).lower()}', 
-        f'{str(time_period_savename).lower()}'
+        save_dir, f'{str(plot_group).lower()}'  
     )
     if not os.path.isdir(save_subdir):
         try:
@@ -1153,7 +1153,6 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
             os.path.join(
                 restart_dir,
                 f'{str(plot_group).lower()}',
-                f'{str(time_period_savename).lower()}',
                 save_name+'.png'
             )
         )

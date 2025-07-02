@@ -751,13 +751,25 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         [np.power(10.,y), 2.*np.power(10.,y)] 
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
-    round_to_nearest_categories = y_range_categories/20.
-    y_range = y_max-y_min
-    round_to_nearest =  round_to_nearest_categories[
+    margin = np.ceil(y_max) -np.floor(y_min)
+    if margin > 1:
+        round_to_nearest_categories = y_range_categories/2.
+        y_range = y_max-y_min
+        round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
-    ]
-    ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
-    ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+        ]
+        ylim_min = (np.floor(y_min/round_to_nearest)*round_to_nearest)- 0.5 * margin
+        ylim_max = (np.ceil(y_max/round_to_nearest)*round_to_nearest)+ 0.5 * margin
+    else:
+        round_to_nearest_categories = y_range_categories/0.2
+        y_range = y_max-y_min
+        round_to_nearest =  round_to_nearest_categories[
+        np.digitize(y_range, y_range_categories[:-1])
+        ]
+        ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest 
+        ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+
+
     if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
         ylim_min = float(
             np.format_float_scientific(ylim_min, unique=False, precision=3)
@@ -932,7 +944,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}')
+              + f'{date_start_string} to {date_end_string}, '
+              + f'Validation: {str(obtype).upper()} ')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=20

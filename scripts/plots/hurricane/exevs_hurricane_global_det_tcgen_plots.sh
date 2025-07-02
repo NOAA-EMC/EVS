@@ -6,7 +6,7 @@ export PS4=' + exevs_hurricane_global_det_tcgen_plots.sh line $LINENO: '
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 export YEAR=${YYYY}
-export TCGENdays="TC Genesis(05/01/${YEAR}-11/30/${YEAR})"
+export TCGENdays="TC Genesis (05/01/${YEAR}-11/30/${YEAR})"
 export basinlist="al ep wp"
 export modellist="gfs ecmwf cmc"
 
@@ -36,14 +36,21 @@ for basin in $basinlist; do
 for model in $modellist; do
 ### model do loop start
 
+
+export stormBasin=${basin}
+export stbasin=`echo ${stormBasin} | tr "[a-z]" "[A-Z]"`
+echo "${stbasin} upper case: AL/EP/WP"
+export basinname=${basin}
+export modelname=${model}
+
 export OUTPUT=${DATA}/${basin}_${model}
 if [ ! -d ${OUTPUT} ]; then mkdir -p ${OUTPUT}; fi
 
 #--- plot the Hits/False Alarms Distribution
 cd ${OUTPUT}
-cp ${USHevs}/hurricane/plots/hits_${basin}.py .
+cp ${USHevs}/${COMPONENT}/hits_${basin}.py .
 cp ${COMINstats}/tc_gen_${YEAR}_genmpr_${basin}_${model}.txt tc_gen_${YEAR}_genmpr.txt 
-grep "00    FYOY" tc_gen_${YEAR}_genmpr.txt > tc_gen_hits.txt
+awk '$NF == "FYOY"'  tc_gen_${YEAR}_genmpr.txt > tc_gen_hits.txt
 export hitfile="tc_gen_hits.txt"
 python hits_${basin}.py
 convert TC_genesis.png tcgen_hits_${basin}_${model}.gif
@@ -63,8 +70,7 @@ error=$?
 rm -f TC_genesis.png
 
 cp ${USHevs}/${COMPONENT}/false_${basin}.py .
-grep "00    FYON" tc_gen_${YEAR}_genmpr.txt > tc_gen_false.txt
-grep "NA    FYON" tc_gen_${YEAR}_genmpr.txt >> tc_gen_false.txt
+awk '$NF == "FYON"'  tc_gen_${YEAR}_genmpr.txt > tc_gen_false.txt
 export falsefile="tc_gen_false.txt"
 python false_${basin}.py
 convert TC_genesis.png tcgen_falseAlarm_${basin}_${model}.gif
@@ -114,12 +120,12 @@ export DATAplot=${DATA}/${basin}
 if [ ! -d ${DATAplot} ]; then mkdir -p ${DATAplot}; fi
 cd ${DATAplot}
 cp ${USHevs}/${COMPONENT}/tcgen_performance_diagram.py .
-grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_gfs.txt > dev_tc_gen_${YEAR}_ctc_${basin}_gfs.txt
-grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt > dev_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt
-grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_cmc.txt > dev_tc_gen_${YEAR}_ctc_${basin}_cmc.txt
-export CTCfile01="dev_tc_gen_${YEAR}_ctc_${basin}_gfs.txt"
-export CTCfile02="dev_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt"
-export CTCfile03="dev_tc_gen_${YEAR}_ctc_${basin}_cmc.txt"
+grep "GENESIS_OPS" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_gfs.txt > ops_tc_gen_${YEAR}_ctc_${basin}_gfs.txt
+grep "GENESIS_OPS" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt > ops_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt
+grep "GENESIS_OPS" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_cmc.txt > ops_tc_gen_${YEAR}_ctc_${basin}_cmc.txt
+export CTCfile01="ops_tc_gen_${YEAR}_ctc_${basin}_gfs.txt"
+export CTCfile02="ops_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt"
+export CTCfile03="ops_tc_gen_${YEAR}_ctc_${basin}_cmc.txt"
 python tcgen_performance_diagram.py
 convert tcgen_performance_diagram.png tcgen_performance_diagram_${basin}.gif
 

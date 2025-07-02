@@ -192,10 +192,12 @@ fi
 ###################################################################
 # Copy Plots Output to Main Directory
 ###################################################################
+shopt -s nullglob
 for CHILD_DIR in ${DATA}/out/workdirs/*; do
     cp -ruv $CHILD_DIR/* ${DATA}/out/.
     export err=$?; err_chk
 done
+shopt -u nullglob
 
 
 ###################################################################

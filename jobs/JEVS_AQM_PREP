@@ -49,16 +49,16 @@ export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-export USHevs=${USHevs:-$HOMEevs/ush}
-export MASKS=${MASKS:-$FIXevs/masks}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=${USHevs:-${HOMEevs}/ush}
+export MASKS=${MASKS:-${FIXevs}/masks}
 
 # Define COMIN/COMOUT variables:
 
-echo $COMPATH
+echo ${COMPATH}
 
 #
 #  The AirNOW obs in DCOM will continue to be updated after first
@@ -68,23 +68,39 @@ echo $COMPATH
 export INITDATE=${INITDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 export COMOUTproc=${COMOUTproc:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}}
 mkdir -p ${COMOUT} ${COMOUTproc}
 
-# alternative choice is dan option different from aqons
-export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+if [ "${VERIF_CASE}" == "grid2obs" ]; then
+    # alternative choice is dan option different from aqons
+    export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+    export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
+    export HOURLY_NCOL=${HOURLY_NCOL:-34}
+    export DAILY_NCOL=${DAILY_NCOL:-13}
+else
+    export DATA_TYPE=${DATA_TYPE:-abi}
+    if [ "${DATA_TYPE}" == "abi" ]; then
+        export DCOMINabi=${DCOMINabi:-${DCOMROOT}}
+        export GOES_EAST=${GOES_EAST:-g19}
+        export GOES_WEST=${GOES_WEST:-g18}
+        export AOD_SCAN_TYPE=${AOD_SCAN_TYPE:-AODC}
+        export ADP_SCAN_TYPE=${ADP_SCAN_TYPE:-ADPC}
+        export AOD_QC_NAME=${AOD_QC_NAME:-high}
+        export restart_mode=${restart_mode:-YES}
+    else
+        echo "DEBUG :: DATA_TYPE == ${DATA_TYPE} is not defined, set default value = abi"
+	export DATA_TYPE=abi
+    fi
+fi
 
-export HOURLY_NCOL=${HOURLY_NCOL:-34}
-export DAILY_NCOL=${DAILY_NCOL:-13}
 
 #######################################################################
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh
+${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB ${job} HAS COMPLETED NORMALLY."
