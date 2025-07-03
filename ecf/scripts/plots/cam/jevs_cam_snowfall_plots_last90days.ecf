@@ -1,4 +1,4 @@
-#PBS -N evs_cam_snowfall_plots
+#PBS -N evs_cam_snowfall_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -58,6 +58,7 @@ export RUN="atmos"
 export VERIF_CASE="snowfall"
 export MODELNAME=${COMPONENT}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
+export EVAL_PERIOD="last90days"
 
 ############################################################
 # Execute j-job
