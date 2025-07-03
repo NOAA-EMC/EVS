@@ -654,14 +654,16 @@ if proceed:
         if VERIF_CASE == 'precip':
             if NEST in ['conus', 'subreg']:
                 gen_templates.append(os.path.join(
-                    EVSINccpa, 
-                    'ccpa.{VDATE}',
+                    EVSINccpa,
+                    'atmos.{VDATE}',
+                    'ccpa',
                     'ccpa.t{VHOUR}z.01h.hrap.conus.gb2'
                 ))
             elif NEST in ['ak', 'pr', 'hi']:
                 gen_templates.append(os.path.join(
                     EVSINmrms, 
-                    'mrms.{VDATE}',
+                    'atmos.{VDATE}',
+                    'mrms',
                     'mrms.t{VHOUR}z.01h.'+NEST+'.gb2'
                 ))
         elif VERIF_CASE == 'snowfall':
