@@ -76,8 +76,8 @@ i=1
    export fhr_end
 
    # Define accumulation begin/end time
-   export ACCUM_BEG=${ACCUM_BEG:-`$NDATE $fhr ${IDATE}${vhr}`}
-   export ACCUM_END=${ACCUM_END:-`$NDATE $fhr_end ${IDATE}${vhr}`}
+   export ACCUM_BEG=${ACCUM_BEG:-`$NDATE $fhr ${INITDATE}${vhr}`}
+   export ACCUM_END=${ACCUM_END:-`$NDATE $fhr_end ${INITDATE}${vhr}`}
 
    # Increment fhr by 1 at the start of loop for each 24-h period
    # Correctly skips initial file (F00, F12, F24) that doesn't include necessary data
@@ -88,7 +88,7 @@ i=1
    # Search for required forecast files
    while [ $i -le $min_file_req ]; do
 
-      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${IDATE}/${modsys}.t${vhr}z.fv3_5km.f$(printf "%02d" $fhr).conus.grib2
+      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${INITDATE}/${modsys}.t${vhr}z.fv3_5km.f$(printf "%02d" $fhr).conus.grib2
 
       if [ -s $fcst_file ]; then
          echo "File number $i found"
@@ -109,22 +109,22 @@ i=1
 
    if [ $nfiles -eq $min_file_req ]; then
 
-      echo "Found all $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${IDATE} cycle at F${fhr_end}"
+      echo "Found all $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${INITDATE} cycle at F${fhr_end}"
 
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GenEnsProd_fcstCAM_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
 
       # Copy final output to $COMOUT
       if [ $SENDCOM = YES ]; then
-         mkdir -p $COMOUT/${modsys}.${IDATE}
-         for FILE in $DATA/pcp_combine/${modsys}.${IDATE}/*; do
+         mkdir -p $COMOUT/${RUN}.${INITDATE}/${modsys}
+         for FILE in $DATA/pcp_combine/${modsys}.${INITDATE}/*; do
             if [ -s "$FILE" ]; then
-               cp -v $FILE $COMOUT/${modsys}.${IDATE}
+               cp -v $FILE $COMOUT/${RUN}.${INITDATE}/${modsys}
             fi
          done
-         for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
+         for FILE in $DATA/sspf/${modsys}.${INITDATE}/*; do
             if [ -s "$FILE" ]; then
-               cp -v $FILE $COMOUT/${modsys}.${IDATE}
+               cp -v $FILE $COMOUT/${RUN}.${INITDATE}/${modsys}
             fi
          done
       fi
@@ -132,10 +132,10 @@ i=1
 
    else
 
-      echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. $min_file_req files are required."
+      echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${INITDATE} cycle. $min_file_req files are required."
       if [ $SENDMAIL = YES ]; then
          export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
-         echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
+         echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${INITDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
       fi
