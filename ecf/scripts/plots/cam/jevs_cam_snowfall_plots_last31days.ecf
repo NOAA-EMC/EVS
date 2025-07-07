@@ -1,13 +1,13 @@
-#PBS -N evs_cam_hrrr_grid2obs_stats_vhr_%VHR%
+#PBS -N evs_cam_snowfall_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=04:05:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=128GB
+#PBS -l walltime=00:35:00
+#PBS -l place=vscatter:exclhost,select=4:ncpus=128:mem=150GB
 #PBS -l debug=true
 
-export model=evs 
+export model=evs
 %include <head.h>
 %include <envir-p1.h>
 
@@ -16,7 +16,7 @@ export model=evs
 ############################################################
 set -x
 export COMPONENT=cam
-export STEP=stats
+export STEP=plots
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
@@ -35,9 +35,11 @@ module load nco/${nco_ver}
 module load cdo/${cdo_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
+module load proj/${proj_ver}
+module load geos/${geos_ver}
+module load imagemagick/${imagemagick_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
-module load bufr/${bufr_ver}
 module list
 
 ############################################################
@@ -48,18 +50,20 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
+export nproc=512
+export ncpu=128
 export USE_CFP=YES
-export nproc=128
 export NET="evs"
 export RUN="atmos"
-export VERIF_CASE="grid2obs"
-export MODELNAME="hrrr"
-export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
+export VERIF_CASE="snowfall"
+export MODELNAME=${COMPONENT}
+export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
+export EVAL_PERIOD="last31days"
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_CAM_STATS
+$HOMEevs/jobs/JEVS_CAM_PLOTS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

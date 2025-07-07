@@ -19,7 +19,8 @@ export MET_VERSION="${MET_VERSION%.}"
 
 # Logging
 export SAVE_DIR="${DATA}/${VERIF_CASE}/out/workdirs/job{njob}"
-export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart"
+export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart/${EVAL_PERIOD}"
+export COMPLETED_JOBS_DIR="${DATA}/${VERIF_CASE}/completed_jobs/${EVAL_PERIOD}"
 export COMPLETED_JOBS_FILE="completed_jobs_${EVAL_PERIOD}.txt"
 export LOG_TEMPLATE="${SAVE_DIR}/logs/EVS_verif_plotting_job{njob}_grid2obs_$$.out"
 export LOG_LEVEL="DEBUG"
