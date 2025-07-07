@@ -1,4 +1,4 @@
-#PBS -N jevs_wafs_plots
+#PBS -N jevs_wafs_atmos_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
