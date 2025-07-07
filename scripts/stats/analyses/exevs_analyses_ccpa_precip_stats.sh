@@ -52,16 +52,16 @@ then
 	echo $DATE > curdate
 	DAY=`cut -c 1-8 curdate`
 	HOUR=`cut -c 9-10 curdate`
-	if [ -e $EVSINccpa/ccpa.${DAY}/ccpa.t${HOUR}z.01h.hrap.conus.gb2 ]
+	if [ -e $EVSINccpa/atmos.${DAY}/ccpa/ccpa.t${HOUR}z.01h.hrap.conus.gb2 ]
         then
          let "ccpanum=ccpanum+1"
-	 cp $EVSINccpa/ccpa.${DAY}/ccpa.t${HOUR}z.01h.hrap.conus.gb2  $DATA/ccpa
+	 cp $EVSINccpa/atmos.${DAY}/ccpa/ccpa.t${HOUR}z.01h.hrap.conus.gb2  $DATA/ccpa
         else
-         echo  "WARNING: $EVSINccpa/ccpa.${DAY}/ccpa.t${HOUR}z.01h.hrap.conus.gb2 is missing, METplus will not run"
+         echo  "WARNING: $EVSINccpa/atmos.${DAY}/ccpa/ccpa.t${HOUR}z.01h.hrap.conus.gb2 is missing, METplus will not run"
          if [ $SENDMAIL = "YES" ]; then
            export subject="CONUS Precip Analysis Missing for EVS ${COMPONENT}"
            echo "Warning: The CONUS Analysis file is missing for valid date ${DAY}. METplus will not run." > mailmsg
-           echo "Missing file is $EVSINccpa/ccpa.${DAY}/ccpa.t${HOUR}z.01h.hrap.conus.gb2" >> mailmsg
+           echo "Missing file is $EVSINccpa/atmos.${DAY}/ccpa/ccpa.t${HOUR}z.01h.hrap.conus.gb2" >> mailmsg
            echo "Job ID: $jobid" >> mailmsg
            cat mailmsg | mail -s "$subject" $MAILTO
          fi
