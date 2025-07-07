@@ -14,7 +14,7 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_analyses_precip_ccpa_fix/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -47,8 +47,8 @@ source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
-export EVSINccpa=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}/prep/cam
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
+export EVSINccpa=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}/prep/cam
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 
 export vhr
