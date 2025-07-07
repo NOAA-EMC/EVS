@@ -112,8 +112,11 @@ fi
 ###################################################################
 shopt -s nullglob
 for CHILD_DIR in ${DATA}/workdirs/*; do
-    cp -ruv ${CHILD_DIR}/* ${DATA}/.
-    export err=$?; err_chk
+    files=("$CHILD_DIR"/*)
+    if [ ${#files[@]} -gt 0 ]; then
+        cp -ruv "$CHILD_DIR"/* "${DATA}/."
+        export err=$?; err_chk
+    fi
 done
 shopt -u nullglob
 
@@ -155,7 +158,7 @@ if [ $vhr = 23 ]; then
          HREF_MODS="href_pmmn href_prob"
 
          for HREF_MOD in ${HREF_MODS}; do
-	    export HREF_MOD
+       export HREF_MOD
             run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstHREF_obsMRMS_gatherByDay.conf
             export err=$?; err_chk
          done
