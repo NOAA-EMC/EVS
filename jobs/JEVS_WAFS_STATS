@@ -93,7 +93,7 @@ export MASKS=${MASKS:-$FIXevs/masks}
 ############################################
 # Execute the script using MPMD
 ############################################
-$SCRIPTSevs/exevs_wafs_stats.sh
+$SCRIPTSevs/exevs_wafs_atmos_stats.sh
 export err=$?; err_chk
 
 echo "JOB $job HAS COMPLETED NORMALLY!"

@@ -46,7 +46,6 @@ export RUN=atmos
 export VERIF_CASE=grid2grid
 
 export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/$evs_ver_2d}
-#export COMIN=/lfs/h1/ops/prod/com/${NET}/${evs_ver_2d}
 #For COMOUT
 export COMROOT=/lfs/h2/emc/ptmp/$USER
 
