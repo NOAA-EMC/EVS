@@ -1470,7 +1470,6 @@ def calculate_stat(logger, model_data, stat):
          stat_values = np.sqrt(var_f + var_o - 2*np.sqrt(var_f*var_o)*R)
    elif stat == 'pcor' or stat == 'corr':
       if line_type == 'SL1L2':
-         #var_f = ffbar - fbar*obar
          var_f = ffbar - fbar*fbar
          var_o = oobar - obar*obar
          covar = fobar - fbar*obar

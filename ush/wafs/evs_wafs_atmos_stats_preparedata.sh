@@ -206,7 +206,6 @@ if [ $runMETplus = yes ] ; then
     # FCST_GRID_STAT_INPUT_DIR=$GRID_STAT_INPUT_BASE
     # GRID_STAT_OUTPUT_DIR=$STATSDIR
     ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATAmpmd/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-    #INPUT_BASE = {ENV[STATSOUTsmall]}=$STATSDIR/$RUN.$VDATE
     #STAT_ANALYSIS_OUTPUT_DIR is defined in config.evs.wafs.standalone, and created & used by StatAnalysis_fcstWAFS*
     ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}${VAR}_GatherbyDay.conf
 fi
