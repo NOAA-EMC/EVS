@@ -1,9 +1,9 @@
-#PBS -N jevs_nfcens_wave_grid2obs_plots
+#PBS -N jevs_nfcens_wave_grid2obs_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=00:10:00
 #PBS -l place=vscatter:exclhost,select=2:ncpus=128:mem=500G
 #PBS -l debug=true
 
@@ -49,11 +49,12 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT=/lfs/h2/emc/ptmp/$USER
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}
+export EVAL_PERIOD="last31days"
 
 export run_mpi='yes'
 export gather='yes'
 
-export job=${PBS_JOBNAME:-jevs_nfcens_wave_grid2obs_plots}
+export job=${PBS_JOBNAME:-jevs_nfcens_wave_grid2obs_plots_last31days}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)

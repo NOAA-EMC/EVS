@@ -8,7 +8,7 @@
 #                    NFCENSv2: Add FNMOC and GEFS model to compare against NFCENS (07/2024)
 #                    NFCENSv2: Image names was updated. (08/2024)
 #                    NFCENSv2: mpmd was addressed (03/2025)
-#
+#                    NFCENSv2: Separated last31days and last90days plots (07/2025).    
 # Usage:                                                                        
 #  Parameters: None                                                             
 #  Input files:                                                                 
@@ -150,7 +150,8 @@ export err=$?; err_chk
 #######################
 # Gather all the files 
 #######################
-periods='LAST31DAYS LAST90DAYS'
+periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
+
 if [ $gather = yes ] ; then
   nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
   echo "Found ${nc} ${DATA}/images/*.png "
