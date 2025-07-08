@@ -543,10 +543,6 @@ elif STEP == 'stats':
                    )
 
             else:
-#                pstat_file_exist = cutil.check_pstat_files(job_env_vars_dict)
-#                if pstat_file_exist:
-#                    print(f"skip this run, pstat already exist")
-#                else:
                   completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                   if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
                       pass
