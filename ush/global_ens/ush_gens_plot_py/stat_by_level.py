@@ -550,6 +550,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -557,6 +558,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         x_vals_metric1 = pivot_metric1[str(model_list[m])].values
         x_vals_metric1_mean = np.nanmean(x_vals_metric1)
         if metric2_name is not None:
@@ -587,9 +590,10 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
             else:
                 x_vals_metric_min = np.nanmin(x_vals_metric1)
                 x_vals_metric_max = np.nanmax(x_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 x_mod_min = x_vals_metric_min
                 x_mod_max = x_vals_metric_max
+                n_mods+=1
             else:
                 x_mod_min = np.nanmin([x_mod_min, x_vals_metric_min])
                 x_mod_max = np.nanmax([x_mod_max, x_vals_metric_max])
