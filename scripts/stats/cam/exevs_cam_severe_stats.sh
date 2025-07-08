@@ -31,15 +31,7 @@ if [ -s $EVSINspclsr/${obs_lsr_file} ]; then
    obs_lsr_found=1
 
 else
-   if [ $SENDMAIL = YES ]; then
-      export subject="SPC LSR Prep Data Missing for EVS ${COMPONENT}"
-      echo "Warning: The ${REP_DATE} SPC LSR file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-      echo "Missing file is $EVSINspclsr/${obs_lsr_file}" >> mailmsg
-      echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $MAILTO
-   else
-      echo "WARNING: The ${REP_DATE} SPC LSR file is missing for valid date ${VDATE}. METplus will not run."
-   fi
+   echo "WARNING: The ${REP_DATE} SPC LSR file is missing for valid date ${VDATE}. METplus will not run."
 
 fi
 
@@ -47,15 +39,7 @@ if [ -s $EVSINspclsr/${obs_ppf_file} ]; then
    obs_ppf_found=1
 
 else
-   if [ $SENDMAIL = YES ]; then
-      export subject="SPC LSR Prep Data Missing for EVS ${COMPONENT}"
-      echo "Warning: The ${REP_DATE} SPC PPF file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-      echo "Missing file is $EVSINspclsr/${obs_ppf_file}" >> mailmsg
-      echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $MAILTO
-   else
-      echo "WARNING: The ${REP_DATE} SPC PPF file is missing for valid date ${VDATE}. METplus will not run."
-   fi
+   echo "WARNING: The ${REP_DATE} SPC PPF file is missing for valid date ${VDATE}. METplus will not run."
 
 fi
 
@@ -146,14 +130,7 @@ done
 
 # Send missing data alert if any forecast files are missing
 if [ -s $DATA/missing_fcst_list ]; then
-   if [ $SENDMAIL = YES ]; then
-      export subject="${MODELNAME} SSPF Prep Data Missing for EVS ${COMPONENT}"
-      echo "Warning: ${MODELNAME} SSPF forecast file(s) is missing for valid date ${VDATE}12. METplus will not run." > mailmsg
-      echo -e "`cat $DATA/missing_fcst_list`" >> mailmsg
-      echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $MAILTO
-   fi
-
+   echo "Warning: ${MODELNAME} SSPF forecast file(s) is missing for valid date ${VDATE}12. METplus will not run."
 fi
 
 

@@ -49,13 +49,6 @@ do
        echo $fhr >> $DATA/fcstmiss
        let "fcstmiss=fcstmiss+1"
        echo "WARNING: File $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 is missing."
-       if [ $SENDMAIL = "YES" ]; then
-        export subject="NAM Firewx File Missing for EVS ${COMPONENT}"
-        echo "Warning: The NAM Firewx file is missing for valid date ${VDATE}." > mailmsg
-        echo "Missing file is $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2" >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $MAILTO
-       fi
      fi
      fi
      let "shr=shr+1"
@@ -130,13 +123,6 @@ then
   fi
 else
   echo "WARNING: File $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum} is missing."
-  if [ $SENDMAIL = "YES" ]; then
-   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-   echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-   echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum}" >> mailmsg
-   echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $MAILTO
-  fi
 fi
 
 echo $obfound
