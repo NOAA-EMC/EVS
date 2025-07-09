@@ -34,7 +34,6 @@ DCOMINecmwf_precip = os.environ['DCOMINecmwf_precip']
 DCOMINfnmoc = os.environ['DCOMINfnmoc']
 DCOMINimd = os.environ['DCOMINimd']
 DCOMINjma = os.environ['DCOMINjma']
-DCOMINjma_precip = os.environ['DCOMINjma_precip']
 DCOMINmetfra_precip = os.environ['DCOMINmetfra_precip']
 DCOMINukmet = os.environ['DCOMINukmet']
 DCOMINukmet_precip = os.environ['DCOMINukmet_precip']
@@ -370,9 +369,6 @@ global_det_model_dict = {
             'input_anl_file_format': os.path.join(DCOMINjma,
                                                   'jma_{hem?fmt=str}'
                                                   +'_{init?fmt=%H}'),
-            'input_precip_file_format': os.path.join(DCOMINjma_precip, 'jma_'
-                                                     +'{init?fmt=%Y%m%d%H}00'
-                                                     +'.grib'),
             'inithours': ['00', '12'],
             'fcst_hrs': range(0, 192+24, 24)},
     'metfra': {'input_precip_file_format': os.path.join(DCOMINmetfra_precip,
