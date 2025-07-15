@@ -92,7 +92,7 @@ else:
               ]) 
         if STEP == "prep":
             print(
-                "Done making working directories for child prcoesses."
+                "Done making working directories for child processes."
             )
         elif STEP == "stats":
             print(
