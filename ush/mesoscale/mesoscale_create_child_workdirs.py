@@ -89,7 +89,6 @@ else:
                 os.makedirs(workdir)
               cutil.run_shell_command([
                 'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
-
               ]) 
         if STEP == "prep":
             print(
