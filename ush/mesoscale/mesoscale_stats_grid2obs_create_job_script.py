@@ -299,12 +299,12 @@ elif job_type == 'generate':
         print('testing mask file RSRS')
         if int(VHOUR) < 12:
             spc_mask_list = glob.glob(os.path.join(
-                  EVSINspcotlk,f'spc_otlk.*',
+                  EVSINspcotlk,f'atmos.*',f'spc_otlk',
                   f'spc_otlk.*.v*-{VDATE}12.G221*'
             ))  
         else:
             spc_mask_list =  glob.glob(os.path.join(
-                  EVSINspcotlk,f'spc_otlk.*',
+                  EVSINspcotlk,f'atmos.*',f'spc_otlk',
                   f'spc_otlk.*.v{VDATE}*G221*'
             ))  
         job_dependent_vars['MASK_POLY_LIST'] = {
