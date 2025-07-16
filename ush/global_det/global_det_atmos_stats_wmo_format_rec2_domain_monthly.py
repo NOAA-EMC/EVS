@@ -204,6 +204,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
                 wmo_v = str(
                     round(float(stat_line.iloc[0]['WMO_WEIGHTED_MEAN']),3)
                 )
+                wmo_n = stat_line['TOTAL'].values[0]
             else:
                 wmo_v = 'nil'
             if wmo_sc == 'sd' and str(wmo_s) == '12':
@@ -222,7 +223,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
             VDATE_monthly_rec2_lines.append(
                 f"centre={wmo_centre},model={wmo_model},d={wmo_d},"
                 +f"ref={wmo_ref},par={wmo_par},sc={wmo_sc},"
-                +f"dom={wmo_dom},t={wmo_t},s={wmo_s},v={wmo_v}\n"
+                +f"dom={wmo_dom},t={wmo_t},s={wmo_s},n={wmo_n},v={wmo_v}\n"
             )
 
 # Write monthly file
