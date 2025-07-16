@@ -65,8 +65,6 @@ if [ $USE_CFP = YES ]; then
             nselect=$(cat $PBS_NODEFILE | wc -l)
 	    nnp=$(($nselect * $nproc))
 	    launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
-            # launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
-	    # ----
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -90,7 +88,7 @@ for CHILD_DIR in ${DATA}/${VERIF_CASE}/out/workdirs/*; do
 done
 
 # Tar and Copy output files to EVS COMOUT directory
-   find ${DATA}/${VERIF_CASE}/out/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##' -T -
+    tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar  ${DATA}/${VERIF_CASE}/out/sfc_upper/*.png  --transform='s#.*/##'  -T -
 
 if [ $SENDCOM = YES ]; then
     cp -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
