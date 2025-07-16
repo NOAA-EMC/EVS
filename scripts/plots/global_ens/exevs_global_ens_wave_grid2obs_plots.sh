@@ -14,6 +14,10 @@
 # 6- Updated all image names to be lastXXdays instead of pastXXdays. tar files have lastXXdays for waves plots.
 # 7- added obs name to image title.
 # 8- Updated walltime for global_ens wave prep.
+# 
+# Updates on 202507:
+# Separated last31days and last90days plots.
+#
 #
 # Purpose of Script: Run the grid2obs plots for any global wave model           
 #                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NWPS)    
@@ -136,7 +140,8 @@ fi
 #######################
 # Gather all the files 
 #######################
-periods='LAST31DAYS LAST90DAYS'
+periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
+
 if [ $gather = yes ] ; then
   echo "copying all images into one directory"
   for FILE in ${DATA}/wave/*png ; do

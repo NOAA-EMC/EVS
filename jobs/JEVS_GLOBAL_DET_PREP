@@ -70,7 +70,6 @@ export DCOMINecmwf_precip=${DCOMINecmwf_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export DCOMINfnmoc=${DCOMINfnmoc:-$DCOMROOT/navgem}
 export DCOMINimd=${DCOMINimd:-$DCOMROOT/${INITDATE}/wgrbbul/ncmrwf_gdas}
 export DCOMINjma=${DCOMINjma:-$DCOMROOT/${INITDATE}/wgrbbul}
-export DCOMINjma_precip=${DCOMINjma_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export DCOMINmetfra_precip=${DCOMINmetfra_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export DCOMINukmet=${DCOMINukmet:-$DCOMROOT/${INITDATE}/wgrbbul/ukmet_hires}
 export DCOMINukmet_precip=${DCOMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
