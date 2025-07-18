@@ -88,13 +88,11 @@ else:
               if not os.path.exists(workdir):
                 os.makedirs(workdir)
               cutil.run_shell_command([
-                'find', '.', '-type', 'd', '-not', '-path',
-                '\"*workdirs*\"', '-not', '-path', '\"*job*\"', '-exec',
                 'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
               ]) 
         if STEP == "prep":
             print(
-                "Done making working directories for child prcoesses."
+                "Done making working directories for child processes."
             )
         elif STEP == "stats":
             print(
