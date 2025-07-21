@@ -297,29 +297,25 @@ elif job_type == 'generate':
     }
     if NEST == 'spc_otlk':
         print('testing mask file RSRS')
+        if int(VHOUR) < 12:
+            spc_mask_list = glob.glob(os.path.join(
+                  EVSINspcotlk,f'atmos.*',f'spc_otlk',
+                  f'spc_otlk.*.v*-{VDATE}12.G221*'
+            ))  
+        else:
+            spc_mask_list =  glob.glob(os.path.join(
+                  EVSINspcotlk,f'atmos.*',f'spc_otlk',
+                  f'spc_otlk.*.v{VDATE}*G221*'
+            ))  
         job_dependent_vars['MASK_POLY_LIST'] = {
             'exec_value': '',
             'bash_value': '',
             'bash_conditional': '[[ ${VHOUR} -lt 12 ]]',
             'bash_conditional_value': '"' + ', '.join(
-                glob.glob(os.path.join(
-                    EVSINspcotlk,f'spc_otlk.*',
-                    f'spc_otlk.*.v*-{VDATE}12.G221*'
-                   # '''
-                   # MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
-                   # f'spc_otlk_*_v*-{VDATE}1200_for{VHOUR}Z*'
-                   # '''
-                ))
+                   spc_mask_list
             ) + '"',
             'bash_conditional_else_value': '"' + ', '.join(
-                glob.glob(os.path.join(
-                    EVSINspcotlk,f'spc_otlk.*',
-                    f'spc_otlk.*.v{VDATE}*G221*'
-                   # '''
-                   # MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
-                   # f'spc_otlk_*_v{VDATE}*for{VHOUR}Z*'
-                   # '''
-                ))
+                    spc_mask_list
             ) + '"'
         }
         print('maskRSRS',job_dependent_vars['MASK_POLY_LIST'])
@@ -531,10 +527,10 @@ elif STEP == 'stats':
                       )
                    completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                    job_cmd_list_iterative.append(
-                       "python -c "
+                       f"if [ $FHR == $FHR_END ]; then python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
                        + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
-                       + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                       + f"\"job{njob}\", job_type=\"{job_type}\")'; fi"
                    )
                    completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
                    completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
@@ -543,51 +539,50 @@ elif STEP == 'stats':
                    )
 
             else:
-                pstat_file_exist = cutil.check_pstat_files(job_env_vars_dict)
-                if pstat_file_exist:
-                    print(f"skip this run, pstat already exist")
-                else:
                   completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                   if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
                       pass
                   else:
-                   job_cmd_list_iterative.append(
+                   if NEST == "spc_otlk" and not spc_mask_list:
+                       pass
+                   else: 
+                     job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
                        + f'PointStat_fcst{COMPONENT.upper()}_'
                        + f'obs{VERIF_TYPE.upper()}.conf'
-                   )
-                   if SENDCOM == 'YES':
-                     job_cmd_list_iterative.append(
-                       f'python -c '
-                       + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
-                       + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                       + f'njob=\\\"{njob}\\\", '
-                       + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                       + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                       + 'vx_mask=\\\"${NEST}\\\", '
-                       + 'met_tool=\\\"point_stat\\\", '
-                       + 'vdate=\\\"${VDATE}\\\", '
-                       + 'vhour=\\\"${VHOUR}\\\", '
-                       + 'fhr_start=\\\"${FHR_START}\\\", '
-                       + 'fhr_end=\\\"${FHR_END}\\\", '
-                       + 'fhr_incr=\\\"${FHR_INCR}\\\", '
-                       + 'model=\\\"${MODELNAME}\\\", '
-                       + 'var_name=\\\"${VAR_NAME}\\\"'
-                       + ')\"'
                      )
-                   completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
-                   job_cmd_list_iterative.append(
+                     if SENDCOM == 'YES':
+                       job_cmd_list_iterative.append(
+                         f'python -c '
+                         + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                         + f'njob=\\\"{njob}\\\", '
+                         + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                         + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                         + 'vx_mask=\\\"${NEST}\\\", '
+                         + 'met_tool=\\\"point_stat\\\", '
+                         + 'vdate=\\\"${VDATE}\\\", '
+                         + 'vhour=\\\"${VHOUR}\\\", '
+                         + 'fhr_start=\\\"${FHR_START}\\\", '
+                         + 'fhr_end=\\\"${FHR_END}\\\", '
+                         + 'fhr_incr=\\\"${FHR_INCR}\\\", '
+                         + 'model=\\\"${MODELNAME}\\\", '
+                         + 'var_name=\\\"${VAR_NAME}\\\"'
+                         + ')\"'
+                       )
+                     completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+                     job_cmd_list_iterative.append(
                        "python -c "
                        + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
                        + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
-                   )
-                   completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
-                   completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
-                   job_cmd_list_iterative.append(
-                     f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
-                   )
+                     )
+                     completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
+                     completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
+                     job_cmd_list_iterative.append(
+                       f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
+                     )
     elif job_type == 'gather':
       completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
       if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, "completed_jobs", completed_jobs_file_full)):
