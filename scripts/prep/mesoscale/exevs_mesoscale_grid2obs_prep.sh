@@ -1,7 +1,8 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_cam_severe_prep.sh
-# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
+# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov),
+#                 Perry C. Shafran (perry.shafran@noaa.gov)
 # Purpose of Script: This script preprocesses SPC data 
 #                    (outlook areas) for mesoscale verification.
 # History Log:
