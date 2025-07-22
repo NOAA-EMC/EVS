@@ -467,9 +467,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             pivot_ci_upper2 = pivot_ci_upper2.reindex(idx, fill_value=np.nan)
     if (metric2_name and (pivot_metric1.empty or pivot_metric2.empty)):
         print_varname = df['FCST_VAR'].tolist()[0]
-        logger.warning(
-            f"Could not find (and cannot plot) {metric1_name} and/or"
-            + f" {metric2_name} stats for {print_varname} at any level. "
+        logger.info(
+            f"Unable to plot {metric1_name} and/or"
+            + f" {metric2_name} stats for {print_varname} at any level due to lack of data. "
             + f"Continuing ..."
         )
         plt.close(num)
@@ -478,9 +478,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         return None
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
-        logger.warning(
-            f"Could not find (and cannot plot) {metric1_name}"
-            + f" stats for {print_varname} at any level. "
+        logger.info(
+            f"Unable to plot {metric1_name}"
+            + f" stats for {print_varname} at any level due to lack of data. "
             + f"Continuing ..."
         )
         plt.close(num)

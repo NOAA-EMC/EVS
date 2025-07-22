@@ -15,7 +15,7 @@ import bisect
 import numpy as np
 
 
-valid_date = os.environ['VDATE'] 
+valid_date = os.environ['INITDATE'] 
 vhr = os.environ['vhr']
 
 YYYY = int(valid_date[0:4])

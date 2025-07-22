@@ -49,7 +49,7 @@ export maskpath=$MASKS
 export vday=$VDATE
 
 #Define the spc outlook reqions mask file path
-export SPCoutlookMask=$EVSINspcotlk/$MODELNAME/spc.$VDATE
+export SPCoutlookMask=$EVSINspcotlk/$RUN.$VDATE/$MODELNAME/spc.$VDATE
 
 
 

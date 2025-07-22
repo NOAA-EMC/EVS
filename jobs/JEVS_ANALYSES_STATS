@@ -80,7 +80,7 @@ export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 mkdir -p $COMOUT
 export COMOUTsmall=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 export COMOUTfinal=${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}
-mkdir -p $COMOUTsmall $COMOUTfinal
+mkdir -p $COMOUTsmall 
 
 #######################################################################
 # Execute the script.

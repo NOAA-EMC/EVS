@@ -215,13 +215,7 @@ done
 
 # Send missing data alert if any forecast files are missing
 if [ $nmiss -ge 1 ]; then
-   if [ $SENDMAIL = YES ]; then
-      export subject="${DOM} ${MODELNAME} Data Missing for EVS ${COMPONENT}"
-      echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
-      echo -e "`cat $DATA/job${JOBNUM}_missing_fcst_list`" >> mailmsg
-      echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $MAILTO
-   fi
+    echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${vhr}. METplus will not run."
 fi
 
 
@@ -241,20 +235,14 @@ else
 fi
 
 
-export obs_file=mrms.${VDATE}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_${VDATE}-${vhr}0000.${VERIF_GRID}.nc
-export OBS_INPUT_TEMPLATE=mrms.{valid?fmt=%Y%m%d}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_{valid?fmt=%Y%m%d}-{valid?fmt=%H}0000.${VERIF_GRID}.nc
+export obs_file=${RUN}.${VDATE}/mrms/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_${VDATE}-${vhr}0000.${VERIF_GRID}.nc
+export OBS_INPUT_TEMPLATE=${RUN}.{valid?fmt=%Y%m%d}/mrms/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_{valid?fmt=%Y%m%d}-{valid?fmt=%H}0000.${VERIF_GRID}.nc
 
 if [ -s $EVSINmrms/${obs_file} ]; then
    obs_found=1
 
 else
-   if [ $SENDMAIL = YES ]; then
-      export subject="MRMS Prep Data Missing for EVS ${COMPONENT}"
-      echo "WARNING: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
-      echo "Missing file is $EVSINmrms/${obs_file}" >> mailmsg
-      echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $MAILTO
-   fi
+    echo "WARNING: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run."
 fi
 
 

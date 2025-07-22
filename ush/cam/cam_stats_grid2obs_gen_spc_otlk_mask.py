@@ -22,6 +22,7 @@ metplus_launcher = os.environ['metplus_launcher']
 machine_conf = os.path.join(
     os.environ['PARMevs'], 'metplus_config', 'machine.conf'
 )
+RUN = os.environ['RUN']
 EVSINspcotlk = os.environ['EVSINspcotlk']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
 
@@ -103,7 +104,7 @@ for OTLK in OTLKs:
         try:
             N_REC = cutil.run_shell_command([
                 'gis_dump_dbf', 
-                os.path.join(EVSINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
+                os.path.join(EVSINspcotlk,f"{RUN}.{VDATE}/spc_otlk/{SHP_FILE}.dbf"), 
                 '|', 'grep', 'n_records', '|', 'cut', '-d\'=\'', '-f2', '|', 'tr', 
                 '-d', '\' \''
             ], capture_output=True)
@@ -112,7 +113,7 @@ for OTLK in OTLKs:
                 for REC in np.arange(int(N_REC)):
                     NAME = cutil.run_shell_command([
                         'gis_dump_dbf', 
-                        os.path.join(EVSINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
+                        os.path.join(EVSINspcotlk,f"{RUN}.{VDATE}/spc_otlk/{SHP_FILE}.dbf"), 
                         '|', 'egrep', '-A', '5', f'"^Record {REC}"', '|', 'tail',
                         '-1', '|', 'cut', '-d\'"\'', '-f2'
                     ], capture_output=True)

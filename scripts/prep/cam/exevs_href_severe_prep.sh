@@ -39,13 +39,13 @@ if [ $vhr -eq 00 ];then
 
    nloop=1
 
-   export IDATE_lag=${IDATE_lag:-`$NDATE -12 ${IDATE}${vhr} | cut -c 1-8`}
+   export IDATE_lag=${IDATE_lag:-`$NDATE -12 ${INITDATE}${vhr} | cut -c 1-8`}
 
-   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
-   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
-   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
-   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${IDATE}
-   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${IDATE}
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${INITDATE}
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${INITDATE}
    export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE_lag}
    export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE_lag}
    export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE_lag}
@@ -65,16 +65,16 @@ elif [ $vhr -eq 12 ]; then
 
    nloop=2
 
-   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
-   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
-   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
-   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${IDATE}
-   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${IDATE}
-   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
-   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
-   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
-   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${IDATE}
-   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${IDATE}
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${INITDATE}
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${INITDATE}
+   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
+   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
+   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
+   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${INITDATE}
+   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${INITDATE}
 
    export cyc_lag6=06
    export cyc_lag12=00
@@ -124,8 +124,8 @@ i=1
    fi
 
    # Define accumulation begin/end time
-   export ACCUM_BEG=`$NDATE $fhr_beg ${IDATE}${vhr}`
-   export ACCUM_END=`$NDATE $fhr_end ${IDATE}${vhr}`
+   export ACCUM_BEG=`$NDATE $fhr_beg ${INITDATE}${vhr}`
+   export ACCUM_END=`$NDATE $fhr_end ${INITDATE}${vhr}`
 
 
    # Loop over all members to check that they exist
@@ -203,25 +203,20 @@ i=1
          export nmem="10"
          export ens_thresh="0.7"
       fi
-      echo "Found $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${IDATE} cycle at F${fhr_end}"
+      echo "Found $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${INITDATE} cycle at F${fhr_end}"
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GenEnsProd_fcstHREF_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
 
       if [ $SENDCOM = YES ]; then
-         mkdir -p $COMOUT/${modsys}.${IDATE}
-         for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
-            cp -v $FILE $COMOUT/${modsys}.${IDATE}
+         mkdir -p $COMOUT/${RUN}.${INITDATE}/${modsys}
+         for FILE in $DATA/sspf/${modsys}.${INITDATE}/*; do
+            cp -v $FILE $COMOUT/${RUN}.${INITDATE}/${modsys}
          done
       fi
 
    else
 
-      if [ $SENDMAIL = YES ]; then
-         export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
-         echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
-         echo -e "`cat missing_file_list`" >> mailmsg
-         cat mailmsg | mail -s "$subject" $MAILTO
-      fi
+      echo "WARNING: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${INITDATE} cycle. At least $min_file_req files are required. METplus will not run."
 
    fi
 

@@ -22,6 +22,7 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
 njob = os.environ['njob']
+eval_period = os.environ['EVAL_PERIOD']
 for VERIF_TYPE in graphics[COMPONENT][VERIF_CASE]:
     for MODELS in graphics[COMPONENT][VERIF_CASE][VERIF_TYPE]:
         for PLOT_TYPE in graphics[COMPONENT][VERIF_CASE][VERIF_TYPE][MODELS]:

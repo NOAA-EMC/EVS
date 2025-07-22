@@ -2,8 +2,6 @@ set -x
 
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
-export finalstat=$DATA/final
-mkdir -p $finalstat
 
 export regionnest=rtma
 export fcstmax=$g2os_sfc_fhr_max
@@ -93,6 +91,8 @@ fi
 
 if [ $vhr = 23 -a $rtmafound -eq 1 -a $obfound -eq 1 ]
 then
+   export finalstat=$DATA/final
+   mkdir -p $finalstat
    mkdir -p $COMOUTfinal
    cp $COMOUTsmall/* $finalstat
    cd $finalstat 
