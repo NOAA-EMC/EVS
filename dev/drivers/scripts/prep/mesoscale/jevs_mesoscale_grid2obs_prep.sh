@@ -52,7 +52,7 @@ export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
 
 export MAILTO=${MAILTO:-'perry.shafran@noaa.gov,andrew.benjamin@noaa.gov'}
 
