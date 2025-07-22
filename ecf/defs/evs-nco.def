@@ -531,7 +531,7 @@ suite evs_nco
               time 09:00
           endfamily
           family mesoscale
-            task jevs_mesoscale_atmos_grid2obs_prep
+            task jevs_mesoscale_grid2obs_prep
               time 07:30
               edit VHR '07'
           endfamily
