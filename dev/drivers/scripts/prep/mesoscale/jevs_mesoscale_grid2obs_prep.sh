@@ -24,7 +24,7 @@ export STEP=prep
 export COMPONENT=mesoscale
 export RUN=atmos
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_mesoscale_adjust_runtime/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -42,7 +42,7 @@ export VERIF_CASE=grid2obs
 export MODELNAME=mesoscale
 export job=${PBS_JOBNAME:-jevs_mesoscale_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 ############################################################
 
@@ -69,7 +69,7 @@ fi
 
 
 ######################################################################
-# Purpose: This job preprocesses SPC storm reports and outlook
-#          areas for use in the CAM severe verification job
+# Purpose: This job preprocesses SPC outlook
+#          areas for use in the Mesoscale verification job
 ######################################################################
 
