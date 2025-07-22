@@ -2,11 +2,12 @@
 ###############################################################################
 # Name of Script: exevs_cam_severe_prep.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
-# Purpose of Script: This script preprocesses SPC data (storm reports 
-#                    and outlook areas) for CAM verification.
+# Purpose of Script: This script preprocesses SPC data 
+#                    (outlook areas) for mesoscale verification.
 # History Log:
 # 1/2023: Initial script assembled 
 # 4/2023: Script updated to handle storm reports and outlook areas 
+# 7/2025: Updated script for mesoscale
 ###############################################################################
 
 
