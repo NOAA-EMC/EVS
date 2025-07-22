@@ -63,7 +63,7 @@ mkdir -p $COMOUT
 export COMOUTotlk=${COMOUT}/${RUN}.${OTLK_DATE}/spc_otlk
 
 # Execute the script.
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
  export err=$?; err_chk
 
 # Clean Up
