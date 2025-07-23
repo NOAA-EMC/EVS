@@ -24,6 +24,8 @@ module load prod_util/${prod_util_ver}
 module load cdo/${cdo_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
+module load met/${met_ver}
+module load metplus/${metplus_ver}
 
 module list
 set -x
