@@ -88,7 +88,12 @@ then
   mkdir -p $COMOUTsmall
   cp $DATA/PointStat/* $COMOUTsmall
 else
-  echo "NO CCPA OR OBS DATA"
+  if [ $obfound -eq 0 ]; then
+    echo "CoCoRaHS data either missing or corrupted; METplus will not run"
+  fi
+  if [ $ccpafound -eq 0 ]; then
+     echo "CCPA precip data is missing; METplus will not run"
+  fi
   echo "CCPAFOUND, OBFOUND", $ccpafound, $obfound
 fi
 

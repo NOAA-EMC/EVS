@@ -87,7 +87,12 @@ then
   mkdir -p $COMOUTsmall
   cp $DATA/PointStat/* $COMOUTsmall
 else
-  echo "NO URMA OR OBS DATA"
+  if [ $obfound -eq 0 ]; then
+     echo "CoCoRaHS data either missing or corrupted; METplus will not run"
+  fi
+  if [ $urmafound -eq 0 ]; then
+     echo "URMA precip data is missing; METplus will not run"
+  fi
   echo "URMAFOUND, OBFOUND", $urmafound, $obfound
 fi
 

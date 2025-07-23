@@ -30,7 +30,7 @@ then
        export masks=$maskdir/Bukovsky_RTMA_CONUS.nc
        mkdir -p $DATA/pcp${modnam}
 
-# Check if DCOM file is corrupt
+# Check if DCOM file is missing or corrupt
 
         export CSV_FILE=$DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv
 
