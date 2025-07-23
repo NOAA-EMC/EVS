@@ -674,11 +674,11 @@ suite evs_nco
               time 11:00
               edit VHR '11'
             task jevs_mesoscale_nam_grid2obs_stats
-              trigger :TIME >= 0800 and ../../../../06/evs/prep/mesoscale/jevs_mesoscale_grid2obs_prep == complete
-              edit VHR '08'
+              trigger :TIME >= 0800 and ../../prep/mesoscale/jevs_mesoscale_grid2obs_prep == complete
+              edit VHR '07'
             task jevs_mesoscale_rap_grid2obs_stats
-              trigger :TIME >= 0830 and ../../../../06/evs/prep/mesoscale/jevs_mesoscale_grid2obs_prep == complete
-              edit VHR '08'
+              trigger :TIME >= 0830 and ../../prep/mesoscale/jevs_mesoscale_grid2obs_prep == complete
+              edit VHR '07'
             task jevs_mesoscale_nam_snowfall_stats_vhr_06
               time 06:00
               edit VHR '06'
