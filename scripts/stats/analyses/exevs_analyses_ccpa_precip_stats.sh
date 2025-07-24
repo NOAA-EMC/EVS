@@ -30,19 +30,23 @@ then
        export masks=$maskdir/Bukovsky_RTMA_CONUS.nc
        mkdir -p $DATA/ccpa
 
-	if [ -e $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv ]
-	then
-	 obfound=1
-	else
-	 echo "WARNING: $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv is missing, METplus will not run"
-          if [ $SENDMAIL = "YES" ]; then
-	    export subject="CoCoRaHS Data Missing for EVS ${COMPONENT}"
-	    echo "Warning: The CoCoRaHS file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-	    echo "Missing file is $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv" >> mailmsg
-	    echo "Job ID: $jobid" >> mailmsg
-	    cat mailmsg | mail -s "$subject" $MAILTO
-	  fi
-	fi
+# Check if DCOM file is missing or corrupt
+
+        export CSV_FILE=$DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv
+
+        if python ${USHevs}/analyses/check_csv.py "$CSV_FILE"; then
+           obfound=1
+        else
+           obfound=0
+           echo "WARNING: $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv is missing or corrupt, METplus will not run"
+           if [ $SENDMAIL = "YES" ]; then
+               export subject="CoCoRaHS Data Missing for EVS ${COMPONENT}"
+               echo "Warning: The CoCoRaHS file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+               echo "Missing file is $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv" >> mailmsg
+               echo "Job ID: $jobid" >> mailmsg
+               cat mailmsg | mail -s "$subject" $MAILTO
+           fi
+        fi
 
 	DATE=${VDATE}${vhr}
 	ENDDATE=`$NDATE -23 $DATE`
@@ -84,7 +88,12 @@ then
   mkdir -p $COMOUTsmall
   cp $DATA/PointStat/* $COMOUTsmall
 else
-  echo "NO CCPA OR OBS DATA"
+  if [ $obfound -eq 0 ]; then
+    echo "CoCoRaHS data either missing or corrupted; METplus will not run"
+  fi
+  if [ $ccpafound -eq 0 ]; then
+     echo "CCPA precip data is missing; METplus will not run"
+  fi
   echo "CCPAFOUND, OBFOUND", $ccpafound, $obfound
 fi
 
