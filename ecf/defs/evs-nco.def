@@ -530,6 +530,11 @@ suite evs_nco
             task jevs_global_ens_wave_grid2obs_prep
               time 09:00
           endfamily
+          family mesoscale
+            task jevs_mesoscale_grid2obs_prep
+              time 07:30
+              edit VHR '07'
+          endfamily
           family cam
             task jevs_cam_radar_prep_vhr_06
               time 06:05
@@ -669,11 +674,11 @@ suite evs_nco
               time 11:00
               edit VHR '11'
             task jevs_mesoscale_nam_grid2obs_stats
-              time 07:00
-              edit VHR '07'
+              trigger :TIME >= 0800 and ../../prep/mesoscale/jevs_mesoscale_grid2obs_prep == complete
+              edit VHR '08'
             task jevs_mesoscale_rap_grid2obs_stats
-              time 05:30
-              edit VHR '07'
+              trigger :TIME >= 0830 and ../../prep/mesoscale/jevs_mesoscale_grid2obs_prep == complete
+              edit VHR '08'
             task jevs_mesoscale_nam_snowfall_stats_vhr_06
               time 06:00
               edit VHR '06'
