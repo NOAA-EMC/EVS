@@ -114,7 +114,7 @@ for ObsType in ${grid2obs_list}; do
             echo "PREP_OUTPUT_MISSING: Pre-processed Global-Chemical output ${fcst_file} is missing. The missing Global-Chemical forecast file will be skipped"
           fi 
         fi 
-        let "ihr=ihr+3"
+        let "ihr=ihr+6"
       done
       if [ -s ${recorded_temp_list} ]; then
         export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
@@ -148,7 +148,7 @@ for ObsType in ${grid2obs_list}; do
         fi
       fi
     fi
-    if [ "${vhr}" == "21" ]; then
+    if [ "${vhr}" == "18" ]; then
       stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
         cp -v ${COMOUTsmall}/*${OutputId}* ${finalstat}
