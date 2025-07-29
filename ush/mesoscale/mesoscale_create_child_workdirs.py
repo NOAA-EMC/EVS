@@ -73,8 +73,6 @@ else:
               if not os.path.exists(workdir):
                   os.makedirs(workdir)
               cutil.run_shell_command([
-                  'find', '.', '-type', 'd', '-not', '-path', 
-                  '\"*workdirs*\"', '-not', '-path', '\"*job*\"', '-exec', 
                   'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
               ]) 
           elif STEP == "plots":

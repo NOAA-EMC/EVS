@@ -30,18 +30,22 @@ then
        export masks=$maskdir/Bukovsky_RTMA_CONUS.nc
        mkdir -p $DATA/pcp${modnam}
 
-	if [ -e $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv ]
-	then
-	 obfound=1
+# Check if DCOM file is missing or corrupt
+
+        export CSV_FILE=$DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv
+
+	if python ${USHevs}/analyses/check_csv.py "$CSV_FILE"; then
+	  obfound=1
 	else
-         echo "WARNING: $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv is missing, METplus will not run"
-         if [ $SENDMAIL = "YES" ]; then
-            export subject="CoCoRaHS Data Missing for EVS ${COMPONENT}"
-            echo "Warning: The CoCoRaHS file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-            echo "Missing file is $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv" >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $MAILTO
-         fi
+          obfound=0
+	  echo "WARNING: $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv is missing or corrupt, METplus will not run"
+	  if [ $SENDMAIL = "YES" ]; then
+             export subject="CoCoRaHS Data Missing for EVS ${COMPONENT}"
+	     echo "Warning: The CoCoRaHS file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+	     echo "Missing file is $DCOMIN/${VDATE}/validation_data/CoCoRaHS/cocorahs.${VDATE}.dailyprecip.csv" >> mailmsg
+	     echo "Job ID: $jobid" >> mailmsg
+	     cat mailmsg | mail -s "$subject" $MAILTO
+	  fi
 	fi
 
 	DATE=${VDATE}${vhr}
@@ -83,7 +87,12 @@ then
   mkdir -p $COMOUTsmall
   cp $DATA/PointStat/* $COMOUTsmall
 else
-  echo "NO RTMA OR OBS DATA"
+  if [ $obfound -eq 0 ]; then
+   echo "CoCoRaHS data either missing or corrupted; METplus will not run"
+  fi
+  if [ $rtmafound -eq 0 ]; then
+   echo "RTMA precip data is missing; METplus will not run"
+  fi
   echo "RTMAFOUND, OBFOUND", $rtmafound, $obfound
 fi
 

@@ -759,10 +759,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 print(f"FATAL ERROR: Could not copy METplus output to COMOUT directory"
                       + f" {dest_path} because the path does not already exist.")
                 continue
-            if len(glob.glob(origin_path)) == len(glob.glob(os.path.join(dest_path, copy_file))):
-                print(f"Not copying restart files to restart_directory"
-                      + f" {dest_path} because they already exist.")
-            else:
+            if not len(glob.glob(origin_path)) == len(glob.glob(os.path.join(dest_path, copy_file))):
                 run_shell_command(
                     ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
                 )
