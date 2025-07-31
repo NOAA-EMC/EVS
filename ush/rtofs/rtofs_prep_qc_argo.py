@@ -26,7 +26,7 @@ COMIN = os.environ ['COMIN']
 SENDCOM = os.environ['SENDCOM']
 COMOUTprep = os.environ['COMOUTprep']
 RUN = os.environ['RUN']
-
+rtofs_ver = os.environ['rtofs_ver']
 
 # Set up date/time
 INITDATE_YMD = datetime.datetime.strptime(INITDATE, '%Y%m%d')
@@ -37,12 +37,12 @@ mDATE_YMD = datetime.datetime.strftime(mDATE, '%Y%m%d')
 p1DATE_YMD = datetime.datetime.strftime(p1DATE, '%Y%m%d')
 p2DATE_YMD = datetime.datetime.strftime(p2DATE, '%Y%m%d')
 rtofs_qc_1 = os.path.join(COMROOT,
-                        'rtofs/v2.4/',f"rtofs.{p1DATE_YMD}",
+                        'rtofs',f"{rtofs_ver}",f"rtofs.{p1DATE_YMD}",
                         'ncoda/logs/profile_qc',
                         f"prof_argo_rpt.{INITDATE_YMD.strftime('%Y%m%d')}00.txt")
 
 rtofs_qc_2 = os.path.join(COMROOT,
-                        'rtofs/v2.4/',f"rtofs.{p2DATE_YMD}",
+                        'rtofs',f"{rtofs_ver}",f"rtofs.{p2DATE_YMD}",
                         'ncoda/logs/profile_qc',
                         f"prof_argo_rpt.{p1DATE_YMD}00.txt")
 

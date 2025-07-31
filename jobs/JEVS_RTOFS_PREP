@@ -38,7 +38,7 @@ export NET=${NET:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-rtofs}
 export RUN=${RUN:-ocean}
-
+export rtofs_ver=${rtofs_ver}
 ###################################
 # Set EVS directories
 ####################################
