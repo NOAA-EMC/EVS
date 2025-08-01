@@ -515,7 +515,7 @@ class ValidHourAverageFhrMean:
                             or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
                         if not np.ma.is_masked(ci_max):
                             stat_min_max_dict['ax2_stat_max'] = ci_max
-                    cmasked_ci_valid_hours = masked_ci_valid_hour
+                    cmasked_ci_valid_hours = masked_ci_valid_hours
                     cmasked_model_num_model1_diff_ci_data = masked_model_num_model1_diff_ci_data
                     cmasked_ci_bar_max_widths = np.ma.masked_where(
                             np.ma.getmask(masked_model_num_model1_diff_ci_data),
