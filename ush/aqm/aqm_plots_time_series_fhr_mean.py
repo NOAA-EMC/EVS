@@ -434,10 +434,6 @@ class TimeSeriesFhrMean:
                 and self.plot_info_dict['fcst_var_name'] \
                 in ['SNOD_A24', 'WEASD_A24']:
             y_axis_tick_inc = 1
-        elif self.plot_info_dict['stat'] in ['FBAR_OBAR'] \
-                and self.plot_info_dict['fcst_var_name'] \
-                in ['AOTK', 'AOD']:
-            y_axis_tick_inc = 0.2
         else:
             y_axis_tick_inc = preset_y_axis_tick_inc
         if np.ma.is_masked(stat_min):
@@ -448,10 +444,6 @@ class TimeSeriesFhrMean:
             elif self.plot_info_dict['stat'] in ['FBIAS'] \
                     and self.plot_info_dict['fcst_var_name'] \
                     in ['SNOD_A24', 'WEASD_A24']:
-                y_axis_min = 0
-            elif self.plot_info_dict['stat'] in ['FBAR_OBAR'] \
-                    and self.plot_info_dict['fcst_var_name'] \
-                    in ['AOTK', 'AOD']:
                 y_axis_min = 0
             else:
                 y_axis_min = preset_y_axis_tick_min
@@ -466,10 +458,6 @@ class TimeSeriesFhrMean:
                     and self.plot_info_dict['fcst_var_name'] \
                     in ['SNOD_A24', 'WEASD_A24']:
                 y_axis_max = 10
-            elif self.plot_info_dict['stat'] in ['FBAR_OBAR'] \
-                    and self.plot_info_dict['fcst_var_name'] \
-                    in ['AOTK', 'AOD']:
-                y_axis_max = 1.8
             else:
                 y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
                 while y_axis_max < stat_max:

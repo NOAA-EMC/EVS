@@ -489,23 +489,15 @@ class LeadAverageVhrMean:
                             or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
                         if not np.ma.is_masked(ci_max):
                             stat_min_max_dict['ax2_stat_max'] = ci_max
-                    cmasked_ci_forecast_hours = np.ma.compressed(
-                        masked_ci_forecast_hours
-                    )
-                    cmasked_model_num_model1_diff_ci_data = np.ma.compressed(
-                        masked_model_num_model1_diff_ci_data
-                    )
-                    cmasked_ci_bar_max_widths = np.ma.compressed(
-                        np.ma.masked_where(
+                    cmasked_ci_forecast_hours = masked_ci_forecast_hours
+                    cmasked_model_num_model1_diff_ci_data = masked_model_num_model1_diff_ci_data
+                    cmasked_ci_bar_max_widths = np.ma.masked_where(
                             np.ma.getmask(masked_model_num_model1_diff_ci_data),
                             ci_bar_max_widths
-                        )
                     )
-                    cmasked_ci_bar_intvl_widths = np.ma.compressed(
-                        np.ma.masked_where(
+                    cmasked_ci_bar_intvl_widths = np.ma.masked_where(
                             np.ma.getmask(masked_model_num_model1_diff_ci_data),
                             ci_bar_intvl_widths
-                        )
                     )
                     for fhr_idx in range(len(cmasked_ci_forecast_hours)):
                         fhr = cmasked_ci_forecast_hours[fhr_idx]
