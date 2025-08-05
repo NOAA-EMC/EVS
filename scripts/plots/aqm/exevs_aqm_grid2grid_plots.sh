@@ -1,16 +1,17 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_aqm_grid2obs_plots.sh
+# Name of Script: exevs_aqm_grid2grid_plots.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
 # Original Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
 # Original Author: Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script is run for the aqm plots step for
-#                    the grid-to-obs verification. It uses EMC-developed
+#                    the grid-to-grid verification. It uses EMC-developed
 #                    python scripts to do the plotting.
 #
 #   Change Logs:
 #   11/21/2024   Ho-Chun Huang  Use GLOBAL_DET CFP approach for regular plots
+#   08/05/2025   Ho-Chun Huang  Adjust for AQM grid2grid plots
 ###############################################################################
 
 set -x
@@ -110,7 +111,7 @@ export err=$?; err_chk
 declare -a proc_list=( condense_stats filter_stats make_plots tar_images )
 for group in "${proc_list[@]}"; do
     export JOB_GROUP=${group}
-    echo "Creating and running jobs for grid-to-obs plots: ${JOB_GROUP}"
+    echo "Creating and running jobs for giid-to-grid plots: ${JOB_GROUP}"
     python ${USHevs}/${COMPONENT}/${COMPONENT}_${STEP}_${VERIF_CASE}_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/*
