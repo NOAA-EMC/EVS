@@ -496,6 +496,10 @@ suite evs_nco
               time 02:45
           endfamily
           family aqm
+            task jevs_aqm_atmos_grid2grid_hourly_plots_last90days
+              time 05:10
+            task jevs_aqm_atmos_grid2grid_hourly_plots_last31days
+              time 05:20
             task jevs_aqm_atmos_grid2obs_daily_plots_last90days
               time 05:30
             task jevs_aqm_atmos_grid2obs_hourly_plots_last90days

@@ -369,6 +369,8 @@ class PerformanceDiagram:
             ]
         if self.plot_info_dict['fcst_var_name'] == "AOTK":
             ncol_set = 8
+        elif self.plot_info_dict['fcst_var_name'] == "AOD":
+            ncol_set = 7
         elif self.plot_info_dict['fcst_var_name'] == "PMTF":
             ncol_set = 7
         else:
