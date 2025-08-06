@@ -1,11 +1,11 @@
 #!/bin/bash
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
-## NCEP EMC Verification System (EVS) - GEFS Chemistry
+## NCEP EMC Verification System (EVS) - Regional Air Quality Model
 ##
 ## ORIGINAL AUTHOR: Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 ## CONTRIBUTORS: Ho-Chun Huang, ho-chun.huang@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-## PURPOSE: Set up configurations to run EVS GEFS Chemistry standalone
+## PURPOSE: Set up configurations to run EVS AQM grid2obs standalone
 ##---------------------------------------------------------------------------
 ##--------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ set -x
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 ####################################################
-# WHAT METPLUS USE CASES TO RUN FOR GEFS CHEM
+# WHAT METPLUS USE CASES TO RUN FOR AQM grid2obs
 ####################################################
 ## SET TO "YES" or "NO"
 ## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
@@ -62,6 +62,7 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2op_model_plot_name_list="raw bc"
     export g2op_type_list="ozone pm25"
+    export g2op_src_list="airnow airnow"
     export g2op_event_equalization="YES"
     export g2op_ozone_init_hr_list="06 12"
     export g2op_ozone_valid_hr_list="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
