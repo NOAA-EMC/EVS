@@ -14,7 +14,7 @@ set -x
 # ECF Settings
   export SENDECF=YES
   export SENDCOM=YES
-  export KEEPDATA=YES
+  export KEEPDATA=NO
   export SENDDBN=NO
   export SENDDBN_NTC=
   export SENDMAIL=YES
