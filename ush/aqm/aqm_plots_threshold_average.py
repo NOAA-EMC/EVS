@@ -313,7 +313,7 @@ class ThresholdAverage:
                     f"{thresh[0:2]}{str(convert_thresh_K_to_F)}"
                 )
             ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK' ]:
+        elif self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'AOD' ]:
             convert_thresh_list = []
             for thresh in self.plot_info_dict['fcst_var_threshs']:
                 convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
@@ -397,8 +397,8 @@ class ThresholdAverage:
                 self.logger.debug(f"Plotting {model_num} [{model_num_name},"
                                   +f"{model_num_plot_name}]")
                 ax1.plot(
-                    np.ma.compressed(masked_thresh_values),
-                    np.ma.compressed(masked_model_num_data),
+                    masked_thresh_values,
+                    masked_model_num_data,
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
@@ -442,8 +442,8 @@ class ThresholdAverage:
                                   +self.model_info_dict['model1']['plot_name']
                                   +"]")
                 ax2.plot(
-                    np.ma.compressed(masked_diff_thresh_values),
-                    np.ma.compressed(masked_model_num_model1_diff_data),
+                    masked_diff_thresh_values,
+                    masked_model_num_model1_diff_data,
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
@@ -513,23 +513,15 @@ class ThresholdAverage:
                             or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
                         if not np.ma.is_masked(ci_max):
                             stat_min_max_dict['ax2_stat_max'] = ci_max
-                    cmasked_ci_thresh_values = np.ma.compressed(
-                        masked_ci_thresh_values
-                    )
-                    cmasked_model_num_model1_diff_ci_data = np.ma.compressed(
-                        masked_model_num_model1_diff_ci_data
-                    )
-                    cmasked_ci_bar_max_widths = np.ma.compressed(
-                        np.ma.masked_where(
+                    cmasked_ci_thresh_values = masked_ci_thresh_values
+                    cmasked_model_num_model1_diff_ci_data = masked_model_num_model1_diff_ci_data
+                    cmasked_ci_bar_max_widths = np.ma.masked_where(
                             np.ma.getmask(masked_model_num_model1_diff_ci_data),
                             ci_bar_max_widths
-                        )
                     )
-                    cmasked_ci_bar_intvl_widths = np.ma.compressed(
-                        np.ma.masked_where(
+                    cmasked_ci_bar_intvl_widths = np.ma.masked_where(
                             np.ma.getmask(masked_model_num_model1_diff_ci_data),
                             ci_bar_intvl_widths
-                        )
                     )
                     for thresh_idx in range(len(cmasked_ci_thresh_values)):
                         thresh = cmasked_ci_thresh_values[thresh_idx]

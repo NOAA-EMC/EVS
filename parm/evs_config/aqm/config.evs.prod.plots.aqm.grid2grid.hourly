@@ -1,0 +1,72 @@
+#!/bin/bash
+##---------------------------------------------------------------------------
+##---------------------------------------------------------------------------
+## NCEP EMC Verification System (EVS) - Regional Air Quality Model
+##
+## ORIGINAL AUTHOR: Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## CONTRIBUTORS: Ho-Chun Huang, ho-chun.huang@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## PURPOSE: Set up configurations to run EVS AQM grid2grid standalone
+##---------------------------------------------------------------------------
+##--------------------------------------------------------------------------
+
+set -x
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+####################################################
+# WHAT METPLUS USE CASES TO RUN FOR AQM grid2grid
+####################################################
+## SET TO "YES" or "NO"
+## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
+export RUN_GRID2GRID_STATS="NO"
+export RUN_GRID2GRID_PLOTS="YES"
+export RUN_GRID2OBS_STATS="NO"
+export RUN_GRID2OBS_PLOTS="NO"
+
+####################################################
+# GENERAL SETTINGS APPLIED TO ALL USE CASES
+####################################################
+## INPUT DATA SETTINGS
+#model_list:                 model names
+#model_evs_data_dir_list:    base path to "evs_data" directory
+#model_file_format_list:     file format of model files
+aqm_ver_id=$( echo ${aqm_ver} | awk -F"." '{print $1$2}' )
+modelid=${MODELNAME}${aqm_ver_id}
+export model_list="${modelid}_raw"
+export model_evs_data_dir_list="${STATDIR}"
+export model_evs_stats_dir_list="${COMIN}/stats/${COMPONENT}"
+export model_file_format_list="${COMROOT}/${MODELNAME}/${mod_ver}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.cmaq.f{lead?fmt=%3H}.793.grib2"
+## OUTPUT DATA SETTINGS
+#OUTPUTROOT: base output directory
+export OUTPUTROOT="${DATAROOT}"
+## DATE SETTINGS
+#start_date:       verification start date, format YYYYMMDD
+#end_date:         verification end date, format YYYYMMDD
+export start_date=${VDATE_START}
+export end_date=${VDATE_END}
+####################################################
+# SETTINGS FOR SPECIFIC USE CASES
+####################################################
+
+if [ $RUN_GRID2GRID_PLOTS = YES ]; then
+    #g2gp_model_plot_name_list: list of models reference name on plots
+    #g2gp_type_list: list type of verifications to run for grid-to-grid: abiaod
+    #g2gp_event_equalization: do event equalization (YES) or not (NO)
+    #g2gp_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2gp_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2gp*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2gp_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2gp_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2gp_*_fhr_inc: frequency to verify forecast hours: at HH[H]
+    export g2gp_model_plot_name_list="raw"
+    export g2gp_type_list="abiaod"
+    export g2gp_src_list="abi"
+    export g2gp_event_equalization="YES"
+    export g2gp_abiaod_init_hr_list="06 12"
+    export g2gp_abiaod_valid_hr_list="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+    export g2gp_abiaod_fhr_list="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72"
+    export g2gp_abiaod_fday_list="1 2 3"
+fi
+echo "END: $(basename ${BASH_SOURCE[0]})"
