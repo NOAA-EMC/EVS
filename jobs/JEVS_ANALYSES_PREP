@@ -71,12 +71,6 @@ export INITDATE=${INITDATE:-$PDYm3}
 
 
 ####################################
-# Define METplus variables
-####################################
-export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}"
-
-
-####################################
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver)}
