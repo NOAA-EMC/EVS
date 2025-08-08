@@ -3,7 +3,8 @@
 #
 # NAME: analyses_util.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Various Utilities for EVS CAM Verification
+#                 Pery Shafran, perry.shafran@noaa.gov
+# PURPOSE: Various Utilities for EVS analyses Verification
 # 
 # =============================================================================
 

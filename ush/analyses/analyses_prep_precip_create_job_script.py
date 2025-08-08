@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: cam_prep_precip_create_job_script.py
+# NAME: analyses_prep_precip_create_job_script.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Precipitation - Prepare job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_precip_prep.sh
+#                 Perry Shafran, perry.shafran@noaa.gov
+# PURPOSE: Create EVS analyses Precipitation - Prepare job scripts
+# DEPENDENCIES: $SCRIPTSevs/analyses/stats/exevs_$MODELNAME_precip_prep.sh
 #
 # =============================================================================
 

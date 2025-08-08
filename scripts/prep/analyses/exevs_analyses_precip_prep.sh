@@ -2,7 +2,7 @@
 
 # =============================================================================
 #
-# NAME: exevs_hrrr_precip_prep.sh
+# NAME: exevs_analyses_precip_prep.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Perry Shafran, perry.shafran@noaa.gov
 # PURPOSE: Handle all components of an EVS CCPA Precipitation - Prep job

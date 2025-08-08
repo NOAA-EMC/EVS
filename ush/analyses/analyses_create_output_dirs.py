@@ -3,6 +3,7 @@
 #
 # NAME: analyses_create_output_dirs.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#                 Perry Shafran, perry.shafran@noaa.gov
 # PURPOSE: Define working/ output directories and create them if they don't
 #          exist.
 # DEPENDENCIES: os.path.join([

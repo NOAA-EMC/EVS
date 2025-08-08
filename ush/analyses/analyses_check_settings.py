@@ -3,6 +3,7 @@
 #
 # NAME: analyses_check_settings.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#                 Perry Shafran, perry.shafran@noaa.gov
 # PURPOSE: Check User's Settings
 # DEPENDENCIES: os.path.join([
 #                   SCRIPTSevs,COMPONENT,STEP,

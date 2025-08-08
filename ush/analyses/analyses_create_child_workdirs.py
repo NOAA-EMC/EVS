@@ -3,6 +3,7 @@
 #
 # NAME: analyses_create_child_workdirs.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#                 Perry Shafran, perry.shafran@noaa.gov
 # PURPOSE: Write output directories used by child processors (MPMD operations)
 #
 # =============================================================================

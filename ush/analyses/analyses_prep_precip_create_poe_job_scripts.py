@@ -3,8 +3,9 @@
 #
 # NAME: analyses_prep_precip_create_poe_job_scripts.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Precipitation - Prepare POE job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/prep/exevs_$MODELNAME_precip_prep.sh
+#                 Perry Shafran, perrry.shafran@noaa.gov
+# PURPOSE: Create EVS analyses Precipitation - Prepare POE job scripts
+# DEPENDENCIES: $SCRIPTSevs/analyses/prep/exevs_$MODELNAME_precip_prep.sh
 #
 # =============================================================================
 

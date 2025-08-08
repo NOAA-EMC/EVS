@@ -2,7 +2,7 @@
 
 # =============================================================================
 # 
-# NAME: config.evs.prod.prep.cam.atmos.precip.hrrr
+# NAME: config.evs.prod.prep.analyses.atmos.precip
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Perry Shafran, perry.shafran@noaa.gov
 # PURPOSE: Set up configurations to run EVS CCPA Analyses Precipitation - Prepare
