@@ -1,5 +1,5 @@
 #!/bin/bash
-# modulefile for EVS analyses stats component
+# modulefile for EVS analyses prep component
 
 set -x
 
@@ -17,8 +17,6 @@ module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
 module load gsl/${gsl_ver}
 module load prod_util/${prod_util_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
 
 module list
 set -x
