@@ -72,14 +72,14 @@ for stats in rmse me csi sratio_pod_csi ; do
   elif [ $stats = csi ] ; then
     stat_list='csi'
     line_tp='ctc'	  
-    VARs='ICEC_gt10 ICEC_gt40 ICEC_gt80'
+    VARs='ICEC_gt15 ICEC_gt40 ICEC_gt80'
     threshes=''
     score_types='time_series lead_average'
   elif [ $stats = sratio_pod_csi ] ; then
     stat_list='sratio, pod, csi'
     line_tp='ctc'
     VARs='ICEC'
-    threshes='>10, >40, >80'
+    threshes='>15, >40, >80'
     score_types='performance_diagram'
   else
     err_exit "$stats is not a valid metric"
@@ -103,8 +103,8 @@ for stats in rmse me csi sratio_pod_csi ; do
         var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
         FCST_LEVEL_values="Z0"
 
-        if [ $VAR = ICEC_gt10 ] ; then
-	  threshes='>10'
+        if [ $VAR = ICEC_gt15 ] ; then
+	  threshes='>15'
         elif [ $VAR = ICEC_gt40 ] ; then
           threshes='>40'	       
         elif [ $VAR = ICEC_gt80 ] ; then
@@ -203,15 +203,15 @@ for domain in arctic antarctic ; do
     for lead in 24 48 72 96 120 144 168 192 216 240 264 288 312 336 360 384; do
         lead_new=$(printf "%03d" "${lead}")
 
-	if [ -f "performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt10gt40gt80.png" ]; then
-            mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt10gt40gt80.png evs.global_ens.ctc.icec_z0.last${past_days}days.perfdiag_${valid_time}_f${lead_new}.g003_${domain}.png
+	if [ -f "performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt15gt40gt80.png" ]; then
+            mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt15gt40gt80.png evs.global_ens.ctc.icec_z0.last${past_days}days.perfdiag_${valid_time}_f${lead_new}.g003_${domain}.png
         fi
     done # lead
 done # domain
 
 for stats in rmse me csi ; do
     if [ $stats = csi ]; then
-        threshs="gt10 gt40 gt80"
+        threshs="gt15 gt40 gt80"
     else
         threshs="NA"
     fi
