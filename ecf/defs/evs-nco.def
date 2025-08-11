@@ -30,6 +30,11 @@ suite evs_nco
             task jevs_global_ens_headline_prep
               trigger :TIME >= 0400 and ./jevs_global_ens_atmos_prep == complete and ./jevs_global_ens_naefs_atmos_prep == complete
           endfamily
+          family analyses
+            task jevs_analyses_precip_prep_vhr_00
+              time 00:00
+              edit VHR '00'
+          endfamily
           family cam
             task jevs_cam_radar_prep_vhr_00
               time 00:05
@@ -540,6 +545,11 @@ suite evs_nco
             task jevs_mesoscale_grid2obs_prep
               time 07:30
               edit VHR '07'
+          endfamily
+          family analyses
+            task jevs_analyses_precip_prep_vhr_06
+              time 6:00
+              edit VHR '06'
           endfamily
           family cam
             task jevs_cam_radar_prep_vhr_06
@@ -1175,6 +1185,11 @@ suite evs_nco
             task jevs_global_det_wave_prep
               time 13:15
           endfamily
+          family analyses
+            task jevs_analyses_precip_prep_vhr_12
+              time 12:00
+              edit VHR '12'
+          endfamily
           family cam
             task jevs_cam_radar_prep_vhr_12
               time 12:15
@@ -1795,6 +1810,11 @@ suite evs_nco
           family global_det
             task jevs_global_det_atmos_prep
               time 18:10
+          endfamily
+          family analyses
+            task jevs_analyses_precip_prep_vhr_18
+              time 18:00
+              edit VHR '18'
           endfamily
           family cam
             task jevs_cam_radar_prep_vhr_18
