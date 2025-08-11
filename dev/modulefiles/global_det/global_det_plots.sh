@@ -3,15 +3,16 @@
 
 set -x
 
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/dev/modulefiles
+#module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
+module use /ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/fms-2024.01/install/modulefiles/intel/${intel_ver}
+#export HPC_OPT=/apps/ops/para/libs
+#module use /apps/dev/modulefiles
 module load PrgEnv-intel/${PrgEnvintel_ver}
-module load intel/${intel_ver}
+module load stack- intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
-module load cray-pals/${craypals_ver}
+#module load cray-pals/${craypals_ver}
 module load prod_util/${prod_util_ver}
 module load cfp/${cfp_ver}
 module load libjpeg/${libjpeg_ver}
