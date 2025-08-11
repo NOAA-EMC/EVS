@@ -922,35 +922,14 @@ suite evs_nco
               trigger :TIME >= 0810 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
               edit VHR '11'
             task jevs_aqm_atmos_grid2obs_stats_vhr_12
-              trigger :TIME >= 0820 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              trigger :TIME >= 1135 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
               edit VHR '12'
             task jevs_aqm_atmos_grid2obs_stats_vhr_13
-              trigger :TIME >= 0830 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              trigger :TIME >= 1145 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
               edit VHR '13'
             task jevs_aqm_atmos_grid2obs_stats_vhr_14
-              trigger :TIME >= 0840 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              trigger :TIME >= 1155 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
               edit VHR '14'
-            task jevs_aqm_atmos_grid2obs_stats_vhr_15
-              trigger :TIME >= 0850 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
-              edit VHR '15'
-            task jevs_aqm_atmos_grid2obs_stats_vhr_16
-              trigger :TIME >= 0900 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
-              edit VHR '16'
-            task jevs_aqm_atmos_grid2obs_stats_vhr_17
-              trigger :TIME >= 0910 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
-              edit VHR '17'
-            task jevs_aqm_atmos_grid2obs_stats_vhr_18
-              trigger :TIME >= 0920 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
-              edit VHR '18'
-            task jevs_aqm_atmos_grid2obs_stats_vhr_19
-              trigger :TIME >= 1130 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
-              edit VHR '19'
-            task jevs_aqm_atmos_grid2obs_stats_vhr_20
-              trigger :TIME >= 1140 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
-              edit VHR '20'
-            task jevs_aqm_atmos_grid2obs_stats_vhr_21
-              trigger :TIME >= 1150 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
-              edit VHR '21'
             task jevs_aqm_atmos_grid2grid_stats_vhr_03
               trigger :TIME >= 0600 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
               edit VHR '03'
@@ -979,35 +958,14 @@ suite evs_nco
               trigger :TIME >= 0810 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
               edit VHR '11'
             task jevs_aqm_atmos_grid2grid_stats_vhr_12
-              trigger :TIME >= 0820 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              trigger :TIME >= 1135 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
               edit VHR '12'
             task jevs_aqm_atmos_grid2grid_stats_vhr_13
-              trigger :TIME >= 0830 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              trigger :TIME >= 1145 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
               edit VHR '13'
             task jevs_aqm_atmos_grid2grid_stats_vhr_14
-              trigger :TIME >= 0840 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              trigger :TIME >= 1155 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
               edit VHR '14'
-            task jevs_aqm_atmos_grid2grid_stats_vhr_15
-              trigger :TIME >= 0850 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
-              edit VHR '15'
-            task jevs_aqm_atmos_grid2grid_stats_vhr_16
-              trigger :TIME >= 0900 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
-              edit VHR '16'
-            task jevs_aqm_atmos_grid2grid_stats_vhr_17
-              trigger :TIME >= 0910 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
-              edit VHR '17'
-            task jevs_aqm_atmos_grid2grid_stats_vhr_18
-              trigger :TIME >= 0920 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
-              edit VHR '18'
-            task jevs_aqm_atmos_grid2grid_stats_vhr_19
-              trigger :TIME >= 1130 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
-              edit VHR '19'
-            task jevs_aqm_atmos_grid2grid_stats_vhr_20
-              trigger :TIME >= 1140 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
-              edit VHR '20'
-            task jevs_aqm_atmos_grid2grid_stats_vhr_21
-              trigger :TIME >= 1150 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
-              edit VHR '21'
           endfamily
           family analyses
             task jevs_analyses_urma_grid2obs_stats_vhr_06
@@ -1515,17 +1473,59 @@ suite evs_nco
               edit VHR '15'
           endfamily
           family aqm
+            task jevs_aqm_atmos_grid2obs_stats_vhr_15
+              trigger :TIME >= 1205 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              edit VHR '15'
+            task jevs_aqm_atmos_grid2obs_stats_vhr_16
+              trigger :TIME >= 1215 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              edit VHR '16'
+            task jevs_aqm_atmos_grid2obs_stats_vhr_17
+              trigger :TIME >= 1225 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              edit VHR '17'
+            task jevs_aqm_atmos_grid2obs_stats_vhr_18
+              trigger :TIME >= 1235 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              edit VHR '18'
+            task jevs_aqm_atmos_grid2obs_stats_vhr_19
+              trigger :TIME >= 1245 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              edit VHR '19'
+            task jevs_aqm_atmos_grid2obs_stats_vhr_20
+              trigger :TIME >= 1255 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              edit VHR '20'
+            task jevs_aqm_atmos_grid2obs_stats_vhr_21
+              trigger :TIME >= 1305 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              edit VHR '21'
             task jevs_aqm_atmos_grid2obs_stats_vhr_22
-              trigger :TIME >= 1200 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
+              trigger :TIME >= 1315 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2obs_prep == complete
               edit VHR '22'
             task jevs_aqm_atmos_grid2obs_stats_vhr_23
-              trigger :TIME >= 1215 and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_06 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_07 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_08 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_09 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_10 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_11 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_12 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_13 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_14 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_15 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_16 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_17 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_18 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_19 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_20 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_21 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_22 == complete
+              trigger :TIME >= 1330 and ../../../../00/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_00 == complete and ../../../../00/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_01 == complete and ../../../../00/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_02 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_03 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_04 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_05 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_06 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_07 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_08 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_09 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_10 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_11 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_12 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_13 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_14 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_15 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_16 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_17 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_18 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_19 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_20 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_21 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2obs_stats_vhr_22 == complete
+            task jevs_aqm_atmos_grid2grid_stats_vhr_15
+              trigger :TIME >= 1205 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              edit VHR '15'
+            task jevs_aqm_atmos_grid2grid_stats_vhr_16
+              trigger :TIME >= 1215 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              edit VHR '16'
+            task jevs_aqm_atmos_grid2grid_stats_vhr_17
+              trigger :TIME >= 1225 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              edit VHR '17'
+            task jevs_aqm_atmos_grid2grid_stats_vhr_18
+              trigger :TIME >= 1235 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              edit VHR '18'
+            task jevs_aqm_atmos_grid2grid_stats_vhr_19
+              trigger :TIME >= 1245 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              edit VHR '19'
+            task jevs_aqm_atmos_grid2grid_stats_vhr_20
+              trigger :TIME >= 1255 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              edit VHR '20'
+            task jevs_aqm_atmos_grid2grid_stats_vhr_21
+              trigger :TIME >= 1305 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              edit VHR '21'
               edit VHR '23'
             task jevs_aqm_atmos_grid2grid_stats_vhr_22
-              trigger :TIME >= 1200 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
+              trigger :TIME >= 1315 and ../../../../00/evs/prep/aqm/jevs_aqm_atmos_grid2grid_prep == complete
               edit VHR '22'
             task jevs_aqm_atmos_grid2grid_stats_vhr_23
-              trigger :TIME >= 1215 and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_06 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_07 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_08 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_09 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_10 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_11 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_12 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_13 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_14 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_15 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_16 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_17 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_18 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_19 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_20 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_21 == complete and ../../../../18/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_22 == complete
+              trigger :TIME >= 1330 and ../../../../00/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_00 == complete and ../../../../00/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_01 == complete and ../../../../00/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_02 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_03 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_04 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_05 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_06 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_07 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_08 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_09 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_10 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_11 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_12 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_13 == complete and ../../../../06/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_14 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_15 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_16 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_17 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_18 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_19 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_20 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_21 == complete and ../../../../12/evs/stats/aqm/jevs_aqm_atmos_grid2grid_stats_vhr_22 == complete
               edit VHR '23'
           endfamily
           family analyses
