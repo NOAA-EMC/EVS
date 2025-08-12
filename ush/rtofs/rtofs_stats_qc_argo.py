@@ -29,12 +29,28 @@ rtofs_ver = os.environ['rtofs_ver']
 
 # Set up date/time
 VDATE_YMD = datetime.datetime.strptime(VDATE, '%Y%m%d')
-PDATE= VDATE_YMD-datetime.timedelta(days=1)
-PDATE_YMD = datetime.datetime.strftime(PDATE, '%Y%m%d')
-rtofs_qc = os.path.join(COMROOT,
-                        'rtofs',f"{rtofs_ver}",f"rtofs.{VDATE_YMD:%Y%m%d}",
+mDATE= VDATE_YMD-datetime.timedelta(days=1)
+p1DATE = VDATE_YMD + datetime.timedelta(days=1)
+p2DATE= VDATE_YMD + datetime.timedelta(days=2)
+mDATE_YMD = datetime.datetime.strftime(mDATE, '%Y%m%d')
+p1DATE_YMD = datetime.datetime.strftime(p1DATE, '%Y%m%d')
+p2DATE_YMD = datetime.datetime.strftime(p2DATE, '%Y%m%d')
+
+rtofs_qc_1 = os.path.join(COMROOT,
+                        'rtofs',f"{rtofs_ver}",f"rtofs.{p1DATE_YMD}",
                         'ncoda/logs/profile_qc',
                         f"prof_argo_rpt.{VDATE_YMD.strftime('%Y%m%d')}00.txt")
+
+rtofs_qc_2 = os.path.join(COMROOT,
+                        'rtofs',f"{rtofs_ver}",f"rtofs.{p2DATE_YMD}",
+                        'ncoda/logs/profile_qc',
+                        f"prof_argo_rpt.{p1DATE_YMD}00.txt")
+
+combined = "rtofs_qc.txt"
+with open(combined, 'w') as outfile:
+    for fname in [rtofs_qc_1, rtofs_qc_2]:
+        with open(fname) as infile:
+            outfile.write(infile.read())
 
 #########################################################################################
 # Identify and filter the call sign of profiles with rejected flag from QC ARTOFS outputs:
@@ -49,7 +65,7 @@ Rcpt_psal = []
 DTG_temp = []
 DTG_psal = []
 lookup = 'QC Std'
-with open(rtofs_qc) as myFile:
+with open("rtofs_qc.txt") as myFile:
     myFile = list(myFile)
     for num, line in enumerate(myFile, 0):
         if lookup in line:
@@ -74,13 +90,13 @@ with open(rtofs_qc) as myFile:
                     Rcpt_temp.append(myFile[num-2].rpartition('Rcpt= ')[2].rpartition('  Sign')[0])
                     DTG_temp.append(myFile[num-2].rpartition('DTG= ')[2].rpartition('  Rcpt')[0])
 
-rejected_temp_file = os.path.join (COMOUTsmall,f"ocean.{VDATE_YMD:%Y%m%d}", 'argo',f"rejected_temp_{INITDATE_YMD:%Y%m%d}.txt")
+rejected_temp_file = os.path.join (COMOUTsmall,f"rejected_temp_{VDATE_YMD:%Y%m%d}.txt")
 file1 = open(rejected_temp_file,'w')
 for temp_ID in rejected_temp:
     file1.write(temp_ID+" ")
 file1.close()
 
-rejected_psal_file = os.path.join (COMOUTsmall, f"ocean.{VDATE_YMD:%Y%m%d}", 'argo',f"rejected_psal_{INITDATE_YMD:%Y%m%d}.txt")    
+rejected_psal_file = os.path.join (COMOUTsmall,f"rejected_psal_{VDATE_YMD:%Y%m%d}.txt")    
 file2 = open(rejected_psal_file,'w')
 for psal_ID in rejected_psal:
 #    file2.write(psal_ID+"\n")
