@@ -41,7 +41,7 @@ date_type = os.environ['date_type']
 NDAYS = os.environ['NDAYS']
 fig_name_label = os.environ['fig_name_label']
 dir_name_label = fig_name_label
-obs_src_name=os.environ['OBS_SRC']
+obs_src_name=os.environ['obs_src_name']
 restart_mode = os.environ['restart_mode']
 plot_verbosity = os.environ['plot_verbosity']
 VERIF_TYPE = os.environ['VERIF_TYPE']
@@ -834,6 +834,23 @@ elif JOB_GROUP == 'make_plots':
                     select_fcst_hour = "64"
             fhrs=[]
             fhrs.append(int(select_fcst_hour))
+        if current_var == "AOD":
+            if init_hr_start == "06":
+                if fday_start == "1":
+                    select_fcst_hour = "14"
+                elif fday_start == "2":
+                    select_fcst_hour = "38"
+                elif fday_start == "3":
+                    select_fcst_hour = "62"
+            elif init_hr_start == "12":
+                if fday_start == "1":
+                    select_fcst_hour = "8"
+                elif fday_start == "2":
+                    select_fcst_hour = "32"
+                elif fday_start == "3":
+                    select_fcst_hour = "56"
+            fhrs=[]
+            fhrs.append(int(select_fcst_hour))
 
         date_info_dict['fday_start'] = fday_start
         date_info_dict['fday_end'] = fday_end
@@ -939,6 +956,23 @@ elif JOB_GROUP == 'make_plots':
                     select_fcst_hour = "40"
                 elif fday_start == "3":
                     select_fcst_hour = "64"
+            fhrs=[]
+            fhrs.append(int(select_fcst_hour))
+        if current_var == "AOD":
+            if init_hr_start == "06":
+                if fday_start == "1":
+                    select_fcst_hour = "14"
+                elif fday_start == "2":
+                    select_fcst_hour = "38"
+                elif fday_start == "3":
+                    select_fcst_hour = "62"
+            elif init_hr_start == "12":
+                if fday_start == "1":
+                    select_fcst_hour = "8"
+                elif fday_start == "2":
+                    select_fcst_hour = "32"
+                elif fday_start == "3":
+                    select_fcst_hour = "56"
             fhrs=[]
             fhrs.append(int(select_fcst_hour))
 
