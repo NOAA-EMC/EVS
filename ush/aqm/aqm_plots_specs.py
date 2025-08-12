@@ -202,6 +202,7 @@ class PlotSpecs:
             'PMTF/L1': 'Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
             'PMAVE/A23': '24hr-Average Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
             'AOTK/L0': 'Aerosol Optical Depth at 550nm',
+            'AOD/L0': 'Aerosol Optical Depth at 550nm',
             'APCP/A24': '24 hour Accumulated Precipitation',
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
@@ -587,7 +588,7 @@ class PlotSpecs:
                 if int(forecast_hour) % 24 == 0:
                     forecast_day_list.append(str(int(forecast_day)))
                 else:
-                    if fcst_var in [ "OZMAX8" , "PMAVE" ]:  ## round up
+                    if fcst_var in [ "OZMAX8" , "PMAVE", "AOD" ]:  ## round up
                         forecast_day = int(fday_for_title)
                     forecast_day_list.append(str(forecast_day))
             if len(forecast_hour_list) == 1:
@@ -763,7 +764,7 @@ class PlotSpecs:
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
                                               var_level_for_title))
-        if plot_info_dict['fcst_var_name'] == 'AOTK':
+        if plot_info_dict['fcst_var_name'] == 'AOTK' or plot_info_dict['fcst_var_name'] == 'AOD':
             units = 'unitless'
         elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
             units = '$\u03bcg/m^3$'
@@ -772,7 +773,7 @@ class PlotSpecs:
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
             var_thresh_symbol = var_thresh_for_title.replace("gt","$\u003E$").replace("ge","$\u2265$")
-            if plot_info_dict['fcst_var_name'] == 'AOTK':
+            if plot_info_dict['fcst_var_name'] == 'AOTK' or plot_info_dict['fcst_var_name'] == 'AOD':
                 plot_title = plot_title+', '+var_thresh_symbol
             else:
                 plot_title = plot_title+', '+var_thresh_symbol+' '+units
@@ -863,7 +864,7 @@ class PlotSpecs:
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
                                               var_level_for_title))
-        if plot_info_dict['fcst_var_name'] == 'AOTK':
+        if plot_info_dict['fcst_var_name'] == 'AOTK' or plot_info_dict['fcst_var_name'] == 'AOD':
             units = 'unitless'
         elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE':
             units = '$\u03bcg/m^3$'
@@ -872,7 +873,7 @@ class PlotSpecs:
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
             var_thresh_symbol = var_thresh_for_title.replace("gt","$\u003E$").replace("ge","$\u2265$")
-            if plot_info_dict['fcst_var_name'] == 'AOTK':
+            if plot_info_dict['fcst_var_name'] == 'AOTK' or plot_info_dict['fcst_var_name'] == 'AOD':
                 plot_title = plot_title+', '+var_thresh_symbol
             else:
                 plot_title = plot_title+', '+var_thresh_symbol+' '+units

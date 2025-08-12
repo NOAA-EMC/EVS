@@ -398,8 +398,8 @@ class ValidHourAverageFhrMean:
             )
             if model_num_npts != 0:
                 ax1.plot(
-                    np.ma.compressed(masked_valid_hours),
-                    np.ma.compressed(masked_model_num_data),
+                    masked_valid_hours,
+                    masked_model_num_data,
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
@@ -443,8 +443,8 @@ class ValidHourAverageFhrMean:
                                   +self.model_info_dict['model1']['plot_name']
                                   +"]")
                 ax2.plot(
-                    np.ma.compressed(masked_diff_valid_hours),
-                    np.ma.compressed(masked_model_num_model1_diff_data),
+                    masked_diff_valid_hours,
+                    masked_model_num_model1_diff_data,
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
@@ -515,23 +515,15 @@ class ValidHourAverageFhrMean:
                             or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
                         if not np.ma.is_masked(ci_max):
                             stat_min_max_dict['ax2_stat_max'] = ci_max
-                    cmasked_ci_valid_hours = np.ma.compressed(
-                        masked_ci_valid_hours
-                    )
-                    cmasked_model_num_model1_diff_ci_data = np.ma.compressed(
-                        masked_model_num_model1_diff_ci_data
-                    )
-                    cmasked_ci_bar_max_widths = np.ma.compressed(
-                        np.ma.masked_where(
+                    cmasked_ci_valid_hours = masked_ci_valid_hours
+                    cmasked_model_num_model1_diff_ci_data = masked_model_num_model1_diff_ci_data
+                    cmasked_ci_bar_max_widths = np.ma.masked_where(
                             np.ma.getmask(masked_model_num_model1_diff_ci_data),
                             ci_bar_max_widths
-                        )
                     )
-                    cmasked_ci_bar_intvl_widths = np.ma.compressed(
-                        np.ma.masked_where(
+                    cmasked_ci_bar_intvl_widths = np.ma.masked_where(
                             np.ma.getmask(masked_model_num_model1_diff_ci_data),
                             ci_bar_intvl_widths
-                        )
                     )
                     for vhr_idx in range(len(cmasked_ci_valid_hours)):
                         vhr = cmasked_ci_valid_hours[vhr_idx]
