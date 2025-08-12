@@ -29,28 +29,12 @@ rtofs_ver = os.environ['rtofs_ver']
 
 # Set up date/time
 VDATE_YMD = datetime.datetime.strptime(VDATE, '%Y%m%d')
-mDATE= VDATE_YMD-datetime.timedelta(days=1)
-p1DATE = VDATE_YMD + datetime.timedelta(days=1)
-p2DATE= VDATE_YMD + datetime.timedelta(days=2)
-mDATE_YMD = datetime.datetime.strftime(mDATE, '%Y%m%d')
-p1DATE_YMD = datetime.datetime.strftime(p1DATE, '%Y%m%d')
-p2DATE_YMD = datetime.datetime.strftime(p2DATE, '%Y%m%d')
-rtofs_qc_1 = os.path.join(COMROOT,
-                        'rtofs',f"{rtofs_ver}",f"rtofs.{p1DATE_YMD}",
+PDATE= VDATE_YMD-datetime.timedelta(days=1)
+PDATE_YMD = datetime.datetime.strftime(PDATE, '%Y%m%d')
+rtofs_qc = os.path.join(COMROOT,
+                        'rtofs',f"{rtofs_ver}",f"rtofs.{VDATE_YMD:%Y%m%d}",
                         'ncoda/logs/profile_qc',
                         f"prof_argo_rpt.{VDATE_YMD.strftime('%Y%m%d')}00.txt")
-
-rtofs_qc_2 = os.path.join(COMROOT,
-                        'rtofs',f"{rtofs_ver}",f"rtofs.{p2DATE_YMD}",
-                        'ncoda/logs/profile_qc',
-                        f"prof_argo_rpt.{p1DATE_YMD}00.txt")
-
-combined = rtofs_qc
-print (combined)
-with open(combined, 'w') as outfile:
-    for fname in [rtofs_qc_1, rtofs_qc_2]:
-        with open(fname) as infile:
-            outfile.write(infile.read())
 
 #########################################################################################
 # Identify and filter the call sign of profiles with rejected flag from QC ARTOFS outputs:
