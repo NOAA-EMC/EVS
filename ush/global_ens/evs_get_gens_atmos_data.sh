@@ -397,11 +397,17 @@ if [ $modnam = prepbufr ] ; then
    > run_pb2nc.sh
    for ihour in 00 06 12 18 ; do
       > run_pb2nc.${ihour}.sh
-      echo "export output_base=${WORKtask}/pb2nc" >> run_pb2nc.${ihour}.sh
+      echo "export bufrpath=$WORKtask" >> run_pb2nc.${ihour}.sh
+      echo "export output_base=$WORKtask/pb2nc" >> run_pb2nc.${ihour}.sh
       echo "export vbeg=${ihour}" >> run_pb2nc.${ihour}.sh
       echo "export vend=${ihour}" >> run_pb2nc.${ihour}.sh
       if [ -s $COMINobsproc/gdas.${vday}/${ihour}/atmos/gdas.t${ihour}z.prepbufr ] ; then
-        echo "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf" >> run_pb2nc.${ihour}.sh  
+        # Split the prepbufr data file by message types to reduce walltime
+	echo "mkdir -p $WORKtask/prepbufr.${vday}" >> run_pb2nc.${ihour}.sh
+        echo ">$WORKtask/prepbufr.${vday}/gdas.t${ihour}z.prepbufr" >> run_pb2nc.${ihour}.sh
+	echo "split_by_subset $COMINobsproc/gdas.${vday}/${ihour}/atmos/gdas.t${ihour}z.prepbufr" >> run_pb2nc.${ihour}.sh
+	echo "cat $WORKtask/ADPUPA $WORKtask/ADPSFC $WORKtask/SFCSHP >> $WORKtask/prepbufr.${vday}/gdas.t${ihour}z.prepbufr" >> run_pb2nc.${ihour}.sh
+      	echo "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf" >> run_pb2nc.${ihour}.sh  
         echo "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.conf" >> run_pb2nc.${ihour}.sh  
       else
         echo "WARNING: $COMINobsproc/gdas.${vday}/${ihour}/atmos/gdas.t${ihour}z.prepbufr is not available"
@@ -414,19 +420,19 @@ if [ $modnam = prepbufr ] ; then
 	fi
       fi 
       chmod +x run_pb2nc.${ihour}.sh
-      echo "${WORKtask}/run_pb2nc.${ihour}.sh" >> run_pb2nc.sh
+      echo "$WORKtask/run_pb2nc.${ihour}.sh" >> run_pb2nc.sh
    done
-   echo "for FILE in ${WORKtask}/pb2nc/prepbufr_nc/*.nc ; do" >> run_pb2nc.sh
+   echo "for FILE in $WORKtask/pb2nc/prepbufr_nc/*.nc ; do" >> run_pb2nc.sh
    echo "  if [ -s \$FILE ]; then" >> run_pb2nc.sh
-   echo "      chmod 640 ${WORKtask}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
-   echo "      chgrp rstprod ${WORKtask}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
+   echo "      chmod 640 $WORKtask/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
+   echo "      chgrp rstprod $WORKtask/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
    echo "      cp -v \$FILE $COMOUTgefs" >> run_pb2nc.sh
    echo "      chmod 640 $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
    echo "      chgrp rstprod $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
    echo "  fi" >> run_pb2nc.sh
    echo "done" >> run_pb2nc.sh
    chmod +x run_pb2nc.sh
-   ${WORKtask}/run_pb2nc.sh
+   $WORKtask/run_pb2nc.sh
 fi
 
 ############################################################
