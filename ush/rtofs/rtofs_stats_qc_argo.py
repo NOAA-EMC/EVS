@@ -91,16 +91,13 @@ with open("rtofs_qc.txt") as myFile:
                     DTG_temp.append(myFile[num-2].rpartition('DTG= ')[2].rpartition('  Rcpt')[0])
 
 rejected_temp_file = os.path.join (COMOUTsmall,f"rejected_temp_{VDATE_YMD:%Y%m%d}.txt")
-file1 = open(rejected_temp_file,'w')
-for temp_ID in rejected_temp:
-    file1.write(temp_ID+" ")
+with open(rejected_temp_file, 'w') as file1:    
+    file1.write(", ".join(rejected_temp))
 file1.close()
 
 rejected_psal_file = os.path.join (COMOUTsmall,f"rejected_psal_{VDATE_YMD:%Y%m%d}.txt")    
-file2 = open(rejected_psal_file,'w')
-for psal_ID in rejected_psal:
-#    file2.write(psal_ID+"\n")
-    file2.write(psal_ID+" ")
+with open(rejected_psal_file, 'w') as file2:
+    file2.write(", ".join(rejected_psal))
 file2.close()
 
 print(rejected_psal)
