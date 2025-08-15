@@ -137,12 +137,12 @@ for aeronet_job in list(filter_stats_jobs_dict['aeronet'].keys()):
             (filter_stats_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
                  'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
-                 'ge1.5', 'ge2.0'
+                 'ge2.0'
              ]
             (filter_stats_jobs_dict['aeronet'][f"{aeronet_job}_Thresh"]\
              ['obs_var_dict']['threshs']) = [
                  'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
-                 'ge1.5', 'ge2.0'
+                 'ge2.0'
              ]
 #### airnow
 for airnow_job in list(filter_stats_jobs_dict['airnow'].keys()):
@@ -168,13 +168,13 @@ for airnow_job in list(filter_stats_jobs_dict['airnow'].keys()):
         if airnow_job == 'PM25':
             (filter_stats_jobs_dict['airnow'][f"{airnow_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
-                 'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
-                 'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
+                 'gt5',  'gt10', 'gt15', 'gt25', 'gt35',
+                 'gt40', 'gt50', 'gt60', 'gt80', 'gt100'
              ]
             (filter_stats_jobs_dict['airnow'][f"{airnow_job}_Thresh"]\
              ['obs_var_dict']['threshs']) = [
-                 'gt5',  'gt10', 'gt15', 'gt20', 'gt25', 'gt30', 'gt35',
-                 'gt40', 'gt45', 'gt50', 'gt55', 'gt60', 'gt65'
+                 'gt5',  'gt10', 'gt15', 'gt25', 'gt35',
+                 'gt40', 'gt50', 'gt60', 'gt80', 'gt100'
              ]
 if JOB_GROUP == 'filter_stats':
     JOB_GROUP_dict = filter_stats_jobs_dict
