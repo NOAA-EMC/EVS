@@ -1090,48 +1090,12 @@ suite evs_nco
               edit VHR '11'
           endfamily
           family global_chem
-            task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_03
-              trigger :TIME >= 0615 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '03'
-            task jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_03
-              trigger :TIME >= 0615 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '03'
             task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_06
-              trigger :TIME >= 0715 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
+              trigger :TIME >= 0615 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '06'
             task jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_06
-              trigger :TIME >= 0715 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
+              trigger :TIME >= 0615 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
               edit VHR '06'
-            task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_09
-              trigger :TIME >= 0730 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '09'
-            task jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_09
-              trigger :TIME >= 0730 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '09'
-            task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_12
-              trigger :TIME >= 0745 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '12'
-            task jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_12
-              trigger :TIME >= 0745 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '12'
-            task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_15
-              trigger :TIME >= 0815 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '15'
-            task jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_15
-              trigger :TIME >= 0815 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '15'
-            task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_18
-              trigger :TIME >= 0845 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '18'
-            task jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_18
-              trigger :TIME >= 0845 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '18'
-            task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_21
-              trigger :TIME >= 0915 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '21'
-            task jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_21
-              trigger :TIME >= 0915 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
-              edit VHR '21'
           endfamily
         endfamily    # 06 stats
         family plots
@@ -1654,6 +1618,20 @@ suite evs_nco
             task jevs_analyses_ccpa_precip_stats_vhr_17
               trigger :TIME >= 1715 ../../prep/analyses/jevs_analyses_precip_prep_vhr_12 == complete
               edit VHR '17'
+          endfamily
+          family global_chem
+            task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_12
+              trigger :TIME >= 1330 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
+              edit VHR '12'
+            task jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_12
+              trigger :TIME >= 1330 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete
+              edit VHR '12'
+            task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_18
+              trigger :TIME >= 1400 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete and ../../../../00/evs/stats/global_chem/jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_00 == complete and ../../../../06/evs/stats/global_chem/jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_06 == complete and ./jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_12 == complete
+              edit VHR '18'
+            task jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_18
+              trigger :TIME >= 1400 and ../../../../00/evs/prep/global_chem/jevs_global_chem_atmos_grid2obs_prep == complete and ../../../../00/evs/stats/global_chem/jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_00 == complete and ../../../../06/evs/stats/global_chem/jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_06 == complete and ./jevs_global_chem_atmos_grid2obs_aeronet_stats_vhr_12 == complete
+              edit VHR '18'
           endfamily
         endfamily   # 12 stats
         family plots
