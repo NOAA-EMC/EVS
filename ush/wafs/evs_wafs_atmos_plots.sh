@@ -89,7 +89,7 @@ while [[ $n -le $NDAYS ]] ; do
     targetfile=$OUTPUT_BASE_DIR/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
     if [[ ! -f "$targetfile" ]] ; then
 	if [[ -f "$sourcefile" ]] ; then
-	    ln -s $sourcefile $OUTPUT_BASE_DIR/.
+	    ln -sf $sourcefile $OUTPUT_BASE_DIR/.
 	fi
     fi
     n=$((n+1))
