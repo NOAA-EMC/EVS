@@ -704,6 +704,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         connect_points = True
     else:
         connect_points = False
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -711,6 +712,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         y_vals_metric1 = pivot_metric1[str(model_list[m])].values
         y_vals_metric1_mean = np.nanmean(y_vals_metric1)
         if metric2_name is not None:
@@ -746,9 +749,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     y_vals_metric_min = np.nanmin(y_vals_metric1)
                     y_vals_metric_max = np.nanmax(y_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
+                n_mods+=1
             else:
                 if math.isinf(y_mod_min):
                     y_mod_min = y_vals_metric_min

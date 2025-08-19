@@ -280,10 +280,6 @@ echo "*****************************"
      export evs_run_mode=$evs_run_mode
      source $config
      
-     if [ ${#VAR_NAME_LIST} -lt 1 ]; then
-        continue
-     fi
-     
    # Create Output Directories
      python $USHevs/mesoscale/mesoscale_create_output_dirs.py
      export err=$?; err_chk

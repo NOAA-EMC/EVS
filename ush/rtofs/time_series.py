@@ -755,11 +755,12 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         [np.power(10.,y), 2.*np.power(10.,y)] 
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
-    round_to_nearest_categories = y_range_categories/2.
     y_range = y_max-y_min
-    round_to_nearest =  round_to_nearest_categories[
-        np.digitize(y_range, y_range_categories[:-1])
-    ]
+    if y_range < 1.0:
+        round_to_nearest = 0.5
+    else:
+        index = np.floor(y_range)
+        round_to_nearest = index / 2.0
     margin = np.ceil(y_max) -np.floor(y_min)
     ylim_min = (np.floor(y_min/round_to_nearest)*round_to_nearest) - 0.1 *margin
     ylim_max = (np.ceil(y_max/round_to_nearest)*round_to_nearest) + 0.1 * margin

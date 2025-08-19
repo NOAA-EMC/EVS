@@ -2165,9 +2165,13 @@ def equalize_samples(logger, df, group_by):
     df_equalized_groups = df_equalized.groupby(group_by)
     # Check that groups are indeed equally sized for each independent variable
     df_groups_sizes = df_equalized_groups.size()
-    df_groups_sizes.index = df_groups_sizes.index.set_levels(
-        df_groups_sizes.index.levels[-1].astype(str), level=-1
-    )
+    if df_groups_sizes.empty:
+        logger.debug(f"equalize_samples: no data in groups {group_by}")
+        return df, False
+    else:
+        df_groups_sizes.index = df_groups_sizes.index.set_levels(
+            df_groups_sizes.index.levels[-1].astype(str), level=-1
+        )
     data_are_equalized = np.all([
         np.unique(df_groups_sizes.xs(str(unique_indep_var), level=1)).size == 1
         for unique_indep_var 
