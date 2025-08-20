@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:45:00
-#PBS -l place=vscatter,select=1:ncpus=32:mem=300GB
+#PBS -l walltime=00:25:00
+#PBS -l place=vscatter,select=2:ncpus=70:mem=300GB
 #PBS -l debug=true
 
 set -x
@@ -30,7 +30,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export envir=prod
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 export SENDDBN=NO
 
 export vhr=00
