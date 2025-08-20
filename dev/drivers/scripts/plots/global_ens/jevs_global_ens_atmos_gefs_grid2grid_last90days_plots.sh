@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_atmos_naefs_grid2grid_past90days_plots
-#PBS -j oe 
+#PBS -N jevs_global_ens_atmos_gefs_grid2grid_last90days_plots
+#PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
-#PBS -l place=vscatter,select=1:ncpus=24:mem=15GB
+#PBS -l walltime=00:25:00
+#PBS -l place=vscatter:exclhost,select=3:ncpus=120:mpiprocs=120:mem=100GB
 #PBS -l debug=true
 
 set -x
@@ -20,7 +20,7 @@ export STEP=plots
 export COMPONENT=global_ens
 export RUN=atmos
 export VERIF_CASE=grid2grid
-export MODELNAME=naefs
+export MODELNAME=gefs
 
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -35,7 +35,6 @@ export SENDDBN=NO
 
 export vhr=00
 export past_days=90
-
 
 
 export valid_time=both

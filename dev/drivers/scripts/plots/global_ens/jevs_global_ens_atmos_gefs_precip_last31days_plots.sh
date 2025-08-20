@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_atmos_naefs_precip_past31days_plots
+#PBS -N jevs_global_ens_atmos_gefs_precip_last31days_plots
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=1:ncpus=28:mem=50GB
+#PBS -l place=vscatter,select=2:ncpus=70:mem=100GB
 #PBS -l debug=true
 
 set -x
@@ -20,7 +20,7 @@ export STEP=plots
 export COMPONENT=global_ens
 export RUN=atmos
 export VERIF_CASE=precip
-export MODELNAME=naefs
+export MODELNAME=gefs
 
 module reset
 module load prod_envir/${prod_envir_ver}
