@@ -1,5 +1,5 @@
 #!/bin/bash
-# modulefile for EVS rtofs component
+# modulefile for EVS rtofs component, stats step
 
 set -x
 
@@ -17,4 +17,5 @@ module load met/${met_ver}
 module load metplus/${metplus_ver}
 
 module list
+
 set -x
