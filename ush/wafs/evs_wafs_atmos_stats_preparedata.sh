@@ -207,6 +207,8 @@ fi
 export valid_beg=$cc
 export valid_end=$cc
 if [ $runMETplus = yes ] ; then
+    # The following commented assignments explain a variable in GridStat_fcstWAFS_obs*conf (left) come from a variable in the workflow scripts (right),
+    # which helps understanding the variable connections between the scripts and met/metplus
     # FCST_GRID_STAT_INPUT_DIR=$GRID_STAT_INPUT_BASE
     # GRID_STAT_OUTPUT_DIR=$STATSDIR
     ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATAmpmd/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf

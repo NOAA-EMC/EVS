@@ -45,7 +45,6 @@ elif [ $OBSERVATION = "GFS" ] ; then
 
 	    # 10 knots == 5.14444 m/s
 	    export VAR_OPTIONS_FCST="wind_thresh = [ >=5.14444 ]; wind_logic = INTERSECTION"
-#	    export VAR_OPTIONS_OBS="wind_thresh = [ NA ]; wind_logic = INTERSECTION"
 	    export VAR_OPTIONS_OBS="$VAR_OPTIONS_FCST"
 
 	    # For plot
