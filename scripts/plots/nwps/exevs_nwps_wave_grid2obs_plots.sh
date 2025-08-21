@@ -59,7 +59,7 @@ echo 'Copying *.stat files :'
 echo '-----------------------------'
 [[ "$LOUD" = YES ]] && set -x
 
-WFO='hgx bro'
+WFO='ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
 
 for wfo in ${WFO}; do
 	export wfo=$wfo
@@ -91,15 +91,13 @@ for wfo in ${WFO}; do
 		set -x
 		echo ' '
 		echo '**************************************** '
-		echo '*** FATAL ERROR: NO NWPS *.stat FILES *** '
+		echo '*** WARNING: NO NWPS *.stat FILES *** '
 		echo "             for ${wfo} at ${VDATE} "
 		echo '**************************************** '
 		echo ' '
 		echo "${MODELNAME}_${RUN} $VDATE $vhour : NWPS *.stat files missing."
 		[[ "$LOUD" = YES ]] && set -x
-		"FATAL ERROR: NO NWPS *.stat files for ${VDATE}"
-		err_exit "FATAL ERROR: Did not copy the NWPS *.stat files for ${VDATE}"
-		exit
+		continue # This will skip the rest of the loop for this WFO
 	fi
 #################################
 ## Make the command files for cfp 
