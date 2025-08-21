@@ -3,7 +3,7 @@
 # Purpose: set up environment, paths, and run the global_ens precip
 #          plotting python scripts
 #
-# Updated: 07/23/2025 by L. Gwen Chen (lichuan.chen@noaa.gov)
+# Updated: 08/18/2025 by L. Gwen Chen (lichuan.chen@noaa.gov)
 #          03/14/2025 by L. Gwen Chen (lichuan.chen@noaa.gov)
 #          11/17/2023 by Binbin Zhou, Lynker@EMC/NCEP
 #**************************************************************************
@@ -20,9 +20,7 @@ verif_case=$VERIF_CASE
 verif_type=ccpa
 model_list='ECME CMCE GEFS'
 models='ECME, CMCE, GEFS'
-VX_MASK_LIST="CONUS, CONUS_East, CONUS_South, CONUS_Central, CONUS_West"
-valid_time='valid_12z'
-init_time='init00z_12z'
+VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central"
 
 n=0
 while [ $n -le $past_days ] ; do
@@ -56,7 +54,7 @@ done
 #*****************************************
 > run_all_poe.sh
 
-for stats in ets fbias crps me rmse bs bss fss ; do 
+for stats in ets fbias crps me_mae rmse_spread bss fss ; do 
   if [ $stats = ets ] ; then
     stat_list='ets'
     line_tp='ctc'
@@ -72,20 +70,15 @@ for stats in ets fbias crps me rmse bs bss fss ; do
     line_tp='ecnt'
     VARs='APCP_24'
     threshes=''
-  elif [ $stats = me ] ; then
-    stat_list='me'
+  elif [ $stats = me_mae ] ; then
+    stat_list='me, mae'
     line_tp='ecnt'
     VARs='APCP_24'
     threshes=''
-  elif [ $stats = rmse ] ; then
-    stat_list='rmse'
+  elif [ $stats = rmse_spread ] ; then
+    stat_list='rmse, spread'
     line_tp='ecnt'
     VARs='APCP_24'
-    threshes=''
-  elif [ $stats = bs ] ; then
-    stat_list='bs'
-    line_tp='pstd'
-    VARs='APCP24_gt1 APCP24_gt5 APCP24_gt10 APCP24_gt25 APCP24_gt50'
     threshes=''
   elif [ $stats = bss ] ; then
     stat_list='bss'
@@ -96,20 +89,20 @@ for stats in ets fbias crps me rmse bs bss fss ; do
     stat_list='fss'
     line_tp='nbrcnt'
     VARs='APCP24_gt1 APCP24_gt5 APCP24_gt10 APCP24_gt25 APCP24_gt50'
-    threshes=''  #should set to threshes='>=1,>=5,>=10,>=25,>=50'? if not, then all thresholds will be used! 
+    threshes='' 
   else
     err_exit "$stats is not a valid metric"
   fi   
 
   if [ $stats = fss ] ; then
-    interp_pnts='1 9 25 49 81 121'
+    interp_pnts='1 9'
   else
     interp_pnts='1'
   fi 
 
   for score_type in time_series lead_average ; do
     if [ $score_type = time_series ] ; then
-      export fcst_leads="120 240 360"
+      export fcst_leads="24 72 120 240"
     else
       export fcst_leads="vs_lead" 
     fi
@@ -226,7 +219,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence to generate png files
 #*********************************************************************
 if [ $run_mpi = yes ] ; then
-  mpiexec -np 32 -ppn 32 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+  mpiexec -np 140 -ppn 70 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
   export err=$?; err_chk
@@ -250,19 +243,19 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
         evs_graphic_domain="buk_conus_c"
     fi
 
-    for stat in ets fbias crps me rmse bs bss fss ; do
+    for stat in ets fbias crps me_mae rmse_spread bss fss ; do
         if [ $stat = crps ]; then
             threshs="NA"
-	elif [ $stat = me ]; then
+	elif [ $stat = me_mae ]; then
 	    threshs="NA"
-	elif [ $stat = rmse ]; then
+	elif [ $stat = rmse_spread ]; then
 	    threshs="NA"
         else
             threshs="gt1 gt5 gt10 gt25 gt50"
         fi
 
 	if [ $stat = fss ]; then
-            nbrhds="1 3 5 7 9 11"
+            nbrhds="1 3"
         else
             nbrhds="NA"
         fi
@@ -281,11 +274,7 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
                     nbhrd_graphic=$(echo "_width${nbrhd}")
                 fi
 
-		if [ $stat = bs ]; then
-                    if [ -f "lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs.png" ]; then
-                        mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs.png evs.global_ens.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
-                    fi
-                elif [ $stat = bss ]; then
+		if [ $stat = bss ]; then
 		    if [ -f "lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bss.png" ]; then
 		        mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bss.png evs.global_ens.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
 		    fi
@@ -295,13 +284,9 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
                     fi
                 fi
 
-		for lead in 120 240 360; do
+		for lead in 24 72 120 240; do
                     lead_graphic=$(echo "_f${lead}")
-                    if [ $stat = bs ]; then
-                        if [ -f "time_series_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs${lead_graphic}.png" ]; then
-                            mv time_series_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs${lead_graphic}.png evs.global_ens.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.timeseries_valid12z${lead_graphic}.g212_${evs_graphic_domain}.png
-                        fi
-		    elif [ $stat = bss ]; then
+                    if [ $stat = bss ]; then
 			if [ -f "time_series_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bss${lead_graphic}.png" ]; then
 			    mv time_series_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bss${lead_graphic}.png evs.global_ens.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.timeseries_valid12z${lead_graphic}.g212_${evs_graphic_domain}.png
 			fi
@@ -316,15 +301,15 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
     done # stat
 done # domain
 
-tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.last${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    if [ -s evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar ]; then
-        cp -v evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar $COMOUT/.
+    if [ -s evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.last${past_days}days.v${VDATE}.tar ]; then
+        cp -v evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.last${past_days}days.v${VDATE}.tar $COMOUT/.
     fi
 fi
 
 if [ $SENDDBN = YES ]; then 
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.last${past_days}days.v${VDATE}.tar
 fi
 
