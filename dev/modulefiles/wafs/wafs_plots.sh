@@ -1,10 +1,10 @@
 #!/bin/bash
-# modulefile for EVS wafs stat
+# modulefile for EVS wafs component, plots step
+
 set -x
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
-
 module load ve/evs/$ve_evs_ver
 module load craype/$craype_ver
 module load cray-pals/$craypals_ver
@@ -19,4 +19,9 @@ module load gsl/$gsl_ver
 module load met/$met_ver
 module load metplus/$metplus_ver
 
+export SIPHONROOT=${UTILROOT}/fakedbn
+export DBNROOT=$SIPHONROOT
+
 module list
+
+set -x
