@@ -158,7 +158,6 @@ for wfo in ${WFO}; do
 #########################                                                                                                                                                                        
 	if [[ -s ${DATA}/jobs/${wfo}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh ]]; then
     		if [ ${run_mpi} = 'yes' ] ; then
-       			export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
        			mpiexec -np 36 -ppn 36 --cpu-bind verbose,core cfp ${DATA}/jobs/${wfo}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
        			export err=$?; err_chk
 
