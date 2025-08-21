@@ -4,7 +4,8 @@
 # Purpose of Script: To create stat files for NWPS forecasts verified with
 #    NDBC buoy data using MET/METplus.
 # Author: Samira Ardani (samira.ardani@noaa.gov)
-#         - Added MPMD directories and updated the $DATA structure (03/2025)
+#         - Added MPMD directories and updated the $DATA structure (03/2025).
+#         - Added all available WFOs for stats analysis (08/2025). 
 # Input fils:
 # indivudual fcst grib2 files from ARCmodel
 # Output files:

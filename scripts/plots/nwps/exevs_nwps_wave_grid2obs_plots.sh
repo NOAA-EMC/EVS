@@ -5,8 +5,9 @@
 # Purpose of Script: Run the grid2obs plots for NWPS wave model           
 #           Updates: 
 #           - Updated the code structure (11/2024)
-#           - addressed mpmd (03/2025)
-#                   
+#           - Addressed mpmd (03/2025)
+#           - Added most of the available WFOs for plotting purposes (08/2025).
+#           - Adjusted the code to skip the rest of the loops for WFO without stat file (08/2025).        
 #                                                                               
 # Usage:                                                                        
 #  Parameters: None                                                             
