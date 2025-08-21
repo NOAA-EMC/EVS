@@ -84,6 +84,7 @@ for ff in $FHOURS ; do
 	    fi
 	else
 	    echo "WARNING: missing forecast $sourcefile"
+	    echo $sourcefile >> missingFiles.$OBSERVATION.$RESOLUTION$CENTER$VAR$cc
         fi
     else
 	if [[ -f $sourcefile ]] ; then
@@ -92,6 +93,7 @@ for ff in $FHOURS ; do
 	else
 	    missingForecast="$missingForecast F$ff"
 	    echo "WARNING: missing forecast $sourcefile"
+	    echo $sourcefile >> missingFiles.$OBSERVATION.$RESOLUTION$CENTER$VAR$cc
 	fi
     fi
 done
@@ -111,6 +113,8 @@ else
 	if [[ $SENDMAIL = YES ]] ; then
             export subject="A subset of $CENTER forecast files is missing for EVS ${COMPONENT}"
             echo "WARNING: A subset of $CENTER forecasts ($missingForecast) is missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues." > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+	    echo "Missing forecast file(s):" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+	    cat missingFiles.$OBSERVATION.$RESOLUTION$CENTER$VAR$cc >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
             echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 	    cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	fi
