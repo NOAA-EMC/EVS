@@ -127,12 +127,12 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
   export output_base=${WORK}/sref.${vday}
   mkdir -p $output_base
   cd $output_base
-  if [ ! -d ${COMOUTfinal}/apcp24mean ] ; then
-     mkdir -p ${COMOUTfinal}/apcp24mean
+  if [ ! -d ${COMOUTsmall}/apcp24mean ] ; then
+     mkdir -p ${COMOUTsmall}/apcp24mean
   fi
 
 
- if [ ! -s ${COMOUTfinal}/apcp24mean/sref.t12z.pgrb212.24mean.f72.nc ] ; then 
+ if [ ! -s ${COMOUTsmall}/apcp24mean/sref.t12z.pgrb212.24mean.f72.nc ] ; then 
 
   for vhr in 09 15 ; do
     large=${COMINsref}/sref.${vday}/${vhr}/ensprod/sref.t${vhr}z.pgrb212.mean_3hrly.grib2
@@ -169,7 +169,7 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
   if [ -s $output_base/sref.t12z.pgrb212.24mean.f24.nc ] && [ -s $output_base/sref.t12z.pgrb212.24mean.f72.nc ] && [ -s $output_base/sref.t12z.pgrb212.24mean.f72.nc ] ; then 
    if [ $SENDCOM = YES ] ; then
     if [ -s $output_base/sref.t12z.pgrb212.24mean.f*.nc ] ; then
-      cp $output_base/sref.t12z.pgrb212.24mean.f*.nc ${COMOUTfinal}/apcp24mean
+      cp $output_base/sref.t12z.pgrb212.24mean.f*.nc ${COMOUTsmall}/apcp24mean
     fi
    fi 
   fi
