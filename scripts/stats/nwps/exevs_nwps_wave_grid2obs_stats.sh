@@ -188,7 +188,7 @@ for wfo in ${WFO}; do
 #########################
 	if [ $gather = yes ] ; then
 	# check to see if the small stat files are there
-	   nc=$(ls ${DATA}/all_stats/${wfo}/*stat | wc -l | awk '{print $1}')
+	   nc=$(ls ${DATA}/all_stats/${wfo}/ | wc -l | awk '{print $1}')
 	   if [ "${nc}" != '0' ]; then
 		   echo " Found ${nc} ${DATA}/all_stats/${wfo}/*stat files for ${VDATE}"
 		   export job_work_dir=$DATA/job_work_dir/StatAnalysis_${VDATE}
