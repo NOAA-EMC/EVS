@@ -87,7 +87,7 @@ export fig_name_label=${fig_name_label:-last${NDAYS}days}
 export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${MODELNAME}.${VERIF_CASE}.${DATA_TYPE}}
 
 if [ "${RUN}" == "headline" ]; then
-    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${RUN}_${STEP}.sh
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${RUN}_${STEP}.sh
 else
     ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 fi
