@@ -2631,6 +2631,7 @@ graphics = {
                                     'OBS_THRESHs':[''],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
                                 },
                             }
                         }
