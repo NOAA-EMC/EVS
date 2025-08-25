@@ -33,9 +33,11 @@ met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
 envir = os.environ['envir']
 obs_src_name=os.environ['obs_src_name']
+linked_stat_base_dir= os.environ['linked_stat_base_dir']
 
 # Set more specific input directory paths
 daily_stats_dir = os.path.join(COMIN, 'stats', COMPONENT)
+daily_stats_dir = os.path.join(DATA, 'data', RUN)
 
 # Set up directory paths
 logo_dir = os.path.join(FIXevs, 'logos')
@@ -105,7 +107,7 @@ headline1_date_info_dict = {
     'fday_inc': '1'
 }
 headline1_job_name = (
-    'grid2grid_'+headline1_plot_info_dict['line_type']+'_'
+    RUN+'_'+headline1_plot_info_dict['line_type']+'_'
     +headline1_plot_info_dict['stat']+'_'
     +headline1_plot_info_dict['vx_mask']+'_'
     +headline1_plot_info_dict['fcst_var_name']+'_'
@@ -138,15 +140,12 @@ headline1_end_date_dt = datetime.datetime.strptime(
 ##
 for model_num in list(headline1_model_info_dict.keys()):
     model = headline1_model_info_dict[model_num]['name']
-    obs_name = headline1_model_info_dict[model_num]['obs_name']
-    stat_model_dir = os.path.join(stat_base_dir, model)
-    gda_util.make_dir(stat_model_dir)
-    gda_util.get_daily_stat_file(model, daily_stats_dir, stat_model_dir,
-                                 'grid2obs', headline1_start_date_dt,
-                                 headline1_end_date_dt)
+    ## Create condense stats file for plotting based on
+    ## selected criteria from linked stats files in
+    ## "linked_stat_base_dir" defined in exevs_aqm_headline_plots.sh
     logger1.info("Condensing model .stat files for job")
     gda_util.condense_model_stat_files(
-        logger1, stat_base_dir, headline1_output_dir, model,
+        logger1, linked_stat_base_dir, headline1_output_dir, model,
         obs_name, headline1_plot_info_dict['vx_mask'],
         headline1_plot_info_dict['fcst_var_name'],
         headline1_plot_info_dict['fcst_var_level'],
