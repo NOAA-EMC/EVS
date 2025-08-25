@@ -1,10 +1,10 @@
-#PBS -N evs_global_ens_atmos_naefs_grid2grid_past90days_plots
+#PBS -N evs_global_ens_atmos_gefs_precip_last31days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:10:00
-#PBS -l place=vscatter:shared,select=1:ncpus=12:mem=15GB
+#PBS -l walltime=00:15:00
+#PBS -l place=vscatter:shared,select=2:ncpus=70:mem=100GB
 #PBS -l debug=true
 
 export model=evs
@@ -44,13 +44,12 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export NET=evs
 export OMP_NUM_THREADS=1
+export NET=evs
 export RUN=atmos
-export VERIF_CASE=grid2grid
-export MODELNAME=naefs
-export past_days=90
-export valid_time=both
+export VERIF_CASE=precip
+export MODELNAME=gefs
+export past_days=31
 
 ############################################################
 # Execute j-job
