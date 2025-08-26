@@ -21,22 +21,26 @@ for observation in $observations ; do
 	# For ICING, there are 2 different resolutions (before Nov 2023) and 3 centers
 	resolutions="0P25"
 	centers="blend uk us"
+	vars="icesev" #variables to do verfications on
     elif [ $observation = "GFS" ] ; then
 	# For wind/temperature, only 1 resolution so far
 	resolutions="1P25"
 	centers="gfs"
+	vars="uvt wdir"  #variables to do verfications on
     fi
 
     for resolution in $resolutions ; do
-	for center in $centers; do
+       for center in $centers; do
+	  for var in $vars ; do
 	    if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
-		echo $ic $USHevs/evs_wafs_atmos_stats.sh $observation $resolution $center  >> wafs_stat.cmdfile
+		echo $ic $USHevs/evs_wafs_atmos_stats.sh $observation $resolution $center $var >> wafs_stat.cmdfile
 	    else
-		echo $USHevs/evs_wafs_atmos_stats.sh $observation $resolution $center  >> wafs_stat.cmdfile
+		echo $USHevs/evs_wafs_atmos_stats.sh $observation $resolution $center $var >> wafs_stat.cmdfile
 		export MP_PGMMODEL=mpmd
 	    fi
 	    ic=`expr $ic + 1`
-	done
+	  done
+       done
     done
 done
 
@@ -44,7 +48,6 @@ export STATSDIR=$DATA/stats
 export STATSOUTsmall=$STATSDIR/$RUN.$VDATE
 export STATSOUTfinal=$STATSDIR/$MODELNAME.$VDATE
 mkdir -p $STATSOUTsmall $STATSOUTfinal
-
 
 export MPIRUN="$MPIRUN -np $ic -cpu-bind verbose,core cfp"
 $MPIRUN wafs_stat.cmdfile

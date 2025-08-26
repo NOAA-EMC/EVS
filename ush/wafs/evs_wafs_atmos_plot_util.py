@@ -295,24 +295,80 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
             'TOTAL', 'FABAR', 'OABAR', 'FOABAR', 'FFABAR', 'OOABAR', 'MAE'
          ]
    elif line_type == 'VL1L2':
-      if met_version <= 6.1:
+      if met_version >= 12.0:
          stat_file_line_type_columns = [
             'TOTAL', 'UFBAR', 'VFBAR', 'UOBAR', 'VOBAR', 'UVFOBAR',
-            'UVFFBAR', 'UVOOBAR'
+            'UVFFBAR', 'UVOOBAR', 'F_SPEED_BAR', 'O_SPEED_BAR', 'TOTAL_DIR',
+            'DIR_ME', 'DIR_MAE', 'DIR_MSE'
          ]
       elif met_version >= 7.0:
          stat_file_line_type_columns = [
             'TOTAL', 'UFBAR', 'VFBAR', 'UOBAR', 'VOBAR', 'UVFOBAR',
             'UVFFBAR', 'UVOOBAR', 'F_SPEED_BAR', 'O_SPEED_BAR'
          ]
+      elif met_version <= 6.1:
+         stat_file_line_type_columns = [
+            'TOTAL', 'UFBAR', 'VFBAR', 'UOBAR', 'VOBAR', 'UVFOBAR',
+            'UVFFBAR', 'UVOOBAR'
+         ]
    elif line_type == 'VAL1L2':
-      if met_version >= 6.0:
+      if met_version >= 12.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'UFABAR', 'VFABAR', 'UOABAR', 'VOABAR', 'UVFOABAR',
+            'UVFFABAR', 'UVOOABAR', 'FA_SPEED_BAR', 'OA_SPEED_BAR',
+            'TOTAL_DIR', 'DIRA_ME', 'DIRA_MAE', 'DIRA_MSE'
+         ]
+      elif met_version >= 11.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'UFABAR', 'VFABAR', 'UOABAR', 'VOABAR', 'UVFOABAR',
+            'UVFFABAR', 'UVOOABAR', 'FA_SPEED_BAR', 'OA_SPEED_BAR'
+         ]
+      elif met_version >= 6.0:
          stat_file_line_type_columns = [
             'TOTAL', 'UFABAR', 'VFABAR', 'UOABAR', 'VOABAR', 'UVFOABAR', 
             'UVFFABAR', 'UVOOABAR'
          ]
    elif line_type == 'VCNT':
-      if met_version >= 7.0:
+      if met_version >= 12.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'FBAR', 'FBAR_BCL', 'FBAR_BCU', 'OBAR', 'OBAR_BCL',
+            'OBAR_BCU', 'FS_RMS', 'FS_RMS_BCL', 'FS_RMS_BCU', 'OS_RMS',
+            'OS_RMS_BCL', 'OS_RMS_BCU', 'MSVE', 'MSVE_BCL', 'MSVE_BCU',
+            'RMSVE', 'RMSVE_BCL', 'RMSVE_BCU', 'FSTDEV', 'FSTDEV_BCL',
+            'FSTDEV_BCU', 'OSTDEV', 'OSTDEV_BCL', 'OSTDEV_BCU', 'FDIR',
+            'FDIR_BCL', 'FDIR_BCU', 'ODIR', 'ODIR_BCL', 'ODIR_BCU',
+            'FBAR_SPEED', 'FBAR_SPEED_BCL', 'FBAR_SPEED_BCU', 'OBAR_SPEED',
+            'OBAR_SPEED_BCL', 'OBAR_SPEED_BCU', 'VDIFF_SPEED',
+            'VDIFF_SPEED_BCL', 'VDIFF_SPEED_BCU', 'VDIFF_DIR',
+            'VDIFF_DIR_BCL', 'VDIFF_DIR_BCU', 'SPEED_ERR', 'SPEED_ERR_BCL',
+            'SPEED_ERR_BCU', 'SPEED_ABSERR', 'SPEED_ABSERR_BCL',
+            'SPEED_ABSERR_BCU', 'DIR_ERR', 'DIR_ERR_BCL', 'DIR_ERR_BCU',
+            'DIR_ABSERR', 'DIR_ABSERR_BCL', 'DIR_ABSERR_BCU', 'ANOM_CORR',
+            'ANOM_CORR_NCL', 'ANOM_CORR_NCU', 'ANOM_CORR_BCL', 'ANOM_CORR_BCU',
+            'ANOM_CORR_UNCNR', 'ANOM_CORR_UNCNTR_BCL', 'ANOM_CORR_UNCNTR_BCU',
+            'TOTAL_DIR', 'DIR_ME', 'DIR_ME_BCL', 'DIR_ME_BCU', 'DIR_MAE',
+            'DIR_MAE_BCL', 'DIR_MAE_BCU', 'DIR_MSE', 'DIR_MSE_BCL',
+            'DIR_MSE_BCU', 'DIR_RMSE', 'DIR_RMSE_BCL', 'DIR_RMSE_BCU'
+         ]
+      elif met_version >= 11.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'FBAR', 'FBAR_BCL', 'FBAR_BCU', 'OBAR', 'OBAR_BCL',
+            'OBAR_BCU', 'FS_RMS', 'FS_RMS_BCL', 'FS_RMS_BCU', 'OS_RMS',
+            'OS_RMS_BCL', 'OS_RMS_BCU', 'MSVE', 'MSVE_BCL', 'MSVE_BCU',
+            'RMSVE', 'RMSVE_BCL', 'RMSVE_BCU', 'FSTDEV', 'FSTDEV_BCL',
+            'FSTDEV_BCU', 'OSTDEV', 'OSTDEV_BCL', 'OSTDEV_BCU', 'FDIR',
+            'FDIR_BCL', 'FDIR_BCU', 'ODIR', 'ODIR_BCL', 'ODIR_BCU',
+            'FBAR_SPEED', 'FBAR_SPEED_BCL', 'FBAR_SPEED_BCU', 'OBAR_SPEED',
+            'OBAR_SPEED_BCL', 'OBAR_SPEED_BCU', 'VDIFF_SPEED',
+            'VDIFF_SPEED_BCL', 'VDIFF_SPEED_BCU', 'VDIFF_DIR',
+            'VDIFF_DIR_BCL', 'VDIFF_DIR_BCU', 'SPEED_ERR', 'SPEED_ERR_BCL',
+            'SPEED_ERR_BCU', 'SPEED_ABSERR', 'SPEED_ABSERR_BCL',
+            'SPEED_ABSERR_BCU', 'DIR_ERR', 'DIR_ERR_BCL', 'DIR_ERR_BCU',
+            'DIR_ABSERR', 'DIR_ABSERR_BCL', 'DIR_ABSERR_BCU', 'ANOM_CORR',
+            'ANOM_CORR_NCL', 'ANOM_CORR_NCU', 'ANOM_CORR_BCL', 'ANOM_CORR_BCU',
+            'ANOM_CORR_UNCNT', 'ANOM_CORR_UNCNTR_BCL', 'ANOM_CORR_UNCNTR_BCU'
+         ]
+      elif met_version >= 7.0:
          stat_file_line_type_columns = [
             'TOTAL', 'FBAR', 'FBAR_NCL', 'FBAR_NCU', 'OBAR', 'OBAR_NCL', 
             'OBAR_NCU', 'FS_RMS', 'FS_RMS_NCL', 'FS_RMS_NCU', 'OS_RMS',
@@ -537,20 +593,16 @@ def get_stat_plot_name(logger, stat):
          stat_plot_name - string of the formal statistic
                           name being plotted
    """
-   if stat == 'me':
+   if stat in ['bias','me']:
       stat_plot_name = 'Mean Error (Bias)'
+   elif stat == 'esd':
+      stat_plot_name = 'Standard Deviation of the Error'
    elif stat == 'rmse':
       stat_plot_name = 'Root Mean Square Error'
    elif stat == 'bcrmse':
       stat_plot_name = 'Bias-Corrected Root Mean Square Error'
    elif stat == 'msess':
       stat_plot_name = "Murphy's Mean Square Error Skill Score"
-   elif stat == 'fsd':
-      stat_plot_name = 'Standard Deviation of the Forecast'
-   elif stat == 'osd':
-      stat_plot_name = 'Standard Deviation of the Observation'
-   elif stat == 'esd':
-      stat_plot_name = 'Standard Deviation of the Error'
    elif stat == 'rsd':
       stat_plot_name = 'Ratio of the Standard Deviation'
    elif stat == 'rmse_md':
@@ -559,6 +611,8 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Root Mean Square Error from Pattern Variation'
    elif stat == 'pcor':
       stat_plot_name = 'Pattern Correlation'
+   elif stat == 'corr':
+      stat_plot_name = 'Correlation Coefficient'
    elif stat == 'acc':
       stat_plot_name = 'Anomaly Correlation Coefficient'
    elif stat == 'fbar':
@@ -611,6 +665,14 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Probability of False Detection'
    elif stat == 'farate':
       stat_plot_name = 'False Alarm Rate'
+   elif stat == 'hit':
+      stat_plot_name = 'hit count'
+   elif stat == 'falarm':
+      stat_plot_name = 'false alarm count'
+   elif stat == 'miss':
+      stat_plot_name = 'miss count'
+   elif stat == 'reject':
+      stat_plot_name = 'rejection count'
    elif stat == 'podn':
       stat_plot_name = 'Probability of Detection of the Non-Event'
    elif stat == 'faratio':
@@ -633,6 +695,18 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Peirce Skill Score'
    elif stat == 'hss':
       stat_plot_name = 'Heidke Skill Score'
+   elif stat == 'si':
+      stat_plot_name = 'Scatter Index'
+   elif stat == 'p90':
+      stat_plot_name = '90th Percentile'
+   elif stat == 'dir_me':
+      stat_plot_name = 'Mean Error (Bias)'
+   elif stat == 'dir_mae':
+      stat_plot_name = 'Mean Absolute Error'
+   elif stat == 'dir_mse':
+      stat_plot_name = 'Mean Squared Error'
+   elif stat == 'dir_rmse':
+      stat_plot_name = 'Root Mean Square Error'
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
@@ -950,13 +1024,17 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
    else:
       logger.error(bs_method+" is not a valid option")
       exit(1)
-   if stat == 'me':
-      if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
-         if line_type == 'SL1L2':
-            stat_values_mean = np.mean(fbar_est_mean) - np.mean(obar_est_mean)
-            stat_values = fbar_est_samp - obar_est_samp
-         elif line_type == 'CTC':
-            stat_values = (fy_oy_samp + fy_on_samp)/(fy_oy_samp + fn_oy_samp)
+   if stat in ['bias','me']:
+        if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
+            if line_type == 'SL1L2':
+                stat_values_mean = np.mean(fbar_est_mean) - np.mean(obar_est_mean)
+                stat_values = fbar_est_samp - obar_est_samp
+            elif line_type == 'CTC':
+                stat_values = (fy_oy_samp + fy_on_samp)/(fy_oy_samp + fn_oy_samp)
+   elif stat == 'esd':
+       if line_type == 'SL1L2':
+           var_e = ffbar + oobar - fbar*fbar - obar*obar - 2*fobar + 2*fbar*obar
+           stat_values = np.sqrt(var_e)
    elif stat == 'rmse':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
          if line_type == 'SL1L2':
@@ -1031,14 +1109,16 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             covar = fobar_est_samp - fbar_est_samp*obar_est_samp
             R = covar/np.sqrt(var_f*var_o)
             stat_values = np.sqrt(var_f + var_o - 2*np.sqrt(var_f*var_o)*R)
-   elif stat == 'pcor':
+   elif stat == 'pcor' or stat == 'corr':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
          if line_type == 'SL1L2':
+            #var_f_mean = ffbar_est_mean - fbar_est_mean*obar_est_mean
             var_f_mean = ffbar_est_mean - fbar_est_mean*fbar_est_mean
             var_o_mean = oobar_est_mean - obar_est_mean*obar_est_mean
             covar_mean = fobar_est_mean - fbar_est_mean*obar_est_mean
             stat_values_pre_mean = covar_mean/np.sqrt(var_f_mean*var_o_mean)
             stat_values_mean = np.mean(stat_values_pre_mean)
+            #var_f = ffbar_est_samp - fbar_est_samp*obar_est_samp
             var_f = ffbar_est_samp - fbar_est_samp*fbar_est_samp
             var_o = oobar_est_samp - obar_est_samp*obar_est_samp
             covar = fobar_est_samp - fbar_est_samp*obar_est_samp
@@ -1203,6 +1283,19 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          Cb = (fn_oy_samp+fn_on_samp)*(fy_on_samp+fn_on_samp)
          C = (Ca + Cb)/total
          stat_values = (fy_oy_samp + fn_on_samp - C)/(total - C)
+   elif stat == 'si':
+      if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
+         if line_type == 'SL1L2':
+            stat_values_pre_mean = np.sqrt(
+               ffbar_est_mean + oobar_est_mean - 2*fobar_est_mean
+            )
+            stat_values_mean = np.mean(stat_values_pre_mean)
+            stat_values_rmse = np.sqrt(
+               ffbar_est_samp + oobar_est_samp - 2*fobar_est_samp
+            )
+            # Replace 0 with NaN to avoid division by zero
+            obar_est_mean[np.abs(obar_est_mean)<1e-9]= np.nan
+            stat_values = 100 * stat_values_rmse / obar_est_mean
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
@@ -1309,7 +1402,7 @@ def calculate_stat(logger, model_data, stat):
          logger.error("Could not recognize line type from columns")
          exit(1)
    stat_plot_name = get_stat_plot_name(logger, stat)
-   if stat == 'me':
+   if stat in ['bias','me']:
       if line_type == 'SL1L2':
          stat_values = fbar - obar
       elif line_type == 'VL1L2':
@@ -1318,6 +1411,9 @@ def calculate_stat(logger, model_data, stat):
          stat_values = fbar - obar
       elif line_type == 'CTC':
          stat_values = (fy_oy + fy_on)/(fy_oy + fn_oy)
+   elif stat == 'esd':
+      if line_type == 'SL1L2':
+         stat_values = np.sqrt(ffbar + oobar - fbar*fbar - obar*obar - 2*fobar + 2*fbar*obar)
    elif stat == 'rmse':
       if line_type == 'SL1L2':
          stat_values = np.sqrt(ffbar + oobar - 2*fobar)
@@ -1343,18 +1439,6 @@ def calculate_stat(logger, model_data, stat):
          mse = uvffbar + uvoobar - 2*uvfobar
          var_o = uvoobar - uobar*uobar - vobar*vobar
          stat_values = 1 - mse/var_o
-   elif stat == 'fsd':
-      if line_type == 'SL1L2':
-         var_f = ffbar - fbar*fbar
-         stat_values = np.sqrt(var_f)
-   elif stat == 'osd':
-      if line_type == 'SL1L2':
-         var_o = oobar - obar*obar
-         stat_values = np.sqrt(var_o)
-   elif stat == 'esd':
-      if line_type == 'SL1L2':
-         var_e = ffbar + oobar - fbar*fbar - obar*obar - 2*fobar + 2*fbar*obar
-         stat_values = np.sqrt(var_e)
    elif stat == 'rsd':
       if line_type == 'SL1L2':
          var_f = ffbar - fbar*fbar
@@ -1384,7 +1468,7 @@ def calculate_stat(logger, model_data, stat):
          covar = uvfobar - ufbar*uobar - vfbar*vobar
          R = covar/np.sqrt(var_f*var_o)
          stat_values = np.sqrt(var_f + var_o - 2*np.sqrt(var_f*var_o)*R)
-   elif stat == 'pcor':
+   elif stat == 'pcor' or stat == 'corr':
       if line_type == 'SL1L2':
          var_f = ffbar - fbar*fbar
          var_o = oobar - obar*obar
@@ -1482,6 +1566,18 @@ def calculate_stat(logger, model_data, stat):
    elif stat == 'pofd' or stat == 'farate':
       if line_type == 'CTC':
          stat_values = fy_on/(fy_on + fn_on)
+   elif stat == 'hit':
+      if line_type == 'CTC':
+         stat_values = fy_oy
+   elif stat == 'falarm':
+      if line_type == 'CTC':
+         stat_values = fy_on
+   elif stat == 'miss':
+      if line_type == 'CTC':
+         stat_values = fn_oy
+   elif stat == 'reject':
+      if line_type == 'CTC':
+         stat_values = fn_on
    elif stat == 'podn':
       if line_type == 'CTC':
          stat_values = fn_on/(fy_on + fn_on)
@@ -1509,6 +1605,21 @@ def calculate_stat(logger, model_data, stat):
          Cb = (fn_oy+fn_on)*(fy_on+fn_on)
          C = (Ca + Cb)/total
          stat_values = (fy_oy + fn_on - C)/(total - C)
+   elif stat == 'si':
+       if line_type == 'SL1L2':
+           # Replace 0 with NaN to avoid dividing by zero
+           obar[np.abs(obar)<1e-9]=np.nan
+           stat_values = 100*(np.sqrt(ffbar + oobar - 2*fobar))/obar
+   #adding wind direction verifications        
+   elif stat == 'dir_me':
+       stat_values = model_data.loc[:]['DIR_ME']
+   elif stat == 'dir_mae':     
+       stat_values = model_data.loc[:]['DIR_MAE']
+   elif stat == 'dir_mse':
+       stat_values =  model_data.loc[:]['DIR_MSE']
+   elif stat == 'dir_rmse':
+       dir_rmse = model_data.loc[:]['DIR_RMSE']
+       stat_values = dir_rmse
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
