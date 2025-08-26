@@ -4,7 +4,8 @@
 # Purpose of Script: To create stat files for NWPS forecasts verified with
 #    NDBC buoy data using MET/METplus.
 # Author: Samira Ardani (samira.ardani@noaa.gov)
-#         - Added MPMD directories and updated the $DATA structure (03/2025)
+#         - Added MPMD directories and updated the $DATA structure (03/2025).
+#         - Added all available WFOs for stats analysis (08/2025). 
 # Input fils:
 # indivudual fcst grib2 files from ARCmodel
 # Output files:
@@ -41,7 +42,7 @@ mkdir -p ${DATA}/SFCSHP
 mkdir -p ${DATA}/job_work_dir
 
 vhours='00 06 12 18'
-WFO='hgx bro'
+WFO='aer afg ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
 CG='CG1'
 lead_hours='0 24 48 72 96 120 144'
 
@@ -157,7 +158,6 @@ for wfo in ${WFO}; do
 #########################                                                                                                                                                                        
 	if [[ -s ${DATA}/jobs/${wfo}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh ]]; then
     		if [ ${run_mpi} = 'yes' ] ; then
-       			export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
        			mpiexec -np 36 -ppn 36 --cpu-bind verbose,core cfp ${DATA}/jobs/${wfo}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
        			export err=$?; err_chk
 
@@ -188,7 +188,7 @@ for wfo in ${WFO}; do
 #########################
 	if [ $gather = yes ] ; then
 	# check to see if the small stat files are there
-	   nc=$(ls ${DATA}/all_stats/${wfo}/*stat | wc -l | awk '{print $1}')
+	   nc=$(ls ${DATA}/all_stats/${wfo}/ | wc -l | awk '{print $1}')
 	   if [ "${nc}" != '0' ]; then
 		   echo " Found ${nc} ${DATA}/all_stats/${wfo}/*stat files for ${VDATE}"
 		   export job_work_dir=$DATA/job_work_dir/StatAnalysis_${VDATE}
