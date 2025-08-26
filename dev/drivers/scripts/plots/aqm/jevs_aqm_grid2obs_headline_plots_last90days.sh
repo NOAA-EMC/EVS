@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=275GB
+#PBS -l place=shared,select=1:ncpus=1:ompthreads=1:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -14,6 +14,7 @@ cd $PBS_O_WORKDIR
 export model=evs
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVSaqmheadline
 
 ############################################################
 # Load modules
@@ -47,16 +48,18 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
+export KEEPDATA=YES
 export SENDMAIL=YES
 export SENDDBN=NO
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
+export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/aqmv708_${evs_ver_2d}
 today=$(cut -c7-14 ${COMROOT}/date/t${vhr}z)
 export VDATE_END=$(finddate.sh ${today} d-4)
 export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END}
 
-export USE_CFP=YES
-export nproc=128    ## nproc must match with the ncpus allocation above
+export USE_CFP=NO
+export nproc=1    ## nproc must match with the ncpus allocation above
 
 export DATA_TYPE=daily
 export NDAYS=90

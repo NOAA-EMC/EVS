@@ -18,10 +18,11 @@ export obs_src_name=airnow
 
 ## Need temporary staging area for renaming and/or updating model
 ## name id in the stats files
-## STATDIR is used in the environemnt setting in $USHevs/aqm/aqm_atmos_plots_headline.py
 export STATDIR=${DATA}/stats_staging
-## Linked stats dir 
+
+## Linked stats dir: Provides data location in aqm_plots_headline.py
 export linked_stat_base_dir=${DATA}/data/headline
+
 mkdir -p ${STATDIR} ${linked_stat_base_dir}
 
 model1=`echo ${MODELNAME} | tr a-z A-Z`
@@ -46,7 +47,10 @@ fi
 let imdl=0
 while [ ${imdl} -lt ${num_mdl} ]; do
     biasc=$( echo ${mdl_list[${imdl}]} | awk -F"_" '{print $2}' )
+    input_plots_model_name=${mdl_list[${imdl}]}
     idir=${mdl_idir_list[${imdl}]}
+    linked_plot_stat_dir=${linked_stat_base_dir}/${input_plots_model_name}
+    if [ ! -d ${linked_plot_stat_dir} ]; then mkdir -p ${linked_plot_stat_dir}; fi
     for ivar in "${obstype_list[@]}"; do
         #
         ## the time stamp of aqm daily variable is valided at 11Z (ozmax8)
@@ -63,17 +67,16 @@ while [ ${imdl} -lt ${num_mdl} ]; do
             NOW=${VDATE_START}
 	fi
         while [ ${NOW} -le ${VDATE_END} ]; do
-            cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ivar}.v${NOW}.stat
-            sedfile=${modelid}_${biasc}_${ivar}.v${NOW}.stat
+            cpfile=evs.stats.${MODELNAME}_${biasc}.atmos.${VERIF_CASE}_${ivar}.v${NOW}.stat
+            sedfile=${input_plots_model_name}_${ivar}.v${NOW}.stat
             if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
                 cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
-                sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
+                sed "s/${model1}/${input_plots_model_name}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
+                dest_model_date_stat_file=${linked_plot_stat_dir}/${input_plots_model_name}_${ivar}_v${NOW}.stat
+                ln -s ${STATDIR}/${sedfile} ${dest_model_date_stat_file}
             else
-                echo "DEBUG ${MODELNAME} ${STEP} :: Can not find ${idir}/${MODELNAME}.${NOW}/${cpfile}"
+                echo "DEBUG ${MODELNAME} ${RUN} ${STEP} :: Can not find ${idir}/${MODELNAME}.${NOW}/${cpfile}"
             fi
-            dest_model_date_stat_file=${linked_stat_base_dir}/${modelid}_${biasc}/${modelid}_${biasc}_${ivar}_v${NOW}.stat
-## check file size before linked
-            ln -s ${STATDIR}/${sedfile} ${dest_model_date_stat_file}
             cdate=${NOW}"00"
             NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
         done
@@ -82,7 +85,7 @@ while [ ${imdl} -lt ${num_mdl} ]; do
 done
 
 # Create headline plots
-python $USHevs/aqm/aqm_atmos_plots_headline.py
+python $USHevs/aqm/aqm_plots_headline.py
 export err=$?; err_chk
 
 # Copy files to desired location
@@ -107,5 +110,5 @@ if [[ $log_file_count -ne 0 ]]; then
 fi
 
 if [ $SENDDBN = YES ]; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.headline.${RUN}.v${VDATE_END}.tar
 fi
