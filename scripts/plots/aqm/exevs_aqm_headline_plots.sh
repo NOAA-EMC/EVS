@@ -43,6 +43,10 @@ let num_mdl=${#mdl_list[@]}
 if [ ${num_mdl} -gt 10 ]; then
     echo "number of model to be plotted can not exceed 10"
     exit
+else
+    export num_plot_mdl="${num_mdl}"
+    IFS=","
+    export plot_model_list="${mdl_list[*]}"
 fi
 let imdl=0
 while [ ${imdl} -lt ${num_mdl} ]; do

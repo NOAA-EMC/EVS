@@ -500,6 +500,8 @@ suite evs_nco
               time 05:30
             task jevs_aqm_atmos_grid2obs_hourly_plots_last90days
               time 05:40
+            task jevs_aqm_atmos_grid2obs_headline_plots_last90days
+              time 05:45
             task jevs_aqm_atmos_grid2obs_daily_plots_last31days
               time 05:50
             task jevs_aqm_atmos_grid2obs_hourly_plots_last31days

@@ -32,9 +32,19 @@ MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
 envir = os.environ['envir']
-obs_src_name=os.environ['obs_src_name']
+obs_src_name = os.environ['obs_src_name']
 fig_name_label = os.environ['fig_name_label']
-linked_stat_base_dir= os.environ['linked_stat_base_dir']
+linked_stat_base_dir = os.environ['linked_stat_base_dir']
+# Read in model names
+num_plot_mdl = os.environ['num_plot_mdl']
+input_model_list= os.environ['plot_model_list']
+input_model_names = []
+if input_model_list:
+    input_model_names = input_model_list.split(',')
+    print(f"Successfully read {len(input_model_names)} variables.")
+    print(f"The input_model_names are: {input_model_names}")
+else:
+    print(f"No environment variable input_model_list was found.")
 
 # Set more specific input directory paths
 daily_stats_dir = os.path.join(COMIN, 'stats', COMPONENT)
@@ -65,10 +75,10 @@ print("\nHeadline Score Plot 1: Grid-to-OBS - Daily MAX 8-HR AVG OZONE concentra
 headline1_plot = 'time_series'
 headline1_ndays = 90
 headline1_model_info_dict = {
-    'model1': {'name': 'aqmv70_raw',
+    'model1': {'name': input_model_names[0],
                'plot_name': 'raw',
                'obs_name': 'AIRNOW_DAILY_V2'},
-    'model2': {'name': 'aqmv70_bc',
+    'model2': {'name': input_model_names[1],
                'plot_name': 'bc',
                'obs_name': 'AIRNOW_DAILY_V2'},
 }
@@ -187,10 +197,10 @@ print("\nHeadline Score Plot 2: Grid-to-OBS - Daily 24-HR AVG PM2.5 concentratio
 headline1_plot = 'time_series'
 headline1_ndays = 90
 headline1_model_info_dict = {
-    'model1': {'name': 'aqmv70_raw',
+    'model1': {'name': input_model_names[0],
                'plot_name': 'raw',
                'obs_name': 'AIRNOW_DAILY_V2'},
-    'model2': {'name': 'aqmv70_bc',
+    'model2': {'name': input_model_names[1],
                'plot_name': 'bc',
                'obs_name': 'AIRNOW_DAILY_V2'},
 }
