@@ -195,9 +195,9 @@ if [ "$data" = "ccpa24h" ] ; then
       if [ -s $ccpa24/ccpa1 ] && [ -s $ccpa24/ccpa2 ] && [ -s $ccpa24/ccpa3 ] && [ -s $ccpa24/ccpa4 ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
          export err=$?; err_chk
-         [[ ! -d ${COMOUTfinal}/precip_mean24 ]] && mkdir -p ${COMOUTfinal}/precip_mean24
+         [[ ! -d ${COMOUTsmall}/precip_mean24 ]] && mkdir -p ${COMOUTsmall}/precip_mean24
 	 if [ -s ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ] && [ $SENDCOM = YES ] ; then
-           cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
+           cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTsmall}/precip_mean24
          fi 
 	 #For restart:
 	 if [ -s $WORK/ccpa.${vday}/*24h*.nc ] ; then
@@ -229,9 +229,9 @@ if [ "$data" = "ccpa24h" ] ; then
     fi
 
     #Copy precip_mean24 files from restart directory
-    [[ ! -d $COMOUTfinal/precip_mean24 ]] && mkdir $COMOUTfinal/precip_mean24
+    [[ ! -d $COMOUTsmall/precip_mean24 ]] && mkdir $COMOUTsmall/precip_mean24
     if [ -s $COMOUTrestart/prepare/ccpa24h.t12z.G240.nc ] ; then
-     cp $COMOUTrestart/prepare/ccpa24h.t12z.G240.nc $COMOUTfinal/precip_mean24
+     cp $COMOUTrestart/prepare/ccpa24h.t12z.G240.nc $COMOUTsmall/precip_mean24
     fi 
   fi
 
@@ -294,8 +294,8 @@ if [ "$data" = "apcp24h_conus" ] ; then
 	 if [ -s $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
              cp $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
            if [ $SENDCOM = YES ] ; then
-	     [[ ! -d ${COMOUTfinal}/precip_mean24 ]] && mkdir -p ${COMOUTfinal}/precip_mean24
-             cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUTfinal}/precip_mean24/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
+	     [[ ! -d ${COMOUTsmall}/precip_mean24 ]] && mkdir -p ${COMOUTsmall}/precip_mean24
+             cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUTsmall}/precip_mean24/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
 	     #Save restart files
 	     cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
 	   fi
@@ -304,9 +304,9 @@ if [ "$data" = "apcp24h_conus" ] ; then
          #Restart: copy restart files to the working directory
 	 [[ ! -d $WORK/href.${fyyyymmdd} ]] && mkdir -p $WORK/href.${fyyyymmdd}
          cp  $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc
-	 [[ ! -d $COMOUTfinal/precip_mean24 ]] && mkdir $COMOUTfinal/precip_mean24
+	 [[ ! -d $COMOUTsmall/precip_mean24 ]] && mkdir $COMOUTsmall/precip_mean24
          if [ -s $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
-           cp $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTfinal/precip_mean24
+           cp $COMOUTrestart/prepare/href${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTsmall/precip_mean24
          fi
        fi
 
