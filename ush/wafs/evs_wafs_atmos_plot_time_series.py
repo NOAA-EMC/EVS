@@ -870,8 +870,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         time_period_savename = f'{date_start_savename}-{date_end_savename}'
     else:
         time_period_savename = f'{str(eval_period).lower()}'
-    save_name = (f'evs.{str(component)}.sl1l2.'
-                 + f'{str(var_savename).lower()}_'
+    var_savename=str(var_savename).lower()
+    if var_savename == "ugrd_vgrd":
+        var_savename = "wdir"
+    if metric1_name == "dir_rmse":
+        metric1_name = "rmse"
+    save_name = (f'evs.{str(component)}.{line_type.lower()}.'
+                 + f'{var_savename}_'
                  + f'{str(level_savename).lower()}.'
                  + f'{time_period_savename}.'
                  + f'{metric1_name}_{str(frange_save_string).lower()}.')

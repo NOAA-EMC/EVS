@@ -1,10 +1,10 @@
-#PBS -N jevs_wafs_stats
+#PBS -N jevs_wafs_atmos_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:25:00
-#PBS -l place=shared,select=1:ncpus=4:mem=10GB
+#PBS -l place=shared,select=1:ncpus=5:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -42,7 +42,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/$evs_ver_2d
 # set up for email alerts of missing data
 ############################################################
 export pid=${PBS_JOBID:-$$}
-export job=${PBS_JOBNAME:-jevs_wafs_stats}
+export job=${PBS_JOBNAME:-jevs_wafs_atmos_stats}
 export jobid=$job.$pid
 
 export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
