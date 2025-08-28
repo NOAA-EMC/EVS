@@ -61,7 +61,7 @@ export MODELNAME=${MODELNAME:-wafs}
 ############################################
 
 # COMIN folder of analysis and forecast grib2 data
-# gfs_ver defined in versions/run.ver
+# wafs_ver defined in versions/run.ver
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 
 # COMOUT folder
@@ -89,7 +89,7 @@ export USH_DIR=${USH_DIR:-$HOMEevs/ush/$COMPONENT}
 ############################################
 # Execute the script.
 ############################################
-export DAYS_LIST=${DAYS_LIST:-"90 31"}
+export DAYS_LIST=${DAYS_LIST:-"90"}
 $SCRIPTSevs/exevs_wafs_atmos_plots.sh
 
 export err=$?; err_chk

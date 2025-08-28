@@ -2,6 +2,7 @@
 
 from datetime import datetime, timedelta as td
 import numpy as np
+import os
 
 class Toggle():
     def __init__(self):
@@ -24,10 +25,12 @@ class Toggle():
             'display_averages': False, # display mean statistic for each model, averaged across the dimension of the independent variable
             'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
-            'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
-            'zoom_logo_left': 0.85,
-            'zoom_logo_right': 0.85,
-            'logo_alpha': 0.5
+            'clear_prune_directory': False, # remove the intermediate directory created to store pruned data files temporarily
+            'plot_logo_left': True,
+            'plot_logo_right': True,
+            'zoom_logo_left': .65,
+            'zoom_logo_right': .65,
+            'logo_alpha': 0.5,
         }
 
 class Templates():
@@ -2073,7 +2076,7 @@ class Reference():
             },
             'wafs_analysis': {
                 'CTC': {
-                    'plot_stats_list': ('bias, ets, fss, csi, fbias, fbar,'
+                    'plot_stats_list': ('hit, falarm, miss, reject, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
@@ -2124,19 +2127,28 @@ class Reference():
                                     'obs_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
-                                    'plot_group':'aviation'},
-                        'WDIR': {'fcst_var_names': ['WDIR'],
+                                    'plot_group':'aviation'}
+                    }
+                },
+                'VCNT': {
+                    'plot_stats_list': 'dir_rmse',
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : [
+                        'G045','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
+                    ],
+                    'var_dict': {
+                        'UGRD_VGRD': {'fcst_var_names': ['UGRD_VGRD'],
                                     'fcst_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['WDIR'],
+                                    'obs_var_names': ['UGRD_VGRD'],
                                     'obs_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'aviation'}
                     }
                 }
-            },
+            }
         }
 
     class formulas():
