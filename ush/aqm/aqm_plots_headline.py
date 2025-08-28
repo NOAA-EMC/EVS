@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_headline_plots.py
-Contact(s): Mallory Row (mallory.row@noaa.gov)
+Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This is the driver script for creating headline plots.
 Run By: scripts/plots/aqm/exevs_aqm_headline_plots.sh
 '''
@@ -34,10 +34,10 @@ evs_run_mode = os.environ['evs_run_mode']
 envir = os.environ['envir']
 obs_src_name = os.environ['obs_src_name']
 fig_name_label = os.environ['fig_name_label']
-linked_stat_base_dir = os.environ['linked_stat_base_dir']
-# Read in model names
 num_plot_mdl = os.environ['num_plot_mdl']
 input_model_list= os.environ['plot_model_list']
+
+# Read in model names from `input_model_list`
 input_model_names = []
 if input_model_list:
     input_model_names = input_model_list.split(',')
@@ -46,9 +46,10 @@ if input_model_list:
 else:
     print(f"No environment variable input_model_list was found.")
 
-# Set more specific input directory paths
-daily_stats_dir = os.path.join(COMIN, 'stats', COMPONENT)
-daily_stats_dir = os.path.join(DATA, 'data', RUN)
+# Set more specific input directory paths within
+#     ~/scripts/plots/aqm/exevs_aqm_headline_plots.sh.
+# Use the staging dir linked_stat_base_dir as source stats base directory. 
+linked_stat_base_dir = os.environ['linked_stat_base_dir']
 
 # Set up directory paths
 logo_dir = os.path.join(FIXevs, 'logos')
@@ -145,17 +146,12 @@ headline1_start_date_dt = datetime.datetime.strptime(
 headline1_end_date_dt = datetime.datetime.strptime(
     headline1_date_info_dict['end_date'], '%Y%m%d'
 )
-##
-## rearrange aqm grid2obs aqm_raw and aqm_bc
-## update aqm to aqm_raw or aqm_bc and add to staging dir
-## use staging dir as source_stats_base_dir, i.e., daily_stats_dir
-##
+#
+## Creates condensed statistics files for plotting, based on selected criteria.
+#
 for model_num in list(headline1_model_info_dict.keys()):
     model = headline1_model_info_dict[model_num]['name']
     obs_name = headline1_model_info_dict[model_num]['obs_name']
-    ## Create condense stats file for plotting based on
-    ## selected criteria from linked stats files in
-    ## "linked_stat_base_dir" defined in exevs_aqm_headline_plots.sh
     logger1.info("Condensing model .stat files for job")
     gda_util.condense_model_stat_files(
         logger1, linked_stat_base_dir, headline1_output_dir, model,
@@ -267,17 +263,12 @@ headline1_start_date_dt = datetime.datetime.strptime(
 headline1_end_date_dt = datetime.datetime.strptime(
     headline1_date_info_dict['end_date'], '%Y%m%d'
 )
-##
-## rearrange aqm grid2obs aqm_raw and aqm_bc
-## update aqm to aqm_raw or aqm_bc and add to staging dir
-## use staging dir as source_stats_base_dir, i.e., daily_stats_dir
-##
+#
+## Creates condensed statistics files for plotting, based on selected criteria.
+#
 for model_num in list(headline1_model_info_dict.keys()):
     model = headline1_model_info_dict[model_num]['name']
     obs_name = headline1_model_info_dict[model_num]['obs_name']
-    ## Create condense stats file for plotting based on
-    ## selected criteria from linked stats files in
-    ## "linked_stat_base_dir" defined in exevs_aqm_headline_plots.sh
     logger1.info("Condensing model .stat files for job")
     gda_util.condense_model_stat_files(
         logger1, linked_stat_base_dir, headline1_output_dir, model,
