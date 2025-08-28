@@ -14,8 +14,6 @@ set -x
 
 echo "RUN MODE:${evs_run_mode}"
 
-export obs_src_name=airnow
-
 ## Temporary staging area for renaming and/or updating model
 ## name id in the stats files
 export STATDIR=${DATA}/stats_staging
@@ -35,6 +33,9 @@ export modelid=${MODELNAME}${aqm_ver_id}
 #
 declare -a obstype_list=(ozmax8 pmave)
 declare -a mdl_list=(${modelid}_raw ${modelid}_bc)
+declare -a plotname_list=(raw bc)
+declare -a obssrc_list=(airnow airnow)
+
 declare -a mdl_idir_list=(${COMIN}/stats/${COMPONENT} ${COMIN}/stats/${COMPONENT})
 
 let num_mdl=${#mdl_list[@]}
@@ -45,6 +46,26 @@ else
     export num_plot_mdl="${num_mdl}"
     IFS=","
     export plot_model_list="${mdl_list[*]}"
+fi
+
+let num_plotname=${#plotname_list[@]}
+if [ ${num_plotname} -gt 10 ]; then
+    echo "number of model to be plotted can not exceed 10"
+    exit
+else
+    export num_plot_name="${num_plotname}"
+    IFS=","
+    export plot_plotname_list="${plotname_list[*]}"
+fi
+
+let num_obssrc=${#obssrc_list[@]}
+if [ ${num_obssrc} -gt 10 ]; then
+    echo "number of obs_src to be plotted can not exceed 10"
+    exit
+else
+    export num_obs_src="${num_obssrc}"
+    IFS=","
+    export plot_obssrc_list="${obssrc_list[*]}"
 fi
 #
 # Bringing in all statistics files and rearranging the filename and
@@ -95,7 +116,7 @@ python ${USHevs}/aqm/aqm_plots_headline.py
 export err=$?; err_chk
 
 # Copy files to desired location
-if ["${SENDCOM}" = "YES" ]; then
+if [ "${SENDCOM}" = "YES" ]; then
     # Make and copy tar file
     cd ${DATA}/images
     headline_tar_name=${DATA}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar

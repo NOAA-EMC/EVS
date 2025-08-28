@@ -32,10 +32,13 @@ MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
 envir = os.environ['envir']
-obs_src_name = os.environ['obs_src_name']
 fig_name_label = os.environ['fig_name_label']
 num_plot_mdl = os.environ['num_plot_mdl']
+num_plot_name = os.environ['num_plot_name']
+num_obs_src = os.environ['num_obs_src']
 input_model_list= os.environ['plot_model_list']
+input_plotname_list= os.environ['plot_plotname_list']
+input_obssrc_list= os.environ['plot_obssrc_list']
 
 # Read in model names from `input_model_list`
 input_model_names = []
@@ -45,6 +48,24 @@ if input_model_list:
     print(f"The input_model_names are: {input_model_names}")
 else:
     print(f"No environment variable input_model_list was found.")
+
+# Read in plot names from `input_plotname_list`
+input_plot_names = []
+if input_plotname_list:
+    input_plot_names = input_plotname_list.split(',')
+    print(f"Successfully read {len(input_plot_names)} variables.")
+    print(f"The input_plot_names are: {input_plot_names}")
+else:
+    print(f"No environment variable input_plotname_list was found.")
+
+# Read in obs src names from `input_obssrc_list`
+input_obs_srcs = []
+if input_obssrc_list:
+    input_obs_srcs = input_obssrc_list.split(',')
+    print(f"Successfully read {len(input_obs_srcs)} variables.")
+    print(f"The input_obs_srcs are: {input_obs_srcs}")
+else:
+    print(f"No environment variable input_obssrc_list was found.")
 
 # Set more specific input directory paths within
 #     ~/scripts/plots/aqm/exevs_aqm_headline_plots.sh.
@@ -77,10 +98,10 @@ headline1_plot = 'time_series'
 headline1_ndays = 90
 headline1_model_info_dict = {
     'model1': {'name': input_model_names[0],
-               'plot_name': 'raw',
+               'plot_name': input_plot_names[0],
                'obs_name': 'AIRNOW_DAILY_V2'},
     'model2': {'name': input_model_names[1],
-               'plot_name': 'bc',
+               'plot_name': input_plot_names[1],
                'obs_name': 'AIRNOW_DAILY_V2'},
 }
 headline1_plot_info_dict = {
@@ -98,7 +119,7 @@ headline1_plot_info_dict = {
     'obs_var_level': 'A8',
     'obs_var_thresh': 'NA',
     'ob_name':'AIRNOW_DAILY_V2', 
-    'obs_src_name': obs_src_name,
+    'obs_src_name': input_obs_srcs[0],
     'fig_name_label': fig_name_label
 }
 now = datetime.datetime.now()
@@ -194,10 +215,10 @@ headline1_plot = 'time_series'
 headline1_ndays = 90
 headline1_model_info_dict = {
     'model1': {'name': input_model_names[0],
-               'plot_name': 'raw',
+               'plot_name': input_plot_names[0],
                'obs_name': 'AIRNOW_DAILY_V2'},
     'model2': {'name': input_model_names[1],
-               'plot_name': 'bc',
+               'plot_name': input_plot_names[1],
                'obs_name': 'AIRNOW_DAILY_V2'},
 }
 headline1_plot_info_dict = {
@@ -215,7 +236,7 @@ headline1_plot_info_dict = {
     'obs_var_level': 'A24',
     'obs_var_thresh': 'NA',
     'ob_name':'AIRNOW_DAILY_V2', 
-    'obs_src_name': obs_src_name,
+    'obs_src_name': input_obs_srcs[0],
     'fig_name_label': fig_name_label
 }
 now = datetime.datetime.now()
