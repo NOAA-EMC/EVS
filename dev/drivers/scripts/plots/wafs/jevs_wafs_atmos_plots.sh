@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:00:00
-#PBS -l place=shared,select=1:ncpus=60:mem=200GB
+#PBS -l walltime=0:15:00
+#PBS -l place=shared,select=1:ncpus=40:mem=200GB
 #PBS -l debug=true
 
 set -x
@@ -45,12 +45,11 @@ export COMPONENT=wafs
 export RUN=atmos
 export VERIF_CASE=grid2grid
 
-#export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/$evs_ver_2d}
-export COMIN=/lfs/h1/ops/prod/com/${NET}/${evs_ver_2d}
+export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/$evs_ver_2d}
 #For COMOUT
 export COMROOT=/lfs/h2/emc/ptmp/$USER
 
-export DAYS_LIST=${DAYS_LIST:-"90 31"}
+export DAYS_LIST=${DAYS_LIST:-"90"}
 
 ############################################################
 # CALL executable job script here
