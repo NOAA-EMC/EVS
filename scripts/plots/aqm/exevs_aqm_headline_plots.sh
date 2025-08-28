@@ -95,12 +95,13 @@ python ${USHevs}/aqm/aqm_plots_headline.py
 export err=$?; err_chk
 
 # Copy files to desired location
-if [ "${SENDCOM}" == "YES" ]; then
+if ["${SENDCOM}" = "YES" ]; then
     # Make and copy tar file
     cd ${DATA}/images
-    tar -cvf ${DATA}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar *.png
-    if [ -f ${DATA}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar ]; then
-        cp -v ${DATA}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar ${COMOUT}/.
+    headline_tar_name=${DATA}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar
+    tar -cvf ${headline_tar_name} *.png
+    if [[ -f "${headline_tar_name}" ]]; then
+        cp -v ${headline_tar_name} ${COMOUT}/.
     fi
 fi
 
@@ -115,6 +116,9 @@ if [[ ${log_file_count} -ne 0 ]]; then
     done
 fi
 
-if [ $SENDDBN = YES ]; then
-    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/evs.plots.${COMPONENT}.headline.${RUN}.v${VDATE_END}.tar
+if [ "${SENDDBN}" = "YES" ]; then
+    headline_tar_name=${COMOUT}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar
+    if [[ -f "${headline_tar_name}" ]]; then
+        ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${headline_tar_name}
+    fi
 fi
