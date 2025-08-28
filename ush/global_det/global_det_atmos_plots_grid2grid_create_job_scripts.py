@@ -204,11 +204,9 @@ base_plot_jobs_info_dict = {
     'pres_levs': {
         'GeoHeight': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                       'fcst_var_dict': {'name': 'HGT',
-                                        'levels': ['P1000', 'P700',
-                                                   'P500', 'P250']},
+                                        'levels': ['P500']},
                       'obs_var_dict': {'name': 'HGT',
-                                       'levels': ['P1000', 'P700',
-                                                  'P500', 'P250']}},
+                                       'levels': ['P500']}},
         'GeoHeight_FourierDecomp': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM',
                                                  'TROPICS'],
                                     'fcst_var_dict': {'name': 'HGT_DECOMP',
@@ -242,19 +240,19 @@ base_plot_jobs_info_dict = {
                                   'levels': ['P850', 'P500', 'P250']}},
         'UWind': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                   'fcst_var_dict': {'name': 'UGRD',
-                                    'levels': ['P850', 'P500', 'P250']},
+                                    'levels': ['P850', 'P250']},
                   'obs_var_dict': {'name': 'UGRD',
-                                   'levels': ['P850', 'P500', 'P250']}},
+                                   'levels': ['P850', 'P250']}},
         'VWind': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                   'fcst_var_dict': {'name': 'VGRD',
-                                    'levels': ['P850', 'P500', 'P250']},
+                                    'levels': ['P850', 'P250']},
                   'obs_var_dict': {'name': 'VGRD',
-                                   'levels': ['P850', 'P500', 'P250']}},
+                                   'levels': ['P850', 'P250']}},
         'VectorWind': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                        'fcst_var_dict': {'name': 'UGRD_VGRD',
-                                         'levels': ['P850', 'P500', 'P250']},
+                                         'levels': ['P850', 'P250']},
                        'obs_var_dict': {'name': 'UGRD_VGRD',
-                                        'levels': ['P850', 'P500', 'P250']}},
+                                        'levels': ['P850', 'P250']}},
         'WindShear': {'vx_masks': ['ATL_MDR', 'EPAC_MDR'],
                       'fcst_var_dict': {'name': 'WNDSHR',
                                         'levels': ['P850-P200']},
@@ -880,10 +878,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 if job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
                     if verif_type_plot_jobs_dict[verif_type_job]\
                             ['fcst_var_dict']['name'] == 'O3MR':
-                        plot_fcst_levels_loop = ['all', 'strat']
+                        plot_fcst_levels_loop = ['all']
                     else:
-                        plot_fcst_levels_loop = ['all', 'trop', 'strat',
-                                                 'ltrop', 'utrop']
+                        plot_fcst_levels_loop = ['all', 'trop', 'ltrop']
                 else:
                     plot_fcst_levels_loop = (
                         verif_type_plot_jobs_dict[verif_type_job]\
