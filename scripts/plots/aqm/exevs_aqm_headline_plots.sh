@@ -16,11 +16,11 @@ echo "RUN MODE:${evs_run_mode}"
 
 export obs_src_name=airnow
 
-## Need temporary staging area for renaming and/or updating model
+## Temporary staging area for renaming and/or updating model
 ## name id in the stats files
 export STATDIR=${DATA}/stats_staging
 
-## Linked stats dir: Provides data location in aqm_plots_headline.py
+## Provides data location in ~/ush/aqm/aqm_plots_headline.py
 export linked_stat_base_dir=${DATA}/data/headline
 
 mkdir -p ${STATDIR} ${linked_stat_base_dir}
@@ -30,10 +30,8 @@ export model1
 
 aqm_ver_id=$( echo ${aqm_ver} | awk -F"." '{print $1$2}' )
 export modelid=${MODELNAME}${aqm_ver_id}
-
 #
-# Bring in all stats files, and change into display name
-# for different models or types of solution defined in ${config}
+# Define plot type, model id, and input stats file locations.
 #
 declare -a obstype_list=(ozmax8 pmave)
 declare -a mdl_list=(${modelid}_raw ${modelid}_bc)
@@ -48,6 +46,10 @@ else
     IFS=","
     export plot_model_list="${mdl_list[*]}"
 fi
+#
+# Bringing in all statistics files and rearranging the filename and
+# model ID according to the model name defined in `mdl_list`.
+#
 let imdl=0
 while [ ${imdl} -lt ${num_mdl} ]; do
     biasc=$( echo ${mdl_list[${imdl}]} | awk -F"_" '{print $2}' )
@@ -57,16 +59,16 @@ while [ ${imdl} -lt ${num_mdl} ]; do
     if [ ! -d ${linked_plot_stat_dir} ]; then mkdir -p ${linked_plot_stat_dir}; fi
     for ivar in "${obstype_list[@]}"; do
         #
-        ## the time stamp of aqm daily variable is valided at 11Z (ozmax8)
-        ## and 04z (pamve) of next day from initial start date.  To get
-	## the valid-time at 04Z and 11Z of date=VDATE_START for forecast
-	## day1,day2, and day3, the stat of previous days also need
-        ## to be copied
+        ## The `ozmax8` variable is validated at 11Z, and the `pamve`
+        ## variable is validated at 04Z, both on the day following the
+        ## initial start date.
+        ## To obtain the valid-time data at 04Z and 11Z for `VDATE_START`
+        ## for forecast days 1, 2, and 3, it is necessary to include
+        ## statistics from previous days.
         #
         if [ "${ivar}" == "ozmax8" ]  || [ "${ivar}" == "pmave" ]; then  ## get 3 additional day's stat
             cdate=${VDATE_START}"00"
             NOW=$( ${NDATE} -72 ${cdate} | cut -c1-8 )
-	    echo "variable = ${ivar} old_start_date = ${VDATE_START} new_start_date = ${NOW}"
         else
             NOW=${VDATE_START}
 	fi
@@ -79,7 +81,7 @@ while [ ${imdl} -lt ${num_mdl} ]; do
                 dest_model_date_stat_file=${linked_plot_stat_dir}/${input_plots_model_name}_${ivar}_v${NOW}.stat
                 ln -s ${STATDIR}/${sedfile} ${dest_model_date_stat_file}
             else
-                echo "DEBUG ${MODELNAME} ${RUN} ${STEP} :: Can not find ${idir}/${MODELNAME}.${NOW}/${cpfile}"
+                echo "DEBUG :: Input Stats ${idir}/${MODELNAME}.${NOW}/${cpfile} is missing and it will be skipped"
             fi
             cdate=${NOW}"00"
             NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
@@ -89,30 +91,30 @@ while [ ${imdl} -lt ${num_mdl} ]; do
 done
 
 # Create headline plots
-python $USHevs/aqm/aqm_plots_headline.py
+python ${USHevs}/aqm/aqm_plots_headline.py
 export err=$?; err_chk
 
 # Copy files to desired location
-if [ $SENDCOM = YES ]; then
+if [ "${SENDCOM}" == "YES" ]; then
     # Make and copy tar file
-    cd $DATA/images
-    tar -cvf $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar *.png
-    if [ -f $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar ]; then
-        cp -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
+    cd ${DATA}/images
+    tar -cvf ${DATA}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar *.png
+    if [ -f ${DATA}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar ]; then
+        cp -v ${DATA}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar ${COMOUT}/.
     fi
 fi
 
 # Cat the plotting log files
-log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-        echo "Start: $log_file"
-        cat $log_file
-        echo "End: $log_file"
+log_dir=${DATA}/logs
+log_file_count=$(find ${log_dir} -type f |wc -l)
+if [[ ${log_file_count} -ne 0 ]]; then
+    for log_file in ${log_dir}/*; do
+        echo "Start: ${log_file}"
+        cat ${log_file}
+        echo "End: ${log_file}"
     done
 fi
 
 if [ $SENDDBN = YES ]; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.headline.${RUN}.v${VDATE_END}.tar
+    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/evs.plots.${COMPONENT}.headline.${RUN}.v${VDATE_END}.tar
 fi
