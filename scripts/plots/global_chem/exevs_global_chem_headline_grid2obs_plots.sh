@@ -3,7 +3,7 @@
 # Name of Script: exevs_global_chem_headline_grid2obs_plots.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
-# Purpose of Script: This script is run for the global_chemplots step for
+# Purpose of Script: This script is run for the global_chem plots step for
 #                    the headline verification. It uses EMC-developed
 #                    python scripts to do the plotting.
 #
@@ -14,13 +14,11 @@ set -x
 
 echo "RUN MODE:${evs_run_mode}"
 
-export obs_src_name=airnow
-
-## Temporary staging area for renaming and/or updating model
+## Provide temporary staging area for renaming and/or updating model
 ## name id in the stats files
 export STATDIR=${DATA}/stats_staging
 
-## Provides data location in ~/ush/global_chem/global_chem_plots_headline.py
+## Provide input stats location in ~/ush/global_chem/global_chem_plots_headline.py
 export linked_stat_base_dir=${DATA}/data/headline
 
 mkdir -p ${STATDIR} ${linked_stat_base_dir}
@@ -31,49 +29,58 @@ export model1
 gcafs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1}' )
 export modelid=${MODELNAME}${gcafs_ver_id}
 #
-# Define plot type, model id, and input stats file locations.
-#
-declare -a obstype_list=(airnow_pm25 aeronet_aod)
-declare -a mdl_list=(${modelid})
-declare -a mdl_idir_list=( ${COMIN}/stats/${COMPONENT} )
-declare -a plotname_list=( ${gcafs_ver_id} )
-declare -a obssrc_list=(airnow aeronet)
+# Define the verification variables and observation sources
+declare -a obstype_list=("airnow_pm25" "aeronet_aod")
+declare -a obssrc_list=("airnow" "aeronet")
 
-let num_mdl=${#mdl_list[@]}
-if [ ${num_mdl} -gt 10 ]; then
-    echo "number of model to be plotted can not exceed 10"
-    exit
-else
-    export num_plot_mdl="${num_mdl}"
-    IFS=","
-    export plot_model_list="${mdl_list[*]}"
+# Define the model names, plot names, and stats directory
+declare -a mdl_list=("${modelid}")
+declare -a plotname_list=("${gcafs_ver_id}")
+declare -a mdl_idir_list=("${COMIN}/stats/${COMPONENT}")
+
+# Define a constant for the maximum number of models
+readonly MAX_MODELS=10
+
+# Check if observation arrays have matching lengths
+if (( ${#obstype_list[@]} != ${#obssrc_list[@]} )); then
+    echo "DEBUG: The number of verification types does not match the number of observation sources."
+    exit 1
 fi
 
-let num_plotname=${#plotname_list[@]}
-if [ ${num_plotname} -gt 10 ]; then
-    echo "number of model to be plotted can not exceed 10"
-    exit
-else
-    export num_plot_name="${num_plotname}"
-    IFS=","
-    export plot_plotname_list="${plotname_list[*]}"
+# Check if the number of models exceeds the maximum limit
+if (( ${#mdl_list[@]} > MAX_MODELS )); then
+    echo "DEBUG: Number of models to plot cannot exceed ${MAX_MODELS}."
+    exit 1
 fi
 
-let num_obssrc=${#obssrc_list[@]}
-if [ ${num_obssrc} -gt 10 ]; then
-    echo "number of obs_src to be plotted can not exceed 10"
-    exit
-else
-    export num_obs_src="${num_obssrc}"
-    IFS=","
-    export plot_obssrc_list="${obssrc_list[*]}"
+# Check if model and plot name arrays have matching lengths
+if (( ${#mdl_list[@]} != ${#plotname_list[@]} )); then
+    echo "DEBUG: The number of model IDs does not match the number of names to be plotted."
+    exit 1
 fi
+
+# Export verification type info
+export num_obs_type="${#obstype_list[@]}"
+export plot_obstype_list=$(IFS=,; echo "${obstype_list[*]}")
+
+# Export observation source info
+export num_obs_src="${#obssrc_list[@]}"
+export plot_obssrc_list=$(IFS=,; echo "${obssrc_list[*]}")
+
+# Export model info
+export num_plot_mdl="${#mdl_list[@]}"
+export plot_model_list=$(IFS=,; echo "${mdl_list[*]}")
+
+# Export plot name info
+export num_plot_name="${#plotname_list[@]}"
+export plot_plotname_list=$(IFS=,; echo "${plotname_list[*]}")
+
 #
 # Bringing in all statistics files and rearranging the filename and
 # model ID according to the model name defined in `mdl_list`.
 #
 let imdl=0
-while [ ${imdl} -lt ${num_mdl} ]; do
+while [ ${imdl} -lt ${#mdl_list[@]} ]; do
     biasc=$( echo ${mdl_list[${imdl}]} | awk -F"_" '{print $2}' )
     input_plots_model_name=${mdl_list[${imdl}]}
     idir=${mdl_idir_list[${imdl}]}
