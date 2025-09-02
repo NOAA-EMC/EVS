@@ -46,8 +46,8 @@ export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}
 
 export job=${PBS_JOBNAME:-jevs_global_ens_wave_prep}
 export jobid=$job.${PBS_JOBID:-$$}
