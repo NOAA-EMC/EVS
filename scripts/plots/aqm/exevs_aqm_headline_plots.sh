@@ -105,7 +105,7 @@ while [ ${imdl} -lt ${#mdl_list[@]} ]; do
             cpfile=evs.stats.${MODELNAME}_${biasc}.atmos.${VERIF_CASE}_${ivar}.v${NOW}.stat
             sedfile=${input_plots_model_name}_${ivar}.v${NOW}.stat
             if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
-                cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
+                cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
                 sed "s/${model1}/${input_plots_model_name}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
                 dest_model_date_stat_file=${linked_plot_stat_dir}/${input_plots_model_name}_${ivar}_v${NOW}.stat
                 ln -s ${STATDIR}/${sedfile} ${dest_model_date_stat_file}
