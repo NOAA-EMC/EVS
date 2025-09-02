@@ -265,8 +265,14 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
             return None
 
         # Calculate desired metric
+        metric3_name = "fbias"
+        metric4_name = "hit"
+        metric5_name = "falarm"
+        metric6_name = "miss"
+        metric7_name = "reject"
+
         metric_long_names = []
-        for metric_name in [metric1_name, metric2_name]:
+        for metric_name in [metric1_name, metric2_name, metric3_name,metric4_name,metric5_name,metric6_name,metric7_name]:
             stat_output = plot_util.calculate_stat(
                 logger, df_aggregated, str(metric_name).lower()
             )
@@ -301,13 +307,12 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
                 df_aggregated[str(metric_name).upper()+'_BUERR'] = ci_output[
                     'CI_UPPER'
                 ].values
-        df_aggregated[str(metric1_name).upper()] = (
-            df_aggregated[str(metric1_name).upper()]
-        ).astype(float).tolist()
-        df_aggregated[str(metric2_name).upper()] = (
-            df_aggregated[str(metric2_name).upper()]
-        ).astype(float).tolist()
 
+        for metric_name in [metric1_name, metric2_name, metric3_name,metric4_name,metric5_name,metric6_name,metric7_name]:
+            df_aggregated[str(metric_name).upper()] = (
+                df_aggregated[str(metric_name).upper()]
+            ).astype(float).tolist()
+            
         df_aggregated = df_aggregated[
             df_aggregated.index.isin(model_list, level='MODEL')
         ]
@@ -319,18 +324,53 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
             index='FCST_THRESH_VALUE'
         )
+        pivot_metric3 = pd.pivot_table(
+            df_aggregated, values=str(metric3_name).upper(), columns='MODEL', 
+            index='FCST_THRESH_VALUE'
+        )
+        pivot_metric4 = pd.pivot_table(
+            df_aggregated, values=str(metric4_name).upper(), columns='MODEL', 
+            index='FCST_THRESH_VALUE'
+        )
+        pivot_metric5 = pd.pivot_table(
+            df_aggregated, values=str(metric5_name).upper(), columns='MODEL', 
+            index='FCST_THRESH_VALUE'
+        )
+        pivot_metric6 = pd.pivot_table(
+            df_aggregated, values=str(metric6_name).upper(), columns='MODEL', 
+            index='FCST_THRESH_VALUE'
+        )
+        pivot_metric7 = pd.pivot_table(
+            df_aggregated, values=str(metric7_name).upper(), columns='MODEL', 
+            index='FCST_THRESH_VALUE'
+        )
         pivot_metric1 = pivot_metric1.dropna() 
         pivot_metric2 = pivot_metric2.dropna() 
+        pivot_metric3 = pivot_metric3.dropna() 
+        pivot_metric4 = pivot_metric4.dropna() 
+        pivot_metric5 = pivot_metric5.dropna() 
+        pivot_metric6 = pivot_metric6.dropna() 
+        pivot_metric7 = pivot_metric7.dropna() 
         all_thresh_idx = np.unique(
             np.concatenate([
                 pivot_metric1.index, 
                 pivot_metric2.index, 
+                pivot_metric3.index, 
+                pivot_metric4.index, 
+                pivot_metric5.index, 
+                pivot_metric6.index, 
+                pivot_metric7.index, 
             ])
         )
         all_model_col = np.unique(
             np.concatenate([
                 pivot_metric1.columns,
                 pivot_metric2.columns,
+                pivot_metric3.columns,
+                pivot_metric4.columns,
+                pivot_metric5.columns,
+                pivot_metric6.columns,
+                pivot_metric7.columns,
             ])
         )
         if confidence_intervals:
@@ -362,11 +402,26 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
         for thresh_idx in all_thresh_idx:
             if np.any([
                     thresh_idx not in pivot_metric.index for pivot_metric 
-                    in [pivot_metric1, pivot_metric2]]):
+                    in [pivot_metric1, pivot_metric2, pivot_metric3, pivot_metric4, pivot_metric5, pivot_metric6, pivot_metric7]]):
                 pivot_metric1.drop(
                     labels=thresh_idx, inplace=True, errors='ignore'
                 )
                 pivot_metric2.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
+                )
+                pivot_metric3.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
+                )
+                pivot_metric4.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
+                )
+                pivot_metric5.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
+                )
+                pivot_metric6.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
+                )
+                pivot_metric7.drop(
                     labels=thresh_idx, inplace=True, errors='ignore'
                 )
         
@@ -391,11 +446,26 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
         for model_col in all_model_col:
             if np.any([
                     model_col not in pivot_metric.columns for pivot_metric
-                    in [pivot_metric1, pivot_metric2]]):
+                    in [pivot_metric1, pivot_metric2, pivot_metric3, pivot_metric4, pivot_metric5, pivot_metric6, pivot_metric7]]):
                 pivot_metric1.drop(
                     columns=model_col, inplace=True, errors='ignore'
                 )
                 pivot_metric2.drop(
+                    columns=model_col, inplace=True, errors='ignore'
+                )
+                pivot_metric3.drop(
+                    columns=model_col, inplace=True, errors='ignore'
+                )
+                pivot_metric4.drop(
+                    columns=model_col, inplace=True, errors='ignore'
+                )
+                pivot_metric5.drop(
+                    columns=model_col, inplace=True, errors='ignore'
+                )
+                pivot_metric6.drop(
+                    columns=model_col, inplace=True, errors='ignore'
+                )
+                pivot_metric7.drop(
                     columns=model_col, inplace=True, errors='ignore'
                 )
                 if confidence_intervals:
@@ -591,6 +661,26 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
             ]
             y_vals = [
                 pivot_metric2[str(model_list[m])].values[i] 
+                for i in thresh_argsort
+            ]
+            y3_vals = [
+                pivot_metric3[str(model_list[m])].values[i] 
+                for i in thresh_argsort
+            ]
+            y4_vals = [
+                pivot_metric4[str(model_list[m])].values[i] 
+                for i in thresh_argsort
+            ]
+            y5_vals = [
+                pivot_metric5[str(model_list[m])].values[i] 
+                for i in thresh_argsort
+            ]
+            y6_vals = [
+                pivot_metric6[str(model_list[m])].values[i] 
+                for i in thresh_argsort
+            ]
+            y7_vals = [
+                pivot_metric7[str(model_list[m])].values[i] 
                 for i in thresh_argsort
             ]
             #mosaic_vals = pivot_metric3[str(model_list[m])].values
@@ -869,7 +959,62 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
     plt.close(num)
     logger.info('========================================')
 
-
+    htmlfile = (f'roc_{str(frange_save_string).lower()}.'
+                + f'{str(var_savename).lower()}_'
+                + f'{str(level_savename).lower()}.'
+                + f'{time_period_savename}.')
+    if str(domain).lower() == str(regrid).lower():
+        htmlfile = htmlfile + f'{str(regrid)}'
+    else:
+        htmlfile = htmlfile + f'{str(regrid)}_{str(domain).lower()}'
+    save_subdir = "html"
+    if not os.path.isdir(save_subdir):
+        os.makedirs(save_subdir, exist_ok=True)
+    htmlfile = os.path.join(save_subdir, htmlfile+'.html')
+    
+    contingency_table_html(htmlfile,all_thresh_idx,x_vals,y_vals,y3_vals,y4_vals,y5_vals,y6_vals,y7_vals)
+    
+def contingency_table_html(htmlfile,all_thresh_idx,x_vals,y_vals,y3_vals,y4_vals,y5_vals,y6_vals,y7_vals):
+    fw=open(htmlfile,'w')
+    fw.truncate()
+    fw.write('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n')
+    fw.write('<html>\n')
+    fw.write('<head>\n')
+    fw.write('  <link href="/users/verification/aviation/wafs/prod/roctab.css" rel="stylesheet">\n')
+    fw.write('</head>\n')
+    fw.write('<body>\n')
+    fw.write('<table id="contingencyTable">\n')
+    fw.write('  <thead>\n')
+    fw.write('    <tr>\n')
+    fw.write('      <th class="contingencyCol0">Threshold</th>\n')
+    fw.write('      <th class="contingencyCol1">Hits</th>\n')
+    fw.write('      <th class="contingencyCol2">False Alarms</th>\n')
+    fw.write('      <th class="contingencyCol3">Miss</th>\n')
+    fw.write('      <th class="contingencyCol4">Correct Rejection</th>\n')
+    fw.write('      <th class="contingencyCol5">Hit Rate</th>\n')
+    fw.write('      <th class="contingencyCol6">False Alarm Rate</th>\n')
+    fw.write('      <th class="contingencyCol6">Bias</th>\n')
+    fw.write('    </tr>\n')
+    fw.write('  </thead>\n')
+    fw.write('  <tbody>\n')
+    # all_thresh_idx : numpy.ndarray  x_vals : list
+    for thrd, aa, bb, cc, dd, hit, falm, bias in zip(all_thresh_idx.tolist(),y4_vals,y5_vals,y6_vals,y7_vals,y_vals,x_vals,y3_vals):
+        fw.write('    <tr>\n')
+        fw.write('      <td class="contingencyCol0">'+thrd+'</td>\n')
+        fw.write('      <td class="contingencyCol1">'+str(int(aa))  +'</td>\n')
+        fw.write('      <td class="contingencyCol2">'+str(int(bb))  +'</td>\n')
+        fw.write('      <td class="contingencyCol3">'+str(int(cc))  +'</td>\n')
+        fw.write('      <td class="contingencyCol4">'+str(int(dd))  +'</td>\n')
+        fw.write('      <td class="contingencyCol5">'+format(hit,".4f") +'</td>\n')
+        fw.write('      <td class="contingencyCol6">'+format(falm,".4f")+'</td>\n')
+        fw.write('      <td class="contingencyCol6">'+format(bias,".2f")+'</td>\n')
+        fw.write('    </tr>\n')
+    fw.write('  </tbody>\n')
+    fw.write('</table>\n')
+    fw.write('</body>\n')
+    fw.write('</html>\n')
+    fw.close()
+    
 def main():
 
     # Logging

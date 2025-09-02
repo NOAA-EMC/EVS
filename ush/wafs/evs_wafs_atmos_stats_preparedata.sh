@@ -84,6 +84,7 @@ for ff in $FHOURS ; do
 	    fi
 	else
 	    echo "WARNING: missing forecast $sourcefile"
+	    echo $sourcefile >> missingFiles.$OBSERVATION.$RESOLUTION$CENTER$VAR$cc
         fi
     else
 	if [[ -f $sourcefile ]] ; then
@@ -92,6 +93,7 @@ for ff in $FHOURS ; do
 	else
 	    missingForecast="$missingForecast F$ff"
 	    echo "WARNING: missing forecast $sourcefile"
+	    echo $sourcefile >> missingFiles.$OBSERVATION.$RESOLUTION$CENTER$VAR$cc
 	fi
     fi
 done
@@ -111,6 +113,8 @@ else
 	if [[ $SENDMAIL = YES ]] ; then
             export subject="A subset of $CENTER forecast files is missing for EVS ${COMPONENT}"
             echo "WARNING: A subset of $CENTER forecasts ($missingForecast) is missing for $OBSERVATION valid date ${VDATE}${cc}. METplus continues." > mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+	    echo "Missing forecast file(s):" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
+	    cat missingFiles.$OBSERVATION.$RESOLUTION$CENTER$VAR$cc >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
             echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 	    cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	fi
@@ -203,6 +207,11 @@ fi
 export valid_beg=$cc
 export valid_end=$cc
 if [ $runMETplus = yes ] ; then
+    # The following commented assignments explain a variable in GridStat_fcstWAFS_obs*conf (left) come from a variable in the workflow scripts (right),
+    # which helps understanding the variable connections between the scripts and met/metplus
+    # FCST_GRID_STAT_INPUT_DIR=$GRID_STAT_INPUT_BASE
+    # GRID_STAT_OUTPUT_DIR=$STATSDIR
     ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATAmpmd/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
+    #STAT_ANALYSIS_OUTPUT_DIR is defined in config.evs.wafs.standalone, and created & used by StatAnalysis_fcstWAFS*
+    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}${VAR}_GatherbyDay.conf
 fi
