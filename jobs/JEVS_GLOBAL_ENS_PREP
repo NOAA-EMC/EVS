@@ -112,7 +112,7 @@ elif [ "${RUN}" == "atmos" ]; then
         mkdir -p $COMOUTgefs_bc $COMOUTcmce_bc
     fi
 elif [ "${RUN}" == "wave" ]; then
-    mkdir -p $COMOUTgefs
+    mkdir -p $COMOUTgefs/${VERIF_CASE}
 fi
 
 ####################################

@@ -123,7 +123,7 @@ for ihour in 00 06 12 18 ; do
     export ihour=$ihour
     export inithour=t${ihour}z
     if [ -s ${DATA}/prepbufr/gdas.${INITDATE}${ihour}.prepbufr ]; then
-        if [ ! -s ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc ]; then
+        if [ ! -s ${COMOUT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc ]; then
 	    
 	    cd $DATA/gefs_wave_grib2
 	    split_by_subset ${DATA}/prepbufr/gdas.${INITDATE}${ihour}.prepbufr
@@ -136,9 +136,9 @@ for ihour in 00 06 12 18 ; do
                 chgrp rstprod $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${ihour}.nc
                 if [ $SENDCOM = YES ]; then
                     if [ -s $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${ihour}.nc ]; then
-                        cp -v $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${ihour}.nc ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/
-                        chmod 640 ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc
-                        chgrp rstprod ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc
+                        cp -v $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${ihour}.nc ${COMOUT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/
+                        chmod 640 ${COMOUT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc
+                        chgrp rstprod ${COMOUT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc
                     fi
                 fi
             fi
