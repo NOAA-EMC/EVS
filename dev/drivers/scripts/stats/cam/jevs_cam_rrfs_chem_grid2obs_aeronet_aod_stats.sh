@@ -48,9 +48,6 @@ export RUN=${RUN:-chem}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export MODELNAME=${MODELNAME:-rrfs}
 
-export VDATE=${VDATE:-$(date --date="3 days ago" +%Y%m%d)}
-echo "VDATE=${VDATE}"
-
 export DATA_TYPE=aeronet_aod
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
