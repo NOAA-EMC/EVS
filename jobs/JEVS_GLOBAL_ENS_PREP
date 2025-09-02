@@ -26,14 +26,11 @@ cd $DATA
 # Define NET/RUN variables
 ####################################
 export NET=${NET:-evs}
-#export MODEL=${MODEL:-evs} #consider changing this to $NET in wave jobs
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-global_ens}
 export RUN=${RUN:-atmos}
-#export modsys=${modsys:-gefs} #consider changing this to MODELNAME in atmos jobs
 export MODELNAME=${MODELNAME:-gefs}
 export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
-#export mod_ver=${mod_ver:-${gefs_ver}} #consider just using $gefs_ver instead of this variable
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export OBTYPE=${OBTYPE:-GDAS}
 
