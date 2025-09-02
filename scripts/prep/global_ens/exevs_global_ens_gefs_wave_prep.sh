@@ -1,9 +1,10 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_ens_wave_grid2obs_prep.sh                       
+# Name of Script: exevs_global_ens_gefs_wave_prep.sh                       
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                  
 # Mallory Row / mallory.row@noaa.gov 
 # Samira Ardani / samira.ardani@noaa.gov
+# Alicia Bentley / alicia.bentley@noaa.gov
 # Updates (202506): 
 # 1- Bugzilla 1606: added changes to .py plotting scripts to ensure that the plot job does not fail because of missing arrays.
 # 2- Bugzilla 1585: fixed the wave scatter index value.
@@ -13,6 +14,7 @@
 # 6- Updated all image names to be lastXXdays instead of pastXXdays. tar files have lastXXdays for waves plots.
 # 7- added obs name to image title.
 # 8- Updated walltime for global_ens wave prep.
+# 9- Chane filename so one j-job kicks off atmos and wave
 #
 # Purpose of Script: Run the grid2obs data prep for any global wave model      
 #                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NWPS)   
@@ -33,11 +35,11 @@ set -x
 ###################################
 
 cd $DATA
-echo "Starting grid2obs_prep for ${MODELNAME}_${RUN}"
+echo "Starting prep for ${MODELNAME}_${RUN}"
 
 echo ' '
 echo ' *************************************'
-echo " *** ${MODELNAME}-${RUN} grid2obs prep ***"
+echo " *** ${MODELNAME}-${RUN} gefs prep ***"
 echo ' *************************************'
 echo ' '
 echo "Starting at : `date`"
@@ -72,11 +74,11 @@ for ihour in ${inithours} ; do
           cat mailmsg | mail -s "$subject" $MAILTO
 	fi
     else
-        if [ ! -s ${COMOUTgefs}/${newname} ]; then
+        if [ ! -s ${COMOUTgefs}/grid2obs/${newname} ]; then
             cp -v ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
             if [ $SENDCOM = YES ]; then
                 if [ -s $DATA/gefs_wave_grib2/${newname} ]; then 
-                    cp -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/${newname}
+                    cp -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/grid2obs/${newname}
                 fi
             fi
         fi
@@ -93,17 +95,17 @@ mkdir -p $DATA/prepbufr
 for ihour in 00 06 12 18 ; do
 
   export inithour=t${ihour}z
-  if [ ! -s ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ]; then
-      echo "WARNING: ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr is not available"
+  if [ ! -s ${COMINobsproc}/gdas.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ]; then
+      echo "WARNING: ${COMINobsproc}/gdas.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
         echo "WARNING: No GDAS Prepbufr was available for init date ${INITDATE}${ihour}" > mailmsg
-        echo "Missing file is ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
+        echo "Missing file is ${COMINobsproc}/gdas.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
       fi
   else
-      cp -v ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ${DATA}/prepbufr/gdas.${INITDATE}${ihour}.prepbufr
+      cp -v ${COMINobsproc}/gdas.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ${DATA}/prepbufr/gdas.${INITDATE}${ihour}.prepbufr
       chmod 640 ${DATA}/prepbufr/gdas.${INITDATE}${ihour}.prepbufr
       chgrp rstprod ${DATA}/prepbufr/gdas.${INITDATE}${ihour}.prepbufr
   fi
@@ -121,7 +123,7 @@ for ihour in 00 06 12 18 ; do
     export ihour=$ihour
     export inithour=t${ihour}z
     if [ -s ${DATA}/prepbufr/gdas.${INITDATE}${ihour}.prepbufr ]; then
-        if [ ! -s ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc ]; then
+        if [ ! -s ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc ]; then
 	    
 	    cd $DATA/gefs_wave_grib2
 	    split_by_subset ${DATA}/prepbufr/gdas.${INITDATE}${ihour}.prepbufr
@@ -134,9 +136,9 @@ for ihour in 00 06 12 18 ; do
                 chgrp rstprod $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${ihour}.nc
                 if [ $SENDCOM = YES ]; then
                     if [ -s $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${ihour}.nc ]; then
-                        cp -v $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${ihour}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/
-                        chmod 640 ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc
-                        chgrp rstprod ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc
+                        cp -v $DATA/SFCSHP/gdas.SFCSHP.${INITDATE}${ihour}.nc ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/
+                        chmod 640 ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc
+                        chgrp rstprod ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.SFCSHP.${INITDATE}${ihour}.nc
                     fi
                 fi
             fi

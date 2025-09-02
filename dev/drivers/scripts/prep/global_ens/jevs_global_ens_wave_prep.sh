@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_wave_grid2obs_prep
+#PBS -N jevs_global_ens_wave_prep
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
