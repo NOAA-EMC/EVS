@@ -9,6 +9,7 @@
 ##
 ##   04/30/2024   Ho-Chun Huang  modification for using GOES-EAST and
 ##                               GOES-WEST AOD
+##   09/03/2025   Ho-Chun Huang  move cpreq to cp -v to comply with EE2
 ##
 ##   Note :  The lead hours specification is important to avoid the error generated 
 ##           by the MetPlus for not finding the input FCST or OBS files. The error
@@ -179,7 +180,7 @@ for ObsType in "${grid2grid_list[@]}"; do
           mkdir -p ${COMOUTfinal}
           stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*.stat" | wc -l)
           if [ ${stat_file_count} -ne 0 ]; then
-            cpreq ${COMOUTsmall}/*${OutputId}*.stat ${finalstat}
+            cp -v ${COMOUTsmall}/*${OutputId}*.stat ${finalstat}
             cd ${finalstat}
             run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${config_common}
             export err=$?; err_chk

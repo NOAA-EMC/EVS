@@ -15,6 +15,7 @@
 ##   10/20/2024   Ho-Chun Huang  modify for combined GOES-EAST/WEST L3 AOD
 ##   10/31/2024   Ho-Chun Huang  Add RESTART ability
 ##   10/31/2024   Ho-Chun Huang  Add backward search for closest time of the hour
+##   09/03/2025   Ho-Chun Huang  move cpreq to cp -v to comply with EE2
 ##
 ##
 #######################################################################
@@ -373,11 +374,11 @@ if [ "${num_mdl_grid}" != "0" ]; then
         goes_west_aod_file=${RUNTIME_PREP_DIR}/${goes_west_aod}
 
         if [ ! -s ${goes_east_aod_file} ] && [ -s ${COMOUTproc}/${goes_east_aod} ]; then
-          cpreq ${COMOUTproc}/${goes_east_aod} ${RUNTIME_PREP_DIR}
+          cp -v ${COMOUTproc}/${goes_east_aod} ${RUNTIME_PREP_DIR}
         fi
 
         if [ ! -s ${goes_west_aod_file} ] && [ -s ${COMOUTproc}/${goes_west_aod} ]; then
-          cpreq ${COMOUTproc}/${goes_west_aod} ${RUNTIME_PREP_DIR}
+          cp -v ${COMOUTproc}/${goes_west_aod} ${RUNTIME_PREP_DIR}
         fi
 
         join_script_name=${USHevs}/${COMPONENT}/integrate_goes_east_west_aod.py
