@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_atmos_gefs_sst_past31days_plots
+#PBS -N jevs_global_ens_atmos_gefs_sst_last31days_plots
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:05:00
-#PBS -l place=shared,select=1:ncpus=1:mem=5GB
+#PBS -l walltime=00:10:00
+#PBS -l place=shared,select=1:ncpus=1:mem=1GB
 #PBS -l debug=true
 
 set -x

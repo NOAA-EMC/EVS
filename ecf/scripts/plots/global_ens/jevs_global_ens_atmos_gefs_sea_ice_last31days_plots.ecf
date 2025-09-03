@@ -1,10 +1,10 @@
-#PBS -N evs_global_ens_atmos_gefs_snowfall_past31days_plots
+#PBS -N evs_global_ens_atmos_gefs_sea_ice_last31days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:shared,select=1:ncpus=32:mem=75GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter:shared,select=1:ncpus=29:mem=10GB
 #PBS -l debug=true
 
 export model=evs
@@ -47,9 +47,10 @@ fi
 export OMP_NUM_THREADS=1
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=snowfall
+export VERIF_CASE=sea_ice
 export MODELNAME=gefs
 export past_days=31
+export valid_time=both
 
 ############################################################
 # Execute j-job
