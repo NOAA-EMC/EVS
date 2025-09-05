@@ -11,6 +11,7 @@
 #
 #   Change Logs:
 #   11/21/2024   Ho-Chun Huang  Use GLOBAL_DET CFP approach for regular plots
+#   09/03/2025   Ho-Chun Huang  move cpreq to cp -v to comply with EE2
 ###############################################################################
 
 set -x
@@ -76,7 +77,7 @@ while [ ${imdl} -lt ${num_mdl} ]; do
             cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ivar}.v${NOW}.stat
             sedfile=${modelid}_${biasc}_${ivar}.v${NOW}.stat
             if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
-                cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
+                cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
                 sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
             else
                 echo "DEBUG ${MODELNAME} ${STEP} :: Can not find ${idir}/${MODELNAME}.${NOW}/${cpfile}"
