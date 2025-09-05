@@ -41,10 +41,14 @@ rtofs_qc_1 = os.path.join(COMROOT,
                         'ncoda/logs/profile_qc',
                         f"prof_argo_rpt.{VDATE_YMD.strftime('%Y%m%d')}00.txt")
 
+shutil.copy2(rtofs_qc_1,COMOUTsmall) 
+
 rtofs_qc_2 = os.path.join(COMROOT,
                         'rtofs',f"{rtofs_ver}",f"rtofs.{p2DATE_YMD}",
                         'ncoda/logs/profile_qc',
                         f"prof_argo_rpt.{p1DATE_YMD}00.txt")
+
+shutil.copy2(rtofs_qc_2,COMOUTsmall)
 
 combined = "rtofs_qc.txt"
 with open(combined, 'w') as outfile:
@@ -91,13 +95,17 @@ with open("rtofs_qc.txt") as myFile:
                     DTG_temp.append(myFile[num-2].rpartition('DTG= ')[2].rpartition('  Rcpt')[0])
 
 rejected_temp_file = os.path.join (COMOUTsmall,f"rejected_temp_{VDATE_YMD:%Y%m%d}.txt")
+header1 = "SKIP_IDS_temp"
 with open(rejected_temp_file, 'w') as file1:    
-    file1.write(", ".join(rejected_temp))
+    file1.write(header1 + "\n")
+    file1.write(",".join(rejected_temp))
 file1.close()
 
 rejected_psal_file = os.path.join (COMOUTsmall,f"rejected_psal_{VDATE_YMD:%Y%m%d}.txt")    
+header2 = "SKIP_IDS_psal"
 with open(rejected_psal_file, 'w') as file2:
-    file2.write(", ".join(rejected_psal))
+    file2.write(header2 + "\n")
+    file2.write(",".join(rejected_psal))
 file2.close()
 
 print(rejected_psal)
