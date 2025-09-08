@@ -774,7 +774,14 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         ylim_min = float(
             np.format_float_scientific(ylim_min, unique=False, precision=3)
         )
-    yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
+    # Set y-axis limits from 0 to 1 for ACC plots
+    if str(metric1_name).upper() == 'ACC' or str(metric2_name).upper() == 'ACC':
+        ylim_min = -1
+        ylim_max = 1
+        yticks = np.arange(-1, 1.1, 0.1)
+    else:
+        yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
+    
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
         if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
