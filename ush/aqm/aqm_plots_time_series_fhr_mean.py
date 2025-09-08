@@ -255,7 +255,7 @@ class TimeSeriesFhrMean:
             every_minor_ticks=int(self.date_info_dict[f"{hr_minor_tick_type}_hr_inc"])
         elif num_valid_days < 14:
             every_minor_ticks=6
-        elif in num_valid_days < 21:
+        elif num_valid_days < 21:
             every_minor_ticks=12
         else:
             every_minor_ticks=24
