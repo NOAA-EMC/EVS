@@ -59,5 +59,5 @@ ${HOMEevs}/jobs/JEVS_GLOBAL_CHEM_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global chemistry
-#          grid-to-observations aeronet for last 90 days
+#          grid-to-observations airnow/aeronet headline for last 90 days
 ######################################################################
