@@ -486,6 +486,8 @@ suite evs_nco
               time 00:45
             task jevs_global_chem_atmos_grid2obs_airnow_plots_last90days
               time 00:45
+            task jevs_global_chem_headline_grid2obs_plots_last90days
+              time 00:45
             task jevs_global_chem_atmos_grid2obs_aeronet_plots_last31days
               time 01:45
             task jevs_global_chem_atmos_grid2obs_airnow_plots_last31days
