@@ -26,7 +26,6 @@ cd $DATA
 # Define NET/RUN variables
 ####################################
 export NET=${NET:-evs}
-#export MODEL=${MODEL:-evs}
 export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_ens}
 export RUN=${RUN:-atmos}
