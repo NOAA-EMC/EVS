@@ -1,4 +1,4 @@
-#PBS -N evs_aqm_grid2obs_daily_plots_last31days
+#PBS -N evs_aqm_atmos_grid2obs_daily_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%

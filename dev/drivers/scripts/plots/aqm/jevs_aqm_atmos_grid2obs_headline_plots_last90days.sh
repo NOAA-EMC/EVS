@@ -1,10 +1,10 @@
-#PBS -N jevs_aqm_grid2obs_hourly_plots_last90days
+#PBS -N jevs_aqm_atmos_grid2obs_headline_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=275GB
+#PBS -l walltime=00:10:00
+#PBS -l place=shared,select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
 set -x
@@ -36,7 +36,7 @@ export envir=prod
 export NET=evs
 export STEP=plots
 export COMPONENT=aqm
-export RUN=atmos
+export RUN=headline
 export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
@@ -55,10 +55,10 @@ today=$(cut -c7-14 ${COMROOT}/date/t${vhr}z)
 export VDATE_END=$(finddate.sh ${today} d-4)
 export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END}
 
-export USE_CFP=YES
-export nproc=128    ## nproc must match with the ncpus allocation above
+export USE_CFP=NO
+export nproc=1    ## nproc must match with the ncpus allocation above
 
-export DATA_TYPE=hourly
+export DATA_TYPE=daily
 export NDAYS=90
 
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}

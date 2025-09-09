@@ -1,4 +1,4 @@
-#PBS -N jevs_aqm_grid2obs_daily_plots_last90days
+#PBS -N jevs_aqm_atmos_grid2obs_daily_plots_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -59,7 +59,7 @@ export USE_CFP=YES
 export nproc=128    ## nproc must match with the ncpus allocation above
 
 export DATA_TYPE=daily
-export NDAYS=90
+export NDAYS=31
 
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
 
