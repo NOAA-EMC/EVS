@@ -81,11 +81,11 @@ if [ $modnam = sref_apcp06 ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
 	   if [ $base = arw ] && [ $fhr = 06 ] ; then
 	      sref03=${COMINsref}/sref.${fday}/$fvhr/pgrb/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
 	      if [ -s $sref03 ] ; then
-	        $WGRIB2 $sref03|grep "^479:"|$WGRIB2 -i $sref03 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
+	        $WGRIB2 $sref03 -match "^479:"|$WGRIB2 -i $sref03 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f03.grib2
 	      fi
 	      sref06=${COMINsref}/sref.${fday}/$fvhr/pgrb/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
 	      if  [ -s $sref06 ] ; then
-	        $WGRIB2 $sref06|grep "^479:"|$WGRIB2 -i $sref06 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
+	        $WGRIB2 $sref06 -match "^479:"|$WGRIB2 -i $sref06 -grib $WORK/sref.${fday}/sref_${base}.t${fvhr}z.pgrb212.${mb}.f06.grib2
 	      fi
 	      export modelpath=$WORK/sref.${fday}
             else
@@ -127,12 +127,12 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
   export output_base=${WORK}/sref.${vday}
   mkdir -p $output_base
   cd $output_base
-  if [ ! -d ${COMOUTfinal}/apcp24mean ] ; then
-     mkdir -p ${COMOUTfinal}/apcp24mean
+  if [ ! -d ${COMOUTsmall}/apcp24mean ] ; then
+     mkdir -p ${COMOUTsmall}/apcp24mean
   fi
 
 
- if [ ! -s ${COMOUTfinal}/apcp24mean/sref.t12z.pgrb212.24mean.f72.nc ] ; then 
+ if [ ! -s ${COMOUTsmall}/apcp24mean/sref.t12z.pgrb212.24mean.f72.nc ] ; then 
 
   for vhr in 09 15 ; do
     large=${COMINsref}/sref.${vday}/${vhr}/ensprod/sref.t${vhr}z.pgrb212.mean_3hrly.grib2
@@ -169,7 +169,7 @@ if [ $modnam = sref_apcp24_mean ] && [ ! -e $DATA/sref_mbrs.missing ] ; then
   if [ -s $output_base/sref.t12z.pgrb212.24mean.f24.nc ] && [ -s $output_base/sref.t12z.pgrb212.24mean.f72.nc ] && [ -s $output_base/sref.t12z.pgrb212.24mean.f72.nc ] ; then 
    if [ $SENDCOM = YES ] ; then
     if [ -s $output_base/sref.t12z.pgrb212.24mean.f*.nc ] ; then
-      cp $output_base/sref.t12z.pgrb212.24mean.f*.nc ${COMOUTfinal}/apcp24mean
+      cp $output_base/sref.t12z.pgrb212.24mean.f*.nc ${COMOUTsmall}/apcp24mean
     fi
    fi 
   fi

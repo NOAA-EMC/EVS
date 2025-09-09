@@ -99,8 +99,8 @@ fi
 ####################################
 # Define COMIN/COMOUT variables:
 ####################################
+export EVSINapcp24mean=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export EVSINapcp24mean=${EVSINapcp24mean:-$COMIN/stats/$COMPONENT}
 export EVSINccpa=${EVSINccpa:-$COMIN/prep/cam/$RUN}
 export EVSINmrms=${EVSINmrms:-$COMIN/prep/cam/$RUN}
 export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/cam/$RUN}

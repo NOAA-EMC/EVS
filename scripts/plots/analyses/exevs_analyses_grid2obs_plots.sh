@@ -167,7 +167,7 @@ do
 	fi
         elif [ ! -e  ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made due to lack of data in region for last 31 days",$varb,$region,$anl
         fi
 
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
@@ -189,7 +189,7 @@ do
 	fi
         elif [ ! -e  ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made due to lack of data in region for last 31 days",$varb,$region,$anl
 	fi
 
  fi
@@ -227,7 +227,7 @@ do
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
         then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made due to lack of data in region for last 31 days",$varb,$region,$anl
         fi
 
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
@@ -249,7 +249,7 @@ do
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made due to lack of data in region for last 31 days",$varb,$region,$anl
 	fi
  fi
 done
@@ -286,7 +286,7 @@ do
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
         then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made due to lack of data in region for last 31 days",$varb,$region,$anl
         fi
 
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
@@ -308,7 +308,7 @@ do
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made due to lack of data in region for last31days",$varb,$region,$anl
 	fi
  fi
 done
@@ -357,7 +357,7 @@ do
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made due to lack of data in the region in the last 31 days",$varb,$region,$anl
         fi
 
 	for stat in csi fbias
@@ -392,7 +392,7 @@ do
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made due to lack of data in region for last 31 days",$varb,$region,$anl
         fi
 
 	if [ $var = VISsfc ]
@@ -418,7 +418,7 @@ do
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made. The threshold does not occur over the region in the last 31 days",$varb,$region,$anl,$thresh
 	fi
 
         done
@@ -447,7 +447,7 @@ do
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
+	echo "Note: No plot made. The threshold does not occur over the region in the last 31 days",$varb,$region,$anl,$thresh
 	fi
 
         done
@@ -495,7 +495,7 @@ if [ $plot = yes ]; then
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$var,$region,$anl
+	echo "Note: No plot made due to lack of data in region for last 31 days",$var,$region,$anl
         fi
 
         for thresh in 10 50 90
@@ -519,7 +519,7 @@ if [ $plot = yes ]; then
 	fi
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
 	then
-	echo "WARNING: NO PLOT FOR",$var,$region,$anl
+	echo "Note: No plot made. The threshold does not occur over the region in the last 31 days",$var,$region,$anl,$thresh
 	fi
 
         done

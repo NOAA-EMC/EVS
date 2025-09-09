@@ -766,20 +766,15 @@ class Reference():
                                     'TSOIL': 'Soil Temperature',
                                     'SOILW': ('Volumetric Soil Moisture'
                                               + ' Content'),
-                                    'weasd': 'Accum. Snow Depth Water equiv.',
-                                    'WEASD_L0': 'Accum. Snow Depth Water equiv.',
-                                    'SNOD_L0':'Accum. Snow Depth',
-                                    'ASNOW': 'Accum. Snow Depth Water equiv.',
-                                    'APCP': ('Accumulated'
-                                                + ' Precipitation'),
-                                    'APCP_01': ('Accumulated'
-                                                + ' Precipitation'),
-                                    'APCP_03': ('Accumulated'
-                                                + ' Precipitation'),
-                                    'APCP_06': ('Accumulated'
-                                                + ' Precipitation'),
-                                    'APCP_24': ('Accumulated'
-                                                + ' Precipitation'),
+                                    'weasd': 'Accumulated Snow Water Equivalent',
+                                    'WEASD_L0': 'Accumulated Snow Water Equivalent',
+                                    'SNOD_L0': 'Snow Depth',
+                                    'ASNOW': 'Total Snowfall',
+                                    'APCP': 'Accumulated Precipitation',
+                                    'APCP_01': 'Accumulated Precipitation',
+                                    'APCP_03': 'Accumulated Precipitation',
+                                    'APCP_06': 'Accumulated Precipitation',
+                                    'APCP_24': 'Accumulated Precipitation',
                                     'PWAT': 'Precipitable Water',
                                     'CWAT': 'Cloud Water',
                                     'TCDC': 'Cloud Area Fraction',
@@ -805,6 +800,7 @@ class Reference():
                                     'APCP_24_ENS_FREQ_gt20': 'Accumulated Precipitation (> 20 mm)',
                                     'APCP_24_ENS_FREQ_gt25': 'Accumulated Precipitation (> 25 mm)',
                                     'APCP_24_ENS_FREQ_gt50': 'Accumulated Precipitation (> 50 mm)'}
+
         '''
         Given a domain requested in the plotting configuration file, the
         plotting scripts will print the long name of that domain according
@@ -3758,7 +3754,7 @@ class Reference():
                     }
                 },
                 'ECNT': {
-                    'plot_stats_list': 'rmse, me, mae',
+                    'plot_stats_list': 'crps, crpss, rmse, spread, me, mae',
                     'interp': 'NEAREST',
                     'vx_mask_list' : [ 'ARCTIC', 'ANTARCTIC' 
                     ], 
@@ -3782,20 +3778,20 @@ class Reference():
                     'var_dict': {
                         'ICEC': {'fcst_var_names': ['ICEC_Z0_mean'],
                                  'fcst_var_levels': ['Z0'],
-                                 'fcst_var_thresholds': '>10, >40, >80',
+                                 'fcst_var_thresholds': '>15, >40, >80',
                                  'fcst_var_options':  '',
                                  'obs_var_names': ['ice_conc'],
                                  'obs_var_levels': ['*,*'],
-                                 'obs_var_thresholds': '>10, >40, >80',
+                                 'obs_var_thresholds': '>15, >40, >80',
                                  'obs_var_options': '',
                                  'plot_group':'sfc_upper'},
-                       'ICEC_gt10': {'fcst_var_names': ['ICEC_Z0_mean'],
+                       'ICEC_gt15': {'fcst_var_names': ['ICEC_Z0_mean'],
                                      'fcst_var_levels': ['Z0'],
-                                     'fcst_var_thresholds': '>10',
+                                     'fcst_var_thresholds': '>15',
                                      'fcst_var_options':  '',
                                      'obs_var_names': ['ice_conc'],
                                      'obs_var_levels': ['*,*'],
-                                     'obs_var_thresholds': '>10',
+                                     'obs_var_thresholds': '>15',
                                      'obs_var_options': '',
                                      'plot_group':'sfc_upper'},
                        'ICEC_gt40': {'fcst_var_names': ['ICEC_Z0_mean'],

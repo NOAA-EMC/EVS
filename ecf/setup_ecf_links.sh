@@ -120,6 +120,10 @@ cyc=$(seq 0 23)
 link_master_to_cyc "jevs_aqm_stats_vhr" "$cyc"
 
 # ANALYSES files
+cd $ECF_DIR/scripts/prep/analyses
+echo "Linking ANALYSES prep ..."
+cyc=$(seq 0 6 23)
+link_master_to_cyc "jevs_analyses_precip_prep_vhr" "$cyc"
 cd $ECF_DIR/scripts/stats/analyses
 echo "Linking ANALYSES stats ..."
 cyc=$(seq 0 23)

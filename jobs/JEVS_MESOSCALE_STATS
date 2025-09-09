@@ -79,7 +79,7 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
   export COMINobs=$COMINobsproc
   export COMINccpa=${COMINccpa:-$(compath.py  ${envir}/com/ccpa/${ccpa_ver})}
-  export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/cam}
+  export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/mesoscale}
   export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
   export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
   export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}

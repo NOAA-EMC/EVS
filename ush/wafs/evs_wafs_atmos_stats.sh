@@ -13,8 +13,9 @@ echo $msg
 export OBSERVATION=$1
 export RESOLUTION=$2
 export CENTER=$3
+export VAR=$4
 
-export DATAmpmd=$DATA/$OBSERVATION.$RESOLUTION.$CENTER
+export DATAmpmd=$DATA/$OBSERVATION.$RESOLUTION.$CENTER.$VAR
 mkdir -p $DATAmpmd
 cd $DATAmpmd
 
@@ -26,7 +27,7 @@ mkdir -p $GRID_STAT_INPUT_BASE
 # STAT_ANALYSIS_OUTPUT_DIR is defined in config.evs.wafs.standalone, and created & used by StatAnalysis_fcstWAFS*
 source $HOMEevs/parm/evs_config/wafs/config.evs.wafs.standalone
 
-cp $PARMevs/GridStat_fcstWAFS_obs${OBSERVATION}.conf GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
+cp $PARMevs/GridStat_fcstWAFS_obs${OBSERVATION}${VAR}.conf GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
 
 inithours=${FCST_VALID_HOUR//,/ }
 
@@ -49,15 +50,19 @@ done
 
 
 if [ $OBSERVATION = "GCIP" ] ; then
-    stat_file_suffix=`echo $VAR1_NAME | tr '[:upper:]' '[:lower:]'`
+    stat_file_suffix=$VAR
 elif [ $OBSERVATION = "GFS" ] ; then
-    stat_file_suffix='uvt'$resolution
+    stat_file_suffix=$VAR$resolution
 fi
 # Non wind direction variables:
 # remove duplicate lines and keep the first one
 if [ -d $STAT_ANALYSIS_OUTPUT_DIR ] ; then
     if [ $OBSERVATION = "GFS" ] ; then
-	sed '/>=/s/WIND/WIND80/g' $STAT_ANALYSIS_OUTPUT_DIR/* > $STATSOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
+	if [ $VAR = "wdir" ] ; then
+	    cat $STAT_ANALYSIS_OUTPUT_DIR/* > $STATSOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
+	else
+	    sed '/>=/s/WIND/WIND80/g' $STAT_ANALYSIS_OUTPUT_DIR/* > $STATSOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
+	fi
     else
 	cat $STAT_ANALYSIS_OUTPUT_DIR/* > $DATAsemifinal/${CENTER}_${RESOLUTION}.$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
     fi

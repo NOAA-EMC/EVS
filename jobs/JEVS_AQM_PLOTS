@@ -74,20 +74,22 @@ export VDATE_START=${VDATE_START:-$(finddate.sh ${VDATE_END} d-$((${NDAYS}-1)))}
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export EVSINaqm=${EVSINaqm:-${COMIN}/stats/${COMPONENT}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END})}
-export COMOUTheadline=${COMOUTheadline:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/headline.${VDATE_END})}
-mkdir -m 775 -p ${COMOUT} ${COMOUTheadline}
+mkdir -m 775 -p ${COMOUT}
 
 export DATA_TYPE=${DATA_TYPE:-hourly}
 export restart_mode=${restart_mode:-YES}
 export fig_name_label=${fig_name_label:-last${NDAYS}days}
-export OBS_SRC=${OBS_SRC:-airnow}
 #######################################################################
 # Execute the script.
 #######################################################################
 
 export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${MODELNAME}.${VERIF_CASE}.${DATA_TYPE}}
 
-${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+if [ "${RUN}" == "headline" ]; then
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${RUN}_${STEP}.sh
+else
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+fi
 export err=$?; err_chk
 
 msg="JOB ${job} HAS COMPLETED NORMALLY."
