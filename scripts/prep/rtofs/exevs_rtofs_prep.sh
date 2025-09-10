@@ -310,7 +310,7 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	if [ $file_check_atlantic -eq 0 ] && [ $file_check_indian -eq 0 ] && [ $file_check_pacific -eq 0 ] ; then
 		tmp_argo_file=$DATA/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
 		output_argo_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/argo.${INITDATE}.nc
-		if [ ! -s $output_argo_file ]; then
+		if [ ! -s $output_argo_file ] ; then
 			run_metplus.py -c $PARMevs/metplus_config/machine.conf \
 			-c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsARGO.conf
 			export err=$?; err_chk
