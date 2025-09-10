@@ -1,4 +1,4 @@
-#PBS -N evs_global_ens_wave_grid2obs_stats
+#PBS -N evs_global_ens_gefs_wave_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -56,7 +56,7 @@ export gather='yes'
 ############################################################
 # Execute j-job
 ############################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_STATS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
