@@ -50,7 +50,6 @@ mkdir -p ${DATA}/gribs
 mkdir -p ${DATA}/SFCSHP
 mkdir -p ${DATA}/all_stats
 mkdir -p ${DATA}/jobs
-#mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
 mkdir -p ${DATA}/job_work_dir
