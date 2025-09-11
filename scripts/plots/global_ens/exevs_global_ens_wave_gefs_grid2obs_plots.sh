@@ -1,6 +1,6 @@
 #!/bin/bash
 ################################################################################
-# Name of Script: exevs_global_ens_wave_grid2obs_plots.sh                       
+# Name of Script: exevs_global_ens_wave_gefs_grid2obs_plots.sh                       
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                    
 # Samira Ardani / samira.ardani@noaa.gov
 # Updates on 202505:
@@ -181,11 +181,11 @@ if [ $gather = yes ] ; then
     fi
     if [ $SENDCOM="YES" ] ; then
         if [ -s evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ]; then
-            cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/.
+            cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUT}/.
         fi
     fi
     if [ $SENDDBN = YES ]; then
-      $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
+      $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUT}/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
     fi
   done
 else  
