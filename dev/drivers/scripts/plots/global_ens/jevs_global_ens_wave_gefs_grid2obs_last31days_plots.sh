@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_wave_grid2obs_plots_last31days
+#PBS -N jevs_global_ens_wave_gefs_grid2obs_last31days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -53,7 +53,7 @@ export run_mpi='yes'
 export gather='yes'
 
 
-export job=${PBS_JOBNAME:-jevs_global_ens_wave_grid2obs_plots_last31days}
+export job=${PBS_JOBNAME:-jevs_global_ens_wave_gefs_grid2obs_last31days_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -61,7 +61,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
 
 #########################################################################
 # Purpose: This job creates the plots for the global_ens GEFS-Wave model
