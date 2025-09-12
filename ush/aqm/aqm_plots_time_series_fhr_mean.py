@@ -249,6 +249,17 @@ class TimeSeriesFhrMean:
         image_name = plot_specs_ts.get_savefig_name(
             self.output_dir, self.plot_info_dict, self.date_info_dict
         )
+        num_valid_days=int(self.date_info_dict['ndays'])
+        hr_minor_tick_type = self.date_info_dict['date_type'].lower()
+        if  num_valid_days < 7:
+            every_minor_ticks=int(self.date_info_dict[f"{hr_minor_tick_type}_hr_inc"])
+        elif num_valid_days < 14:
+            every_minor_ticks=6
+        elif num_valid_days < 21:
+            every_minor_ticks=12
+        else:
+            every_minor_ticks=24
+
         # Make plot
         self.logger.info(f"Making plot")
         fig, ax = plt.subplots(1,1,figsize=(plot_specs_ts.fig_size[0],
@@ -258,12 +269,11 @@ class TimeSeriesFhrMean:
         ax.set_xlim([plot_dates[0], plot_dates[-1]])
         ax.set_xticks(plot_dates[::xtick_intvl])
         ax.xaxis.set_major_formatter(md.DateFormatter('%HZ %d%b%Y'))
-        hr_minor_tick_type = self.date_info_dict['date_type'].lower()
         ax.xaxis.set_minor_locator(
             md.HourLocator(byhour=range(
                 int(self.date_info_dict[f"{hr_minor_tick_type}_hr_start"]),
                 int(self.date_info_dict[f"{hr_minor_tick_type}_hr_end"])+1,
-                int(self.date_info_dict[f"{hr_minor_tick_type}_hr_inc"])
+                every_minor_ticks
             ))
         )
         ax.set_ylabel(stat_plot_name)
