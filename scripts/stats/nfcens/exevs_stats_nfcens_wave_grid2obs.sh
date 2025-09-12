@@ -1,6 +1,6 @@
 #!/bin/bash
 ################################################################################
-# Name of Script: exevs_nfcens_wave_grid2obs_stats.sh                           
+# Name of Script: exevs_stats_nfcens_wave_grid2obs.sh                           
 # Cited to former developers: Deanna Spindler / Deanna.Spindler@noaa.gov                                    
 #                             Mallory Row / Mallory.Row@noaa.gov
 # 

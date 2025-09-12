@@ -1,6 +1,6 @@
 #!/bin/bash
 ################################################################################
-# Name of Script: exevs_nfcens_wave_grid2obs_plots.sh                           
+# Name of Script: exevs_plots_nfcens_wave_grid2obs.sh                           
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                    
 # Samira Ardani / samira.ardani@noaa.gov
 # Purpose of Script: Run the grid2obs plots for any global wave model           
