@@ -562,9 +562,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             ]
     else:
         handles = []
-        labels = [model_list[0].upper()]
-    handles = []
-    labels = []
+        labels = []
     n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
