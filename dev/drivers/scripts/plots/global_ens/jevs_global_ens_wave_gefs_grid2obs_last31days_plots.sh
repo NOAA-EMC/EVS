@@ -1,9 +1,9 @@
-#PBS -N jevs_global_ens_wave_grid2obs_plots_last90days
+#PBS -N jevs_global_ens_wave_gefs_grid2obs_last31days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=00:10:00
 #PBS -l place=vscatter,select=1:ncpus=108:mem=110G
 #PBS -l debug=true
 
@@ -48,12 +48,12 @@ export SENDMAIL=YES
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}
-export EVAL_PERIOD="last90days"
+export EVAL_PERIOD="last31days"
 export run_mpi='yes'
 export gather='yes'
 
 
-export job=${PBS_JOBNAME:-jevs_global_ens_wave_grid2obs_plots_last90days}
+export job=${PBS_JOBNAME:-jevs_global_ens_wave_gefs_grid2obs_last31days_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -61,7 +61,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
 
 #########################################################################
 # Purpose: This job creates the plots for the global_ens GEFS-Wave model

@@ -520,17 +520,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         if confidence_intervals:
             reference_ci_lower2 = pivot_ci_lower2.mean(axis=1)
             reference_ci_upper2 = pivot_ci_upper2.mean(axis=1)
-        if not np.any((pivot_reference2.T/reference2).T == 1.):
-            logger.warning(
-                f"{str(metric2_name).upper()} is requested, but the value "
-                + f"varies from model to model. "
-                + f"Will plot an individual line for each model. If a "
-                + f"single reference line is preferred, set the "
-                + f"sample_equalization toggle in ush/settings.py to 'True', "
-                + f"and check in the log file if sample equalization "
-                + f"completed successfully."
-            )
-            plot_reference[1] = False
+        plot_reference[1] = True
+    
     if np.any(plot_reference):
         plotted_reference = [False, False]
         if confidence_intervals:
@@ -571,9 +562,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             ]
     else:
         handles = []
-        labels = [model_list[0].upper()]
-    handles = []
-    labels = []
+        labels = []
     n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
