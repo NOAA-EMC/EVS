@@ -148,7 +148,7 @@ for ObsType in ${grid2obs_list}; do
         fi
       fi
     fi
-    if [ "${vhr}" == "18" ]; then
+    if [ "${vhr}" == "21" ]; then
       stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
         cp -v ${COMOUTsmall}/*${OutputId}* ${finalstat}
