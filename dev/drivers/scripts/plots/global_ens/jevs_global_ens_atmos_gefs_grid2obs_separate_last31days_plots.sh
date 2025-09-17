@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_atmos_gefs_grid2obs_past31days_plots
+#PBS -N jevs_global_ens_atmos_gefs_grid2obs_separate_last31days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:20:00
-#PBS -l place=vscatter:exclhost,select=2:ncpus=88:mem=500GB
+#PBS -l walltime=00:15:00
+#PBS -l place=vscatter:exclhost,select=9:ncpus=20:mpiprocs=20:mem=30GB
 #PBS -l debug=true
 
 set -x
@@ -37,7 +37,8 @@ export vhr=00
 export past_days=31
 
 
-export valid_time=both
+
+export valid_time=separate
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d

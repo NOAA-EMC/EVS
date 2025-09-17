@@ -1,9 +1,9 @@
-#PBS -N jevs_aqm_grid2grid_hourly_plots_last90days
+#PBS -N jevs_aqm_atmos_grid2obs_hourly_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:25:00
+#PBS -l walltime=00:15:00
 #PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=275GB
 #PBS -l debug=true
 
@@ -37,13 +37,13 @@ export NET=evs
 export STEP=plots
 export COMPONENT=aqm
 export RUN=atmos
-export VERIF_CASE=grid2grid
+export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
 export mod_ver=${aqm_ver}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
