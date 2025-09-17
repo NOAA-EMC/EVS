@@ -1,4 +1,4 @@
-#PBS -N jevs_aqm_grid2grid_hourly_plots_last90days
+#PBS -N jevs_aqm_atmos_grid2grid_hourly_plots_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -43,7 +43,7 @@ export modsys=aqm
 export mod_ver=${aqm_ver}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
