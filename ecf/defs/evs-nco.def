@@ -1,6 +1,6 @@
 suite evs_nco
   family primary
-    edit evs_ver 'v1.0'
+    edit evs_ver 'v2.0'
     edit PACKAGEHOME '/lfs/h2/emc/global/noscrub/%EMC_USER%/para/packages/evs.%evs_ver%'
     edit NET 'evs'
     edit RUN 'evs'
@@ -527,7 +527,7 @@ suite evs_nco
         family prep
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/prep'
           family rtofs
-            task jevs_rtofs_prep
+            task jevs_prep_rtofs
               time 07:00
           endfamily
           family global_ens

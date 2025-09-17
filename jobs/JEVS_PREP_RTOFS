@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Job Name: JEVS_RTOFS_PREP
+# Job Name: JEVS_PREP_RTOFS
 # Purpose: To pre-process RTOFS forecast data into the same spatial and
 #          temporal scales as validation data.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
@@ -75,7 +75,7 @@ mkdir -p $COMOUT $COMOUTprep
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${STEP}.sh
+$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${STEP}_${COMPONENT}.sh
 export err=$?; err_chk
 
 if [ "$KEEPDATA" != "YES" ] ; then
