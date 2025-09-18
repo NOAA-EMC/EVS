@@ -3,7 +3,7 @@
 # Purpose: set up environment, paths, and run the global_ens sst
 #          plotting python scripts. Plots only contain GEFS metrics.
 #
-# Updated: 07/31/2025 by L. Gwen Chen (lichuan.chen@noaa.gov)
+# Updated: 08/21/2025 by L. Gwen Chen (lichuan.chen@noaa.gov)
 #          11/17/2023 by Binbin Zhou, Lynker@EMC/NCEP 
 #**************************************************************************
 set -x 
@@ -20,8 +20,6 @@ verif_type=sfc
 model_list='GEFS'
 models='GEFS'
 VX_MASK_LIST="G003, NHEM, SHEM, TROPICS"
-valid_time='valid00z'
-init_time='init00_12z'
 
 n=0
 while [ $n -le $past_days ] ; do
@@ -56,12 +54,15 @@ done
 #*****************************************
 > run_all_poe.sh
 
-for stats in rmse me ; do 
-  if [ $stats = rmse ] ; then
-    stat_list='rmse'
+for stats in crps me_mae rmse_spread; do 
+  if [ $stats = crps ] ; then
+    stat_list='crps'
     line_tp='ecnt'
-  elif [ $stats = me ] ; then
-    stat_list='me'
+  elif [ $stats = me_mae ] ; then
+    stat_list='me, mae'
+    line_tp='ecnt'
+  elif [ $stats = rmse_spread ] ; then
+    stat_list='rmse, spread'
     line_tp='ecnt'
   else
     err_exit "$stats is not a valid metric"
@@ -69,14 +70,14 @@ for stats in rmse me ; do
 
   for score_type in time_series lead_average ; do
     if [ $score_type = time_series ] ; then
-      export fcst_leads="120 240 360"
+      export fcst_leads="24 120 240 360"
     else
       export fcst_leads="vs_lead" 
     fi
  
     for lead in $fcst_leads ; do 
       if [ $lead = vs_lead ] ; then
-	export fcst_lead="24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180, 192, 204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
+        export fcst_lead="24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264, 288, 312, 336, 360, 384"
       else
         export fcst_lead=$lead
       fi
@@ -169,7 +170,13 @@ export err=$?; err_chk
 #*************************************************
 cd $plots_all_dir
 
-for stats in rmse me ; do
+for stats in crps me_mae rmse_spread ; do
+   if [ $stats = rmse_spread ]; then
+       evs_graphic_stats="rmse_sprd"
+   else
+       evs_graphic_stats=$stats
+   fi
+
    for domain in g003 nhem shem tropics ; do
        if [ $domain = g003 ] ; then
            domain_new=glb
@@ -178,26 +185,26 @@ for stats in rmse me ; do
        fi
 
        if [ -f "lead_average_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}.png" ]; then
-          mv lead_average_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}.png evs.global_ens.${stats}.sst_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain_new}.png
+          mv lead_average_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}.png evs.global_ens.${evs_graphic_stats}.sst_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain_new}.png
        fi
 
-       for lead in 120 240 360; do
+       for lead in 24 120 240 360 ; do
            if [ -f "time_series_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}_f${lead}.png" ]; then
-              mv time_series_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}_f${lead}.png evs.global_ens.${stats}.sst_z0.last${past_days}days.timeseries_valid00z_f${lead}.g003_${domain_new}.png
+              mv time_series_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.sst_z0.last${past_days}days.timeseries_valid00z_f${lead}.g003_${domain_new}.png
            fi
        done # lead
     done # domain
 done # stats
 
-tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.last${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    if [ -s evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar ]; then 
-        cp -v evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar $COMOUT/.
+    if [ -s evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.last${past_days}days.v${VDATE}.tar ]; then 
+        cp -v evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.last${past_days}days.v${VDATE}.tar $COMOUT/.
     fi
 fi
 
 if [ $SENDDBN = YES ]; then 
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.last${past_days}days.v${VDATE}.tar
 fi
 
