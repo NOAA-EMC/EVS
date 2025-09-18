@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_grid2grid_stats.sh
+# Name of Script: exevs_stats_rtofs_grid2grid.sh
 # Purpose of Script: To create stat files for RTOFS, grid2grid verification cases.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 # Modified for EVSv2:

@@ -1,9 +1,9 @@
-#PBS -N jevs_rtofs_osisaf_grid2grid_stats
+#PBS -N jevs_stats_rtofs_ndbc_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
+#PBS -l walltime=05:30:00
 #PBS -l place=exclhost,select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
@@ -26,8 +26,8 @@ export envir=prod
 export NET=evs
 export STEP=stats
 export RUN=ocean
-export OBTYPE=osisaf
-export VERIF_CASE=grid2grid
+export OBTYPE=ndbc
+export VERIF_CASE=grid2obs
 export COMPONENT=rtofs
 
 source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
@@ -39,16 +39,17 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${OBTYPE}_${VERIF_CASE}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,samira.ardani@noaa.gov'}
 
 # call j-job
-$HOMEevs/jobs/JEVS_RTOFS_STATS
+$HOMEevs/jobs/JEVS_STATS_RTOFS
 
 ######################################################################
 # Purpose: The job and task scripts work together to create stat
-#          files for RTOFS forecast verification using MET/METplus.
+#          files for RTOFS forecasts verified with NDBC data using
+#          MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ######################################################################
