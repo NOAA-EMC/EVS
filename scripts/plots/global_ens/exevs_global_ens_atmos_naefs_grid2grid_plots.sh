@@ -83,7 +83,7 @@ for fcst_valid_hour in $fcst_valid_hours ; do
  
       for lead in $fcst_leads ; do 
         if [ $lead = vs_lead ] ; then
-          export fcst_lead="0, 24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264, 288, 312, 336, 360, 384"
+          export fcst_lead="24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264, 288, 312, 336, 360, 384"
         else
           export fcst_lead=$lead
         fi
