@@ -1,10 +1,10 @@
-#PBS -N evs_rtofs_argo_grid2obs_last60days_plots
+#PBS -N evs_plots_rtofs_headline_grid2grid_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:50:00
-#PBS -l place=shared,select=1:ncpus=1:mem=10GB
+#PBS -l walltime=00:15:00
+#PBS -l place=shared,select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
 export model=evs
@@ -36,14 +36,13 @@ else
   export vhr=00
 fi
 export NET=evs
-export RUN=ocean
-export OBTYPE=argo
-export VERIF_CASE=grid2obs
+export RUN=headline
+export VERIF_CASE=grid2grid
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_RTOFS_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_RTOFS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

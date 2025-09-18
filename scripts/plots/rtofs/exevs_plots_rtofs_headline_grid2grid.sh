@@ -1,6 +1,6 @@
 #!/bin/bash
 ######################################################################################################
-# Name of Script: exevs_rtofs_headline_grid2grid_plots
+# Name of Script: exevs_plots_rtofs_headline_grid2grid
 # Purpose of Script: Create RTOFS headline plots
 # Author: Mallory Row (mallory.row@noaa.gov)
 # Edited by:  Samira Ardani (samira.ardani@noaa.gov) 

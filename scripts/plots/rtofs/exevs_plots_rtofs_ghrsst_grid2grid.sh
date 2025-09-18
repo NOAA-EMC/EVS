@@ -1,7 +1,7 @@
 #!/bin/bash
-######################################################################################################
-# Name of Script: exevs_rtofs_ndnc_grid2obs_plots
-# Purpose of Script: Create RTOFS NDBC plots for last 60 days
+#####################################################################################################
+# Name of Script: exevs_plots_rtofs_ghrsst_grid2grid
+# Purpose of Script: Create RTOFS GHRSST plots for last 60 days
 # Author: Mallory Row (mallory.row@noaa.gov)
 # Edited by:  Samira Ardani (samira.ardani@noaa.gov) 
 # 09/2024: Variable names changed:
@@ -13,11 +13,9 @@
 
 set -x
 
-export OBTYPE=NDBC_STANDARD
+export OBTYPE=GHRSST
 
 export VAR=SST
-export FLVL=Z0
-export OLVL=Z0
 
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 mkdir -p $DATA/tmp/rtofs
@@ -27,7 +25,7 @@ export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*
 # set up plot variables
 export PERIOD=last60days
 export THRESH=""
-export MASKS="GLB"
+export MASKS="GLB, NATL, SATL, EQATL, NPAC, SPAC, EQPAC, IND, SOC, Arctic, MEDIT"
 
 # plot time series
 export PTYPE=time_series
@@ -92,20 +90,16 @@ if [[ $log_file_count -ne 0 ]]; then
 	done
 fi
 
-if [ $OBTYPE = 'NDBC_STANDARD' ]; then
-	export obtype_lower=ndbc_standard
-	export obtype=ndbc
-
-fi
+export obtype=`echo $OBTYPE |tr '[A-Z]' '[a-z]'`
 
 # tar all plots together
-cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype_lower
+cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype
 tar -cvf evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
-	if [ -s evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then
-		cp -v evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
-	fi
+ if [ -s evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar ] ; then
+	cp -v evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
+ fi
 fi
 
 if [ $SENDDBN = YES ] ; then

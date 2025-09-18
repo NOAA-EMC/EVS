@@ -460,21 +460,21 @@ suite evs_nco
         family plots
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/plots'
           family rtofs
-            task jevs_rtofs_aviso_grid2grid_last60days_plots
+            task jevs_plots_rtofs_aviso_grid2grid_last60days
               trigger :TIME >= 0300 and :TIME < 0700
-            task jevs_rtofs_ghrsst_grid2grid_last60days_plots
+            task jevs_plots_rtofs_ghrsst_grid2grid_last60days
               trigger :TIME >= 0300 and :TIME < 0700
-            task jevs_rtofs_osisaf_grid2grid_last60days_plots
+            task jevs_plots_rtofs_osisaf_grid2grid_last60days
               trigger :TIME >= 0300 and :TIME < 0700
-            task jevs_rtofs_smap_grid2grid_last60days_plots
+            task jevs_plots_rtofs_smap_grid2grid_last60days
               trigger :TIME >= 0300 and :TIME < 0700
-            task jevs_rtofs_smos_grid2grid_last60days_plots
+            task jevs_plots_rtofs_smos_grid2grid_last60days
               trigger :TIME >= 0300 and :TIME < 0700
-            task jevs_rtofs_argo_grid2obs_last60days_plots
+            task jevs_plots_rtofs_argo_grid2obs_last60days
               trigger :TIME >= 0300 and :TIME < 0700
-            task jevs_rtofs_ndbc_grid2obs_last60days_plots
+            task jevs_plots_rtofs_ndbc_grid2obs_last60days
               trigger :TIME >= 0300 and :TIME < 0700 and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_ndbc_grid2obs == complete
-            task jevs_rtofs_headline_grid2grid_last90days_plots
+            task jevs_plots_rtofs_headline_grid2grid_last90days
               trigger :TIME >= 0300 and :TIME < 0700
           endfamily
           family cam

@@ -1,10 +1,10 @@
-#PBS -N jevs_rtofs_smos_grid2grid_last60days_plots
+#PBS -N jevs_plots_rtofs_ghrsst_grid2grid_last60days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=shared,select=1:ncpus=1:mem=50GB
+#PBS -l place=shared,select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
 ############################################################
@@ -27,7 +27,7 @@ export NET=evs
 export STEP=plots
 export COMPONENT=rtofs
 export RUN=ocean
-export OBTYPE=smos
+export OBTYPE=ghrsst
 export VERIF_CASE=grid2grid
 
 source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
@@ -39,11 +39,11 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver_2d}
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export job=${PBS_JOBNAME:-jevs_rtofs_smos_grid2grid_last60days_plots}
+export job=${PBS_JOBNAME:-jevs_plots_rtofs_ghrsst_grid2grid_last60days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 # call j-job
-$HOMEevs/jobs/JEVS_RTOFS_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_RTOFS
 
 ######################################################################
 # Purpose: The job and task scripts work together to create plots

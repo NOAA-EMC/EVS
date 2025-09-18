@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Job Name: JEVS_RTOFS_PLOTS
+# Job Name: JEVS_PLOTS_RTOFS
 # Purpose: To create plots for RTOFS forecast verification using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ###############################################################################
@@ -82,10 +82,10 @@ fi
 #######################################################################
 env
 if [ $RUN = ocean ]; then
-	$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${OBTYPE}_${VERIF_CASE}_${STEP}.sh
+	$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${STEP}_${COMPONENT}_${OBTYPE}_${VERIF_CASE}.sh
 	export err=$?; err_chk
 elif [ $RUN = headline ]; then
-        $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+        $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${STEP}_${COMPONENT}_headline_${VERIF_CASE}.sh
         export err=$?; err_chk
 fi	
 

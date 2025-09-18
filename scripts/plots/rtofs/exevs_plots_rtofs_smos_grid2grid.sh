@@ -1,22 +1,21 @@
 #!/bin/bash
-######################################################################################################
-# Name of Script: exevs_rtofs_aviso_grid2grid_plots
-# Purpose of Script: Create RTOFS AVISO plots for last 60 days
+#########################################################################################################
+# Name of Script: exevs_plots_rtofs_smos_grid2grid
+# Purpose of Script: Create RTOFS SMOS plots for last 60 days
 # Author: Mallory Row (mallory.row@noaa.gov)
 # Edited by:  Samira Ardani (samira.ardani@noaa.gov) 
-#  09/2024: Variable names changed:
-#  1- $RUN=ocean for each step of EVSv2-RTOFS was defined to be consistent with other EVS components. 
-#  2- $RUN was defined in all j-jobs. 
-#  3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
-#  4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
-# 
-######################################################################################################
+# 09/2024: Variable names changed:
+# 1- $RUN=ocean for each step of EVSv2-RTOFS was defined to be consistent with other EVS components. 
+# 2- $RUN was defined in all j-jobs. 
+# 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
+# 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
+#########################################################################################################
 
 set -x
 
-export OBTYPE=AVISO
+export OBTYPE=SMOS
 
-export VAR=SSH
+export VAR=SSS
 
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 mkdir -p $DATA/tmp/rtofs
@@ -98,9 +97,9 @@ cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype
 tar -cvf evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- if [ -s evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then
-	cp -v evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
- fi
+	if [ -s evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar ]; then
+		cp -v evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
+	fi
 fi
 
 if [ $SENDDBN = YES ] ; then

@@ -1,4 +1,4 @@
-#PBS -N jevs_rtofs_headline_grid2grid_last90days_plots
+#PBS -N jevs_plots_rtofs_headline_grid2grid_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -38,11 +38,11 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver_2d}
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export job=${PBS_JOBNAME:-jevs_rtofs_headline_grid2grid_last90days_plots}
+export job=${PBS_JOBNAME:-jevs_plots_rtofs_headline_grid2grid_last90days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 # call j-job
-$HOMEevs/jobs/JEVS_RTOFS_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_RTOFS
 
 ######################################################################
 # Purpose: The job and task scripts work together to create plots

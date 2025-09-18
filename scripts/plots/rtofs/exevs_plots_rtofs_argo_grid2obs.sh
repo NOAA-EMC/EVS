@@ -1,6 +1,6 @@
 #!/bin/bash
 ####################################################################################################
-# Name of Script: exevs_rtofs_argo_grid2obs_plots
+# Name of Script: exevs_plots_rtofs_argo_grid2obs
 # Purpose of Script: Create RTOFS ARGO plots for last 60 days
 # Author: Mallory Row (mallory.row@noaa.gov)
 # Edited by:  Samira Ardani (samira.ardani@noaa.gov) 

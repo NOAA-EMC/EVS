@@ -1,7 +1,7 @@
 #!/bin/bash
-########################################################################################################
-# Name of Script: exevs_rtofs_smap_grid2grid_plots
-# Purpose of Script: Create RTOFS SMAP plots for last 60 days
+######################################################################################################
+# Name of Script: exevs_plots_rtofs_ndnc_grid2obs
+# Purpose of Script: Create RTOFS NDBC plots for last 60 days
 # Author: Mallory Row (mallory.row@noaa.gov)
 # Edited by:  Samira Ardani (samira.ardani@noaa.gov) 
 # 09/2024: Variable names changed:
@@ -9,14 +9,15 @@
 # 2- $RUN was defined in all j-jobs. 
 # 3- $RUNsmall was renamed to $RUN in stats j-job and all stats scripts; and 
 # 4- For all observation types, variable $OBTYPE was used instead of $RUN throughout all scripts.
-
-#########################################################################################################
+#####################################################################################################
 
 set -x
 
-export OBTYPE=SMAP
+export OBTYPE=NDBC_STANDARD
 
-export VAR=SSS
+export VAR=SST
+export FLVL=Z0
+export OLVL=Z0
 
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 mkdir -p $DATA/tmp/rtofs
@@ -26,7 +27,7 @@ export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*
 # set up plot variables
 export PERIOD=last60days
 export THRESH=""
-export MASKS="GLB, NATL, SATL, EQATL, NPAC, SPAC, EQPAC, IND, SOC, Arctic, MEDIT"
+export MASKS="GLB"
 
 # plot time series
 export PTYPE=time_series
@@ -91,10 +92,14 @@ if [[ $log_file_count -ne 0 ]]; then
 	done
 fi
 
-export obtype=`echo $OBTYPE |tr '[A-Z]' '[a-z]'`
+if [ $OBTYPE = 'NDBC_STANDARD' ]; then
+	export obtype_lower=ndbc_standard
+	export obtype=ndbc
+
+fi
 
 # tar all plots together
-cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype
+cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$obtype_lower
 tar -cvf evs.plots.$COMPONENT.$obtype.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then

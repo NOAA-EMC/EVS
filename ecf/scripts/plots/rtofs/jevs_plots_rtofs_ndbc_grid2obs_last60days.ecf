@@ -1,4 +1,4 @@
-#PBS -N evs_rtofs_headline_grid2grid_last90days_plots
+#PBS -N evs_plots_rtofs_ndbc_grid2obs_last60days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -36,13 +36,14 @@ else
   export vhr=00
 fi
 export NET=evs
-export RUN=headline
-export VERIF_CASE=grid2grid
+export RUN=ocean
+export OBTYPE=ndbc
+export VERIF_CASE=grid2obs
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_RTOFS_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_RTOFS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
