@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_atmos_naefs_grid2obs_past31days_plots
+#PBS -N jevs_global_ens_atmos_naefs_grid2obs_last31days_plots
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=1:ncpus=32:mem=50GB
+#PBS -l place=vscatter:exclhost,select=2:ncpus=32:mem=50GB
 #PBS -l debug=true
 
 set -x
