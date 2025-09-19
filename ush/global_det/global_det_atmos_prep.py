@@ -34,7 +34,6 @@ DCOMINjma = os.environ['DCOMINjma']
 DCOMINjma_precip = os.environ['DCOMINjma_precip']
 DCOMINmetfra_precip = os.environ['DCOMINmetfra_precip']
 DCOMINukmet = os.environ['DCOMINukmet']
-DCOMINukmet_precip = os.environ['DCOMINukmet_precip']
 DCOMINosi_saf = os.environ['DCOMINosi_saf']
 DCOMINghrsst_ospo = os.environ['DCOMINghrsst_ospo']
 SENDCOM = os.environ['SENDCOM']
@@ -152,12 +151,11 @@ global_det_model_dict = {
                'inithours': ['00', '12'],
                'fcst_hrs': range(24, 72+12, 12)},
     'ukmet': {'input_fcst_file_format': os.path.join(DCOMINukmet,
-                                                     'GAB{init?fmt=%2H}'
-                                                     +'{letter?fmt=str}.GRB'),
+                                                     'ukmet.t{init?fmt=%2H}z.'
+                                                     +'0p25.f{lead?fmt=%3H}.grib'),
               'input_anl_file_format': os.path.join(DCOMINukmet,
-                                                    'GAB{init?fmt=%2H}AAT.GRB'),
-              #'input_precip_file_format': os.path.join(DCOMINukmet_precip, 'ukmo.'
-              #                                         +'{init?fmt=%Y%m%d%H}'),
+                                                     'ukmet.t{init?fmt=%2H}z.'
+                                                     +'0p25.f000.grib'),
               'inithours': ['00', '12'],
               'fcst_hrs': range(0, 144+6, 6)}
 }
@@ -333,13 +331,6 @@ for MODEL in MODELNAME:
                                                               str(fcst_hr),
                                                               'precip',
                                                               log_missing_file)
-                        elif MODEL == 'ukmet':
-                            gda_util.prep_prod_ukmet_file(input_precip_file,
-                                                          tmp_precip_file,
-                                                          CDATE_dt,
-                                                          str(fcst_hr),
-                                                          'precip',
-                                                           log_missing_file)
                         elif MODEL == 'fnmoc':
                             gda_util.prep_prod_fnmoc_file(input_precip_file,
                                                           tmp_precip_file,

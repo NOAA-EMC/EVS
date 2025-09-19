@@ -804,7 +804,7 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
         run_shell_command(['chgrp', 'rstprod', prepped_file])
     copy_file(prepped_file, dest_file)
 
-def prep_prod_ukmet_file(source_file_format, dest_file, init_dt,
+def prep_prod_ukmet_file(source_file, dest_file, init_dt,
                          forecast_hour, prep_method, log_missing_file):
     """! Do prep work for UKMET production files
 
@@ -821,96 +821,16 @@ def prep_prod_ukmet_file(source_file_format, dest_file, init_dt,
          Returns:
     """
     # Environment variables and executables
-    EXECevs = os.environ['EXECevs']
-    WGRIB = os.environ['WGRIB']
-    WGRIB2 = os.environ['WGRIB2']
-    UKMHIRESMERGE = os.path.join(EXECevs, 'ukm_hires_merge')
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
-    working_file1 = prepped_file+'.tmp1'
-    working_file2 = prepped_file+'.tmp2'
     # Prep file
-    if prep_method == 'full':
-        ukmet_fhr_id_dict = {
-            'anl': 'AAT',
-            '0': 'AAT',
-            '6': 'BBT',
-            '12': 'CCT',
-            '18': 'DDT',
-            '24': 'EET',
-            '30': 'FFT',
-            '36': 'GGT',
-            '42': 'HHT',
-            '48': 'IIT',
-            '54': 'JJT',
-            '60': 'JJT',
-            '66': 'KKT',
-            '72': 'KKT',
-            '78': 'QQT',
-            '84': 'LLT',
-            '90': 'TTT',
-            '96': 'MMT',
-            '102': 'UUT',
-            '108': 'NNT',
-            '114': 'VVT',
-            '120': 'OOT',
-            '126': '11T',
-            '132': 'PPA',
-            '138': '22T',
-            '144': 'PPA'
-        }
-        if forecast_hour in list(ukmet_fhr_id_dict.keys()):
-            if forecast_hour == 'anl':
-                fhr_id = ukmet_fhr_id_dict['anl']
-                fhr_str = '0'
-                wgrib_fhr = 'anl'
-            else:
-                fhr_id = ukmet_fhr_id_dict[forecast_hour]
-                fhr_str = forecast_hour
-                if forecast_hour == '0':
-                    wgrib_fhr = 'anl'
-                else:
-                    wgrib_fhr = forecast_hour+'hr'
-            source_file = source_file_format.replace('{letter?fmt=str}',
-                                                     fhr_id)
-            if check_file_exists_size(source_file):
-                if not check_grib1_file_corrupt(source_file):
-                    run_shell_command(
-                        [WGRIB+' '+source_file+' | grep "'+wgrib_fhr
-                         +'" | '+WGRIB+' '+source_file+' -i -grib -o '
-                         +working_file1]
-                    )
-            else:
-                log_missing_file_model(log_missing_file, source_file, 'ukmet',
-                                       init_dt, str(forecast_hour).zfill(3))
-            if check_file_exists_size(working_file1):
-                run_shell_command([UKMHIRESMERGE, working_file1,
-                                   prepped_file, fhr_str])
-    elif 'precip' in prep_method:
-        source_file = source_file_format
-        source_file_accum = 12
-        if check_file_exists_size(source_file):
-            if not check_grib2_file_corrupt(source_file):
-                run_shell_command(
-                    [WGRIB2+' '+source_file+' -if ":TWATP:" -set_var "APCP" '
-                     +'-fi -grib '+working_file1]
-                )
-        else:
-            log_missing_file_model(log_missing_file, source_file, 'ukmet',
-                                   init_dt, str(forecast_hour).zfill(3))
-        if check_file_exists_size(working_file1):
-            convert_grib2_grib1(working_file1, working_file2)
-        if check_file_exists_size(working_file2):
-            source_file_accum_fhr_start = (
-                int(forecast_hour) - source_file_accum
-            )
-            run_shell_command(
-                [WGRIB+' '+working_file2+' | grep "'
-                 +str(source_file_accum_fhr_start)+'-'
-                 +forecast_hour+'hr" | '+WGRIB+' '+working_file2
-                 +' -i -grib -o '+prepped_file]
-            )
+    if check_file_exists_size(source_file):
+        if not check_grib1_file_corrupt(source_file):
+            copy_file(source_file, prepped_file)
+    else:
+        log_missing_file_model(log_missing_file, source_file, 'cmc',
+                               init_dt, str(forecast_hour).zfill(3))
     copy_file(prepped_file, dest_file)
 
 def prep_prod_dwd_file(source_file, dest_file, init_dt, forecast_hour,
@@ -1127,7 +1047,7 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
         elif 'wgrbbul/ecmwf' in source_file:
             prep_prod_ecmwf_file(source_file, dest_file, init_time_dt,
                                  forecast_hour, 'full', log_missing_file)
-        elif 'wgrbbul/ukmet_hires' in source_file:
+        elif 'com/ukmet' in source_file:
             prep_prod_ukmet_file(source_file, dest_file, init_time_dt,
                                  forecast_hour, 'full', log_missing_file)
         elif 'qpf_verif/jma' in source_file:
@@ -1135,9 +1055,6 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                                forecast_hour, 'precip', log_missing_file)
         elif 'qpf_verif/UWD' in source_file:
             prep_prod_ecmwf_file(source_file, dest_file, init_time_dt,
-                                 forecast_hour, 'precip', log_missing_file)
-        elif 'qpf_verif/ukmo' in source_file:
-            prep_prod_ukmet_file(source_file, dest_file, init_time_dt,
                                  forecast_hour, 'precip', log_missing_file)
         elif 'qpf_verif/dwd' in source_file:
             prep_prod_dwd_file(source_file, dest_file, init_time_dt,
