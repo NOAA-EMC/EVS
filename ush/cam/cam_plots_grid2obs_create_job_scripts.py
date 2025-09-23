@@ -10,12 +10,11 @@
 
 import os
 import sys
-from pathlib import Path
 
 USH_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(USH_DIR))
-from cam_plots_grid2obs_graphx_defs import graphics
 import cam_util as cutil
+from cam_plots_grid2obs_graphx_defs import graphics
 
 USHevs = os.environ['USHevs']
 COMPONENT = os.environ['COMPONENT']

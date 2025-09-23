@@ -10,13 +10,12 @@
 
 import os
 import sys
-from pathlib import Path
 
 USH_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(USH_DIR))
+import cam_util as cutil
 from cam_plots_precip_last31days_graphx_defs import graphics as graphics31
 from cam_plots_precip_last90days_graphx_defs import graphics as graphics90
-import cam_util as cutil
 
 USHevs = os.environ['USHevs']
 COMPONENT = os.environ['COMPONENT']

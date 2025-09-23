@@ -7,17 +7,23 @@
 #
 # =============================================================================
 
+
+# Standard library imports
 import os
 import sys
-import datetime as datetime
 import time
+import warnings
+import datetime as datetime
+
+# Third-party imports
 import numpy as np
 import pandas as pd
-import warnings
-warnings.filterwarnings('ignore')
+
+# Local imports
 """!@namespace plot_util
    @brief Provides utility functions for METplus plotting use case
 """
+warnings.filterwarnings('ignore')
 
 def get_memory_usage():
     total_memory, used_memory, free_memory = map(

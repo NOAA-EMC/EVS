@@ -8,12 +8,18 @@
 #
 # =============================================================================
 
-import matplotlib
-import matplotlib.pyplot as plt
-import datetime
+
+# Standard library imports
 import sys
 import os
+import datetime
+
+# Third-party imports
 import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Local imports
 import cam_util as cutil
 
 class PlotSpecs:

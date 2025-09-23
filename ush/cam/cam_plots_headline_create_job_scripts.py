@@ -10,12 +10,12 @@
 
 import os
 import sys
-from pathlib import Path
+
+import cam_util as cutil
+from cam_plots_headline_graphx_defs import graphics
 
 USH_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(USH_DIR))
-from cam_plots_headline_graphx_defs import graphics
-import cam_util as cutil
 
 USHevs = os.environ['USHevs']
 COMPONENT = os.environ['COMPONENT']

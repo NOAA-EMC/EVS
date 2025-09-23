@@ -11,11 +11,10 @@
 #
 # =============================================================================
 
-import sys
+import calendar
 import os
 import re
-import datetime
-import calendar
+import sys
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 

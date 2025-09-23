@@ -8,8 +8,11 @@
 # =============================================================================
 
 import os
-from datetime import datetime, timedelta as td
+from datetime import datetime
+from datetime import timedelta as td
+
 import numpy as np
+
 
 class Toggle():
     def __init__(self):

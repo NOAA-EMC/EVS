@@ -10,16 +10,17 @@ Abstract: This script is run by all scripts in EMC_verif-global/scripts/.
 '''
 
 import glob
-import subprocess
 import os
-import re
+import subprocess
 import sys
+from datetime import timedelta as td
+
 import numpy as np
-from datetime import datetime, timedelta as td
+
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 import string_template_substitution
-import plot_util
+
 
 def daterange(start, end, td):
    curr = start

@@ -8,7 +8,9 @@
 # =============================================================================
 
 import os
-from datetime import datetime, timedelta as td
+from datetime import datetime
+from datetime import timedelta as td
+
 graphics = {
     'cam':{
         'precip':{

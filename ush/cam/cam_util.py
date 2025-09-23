@@ -7,13 +7,17 @@
 # 
 # =============================================================================
 
+
+# Standard library imports
 import os
 from pathlib import Path
 from collections.abc import Iterable
-import numpy as np
 import subprocess
 import glob
 from datetime import datetime, timedelta as td
+
+# Third-party imports
+import numpy as np
 
 def flatten(xs):
     for x in xs: 

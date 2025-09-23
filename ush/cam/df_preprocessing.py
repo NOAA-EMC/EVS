@@ -9,18 +9,24 @@
 #
 ###############################################################################
 
+
+# Standard library imports
 import os
 import sys
 import shutil
 import uuid
+from datetime import timedelta as td
+
+# Third-party imports
 import numpy as np
 import pandas as pd
-from datetime import timedelta as td
+
+# Local imports
+from prune_stat_files import prune_data
+import plot_util
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from prune_stat_files import prune_data
-import plot_util
 
 
 # =================== FUNCTIONS =========================

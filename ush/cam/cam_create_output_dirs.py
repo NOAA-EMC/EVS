@@ -13,17 +13,21 @@
 # =============================================================================
 
 import os
-import re
-from datetime import datetime, timedelta as td
+from datetime import datetime
+from datetime import timedelta as td
+
 import cam_util as cutil
+
 if os.environ['STEP'] == 'plots':
     if os.environ['VERIF_CASE'] == 'grid2obs':
         from cam_plots_grid2obs_graphx_defs import graphics as graphics_g2o
     if os.environ['VERIF_CASE'] == 'headline':
         from cam_plots_headline_graphx_defs import graphics as graphics_hdl
     if os.environ['VERIF_CASE'] == 'precip':
-        from cam_plots_precip_last31days_graphx_defs import graphics as graphics_pcp31
-        from cam_plots_precip_last90days_graphx_defs import graphics as graphics_pcp90
+        from cam_plots_precip_last31days_graphx_defs import \
+            graphics as graphics_pcp31
+        from cam_plots_precip_last90days_graphx_defs import \
+            graphics as graphics_pcp90
     if os.environ['VERIF_CASE'] == 'snowfall':
         from cam_plots_snowfall_graphx_defs import graphics as graphics_sno
 

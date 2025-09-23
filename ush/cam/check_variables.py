@@ -7,10 +7,10 @@
 #
 # =============================================================================
 
-import sys
-import logging
 import re
+import sys
 from pathlib import Path
+
 
 # Variables to check:
 # VERIF_CASE

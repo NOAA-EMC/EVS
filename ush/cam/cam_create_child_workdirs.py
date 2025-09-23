@@ -8,6 +8,7 @@
 # =============================================================================
 
 import os
+
 import cam_util as cutil
 
 DATA = os.environ['DATA']

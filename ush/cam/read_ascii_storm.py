@@ -8,9 +8,12 @@
 #   1/2023: Script copied from METplus repository
 ###############################################################################
 
-import pandas as pd
+# Standard library imports
 import os
 import sys
+
+# Third-party imports
+import pandas as pd
 
 print(f'Python Script: {sys.argv[0]}')
 

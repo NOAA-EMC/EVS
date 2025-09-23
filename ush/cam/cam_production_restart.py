@@ -9,8 +9,8 @@
 # =============================================================================
 
 import os
-import glob
 from pathlib import Path
+
 import cam_util as cutil
 
 print("BEGIN: "+os.path.basename(__file__))

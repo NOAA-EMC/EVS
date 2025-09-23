@@ -15,20 +15,21 @@
 #
 ###############################################################################
 
-import sys
-import os
 import datetime
 import logging
+import os
+# Standard library imports
+import sys
 
+# Local imports
 USH_DIR = os.environ['USH_DIR']
-
-# Load cam and global_det modules
 MODULES_DIR1 = "global_det"
 MODULES_DIR2 = "cam"
 sys.path.insert(0, os.path.abspath(os.path.join(USH_DIR, MODULES_DIR1)))
 sys.path.insert(0, os.path.abspath(os.path.join(USH_DIR, MODULES_DIR2)))
 import cam_plots_precip_spatial_map
 from settings import ModelSpecs
+
 model_info = ModelSpecs()
 from check_variables import *
 

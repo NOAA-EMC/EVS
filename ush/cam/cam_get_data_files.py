@@ -12,7 +12,7 @@
 # =============================================================================
 
 import os
-import datetime
+import sys
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
@@ -93,7 +93,7 @@ if VERIF_CASE == 'precip':
                   + f" OBS_ACC ({OBS_ACC}), which is not allowed."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
-                 
+
 
 
 

@@ -8,12 +8,11 @@
 #
 # =============================================================================
 
-import sys
-import os
 import glob
+import os
 import re
 from datetime import datetime
-import numpy as np
+
 import cam_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")

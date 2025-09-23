@@ -7,11 +7,13 @@
 #
 # =============================================================================
 
+
+# Third-party imports
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Rectangle, PathPatch
 from matplotlib.path import Path
-import numpy as np
 
 class Plotter():
     def __init__(self, font_weight='bold',  axis_title_weight='bold',  

@@ -8,13 +8,13 @@
 #
 # =============================================================================
 
-import sys
+import glob
 import os
 import re
-import glob
-import shutil
-from datetime import datetime, timedelta as td
-import numpy as np
+import sys
+from datetime import datetime
+from datetime import timedelta as td
+
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 

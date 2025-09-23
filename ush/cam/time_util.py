@@ -12,8 +12,9 @@ Output Files: N/A
 """
 
 import datetime
-from dateutil.relativedelta import relativedelta
 import re
+
+from dateutil.relativedelta import relativedelta
 
 '''!@namespace TimeInfo
 @brief Utility to handle timing in METplus wrappers

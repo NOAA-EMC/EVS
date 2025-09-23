@@ -12,22 +12,27 @@
 #                models can be plotted at once.
 #
 ###############################################################################
+
+# Standard library imports
 import os
 import sys
-import numpy as np
 import math
-import pandas as pd
 import logging
+import shutil
 from functools import reduce
+from datetime import datetime, timedelta as td
+
+# Third-party imports
+import numpy as np
+import pandas as pd
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-from datetime import datetime, timedelta as td
-import shutil
 
+# Local imports
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference

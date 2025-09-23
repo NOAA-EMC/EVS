@@ -8,12 +8,12 @@
 #
 # =============================================================================
 
-import sys
-import os
 import glob
+import os
 import re
+import sys
 from datetime import datetime
-import numpy as np
+
 import cam_util as cutil
 from cam_stats_grid2obs_var_defs import generate_stats_jobs_dict as var_defs
 

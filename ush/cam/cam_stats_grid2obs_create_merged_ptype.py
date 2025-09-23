@@ -7,12 +7,11 @@ Abstract: This creates a merged precipitation type file used for
           1-rain, 2-snow, 3-freezing rain, 4-ice pellets
 '''
 
+import datetime
 import os
-import sys
+
 import netCDF4 as netcdf
 import numpy as np
-import datetime
-import cam_util as cutil
 
 print("BEGIN: "+os.path.basename(__file__))
 

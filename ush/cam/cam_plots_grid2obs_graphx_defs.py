@@ -8,7 +8,7 @@
 # =============================================================================
 
 import os
-from datetime import datetime
+
 graphics = {
     'cam':{
         'grid2obs':{

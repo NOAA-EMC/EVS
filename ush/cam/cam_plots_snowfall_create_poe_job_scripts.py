@@ -8,11 +8,9 @@
 #
 # =============================================================================
 
-import sys
-import os
 import glob
-from datetime import datetime
-import numpy as np
+import os
+import sys
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 

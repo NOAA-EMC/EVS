@@ -8,12 +8,13 @@
 #
 # =============================================================================
 
-from datetime import datetime, timedelta as td
 import os
 import sys
-import requests
-import numpy as np
+from datetime import datetime
+from datetime import timedelta as td
+
 import cam_util as cutil
+import numpy as np
 
 VDATE = os.environ['VDATE']
 VHOUR = os.environ['VHOUR']
