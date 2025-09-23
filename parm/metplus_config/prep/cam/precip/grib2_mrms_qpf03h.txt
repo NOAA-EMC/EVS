@@ -1,2 +1,0 @@
-GRIB2
-209 0 0 0 161 1 6 38 "APCP_03" "3hr Accumulated prepcip" "mm"
