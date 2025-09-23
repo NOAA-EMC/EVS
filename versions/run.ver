@@ -55,7 +55,6 @@ export hrrr_ver=v4.1
 export hysplit_ver=v7.9
 export naefs_ver=v7.0
 export nam_ver=v4.2
-export narre_ver=v1.2
 export nfcens_ver=v1.3
 export nwps_ver=v1.4
 export obsproc_ver=v1.2

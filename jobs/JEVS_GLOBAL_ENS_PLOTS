@@ -1,10 +1,67 @@
 #!/bin/bash
-#  JOB card created for running METPlus-based Global ensemble verifications
-#   By Binbin Zhou, IMSG@EMC/NCEP
-#   Feb 2, 2022
-#
-#######################################################
+#  JOB card created for global_ens stats jobs
+#   By Binbin Zhou, IMSG@EMC/NCEP - Feb 2, 2022
+#   Updated by Alicia Bentley, EMC - Sep 11, 2025
+
+########################################
+# Preliminary data setup step
+########################################
 set -x
+
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-global_ens}
+export RUN=${RUN:-atmos}
+export MODELNAME=${MODELNAME:-gefs}
+export MODNAM=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export OBTYPE=${OBTYPE:-GDAS}
+export modsys=${modsys:-gefs}
+export mod_ver=${mod_ver:-${gefs_ver}}
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=${USHevs:-${HOMEevs}/ush}
+export ush_dir=${USHevs}/global_ens/ush_gens_plot_py
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
+
+##########################################
+# Run setpdy and initialize PDY variables 
+##########################################
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
+setpdy.sh 90
+. ./PDY
+
+## May need a default setting to avoid non-defined VDATE
+if [ "${RUN}" == "atmos" ] || [ "${RUN}" == "wmo" ] || [ "${RUN}" == "headline" ] ; then
+    export VDATE=${VDATE:-${PDYm2}}
+elif [ "${RUN}" == "wave" ] ; then
+    export VDATE=${VDATE:-${PDYm1}}
+fi
+
 ##################################################
 ### SENDCOM  - Copy Files From TMPDIR to $COMOUT
 ### SENDDBN  - Issue DBNet Client Calls 
@@ -15,55 +72,6 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
-
-#######################################################
-# SET SHELL PROCESSING VARIABLES
-#######################################################
-date
-export PS4='$SECONDS + '
-
-export vhr=${vhr:-00}
-export cycle=${cycle:-t${vhr}z}
-
-##########################################################
-# obtain unique LSF id (jobid) and make temp directories
-##########################################################
-export pid=$$
-export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-mkdir -p $DATA
-cd $DATA
-
-export envir=${envir:-prod}
-
-# Define COMIN/COMOUT variables:
-
-echo ${COMPATH}
-
-export NET=${NET:-evs}
-export STEP=${STEP:-plots}
-export COMPONENT=${COMPONENT:-global_ens}
-export RUN=${RUN:-atmos}
-export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export MODELNAME=${MODELNAME:-gefs}
-export modsys=${modsys:-gefs}
-export mod_ver=${mod_ver:-${gefs_ver}}
-
-setpdy.sh
-. ./PDY
-
-########################################
-# Set EVS directories
-########################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
-export EXECevs=${EXECevs:-${HOMEevs}/exec}
-export PARMevs=${PARMevs:-${HOMEevs}/parm}
-export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
-export USHevs=${USHevs:-${HOMEevs}/ush}
-export FIXevs=${FIXevs:-${HOMEevs}/fix}
-
-if [ "${RUN}" == "atmos" ] || [ "${RUN}" == "wmo" ] || [ "${RUN}" == "headline" ] ; then
-    export VDATE=${VDATE:-$PDYm2}
-fi
 
 ########################################
 # Define COMIN/COMOUT variables
@@ -77,8 +85,6 @@ export DATA_IN=${DATA_IN:-$DATAROOT}
 export run_mpi=${run_mpi:-yes}
 export valid_time=${valid_time:-both}
 
-export ush_dir=$USHevs/global_ens/ush_gens_plot_py
-
 mkdir -p ${COMOUT}
 
 ########################################
@@ -86,7 +92,7 @@ mkdir -p ${COMOUT}
 ########################################
 if [ "${valid_time}" == "separate" ] ; then
     $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_separate_${STEP}.sh
-else
+elif [ "${valid_time}" == "both" ] ; then
     $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 fi
 export err=$?; err_chk

@@ -244,6 +244,12 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
     fi
 
     for stat in ets fbias crps me_mae rmse_spread bss fss ; do
+        if [ $stat = rmse_spread ]; then
+            evs_graphic_stats="rmse_sprd"
+        else
+            evs_graphic_stats=$stat
+        fi
+
         if [ $stat = crps ]; then
             threshs="NA"
 	elif [ $stat = me_mae ]; then
@@ -280,7 +286,7 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
 		    fi
    	        else
                     if [ -f "lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png" ]; then
-                        mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png evs.global_ens.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
+                        mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png evs.global_ens.${evs_graphic_stats}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
                     fi
                 fi
 
@@ -292,7 +298,7 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
 			fi
                     else
                         if [ -f "time_series_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${lead_graphic}${thresh_graphic}.png" ]; then
-                            mv time_series_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${lead_graphic}${thresh_graphic}.png evs.global_ens.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.timeseries_valid12z${lead_graphic}.g212_${evs_graphic_domain}.png
+                            mv time_series_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${lead_graphic}${thresh_graphic}.png evs.global_ens.${evs_graphic_stats}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.timeseries_valid12z${lead_graphic}.g212_${evs_graphic_domain}.png
                         fi
                     fi
                 done # lead

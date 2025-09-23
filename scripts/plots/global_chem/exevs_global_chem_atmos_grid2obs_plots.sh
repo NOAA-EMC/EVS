@@ -10,6 +10,7 @@
 #                    python scripts to do the plotting.
 #                    
 #    05/22/2025  Ho-Chun Huang    move from global_ens to global_chem
+#    09/02/2025  Ho-Chun Huang    move cpreq to cp -v to comply with EE2
 ###############################################################################
 
 set -x
@@ -72,7 +73,7 @@ while [ ${imdl} -lt ${num_mdl} ]; do
         cpfile=evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${varid}.v${NOW}.stat
         sedfile=${mdl}.${ObsType}${varid}.v${NOW}.stat
         if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
-            cpreq ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
+            cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
             sed "s/${model1}/${mdl}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
         else
             echo "DEBUG ${MODELNAME} ${STEP} :: Can not find ${idir}/${MODELNAME}.${NOW}/${cpfile}"

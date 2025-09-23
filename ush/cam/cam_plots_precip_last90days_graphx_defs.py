@@ -159,6 +159,32 @@ graphics = {
                             }
                         }
                     },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['24','30','36','42','48'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
                 },
                 'domain_group1, fhr_group2, init_group1, namnest, hireswfv3':{
                     'threshold_average':{
@@ -267,6 +293,32 @@ graphics = {
                             }
                         }
                     },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
                 },
                 'domain_group1, fhr_group1, init_group2, namnest, hrrr':{
                     'threshold_average':{
@@ -336,6 +388,32 @@ graphics = {
                             }
                         }
                     },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['24','30','36','42','48'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
                 },
                 'domain_group1, fhr_group2, init_group2, namnest':{
                     'threshold_average':{
@@ -400,6 +478,32 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['54','60'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
                                     'INTERP_PNTSs':[''],
                                 },
                             }
@@ -2126,6 +2230,32 @@ graphics = {
                             }
                         }
                     },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Alaska',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['24','36','48'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
                 },
                 'domain_group1, fhr_group2, init_group1, namnest':{
                     'threshold_average':{
@@ -2234,6 +2364,32 @@ graphics = {
                             }
                         }
                     },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Alaska',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
                 },
                 'domain_group1, fhr_group1, init_group2, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr':{
                     'threshold_average':{
@@ -2298,6 +2454,32 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Alaska',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['30','42'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
                                     'INTERP_PNTSs':[''],
                                 },
                             }
@@ -2372,7 +2554,257 @@ graphics = {
                             }
                         }
                     },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Alaska',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['54'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
                 },
+                'domain_group2, fhr_group1, init_group1, namnest':{
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'PuertoRico',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['24','36','48'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'domain_group2, fhr_group2, init_group1, namnest':{
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'PuertoRico',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'domain_group2, fhr_group1, init_group2, namnest, hireswarw, hireswarwmem2, hireswfv3':{
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'PuertoRico',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['30','42'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'domain_group2, fhr_group2, init_group2, namnest, hireswfv3':{
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'PuertoRico',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['54'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'domain_group3, fhr_group1, init_group1, namnest, hireswarw, hireswarwmem2, hireswfv3':{
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Hawaii',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['24','36','48'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'domain_group3, fhr_group2, init_group1, namnest, hireswfv3':{
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Hawaii',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['60'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'domain_group3, fhr_group1, init_group2, namnest':{
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Hawaii',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['30','42'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'domain_group3, fhr_group2, init_group2, namnest':{
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Hawaii',
+                        'EVAL_PERIODS':['NA'],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'FCST_VALID_HOURS':['12'],
+                                    'FCST_INIT_HOURS':[''],
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['54'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                }
             }
         },
     }
