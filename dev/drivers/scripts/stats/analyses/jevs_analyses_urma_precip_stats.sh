@@ -3,7 +3,7 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
-#PBS -A EVS-DEV
+#PBS -A VERF-DEV
 #PBS -l walltime=00:10:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
@@ -47,8 +47,8 @@ source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}_devonly/${evs_ver_2d}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}_devonly/${evs_ver_2d}
 
 export vhr
 echo $vhr
