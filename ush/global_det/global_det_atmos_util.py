@@ -1086,7 +1086,7 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                                  forecast_hour, 'precip', log_missing_file)
         elif 'qpf_verif/ukmo' in source_file:
             prep_prod_ukmet_file(source_file, dest_file, init_time_dt,
-                                 forecast_hour, 'precip', log_missing_file)            
+                                 forecast_hour, 'precip', log_missing_file)
         elif 'qpf_verif/dwd' in source_file:
             prep_prod_dwd_file(source_file, dest_file, init_time_dt,
                                forecast_hour, 'precip', log_missing_file)
