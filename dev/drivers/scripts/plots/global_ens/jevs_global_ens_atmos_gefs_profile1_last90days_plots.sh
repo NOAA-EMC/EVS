@@ -1,30 +1,28 @@
-#PBS -N jevs_global_ens_atmos_gefs_profile4_past31days_plots
-#PBS -j oe
+#PBS -N jevs_global_ens_atmos_gefs_profile1_last90days_plots
+#PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:20:00
-#PBS -l place=vscatter,select=5:ncpus=32:mpiprocs=32:mem=75GB
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter:exclhost,select=14:ncpus=25:mpiprocs=20:mem=80GB
 #PBS -l debug=true
 
 set -x
 
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=5
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-
 source $HOMEevs/versions/run.ver
 
 export NET=evs
 export STEP=plots
 export COMPONENT=global_ens
 export RUN=atmos
-export VERIF_CASE=profile4
+export VERIF_CASE=profile1
 export MODELNAME=gefs
 
 module reset
 module load prod_envir/${prod_envir_ver}
-
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
@@ -35,9 +33,7 @@ export KEEPDATA=NO
 export SENDDBN=NO
 
 export vhr=00
-export past_days=31
-
-
+export past_days=90
 export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
