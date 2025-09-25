@@ -23,6 +23,7 @@ print("Working in: "+cwd)
 DATA = os.environ['DATA']
 COMINcfs = os.environ['COMINcfs']
 COMINcmc = os.environ['COMINcmc']
+COMINukmet = os.environ['COMINukmet']
 DCOMINcmc_precip = os.environ['DCOMINcmc_precip']
 DCOMINcmc_regional_precip = os.environ['DCOMINcmc_regional_precip']
 DCOMINdwd_precip = os.environ['DCOMINdwd_precip']
@@ -33,7 +34,7 @@ DCOMINimd = os.environ['DCOMINimd']
 DCOMINjma = os.environ['DCOMINjma']
 DCOMINjma_precip = os.environ['DCOMINjma_precip']
 DCOMINmetfra_precip = os.environ['DCOMINmetfra_precip']
-DCOMINukmet = os.environ['DCOMINukmet']
+DCOMINukmet_precip = os.environ['DCOMINukmet_precip']
 DCOMINosi_saf = os.environ['DCOMINosi_saf']
 DCOMINghrsst_ospo = os.environ['DCOMINghrsst_ospo']
 SENDCOM = os.environ['SENDCOM']
@@ -150,12 +151,14 @@ global_det_model_dict = {
                                                         +'{init?fmt=%Y%m%d}.gz'),
                'inithours': ['00', '12'],
                'fcst_hrs': range(24, 72+12, 12)},
-    'ukmet': {'input_fcst_file_format': os.path.join(DCOMINukmet,
+    'ukmet': {'input_fcst_file_format': os.path.join(COMINukmet,
                                                      'ukmet.t{init?fmt=%2H}z.'
                                                      +'0p25.f{lead?fmt=%3H}.grib'),
-              'input_anl_file_format': os.path.join(DCOMINukmet,
+              'input_anl_file_format': os.path.join(COMINukmet,
                                                      'ukmet.t{init?fmt=%2H}z.'
                                                      +'0p25.f000.grib'),
+              #'input_precip_file_format': os.path.join(DCOMINukmet_precip, 'ukmo.'
+              #                                         +'{init?fmt=%Y%m%d%H}'),
               'inithours': ['00', '12'],
               'fcst_hrs': range(0, 144+6, 6)}
 }
@@ -331,6 +334,13 @@ for MODEL in MODELNAME:
                                                               str(fcst_hr),
                                                               'precip',
                                                               log_missing_file)
+                        elif MODEL == 'ukmet':
+                            gda_util.prep_prod_ukmet_file(input_precip_file,
+                                                          tmp_precip_file,
+                                                          CDATE_dt,
+                                                          str(fcst_hr),
+                                                          'precip',
+                                                           log_missing_file)
                         elif MODEL == 'fnmoc':
                             gda_util.prep_prod_fnmoc_file(input_precip_file,
                                                           tmp_precip_file,

@@ -821,16 +821,44 @@ def prep_prod_ukmet_file(source_file, dest_file, init_dt,
          Returns:
     """
     # Environment variables and executables
+    WGRIB = os.environ['WGRIB']
+    WGRIB2 = os.environ['WGRIB2']
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
+    working_file1 = prepped_file+'.tmp1'
+    working_file2 = prepped_file+'.tmp2'
     # Prep file
-    if check_file_exists_size(source_file):
-        if not check_grib1_file_corrupt(source_file):
-            copy_file(source_file, prepped_file)
-    else:
-        log_missing_file_model(log_missing_file, source_file, 'cmc',
-                               init_dt, str(forecast_hour).zfill(3))
+    if prep_method == 'full':
+       if check_file_exists_size(source_file):
+            if not check_grib1_file_corrupt(source_file):
+               copy_file(source_file, prepped_file)
+       else:
+            log_missing_file_model(log_missing_file, source_file, 'ukmet',
+                                   init_dt, str(forecast_hour).zfill(3))
+    elif 'precip' in prep_method:
+        source_file_accum = 12
+        if check_file_exists_size(source_file):
+            if not check_grib2_file_corrupt(source_file):
+                run_shell_command(
+                    [WGRIB2+' '+source_file+' -if ":TWATP:" -set_var "APCP" '
+                     +'-fi -grib '+working_file1]
+                )
+        else:
+            log_missing_file_model(log_missing_file, source_file, 'ukmet',
+                                   init_dt, str(forecast_hour).zfill(3))
+        if check_file_exists_size(working_file1):
+            convert_grib2_grib1(working_file1, working_file2)
+        if check_file_exists_size(working_file2):
+            source_file_accum_fhr_start = (
+                int(forecast_hour) - source_file_accum
+            )
+            run_shell_command(
+                [WGRIB+' '+working_file2+' | grep "'
+                 +str(source_file_accum_fhr_start)+'-'
+                 +forecast_hour+'hr" | '+WGRIB+' '+working_file2
+                 +' -i -grib -o '+prepped_file]
+            )
     copy_file(prepped_file, dest_file)
 
 def prep_prod_dwd_file(source_file, dest_file, init_dt, forecast_hour,
