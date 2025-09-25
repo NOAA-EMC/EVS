@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-###############################################################################
-#
-# Name:          threshold_average.py
-# Contact(s):    Marcel Caron
-# Developed:     Nov. 22, 2021 by Marcel Caron 
-# Title:         Line plot of verification metric as a function of 
-#                forecast threshold
-# Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
-#                varying by forecast threshold, which represents the x-axis. 
-#                Line colors and styles are unique for each model, and several
-#                models can be plotted at once.
-#
-###############################################################################
+"""
+threshold_average.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Plots verification metrics as a function of forecast threshold for the cam component.
 
+Environment Variables (Inputs):
+    USH_DIR (for settings directory)
+
+Outputs:
+    - Generates line plots of verification metrics (e.g., BCRMSE) by forecast
+      threshold for multiple models.
+
+This script is intended to be run as part of the cam component to automate
+plotting of verification metrics as a function of forecast threshold.
+"""
 
 # Standard library imports
 import os

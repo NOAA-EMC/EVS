@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-###############################################################################
-#
-# Name:          stat_by_level.py
-# Contact(s):    Marcel Caron
-# Developed:     Oct. 14, 2021 by Marcel Caron 
-# Title:         Line plot of pressure level as a function of 
-#                verification metric
-# Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
-#                stratified by pressure level, which represents the y-axis. 
-#                Line colors and styles are unique for each model, and several
-#                models can be plotted at once.
-#
-###############################################################################
+"""
+stat_by_level.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Plots verification metrics stratified by pressure level for the cam component.
 
+Environment Variables (Inputs):
+    USH_DIR (for settings directory)
+
+Outputs:
+    - Generates line plots of verification metrics (e.g., BCRMSE) by pressure
+      level for multiple models.
+
+This script is intended to be run as part of the cam component to automate
+plotting of verification metrics as a function of pressure level.
+"""
 
 # Standard library imports
 import os

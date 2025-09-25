@@ -1,12 +1,23 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_prep_precip_create_job_script.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Precipitation - Prepare job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_precip_prep.sh
-#
-# =============================================================================
+"""
+cam_prep_precip_create_job_script.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+----------------------
+Creates EVS CAM Precipitation job scripts for the cam component, using
+environment variables and available configuration.
+
+Environment Variables (Inputs):
+    STEP, RUN, VERIF_CASE, VERIF_TYPE, MODELNAME, METPLUS_PATH, MET_ROOT,
+    DATA, INITDATE, VHOUR_LIST, njob, COMPONENT, COMINobs, OBS_ACC, ACC,
+    OBSNAME, NEST (and others depending on configuration)
+
+Outputs:
+    - Generates job scripts for precipitation processing in the appropriate
+      job directory.
+
+This script is intended to be run as part of the cam component to automate
+the creation and management of precipitation job scripts.
+"""
 
 import glob
 import os

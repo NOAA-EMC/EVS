@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_create_output_dirs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Define working/ output directories and create them if they don't
-#          exist.
-# DEPENDENCIES: os.path.join([
-#                   SCRIPTSevs,COMPONENT,STEP,
-#                   "_".join(["exevs",MODELNAME,VERIF_CASE,STEP+".sh"]
-#               )]
-#
-# =============================================================================
+"""
+cam_create_output_dirs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Defines working and output directories for the cam component and creates them
+if they do not exist.
+
+Environment Variables (Inputs):
+    Various variables including STEP, VERIF_CASE, DATA, COMPONENT, MODELNAME,
+    and others required for directory structure and naming.
+
+Outputs:
+    - Creates required working and output directories if they do not exist.
+    - Prints errors and exits if critical environment variables are missing or
+      if directory creation fails.
+
+This script is intended to be run as part of the cam component to ensure all
+required directories are present before downstream processing.
+"""
 
 import os
 from datetime import datetime

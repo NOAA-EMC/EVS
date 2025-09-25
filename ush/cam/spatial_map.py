@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
+"""
+spatial_map.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Executes precip spatial map plotting for the cam component.
 
-###############################################################################
-#
-# Name:          spatial_map.py
-# Contact(s):    Marcel Caron
-# Developed:     Feb. 01, 2023 by Marcel Caron 
-# Last Modified: Feb. 01, 2023 by Marcel Caron             
-# Title:         Precip spatial map execution script
-# Abstract:      Defines input variables for precip spatial map functions, 
-#                imports the functions from 
-#                {USHevs}/cam_plots_precip_spatial_map.py, and runs the spatial
-#                map. Lists of models and verification masking regions can be
-#                provided; otherwise, single values must be provided to inputs.  
-#
-###############################################################################
+Environment Variables (Inputs):
+    Various, including DATE_TYPE, PLOT_TYPE, FCST_LEAD, EVAL_PERIOD,
+    FCST_VALID_HOUR, VALID_END, MODELS, VX_MASK_LIST, SAVE_DIR,
+    STAT_OUTPUT_BASE_DIR, FIXevs, VERIF_TYPE, RESTART_DIR
+
+Outputs:
+    - Runs spatial map plotting using input variables and imported functions.
+    - Handles lists of models and verification masking regions.
+
+This script is intended to be run as part of the cam component to automate
+precip spatial map plotting and configuration.
+"""
 
 import datetime
 import logging

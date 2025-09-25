@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: check_variables.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Functions that check specific configurations to CAM plotting scripts
-#
-# =============================================================================
+"""
+check_variables.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Functions to check and validate configuration variables for the cam component.
+
+Environment Variables (Inputs):
+    None (this module is imported and used by other scripts).
+
+Outputs:
+    - Provides functions to validate configuration variables for plotting and
+      verification scripts in the cam component.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared validation logic for configuration variables.
+"""
 
 import re
 import sys

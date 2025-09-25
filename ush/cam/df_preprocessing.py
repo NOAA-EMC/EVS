@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
-###############################################################################
-#
-# Name:          df_preprocessing.py
-# Contact(s):    Marcel Caron
-# Developed:     Dec. 2, 2021 by Marcel Caron
-# Last Modified: Apr. 22, 2022 by Marcel Caron
-# Abstract:      Collection of functions that initialize and filter dataframes
-#
-###############################################################################
+"""
+df_preprocessing.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Collection of functions to initialize and filter dataframes for the cam component.
 
+Environment Variables (Inputs):
+    USH_DIR (for settings directory)
+
+Outputs:
+    - Provides functions for dataframe preprocessing, including filtering,
+      validation, and pruning, used by other scripts in the cam component.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared dataframe preprocessing utilities.
+"""
 
 # Standard library imports
 import os

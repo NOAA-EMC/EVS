@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-###############################################################################
-#
-# Name:          performance_diagram.py
-# Contact(s):    Marcel Caron
-# Developed:     Nov. 22, 2021 by Marcel Caron 
-# Title:         Performance Diagram: plot displaying multiple skill scores
-# Abstract:      Plots METplus output as a line plot, expressed as prob. 
-#                of detection as a function of success ratio but displaying 
-#                multiple skill scores per model (distinguished by line color 
-#                and linestyle) and per forecast threshold (distinguished by 
-#                marker shape).  
-#
-###############################################################################
+"""
+performance_diagram.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Plots performance diagrams for verification metrics in the cam component.
 
+Environment Variables (Inputs):
+    USH_DIR (for settings directory)
+
+Outputs:
+    - Generates performance diagrams (probability of detection vs. success
+      ratio) for multiple models and forecast thresholds.
+
+This script is intended to be run as part of the cam component to automate
+plotting of performance diagrams for verification metrics.
+"""
 
 # Standard library imports
 import os

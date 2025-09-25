@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
-'''
-Name: cam_stats_grid2obs_preprocess_prepbufr.py
-Contact(s): Marcel Caron (marcel.caron@noaa.gov)
-Abstract: Preprocess input prepbufr files and store the preprocessed file in 
-          DATA. Preprocessing currently includes splitting each file into
-          multiple files by subset (i.e. message type, e.g., ADPUPA), and
-          concatenating the desired subsets to a new smaller file.
-Run By: scripts/stats/cam/exevs_hireswarw_grid2obs_stats.sh
-        scripts/stats/cam/exevs_hireswarwmem2_grid2obs_stats.sh
-        scripts/stats/cam/exevs_hireswfv3_grid2obs_stats.sh
-        scripts/stats/cam/exevs_hrrr_grid2obs_stats.sh
-        scripts/stats/cam/exevs_namnest_grid2obs_stats.sh
-'''
+"""
+cam_stats_grid2obs_preprocess_prepbufr.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Preprocesses input prepbufr files and stores the preprocessed files in DATA
+for the cam component. Preprocessing includes splitting each file by subset
+(e.g., message type such as ADPUPA) and concatenating the desired subsets to a
+new smaller file.
+
+Environment Variables (Inputs):
+    DATA, COMINobsproc, MODELNAME, VERIF_CASE, VERIF_TYPE, VDATE, VHOUR
+
+Outputs:
+    - Preprocessed prepbufr files in the appropriate output directory.
+    - Prints errors and exits if required environment variables or settings are
+      missing or invalid.
+
+This script is intended to be run as part of the cam component to automate
+preprocessing of prepbufr files for Grid2Obs verification.
+"""
+
 import os
 from datetime import datetime
 

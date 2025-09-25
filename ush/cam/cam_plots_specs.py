@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_plots_specs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Plotting specifications and tools used primarily to make spatial 
-#          maps (other plotting scripts more heavily use plotter.py)
-#
-# =============================================================================
+"""
+cam_plots_specs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+----------------------
+Plotting specifications and tools used primarily to make spatial maps for the
+cam component. Other plotting scripts more heavily use plotter.py.
 
+Environment Variables (Inputs):
+    (None required directly; see dependent scripts for context)
+
+Outputs:
+    - Provides classes and functions for plotting specifications used by cam
+      plotting scripts.
+
+This module is intended to be imported and used as part of the cam component's
+plotting workflow.
+"""
 
 # Standard library imports
 import sys

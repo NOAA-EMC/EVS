@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_util.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Various Utilities for EVS CAM Verification
-# 
-# =============================================================================
+"""
+cam_util.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Various utility functions for the cam component.
 
+Environment Variables (Inputs):
+    None (this module is imported and used by other scripts).
+
+Outputs:
+    - Provides utility functions for file handling, data type detection,
+      evaluation period extraction, and more, used throughout the cam
+      component.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared utility functions for verification workflows.
+"""
 
 # Standard library imports
 import os

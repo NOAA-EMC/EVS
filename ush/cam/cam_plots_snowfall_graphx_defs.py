@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_plots_snowfall_graphx_defs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Graphics definitions for the CAM Snowfall Plots jobs
-#
-# =============================================================================
+"""
+cam_plots_snowfall_graphx_defs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+----------------------
+Graphics definitions for the CAM Snowfall Plots jobs, used by the cam
+component for plotting and job configuration.
+
+Environment Variables (Inputs):
+    EVAL_PERIOD (used within graphics definitions)
+
+Outputs:
+    - Provides the 'graphics' dictionary for CAM Snowfall plotting jobs.
+
+This module is intended to be imported and used as part of the cam component's
+plotting and job generation workflow for snowfall plots.
+"""
 
 import os
 

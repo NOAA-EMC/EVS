@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-###############################################################################
-#
-# Name:          lead_average.py
-# Contact(s):    Marcel Caron
-# Developed:     Nov. 18, 2021 by Marcel Caron 
-# Title:         Line plot of verification metric as a function of 
-#                lead time
-# Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
-#                varying by lead time, which represents the x-axis. 
-#                Line colors and styles are unique for each model, and several
-#                models can be plotted at once.
-#
-###############################################################################
+"""
+lead_average.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Plots verification metrics as a function of lead time for the cam component.
 
+Environment Variables (Inputs):
+    USH_DIR (for settings directory)
+
+Outputs:
+    - Generates line plots of verification metrics (e.g., BCRMSE) by lead time.
+    - Supports multiple models, line colors, and styles.
+
+This script is intended to be run as part of the cam component to automate
+plotting of verification metrics as a function of lead time.
+"""
 
 # Standard library imports
 import os

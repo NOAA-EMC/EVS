@@ -1,12 +1,23 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_headline_create_job_scripts.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Loads graphics definitions dictionary and feeds each set of configs
-#          to cam_plots_headline_create_job_script.py to write the job card
-#
-# =============================================================================
+"""
+cam_plots_headline_create_job_scripts.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+----------------------
+Loads graphics definitions and feeds each set of configs to
+cam_plots_headline_create_job_script.py to write the job card for the cam
+component.
+
+Environment Variables (Inputs):
+    USH_DIR, USHevs, COMPONENT, STEP, VERIF_CASE, njob (and others used in
+    imported modules)
+
+Outputs:
+    - Automates the creation of job cards for headline plots using the
+      graphics definitions.
+
+This script is intended to be run as part of the cam component to automate
+the creation of headline plot job scripts.
+"""
 
 import os
 import sys
