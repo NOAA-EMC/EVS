@@ -17,7 +17,7 @@ small_periods='last31days last90days'
 
 inithours='00 12'
 wave_vars='HTSGW'
-fhrs='000 024 048 072 096 120 144 168 192 216 240'
+fhrs='000 024 072 120 168 240'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 region='glb'
 export region=${region}
