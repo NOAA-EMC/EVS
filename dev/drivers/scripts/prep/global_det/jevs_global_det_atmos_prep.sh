@@ -2,11 +2,10 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A EVS-DEV
-#PBS -l walltime=00:30:00
-#PBS -l place=exclhost,select=1:ncpus=1:mem=120GB
+#PBS -A VERF-DEV
+#PBS -l walltime=00:45:00
+#PBS -l place=exclhost,select=1:ncpus=1:mem=100GB
 #PBS -l debug=true
-#PBS -V
 
 set -x 
 
@@ -17,7 +16,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export SENDCOM=YES
 export SENDMAIL=YES
-export KEEPDATA=YES
+export KEEPDATA=NO
 export job=${PBS_JOBNAME:-jevs_global_det_atmos_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
@@ -30,7 +29,7 @@ source $HOMEevs/dev/modulefiles/global_det/global_det_prep.sh
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
-export MAILTO='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,qi.shi@noaa.gov'
 
 export envir=prod
 export NET=evs
@@ -41,10 +40,11 @@ export RUN=atmos
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export COMINukmet=/lfs/h1/ops/para/com/ukmet/v2.2/ukmet.$(date -d "$PDYm1 -1 day" +%Y%m%d)
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN
 
-export MODELNAME="cfs cmc cmc_regional dwd fnmoc imd jma metfra ukmet ecmwf"
-export OBSNAME="osi_saf ghrsst_ospo"
+export MODELNAME="cfs cmc cmc_regional dwd fnmoc gfs imd jma metfra ukmet ecmwf"
+export OBSNAME="osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_nam"
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_GLOBAL_DET_PREP
