@@ -265,13 +265,14 @@ for ihr in 00z 12z ; do
                 fi
 
                 for lead in 24 120 240 360; do
+                    lead_new=$(printf "%03d" "${lead}")
                     if [ $var = prmsl ] ; then
                         if [ -f "time_series_regional_${domain}_valid_${ihr}_${var}_${stats}_f${lead}.png" ]; then
-                            mv time_series_regional_${domain}_valid_${ihr}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid${ihr}_f${lead}.g003_${domain_new}.png
+                            mv time_series_regional_${domain}_valid_${ihr}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid${ihr}_f${lead_new}.g003_${domain_new}.png
                         fi
                     else
                         if [ -f "time_series_regional_${domain}_valid_${ihr}_${level}${unit}_${var}_${stats}_f${lead}.png" ]; then
-                            mv time_series_regional_${domain}_valid_${ihr}_${level}${unit}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid${ihr}_f${lead}.g003_${domain_new}.png
+                            mv time_series_regional_${domain}_valid_${ihr}_${level}${unit}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid${ihr}_f${lead_new}.g003_${domain_new}.png
                         fi
                     fi
                 done # lead
