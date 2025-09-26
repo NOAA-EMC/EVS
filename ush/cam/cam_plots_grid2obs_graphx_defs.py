@@ -855,43 +855,6 @@ graphics = {
                     }
                 },
                 'domain_group5, fhr_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
-                    'time_series':{
-                        'DATE_TYPE':'INIT',
-                        'VALID_BEG':'',
-                        'VALID_END':'',
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
-                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
-                        'FCST_VALID_HOURS':[''],
-                        'FCST_INIT_HOURS':['0','12'],
-                        'VARIABLES':{
-                            'sl1l2':{
-                                'SBCAPE':{
-                                    'STATSs':['fbar,obar'],
-                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
-                                    'FCST_LEVELs':['L0'],
-                                    'OBS_LEVELs':['L100000-0'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'MLCAPE':{
-                                    'STATSs':['fbar,obar'],
-                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48'],
-                                    'FCST_LEVELs':['P90-0'],
-                                    'OBS_LEVELs':['L90000-0'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            },
-                        }
-                    },
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1079,43 +1042,6 @@ graphics = {
                     }
                 },
                 'domain_group5, fhr_group2, namnest, hireswfv3': {
-                    'time_series':{
-                        'DATE_TYPE':'INIT',
-                        'VALID_BEG':'',
-                        'VALID_END':'',
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LISTs':['CONUS','CONUS_East','CONUS_West','CONUS_Central','CONUS_South'],
-                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
-                        'FCST_VALID_HOURS':[''],
-                        'FCST_INIT_HOURS':['0','12'],
-                        'VARIABLES':{
-                            'sl1l2':{
-                                'SBCAPE':{
-                                    'STATSs':['fbar,obar'],
-                                    'FCST_LEADS':['54','60'],
-                                    'FCST_LEVELs':['L0'],
-                                    'OBS_LEVELs':['L100000-0'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'MLCAPE':{
-                                    'STATSs':['fbar,obar'],
-                                    'FCST_LEADS':['54','60'],
-                                    'FCST_LEVELs':['P90-0'],
-                                    'OBS_LEVELs':['L90000-0'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            },
-                        }
-                    },
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1534,7 +1460,7 @@ graphics = {
                                     'FCST_LEVELs':['Z2'],
                                     'OBS_LEVELs':['Z2'],
                                     'FCST_THRESHs':['','','','',''],
-                                    'OBS_THRESHs':['','<=15','<=20','<=25','<=30'],
+                                    'OBS_THRESHs':['','<=20','<=30'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'BILIN',
                                     'INTERP_PNTSs':[''],
@@ -2071,7 +1997,7 @@ graphics = {
                                     'FCST_LEVELs':['Z2'],
                                     'OBS_LEVELs':['Z2'],
                                     'FCST_THRESHs':['','','','',''],
-                                    'OBS_THRESHs':['','<=15','<=20','<=25','<=30'],
+                                    'OBS_THRESHs':['','<=20','<=30'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'BILIN',
                                     'INTERP_PNTSs':[''],

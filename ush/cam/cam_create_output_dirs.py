@@ -22,7 +22,6 @@ if os.environ['STEP'] == 'plots':
     if os.environ['VERIF_CASE'] == 'headline':
         from cam_plots_headline_graphx_defs import graphics as graphics_hdl
     if os.environ['VERIF_CASE'] == 'precip':
-        from cam_plots_precip_last31days_graphx_defs import graphics as graphics_pcp31
         from cam_plots_precip_last90days_graphx_defs import graphics as graphics_pcp90
     if os.environ['VERIF_CASE'] == 'snowfall':
         from cam_plots_snowfall_graphx_defs import graphics as graphics_sno
@@ -72,9 +71,7 @@ if VERIF_CASE == "precip":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         EVAL_PERIOD = os.environ['EVAL_PERIOD']
-        if EVAL_PERIOD == 'last31days':
-            all_eval_periods = cutil.get_all_eval_periods(graphics_pcp31)
-        elif EVAL_PERIOD == 'last90days':
+        if EVAL_PERIOD == 'last90days':
             all_eval_periods = cutil.get_all_eval_periods(graphics_pcp90)
         else:
             raise ValueError(
