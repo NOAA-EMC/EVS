@@ -54,7 +54,7 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 
-export MAILTO=${MAILTO:-'perry.shafran@noaa.gov,andrew.benjamin@noaa.gov'}
+export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
 

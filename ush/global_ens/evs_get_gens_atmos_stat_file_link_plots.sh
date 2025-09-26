@@ -10,7 +10,7 @@ day=$1
 MODEL_LIST=$2
 if [ ${VERIF_CASE} = sst ] ; then
   VRF_CASE=${VERIF_CASE}24h
-elif [ ${VERIF_CASE} = profile1 ] || [ ${VERIF_CASE} = profile2 ] || [ ${VERIF_CASE} = profile3 ] || [ ${VERIF_CASE} = profile4 ]; then
+elif [ ${VERIF_CASE} = cape ] || [ ${VERIF_CASE} = profile1 ] || [ ${VERIF_CASE} = profile2 ] || [ ${VERIF_CASE} = profile3 ] ; then
   VRF_CASE=grid2obs
 else
   VRF_CASE=${VERIF_CASE}

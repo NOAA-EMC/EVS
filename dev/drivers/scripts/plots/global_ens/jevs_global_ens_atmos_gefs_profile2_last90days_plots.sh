@@ -1,30 +1,28 @@
-#PBS -N jevs_global_ens_atmos_gefs_profile1_past90days_plots
-#PBS -j oe 
+#PBS -N jevs_global_ens_atmos_gefs_profile2_last90days_plots
+#PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A EVS-DEV
-#PBS -l walltime=00:55:00
-#PBS -l place=vscatter:exclhost,select=5:ncpus=88:mpiprocs=88:mem=250GB
+#PBS -l walltime=00:25:00
+#PBS -l place=vscatter:exclhost,select=14:ncpus=15:mpiprocs=10:mem=60GB
 #PBS -l debug=true
 
 set -x
 
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=5
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-
 source $HOMEevs/versions/run.ver
 
 export NET=evs
 export STEP=plots
 export COMPONENT=global_ens
 export RUN=atmos
-export VERIF_CASE=profile1
+export VERIF_CASE=profile2
 export MODELNAME=gefs
 
 module reset
 module load prod_envir/${prod_envir_ver}
-
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
@@ -36,8 +34,6 @@ export SENDDBN=YES
 
 export vhr=00
 export past_days=90
-
-
 export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
@@ -46,6 +42,5 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export SENDMAIL=YES
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-
 
 ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
