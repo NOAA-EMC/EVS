@@ -17,7 +17,8 @@ plotting and job generation workflow for precipitation plots (last 90 days).
 """
 
 import os
-
+from datetime import datetime
+from datetime import timedelta as td
 graphics = {
     'cam':{
         'precip':{
