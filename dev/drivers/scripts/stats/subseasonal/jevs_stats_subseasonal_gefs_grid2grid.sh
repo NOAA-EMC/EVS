@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_gefs_grid2grid_stats
+#PBS -N jevs_stats_subseasonal_gefs_grid2grid
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export job=${PBS_JOBNAME:-jevs_subseasonal_gefs_grid2grid_stats}
+export job=${PBS_JOBNAME:-jevs_stats_subseasonal_gefs_grid2grid}
 export jobid=$job.${PBS_JOBID:-$$}
 
 source $HOMEevs/versions/run.ver
@@ -51,7 +51,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/prep/$COMPONENT/
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.gefs.grid2grid.stats
 
 # Call executable job script
-$HOMEevs/jobs/JEVS_SUBSEASONAL_STATS
+$HOMEevs/jobs/JEVS_STATS_SUBSEASONAL
 
 
 ######################################################################

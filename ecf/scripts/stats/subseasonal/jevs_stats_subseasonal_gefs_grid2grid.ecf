@@ -1,10 +1,10 @@
-#PBS -N evs_subseasonal_gefs_grid2obs_stats
+#PBS -N evs_stats_subseasonal_gefs_grid2grid
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:25:00
-#PBS -l place=vscatter:shared,select=1:ncpus=8:ompthreads=1:mem=60GB
+#PBS -l walltime=00:20:00
+#PBS -l place=vscatter:shared,select=1:ncpus=66:ompthreads=1:mem=70GB
 #PBS -l debug=true
 
 export model=evs
@@ -46,18 +46,18 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=8
+export nproc=66
 export USE_CFP=YES
 export NET=evs
 export RUN=atmos
 export MODELNAME=gefs
-export VERIF_CASE=grid2obs
+export VERIF_CASE=grid2grid
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.${model}.${COMPONENT}.${MODELNAME}.${VERIF_CASE}.${STEP}
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_SUBSEASONAL_STATS
+$HOMEevs/jobs/JEVS_STATS_SUBSEASONAL
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

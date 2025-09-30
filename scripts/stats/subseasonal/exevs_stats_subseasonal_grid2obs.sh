@@ -1,7 +1,7 @@
 #!/bin/bash
-# Program Name: exevs_subseasonal_grid2obs_stats.sh
+# Program Name: exevs_stats_subseasonal_grid2obs.sh
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: This script is run by JEVS_SUBSEASONAL_STATS in jobs/.
+# Abstract: This script is run by JEVS_STATS_SUBSEASONAL in jobs/.
 #           This script runs METplus for subseasonal grid-to-obs verification             to produce stats.
 
 set -x
