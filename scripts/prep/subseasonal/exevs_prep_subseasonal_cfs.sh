@@ -1,14 +1,14 @@
 #!/bin/bash
-# Program Name: exevs_subseasonal_cfs_prep
+# Program Name: exevs_prep_subseasonal_cfs
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: This script is run by JEVS_SUBSEASONAL_PREP in jobs/.
+# Abstract: This script is run by JEVS_PREP_SUBSEASONAL in jobs/.
 #           This script retrieves data for subseasonal CFS verification.
 
 set -x
 
 
 echo
-echo "===== RUNNING EVS SUBSEASONAL CFS PREP  ====="
+echo "===== RUNNING EVS PREP SUBSEASONAL CFS ====="
 export STEP="prep"
 
 # Source config

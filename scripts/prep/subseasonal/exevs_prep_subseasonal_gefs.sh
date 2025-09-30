@@ -1,14 +1,14 @@
 #!/bin/bash
-# Program Name: exevs_subseasonal_gefs_prep.sh
+# Program Name: exevs_prep_subseasonal_gefs.sh
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: This script is run by JEVS_SUBSEASONAL_PREP in jobs/.
+# Abstract: This script is run by JEVS_PREP_SUBSEASONAL in jobs/.
 #           This script retrieves data for subseasonal GEFS verification.
 
 set -x
 
 
 echo
-echo "===== RUNNING EVS SUBSEASONAL GEFS PREP  ====="
+echo "===== RUNNING EVS PREP SUBSEASONAL GEFS ====="
 export STEP="prep"
 
 # Source config

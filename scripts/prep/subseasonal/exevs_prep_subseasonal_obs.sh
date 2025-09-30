@@ -1,14 +1,14 @@
 #!/bin/bash
-# Program Name: exevs_subseasonal_obs_prep
+# Program Name: exevs_prep_subseasonal_obs
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: This script is run by JEVS_SUBSEASONAL_PREP in jobs/.
+# Abstract: This script is run by JEVS_PREP_SUBSEASONAL in jobs/.
 #           This script retrieves data for subseasonal observations.
 
 set -x
 
 
 echo
-echo "===== RUNNING EVS SUBSEASONAL OBS PREP  ====="
+echo "===== RUNNING EVS PREP SUBSEASONAL OBS ====="
 export STEP="prep"
 
 # Source config
