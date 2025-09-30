@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_grid2grid_sea_ice_plots_last31days
+#PBS -N jevs_plots_subseasonal_grid2grid_sea_ice_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export job=${PBS_JOBNAME:-jevs_subseasonal_grid2grid_sea_ice_plots_last31days}
+export job=${PBS_JOBNAME:-jevs_plots_subseasonal_grid2grid_sea_ice_last31days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 source $HOMEevs/versions/run.ver
@@ -55,7 +55,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
 # Call executable job script
-$HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_SUBSEASONAL
 
 
 ######################################################################

@@ -1,10 +1,10 @@
-#PBS -N jevs_subseasonal_grid2grid_precip_plots_last31days
+#PBS -N jevs_plots_subseasonal_grid2grid_temp_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=2:ncpus=100:mem=200GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter,select=1:ncpus=80:ompthreads=1:mem=35GB
 #PBS -l debug=true
 
 set -x
@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export job=${PBS_JOBNAME:-jevs_subseasonal_grid2grid_precip_plots_last31days}
+export job=${PBS_JOBNAME:-jevs_plots_subseasonal_grid2grid_temp_last31days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 source $HOMEevs/versions/run.ver
@@ -36,8 +36,7 @@ export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
 export PARTITION_BATCH=
-export nproc=200
-export ncpu=100
+export nproc=80
 export USE_CFP=YES
 export vhr=00
 export NET=evs
@@ -46,7 +45,7 @@ export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME="gefs cfs"
 export VERIF_CASE=grid2grid
-export VERIF_TYPE=precip
+export VERIF_TYPE=temp
 export NDAYS=31
 export DAYS=32
 
@@ -56,11 +55,11 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
 # Call executable job script
-$HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_SUBSEASONAL
 
 
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
-#          subseasonal grid-to-grid precipitation statistical plots
+#          subseasonal grid-to-grid 2m temp statistical plots
 #          for the GEFS and CFS models for past 31 days.
 ######################################################################

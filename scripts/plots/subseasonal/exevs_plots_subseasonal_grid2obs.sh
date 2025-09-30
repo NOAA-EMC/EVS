@@ -1,17 +1,17 @@
 #!/bin/bash
-# Program Name: exevs_subseasonal_grid2grid_plots.sh
+# Program Name: exevs_plots_subseasonal_grid2obs.sh
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: This script is run by JEVS_SUBSEASONAL_PLOTS in jobs/.
-#           This script generates grid-to-grid verification plots
+# Abstract: This script is run by JEVS_PLOTS_SUBSEASONAL in jobs/.
+#           This script generates grid-to-obs verification plots
 #           using python for the subseasonal models.
 
 set -x
 
 echo
-echo "===== RUNNING GRID-TO-GRID PLOTS VERIFICATION  ====="
+echo "===== RUNNING GRID-TO-OBS PLOTS VERIFICATION  ====="
 export STEP="plots"
-export VERIF_CASE_STEP="grid2grid_plots"
-export VERIF_CASE_STEP_abbrev="g2gplots"
+export VERIF_CASE_STEP="grid2obs_plots"
+export VERIF_CASE_STEP_abbrev="g2oplots"
 
 # Source config
 source $config
@@ -42,8 +42,8 @@ export err=$?; err_chk
 # Create job scripts
 for group in condense_stats filter_stats make_plots tar_images; do
     export JOB_GROUP=$group
-    echo "Creating and running jobs for grid-to-grid plots: ${JOB_GROUP}"
-    python $USHevs/subseasonal/subseasonal_plots_grid2grid_create_job_scripts.py
+    echo "Creating and running jobs for grid-to-obs plots: ${JOB_GROUP}"
+    python $USHevs/subseasonal/subseasonal_plots_grid2obs_create_job_scripts.py
     export err=$?; err_chk
     # Run job scripts
     chmod u+x $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/*
@@ -58,11 +58,7 @@ for group in condense_stats filter_stats make_plots tar_images; do
 	    if [ $machine = WCOSS2 ]; then
 	        nselect=$(cat $PBS_NODEFILE | wc -l)
 	        nnp=$(($nselect * $nproc))
-		if [ $VERIF_TYPE = precip ]; then
-		    launcher="mpiexec -np $nproc -ppn $ncpu -depth 2 --cpu-bind verbose,depth cfp"
-		else
-	            launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
-		fi
+	        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
 	    elif [ $machine = HERA -o $machine = ORION ]; then
 	        export SLURM_KILL_BAD_EXIT=0
 	        launcher="srun --export=ALL --multi-prog"
@@ -115,6 +111,6 @@ fi
 
 # SENDDBN alert
 if [ $SENDDBN = YES ] ; then
-    tarname=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+    tarname=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_prepbufr.last${NDAYS}days.v${end_date}.tar
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$tarname
 fi

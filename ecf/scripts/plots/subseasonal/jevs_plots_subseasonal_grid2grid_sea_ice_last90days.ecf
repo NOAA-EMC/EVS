@@ -1,4 +1,4 @@
-#PBS -N evs_subseasonal_grid2grid_sea_ice_plots_last90days
+#PBS -N evs_plots_subseasonal_grid2grid_sea_ice_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -60,7 +60,7 @@ export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.${model}.${COMPONENT}
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_SUBSEASONAL
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

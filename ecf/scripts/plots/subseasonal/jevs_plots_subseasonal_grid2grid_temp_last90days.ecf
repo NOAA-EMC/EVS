@@ -1,4 +1,4 @@
-#PBS -N evs_subseasonal_grid2grid_temp_plots_last31days
+#PBS -N evs_plots_subseasonal_grid2grid_temp_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -53,14 +53,14 @@ export RUN=atmos
 export MODELNAME="gefs cfs"
 export VERIF_CASE=grid2grid
 export VERIF_TYPE=temp
-export NDAYS=31
-export DAYS=32
+export NDAYS=90
+export DAYS=91
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.${model}.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_SUBSEASONAL
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
