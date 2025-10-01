@@ -1,4 +1,4 @@
-#PBS -N jevs_global_chem_atmos_grid2obs_prep
+#PBS -N jevs_prep_global_chem_atmos_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -57,7 +57,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${RUN}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 ############################################################
@@ -71,7 +71,7 @@ if [ -z "$MAILTO" ]; then
 
 else
 
-    ${HOMEevs}/jobs/JEVS_GLOBAL_CHEM_PREP
+    ${HOMEevs}/jobs/JEVS_PREP_GLOBAL_CHEM
 
 fi
 
