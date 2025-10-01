@@ -1109,9 +1109,9 @@ suite evs_nco
             task jevs_stats_subseasonal_cfs_grid2grid
               trigger :TIME >= 1600 and ../../prep/subseasonal/jevs_prep_subseasonal_cfs == complete and ../../prep/subseasonal/jevs_prep_subseasonal_obs == complete
             task jevs_stats_subseasonal_gefs_grid2obs
-              trigger :TIME >= 1630 and ../../prep/subseasonal/jevs_prep_subseasonal_gefs == complete and ../../prep/subseasonal/jevs_prep_subseasonal_obs == complete
-            task jevs_stats_subseasonal_gefs_grid2grid    # walltime=02:00:00
-              trigger :TIME >= 1610 and ../../prep/subseasonal/jevs_prep_subseasonal_gefs == complete and ../../prep/subseasonal/jevs_prep_subseasonal_obs == complete
+              trigger :TIME >= 1730 and ../../prep/subseasonal/jevs_prep_subseasonal_gefs == complete and ../../prep/subseasonal/jevs_prep_subseasonal_obs == complete
+            task jevs_stats_subseasonal_gefs_grid2grid
+              trigger :TIME >= 1710 and ../../prep/subseasonal/jevs_prep_subseasonal_gefs == complete and ../../prep/subseasonal/jevs_prep_subseasonal_obs == complete
           endfamily
           family mesoscale
             task jevs_mesoscale_nam_precip_stats_vhr_12
