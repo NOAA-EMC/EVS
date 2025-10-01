@@ -1,4 +1,4 @@
-#PBS -N evs_global_chem_atmos_grid2obs_aeronet_stats_vhr_%VHR%
+#PBS -N evs_stats_global_chem_atmos_grid2obs_aeronet_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -56,7 +56,7 @@ export DATA_TYPE=aeronet
 ############################################################
 #  Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_GLOBAL_CHEM_STATS
+$HOMEevs/jobs/JEVS_STATS_GLOBAL_CHEM
 
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
