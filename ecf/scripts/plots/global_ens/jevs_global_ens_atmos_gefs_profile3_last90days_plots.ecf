@@ -1,10 +1,10 @@
-#PBS -N evs_global_ens_atmos_gefs_profile2_past31days_plots
+#PBS -N evs_global_ens_atmos_gefs_profile3_last90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:shared,select=4:ncpus=53:mem=75GB
+#PBS -l walltime=00:25:00
+#PBS -l place=vscatter:exclhost,select=10:ncpus=12:mpiprocs=12:mem=70GB
 #PBS -l debug=true
 
 export model=evs
@@ -44,12 +44,12 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=5
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=profile2
+export VERIF_CASE=profile3
 export MODELNAME=gefs
-export past_days=31
+export past_days=90
 export valid_time=both
 
 ############################################################

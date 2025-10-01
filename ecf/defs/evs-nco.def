@@ -30,11 +30,6 @@ suite evs_nco
             task jevs_global_ens_headline_prep
               trigger :TIME >= 0400 and ./jevs_global_ens_atmos_prep == complete and ./jevs_global_ens_naefs_atmos_prep == complete
           endfamily
-          family analyses
-            task jevs_analyses_precip_prep_vhr_00
-              time 00:00
-              edit VHR '00'
-          endfamily
           family cam
             task jevs_cam_radar_prep_vhr_00
               time 00:05
@@ -393,60 +388,6 @@ suite evs_nco
             task jevs_analyses_rtma_ru_grid2obs_stats_vhr_05
               time 05:00
               edit VHR '05'
-            task jevs_analyses_urma_precip_stats_vhr_00
-              time 00:00
-              edit VHR '00'
-            task jevs_analyses_urma_precip_stats_vhr_01
-              time 01:00
-              edit VHR '01'
-            task jevs_analyses_urma_precip_stats_vhr_02
-              time 02:00
-              edit VHR '02'
-            task jevs_analyses_urma_precip_stats_vhr_03
-              time 03:00
-              edit VHR '03'
-            task jevs_analyses_urma_precip_stats_vhr_04
-              time 04:00
-              edit VHR '04'
-            task jevs_analyses_urma_precip_stats_vhr_05
-              time 05:00
-              edit VHR '05'
-            task jevs_analyses_rtma_precip_stats_vhr_00
-              time 00:00
-              edit VHR '00'
-            task jevs_analyses_rtma_precip_stats_vhr_01
-              time 01:00
-              edit VHR '01'
-            task jevs_analyses_rtma_precip_stats_vhr_02
-              time 02:00
-              edit VHR '02'
-            task jevs_analyses_rtma_precip_stats_vhr_03
-              time 03:00
-              edit VHR '03'
-            task jevs_analyses_rtma_precip_stats_vhr_04
-              time 04:00
-              edit VHR '04'
-            task jevs_analyses_rtma_precip_stats_vhr_05
-              time 05:00
-              edit VHR '05'
-            task jevs_analyses_ccpa_precip_stats_vhr_00
-              trigger :TIME >= 0015 ../../prep/analyses/jevs_analyses_precip_prep_vhr_00 == complete
-              edit VHR '00'
-            task jevs_analyses_ccpa_precip_stats_vhr_01
-              trigger :TIME >= 0115 ../../prep/analyses/jevs_analyses_precip_prep_vhr_00 == complete
-              edit VHR '01'
-            task jevs_analyses_ccpa_precip_stats_vhr_02
-              trigger :TIME >= 0215 ../../prep/analyses/jevs_analyses_precip_prep_vhr_00 == complete
-              edit VHR '02'
-            task jevs_analyses_ccpa_precip_stats_vhr_03
-              trigger :TIME >= 0315 ../../prep/analyses/jevs_analyses_precip_prep_vhr_00 == complete
-              edit VHR '03'
-            task jevs_analyses_ccpa_precip_stats_vhr_04
-              trigger :TIME >= 0415 ../../prep/analyses/jevs_analyses_precip_prep_vhr_00 == complete
-              edit VHR '04'
-            task jevs_analyses_ccpa_precip_stats_vhr_05
-              trigger :TIME >= 0515 ../../prep/analyses/jevs_analyses_precip_prep_vhr_00 == complete
-              edit VHR '05'
           endfamily
           family global_chem
             task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_00
@@ -538,11 +479,6 @@ suite evs_nco
             task jevs_mesoscale_grid2obs_prep
               time 07:30
               edit VHR '07'
-          endfamily
-          family analyses
-            task jevs_analyses_precip_prep_vhr_06
-              time 6:00
-              edit VHR '06'
           endfamily
           family cam
             task jevs_cam_radar_prep_vhr_06
@@ -1032,60 +968,6 @@ suite evs_nco
             task jevs_analyses_rtma_ru_grid2obs_stats_vhr_11
               time 11:00
               edit VHR '11'
-            task jevs_analyses_rtma_precip_stats_vhr_06
-              time 06:00
-              edit VHR '06'
-            task jevs_analyses_rtma_precip_stats_vhr_07
-              time 07:00
-              edit VHR '07'
-            task jevs_analyses_rtma_precip_stats_vhr_08
-              time 08:00
-              edit VHR '08'
-            task jevs_analyses_rtma_precip_stats_vhr_09
-              time 09:00
-              edit VHR '09'
-            task jevs_analyses_rtma_precip_stats_vhr_10
-              time 10:00
-              edit VHR '10'
-            task jevs_analyses_rtma_precip_stats_vhr_11
-              time 11:00
-              edit VHR '11'
-            task jevs_analyses_urma_precip_stats_vhr_06
-              time 06:00
-              edit VHR '06'
-            task jevs_analyses_urma_precip_stats_vhr_07
-              time 07:00
-              edit VHR '07'
-            task jevs_analyses_urma_precip_stats_vhr_08
-              time 08:00
-              edit VHR '08'
-            task jevs_analyses_urma_precip_stats_vhr_09
-              time 09:00
-              edit VHR '09'
-            task jevs_analyses_urma_precip_stats_vhr_10
-              time 10:00
-              edit VHR '10'
-            task jevs_analyses_urma_precip_stats_vhr_11
-              time 11:00
-              edit VHR '11'
-            task jevs_analyses_ccpa_precip_stats_vhr_06
-              trigger :TIME >= 0615 ../../prep/analyses/jevs_analyses_precip_prep_vhr_06 == complete
-              edit VHR '06'
-            task jevs_analyses_ccpa_precip_stats_vhr_07
-              trigger :TIME >= 0715 ../../prep/analyses/jevs_analyses_precip_prep_vhr_06 == complete
-              edit VHR '07'
-            task jevs_analyses_ccpa_precip_stats_vhr_08
-              trigger :TIME >= 0815 ../../prep/analyses/jevs_analyses_precip_prep_vhr_06 == complete
-              edit VHR '08'
-            task jevs_analyses_ccpa_precip_stats_vhr_09
-              trigger :TIME >= 0915 ../../prep/analyses/jevs_analyses_precip_prep_vhr_06 == complete
-              edit VHR '09'
-            task jevs_analyses_ccpa_precip_stats_vhr_10
-              trigger :TIME >= 1015 ../../prep/analyses/jevs_analyses_precip_prep_vhr_06 == complete
-              edit VHR '10'
-            task jevs_analyses_ccpa_precip_stats_vhr_11
-              trigger :TIME >= 1115 ../../prep/analyses/jevs_analyses_precip_prep_vhr_06 == complete
-              edit VHR '11'
           endfamily
           family global_chem
             task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_03
@@ -1152,11 +1034,6 @@ suite evs_nco
           family global_det
             task jevs_global_det_wave_prep
               time 13:15
-          endfamily
-          family analyses
-            task jevs_analyses_precip_prep_vhr_12
-              time 12:00
-              edit VHR '12'
           endfamily
           family cam
             task jevs_cam_radar_prep_vhr_12
@@ -1568,60 +1445,6 @@ suite evs_nco
             task jevs_analyses_rtma_ru_grid2obs_stats_vhr_17
               time 17:00
               edit VHR '17'
-            task jevs_analyses_rtma_precip_stats_vhr_12
-              time 12:00
-              edit VHR '12'
-            task jevs_analyses_rtma_precip_stats_vhr_13
-              time 13:00
-              edit VHR '13'
-            task jevs_analyses_rtma_precip_stats_vhr_14
-              time 14:00
-              edit VHR '14'
-            task jevs_analyses_rtma_precip_stats_vhr_15
-              time 15:00
-              edit VHR '15'
-            task jevs_analyses_rtma_precip_stats_vhr_16
-              time 16:00
-              edit VHR '16'
-            task jevs_analyses_rtma_precip_stats_vhr_17
-              time 17:00
-              edit VHR '17'
-            task jevs_analyses_urma_precip_stats_vhr_12
-              time 12:00
-              edit VHR '12'
-            task jevs_analyses_urma_precip_stats_vhr_13
-              time 13:00
-              edit VHR '13'
-            task jevs_analyses_urma_precip_stats_vhr_14
-              time 14:00
-              edit VHR '14'
-            task jevs_analyses_urma_precip_stats_vhr_15
-              time 15:00
-              edit VHR '15'
-            task jevs_analyses_urma_precip_stats_vhr_16
-              time 16:00
-              edit VHR '16'
-            task jevs_analyses_urma_precip_stats_vhr_17
-              time 17:00
-              edit VHR '17'
-            task jevs_analyses_ccpa_precip_stats_vhr_12
-              trigger :TIME >= 1215 ../../prep/analyses/jevs_analyses_precip_prep_vhr_12 == complete
-              edit VHR '12'
-            task jevs_analyses_ccpa_precip_stats_vhr_13
-              trigger :TIME >= 1315 ../../prep/analyses/jevs_analyses_precip_prep_vhr_12 == complete
-              edit VHR '13'
-            task jevs_analyses_ccpa_precip_stats_vhr_14
-              trigger :TIME >= 1415 ../../prep/analyses/jevs_analyses_precip_prep_vhr_12 == complete
-              edit VHR '14'
-            task jevs_analyses_ccpa_precip_stats_vhr_15
-              trigger :TIME >= 1515 ../../prep/analyses/jevs_analyses_precip_prep_vhr_12 == complete
-              edit VHR '15'
-            task jevs_analyses_ccpa_precip_stats_vhr_16
-              trigger :TIME >= 1615 ../../prep/analyses/jevs_analyses_precip_prep_vhr_12 == complete
-              edit VHR '16'
-            task jevs_analyses_ccpa_precip_stats_vhr_17
-              trigger :TIME >= 1715 ../../prep/analyses/jevs_analyses_precip_prep_vhr_12 == complete
-              edit VHR '17'
           endfamily
           family global_chem
             task jevs_global_chem_atmos_grid2obs_airnow_stats_vhr_12
@@ -1677,21 +1500,21 @@ suite evs_nco
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_sea_ice_stats == complete
             task jevs_global_ens_atmos_gefs_sea_ice_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_sea_ice_stats == complete
-            task jevs_global_ens_atmos_gefs_profile4_past90days_plots
+            task jevs_global_ens_atmos_gefs_cape_last90days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile4_past31days_plots
+            task jevs_global_ens_atmos_gefs_cape_last31days_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile3_past90days_plots
+            task jevs_global_ens_atmos_gefs_profile3_last90days_plots
               trigger :TIME >= 1500 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile3_past31days_plots
+            task jevs_global_ens_atmos_gefs_profile3_last31days_plots
               trigger :TIME >= 1500 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile2_past90days_plots
+            task jevs_global_ens_atmos_gefs_profile2_last90days_plots
               trigger :TIME >= 1600 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile2_past31days_plots
+            task jevs_global_ens_atmos_gefs_profile2_last31days_plots
               trigger :TIME >= 1600 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile1_past90days_plots
+            task jevs_global_ens_atmos_gefs_profile1_last90days_plots
               trigger :TIME >= 1700 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
-            task jevs_global_ens_atmos_gefs_profile1_past31days_plots
+            task jevs_global_ens_atmos_gefs_profile1_last31days_plots
               trigger :TIME >= 1700 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_grid2obs_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_grid2obs_stats == complete
             task jevs_global_ens_atmos_gefs_precip_spatial_plots
               trigger :TIME >= 1400 and ../../../../06/evs/stats/global_ens/jevs_global_ens_cmce_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_ecme_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_gefs_atmos_precip_stats == complete and ../../../../06/evs/stats/global_ens/jevs_global_ens_naefs_atmos_precip_stats == complete
@@ -1804,11 +1627,6 @@ suite evs_nco
           family global_det
             task jevs_global_det_atmos_prep
               time 18:10
-          endfamily
-          family analyses
-            task jevs_analyses_precip_prep_vhr_18
-              time 18:00
-              edit VHR '18'
           endfamily
           family cam
             task jevs_cam_radar_prep_vhr_18
@@ -2246,60 +2064,6 @@ suite evs_nco
               edit VHR '22'
             task jevs_analyses_rtma_ru_grid2obs_stats_vhr_23
               trigger :TIME >= 2300 and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_06 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_07 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_08 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_09 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_10 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_11 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_12 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_13 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_14 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_15 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_16 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_17 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_18 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_19 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_20 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_21 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_ru_grid2obs_stats_vhr_22 == complete
-              edit VHR '23'
-            task jevs_analyses_rtma_precip_stats_vhr_18
-              time 18:15
-              edit VHR '18'
-            task jevs_analyses_rtma_precip_stats_vhr_19
-              time 19:00
-              edit VHR '19'
-            task jevs_analyses_rtma_precip_stats_vhr_20
-              time 20:00
-              edit VHR '20'
-            task jevs_analyses_rtma_precip_stats_vhr_21
-              time 21:00
-              edit VHR '21'
-            task jevs_analyses_rtma_precip_stats_vhr_22
-              time 22:00
-              edit VHR '22'
-            task jevs_analyses_rtma_precip_stats_vhr_23
-              trigger :TIME >= 2300 and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_06 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_07 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_08 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_09 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_10 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_11 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_12 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_13 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_14 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_15 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_16 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_17 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_18 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_19 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_20 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_21 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_rtma_precip_stats_vhr_22 == complete
-              edit VHR '23'
-            task jevs_analyses_urma_precip_stats_vhr_18
-              time 18:15
-              edit VHR '18'
-            task jevs_analyses_urma_precip_stats_vhr_19
-              time 19:00
-              edit VHR '19'
-            task jevs_analyses_urma_precip_stats_vhr_20
-              time 20:00
-              edit VHR '20'
-            task jevs_analyses_urma_precip_stats_vhr_21
-              time 21:00
-              edit VHR '21'
-            task jevs_analyses_urma_precip_stats_vhr_22
-              time 22:00
-              edit VHR '22'
-            task jevs_analyses_urma_precip_stats_vhr_23
-              trigger :TIME >= 2300 and ../../../../06/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_06 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_07 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_08 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_09 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_10 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_11 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_12 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_13 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_14 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_15 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_16 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_17 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_18 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_19 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_20 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_21 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_urma_precip_stats_vhr_22 == complete
-              edit VHR '23'
-            task jevs_analyses_ccpa_precip_stats_vhr_18
-              trigger :TIME >= 1815 ../../prep/analyses/jevs_analyses_precip_prep_vhr_18 == complete
-              edit VHR '18'
-            task jevs_analyses_ccpa_precip_stats_vhr_19
-              trigger :TIME >= 1915 ../../prep/analyses/jevs_analyses_precip_prep_vhr_18 == complete
-              edit VHR '19'
-            task jevs_analyses_ccpa_precip_stats_vhr_20
-              trigger :TIME >= 2015 ../../prep/analyses/jevs_analyses_precip_prep_vhr_18 == complete
-              edit VHR '20'
-            task jevs_analyses_ccpa_precip_stats_vhr_21
-              trigger :TIME >= 2115 ../../prep/analyses/jevs_analyses_precip_prep_vhr_18 == complete
-              edit VHR '21'
-            task jevs_analyses_ccpa_precip_stats_vhr_22
-              trigger :TIME >= 2215 ../../prep/analyses/jevs_analyses_precip_prep_vhr_18 == complete
-              edit VHR '22'
-            task jevs_analyses_ccpa_precip_stats_vhr_23
-              trigger :TIME >= 2315 and ../../prep/analyses/jevs_analyses_precip_prep_vhr_18 == complete and  ../../../../00/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_00 == complete and  ../../../../00/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_01 == complete and  ../../../../00/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_02 == complete and  ../../../../00/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_03 == complete and  ../../../../00/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_04 == complete and  ../../../../00/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_05 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_06 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_07 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_08 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_09 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_10 == complete and ../../../../06/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_11 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_12 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_13 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_14 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_15 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_16 == complete and ../../../../12/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_17 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_18 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_19 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_20 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_21 == complete and ../../../../18/evs/stats/analyses/jevs_analyses_ccpa_precip_stats_vhr_22 == complete
               edit VHR '23'
           endfamily
         endfamily   # 18 stats
