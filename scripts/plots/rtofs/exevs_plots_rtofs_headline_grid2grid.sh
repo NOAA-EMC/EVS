@@ -28,7 +28,7 @@ export PERIOD=last90days
 # plot time series
 export PTYPE=time_series
 
-for lead in 000 024 048 072 096 120 144 168 192; do
+for lead in 000 024 072 120 192; do
   export FLEAD=$lead
 
 # make plots for SST
