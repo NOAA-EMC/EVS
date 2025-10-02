@@ -2,7 +2,7 @@
 ########################################################################
 ###  UNIX Script Documentation Block
 ###                      .
-### Script name:         exevs_global_chem_atmos_grid2obs_prep.sh
+### Script name:         exevs_prep_global_chem_atmos_grid2obs.sh
 ### Script description:  To run grid-to-obs verification on Global Chemical modeling
 ### Original Author   :  Partha Bhattacharjee
 ###

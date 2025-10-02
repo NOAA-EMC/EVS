@@ -1,9 +1,7 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_chem_atmos_grid2obs_plots.sh
+# Name of Script: exevs_plots_global_chem_atmos_grid2obs.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
-#
-# Original Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
 # Original Author: Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script is run for the global_chem_atmos plots step
 #                    for the grid-to-obs verification. It uses EMC-developed
