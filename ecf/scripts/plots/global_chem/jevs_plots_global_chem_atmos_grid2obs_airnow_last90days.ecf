@@ -1,4 +1,4 @@
-#PBS -N evs_global_chem_atmos_grid2obs_aeronet_plots_last31days
+#PBS -N evs_plots_global_chem_atmos_grid2obs_airnow_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -54,16 +54,17 @@ fi
 export nproc=128
 export USE_CFP=YES
 
+export envir=prod
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export DATA_TYPE=aeronet
-export NDAYS=31
+export DATA_TYPE=airnow
+export NDAYS=90
 
 ######################################################################
 # Execute j-job
 ######################################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_CHEM_PLOTS
+${HOMEevs}/jobs/JEVS_PLOTS_GLOBAL_CHEM
 
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"

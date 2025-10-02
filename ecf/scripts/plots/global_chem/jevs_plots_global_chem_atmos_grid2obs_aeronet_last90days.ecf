@@ -1,4 +1,4 @@
-#PBS -N evs_global_chem_atmos_grid2obs_aeronet_plots_last90days
+#PBS -N evs_plots_global_chem_atmos_grid2obs_aeronet_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -63,7 +63,7 @@ export NDAYS=90
 ######################################################################
 # Execute j-job
 ######################################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_CHEM_PLOTS
+${HOMEevs}/jobs/JEVS_PLOTS_GLOBAL_CHEM
 
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
