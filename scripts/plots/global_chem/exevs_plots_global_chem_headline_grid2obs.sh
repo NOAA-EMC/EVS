@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_chem_headline_grid2obs_plots.sh
+# Name of Script: exevs_plots_global_chem_headline_grid2obs.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
 # Purpose of Script: This script is run for the global_chem plots step for
