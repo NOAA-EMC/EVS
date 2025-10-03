@@ -204,11 +204,9 @@ base_plot_jobs_info_dict = {
     'pres_levs': {
         'GeoHeight': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                       'fcst_var_dict': {'name': 'HGT',
-                                        'levels': ['P1000', 'P700',
-                                                   'P500', 'P250']},
+                                        'levels': ['P500']},
                       'obs_var_dict': {'name': 'HGT',
-                                       'levels': ['P1000', 'P700',
-                                                  'P500', 'P250']}},
+                                       'levels': ['P500']}},
         'GeoHeight_FourierDecomp': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM',
                                                  'TROPICS'],
                                     'fcst_var_dict': {'name': 'HGT_DECOMP',
@@ -223,12 +221,12 @@ base_plot_jobs_info_dict = {
                                                     'levels': ['P500']}},
         'Ozone': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                   'fcst_var_dict': {'name': 'O3MR',
-                                    'levels': ['P925', 'P100', 'P70', 'P50',
-                                               'P30', 'P20', 'P10', 'P5',
+                                    'levels': ['P925', 'P70',
+                                               'P30', 'P10', 
                                                'P1']},
                   'obs_var_dict': {'name': 'O3MR',
-                                   'levels': ['P925', 'P100', 'P70', 'P50',
-                                              'P30', 'P20', 'P10', 'P5',
+                                   'levels': ['P925', 'P70',
+                                              'P30', 'P10',
                                               'P1']}},
         'PresSeaLevel': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                          'fcst_var_dict': {'name': 'PRMSL',
@@ -242,19 +240,19 @@ base_plot_jobs_info_dict = {
                                   'levels': ['P850', 'P500', 'P250']}},
         'UWind': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                   'fcst_var_dict': {'name': 'UGRD',
-                                    'levels': ['P850', 'P500', 'P250']},
+                                    'levels': ['P850', 'P250']},
                   'obs_var_dict': {'name': 'UGRD',
-                                   'levels': ['P850', 'P500', 'P250']}},
+                                   'levels': ['P850', 'P250']}},
         'VWind': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                   'fcst_var_dict': {'name': 'VGRD',
-                                    'levels': ['P850', 'P500', 'P250']},
+                                    'levels': ['P850', 'P250']},
                   'obs_var_dict': {'name': 'VGRD',
-                                   'levels': ['P850', 'P500', 'P250']}},
+                                   'levels': ['P850', 'P250']}},
         'VectorWind': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                        'fcst_var_dict': {'name': 'UGRD_VGRD',
-                                         'levels': ['P850', 'P500', 'P250']},
+                                         'levels': ['P850', 'P250']},
                        'obs_var_dict': {'name': 'UGRD_VGRD',
-                                        'levels': ['P850', 'P500', 'P250']}},
+                                        'levels': ['P850', 'P250']}},
         'WindShear': {'vx_masks': ['ATL_MDR', 'EPAC_MDR'],
                       'fcst_var_dict': {'name': 'WNDSHR',
                                         'levels': ['P850-P200']},
@@ -379,11 +377,11 @@ for means_job in list(filter_stats_jobs_dict['means'].keys()):
 filter_stats_jobs_dict['precip']['24hrCCPA']['line_types'] = ['CTC']
 filter_stats_jobs_dict['precip']['24hrCCPA']['grid'] = 'G211'
 filter_stats_jobs_dict['precip']['24hrCCPA']['fcst_var_dict']['threshs'] = [
-    'ge0.1', 'ge0.5', 'ge1', 'ge5', 'ge10', 'ge25', 'ge50', 'ge75', 'ge0.254',
+    'ge0.254',
     'ge2.54', 'ge6.35', 'ge12.7', 'ge25.4', 'ge50.8', 'ge76.2', 'ge101.6'
 ]
 filter_stats_jobs_dict['precip']['24hrCCPA']['obs_var_dict']['threshs'] = [
-    'ge0.1', 'ge0.5', 'ge1', 'ge5', 'ge10', 'ge25', 'ge50', 'ge75', 'ge0.254',
+    'ge0.254',
     'ge2.54', 'ge6.35', 'ge12.7', 'ge25.4', 'ge50.8', 'ge76.2', 'ge101.6'
 ]
 filter_stats_jobs_dict['precip']['24hrCCPA']['interps'] = ['NEAREST/1']
@@ -393,9 +391,7 @@ filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd'] = copy.deepcopy(
 filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd']['line_types'] = ['NBRCNT']
 filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd']['grid'] = 'G240'
 filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd']['interps'] = [
-    'NBRHD_SQUARE/1', 'NBRHD_SQUARE/169', 'NBRHD_SQUARE/529',
-    'NBRHD_SQUARE/1089', 'NBRHD_SQUARE/1849', 'NBRHD_SQUARE/2809',
-    'NBRHD_SQUARE/3969'
+    'NBRHD_SQUARE/1', 'NBRHD_SQUARE/169'
 ]
 #### pres_levs
 for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
@@ -457,9 +453,7 @@ for snow_job in list(filter_stats_jobs_dict['snow'].keys()):
         'NBRCNT'
     ]
     filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"]['interps'] = [
-        'NBRHD_SQUARE/1', 'NBRHD_SQUARE/169', 'NBRHD_SQUARE/529',
-        'NBRHD_SQUARE/1089', 'NBRHD_SQUARE/1849', 'NBRHD_SQUARE/2809',
-        'NBRHD_SQUARE/3969'
+        'NBRHD_SQUARE/1', 'NBRHD_SQUARE/169'
     ]
 #### sst
 for sst_job in list(filter_stats_jobs_dict['sst'].keys()):
@@ -884,10 +878,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 if job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
                     if verif_type_plot_jobs_dict[verif_type_job]\
                             ['fcst_var_dict']['name'] == 'O3MR':
-                        plot_fcst_levels_loop = ['all', 'strat']
+                        plot_fcst_levels_loop = ['all']
                     else:
-                        plot_fcst_levels_loop = ['all', 'trop', 'strat',
-                                                 'ltrop', 'utrop']
+                        plot_fcst_levels_loop = ['all', 'trop', 'ltrop']
                 else:
                     plot_fcst_levels_loop = (
                         verif_type_plot_jobs_dict[verif_type_job]\
