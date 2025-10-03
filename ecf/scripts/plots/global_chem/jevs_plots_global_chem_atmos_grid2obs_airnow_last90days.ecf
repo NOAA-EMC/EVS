@@ -1,10 +1,10 @@
-#PBS -N evs_global_ens_wave_gefs_grid2obs_last90days_plots
+#PBS -N evs_plots_global_chem_atmos_grid2obs_airnow_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:10:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=108:mem=110G
+#PBS -l walltime=00:15:00
+#PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=275GB
 #PBS -l debug=true
 
 export model=evs
@@ -12,16 +12,18 @@ export model=evs
 %include <envir-p1.h>
 
 ############################################################
-# Load modules
+## Load modules
 ############################################################
 set -x
-export COMPONENT=global_ens
+export COMPONENT=global_chem
 export STEP=plots
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
+module load cray-mpich/${craympich_ver}
 module load gsl/${gsl_ver}
+module load prod_util/${prod_util_ver}
 module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
@@ -34,6 +36,10 @@ module load cfp/${cfp_ver}
 module load imagemagick/${imagemagick_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
+
+export SIPHONROOT=${UTILROOT}/fakedbn
+export DBNROOT=$SIPHONROOT
+
 module list
 
 ############################################################
@@ -44,20 +50,22 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export OMP_NUM_THREADS=1
-export NET=evs
-export RUN=wave
-export VERIF_CASE=grid2obs
-export MODELNAME=gefs
-export OBTYPE=GDAS
-export run_mpi='yes'
-export gather='yes'
-export EVAL_PERIOD="last90days"
 
-############################################################
+export nproc=128
+export USE_CFP=YES
+
+export envir=prod
+export NET=evs
+export RUN=atmos
+export VERIF_CASE=grid2obs
+export DATA_TYPE=airnow
+export NDAYS=90
+
+######################################################################
 # Execute j-job
-############################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
+######################################################################
+${HOMEevs}/jobs/JEVS_PLOTS_GLOBAL_CHEM
+
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
