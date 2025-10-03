@@ -86,7 +86,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -99,7 +99,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -112,7 +112,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -246,7 +246,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -259,7 +259,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -367,7 +367,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -462,7 +462,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -583,7 +583,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -596,7 +596,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -609,7 +609,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -717,7 +717,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -730,7 +730,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -812,7 +812,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -881,7 +881,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -976,7 +976,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -989,7 +989,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1002,7 +1002,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1110,7 +1110,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1123,7 +1123,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1205,7 +1205,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1274,7 +1274,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1369,7 +1369,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -1382,7 +1382,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1395,7 +1395,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1503,7 +1503,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1516,7 +1516,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1598,7 +1598,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1667,7 +1667,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1762,7 +1762,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -1775,7 +1775,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1788,7 +1788,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1896,7 +1896,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1909,7 +1909,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1991,7 +1991,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2060,7 +2060,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2157,7 +2157,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -2170,7 +2170,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -2183,7 +2183,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2317,7 +2317,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -2330,7 +2330,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2438,7 +2438,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2533,7 +2533,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }

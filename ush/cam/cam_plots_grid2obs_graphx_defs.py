@@ -1125,7 +1125,7 @@ graphics = {
                             },
                         }
                     },
-                    'stat_by_level':{
+					'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
                         'VALID_END':'',

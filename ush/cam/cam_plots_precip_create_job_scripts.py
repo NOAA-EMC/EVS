@@ -26,9 +26,9 @@ import sys
 
 USH_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(USH_DIR))
-import cam_util as cutil
-from cam_plots_precip_last31days_graphx_defs import graphics as graphics31
 from cam_plots_precip_last90days_graphx_defs import graphics as graphics90
+from cam_plots_precip_last31days_graphx_defs import graphics as graphics31
+import cam_util as cutil
 
 USHevs = os.environ['USHevs']
 COMPONENT = os.environ['COMPONENT']
@@ -36,10 +36,10 @@ STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
 njob = os.environ['njob']
 eval_period = os.environ['EVAL_PERIOD']
-if eval_period == "last31days":
-    graphics = graphics31
-elif eval_period == "last90days":
+if eval_period == "last90days":
     graphics = graphics90
+elif eval_period == "last31days":
+    graphics = graphics31
 else:
     raise ValueError(f"Invalid environment variable \"EVAL_PERIOD\": {os.environ['EVAL_PERIOD']}")
     sys.exit(1)
