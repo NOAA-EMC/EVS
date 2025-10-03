@@ -19,8 +19,7 @@ set -x
 periods="LAST${NDAYS}DAYS"
 
 valid_hours='00 12'
-fhrs='000 024 048 072 096 120 144 168
-      192 216 240 264 288 312 336 360 384'
+fhrs='000 024 072 120 168 240 312 384'
 stats_list='stats1 stats2 stats3'
 obsnames='GDAS'
 
