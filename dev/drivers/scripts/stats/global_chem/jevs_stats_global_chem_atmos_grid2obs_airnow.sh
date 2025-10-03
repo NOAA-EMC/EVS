@@ -1,4 +1,4 @@
-#PBS -N jevs_global_chem_atmos_grid2obs_airnow_stats
+#PBS -N jevs_stats_global_chem_atmos_grid2obs_airnow
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -51,7 +51,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
-export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${DATA_TYPE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}_${DATA_TYPE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 ############################################################
@@ -64,7 +64,7 @@ if [ -z "$MAILTO" ]; then
 else
     export vhr
     echo "vhr = ${vhr}"
-    ${HOMEevs}/jobs/JEVS_GLOBAL_CHEM_STATS
+    ${HOMEevs}/jobs/JEVS_STATS_GLOBAL_CHEM
 fi
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics using AirNOW PM2.5
