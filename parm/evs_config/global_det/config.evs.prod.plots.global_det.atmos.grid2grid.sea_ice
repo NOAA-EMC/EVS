@@ -62,9 +62,7 @@ if [ $RUN_GRID2GRID_PLOTS = YES ]; then
     export g2gp_type_list="sea_ice"
     export g2gp_event_equalization="NO"
     export g2gp_sea_ice_init_hr_list="00"
-    export g2gp_sea_ice_fhr_min=24
-    export g2gp_sea_ice_fhr_max=384
-    export g2gp_sea_ice_fhr_inc=24
+    export g2gp_sea_ice_fhr_list="0 24 72 120 168 240 312 384"
 fi
 
 echo "END: $(basename ${BASH_SOURCE[0]})"
