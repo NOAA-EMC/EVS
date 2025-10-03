@@ -64,9 +64,7 @@ if [ $RUN_GRID2GRID_PLOTS = YES ]; then
     export g2gp_pres_levs_truth_name_list="gfs_anl ecmwf_anl cmc_anl ukmet_anl jma_anl imd_anl fnmoc_anl gfs_anl"
     export g2gp_pres_levs_init_hr_list="00 12"
     export g2gp_pres_levs_valid_hr_list="00 12"
-    export g2gp_pres_levs_fhr_min=00
-    export g2gp_pres_levs_fhr_max=384
-    export g2gp_pres_levs_fhr_inc=24
+    export g2gp_pres_levs_fhr_list="0 24 72 120 168 240 312 384"
 fi
 
 echo "END: $(basename ${BASH_SOURCE[0]})"
