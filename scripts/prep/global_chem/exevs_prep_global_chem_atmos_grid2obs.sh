@@ -55,7 +55,8 @@ for OBTTYPE in ${obstype}; do
                     if [ ${SENDCOM} = "YES" ]; then
                         cpfile=${finalprep}/${OBTTYPE}_All_${INITDATE}_lev15.nc
                         if [ -e ${cpfile} ]; then
-                            cp -v ${cpfile} ${COMOUTprep}
+                            mkdir -p ${COMOUTprepobs}
+                            cp -v ${cpfile} ${COMOUTprepobs}
                         fi
                     fi
                 fi
@@ -109,7 +110,10 @@ for OBTTYPE in ${obstype}; do
                         export err=$?; err_chk
                         if [ ${SENDCOM} = "YES" ]; then
                             cpfile=${finalprep}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
-                            if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
+                            if [ -e ${cpfile} ]; then
+                                mkdir -p ${COMOUTprepobs}
+                                cp -v ${cpfile} ${COMOUTprepobs}
+                            fi
                         fi
                     fi
                 else
@@ -156,7 +160,7 @@ let inc=3
 for mdl_cyc in "${cyc_opt[@]}"; do
     com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/chem/pgrb2ap25   ## FOR GEFS-chem
     if [ -d ${com_gc_mdl} ]; then
-        prep_gc_mdl=${COMOUTprep}/${mdl_cyc}/${RUN}/pgrb2ap25
+        prep_gc_mdl=${COMOUTprepmdl}/${mdl_cyc}/${RUN}/pgrb2ap25
         mkdir -p ${prep_gc_mdl}
         let hour_now=0
         let max_hour=120

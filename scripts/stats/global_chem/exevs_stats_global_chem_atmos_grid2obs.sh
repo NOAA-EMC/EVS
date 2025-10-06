@@ -64,7 +64,7 @@ for ObsType in ${grid2obs_list}; do
 
     if [ "${ObsType}" == "aeronet" ]; then
         fcstmax=120
-        check_file=${EVSINmdl}/${RUN}.${VDATE}/${MODELNAME}/${ObsType}_All_${VDATE}_lev15.nc
+        check_file=${EVSINprep}/${RUN}.${VDATE}/obs/${ObsType}_All_${VDATE}_lev15.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
@@ -79,7 +79,7 @@ for ObsType in ${grid2obs_list}; do
         vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
         vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
-        check_file=${EVSINmdl}/${RUN}.${vld_date}/${MODELNAME}/${ObsType}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+        check_file=${EVSINprep}/${RUN}.${vld_date}/obs/${ObsType}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
@@ -105,7 +105,7 @@ for ObsType in ${grid2obs_list}; do
         aday=`echo ${adate} |cut -c1-8`
         acyc=`echo ${adate} |cut -c9-10`
         if [ "${acyc}" == "${mdl_cyc}" ]; then
-          fcst_file=${EVSINmdl}/${RUN}.${aday}/${MODELNAME}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.reduced.grib2
+          fcst_file=${EVSINprep}/${RUN}.${aday}/${MODELNAME}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.reduced.grib2
           if [ -s ${fcst_file} ]; then
             echo "${fhr} found"
             echo ${fhr} >> ${recorded_temp_list}
