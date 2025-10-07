@@ -1,4 +1,4 @@
-#PBS -N jevs_wafs_atmos_plots
+#PBS -N jevs_plots_wafs_atmos
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -55,18 +55,18 @@ export DAYS_LIST=${DAYS_LIST:-"90"}
 # CALL executable job script here
 ############################################################
 export pid=${PBS_JOBID:-$$}
-export job=${PBS_JOBNAME:-jevs_wafs_atmos_plots}
+export job=${PBS_JOBNAME:-jevs_plots_wafs_atmos}
 export jobid=$job.$pid
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
 export KEEPDATA=NO
 
-$HOMEevs/jobs/JEVS_WAFS_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_WAFS
 
 ############################################################
 ## Purpose: This job generates the grid2grid statistics stat
-##          files for GFS WAFS
+##          files for WAFS
 ############################################################
 #
 
