@@ -12,6 +12,7 @@
 ###   04/30/2025   Ho-Chun Huang  Remove email function for missing 
 ###                               pre-processed forecast output
 ###   06/04/2025   Ho-Chun Huang  mv from global_ens to global_chem
+###   10/07/2025   Ho-Chun Huang  Revise code for GCAFSv1 naming and data structure
 ###
 ########################################################################
 set -x
@@ -26,7 +27,7 @@ export finalstat=${DATA}/final  # config variable
 mkdir -p ${finalstat}
 
 export CMODEL=`echo ${MODELNAME} | tr a-z A-Z`  # define config variable
-vmodel=`echo ${gefs_ver} | awk -F"." '{print $1}'`
+vmodel=`echo ${gcafs_ver} | awk -F"." '{print $1}'`
 export VMODEL=${CMODEL}
 
 export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}}
@@ -105,7 +106,7 @@ for ObsType in ${grid2obs_list}; do
         aday=`echo ${adate} |cut -c1-8`
         acyc=`echo ${adate} |cut -c9-10`
         if [ "${acyc}" == "${mdl_cyc}" ]; then
-          fcst_file=${EVSINprep}/${RUN}.${aday}/${MODELNAME}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.reduced.grib2
+          fcst_file=${EVSINprep}/${RUN}.${aday}/${MODELNAME}/${acyc}/model/${RUN}/master/${MODELNAME}.${RUN}.t${acyc}z.master.f${filehr}.reduced.grib2
           if [ -s ${fcst_file} ]; then
             echo "${fhr} found"
             echo ${fhr} >> ${recorded_temp_list}

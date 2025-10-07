@@ -12,6 +12,7 @@
 ###   01/30/2024   Ho-Chun Huang  for a single email of missing files of both OBS and FCST
 ###   05/01/2025   Ho-Chun Huang  Remove email function for missing model forecast output
 ###   05/22/2025   Ho-Chun Huang  Move from global_ens chem to global_chem
+###   10/07/2025   Ho-Chun Huang  Revise code for GCAFSv1 naming and data structure
 ###
 ########################################################################
 #
@@ -151,23 +152,23 @@ done
 match_aod_1=":AOTK:"
 match_aod_2="aerosol=Total Aerosol"
 match_aod_3="aerosol_size <2e-05"
-match_aod_4="aerosol_wavelength >=5.45e-07,<=5.65e-07"
+match_aod_4="aerosol_wavelength >=5.45e-07,<=5.55e-07"
 match_pm25_1="PMTF"
 match_pm25_2="aerosol=Total Aerosol"
 match_pm25_3="aerosol_size <2.5e-06"
 declare -a cyc_opt=( 00 06 12 18 )
 let inc=3
 for mdl_cyc in "${cyc_opt[@]}"; do
-    com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/chem/pgrb2ap25   ## FOR GEFS-chem
+    com_gc_mdl=${COMINgcafs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/model/${RUN}/master   ## FOR GCAFS
     if [ -d ${com_gc_mdl} ]; then
-        prep_gc_mdl=${COMOUTprepmdl}/${mdl_cyc}/${RUN}/pgrb2ap25
+        prep_gc_mdl=${COMOUTprepmdl}/${mdl_cyc}/model/${RUN}/master
         mkdir -p ${prep_gc_mdl}
         let hour_now=0
         let max_hour=120
         while [ ${hour_now} -le ${max_hour} ]; do
             fhr=`printf %3.3d ${hour_now}`
-            mdl_full_grib2=${MODELNAME}.chem.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2  ## FOR GEFS-chem
-            reduced_rec_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.reduced.grib2
+            mdl_full_grib2=${MODELNAME}.t${mdl_cyc}z.master.grb2f${fhr}  ## FOR GCAFS
+            reduced_rec_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.master.f${fhr}.reduced.grib2
             check_full_file=${com_gc_mdl}/${mdl_full_grib2}
             check_reduced_file=${com_gc_mdl}/${reduced_rec_grib2}
             if [ -s ${check_reduced_file} ]; then
