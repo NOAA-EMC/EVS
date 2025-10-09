@@ -386,8 +386,7 @@ plot_jobs_dict = {
                                                              +'ge203.2, '
                                                              +'ge254')},
                                 'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                'points': ('1, 9, 25, '
-                                                           +'49, 81, 121')},
+                                                'points': '1, 9'},
                                 'fhr_start': '180',
                                 'fhr_end': '684',
                                 'fhr_inc': '168',
@@ -496,8 +495,7 @@ plot_jobs_dict = {
                                                             +'ge203.2, '
                                                             +'ge254')},
                                'interp_dict': {'method': 'NBRHD_SQUARE',
-                                               'points': ('1, 9, 25, '
-                                                          +'49, 81, 121')},
+                                               'points': '1, 9'},
                                'fhr_start': '828',
                                'fhr_end': '828',
                                'fhr_inc': '24',
@@ -606,8 +604,7 @@ plot_jobs_dict = {
                                                                +'ge203.2, '
                                                                +'ge254')},
                                   'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                  'points': ('1, 9, 25, '
-                                                             +'49, 81, 121')},
+                                                  'points': '1, 9'},
                                   'fhr_start': '252',
                                   'fhr_end': '252',
                                   'fhr_inc': '24',
@@ -716,8 +713,7 @@ plot_jobs_dict = {
                                                                +'ge508, '
                                                                +'ge635')},
                                   'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                  'points': ('1, 9, 25, '
-                                                             +'49, 81, 121')},
+                                                  'points': '1, 9'},
                                   'fhr_start': '684',
                                   'fhr_end': '684',
                                   'fhr_inc': '24',
