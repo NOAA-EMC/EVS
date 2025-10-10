@@ -305,6 +305,13 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                                   + f" not found and will not be plotted.")
             logger.warning(warning_string)
             logger.warning("Continuing ...")
+    else:
+        # No obs thresh requested: keep ONLY rows with no obs thresh
+        nullish = (
+            df['OBS_THRESH'].isna()
+            | df['OBS_THRESH'].astype(str).str.strip().isin(['', 'NA', 'NaN', 'nan'])
+        )
+        df = df[nullish]
     if fcst_thresh and '' not in fcst_thresh:
         requested_fcst_thresh_symbol, requested_fcst_thresh_letter = list(
             zip(*[plot_util.format_thresh(t) for t in fcst_thresh])
@@ -357,6 +364,13 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                                   + f" not found and will not be plotted.")
             logger.warning(warning_string)
             logger.warning("Continuing ...")
+    else:
+        # No fcst thresh requested: keep ONLY rows with no fcst thresh
+        nullish = (
+            df['FCST_THRESH'].isna()
+            | df['FCST_THRESH'].astype(str).str.strip().isin(['', 'NA', 'NaN', 'nan'])
+        )
+        df = df[nullish]
 
     # Remove from model_list the models that don't exist in the dataframe
     cols_to_keep = [

@@ -3,7 +3,7 @@
 # Purpose: set up environment, paths, and run the global_ens grid2obs  
 #          plotting python scripts separated by different valid times
 #
-# Updated: 07/21/2025 by L. Gwen Chen (lichuan.chen@noaa.gov)
+# Updated: 08/28/2025 by L. Gwen Chen (lichuan.chen@noaa.gov)
 #          02/20/2025 by L. Gwen Chen (lichuan.chen@noaa.gov)
 #          11/17/2023 by Binbin Zhou, Lynker@EMC/NCEP 
 #*******************************************************************************
@@ -53,10 +53,8 @@ done
 > run_all_poe.sh
 
 for fcst_valid_hour in $fcst_valid_hours ; do
-  init_time=init${fcst_valid_hour}z
-  valid_time=valid${fcst_valid_hour}z
 
-  for stats in acc me_mae crpss rmse_spread ets fbias sratio_pod_csi ; do 
+  for stats in acc me_mae crpss rmse_spread ; do 
     if [ $stats = acc ] ; then
       stat_list='acc'
       line_tp='sal1l2'
@@ -81,64 +79,35 @@ for fcst_valid_hour in $fcst_valid_hours ; do
       VARs='TMP2m DPT2m UGRD10m VGRD10m RH2m'
       score_types='time_series lead_average'
       VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central, Alaska"
-    elif [ $stats = ets ] ; then
-      stat_list='ets'
-      line_tp='ctc'
-      VARs='CAPEsfc'
-      score_types='time_series lead_average'
-      VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central"
-    elif [ $stats = fbias ] ; then
-      stat_list='fbias'
-      line_tp='ctc'
-      VARs='CAPEsfc'
-      score_types='time_series lead_average'
-      VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central"
-    elif [ $stats = sratio_pod_csi ] ; then
-      stat_list='sratio, pod, csi'
-      line_tp='ctc'
-      VARs='CAPEsfc'
-      score_types='performance_diagram'
-      VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central"
     else
       err_exit "$stats is not a valid metric"
     fi   
 
     for score_type in $score_types ; do
-      if [ $score_type = time_series ] || [ $score_type = performance_diagram ] ; then
-        export fcst_leads="120 240 360"
+      if [ $score_type = time_series ] ; then
+        export fcst_leads="24 120 240 360"
       else 
         export fcst_leads="vs_lead" 
       fi
  
       for lead in $fcst_leads ; do 
         if [ $lead = vs_lead ] ; then
-	  export fcst_lead="0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168, 180, 192, 204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
+          export fcst_lead="24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264, 288, 312, 336, 360, 384"
         else
           export fcst_lead=$lead
         fi
 
         for VAR in $VARs ; do 
           var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
-	    
+          thresh_list='NA'	  
+  
           if [ $VAR = TMP2m ] || [ $VAR = DPT2m ] || [ $VAR = RH2m ] ; then 
             FCST_LEVEL_values="Z2"
           elif [ $VAR = UGRD10m ] || [ $VAR = VGRD10m ] ; then
             FCST_LEVEL_values="Z10"
-          elif [ $VAR = CAPEsfc ] ; then
-	    FCST_LEVEL_values="L0"
           fi
        
-          if [ $VAR = CAPEsfc ] && [ $line_tp = ctc ] ; then
-            if [ $score_type = performance_diagram ]; then
-              thresh_list='all'
-            else
-              thresh_list='ge250 ge500 ge1000 ge2000'
-            fi
-          else
-            thresh_list='NA'
-          fi
-
-          if [ $VAR = RH2m ] || [ $VAR = CAPEsfc ] ; then
+          if [ $VAR = RH2m ] ; then
             models='CMCE, GEFS'
           elif [ $VAR = DPT2m ] ; then
             models='ECME, GEFS'
@@ -191,15 +160,7 @@ for fcst_valid_hour in $fcst_valid_hours ; do
               echo "export confidence_intervals=False" >> run_${fcst_valid_hour}.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${thresh}.sh
 	      echo "export PLOT_TYPE=$score_type" >> run_${fcst_valid_hour}.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${thresh}.sh
 
-              if [ $VAR = CAPEsfc ] && [ $line_tp = ctc ] ; then
-                if [ $score_type = performance_diagram ]; then
-                  thresh_fcst='>=250, >=500, >=1000, >=2000'
-                  thresh_obs='>=250, >=500, >=1000, >=2000'
-                else
-	          thresh_fcst=$(echo ${thresh/ge/>=})
-	          thresh_obs=$(echo ${thresh/ge/>=})
-                fi
-	      elif [ $thresh = NA ]; then 
+	      if [ $thresh = NA ]; then 
 	        thresh_fcst=''
 	        thresh_obs=''
 	      fi
@@ -234,7 +195,7 @@ chmod +x run_all_poe.sh
 # Run the POE script in parallel or in sequence to generate png files
 #*********************************************************************
 if [ $run_mpi = yes ] ; then
-  mpiexec -np 108 -ppn 54 -depth 2 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+  mpiexec -np 180 -ppn 20 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
   export err=$?; err_chk
@@ -244,58 +205,6 @@ fi
 # Change plot file names to meet the EVS standard
 #*************************************************
 cd $plots_all_dir
-
-for ihr in 00z 12z ; do
-    for domain in conus conus_east conus_west conus_south conus_central ; do
-        if [ $domain = conus_east ]; then
-            evs_graphic_domain="conus_e"
-        elif [ $domain = conus_west ]; then
-            evs_graphic_domain="conus_w"
-        elif [ $domain = conus_south ]; then
-            evs_graphic_domain="conus_s"
-        elif [ $domain = conus_central ]; then
-            evs_graphic_domain="conus_c"
-        else
-            evs_graphic_domain=$domain
-        fi
-
-        for lead in 120 240 360 ; do
-            if [ -f "performance_diagram_regional_${domain}_valid_${ihr}_cape_f${lead}__ge250ge500ge1000ge2000.png" ]; then
-                mv performance_diagram_regional_${domain}_valid_${ihr}_cape_f${lead}__ge250ge500ge1000ge2000.png evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_valid${ihr}_f${lead}.g212_buk_${evs_graphic_domain}.png
-            fi
-        done # lead
-    done # domain
-done # ihr
-
-for stats in ets fbias ; do
-    for ihr in 00z 12z ; do
-        for thresh in ge250 ge500 ge1000 ge2000 ; do
-            for domain in conus conus_east conus_west conus_south conus_central ; do
-                if [ $domain = conus_east ]; then
-                    evs_graphic_domain="conus_e"
-                elif [ $domain = conus_west ]; then
-                    evs_graphic_domain="conus_w"
-                elif [ $domain = conus_south ]; then
-                    evs_graphic_domain="conus_s"
-                elif [ $domain = conus_central ]; then
-                    evs_graphic_domain="conus_c"
-                else
-                    evs_graphic_domain=$domain
-                fi
-
-                if [ -f "lead_average_regional_${domain}_valid_${ihr}_cape_${stats}_${thresh}.png" ]; then
-                    mv lead_average_regional_${domain}_valid_${ihr}_cape_${stats}_${thresh}.png evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.fhrmean_valid${ihr}_f384.g212_buk_${evs_graphic_domain}.png
-                fi
-
-                for lead in 120 240 360 ; do
-                    if [ -f "time_series_regional_${domain}_valid_${ihr}_cape_${stats}_f${lead}_${thresh}.png" ]; then
-                        mv time_series_regional_${domain}_valid_${ihr}_cape_${stats}_f${lead}_${thresh}.png evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.timeseries_valid${ihr}_f${lead}.g212_buk_${evs_graphic_domain}.png
-                    fi
-                done # lead
-            done # domain
-        done # thresh
-    done # ihr
-done # stats
 
 for ihr in 00z 12z ; do
     for var in tmp dpt ugrd vgrd rh ; do
@@ -350,9 +259,10 @@ for ihr in 00z 12z ; do
                         mv lead_average_regional_${domain}_valid_${ihr}_${level}_${var}_${stats}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid${ihr}_f384.${grid}_${evs_graphic_domain}.png
                     fi
 
-                    for lead in 120 240 360; do
+                    for lead in 24 120 240 360; do
+                        lead_new=$(printf "%03d" "${lead}")
                         if [ -f "time_series_regional_${domain}_valid_${ihr}_${level}_${var}_${stats}_f${lead}.png" ]; then
-                            mv time_series_regional_${domain}_valid_${ihr}_${level}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid${ihr}_f${lead}.${grid}_${evs_graphic_domain}.png
+                            mv time_series_regional_${domain}_valid_${ihr}_${level}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid${ihr}_f${lead_new}.${grid}_${evs_graphic_domain}.png
                         fi
                     done # lead
                 done # level
@@ -361,15 +271,15 @@ for ihr in 00z 12z ; do
     done # var
 done # ihr
 
-tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.past${past_days}days.v${VDATE}.tar *.png
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.last${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    if [ -s evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.past${past_days}days.v${VDATE}.tar ]; then
-        cp -v evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.past${past_days}days.v${VDATE}.tar $COMOUT/.
+    if [ -s evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.last${past_days}days.v${VDATE}.tar ]; then
+        cp -v evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.last${past_days}days.v${VDATE}.tar $COMOUT/.
     fi
 fi
 
 if [ $SENDDBN = YES ]; then 
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.past${past_days}days.v${VDATE}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.last${past_days}days.v${VDATE}.tar
 fi
 
