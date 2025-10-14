@@ -1,8 +1,8 @@
 #! /bin/bash
 ########################################################################################
-# Name of Script: exevs_wafs_atmos_stats.sh
+# Name of Script: exevs_stats_wafs_atmos.sh
 # Purpose of Script: To generate the verification products for WAFS verification
-# Arguments: exevs_wafs_atmos_stats.sh
+# Arguments: exevs_stats_wafs_atmos.sh
 #   
 ########################################################################################
 set -x

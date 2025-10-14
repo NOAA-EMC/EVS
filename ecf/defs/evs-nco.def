@@ -570,7 +570,7 @@ suite evs_nco
               trigger :TIME >= 1000 and ../../../../06/evs/prep/global_ens/jevs_global_ens_wave_prep == complete
           endfamily
           family wafs
-            task jevs_wafs_atmos_stats
+            task jevs_stats_wafs_atmos
               time 09:00
           endfamily
           family mesoscale
