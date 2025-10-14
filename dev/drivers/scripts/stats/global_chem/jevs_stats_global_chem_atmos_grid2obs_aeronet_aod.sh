@@ -1,4 +1,4 @@
-#PBS -N jevs_stats_global_chem_atmos_grid2obs_aeronet
+#PBS -N jevs_stats_global_chem_atmos_grid2obs_aeronet_aod
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -44,7 +44,7 @@ export MODELNAME=${MODELNAME:-gcafs}
 export modsys=${modsys:-gcafs}
 export mod_ver=${mod_ver:-${gcafs_ver}}
 
-export DATA_TYPE=aeronet 
+export DATA_TYPE=aeronet_aod 
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}

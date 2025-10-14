@@ -37,35 +37,34 @@ export METPLUS_PATH
 
 grid2obs_list="${DATA_TYPE}"
 
-export init_cyc="00 06 12 18"
+export init_cyc="00 12"
 
 for ObsType in ${grid2obs_list}; do
     export ObsType
     case ${ObsType} in
-        aeronet) export obs_var=aod
-                 export VARID=`echo ${obs_var} | tr a-z A-Z`;;  # config variable
-        airnow)  export obs_var=pm25
-                 if [ "${airnow_hourly_type}" == "aqobs" ]; then
+        airnow_pm25) if [ "${airnow_hourly_type}" == "aqobs" ]; then
                    export HOURLY_INPUT_TYPE=hourly_aqobs
                  else
                    export HOURLY_INPUT_TYPE=hourly_data
                  fi
-                 export VARID=`echo ${HOURLY_INPUT_TYPE} | tr a-z A-Z`;;  # config variable
-        *)       echo " ObsType=${ObsType} is not defined, set to default aeronet"
-                 export obs_var=aod
-                 export VARID=`echo ${obs_var} | tr a-z A-Z`;;  # config variable
+        airnow_pm10) if [ "${airnow_hourly_type}" == "aqobs" ]; then
+                   export HOURLY_INPUT_TYPE=hourly_aqobs
+                 else
+                   export HOURLY_INPUT_TYPE=hourly_data
+                 fi
+        *)       export HOURLY_INPUT_TYPE="aod";;     # config variable
     esac
 
     export RUNTIME_STATS=${DATA}/point_stat/${MODELNAME}_${ObsType}  # config variable
-    export OutputId=${MODELNAME}_${ObsType}_${obs_var}            # config variable
-    export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${obs_var} # config variable
+    export OutputId=${MODELNAME}_${ObsType}                       # config variable
+    export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}            # config variable
     export OBSTYPE=`echo ${ObsType} | tr a-z A-Z`    # config variable
     point_stat_conf_file="${CONFIGevs}/PointStat_fcst${CMODEL}Aero_obs${OBSTYPE}.conf"
     stat_analysis_conf_file="${CONFIGevs}/Statanalysis_fcst${CMODEL}Aero_obs${OBSTYPE}.conf"
 
-    if [ "${ObsType}" == "aeronet" ]; then
+    if [ "${ObsType}" == "aeronet_aod" ]; then
         fcstmax=120
-        check_file=${EVSINprep}/${RUN}.${VDATE}/obs/${ObsType}_All_${VDATE}_lev15.nc
+        check_file=${EVSINprep}/${RUN}.${VDATE}/obs/aeronet_All_${VDATE}_lev15.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
@@ -73,7 +72,7 @@ for ObsType in ${grid2obs_list}; do
           echo "PREP_OUTPUT_MISSING: Pre-processed ${OBSTYPE} Level 1.5 input ${check_file} is missing. The verification on ${VDATE} will be skipped"
         fi
         echo "DEBUG: index of daily aeronet obs found = ${num_obs_found}"
-    elif [ "${ObsType}" == "airnow" ]; then
+    elif [ "${ObsType}" == "airnow_pm25" ] || [ "${ObsType}" == "airnow_pm10" ]; then
         fcstmax=120
 
         cdate=${VDATE}${vhr}
@@ -106,7 +105,7 @@ for ObsType in ${grid2obs_list}; do
         aday=`echo ${adate} |cut -c1-8`
         acyc=`echo ${adate} |cut -c9-10`
         if [ "${acyc}" == "${mdl_cyc}" ]; then
-          fcst_file=${EVSINprep}/${RUN}.${aday}/${MODELNAME}/${acyc}/model/${RUN}/master/${MODELNAME}.${RUN}.t${acyc}z.master.f${filehr}.reduced.grib2
+          fcst_file=${EVSINprep}/${RUN}.${aday}/${MODELNAME}/${acyc}/products/${RUN}/grib2/0p25/${MODELNAME}.${RUN}.t${acyc}z.0p25.f${filehr}.trim.grib2
           if [ -s ${fcst_file} ]; then
             echo "${fhr} found"
             echo ${fhr} >> ${recorded_temp_list}
@@ -122,7 +121,7 @@ for ObsType in ${grid2obs_list}; do
       fi
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       export num_fcst_in_metplus
-      echo "number of fcst lead in_metplus point_stat for ${CMODEL}-aerosol ${obs_var} == ${num_fcst_in_metplus}"
+      echo "number of fcst lead in_metplus point_stat for ${CMODEL}-aerosol ${ObsType} == ${num_fcst_in_metplus}"
     
       if [ ${num_fcst_in_metplus} -gt 0 -a ${num_obs_found} -eq 1 ]; then
         export fcsthours=${fcsthours_list}
@@ -136,7 +135,7 @@ for ObsType in ${grid2obs_list}; do
             echo "DEBUG: There is no pre-processed ${OBSTYPE} OBS, the metplus stats process will be skipped"
         fi
         if [ ${num_fcst_in_metplus} -eq 0 ]; then
-            echo "DEBUG: There is no pre-processed ${obs_var} ${CMODEL}-aerosol ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+            echo "DEBUG: There is no pre-processed ${ObsType} ${CMODEL}-aerosol ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
         fi
       fi
     done   ## hour loop
