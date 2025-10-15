@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_stats_precip_create_poe_job_scripts.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Precip - Statistics POE job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_precip_stats.sh
-#
-# =============================================================================
+"""
+cam_stats_precip_create_poe_job_scripts.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates POE job scripts for Precip verification in the cam component.
 
-import sys
-import os
+Environment Variables (Inputs):
+    job_type, machine, USE_CFP, nproc, STEP, VERIF_CASE, DATA
+    (and other variables required for job script creation and configuration)
+
+Outputs:
+    - Generates POE job scripts for running Precip verification in parallel.
+    - Prints errors and exits if required environment variables are missing or
+      invalid.
+
+This script is intended to be run as part of the cam component to automate
+creation of POE job scripts for Precip verification.
+"""
+
 import glob
-from datetime import datetime
-import numpy as np
+import os
+import sys
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 

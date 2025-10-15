@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_production_restart.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Check the appropriate restart directory for restart files and copy
-#          the available files to the working directory
-#
-# =============================================================================
+"""
+cam_production_restart.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+----------------------
+Checks the appropriate restart directory for restart files and copies the
+available files to the working directory for the cam component.
+
+Environment Variables (Inputs):
+    DATA, COMOUT, NET, RUN, COMPONENT, STEP, VERIF_CASE, RESTART_DIR,
+    COMPLETED_JOBS_DIR
+
+Outputs:
+    - Copies restart files from the restart directory to the working directory.
+
+This script is intended to be run as part of the cam component to automate
+the management of restart files during production runs.
+"""
 
 import os
-import glob
 from pathlib import Path
+
 import cam_util as cutil
 
 print("BEGIN: "+os.path.basename(__file__))

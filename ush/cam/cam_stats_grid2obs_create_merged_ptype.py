@@ -1,18 +1,31 @@
 #!/usr/bin/env python3
-'''
-Program Name: cam_stats_grid2obs_create_merged_ptype.py
-Contact(s): Marcel Caron, Mallory Row
-Abstract: This creates a merged precipitation type file used for
-          calculating MET MCTC line type.
-          1-rain, 2-snow, 3-freezing rain, 4-ice pellets
-'''
+"""
+cam_stats_grid2obs_create_merged_ptype.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates a merged precipitation type file used for calculating MET MCTC line
+type (1-rain, 2-snow, 3-freezing rain, 4-ice pellets) in the cam component.
 
+Environment Variables (Inputs):
+        DATA, RUN, NET, VERIF_CASE, STEP, COMPONENT, VERIF_TYPE, job_name,
+        MODELNAME, NEST, COMINfcst, MODEL_INPUT_TEMPLATE, VDATE, VHOUR, FHR,
+        job_type, njob
+
+Outputs:
+        - Merged precipitation type NetCDF file in the appropriate output
+            directory.
+        - Prints notes if output already exists or if required environment
+            variables are missing.
+
+This script is intended to be run as part of the cam component to automate
+creation of merged precipitation type files for Grid2Obs verification.
+"""
+
+import datetime
 import os
-import sys
+
 import netCDF4 as netcdf
 import numpy as np
-import datetime
-import cam_util as cutil
 
 print("BEGIN: "+os.path.basename(__file__))
 

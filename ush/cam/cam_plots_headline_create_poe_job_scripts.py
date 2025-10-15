@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_plots_headline_create_poe_job_scripts.sh
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Headline - Plots POE job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/plots/exevs_$MODELNAME_headline_plots.sh
-#
-# =============================================================================
+"""
+cam_plots_headline_create_poe_job_scripts.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+----------------------
+Creates EVS CAM Headline POE job scripts for the cam component, using
+environment variables and available job files.
 
-import sys
-import os
+Environment Variables (Inputs):
+    machine, USE_CFP, nproc, STEP, VERIF_CASE, DATA
+
+Outputs:
+    - Generates and manages POE job scripts in the appropriate job directory
+      for headline plots.
+
+This script is intended to be run as part of the cam component to automate
+the creation and management of POE job scripts for headline plotting.
+"""
+
 import glob
-from datetime import datetime
-import numpy as np
+import os
+import sys
+
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
