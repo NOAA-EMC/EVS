@@ -52,15 +52,15 @@ for ObsType in ${grid2obs_list}; do
                  else
                    export HOURLY_INPUT_TYPE=hourly_data
                  fi
-        *)       export HOURLY_INPUT_TYPE="aod";;     # config variable
+        *)       export HOURLY_INPUT_TYPE="hourly_aod";;     # config variable
     esac
 
     export RUNTIME_STATS=${DATA}/point_stat/${MODELNAME}_${ObsType}  # config variable
     export OutputId=${MODELNAME}_${ObsType}                       # config variable
     export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}            # config variable
     export OBSTYPE=`echo ${ObsType} | tr a-z A-Z`    # config variable
-    point_stat_conf_file="${CONFIGevs}/PointStat_fcst${CMODEL}Aero_obs${OBSTYPE}.conf"
-    stat_analysis_conf_file="${CONFIGevs}/Statanalysis_fcst${CMODEL}Aero_obs${OBSTYPE}.conf"
+    point_stat_conf_file="${CONFIGevs}/PointStat_fcst${CMODEL}_obs${OBSTYPE}.conf"
+    stat_analysis_conf_file="${CONFIGevs}/Statanalysis_fcst${CMODEL}_obs${OBSTYPE}.conf"
 
     if [ "${ObsType}" == "aeronet_aod" ]; then
         fcstmax=120
@@ -121,7 +121,7 @@ for ObsType in ${grid2obs_list}; do
       fi
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       export num_fcst_in_metplus
-      echo "number of fcst lead in_metplus point_stat for ${CMODEL}-aerosol ${ObsType} == ${num_fcst_in_metplus}"
+      echo "number of fcst lead in_metplus point_stat for ${CMODEL} ${ObsType} == ${num_fcst_in_metplus}"
     
       if [ ${num_fcst_in_metplus} -gt 0 -a ${num_obs_found} -eq 1 ]; then
         export fcsthours=${fcsthours_list}
@@ -135,7 +135,7 @@ for ObsType in ${grid2obs_list}; do
             echo "DEBUG: There is no pre-processed ${OBSTYPE} OBS, the metplus stats process will be skipped"
         fi
         if [ ${num_fcst_in_metplus} -eq 0 ]; then
-            echo "DEBUG: There is no pre-processed ${ObsType} ${CMODEL}-aerosol ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+            echo "DEBUG: There is no pre-processed ${ObsType} ${CMODEL} ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
         fi
       fi
     done   ## hour loop
