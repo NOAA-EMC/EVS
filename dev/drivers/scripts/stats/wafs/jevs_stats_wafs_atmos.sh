@@ -1,10 +1,10 @@
-#PBS -N jevs_wafs_atmos_plots
+#PBS -N jevs_stats_wafs_atmos
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:15:00
-#PBS -l place=shared,select=1:ncpus=40:mem=200GB
+#PBS -l walltime=00:25:00
+#PBS -l place=shared,select=1:ncpus=5:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -30,45 +30,36 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_$STEP.sh
 
-export DBNROOT=${UTILROOT}/fakedbn
-
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 ############################################################
 # environment variables set
 ############################################################
 export envir=prod
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/$evs_ver_2d
 
-export NET=evs
-export STEP=plots
-export COMPONENT=wafs
-export RUN=atmos
-export VERIF_CASE=grid2grid
+############################################################
+# set up for email alerts of missing data
+############################################################
+export pid=${PBS_JOBID:-$$}
+export job=${PBS_JOBNAME:-jevs_stats_wafs_atmos}
+export jobid=$job.$pid
 
-export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/$evs_ver_2d}
-#For COMOUT
-export COMROOT=/lfs/h2/emc/ptmp/$USER
-
-export DAYS_LIST=${DAYS_LIST:-"90"}
+export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
+export SENDMAIL=${SENDMAIL:-YES}
 
 ############################################################
 # CALL executable job script here
 ############################################################
-export pid=${PBS_JOBID:-$$}
-export job=${PBS_JOBNAME:-jevs_wafs_atmos_plots}
-export jobid=$job.$pid
-
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
 export KEEPDATA=NO
 
-$HOMEevs/jobs/JEVS_WAFS_PLOTS
+$HOMEevs/jobs/JEVS_STATS_WAFS
 
 ############################################################
 ## Purpose: This job generates the grid2grid statistics stat
-##          files for GFS WAFS
+##          files for WAFS
 ############################################################
 #
-
 exit
-
