@@ -1,4 +1,4 @@
-#PBS -N jevs_wafs_atmos_stats
+#PBS -N jevs_stats_wafs_atmos
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -42,7 +42,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/$evs_ver_2d
 # set up for email alerts of missing data
 ############################################################
 export pid=${PBS_JOBID:-$$}
-export job=${PBS_JOBNAME:-jevs_wafs_atmos_stats}
+export job=${PBS_JOBNAME:-jevs_stats_wafs_atmos}
 export jobid=$job.$pid
 
 export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
@@ -55,11 +55,11 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
 export KEEPDATA=NO
 
-$HOMEevs/jobs/JEVS_WAFS_STATS
+$HOMEevs/jobs/JEVS_STATS_WAFS
 
 ############################################################
 ## Purpose: This job generates the grid2grid statistics stat
-##          files for GFS WAFS
+##          files for WAFS
 ############################################################
 #
 exit

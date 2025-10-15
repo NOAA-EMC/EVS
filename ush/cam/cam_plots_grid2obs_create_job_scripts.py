@@ -1,21 +1,33 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_plots_grid2obs_create_job_scripts.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Loads graphics definitions dictionary and feeds each set of configs
-#          to cam_plots_grid2obs_create_job_script.py to write the job card
-#
-# =============================================================================
+"""
+cam_plots_grid2obs_create_job_scripts.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Loads the graphics definitions dictionary and feeds each set of configurations
+to cam_plots_grid2obs_create_job_script.py to write job cards for the cam
+component.
+
+Environment Variables (Inputs):
+        USH_DIR, USHevs, COMPONENT, STEP, VERIF_CASE, njob, and others required
+        for job card creation and plotting configuration.
+
+Outputs:
+        - Iterates over all plotting configurations and generates job cards for
+            Grid2Obs plots.
+        - Prints errors and exits if required environment variables or settings are
+            missing or invalid.
+
+This script is intended to be run as part of the cam component to automate
+creation of all Grid2Obs plotting job cards.
+"""
 
 import os
 import sys
-from pathlib import Path
 
 USH_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(USH_DIR))
-from cam_plots_grid2obs_graphx_defs import graphics
 import cam_util as cutil
+from cam_plots_grid2obs_graphx_defs import graphics
 
 USHevs = os.environ['USHevs']
 COMPONENT = os.environ['COMPONENT']

@@ -1,16 +1,28 @@
 #!/usr/bin/env python3
-###############################################################################
-# Name of Script: read_ascii_storm.py
-# Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
-# Purpose of Script: Read SPC LSR data in csv format and output to 
-#                    a MET-compatible netcdf file
-# History Log:
-#   1/2023: Script copied from METplus repository
-###############################################################################
+"""
+read_ascii_storm.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Reads SPC LSR data in CSV format and outputs a MET-compatible netCDF file for
+the cam component.
 
-import pandas as pd
+Environment Variables (Inputs):
+    None (input file is specified as a command-line argument).
+
+Outputs:
+    - Reads and reformats storm report CSV data for MET compatibility.
+    - Exits with error if input file is missing or invalid.
+
+This script is intended to be run as part of the cam component to automate
+conversion of SPC LSR CSV data to MET-compatible netCDF format.
+"""
+
+# Standard library imports
 import os
 import sys
+
+# Third-party imports
+import pandas as pd
 
 print(f'Python Script: {sys.argv[0]}')
 

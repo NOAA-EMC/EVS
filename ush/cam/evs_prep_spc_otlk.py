@@ -9,13 +9,13 @@
 #   4/2023: Script modified to generate masks on a daily basis
 ###############################################################################
 
-import sys, os, shutil, subprocess
 import datetime
-import re, csv, glob
-import bisect
-import numpy as np
-import cam_util as cutil
+import glob
+import os
+import re
 
+import cam_util as cutil
+import numpy as np
 
 OTLK_DATE = os.environ['OTLK_DATE'] 
 vhr = os.environ['vhr']

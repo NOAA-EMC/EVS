@@ -1,15 +1,34 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_check_input_data.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Check Availability of Input Data
-# DEPENDENCIES: os.path.join([
-#                   SCRIPTSevs,COMPONENT,STEP,
-#                   "_".join(["exevs",MODELNAME,VERIF_CASE,STEP+".sh"]
-#               )]
-#
-# =============================================================================
+"""
+cam_check_input_data.py
+CONTRIBUTERS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Checks the availability of required input data files for a given verification 
+step and verif_case in the cam workflow.
+
+Environment Variables (Inputs):
+    STEP: str
+        The workflow step (e.g., 'stats', 'prep').
+    VERIF_CASE: str
+        The verification case (e.g., 'precip', 'snowfall', 'grid2obs').
+    COMPONENT, SENDMAIL, VHR, jobid, FIXevs, VDATE, VHOUR, FHR_END_FULL, 
+    FHR_END_SHORT, NEST, MODELNAME, FHR_INCR_FULL, FHR_INCR_SHORT, 
+    FHR_GROUP_LIST, MIN_IHOUR, COMINobsproc, COMINnam, DCOMINnohrsc, 
+    OBS_ACC, ACC, COMINfcst, COMINhiresw, COMINhrrr, EVSINmrms, EVSINccpa, 
+    DCOMINmrms, COMINccpa, etc.:
+        Various environment variables specifying file locations, model names, 
+        and configuration options.
+
+Outputs:
+    - Prints warnings for any missing mask, forecast, or observation files.
+    - Optionally sends email notifications if critical data are missing (when 
+      SENDMAIL=="YES").
+    - Exits if missing data are detected.
+
+This script is intended to be run as part of the cam component to 
+ensure all required input data are present before proceeding with downstream 
+steps.
+"""
 
 import sys
 import os
