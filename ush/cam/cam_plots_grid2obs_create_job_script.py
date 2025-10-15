@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_plots_grid2obs_create_job_script.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Grid2Obs - Plots job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_grid2obs_plots.sh
-#
-# =============================================================================
+"""
+cam_plots_grid2obs_create_job_script.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates job scripts for EVS CAM Grid2Obs plots in the cam component.
 
-import sys
+Environment Variables (Inputs):
+    Various variables including PYTHONPATH, COMPONENT, STEP, VERIF_CASE,
+    MODELNAME, METPLUS_PATH, MET_ROOT, DATA, VDATE, and many others required
+    for job script creation and configuration.
+
+Outputs:
+    - Generates job scripts for plotting Grid2Obs statistics.
+    - Prints errors and exits if required environment variables are missing or
+      invalid.
+
+This script is intended to be run as part of the cam component to automate
+creation of plotting job scripts for Grid2Obs verification.
+"""
+
 import os
-import glob
-import re
-from datetime import datetime
-import numpy as np
+
 import cam_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")
