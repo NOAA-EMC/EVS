@@ -100,4 +100,4 @@ if [[ $log_file_count -ne 0 ]]; then
 	done
 fi
 
-echo "********SCRIPT exevs_wafs_atmos_plots.sh COMPLETED NORMALLY on `$NDATE`"
+echo "********SCRIPT exevs_plots_wafs_atmos.sh COMPLETED NORMALLY on `$NDATE`"
