@@ -395,65 +395,6 @@ do
 	echo "Note: No plot made due to lack of data in region for last 31 days",$varb,$region,$anl
         fi
 
-	if [ $var = VISsfc ]
-	then
-        for thresh in 805 1609 4828 8045 16090
-	do
-        
-        if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_timeseries_ctc
-	export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $PLOTDIR
-	fi
-
-	if [ -e ${PLOTDIR}/ceil_vis/*/evs*png ]
-	then
-	mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
-	if [ $SENDCOM = "YES" ]; then
-	if [ -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
-        cp ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
-	fi
-	fi
-        elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
-	then
-	echo "Note: No plot made. The threshold does not occur over the region in the last 31 days",$varb,$region,$anl,$thresh
-	fi
-
-        done
-	fi
-
-	if [ $var = HGTcldceil ]
-        then
-        for thresh in 152 305 914 1524 3048 
-        do
-
-	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
-        $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_timeseries_ctc
-	export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$varb/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $PLOTDIR
-        fi
-
-	if [ -e ${PLOTDIR}/ceil_vis/*/evs*png ]
-	then
-        mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
-	if [ $SENDCOM = "YES" ]; then
-	if [ -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
-	cp ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$varb
-	fi
-	fi
-        elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_lt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
-	then
-	echo "Note: No plot made. The threshold does not occur over the region in the last 31 days",$varb,$region,$anl,$thresh
-	fi
-
-        done
-        fi
-
-        
         done
  fi
 done
@@ -468,7 +409,6 @@ if [ $plot = yes ]; then
 	export lev=L0
 	export lev_obs=L0
 	export linetype=CTC
-#	export thresh=">10,>50,>90"
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $var | tr A-Z a-z`
 
@@ -497,32 +437,6 @@ if [ $plot = yes ]; then
 	then
 	echo "Note: No plot made due to lack of data in region for last 31 days",$var,$region,$anl
         fi
-
-        for thresh in 10 50 90
-	do
-	
-	if [ ! -e $COMOUTplots/$var/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
-	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_timeseries_ctc_tcdc
-	export err=$?; err_chk
-        else
-	echo "RESTART - plot exists; copying over to plot directory"
-	cp $COMOUTplots/$var//evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $PLOTDIR
-	fi
-
-	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
-	then
-        mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png
-	if [ $SENDCOM = "YES" ]; then
-	if [ -e ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]; then
-	cp ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png $COMOUTplots/$var
-	fi
-	fi
-        elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}_gt${thresh}.${smvar}_${smlev}.last31days.timeseries.buk_${smregion}.png ]
-	then
-	echo "Note: No plot made. The threshold does not occur over the region in the last 31 days",$var,$region,$anl,$thresh
-	fi
-
-        done
 
         done
         fi

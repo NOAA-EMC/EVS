@@ -1,26 +1,38 @@
 #!/usr/bin/env python3
-###############################################################################
-#
-# Name:          df_preprocessing.py
-# Contact(s):    Marcel Caron
-# Developed:     Dec. 2, 2021 by Marcel Caron
-# Last Modified: Apr. 22, 2022 by Marcel Caron
-# Abstract:      Collection of functions that initialize and filter dataframes
-#
-###############################################################################
+"""
+df_preprocessing.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Collection of functions to initialize and filter dataframes for the cam component.
 
+Environment Variables (Inputs):
+    USH_DIR (for settings directory)
+
+Outputs:
+    - Provides functions for dataframe preprocessing, including filtering,
+      validation, and pruning, used by other scripts in the cam component.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared dataframe preprocessing utilities.
+"""
+
+# Standard library imports
 import os
 import sys
 import shutil
 import uuid
+from datetime import timedelta as td
+
+# Third-party imports
 import numpy as np
 import pandas as pd
-from datetime import timedelta as td
+
+# Local imports
+from prune_stat_files import prune_data
+import plot_util
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from prune_stat_files import prune_data
-import plot_util
 
 
 # =================== FUNCTIONS =========================
@@ -94,10 +106,6 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
 
 def check_empty(df, logger, called_from):
     if df.empty:
-        logger.warning(f"Called from {called_from}:")
-        logger.warning(f"Empty Dataframe encountered while filtering a subset"
-                       + f" of input statistics...")
-        logger.info("========================================")
         return True
     else:
         return False
@@ -125,7 +133,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
                     + f" {str(model)} data according to the output_base template,"
                     + f" given domain, variable, etc..."
                 )
-                logger.warning("Continuing ...")
+                logger.info("Continuing ...")
             continue
         if not clear_prune_dir:
             logger.debug(f"Creating dataframe using pruned data from {fpath}")

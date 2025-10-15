@@ -8,8 +8,8 @@
 ###############################################################################
 
 import datetime
-import os, glob
-
+import glob
+import os
 
 FIX_DIR = os.environ['FIXevs'] 
 OTLK_DIR = os.environ['EVSINspcotlk']
