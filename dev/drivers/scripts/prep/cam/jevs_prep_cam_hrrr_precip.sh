@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -N jevs_cam_hrrr_precip_prep
+#PBS -N jevs_prep_cam_hrrr_precip
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -18,7 +18,7 @@ export SENDCOM=YES
 export KEEPDATA=NO
 export SENDDBN=NO
 export SENDDBN_NTC=
-export job=${PBS_JOBNAME:-jevs_cam_hrrr_precip_prep}
+export job=${PBS_JOBNAME:-jevs_prep_cam_hrrr_precip}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
@@ -51,4 +51,4 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export vhr=${vhr:-${vhr}}
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/JEVS_CAM_PREP
+. ${HOMEevs}/jobs/JEVS_PREP_CAM

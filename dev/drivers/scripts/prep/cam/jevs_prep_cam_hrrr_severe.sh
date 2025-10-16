@@ -1,4 +1,4 @@
-#PBS -N jevs_cam_hrrr_severe_prep
+#PBS -N jevs_prep_cam_hrrr_severe
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -43,7 +43,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export VERIF_CASE=severe
 export MODELNAME=hrrr
 export modsys=hrrr
-export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${vhr}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${vhr}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
@@ -64,7 +64,7 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/JEVS_CAM_PREP
+   $HOMEevs/jobs/JEVS_PREP_CAM
 
 fi
 

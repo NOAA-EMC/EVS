@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_namnest_severe_prep
+#PBS -N jevs_prep_cam_radar
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=shared,select=1:ncpus=1:mem=75GB
+#PBS -l place=shared,select=1:ncpus=1:mem=25GB
 #PBS -l debug=true
 
 
@@ -32,6 +32,7 @@ module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
+
 export vhr=${vhr:-${vhr}}
 
 
@@ -40,10 +41,9 @@ export vhr=${vhr:-${vhr}}
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export VERIF_CASE=severe
-export MODELNAME=namnest
-export modsys=nam
-export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${vhr}}
+export VERIF_CASE=radar
+export MODELNAME=cam
+export job=${PBS_JOBNAME:-jevs_${STEP}_cam_${VERIF_CASE}_${vhr}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
@@ -64,13 +64,13 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/JEVS_CAM_PREP
+   $HOMEevs/jobs/JEVS_PREP_CAM
 
 fi
 
 
 ######################################################################
-# Purpose: This job preprocesses NAM Nest data for use in
-#          CAM severe verification jobs
+# Purpose: This job preprocesses MRMS radar observations for use in
+#          CAM radar verification job
 ######################################################################
 

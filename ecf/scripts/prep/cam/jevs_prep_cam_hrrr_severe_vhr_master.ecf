@@ -1,4 +1,4 @@
-#PBS -N evs_cam_hrrr_severe_prep_vhr_%VHR%
+#PBS -N evs_prep_cam_hrrr_severe_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -56,7 +56,7 @@ export modsys=hrrr
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_CAM_PREP
+$HOMEevs/jobs/JEVS_PREP_CAM
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
