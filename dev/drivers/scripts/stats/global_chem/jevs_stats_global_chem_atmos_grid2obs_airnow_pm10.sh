@@ -67,6 +67,6 @@ else
     ${HOMEevs}/jobs/JEVS_STATS_GLOBAL_CHEM
 fi
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics using AirNOW PM2.5
+## Purpose: This job will generate the grid2obs statistics using AirNOW PM10
 ##          for the Global Chemistry model.
 #######################################################################

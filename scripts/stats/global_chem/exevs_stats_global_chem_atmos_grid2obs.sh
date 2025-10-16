@@ -13,6 +13,7 @@
 ###                               pre-processed forecast output
 ###   06/04/2025   Ho-Chun Huang  mv from global_ens to global_chem
 ###   10/07/2025   Ho-Chun Huang  Revise code for GCAFSv1 naming and data structure
+###   10/16/2025   Ho-Chun Huang  Add PM10 stats for GCAFSv1
 ###
 ########################################################################
 set -x
@@ -38,57 +39,69 @@ export METPLUS_PATH
 grid2obs_list="${DATA_TYPE}"
 
 export init_cyc="00 12"
+let fcst_hr_inc=1
 
 for ObsType in ${grid2obs_list}; do
     export ObsType
+    export ObsSrc=$( echo ${ObsType} | awk -F"_" '{print $1}' )  # config variable
+    export ObsVar=$( echo ${ObsType} | awk -F"_" '{print $2}' )
+    export OBSTYPE=$( echo ${ObsType} | tr a-z A-Z )             # config variable
     case ${ObsType} in
+        aeronet_aod) export OBS_STANLYS_TYPE="${OBSTYPE}";;     # config variable
         airnow_pm25) if [ "${airnow_hourly_type}" == "aqobs" ]; then
-                   export HOURLY_INPUT_TYPE=hourly_aqobs
+                   export HOURLY_INPUT_TYPE="hourly_aqobs"
+                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQOBS" # config variable
                  else
-                   export HOURLY_INPUT_TYPE=hourly_data
+                   export HOURLY_INPUT_TYPE="hourly_data"
+                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQDATA"  # config variable
                  fi
         airnow_pm10) if [ "${airnow_hourly_type}" == "aqobs" ]; then
-                   export HOURLY_INPUT_TYPE=hourly_aqobs
+                   export HOURLY_INPUT_TYPE="hourly_aqobs"
+                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQOBS" # config variable
                  else
-                   export HOURLY_INPUT_TYPE=hourly_data
+                   export HOURLY_INPUT_TYPE="hourly_data"
+                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQDATA"  # config variable
                  fi
-        *)       export HOURLY_INPUT_TYPE="hourly_aod";;     # config variable
+        *)       echo "ObsType=${ObsType} is not defined, set to default aeronet"
+                 export ObsType="aeronet_aod"
+                 export ObsSrc=$( echo ${ObsType} | awk -F"_" '{print $1}' )  # config variable
+                 export ObsVar=$( echo ${ObsType} | awk -F"_" '{print $2}' )
+                 export OBSTYPE=$( echo ${ObsType} | tr a-z A-Z )
+                 export OBS_STANLYS_TYPE="${OBSTYPE}";;
     esac
 
     export RUNTIME_STATS=${DATA}/point_stat/${MODELNAME}_${ObsType}  # config variable
     export OutputId=${MODELNAME}_${ObsType}                       # config variable
     export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}            # config variable
-    export OBSTYPE=`echo ${ObsType} | tr a-z A-Z`    # config variable
     point_stat_conf_file="${CONFIGevs}/PointStat_fcst${CMODEL}_obs${OBSTYPE}.conf"
     stat_analysis_conf_file="${CONFIGevs}/Statanalysis_fcst${CMODEL}_obs${OBSTYPE}.conf"
 
-    if [ "${ObsType}" == "aeronet_aod" ]; then
-        fcstmax=120
-        check_file=${EVSINprep}/${RUN}.${VDATE}/obs/aeronet_All_${VDATE}_lev15.nc
+    if [ "${ObsSrc}" == "aeronet" ]; then
+        check_file=${EVSINprep}/${RUN}.${VDATE}/obs/${ObsSrc}_All_${VDATE}_lev15.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "PREP_OUTPUT_MISSING: Pre-processed ${OBSTYPE} Level 1.5 input ${check_file} is missing. The verification on ${VDATE} will be skipped"
+          echo "PREP_OUTPUT_MISSING: Pre-processed ${ObsSrc} Level 1.5 input ${check_file} is missing. The verification on ${VDATE} will be skipped"
         fi
-        echo "DEBUG: index of daily aeronet obs found = ${num_obs_found}"
-    elif [ "${ObsType}" == "airnow_pm25" ] || [ "${ObsType}" == "airnow_pm10" ]; then
-        fcstmax=120
+        echo "DEBUG: index of daily ${ObsSrc} obs found = ${num_obs_found}"
+    elif [ "${ObsSrc}" == "airnow" ]; then
 
         cdate=${VDATE}${vhr}
         vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
         vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
-        check_file=${EVSINprep}/${RUN}.${vld_date}/obs/${ObsType}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+        check_file=${EVSINprep}/${RUN}.${vld_date}/obs/${ObsSrc}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
         else
-          echo "PREP_OUTPUT_MISSING: Pre-processed ${OBSTYPE} hourly input ${check_file} is missing. The verification at ${vhr}Z will be skipped"
+          echo "PREP_OUTPUT_MISSING: Pre-processed ${ObsSrc} hourly input ${check_file} is missing. The verification at ${vhr}Z will be skipped"
         fi
-        echo "DEBUG: index of hourly AirNOW obs found = ${num_obs_found}"
+        echo "DEBUG: index of hourly ${ObsSrc} obs found = ${num_obs_found}"
     fi
 
+    fcstmax=120
     for mdl_cyc in ${init_cyc}; do
       export mdl_cyc    ## variable used in *.conf
 
@@ -114,7 +127,7 @@ for ObsType in ${grid2obs_list}; do
             echo "PREP_OUTPUT_MISSING: Pre-processed Global-Chemical output ${fcst_file} is missing. The missing Global-Chemical forecast file will be skipped"
           fi 
         fi 
-        let "ihr=ihr+3"
+        ((ihr+=${fcst_hr_inc}))
       done
       if [ -s ${recorded_temp_list} ]; then
         export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
@@ -132,19 +145,21 @@ for ObsType in ${grid2obs_list}; do
         export err=$?; err_chk
       else
         if [ ${num_obs_found} -eq 0 ]; then
-            echo "DEBUG: There is no pre-processed ${OBSTYPE} OBS, the metplus stats process will be skipped"
+            echo "DEBUG: There is no pre-processed ${ObsSrc} OBS, the metplus stats process will be skipped"
         fi
         if [ ${num_fcst_in_metplus} -eq 0 ]; then
-            echo "DEBUG: There is no pre-processed ${ObsType} ${CMODEL} ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+            echo "DEBUG: There is no pre-processed ${ObsVar} ${CMODEL} ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
         fi
       fi
-    done   ## hour loop
+    done   ## cycle loop
     if [ "${SENDCOM}" == "YES" ]; then
       if [ -d ${RUNTIME_STATS}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${RUNTIME_STATS}/${VDATE}.stat -name "*${OutputId}*" | wc -l)
         if [ ${stat_file_count} -ne 0 ]; then
           mkdir -p ${COMOUTsmall}
           cp -v ${RUNTIME_STATS}/${VDATE}.stat/*${OutputId}* ${COMOUTsmall}
+        else
+          echo "DEBUG: NO stats file *${OutputId}* found in ${RUNTIME_STATS}/${VDATE}.stat"
         fi
       fi
     fi
@@ -165,5 +180,6 @@ for ObsType in ${grid2obs_list}; do
       fi
     fi
 
-done
+done    ## loop over ObsType
+
 exit
