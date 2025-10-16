@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #################################################################################
-# Name of Script: exevs_analyses__grid2obs_plots.sh
+# Name of Script: exevs_plots_analyses_grid2obs.sh
 # Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
 # Purpose of Script: This script runs plotting codes to generate plots
 #                   of analysis vs first guess for all three analyses 

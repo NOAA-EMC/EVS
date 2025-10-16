@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_analyses_grid2obs_plots_last31days
+#PBS -N jevs_plots_analyses_grid2obs_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -46,7 +46,7 @@ export mod_ver=${rtma_ver}
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}_last31days}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}_last31days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 
@@ -59,7 +59,7 @@ echo $vhr
 export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_ANALYSES_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_ANALYSES
 
 ######################################################################
 ## Purpose: This job will generate the grid2obs plots for the 
