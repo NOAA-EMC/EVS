@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_analyses_rtma_precip_stats
+#PBS -N jevs_stats_analyses_rtma_precip
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -44,7 +44,7 @@ export VERIF_CASE=precip
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
@@ -60,7 +60,7 @@ export MODELNAME=rtma
 export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_ANALYSES_STATS
+$HOMEevs/jobs/JEVS_STATS_ANALYSES
 
 ######################################################################
 ## Purpose: This job will generate the precip statistics for the RTMA
