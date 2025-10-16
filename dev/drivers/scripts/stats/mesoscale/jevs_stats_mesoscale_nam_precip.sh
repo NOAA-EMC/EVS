@@ -1,4 +1,4 @@
-#PBS -N jevs_mesoscale_rap_precip_stats_00
+#PBS -N jevs_stats_mesoscale_nam_precip_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -19,7 +19,7 @@ export KEEPDATA=NO
 export SENDDBN=NO
 export SENDDBN_NTC=
 export SENDMAIL=YES
-export job=${PBS_JOBNAME:-jevs_rap_precip_stats}
+export job=${PBS_JOBNAME:-jevs_stats_mesoscale_nam_precip}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)  
 export envir="prod"
@@ -32,7 +32,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 export STEP="stats"
 export COMPONENT="mesoscale"
 export VERIF_CASE="precip"
-export MODELNAME="rap" 
+export MODELNAME="nam" 
 export machine=WCOSS2
 export USE_CFP=YES
 export nproc=128  
@@ -53,5 +53,5 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
 # Job Settings and Run
-${HOMEevs}/jobs/JEVS_MESOSCALE_STATS
+${HOMEevs}/jobs/JEVS_STATS_MESOSCALE
 

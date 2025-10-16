@@ -1,13 +1,13 @@
-#PBS -N jevs_mesoscale_sref_grid2obs_stats
-#PBS -j oe 
+#PBS -N jevs_stats_mesoscale_sref_precip
+#PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:35:00
-#PBS -l place=vscatter,select=1:ncpus=15:mem=100GB
+#PBS -l walltime=01:10:00
+#PBS -l place=vscatter,select=1:ncpus=28:mem=30GB
 #PBS -l debug=true
 
-set -x 
+set -x
 export OMP_NUM_THREADS=1
 
 export NET=evs
@@ -18,7 +18,7 @@ export envir=prod
 export STEP=stats
 export COMPONENT=mesoscale
 export RUN=atmos
-export VERIF_CASE=grid2obs
+export VERIF_CASE=precip
 export MODELNAME=sref
 
 module reset
@@ -33,9 +33,8 @@ export SENDCOM=YES
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
-
 
 export MAILTO='andrew.benjamin@noaa.gov,binbin.zhou@noaa.gov'
 
@@ -44,6 +43,6 @@ if [ -z "$MAILTO" ]; then
    echo "MAILTO variable is not defined. Exiting without continuing."
 
 else
-  ${HOMEevs}/jobs/JEVS_MESOSCALE_STATS
+ ${HOMEevs}/jobs/JEVS_STATS_MESOSCALE
 fi
 
