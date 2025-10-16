@@ -2,11 +2,11 @@
 
 # =============================================================================
 #
-# NAME: exevs_analyses_precip_prep.sh
+# NAME: exevs_prep_analyses_precip.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Perry Shafran, perry.shafran@noaa.gov
 # PURPOSE: Handle all components of an EVS CCPA Precipitation - Prep job
-# DEPENDENCIES: $HOMEevs/jobs/JEVS_ANALYSES_PREP 
+# DEPENDENCIES: $HOMEevs/jobs/JEVS_PREP_ANALYSES 
 #
 # =============================================================================
 
