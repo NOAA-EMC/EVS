@@ -2,20 +2,21 @@
 
 # =============================================================================
 #
-# NAME: exevs_hrrr_precip_prep.sh
+# NAME: exevs_prep_hireswarw_precip.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS HRRR Precipitation - Prep job
-# DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_PREP 
+# PURPOSE: Handle all components of an EVS HiRes Window ARW Precipitation - 
+#          Prep job
+# DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_PREP
 #
 # =============================================================================
 
 set -x
 
-# Loop through HRRR Precipitation configs
+# Loop through HiRes Window ARW Precipitation configs
 export machine=${machine:-"WCOSS2"}
 export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 export njob=1
-for NEST in "conus" "ak"; do
+for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
     if [ "${NEST}" == "conus" ]; then
         OBS_ACCs="01"
@@ -54,7 +55,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run all HRRR precip/prep jobs
+# Run all Hires Window ARW precip/prep jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/job* |wc -l)
 nc=1
@@ -92,7 +93,7 @@ for CHILD_DIR in ${DATA}/${VERIF_CASE}/data/workdirs/*; do
 done
 shopt -u nullglob
 
-for NEST in "conus" "ak"; do
+for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
     source "$config"
     # Copy files to desired location

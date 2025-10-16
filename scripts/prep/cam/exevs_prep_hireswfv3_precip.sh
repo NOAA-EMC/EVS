@@ -2,17 +2,17 @@
 
 # =============================================================================
 #
-# NAME: exevs_hireswarw_precip_prep.sh
+# NAME: exevs_prep_hireswfv3_precip.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS HiRes Window ARW Precipitation - 
+# PURPOSE: Handle all components of an EVS HiRes Window FV3 Precipitation - 
 #          Prep job
-# DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_PREP
+# DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_PREP 
 #
 # =============================================================================
 
 set -x
 
-# Loop through HiRes Window ARW Precipitation configs
+# Loop through HiRes Window FV3 Precipitation configs
 export machine=${machine:-"WCOSS2"}
 export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 export njob=1
@@ -55,7 +55,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run all Hires Window ARW precip/prep jobs
+# Run all Hires Window FV3 precip/prep jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/job* |wc -l)
 nc=1

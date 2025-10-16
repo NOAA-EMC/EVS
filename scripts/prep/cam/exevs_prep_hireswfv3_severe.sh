@@ -1,8 +1,8 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_hrrr_severe_prep.sh
+# Name of Script: exevs_prep_hireswfv3_severe.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
-# Purpose of Script: This script preprocesses HRRR UH data for 
+# Purpose of Script: This script preprocesses HiResW FV3 UH data for 
 #                    CAM severe verification.
 ###############################################################################
 
@@ -30,21 +30,18 @@ export GAUSS_RAD=120
 # Set some model-specific environment variables 
 ############################################################
 
-export MODEL_INPUT_DIR=${COMINhrrr}
-export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/conus/${modsys}.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2
+export MODEL_INPUT_DIR=${COMINhiresw}
+export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.conus.grib2
 
-export MXUPHL25_THRESH1=75.0
+export MXUPHL25_THRESH1=160.0
 
 
 if [ $vhr -eq 00 ];then
-   nloop=1
+   nloop=2
    fhr_beg1=12
    fhr_end1=36
-
-elif [ $vhr -eq 06 ]; then
-   nloop=1
-   fhr_beg1=6
-   fhr_end1=30
+   fhr_beg2=36
+   fhr_end2=60
 
 elif [ $vhr -eq 12 ]; then
    nloop=2
@@ -52,11 +49,6 @@ elif [ $vhr -eq 12 ]; then
    fhr_end1=24
    fhr_beg2=24
    fhr_end2=48
-
-elif [ $vhr -eq 18 ]; then
-   nloop=1
-   fhr_beg1=18
-   fhr_end1=42
 
 fi
 
@@ -96,7 +88,7 @@ i=1
    # Search for required forecast files
    while [ $i -le $min_file_req ]; do
 
-      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${INITDATE}/conus/${modsys}.t${vhr}z.wrfprsf$(printf "%02d" $fhr).grib2
+      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${INITDATE}/${modsys}.t${vhr}z.fv3_5km.f$(printf "%02d" $fhr).conus.grib2
 
       if [ -s $fcst_file ]; then
          echo "File number $i found"

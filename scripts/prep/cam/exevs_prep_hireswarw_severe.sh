@@ -1,8 +1,8 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_hireswarwmem2_severe_prep.sh
+# Name of Script: exevs_prep_hireswarw_severe.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
-# Purpose of Script: This script preprocesses HiResW ARW2 UH data for 
+# Purpose of Script: This script preprocesses HiResW ARW UH data for 
 #                    CAM severe verification.
 ###############################################################################
 
@@ -31,7 +31,7 @@ export GAUSS_RAD=120
 ############################################################
 
 export MODEL_INPUT_DIR=${COMINhiresw}
-export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.conusmem2.grib2
+export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.conus.grib2
 
 export MXUPHL25_THRESH1=75.0
 
@@ -86,7 +86,7 @@ i=1
    # Search for required forecast files
    while [ $i -le $min_file_req ]; do
 
-      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${INITDATE}/${modsys}.t${vhr}z.arw_5km.f$(printf "%02d" $fhr).conusmem2.grib2
+      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${INITDATE}/${modsys}.t${vhr}z.arw_5km.f$(printf "%02d" $fhr).conus.grib2
 
       if [ -s $fcst_file ]; then
          echo "File number $i found"

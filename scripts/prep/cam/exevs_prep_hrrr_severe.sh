@@ -1,8 +1,8 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_namnest_severe_prep.sh
+# Name of Script: exevs_prep_hrrr_severe.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
-# Purpose of Script: This script preprocesses NAM Nest UH data for 
+# Purpose of Script: This script preprocesses HRRR UH data for 
 #                    CAM severe verification.
 ###############################################################################
 
@@ -30,26 +30,21 @@ export GAUSS_RAD=120
 # Set some model-specific environment variables 
 ############################################################
 
-export MODEL_INPUT_DIR=${COMINnam}
-export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2
+export MODEL_INPUT_DIR=${COMINhrrr}
+export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/conus/${modsys}.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2
 
-
-export MXUPHL25_THRESH1=100.0
+export MXUPHL25_THRESH1=75.0
 
 
 if [ $vhr -eq 00 ];then
-   nloop=2
+   nloop=1
    fhr_beg1=12
    fhr_end1=36
-   fhr_beg2=36
-   fhr_end2=60
 
 elif [ $vhr -eq 06 ]; then
-   nloop=2
+   nloop=1
    fhr_beg1=6
    fhr_end1=30
-   fhr_beg2=30
-   fhr_end2=54
 
 elif [ $vhr -eq 12 ]; then
    nloop=2
@@ -62,9 +57,6 @@ elif [ $vhr -eq 18 ]; then
    nloop=1
    fhr_beg1=18
    fhr_end1=42
-
-else
-   err_exit "Current vhr is unsupported"
 
 fi
 
@@ -104,7 +96,7 @@ i=1
    # Search for required forecast files
    while [ $i -le $min_file_req ]; do
 
-      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${INITDATE}/${modsys}.t${vhr}z.conusnest.hiresf$(printf "%02d" $fhr).tm00.grib2
+      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${INITDATE}/conus/${modsys}.t${vhr}z.wrfprsf$(printf "%02d" $fhr).grib2
 
       if [ -s $fcst_file ]; then
          echo "File number $i found"

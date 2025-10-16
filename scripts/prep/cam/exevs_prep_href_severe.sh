@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_href_severe_prep.sh
+# Name of Script: exevs_prep_href_severe.sh
 # Contact(s):     Binbin Zhou (binbin.zhou@noaa.gov)
 # Purpose of Script: This script preprocesses HREF SSPFs for 
 #                    CAM severe verification.

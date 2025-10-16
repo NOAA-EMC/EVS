@@ -2,7 +2,7 @@
 
 # =============================================================================
 #
-# NAME: exevs_hireswarwmem2_precip_prep.sh
+# NAME: exevs_prep_hireswarwmem2_precip.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS HiRes Window ARW Member 2 
 #          Precipitation - Prep job
