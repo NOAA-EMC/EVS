@@ -105,7 +105,7 @@ for NEST in "conus" "ak" "pr" "hi"; do
             if [ ! -z "$(ls -A $OBS_DIR_PATH 2>/dev/null)" ]; then
                 for SUBDIR in "$OBS_DIR_PATH"/*; do
                     if [ -d "$SUBDIR" ] && [ -n "$(ls -A "$SUBDIR" 2>/dev/null)" ]; then
-                       cp -vr "$SUBDIR" "$COMOUT/$OBS_DIR/."
+                       cp -vur "$SUBDIR" "$COMOUT/$OBS_DIR/."
                     fi
                 done
             fi

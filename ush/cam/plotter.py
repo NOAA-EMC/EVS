@@ -1,17 +1,27 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: plotter.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Plotting specifications for CAM plotting scripts
-#
-# =============================================================================
+"""
+plotter.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Plotting specifications and helper class for the cam component.
 
+Environment Variables (Inputs):
+    None (this module is imported and used by other scripts).
+
+Outputs:
+    - Provides the Plotter class and related plotting utilities for use by
+      other scripts in the cam component.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared plotting specifications and helper functions.
+"""
+
+# Third-party imports
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Rectangle, PathPatch
 from matplotlib.path import Path
-import numpy as np
 
 class Plotter():
     def __init__(self, font_weight='bold',  axis_title_weight='bold',  

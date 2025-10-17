@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_stats_grid2obs_var_defs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Configurations for each variable that will be processed by MET
-#
-# =============================================================================
+"""
+cam_stats_grid2obs_var_defs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Contains configuration dictionaries for each variable that will be processed
+by MET in the cam component.
+
+Environment Variables (Inputs):
+    None directly; this module is imported by job script generators.
+
+Outputs:
+    - Provides variable configuration dictionaries for use by other scripts.
+
+This module is intended to be imported as part of the cam component to supply
+variable definitions for Grid2Obs verification.
+"""
 
 generate_stats_jobs_dict = {
     'HGT': {

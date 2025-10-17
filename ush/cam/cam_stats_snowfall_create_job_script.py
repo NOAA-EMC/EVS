@@ -1,19 +1,31 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_stats_snowfall_create_job_script.sh
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Snowfall - Statistics job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_snowfall_stats.sh
-#
-# =============================================================================
+"""
+cam_stats_snowfall_create_job_script.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates job scripts for Snowfall verification in the cam component.
 
-import sys
-import os
+Environment Variables (Inputs):
+    vhr, job_type, PYTHONPATH, COMPONENT, NET, STEP, RUN, VERIF_CASE,
+    MODELNAME, METPLUS_PATH, MET_ROOT, DATA, RESTART_DIR, SENDCOM, VDATE,
+    MET_PLUS_CONF, MET_CONFIG_OVERRIDES, PARMevs, COMPLETED_JOBS_DIR,
+    and many others required for job script creation and configuration.
+
+Outputs:
+    - Generates job scripts for running Snowfall verification.
+    - Prints errors and exits if required environment variables are missing or
+      invalid.
+
+This script is intended to be run as part of the cam component to automate
+creation of job scripts for Snowfall verification.
+"""
+
 import glob
+import os
 import re
+import sys
 from datetime import datetime
-import numpy as np
+
 import cam_util as cutil
 from cam_stats_snowfall_var_defs import generate_stats_jobs_dict as var_defs
 
