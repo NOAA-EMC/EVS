@@ -88,7 +88,7 @@ wmo_svs_report_file_format = os.path.join(
 )
 
 # WMO Verifcations
-wmo_verif_list = ['grid2grid_upperair', 'grid2obs_upperair', 'grid2obs_sfc']
+wmo_verif_list = ['grid2grid_upperair']
 wmo_init_hour_list = ['00', '12']
 wmo_verif_settings_dict = {
     'grid2grid_upperair': {'valid_hour_list': ['00', '12'],
