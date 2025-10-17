@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqm_grid2grid_stats.sh
+## Script name:         exevs_stats_aqm_grid2grid.sh
 ## Script description:  Perform MetPlus GridStat of Air Quality Model.
 ##
 ##   Change Logs:
@@ -33,7 +33,7 @@ export dirname=${MODELNAME}
 export gridspec=793
 export fcstmax=72
 #
-## export MASK_DIR is declared in the ~/EVS/jobs/JEVS_AQM_STATS 
+## export MASK_DIR is declared in the ~/EVS/jobs/JEVS_STATS_AQM
 #
 export CMODEL=$(echo ${MODELNAME} | tr a-z A-Z)
 echo ${CMODEL}

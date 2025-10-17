@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqm_grid2obs_stats.sh
+## Script name:         exevs_stats_aqm_grid2obs.sh
 ## Script description:  Perform MetPlus PointStat of Air Quality Model.
 ## Original Author   :  Perry Shafran
 ##
@@ -50,7 +50,7 @@ export dirname=aqm
 export gridspec=793
 export fcstmax=72
 #
-## export MASK_DIR is declared in the ~/EVS/jobs/JEVS_AQM_STATS 
+## export MASK_DIR is declared in the ~/EVS/jobs/JEVS_STATS_AQM
 #
 export model1=`echo ${MODELNAME} | tr a-z A-Z`
 echo ${model1}

@@ -1,23 +1,24 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_aqm_grid2obs_plots.sh
+# Name of Script: exevs_plots_aqm_grid2grid.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
 # Original Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
 # Original Author: Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script is run for the aqm plots step for
-#                    the grid-to-obs verification. It uses EMC-developed
+#                    the grid-to-grid verification. It uses EMC-developed
 #                    python scripts to do the plotting.
 #
 #   Change Logs:
 #   11/21/2024   Ho-Chun Huang  Use GLOBAL_DET CFP approach for regular plots
+#   08/05/2025   Ho-Chun Huang  Adjust for AQM grid2grid plots
 #   09/03/2025   Ho-Chun Huang  move cpreq to cp -v to comply with EE2
 ###############################################################################
 
 set -x
 
 # set VERIF_CASE_STEP_abbrev prior to source ${config}
-export VERIF_CASE_STEP_abbrev="g2op"
+export VERIF_CASE_STEP_abbrev="g2gp"
 echo "RUN MODE:${evs_run_mode}"
 
 ## Need temporary staging area for renaming and/or updating model
@@ -40,7 +41,7 @@ export modelid=${MODELNAME}${aqm_ver_id}
 # Bring in all stats files, and change into display name
 # for different models or types of solution defined in ${config}
 #
-IFS=' ' read -ra obstype_list <<< "${g2op_type_list}"
+IFS=' ' read -ra obstype_list <<< "${g2gp_type_list}"
 let num_obstype=${#obstype_list[@]}
 if [ ${num_obstype} -lt 1 ]; then
     echo "ERROR :: number of variable to be plotted is zero"
@@ -59,28 +60,20 @@ while [ ${imdl} -lt ${num_mdl} ]; do
     biasc=$( echo ${mdl_list[${imdl}]} | awk -F"_" '{print $2}' )
     idir=${mdl_idir_list[${imdl}]}
     for ivar in "${obstype_list[@]}"; do
-        #
-        ## the time stamp of aqm daily variable is valided at 11Z (ozmax8)
-        ## and 04z (pamve) of next day from initial start date.  To get
-	## the valid-time at 04Z and 11Z of date=VDATE_START for forecast
-	## day1,day2, and day3, the stat of previous days also need
-        ## to be copied
-        #
-        if [ "${ivar}" == "ozmax8" ]  || [ "${ivar}" == "pmave" ]; then  ## get 3 additional day's stat
-            cdate=${VDATE_START}"00"
-            NOW=$( ${NDATE} -24 ${cdate} | cut -c1-8 )
-	    echo "variable = ${ivar} old_start_date = ${VDATE_START} new_start_date = ${NOW}"
+        if [ "${ivar}" == "abiaod" ]; then
+	    fileid="abi_joinaodc"
         else
-            NOW=${VDATE_START}
+	    fileid="abi_joinaodc"    ## default
 	fi
+        NOW=${VDATE_START}
         while [ ${NOW} -le ${VDATE_END} ]; do
-            cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ivar}.v${NOW}.stat
+            cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${fileid}.v${NOW}.stat
             sedfile=${modelid}_${biasc}_${ivar}.v${NOW}.stat
             if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
                 cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
                 sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
             else
-                echo "DEBUG ${MODELNAME} ${STEP} :: Can not find ${idir}/${MODELNAME}.${NOW}/${cpfile}"
+                echo "DEBUG ${MODELNAME} ${STEP} :: Can not find ${idir}.${NOW}/${cpfile}"
             fi
             cdate=${NOW}"00"
             NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
@@ -119,7 +112,7 @@ export err=$?; err_chk
 declare -a proc_list=( condense_stats filter_stats make_plots tar_images )
 for group in "${proc_list[@]}"; do
     export JOB_GROUP=${group}
-    echo "Creating and running jobs for grid-to-obs plots: ${JOB_GROUP}"
+    echo "Creating and running jobs for giid-to-grid plots: ${JOB_GROUP}"
     python ${USHevs}/${COMPONENT}/${COMPONENT}_${STEP}_${VERIF_CASE}_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/${group}/*
@@ -173,7 +166,7 @@ done
 if [ "${SENDCOM}" == "YES" ]; then
     # Make and copy tar file
     cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
-    for VERIF_TYPE in ${g2op_type_list}; do
+    for VERIF_TYPE in ${g2gp_type_list}; do
         tar_file_combine=${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${fig_name_label}.v${end_date}.tar
         large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${tar_file_combine}
         tar_file_count=$(find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files ${VERIF_CASE}_${VERIF_TYPE}*.tar 2>/dev/null | wc -l)

@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_aqm_headline_plots.sh
+# Name of Script: exevs_plots_aqm_headline.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
 # Purpose of Script: This script is run for the aqm plots step for

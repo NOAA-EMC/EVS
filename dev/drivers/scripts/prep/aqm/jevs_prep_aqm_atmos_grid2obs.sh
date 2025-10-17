@@ -1,10 +1,10 @@
-#PBS -N jevs_aqm_atmos_grid2grid_stats
+#PBS -N jevs_prep_aqm_atmos_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=00:10:00
-#PBS -l place=shared,select=1:ncpus=1:mem=10GB
+#PBS -l place=shared,select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
 set -x
@@ -14,45 +14,44 @@ cd $PBS_O_WORKDIR
 export model=evs
 export COMPONENT=aqm
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+
 
 ############################################################
 # Load modules
 ############################################################
 
-source ${HOMEevs}/versions/run.ver
+source $HOMEevs/versions/run.ver
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source ${HOMEevs}/dev/modulefiles/aqm/aqm_stats.sh
+source $HOMEevs/dev/modulefiles/aqm/aqm_prep.sh
 
-export vhr
+export vhr=00
 echo $vhr
-export envir=prod
 export NET=evs
-export STEP=stats
+export STEP=prep
 export RUN=atmos
-export VERIF_CASE=grid2grid
+export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
 export mod_ver=${aqm_ver}
+export envir=prod
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
-
-export KEEPDATA=NO
-export SENDMAIL=YES
-export SENDDBN=NO
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
-
-########################################################################
-
+#
+export KEEPDATA=NO
+export SENDMAIL=YES
+export SENDDBN=NO
+ 
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
@@ -62,11 +61,8 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   ${HOMEevs}/jobs/JEVS_AQM_STATS
+   $HOMEevs/jobs/JEVS_PREP_AQM
 
 fi
 
 exit
-
-
-

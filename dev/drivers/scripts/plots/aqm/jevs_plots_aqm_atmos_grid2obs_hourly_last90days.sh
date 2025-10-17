@@ -1,4 +1,4 @@
-#PBS -N jevs_aqm_atmos_grid2obs_hourly_plots_last31days
+#PBS -N jevs_plots_plots_aqm_atmos_grid2obs_hourly_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -43,7 +43,7 @@ export modsys=aqm
 export mod_ver=${aqm_ver}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${RUN}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
@@ -59,7 +59,7 @@ export USE_CFP=YES
 export nproc=128    ## nproc must match with the ncpus allocation above
 
 export DATA_TYPE=hourly
-export NDAYS=31
+export NDAYS=90
 
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
 
@@ -70,7 +70,7 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   ${HOMEevs}/jobs/JEVS_AQM_PLOTS
+   ${HOMEevs}/jobs/JEVS_PLOTS_AQM
 
 fi
 

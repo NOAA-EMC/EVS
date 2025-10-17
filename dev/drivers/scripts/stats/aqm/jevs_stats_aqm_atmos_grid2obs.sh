@@ -1,10 +1,10 @@
-#PBS -N jevs_aqm_atmos_grid2obs_daily_plots_last31days
+#PBS -N jevs_stats_aqm_atmos_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=275GB
+#PBS -l walltime=00:10:00
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -12,6 +12,7 @@ set -x
 cd $PBS_O_WORKDIR
 
 export model=evs
+export COMPONENT=aqm
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
@@ -19,23 +20,20 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 # Load modules
 ############################################################
 
-source ${HOMEevs}/versions/run.ver
+source $HOMEevs/versions/run.ver
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source ${HOMEevs}/dev/modulefiles/aqm/aqm_plots.sh
+source $HOMEevs/dev/modulefiles/aqm/aqm_stats.sh
 
-############################################################
-## For dev testing
-#############################################################
-export vhr=00
+export vhr
+echo $vhr
 export envir=prod
 export NET=evs
-export STEP=plots
-export COMPONENT=aqm
+export STEP=stats
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=aqm
@@ -43,7 +41,7 @@ export modsys=aqm
 export mod_ver=${aqm_ver}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
@@ -51,15 +49,9 @@ export SENDMAIL=YES
 export SENDDBN=NO
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
-today=$(cut -c7-14 ${COMROOT}/date/t${vhr}z)
-export VDATE_END=$(finddate.sh ${today} d-4)
-export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 
-export USE_CFP=YES
-export nproc=128    ## nproc must match with the ncpus allocation above
-
-export DATA_TYPE=daily
-export NDAYS=31
+########################################################################
 
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
 
@@ -70,9 +62,11 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   ${HOMEevs}/jobs/JEVS_AQM_PLOTS
+   $HOMEevs/jobs/JEVS_STATS_AQM
 
 fi
 
 exit
+
+
 

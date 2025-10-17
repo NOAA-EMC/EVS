@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqm_aqm_grid2grid_prep.sh
+## Script name:         exevs_prep_aqm_aqm_grid2grid.sh
 ## Script description:  Pre-processed input data for the MetPlus GridStat 
 ##                      of Air Quality Model.
 ## Original Author   :  Ho-Chun Huang
