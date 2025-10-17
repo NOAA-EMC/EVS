@@ -1,19 +1,29 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_stats_precip_create_job_script.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Precipitation - Statistics job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_precip_stats.sh
-#
-# =============================================================================
+"""
+cam_stats_precip_create_job_script.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates job scripts for Precip verification in the cam component.
 
-import sys
-import os
+Environment Variables (Inputs):
+    Various variables including vhr, job_type, PYTHONPATH, COMPONENT, NET,
+    STEP, RUN, VERIF_CASE, MODELNAME, METPLUS_PATH, MET_ROOT, DATA, and many
+    others required for job script creation and configuration.
+
+Outputs:
+    - Generates job scripts for running Precip verification.
+    - Prints errors and exits if required environment variables are missing or
+      invalid.
+
+This script is intended to be run as part of the cam component to automate
+creation of job scripts for Precip verification.
+"""
+
 import glob
+import os
 import re
 from datetime import datetime
-import numpy as np
+
 import cam_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")

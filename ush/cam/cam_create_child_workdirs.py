@@ -1,13 +1,32 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_create_child_workdirs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Write output directories used by child processors (MPMD operations)
-#
-# =============================================================================
+"""
+cam_create_child_workdirs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates and checks output directories used by child processors (MPMD
+operations) in the cam component.
+
+Environment Variables (Inputs):
+    DATA: str
+        Top-level data directory.
+    VERIF_CASE: str
+        Verification case name.
+    STEP: str
+        Workflow step (e.g., 'prep', 'stats', 'plots').
+    job_type: str (if STEP == 'stats')
+        Type of job for stats step.
+
+Outputs:
+    - Raises OSError if required output or working directories do not exist.
+    - Sets up directory paths for downstream processing in the cam component.
+
+This script is intended to be run as part of the cam component to ensure all
+required output and working directories are present before launching child
+processes.
+"""
 
 import os
+
 import cam_util as cutil
 
 DATA = os.environ['DATA']

@@ -1,18 +1,28 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_stats_grid2obs_create_poe_job_scripts.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Grid2Obs - Statistics POE job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_grid2obs_stats.sh
-#
-# =============================================================================
+"""
+cam_stats_grid2obs_create_poe_job_scripts.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates POE (parallel execution) job scripts for EVS CAM Grid2Obs in the cam
+component.
 
-import sys
-import os
+Environment Variables (Inputs):
+    job_type, machine, USE_CFP, nproc, STEP, VERIF_CASE, DATA, and others
+    required for job script creation and parallelization.
+
+Outputs:
+    - Generates POE job scripts for parallel statistics execution.
+    - Prints notes if no job files are found or if required environment
+      variables are missing.
+
+This script is intended to be run as part of the cam component to automate
+creation of POE job scripts for Grid2Obs verification.
+"""
+
 import glob
-from datetime import datetime
-import numpy as np
+import os
+import sys
+
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 

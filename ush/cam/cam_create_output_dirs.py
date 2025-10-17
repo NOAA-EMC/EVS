@@ -1,29 +1,40 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_create_output_dirs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Define working/ output directories and create them if they don't
-#          exist.
-# DEPENDENCIES: os.path.join([
-#                   SCRIPTSevs,COMPONENT,STEP,
-#                   "_".join(["exevs",MODELNAME,VERIF_CASE,STEP+".sh"]
-#               )]
-#
-# =============================================================================
+"""
+cam_create_output_dirs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Defines working and output directories for the cam component and creates them
+if they do not exist.
+
+Environment Variables (Inputs):
+    Various variables including STEP, VERIF_CASE, DATA, COMPONENT, MODELNAME,
+    and others required for directory structure and naming.
+
+Outputs:
+    - Creates required working and output directories if they do not exist.
+    - Prints errors and exits if critical environment variables are missing or
+      if directory creation fails.
+
+This script is intended to be run as part of the cam component to ensure all
+required directories are present before downstream processing.
+"""
 
 import os
-import re
-from datetime import datetime, timedelta as td
+from datetime import datetime
+from datetime import timedelta as td
+
 import cam_util as cutil
+
 if os.environ['STEP'] == 'plots':
     if os.environ['VERIF_CASE'] == 'grid2obs':
         from cam_plots_grid2obs_graphx_defs import graphics as graphics_g2o
     if os.environ['VERIF_CASE'] == 'headline':
         from cam_plots_headline_graphx_defs import graphics as graphics_hdl
     if os.environ['VERIF_CASE'] == 'precip':
-        from cam_plots_precip_last31days_graphx_defs import graphics as graphics_pcp31
-        from cam_plots_precip_last90days_graphx_defs import graphics as graphics_pcp90
+        from cam_plots_precip_last31days_graphx_defs import \
+            graphics as graphics_pcp31
+        from cam_plots_precip_last90days_graphx_defs import \
+            graphics as graphics_pcp90
     if os.environ['VERIF_CASE'] == 'snowfall':
         from cam_plots_snowfall_graphx_defs import graphics as graphics_sno
 

@@ -1,2 +1,0 @@
-GRIB2
-209 0 0 0 161 1 6 41 "APCP_24" "24hr Accumulated prepcip" "mm"

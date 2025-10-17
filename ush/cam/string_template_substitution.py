@@ -13,10 +13,16 @@ Condition codes: Varies
 
 """
 
+
+# Standard library imports
 import sys
 import re
 import datetime
+
+# Third-party imports
 from dateutil.relativedelta import relativedelta
+
+# Local imports
 import time_util
 
 TEMPLATE_IDENTIFIER_BEGIN = "{"

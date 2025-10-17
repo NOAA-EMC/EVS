@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_plots_headline_create_job_script.sh
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Headline - Plots job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_headline_plots.sh
-#
-# =============================================================================
+"""
+cam_plots_headline_create_job_script.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates EVS CAM Headline job scripts for the cam component, using environment
+variables and available configuration.
 
-import sys
+Environment Variables (Inputs):
+    PYTHONPATH, COMPONENT, STEP, VERIF_CASE, MODELNAME, METPLUS_PATH, MET_ROOT,
+    DATA, VDATE, VERIF_TYPE, USH_DIR, FIXevs, MET_VERSION, IMG_HEADER,
+    PRUNE_DIR, SAVE_DIR, RESTART_DIR, SENDCOM, LOG_TEMPLATE, LOG_LEVEL,
+    STAT_OUTPUT_BASE_DIR, STAT_OUTPUT_BASE_TEMPLATE, MODELS (and others as needed)
+
+Outputs:
+    - Generates job scripts for headline plotting in the appropriate job 
+    directory.
+
+This script is intended to be run as part of the cam component to automate
+the creation and management of headline plot job scripts.
+"""
+
 import os
-import glob
-import re
-from datetime import datetime
-import numpy as np
+
 import cam_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")

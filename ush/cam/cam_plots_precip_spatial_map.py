@@ -5,25 +5,30 @@ Contact(s): Marcel Caron, Mallory Row
 Abstract: This script generates a spatial map for precip
 '''
 
-import netCDF4 as netcdf
-import pyproj
-import numpy as np
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-import os
+
+# Standard library imports
+import datetime
 import glob
 import logging
-import sys
-import datetime
-import subprocess
+import os
 import shutil
+import subprocess
+import sys
+
+# Third-party imports
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
+import netCDF4 as netcdf
+import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 from cartopy import config
+
+# Local imports
 from cam_plots_specs import PlotSpecs
+
 
 class PrecipSpatialMap:
     """

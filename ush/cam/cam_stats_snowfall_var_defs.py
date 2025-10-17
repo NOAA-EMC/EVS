@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_stats_snowfall_var_defs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Configurations for each variable that will be processed by MET
-#
-# =============================================================================
+"""
+cam_stats_snowfall_var_defs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Defines variable configurations for Snowfall verification in the cam component.
+
+Environment Variables (Inputs):
+    None (this module is imported and used by other scripts).
+
+Outputs:
+    - Provides the generate_stats_jobs_dict dictionary containing variable
+      definitions and options for Snowfall verification jobs.
+
+This module is intended to be imported by job script generators in the cam
+component to supply variable definitions for Snowfall verification.
+"""
 
 generate_stats_jobs_dict = {
     'WEASD': {
