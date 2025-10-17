@@ -432,8 +432,9 @@ if JOB_GROUP == 'reformat_data':
                              job.write('export err=$?; err_chk')
 elif JOB_GROUP == 'assemble_data':
      # Do not run for grid2grid_upperair, grid2obs_upperair
-     wmo_verif_list.remove('grid2grid_upperair')
-     wmo_verif_list.remove('grid2obs_upperair')
+     for item in ['grid2grid_upperair', 'grid2obs_upperair']:
+         if item in wmo_verif_list:
+             wmo_verif_list.remove(item)
      for wmo_verif in wmo_verif_list:
          job_env_dict = gda_util.initalize_job_env_dict(wmo_verif, JOB_GROUP,
                                                         VERIF_CASE, wmo_verif)
