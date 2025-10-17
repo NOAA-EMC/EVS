@@ -1,4 +1,4 @@
-#PBS -N jevs_plots_plots_aqm_atmos_grid2obs_hourly_last90days
+#PBS -N jevs_plots_aqm_atmos_grid2obs_hourly_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
