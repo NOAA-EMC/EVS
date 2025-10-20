@@ -1,10 +1,10 @@
-#PBS -N evs_aqm_atmos_grid2grid_stats_vhr_%VHR%
+#PBS -N evs_prep_aqm_atmos_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:10:00
-#PBS -l place=shared,select=1:ncpus=1:mem=10GB
+#PBS -l place=shared,select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
 export model=evs
@@ -16,7 +16,7 @@ export model=evs
 ############################################################
 set -x
 export COMPONENT=aqm
-export STEP=stats
+export STEP=prep
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
@@ -34,17 +34,21 @@ module list
 ############################################################
 # Specify environment variables
 ############################################################
-export vhr=%VHR%
+if [ -n "%VHR:%" ]; then
+  export vhr=${vhr:-%VHR:%}
+else
+  export vhr=00
+fi
 export cycle=t${vhr}z
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=grid2grid
+export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_AQM_STATS
+$HOMEevs/jobs/JEVS_PREP_AQM
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
@@ -54,3 +58,4 @@ fi
 %include <tail.h>
 %manual
 %end
+

@@ -1,4 +1,4 @@
-#PBS -N evs_aqm_atmos_grid2obs_hourly_plots_last31days
+#PBS -N evs_plots_aqm_atmos_grid2obs_hourly_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -58,7 +58,7 @@ export NDAYS=31
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_AQM_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_AQM
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
