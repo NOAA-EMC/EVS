@@ -1,9 +1,9 @@
-#PBS -N evs_analyses_urma_precip_stats_vhr_%VHR%
+#PBS -N evs_stats_analyses_urma_grid2obs_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:10:00
+#PBS -l walltime=00:30:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
@@ -37,14 +37,14 @@ module list
 export vhr=%VHR%
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=precip
+export VERIF_CASE=grid2obs
 export MODELNAME=urma
 export modsys=urma
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_ANALYSES_STATS
+$HOMEevs/jobs/JEVS_STATS_ANALYSES
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
