@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_cam_severe_prep.sh
+# Name of Script: exevs_prep_mesoscale_grid2obs.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov),
 #                 Perry C. Shafran (perry.shafran@noaa.gov)
 # Purpose of Script: This script preprocesses SPC data 

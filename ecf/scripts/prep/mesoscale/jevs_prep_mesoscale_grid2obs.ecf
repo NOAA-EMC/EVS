@@ -1,10 +1,10 @@
-#PBS -N evs_mesoscale_rap_precip_stats_vhr_%VHR%
+#PBS -N evs_prep_mesoscale_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=500GB
+#PBS -l walltime=00:10:00
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 export model=evs
@@ -15,8 +15,8 @@ export model=evs
 # Load modules
 ############################################################
 set -x
-export COMPONENT="mesoscale"
-export STEP="stats"
+export COMPONENT=mesoscale
+export STEP=prep
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
@@ -47,19 +47,15 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=128
-export NET="evs"
-export RUN="atmos"
-export VERIF_CASE="precip"
-export MODELNAME="rap" 
-export USE_CFP=YES
-export evs_run_mode="production"
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
+export NET=evs
+export RUN=atmos
+export VERIF_CASE=grid2obs
+export MODELNAME=mesoscale
 
 ############################################################
 # Execute j-job
 ############################################################
-${HOMEevs}/jobs/JEVS_MESOSCALE_STATS
+$HOMEevs/jobs/JEVS_PREP_MESOSCALE
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
