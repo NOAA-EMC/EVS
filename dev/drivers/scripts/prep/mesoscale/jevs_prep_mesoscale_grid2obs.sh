@@ -1,4 +1,4 @@
-#PBS -N jevs_mesoscale_grid2obs_prep
+#PBS -N jevs_prep_mesoscale_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -40,7 +40,7 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export VERIF_CASE=grid2obs
 export MODELNAME=mesoscale
-export job=${PBS_JOBNAME:-jevs_mesoscale_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
@@ -63,7 +63,7 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/JEVS_MESOSCALE_PREP
+   $HOMEevs/jobs/JEVS_PREP_MESOSCALE
 
 fi
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 ###############################################################################
-# Name of Script: exevs_mesoscale_rap_grid2obs_stats.sh 
+# Name of Script: exevs_stats_mesoscale_rap_grid2obs.sh 
 # CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # Purpose of Script: This script generates grid-to-observations
 #                    verification statistics using METplus for the
