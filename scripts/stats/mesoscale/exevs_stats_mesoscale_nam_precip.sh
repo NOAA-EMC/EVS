@@ -1,9 +1,9 @@
 #!/bin/sh
 ###############################################################################
-# Name of Script: exevs_mesoscale_rap_precip_stats.sh 
+# Name of Script: exevs_stats_mesoscale_nam_precip.sh 
 # Purpose of Script: This script generates precipitation
 #                    verification statistics using METplus for the
-#                    atmospheric component of RAP models
+#                    atmospheric component of NAM models
 # Log history:
 ###############################################################################
 
@@ -25,13 +25,13 @@ mkdir -p $DATA/jobs
 mkdir -p $DATA/${MODELNAME}.${VDATE}
 mkdir -p $DATA/${RUN}.${VDATE}/$MODELNAME/$VERIF_CASE
 
-# Get RAP, MRMS, and CCPA data
+# Get NAM, MRMS, and CCPA data
 python $USHevs/mesoscale/mesoscale_precip_stats_get_data.py
 
-export err=$?; err_chk
+    export err=$?; err_chk
 
 # Send for missing files
-if ls ${DATA}/mail_** 1> /dev/null 2>&1; then
+if ls $DATA/mail_* 1> /dev/null 2>&1; then
     for FILE in $DATA/mail_*; do
         $FILE
     done
@@ -81,17 +81,16 @@ for group in $JOB_GROUP_list; do
         done
     fi
     if [ $JOB_GROUP = gather_stats ]; then
-        echo "Copy job dir output"
-        python $USHevs/mesoscale/mesoscale_copy_job_dir_output.py
-        export err=$?; err_chk
-        # Copy output files into the correct EVS COMOUT directory
-        if [ $SENDCOM = YES ]; then
-            if [ -s $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+       echo "Copy job dir output"
+       python $USHevs/mesoscale/mesoscale_copy_job_dir_output.py
+       export err=$?; err_chk
+       # Copy output files into the correct EVS COMOUT directory
+       if [ $SENDCOM = YES ]; then
+           if [ -s $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
                cp -v $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal/.
-	    fi
-        fi
+           fi
+       fi
     fi
 done
-
 
 
