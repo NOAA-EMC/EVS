@@ -54,14 +54,14 @@ for ObsType in ${grid2obs_list}; do
                  else
                    export HOURLY_INPUT_TYPE="hourly_data"
                    export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQDATA"  # config variable
-                 fi
+                 fi;;
         airnow_pm10) if [ "${airnow_hourly_type}" == "aqobs" ]; then
                    export HOURLY_INPUT_TYPE="hourly_aqobs"
                    export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQOBS" # config variable
                  else
                    export HOURLY_INPUT_TYPE="hourly_data"
                    export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQDATA"  # config variable
-                 fi
+                 fi;;
         *)       echo "ObsType=${ObsType} is not defined, set to default aeronet"
                  export ObsType="aeronet_aod"
                  export ObsSrc=$( echo ${ObsType} | awk -F"_" '{print $1}' )  # config variable
