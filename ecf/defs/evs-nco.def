@@ -31,56 +31,56 @@ suite evs_nco
               trigger :TIME >= 0400 and ./jevs_global_ens_atmos_prep == complete and ./jevs_global_ens_naefs_atmos_prep == complete
           endfamily
           family cam
-            task jevs_cam_radar_prep_vhr_00
+            task jevs_prep_cam_radar_vhr_00
               time 00:05
               edit VHR '00'
-            task jevs_cam_radar_prep_vhr_01
+            task jevs_prep_cam_radar_vhr_01
               time 01:05
               edit VHR '01'
-            task jevs_cam_radar_prep_vhr_02
+            task jevs_prep_cam_radar_vhr_02
               time 02:05
               edit VHR '02'
-            task jevs_cam_radar_prep_vhr_03
+            task jevs_prep_cam_radar_vhr_03
               time 03:05
               edit VHR '03'
-            task jevs_cam_radar_prep_vhr_04
+            task jevs_prep_cam_radar_vhr_04
               time 04:05
               edit VHR '04'
-            task jevs_cam_radar_prep_vhr_05
+            task jevs_prep_cam_radar_vhr_05
               time 05:05
               edit VHR '05'
-            task jevs_cam_namnest_precip_prep_vhr_00
+            task jevs_prep_cam_namnest_precip_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_hrrr_precip_prep_vhr_00
+            task jevs_prep_cam_hrrr_precip_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_hireswfv3_precip_prep_vhr_00
+            task jevs_prep_cam_hireswfv3_precip_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_hireswarw_precip_prep_vhr_00
+            task jevs_prep_cam_hireswarw_precip_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_hireswarwmem2_precip_prep_vhr_00
+            task jevs_prep_cam_hireswarwmem2_precip_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_hrrr_severe_prep_vhr_00
+            task jevs_prep_cam_hrrr_severe_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_namnest_severe_prep_vhr_00
+            task jevs_prep_cam_namnest_severe_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_hireswarw_severe_prep_vhr_00
+            task jevs_prep_cam_hireswarw_severe_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_hireswarwmem2_severe_prep_vhr_00
+            task jevs_prep_cam_hireswarwmem2_severe_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_hireswfv3_severe_prep_vhr_00
+            task jevs_prep_cam_hireswfv3_severe_vhr_00
               time 00:00
               edit VHR '00'
-            task jevs_cam_href_severe_prep_vhr_00
-              trigger ./jevs_cam_hireswarw_severe_prep_vhr_00 == complete and ./jevs_cam_hireswarwmem2_severe_prep_vhr_00 == complete and ./jevs_cam_hireswfv3_severe_prep_vhr_00 == complete and ./jevs_cam_hrrr_severe_prep_vhr_00 == complete and ./jevs_cam_namnest_severe_prep_vhr_00 == complete
+            task jevs_prep_cam_href_severe_vhr_00
+              trigger ./jevs_prep_cam_hireswarw_severe_vhr_00 == complete and ./jevs_prep_cam_hireswarwmem2_severe_vhr_00 == complete and ./jevs_prep_cam_hireswfv3_severe_vhr_00 == complete and ./jevs_prep_cam_hrrr_severe_vhr_00 == complete and ./jevs_prep_cam_namnest_severe_vhr_00 == complete
               edit VHR '00'
           endfamily
           family aqm
@@ -471,46 +471,46 @@ suite evs_nco
               edit VHR '07'
           endfamily
           family cam
-            task jevs_cam_radar_prep_vhr_06
+            task jevs_prep_cam_radar_vhr_06
               time 06:05
               edit VHR '06'
-            task jevs_cam_radar_prep_vhr_07
+            task jevs_prep_cam_radar_vhr_07
               time 07:05
               edit VHR '07'
-            task jevs_cam_radar_prep_vhr_08
+            task jevs_prep_cam_radar_vhr_08
               time 08:05
               edit VHR '08'
-            task jevs_cam_radar_prep_vhr_09
+            task jevs_prep_cam_radar_vhr_09
               time 09:05
               edit VHR '09'
-            task jevs_cam_radar_prep_vhr_10
+            task jevs_prep_cam_radar_vhr_10
               time 10:05
               edit VHR '10'
-            task jevs_cam_radar_prep_vhr_11
+            task jevs_prep_cam_radar_vhr_11
               time 11:05
               edit VHR '11'
-            task jevs_cam_namnest_precip_prep_vhr_06
+            task jevs_prep_cam_namnest_precip_vhr_06
               time 06:00
               edit VHR '06'
-            task jevs_cam_hrrr_precip_prep_vhr_06
+            task jevs_prep_cam_hrrr_precip_vhr_06
               time 06:00
               edit VHR '06'
-            task jevs_cam_hireswfv3_precip_prep_vhr_06
+            task jevs_prep_cam_hireswfv3_precip_vhr_06
               time 06:00
               edit VHR '06'
-            task jevs_cam_hireswarw_precip_prep_vhr_06
+            task jevs_prep_cam_hireswarw_precip_vhr_06
               time 06:00
               edit VHR '06'
-            task jevs_cam_hireswarwmem2_precip_prep_vhr_06
+            task jevs_prep_cam_hireswarwmem2_precip_vhr_06
               time 06:00
               edit VHR '06'
-            task jevs_cam_hrrr_severe_prep_vhr_06
+            task jevs_prep_cam_hrrr_severe_vhr_06
               time 06:00
               edit VHR '06'
-            task jevs_cam_namnest_severe_prep_vhr_06
+            task jevs_prep_cam_namnest_severe_vhr_06
               time 06:00
               edit VHR '06'
-            task jevs_cam_severe_prep
+            task jevs_prep_cam_severe
               time 07:30
               edit VHR '07'
           endfamily
@@ -794,22 +794,22 @@ suite evs_nco
               time 09:00
               edit VHR '09'
             task jevs_cam_hireswarwmem2_severe_stats
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_hireswarwmem2_severe_prep_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_cam_hireswarwmem2_severe_prep_vhr_12 == complete
+              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_hireswarwmem2_severe_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_prep_cam_hireswarwmem2_severe_vhr_12 == complete
               edit VHR '08'
             task jevs_cam_hireswarw_severe_stats
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_hireswarw_severe_prep_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_cam_hireswarw_severe_prep_vhr_12 == complete
+              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_hireswarw_severe_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_prep_cam_hireswarw_severe_vhr_12 == complete
               edit VHR '08'
             task jevs_cam_hireswfv3_severe_stats
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_hireswfv3_severe_prep_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_cam_hireswfv3_severe_prep_vhr_12 == complete
+              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_hireswfv3_severe_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_prep_cam_hireswfv3_severe_vhr_12 == complete
               edit VHR '08'
             task jevs_cam_href_severe_stats
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_href_severe_prep_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_cam_href_severe_prep_vhr_12 == complete
+              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_href_severe_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_prep_cam_href_severe_vhr_12 == complete
               edit VHR '08'
             task jevs_cam_hrrr_severe_stats
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_hrrr_severe_prep_vhr_00 == complete and ../../../../06/evs/prep/cam/jevs_cam_hrrr_severe_prep_vhr_06 == complete
+              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_hrrr_severe_vhr_00 == complete and ../../../../06/evs/prep/cam/jevs_prep_cam_hrrr_severe_vhr_06 == complete
               edit VHR '08'
             task jevs_cam_namnest_severe_stats
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_cam_namnest_severe_prep_vhr_00 == complete and ../../../../06/evs/prep/cam/jevs_cam_namnest_severe_prep_vhr_06 == complete
+              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_namnest_severe_vhr_00 == complete and ../../../../06/evs/prep/cam/jevs_prep_cam_namnest_severe_vhr_06 == complete
               edit VHR '08'
             task jevs_cam_href_grid2obs_stats
               time 07:30
@@ -818,7 +818,7 @@ suite evs_nco
             task jevs_cam_href_snowfall_stats
               time 09:00
             task jevs_cam_href_spcoutlook_stats
-              trigger :TIME >= 0830 and ../../prep/cam/jevs_cam_severe_prep == complete
+              trigger :TIME >= 0830 and ../../prep/cam/jevs_prep_cam_severe == complete
           endfamily
           family aqm
             task jevs_stats_aqm_atmos_grid2obs_vhr_03
@@ -1015,56 +1015,56 @@ suite evs_nco
               time 13:15
           endfamily
           family cam
-            task jevs_cam_radar_prep_vhr_12
+            task jevs_prep_cam_radar_vhr_12
               time 12:15
               edit VHR '12'
-            task jevs_cam_radar_prep_vhr_13
+            task jevs_prep_cam_radar_vhr_13
               time 13:05
               edit VHR '13'
-            task jevs_cam_radar_prep_vhr_14
+            task jevs_prep_cam_radar_vhr_14
               time 14:05
               edit VHR '14'
-            task jevs_cam_radar_prep_vhr_15
+            task jevs_prep_cam_radar_vhr_15
               time 15:05
               edit VHR '15'
-            task jevs_cam_radar_prep_vhr_16
+            task jevs_prep_cam_radar_vhr_16
               time 16:05
               edit VHR '16'
-            task jevs_cam_radar_prep_vhr_17
+            task jevs_prep_cam_radar_vhr_17
               time 17:05
               edit VHR '17'
-            task jevs_cam_namnest_precip_prep_vhr_12
+            task jevs_prep_cam_namnest_precip_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_hrrr_precip_prep_vhr_12
+            task jevs_prep_cam_hrrr_precip_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_hireswfv3_precip_prep_vhr_12
+            task jevs_prep_cam_hireswfv3_precip_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_hireswarw_precip_prep_vhr_12
+            task jevs_prep_cam_hireswarw_precip_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_hireswarwmem2_precip_prep_vhr_12
+            task jevs_prep_cam_hireswarwmem2_precip_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_hrrr_severe_prep_vhr_12
+            task jevs_prep_cam_hrrr_severe_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_namnest_severe_prep_vhr_12
+            task jevs_prep_cam_namnest_severe_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_hireswarw_severe_prep_vhr_12
+            task jevs_prep_cam_hireswarw_severe_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_hireswarwmem2_severe_prep_vhr_12
+            task jevs_prep_cam_hireswarwmem2_severe_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_hireswfv3_severe_prep_vhr_12
+            task jevs_prep_cam_hireswfv3_severe_vhr_12
               time 12:00
               edit VHR '12'
-            task jevs_cam_href_severe_prep_vhr_12
-              trigger ./jevs_cam_hireswarw_severe_prep_vhr_12 == complete and ./jevs_cam_hireswarwmem2_severe_prep_vhr_12 == complete and ./jevs_cam_hireswfv3_severe_prep_vhr_12 == complete and ./jevs_cam_hrrr_severe_prep_vhr_12 == complete and ./jevs_cam_namnest_severe_prep_vhr_12 == complete
+            task jevs_prep_cam_href_severe_vhr_12
+              trigger ./jevs_prep_cam_hireswarw_severe_vhr_12 == complete and ./jevs_prep_cam_hireswarwmem2_severe_vhr_12 == complete and ./jevs_prep_cam_hireswfv3_severe_vhr_12 == complete and ./jevs_prep_cam_hrrr_severe_vhr_12 == complete and ./jevs_prep_cam_namnest_severe_vhr_12 == complete
               edit VHR '12'
           endfamily
         endfamily   # 12 prep
@@ -1543,43 +1543,43 @@ suite evs_nco
               time 18:10
           endfamily
           family cam
-            task jevs_cam_radar_prep_vhr_18
+            task jevs_prep_cam_radar_vhr_18
               time 18:15
               edit VHR '18'
-            task jevs_cam_radar_prep_vhr_19
+            task jevs_prep_cam_radar_vhr_19
               time 19:05
               edit VHR '19'
-            task jevs_cam_radar_prep_vhr_20
+            task jevs_prep_cam_radar_vhr_20
               time 20:05
               edit VHR '20'
-            task jevs_cam_radar_prep_vhr_21
+            task jevs_prep_cam_radar_vhr_21
               time 21:05
               edit VHR '21'
-            task jevs_cam_radar_prep_vhr_22
+            task jevs_prep_cam_radar_vhr_22
               time 22:05
               edit VHR '22'
-            task jevs_cam_radar_prep_vhr_23
+            task jevs_prep_cam_radar_vhr_23
               time 23:05
               edit VHR '23'
-            task jevs_cam_namnest_precip_prep_vhr_18
+            task jevs_prep_cam_namnest_precip_vhr_18
               time 18:15
               edit VHR '18'
-            task jevs_cam_hrrr_precip_prep_vhr_18
+            task jevs_prep_cam_hrrr_precip_vhr_18
               time 18:15
               edit VHR '18'
-            task jevs_cam_hireswfv3_precip_prep_vhr_18
+            task jevs_prep_cam_hireswfv3_precip_vhr_18
               time 18:15
               edit VHR '18'
-            task jevs_cam_hireswarw_precip_prep_vhr_18
+            task jevs_prep_cam_hireswarw_precip_vhr_18
               time 18:15
               edit VHR '18'
-            task jevs_cam_hireswarwmem2_precip_prep_vhr_18
+            task jevs_prep_cam_hireswarwmem2_precip_vhr_18
               time 18:15
               edit VHR '18'
-            task jevs_cam_hrrr_severe_prep_vhr_18
+            task jevs_prep_cam_hrrr_severe_vhr_18
               time 18:15
               edit VHR '18'
-            task jevs_cam_namnest_severe_prep_vhr_18
+            task jevs_prep_cam_namnest_severe_vhr_18
               time 18:15
               edit VHR '18'
 
