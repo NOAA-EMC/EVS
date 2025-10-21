@@ -122,9 +122,8 @@ export COMINrrfs=${COMINrrfs:-$(compath.py ${envir}/com/rrfs/${rrfs_ver})}
 if [ "${RUN}" == "chem" ]; then
     export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
     export DCOMINaeronet=${DCOMINaeronet:-${DCOMROOT}}
-    export COMOUTprep=${COMOUTprep:-${COMOUT}/${RUN}.${INITDATE}/${MODELNAME}}
-   
-    mkdir -p ${COMOUTprep}
+    export COMOUTprepmdl=${COMOUTprepmdl:-${COMOUT}/${RUN}.${INITDATE}/${MODELNAME}}
+    export COMOUTprepobs=${COMOUTprepobs:-${COMOUT}/${RUN}.${INITDATE}/obs}
    
     # alternative choice is an option different from aqobs
     export airnow_hourly_type=${airnow_hourly_type:-aqobs}

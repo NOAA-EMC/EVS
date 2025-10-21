@@ -45,7 +45,7 @@ for OBTTYPE in ${obstype}; do
     if [ "${OBTTYPE}" == "aeronet" ]; then
         flag_process_ascii_aeronet="YES"
         if [ "${check_restart}" == "YES" ]; then   ## Check ASCII2NC AERONET AOD file for RESTART ability
-            checkfile=${COMOUTprep}/${OBTTYPE}_All_${INITDATE}_lev15.nc
+            checkfile=${COMOUTprepobs}/${OBTTYPE}_All_${INITDATE}_lev15.nc
             if [ -s ${checkfile} ]; then
 		msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
                 if [ ${msg} -eq 0 ]; then flag_process_ascii_aeronet="NO"; fi
@@ -68,7 +68,8 @@ for OBTTYPE in ${obstype}; do
                     if [ ${SENDCOM} = "YES" ]; then
                         cpfile=${finalprep}/${OBTTYPE}_All_${INITDATE}_lev15.nc
                         if [ -e ${cpfile} ]; then
-                            cp -v ${cpfile} ${COMOUTprep}
+                            mkdir -p ${COMOUTprepobs}
+                            cp -v ${cpfile} ${COMOUTprepobs}
                         fi
                     fi
                 fi
@@ -110,13 +111,13 @@ for OBTTYPE in ${obstype}; do
   
         if [ "${check_restart}" == "YES" ]; then   ## Check ASCII2NC AIRNOW files for RESTART ability
             checkfile="${OBTTYPE}_${HOURLY_OUTPUT_TYPE}_*.nc"
-            obs_file_count=$(find ${COMOUTprep} -name ${checkfile} | wc -l )
+            obs_file_count=$(find ${COMOUTprepobs} -name ${checkfile} | wc -l )
             if [ ${obs_file_count} -eq 0 ]; then
               let ic=0
             elif [ ${obs_file_count} -eq ${total_num_file} ]; then
               ## check corrupted ASCII2NC file
               vldhr=$(printf %2.2d ${endvhr})
-              checkfile="${COMOUTprep}/${OBTTYPE}_${HOURLY_OUTPUT_TYPE}_${INITDATE}${vldhr}.nc"
+              checkfile="${COMOUTprepobs}/${OBTTYPE}_${HOURLY_OUTPUT_TYPE}_${INITDATE}${vldhr}.nc"
               msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
               if [ ${msg} -eq 0 ]; then
                 let ic=${endvhr}+1   ## skip current AIRNOW Processing
@@ -151,7 +152,10 @@ for OBTTYPE in ${obstype}; do
                         export err=$?; err_chk
                         if [ ${SENDCOM} = "YES" ]; then
                             cpfile=${finalprep}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
-                            if [ -e ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprep}; fi
+                            if [ -e ${cpfile} ]; then
+                                mkdir -p ${COMOUTprepobs}
+                                cp -v ${cpfile} ${COMOUTprepobs}
+                            fi
                         fi
                     fi
                 else
@@ -206,13 +210,12 @@ let inc=1
 for mdl_cyc in "${cyc_opt[@]}"; do
     com_rrfs=${COMINrrfs}/${MODELNAME}.${INITDATE}/${mdl_cyc}
     if [ -d ${com_rrfs} ]; then
-        prep_rrfs=${COMOUTprep}/${mdl_cyc}
-        if [ ! -d ${prep_rrfs} ]; then mkdir -p ${prep_rrfs}; fi
+        prep_rrfs=${COMOUTprepmdl}/${mdl_cyc}
         let hour_now=1
         let max_hour=84
         let total_num_file=${max_hour}
   
-        if [ "${check_restart}" == "YES" ]; then   ## Check RRFS reduced grib2 files for RESTART ability
+        if [ "${check_restart}" == "YES" ] && [ -d  ${prep_rrfs} ]; then   ## Check RRFS reduced grib2 files for RESTART ability
             checkfile="${MODELNAME}.t${mdl_cyc}z.prslev.f*.reduced.grib2"
             mdl_file_count=$(find ${prep_rrfs} -name ${checkfile} | wc -l )
             if [ ${mdl_file_count} -eq 0 ]; then
@@ -243,6 +246,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
             if [ -s ${check_reduced_file} ]; then
                 echo "Found file ${check_reduced_file}"
                 if [ ${SENDCOM} = "YES" ]; then
+                    if [ ! -d ${prep_rrfs} ]; then mkdir -p ${prep_rrfs}; fi
                     cp -v ${check_reduced_file} ${prep_rrfs}
                 fi
             elif [ -s ${check_full_file} ]; then
@@ -270,6 +274,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
 		echo "DEBUG: Number of extracted record is ${number_of_record} for file extract_pm10"
                 cat extract_pm25 extract_pm10 extract_aod > ${reduced_rec_grib2}
                 if [ ${SENDCOM} = "YES" ]; then
+                    if [ ! -d ${prep_rrfs} ]; then mkdir -p ${prep_rrfs}; fi
                     cp -v ${reduced_rec_grib2} ${prep_rrfs}
                 fi
             else

@@ -142,7 +142,7 @@ else
 fi
 
 if [ "${RUN}" == "chem" ]; then
-    export EVSINrrfs=${EVSINrrfs:-${COMIN}/prep/${COMPONENT}}
+    export EVSINprep=${EVSINprep:-${COMIN}/prep/${COMPONENT}}
     export DATA_TYPE=${DATA_TYPE:-aeronet_aod}
     # alternative choice is an option different from aqobs
     export airnow_hourly_type=${airnow_hourly_type:-aqobs}
