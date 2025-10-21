@@ -1,10 +1,10 @@
 #!/bin/bash
-#PBS -N jevs_analyses_rtma_ru_grid2obs_stats
+#PBS -N jevs_plots_analyses_grid2obs_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
+#PBS -l walltime=01:30:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
@@ -33,36 +33,37 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=NO
 export SENDMAIL=YES
+export SENDDBN=NO
+
 export NET=evs
-export STEP=stats
+export STEP=plots
 export COMPONENT=analyses
 export RUN=atmos
 export VERIF_CASE=grid2obs
+export MODELNAME=rtma
+export modsys=rtma
+export mod_ver=${rtma_ver}
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}_last31days}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
+export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver_2d}
 
-export vhr
+export vhr=00
 echo $vhr
-
-export mod_ver=${rtma_ver}
-export modsys=rtma
-export MODELNAME=rtma_ru
 
 export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_ANALYSES_STATS
+$HOMEevs/jobs/JEVS_PLOTS_ANALYSES
 
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics for RTMA-RU
-##          analyses and generate stat files.
+## Purpose: This job will generate the grid2obs plots for the 
+##          analyses.
 #######################################################################
 #
 exit
