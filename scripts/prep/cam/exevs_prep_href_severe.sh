@@ -41,16 +41,16 @@ if [ $vhr -eq 00 ];then
 
    export IDATE_lag=${IDATE_lag:-`$NDATE -12 ${INITDATE}${vhr} | cut -c 1-8`}
 
-   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
-   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
-   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
-   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${INITDATE}
-   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${INITDATE}
-   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE_lag}
-   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE_lag}
-   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE_lag}
-   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${IDATE_lag}
-   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${IDATE_lag}
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/nam
+   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/hiresw
+   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/hiresw
+   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/hiresw
+   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/hrrr
+   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/nam
 
    export cyc_lag6=18
    export cyc_lag12=12
@@ -65,16 +65,16 @@ elif [ $vhr -eq 12 ]; then
 
    nloop=2
 
-   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
-   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
-   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
-   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${INITDATE}
-   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${INITDATE}
-   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
-   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
-   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${INITDATE}
-   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${INITDATE}
-   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${INITDATE}
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/nam
+   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
+   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
+   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
+   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
+   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/nam
 
    export cyc_lag6=06
    export cyc_lag12=00
