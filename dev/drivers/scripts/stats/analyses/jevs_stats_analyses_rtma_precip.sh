@@ -1,15 +1,16 @@
 #!/bin/bash
- 
-#PBS -N jevs_analyses_urma_grid2obs_stats
+#PBS -N jevs_stats_analyses_rtma_precip
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
+#PBS -l walltime=00:10:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
-
+ 
 set -x
+
+cd $PBS_O_WORKDIR
 
 export model=evs
 
@@ -20,29 +21,30 @@ source $HOMEevs/versions/run.ver
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 ############################################################
-# Load modules
-############################################################
+## Load modules
+#############################################################
 
 module reset
 module load prod_envir/${prod_envir_ver}
 
+
+############################################################
 ## For dev testing
-##############################################################
+#############################################################
 
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export KEEPDATA=NO
+export SENDMAIL=YES
 export NET=evs
 export STEP=stats
 export COMPONENT=analyses
 export RUN=atmos
-export VERIF_CASE=grid2obs
-
-export KEEPDATA=NO
-export SENDMAIL=YES
+export VERIF_CASE=precip
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
@@ -50,19 +52,18 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 
 export vhr
 echo $vhr
-export envir=prod
 
-export MODELNAME=urma
-export modsys=urma
-export mod_ver=${urma_ver}
+export mod_ver=${rtma_ver}
+export modsys=rtma
+export MODELNAME=rtma
 
 export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_ANALYSES_STATS
+$HOMEevs/jobs/JEVS_STATS_ANALYSES
 
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics for the URMA
+## Purpose: This job will generate the precip statistics for the RTMA
 ##          analyses and generate stat files.
 #######################################################################
 #

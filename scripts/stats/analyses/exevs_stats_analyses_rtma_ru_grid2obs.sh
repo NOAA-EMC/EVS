@@ -1,7 +1,7 @@
 #/bin/bash
 
 ##################################################################################
-# Name of Script: exevs_analyses_rtma_ru_grid2obs_stats.sh
+# Name of Script: exevs_stats_analyses_rtma_ru_grid2obs.sh
 # Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
 # Purpose of Script: This script runs METplus to generate 
 #                    verification statistics for analyses and first guess for rtma-ru
