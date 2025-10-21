@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ksh
 
 ########################################
 # Preliminary data setup step
@@ -6,11 +6,10 @@
 set -x
 
 ##################################################
-### SAVEGES  - Copy Files From TMPDIR to $GESdir
-### SENDECF  - Flag Events on ecFLOW
-### SENDCOM  - Copy Files From TMPDIR to $COMOUT
-### SENDDBN  - Issue DBNet Client Calls
-### SENDMAIL - Send email if file is missing
+## SAVEGES  - Copy Files From TMPDIR to $GESdir
+## SENDECF  - Flag Events on ecFLOW
+## SENDCOM  - Copy Files From TMPDIR to $COMOUT
+## SENDDBN  - Issue DBNet Client Calls
 ###################################################
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
@@ -31,64 +30,43 @@ mkdir -p $DATA
 cd $DATA
 
 ####################################
-### Define NET/RUN variables
+#### Define NET/RUN variables
 ####################################
 export NET=${NET:-evs}
-export STEP=${STEP:-stats}
+export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-analyses}
 export RUN=${RUN:-atmos}
 
-####################################
-## Set EVS directories
-#####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export USHevs=${USHevs:-$HOMEevs/ush}
-export MASKS=${MASKS:-$FIXevs/masks}
 
 # Run setpdy and initialize PDY variables
-export vhr=${vhr:-00}
-export cycle=t${vhr}z
-setpdy.sh
-. ./PDY
+ export vhr=${vhr:-00}
+ export cycle=t${vhr}z
+ setpdy.sh 31
+ . ./PDY
 
-if [ $VERIF_CASE = grid2obs ]; then
-  export VDATE=${VDATE:-$PDYm1}
-else
-  export VDATE=${VDATE:-$PDYm3}
-fi
+export VDATE=${VDATE:-$PDYm2}
 
 # Define COMIN/COMOUT variables:
 
 echo $COMPATH
-if [ "$modsys" = "urma" ] ; then
-  mod_ver=$urma_ver
-fi
-if [ "$modsys" = "rtma" ] ; then
-  mod_ver=$rtma_ver
-fi
-export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/$evs_ver)}
-export COMINrtma=${COMINrtma:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
-export COMINurma=${COMINurma:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
-export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export DCOMIN=${DCOMIN:-${DCOMROOT}}
-export EVSINccpa=${EVSINccpa:-${COMIN}/prep/analyses}
+
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export EVSINanl=${EVSINanl:-${COMIN}/stats/${COMPONENT}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
-mkdir -p $COMOUT
-export COMOUTsmall=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-export COMOUTfinal=${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}
-mkdir -p $COMOUTsmall 
+export COMOUTplots=${COMOUTplots:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}}
+mkdir -m 775 -p $COMOUTplots
 
 #######################################################################
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/$STEP/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-
-export err=$?; err_chk
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${VERIF_CASE}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
