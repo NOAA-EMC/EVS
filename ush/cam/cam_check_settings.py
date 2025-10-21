@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_check_settings.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Check User's Settings
-# DEPENDENCIES: os.path.join([
-#                   SCRIPTSevs,COMPONENT,STEP,
-#                   "_".join(["exevs",MODELNAME,VERIF_CASE,STEP+".sh"]
-#               )]
-#
-# =============================================================================
+"""
+cam_check_settings.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Checks the user's environment and configuration settings for the cam component.
 
-import sys
+Environment Variables (Inputs):
+        Various variables including machine, VERIF_CASE, STEP, config, and many
+        others required for different workflow steps.
+
+Outputs:
+        - Prints fatal errors and exits if required environment variables are
+            missing or if date/time formats are invalid.
+        - Ensures all necessary configuration is present before proceeding with
+            downstream steps.
+
+This script is intended to be run as part of the cam component to
+validate user and system settings before workflow execution.
+"""
+
+import calendar
 import os
 import re
-import datetime
-import calendar
+import sys
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 

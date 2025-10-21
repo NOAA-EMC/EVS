@@ -1,25 +1,33 @@
 #!/usr/bin/env python3
+"""
+prune_stat_files.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov; Mallory Row
+----------------------
+Prunes MET .stat files for specific plotting jobs in the cam component.
 
-'''
-Program Name: prune_stat_files.py
-Contact(s): Marcel Caron, Mallory Row
-Abstract: This script is run by all scripts in EMC_verif-global/scripts/.
-          This prunes the MET .stat files for the
-          specific plotting job to help decrease
-          wall time.
-'''
+Environment Variables (Inputs):
+   USH_DIR (for settings directory)
+
+Outputs:
+   - Provides functions to prune and expand MET .stat files, reducing wall
+     time for plotting jobs in the cam component.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared file pruning utilities for verification workflows.
+"""
 
 import glob
-import subprocess
 import os
-import re
+import subprocess
 import sys
+from datetime import timedelta as td
+
 import numpy as np
-from datetime import datetime, timedelta as td
+
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 import string_template_substitution
-import plot_util
+
 
 def daterange(start, end, td):
    curr = start

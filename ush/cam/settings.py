@@ -1,15 +1,28 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: settings.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: General settings used for CAM plotting scripts
-#
-# =============================================================================
+"""
+settings.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+General settings and configuration classes for the cam component.
+
+Environment Variables (Inputs):
+    None (this module is imported and used by other scripts).
+
+Outputs:
+    - Provides classes and constants for plot settings, templates, paths,
+      presets, model specifications, and references, used by other scripts in
+      the cam component.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared configuration and settings for plotting and verification.
+"""
 
 import os
-from datetime import datetime, timedelta as td
+from datetime import datetime
+from datetime import timedelta as td
+
 import numpy as np
+
 
 class Toggle():
     def __init__(self):

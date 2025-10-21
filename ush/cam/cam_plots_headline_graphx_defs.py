@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
-import os
-from datetime import datetime
+"""
+cam_plots_headline_graphx_defs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+----------------------
+Graphics definitions for the CAM Headline Plots jobs, used by the cam
+component for headline plotting and job configuration.
+
+Environment Variables (Inputs):
+    (None required directly; see dependent scripts for context)
+
+Outputs:
+    - Provides the 'graphics' dictionary for CAM Headline plotting jobs.
+
+This module is intended to be imported and used as part of the cam component's
+plotting and job generation workflow for headline plots.
+"""
 graphics = {
     'cam':{
         'headline':{

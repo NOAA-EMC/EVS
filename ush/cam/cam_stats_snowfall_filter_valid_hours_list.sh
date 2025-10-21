@@ -1,12 +1,19 @@
 #!/bin/bash -e
-##---------------------------------------------------------------------------
-##---------------------------------------------------------------------------
-## NCEP EMC Verification System (EVS) - CAM
-##
-## CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, Affiliate @ NOAA/NWS/NCEP/EMC-VPPPGB
-## PURPOSE: Filter list of valid hours depending on the current vhr value (precip)
-##---------------------------------------------------------------------------
-##---------------------------------------------------------------------------
+# cam_stats_snowfall_filter_valid_hours_list.sh
+# CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+# ----------------------
+# Filters a list of valid hours for Snowfall verification in the cam component
+# based on the current vhr value.
+#
+# Environment Variables (Inputs):
+#     vhr, VHOUR_LIST
+#
+# Outputs:
+#     - Exports a filtered VHOUR_LIST based on the current vhr cycle.
+#     - Prints errors and exits if required environment variables are missing.
+#
+# This script is intended to be run as part of the cam component to automate
+# filtering of valid hour lists for Snowfall verification.
 
 set -x
 
