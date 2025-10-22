@@ -1157,7 +1157,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         # UKMET does not have winds at P200 past fhr120
                         if verif_type == 'pres_levs' \
                                 and verif_type_job == 'WindShear' \
-                                and job_env_dict['MODEL'] == 'ukmet':
+                                and job_env_dict['MODEL'] == 'ukmet'\
+                                and job_env_dict.get('fhr_list', '').strip() != '':
                             ukmet_fhr_list = []
                             ukmet_fhr_rm_list = []
                             for fhr_chk in (job_env_dict['fhr_list']\
@@ -1200,11 +1201,14 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if verif_type == 'pres_levs' \
                                 and verif_type_job == 'WindShear' \
                                 and job_env_dict['MODEL'] == 'ukmet' \
-                                and job_env_dict['fhr_list'] != "''":
+                                and job_env_dict.get('fhr_list', '').strip() != '': 
                             ukmet_fhr_list = []
                             ukmet_fhr_rm_list = []
                             for fhr_chk in (job_env_dict['fhr_list']\
                                             .replace("'",'').split(', ')):
+                                if fhr_chk == '':
+                                    print("Skipping empty fhr_chk")
+                                    continue
                                 if int(fhr_chk) <= 120:
                                     ukmet_fhr_list.append(fhr_chk)
                                 else:
@@ -1248,13 +1252,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     ]
                             mod_lefhr_list = []
                             mod_gtfhr_list = []
-                            if job_env_dict['fhr_list'] != "''":
+                            if job_env_dict.get('fhr_list', '').strip() != '':
                                 mod_full_fhr_list = (
                                     job_env_dict['fhr_list']\
                                     .replace("'",'').split(', ')
                                 )
                                 for fhr_chk in mod_full_fhr_list:
-                                    if int(fhr_chk) <= mod_fhr_thresh:
+                                    if fhr_chk.strip().isdigit() and int(fhr_chk.strip()) <= mod_fhr_thresh:
                                         mod_lefhr_list.append(fhr_chk)
                                     else:
                                         mod_gtfhr_list.append(fhr_chk)
@@ -1322,8 +1326,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     model_fhr_lev_dict.keys()
                                 )[1:]
                                 for runN in rerun_key_list:
-                                    if (model_fhr_lev_dict[runN]['fhr_list']) \
-                                            != "''":
+                                    if (str(model_fhr_lev_dict[runN].get('fhr_list', '')).strip() != ''):
                                         export_key_list = list(
                                             model_fhr_lev_dict[runN].keys()
                                         )
@@ -1349,7 +1352,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                      and int(job_env_dict['valid_hr_start']) \
                                      % 12 == 0) \
                                     or verif_type_job == 'WindShear':
-                                if job_env_dict['fhr_list'] != "''":
+                                if job_env_dict.get('fhr_list', '').strip() != '':
                                     job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)

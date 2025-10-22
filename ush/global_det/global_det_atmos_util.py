@@ -828,11 +828,39 @@ def prep_prod_ukmet_file(source_file, dest_file, init_dt,
                                 'atmos.'+dest_file.rpartition('/')[2])
     working_file1 = prepped_file+'.tmp1'
     working_file2 = prepped_file+'.tmp2'
+
     # Prep file
     if prep_method == 'full':
        if check_file_exists_size(source_file):
             if not check_grib1_file_corrupt(source_file):
-               copy_file(source_file, prepped_file)
+               # === Required pressure level variables and levels ===
+               pres_var = ["UGRD", "VGRD", "TMP", "HGT","RH"]
+               pres_level = [1000, 925, 850, 700, 500, 400, 300, 250, 200, 150, 100]
+               # === Construct required field strings
+               required_fields = {}
+               # Add pressure-level variables
+               for var in pres_var:
+                   required_fields[var] = [f":{var}:{level} mb" for level in pres_level]
+               # Add surface-level fields (PRMSL at MSL and TMP at sfc)
+               required_fields["PRMSL"] = []
+               required_fields["PRMSL"].append(":PRMSL:MSL:")
+               required_fields["TMP"] = []
+               required_fields["TMP"].append(":TMP:sfc:")
+
+               result = subprocess.run(["wgrib", "-s", source_file], capture_output=True, text=True, check=True)
+               inventory = result.stdout
+               # Check each required field
+               missing_fields = []
+               for label, patterns in required_fields.items():
+                   for pattern in patterns:
+                      if pattern not in inventory:
+                         missing_fields.append(pattern)
+               if len(missing_fields) == 0:
+                   copy_file(source_file, prepped_file)
+               else:
+                   print("Missing fields:")
+                   for field in missing_fields:
+                       print(f" - {field}")
        else:
             log_missing_file_model(log_missing_file, source_file, 'ukmet',
                                    init_dt, str(forecast_hour).zfill(3))
