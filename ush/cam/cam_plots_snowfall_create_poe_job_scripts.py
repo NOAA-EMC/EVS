@@ -1,18 +1,27 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_plots_snowfall_create_poe_job_scripts.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Snowfall - Plots POE job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/plots/exevs_$MODELNAME_snowfall_plots.sh
-#
-# =============================================================================
+"""
+cam_plots_snowfall_create_poe_job_scripts.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates POE (parallel execution) job scripts for EVS CAM Snowfall plots in the
+cam component.
 
-import sys
-import os
+Environment Variables (Inputs):
+    machine, USE_CFP, nproc, STEP, VERIF_CASE, DATA, and others required for
+    job script creation and parallelization.
+
+Outputs:
+    - Generates POE job scripts for parallel plotting execution.
+    - Prints notes if no job files are found or if required environment
+      variables are missing.
+
+This script is intended to be run as part of the cam component to automate
+creation of POE job scripts for Snowfall plotting.
+"""
+
 import glob
-from datetime import datetime
-import numpy as np
+import os
+import sys
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 

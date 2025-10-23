@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
 """
-Program Name: time_util.py
-Contact(s): Marcel Caron, George McCabe
-Abstract: Tools to handle time templates in EVS CAM
-          ... inherited code from METplus
-History Log:  Initial version
-Usage: Create a subclass
-Parameters: None
-Input Files: N/A
-Output Files: N/A
+time_util.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov; George McCabe
+----------------------
+Time utility functions for handling time templates and conversions in the cam 
+component.
+
+Environment Variables (Inputs):
+    None (this module is imported and used by other scripts).
+
+Outputs:
+    - Provides functions for time parsing, conversion, and manipulation,
+      used by other scripts in the cam component and inherited from METplus.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared time utilities for verification workflows.
 """
 
 import datetime
-from dateutil.relativedelta import relativedelta
 import re
+
+from dateutil.relativedelta import relativedelta
 
 '''!@namespace TimeInfo
 @brief Utility to handle timing in METplus wrappers

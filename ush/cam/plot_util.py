@@ -1,23 +1,37 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: plot_util.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Plotting tools for CAM plotting scripts
-#
-# =============================================================================
+"""
+plot_util.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Plotting utility functions for the cam component.
 
+Environment Variables (Inputs):
+   None (this module is imported and used by other scripts).
+
+Outputs:
+   - Provides utility functions for METplus plotting use cases, file handling,
+     and data processing, used by other scripts in the cam component.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared plotting utilities and helper functions.
+"""
+
+# Standard library imports
 import os
 import sys
-import datetime as datetime
 import time
+import warnings
+import datetime as datetime
+
+# Third-party imports
 import numpy as np
 import pandas as pd
-import warnings
-warnings.filterwarnings('ignore')
+
+# Local imports
 """!@namespace plot_util
    @brief Provides utility functions for METplus plotting use case
 """
+warnings.filterwarnings('ignore')
 
 def get_memory_usage():
     total_memory, used_memory, free_memory = map(
