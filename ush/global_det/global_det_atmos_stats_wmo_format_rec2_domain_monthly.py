@@ -100,6 +100,9 @@ wmo_verif_info_dict = {
 # Format for WMO daily rec2
 VDATE_monthly_rec2_lines = []
 for wmo_verif in list(wmo_verif_info_dict.keys()):
+    if wmo_verif == 'grid2obs_upperair':     
+        print (f"Skipping {wmo_verif} per configuration") #turn off the grid2obs_upperair stats
+        continue
     print(f"Gathering stats for {VDATE_dt:%Y%m} for {wmo_verif}")
     wmo_verif_dict = wmo_verif_info_dict[wmo_verif]
     wmo_ref = wmo_verif_dict['wmo_ref']
