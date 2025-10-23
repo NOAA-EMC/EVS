@@ -2,9 +2,9 @@
 
 # =============================================================================
 #
-# NAME: exevs_hireswarwmem2_grid2obs_stats.sh
+# NAME: exevs_stats_hireswfv3_snowfall.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS HiRes Window ARW Member 2 Grid2Obs - 
+# PURPOSE: Handle all components of an EVS HiRes Window FV3 Snowfall -  
 #          Statistics job
 # DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_STATS 
 #
@@ -15,9 +15,9 @@ set -x
 # Set Basic Environment Variables
 export machine=${machine:-"WCOSS2"}
 export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
-last_cyc="21"
-NEST_LIST="conus ak spc_otlk hi pr subreg"
-VERIF_TYPES="raob metar"
+last_cyc="18"
+NEST_LIST="conus" 
+export BOOL_NBRHD=False
 
 # Reformat MET Data
 export job_type="reformat"
@@ -25,40 +25,46 @@ export njob=1
 export run_restart=true
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    for VERIF_TYPE in $VERIF_TYPES; do
-        export VERIF_TYPE=$VERIF_TYPE
-        source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-
-        # Check For Restart Files
-        if [ "$run_restart" = true ]; then
-            python ${USHevs}/cam/cam_production_restart.py
-            export err=$?; err_chk
-            export run_restart=false
+    for ACC in "06" "24"; do
+        export ACC=$ACC
+        if [ "${ACC}" = "06" ]; then
+            VHOUR_LIST="00 06 12 18"
+        elif [ "${ACC}" = "24" ]; then
+            VHOUR_LIST="00 12"
+        else
+            err_exit "${ACC} is not supported"
         fi
-
+        source $USHevs/cam/cam_stats_snowfall_filter_valid_hours_list.sh
         for VHOUR in $VHOUR_LIST; do
             export VHOUR=$VHOUR
-            # Check User's Configuration Settings
-            python $USHevs/cam/cam_check_settings.py
-            export err=$?; err_chk
-     
-            # Check Availability of Input Data
-            python $USHevs/cam/cam_check_input_data.py
-            export err=$?; err_chk
-     
-            # Create Output Directories
-            python $USHevs/cam/cam_create_output_dirs.py
-            export err=$?; err_chk
+            source $config
+            
+            # Check For Restart Files
+            if [ "$run_restart" = true ]; then
+                python ${USHevs}/cam/cam_production_restart.py
+                export err=$?; err_chk
+                export run_restart=false
+            fi
 
-            # Preprocess Prepbufr Data
-            python $USHevs/cam/cam_stats_grid2obs_preprocess_prepbufr.py
-            export err=$?; err_chk
-     
-            # Create Reformat Job Script 
-            python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-            export err=$?; err_chk
-            export njob=$((njob+1))
+            for VAR_NAME in $VAR_NAME_LIST; do
+                export VAR_NAME=$VAR_NAME 
+                # Check User's Configuration Settings
+                python $USHevs/cam/cam_check_settings.py
+                export err=$?; err_chk
+                
+                # Check Availability of Input Data
+                python $USHevs/cam/cam_check_input_data.py
+                export err=$?; err_chk
+         
+                # Create Output Directories
+                python $USHevs/cam/cam_create_output_dirs.py
+                export err=$?; err_chk
+                
+                # Create Reformat Job Script 
+                python $USHevs/cam/cam_stats_snowfall_create_job_script.py
+                export err=$?; err_chk
+                export njob=$((njob+1))
+            done
         done
     done
 done
@@ -73,7 +79,7 @@ fi
 
 # Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_grid2obs_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
     export err=$?; err_chk
 fi
 
@@ -81,7 +87,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run All HiRes Window ARW2 grid2obs/stats Reformat Jobs
+# Run All HiRes Window FV3 snowfall/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
@@ -105,7 +111,6 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
-    set -x
     while [ $nc -le $ncount_job ]; do
         job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
         if [ -f "$job_file" ]; then
@@ -114,7 +119,6 @@ else
         fi
         nc=$((nc+1))
     done
-    set -x
 fi
 
 # Copy Reformat Output to Main Directory
@@ -130,47 +134,61 @@ export job_type="generate"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    for VERIF_TYPE in $VERIF_TYPES; do
-        export VERIF_TYPE=$VERIF_TYPE
-        source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-        for VAR_NAME in $VAR_NAME_LIST; do
-            export VAR_NAME=$VAR_NAME
-            for VHOUR in $VHOUR_LIST; do
-                export VHOUR=$VHOUR
-                # Check User's Configuration Settings
-                python $USHevs/cam/cam_check_settings.py
-                export err=$?; err_chk
-         
-                # Create Output Directories
-                python $USHevs/cam/cam_create_output_dirs.py
-                export err=$?; err_chk
-         
-                # Create Generate Job Script 
-                for FHR_GROUP in $FHR_GROUP_LIST; do
-                    export FHR_GROUP=$FHR_GROUP
-                    TARGET_FHR_END="FHR_END_${FHR_GROUP}"
-                    TARGET_FHR_INCR="FHR_INCR_${FHR_GROUP}"
-                    export FHR_END=${!TARGET_FHR_END}
-                    export FHR_INCR=${!TARGET_FHR_INCR}
-                    export FHR_START=$(python -c "import cam_util; print(cam_util.get_fhr_start('${VHOUR}',0,'${FHR_INCR}','${MIN_IHOUR}'))")
-                
-                    for FHR in `seq ${FHR_START} ${FHR_INCR} ${FHR_END}`; do
-                        export FHR=$(printf "%02d" $FHR)
-                      
-                        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-                        export err=$?; err_chk
-                        export njob=$((njob+1))
+    for ACC in "06" "24"; do
+        export ACC=$ACC
+        if [ "${ACC}" = "06" ]; then
+            VHOUR_LIST="00 06 12 18"
+        elif [ "${ACC}" = "24" ]; then
+            VHOUR_LIST="00 12"
+        else
+            err_exit "${ACC} is not supported"
+        fi
+        source $USHevs/cam/cam_stats_snowfall_filter_valid_hours_list.sh
+        for VHOUR in $VHOUR_LIST; do
+            export VHOUR=$VHOUR
+            for BOOL_NBRHD in True False; do
+                export BOOL_NBRHD=$BOOL_NBRHD
+                source $config
+                for VAR_NAME in $VAR_NAME_LIST; do
+                    export VAR_NAME=$VAR_NAME 
+                    # Check User's Configuration Settings
+                    python $USHevs/cam/cam_check_settings.py
+                    export err=$?; err_chk
+                    
+                    # Create Output Directories
+                    python $USHevs/cam/cam_create_output_dirs.py
+                    export err=$?; err_chk
+                    
+                    # Create Generate Job Script
+                    for FHR_GROUP in $FHR_GROUP_LIST; do
+                        export FHR_GROUP=$FHR_GROUP
+                        TARGET_FHR_END="FHR_END_${FHR_GROUP}"
+                        TARGET_FHR_INCR="FHR_INCR_${FHR_GROUP}"
+                        export FHR_END=${!TARGET_FHR_END}
+                        export FHR_INCR=${!TARGET_FHR_INCR}
+                        export FHR_START=$(python -c "import cam_util; print(cam_util.get_fhr_start('${VHOUR}','${ACC}','${FHR_INCR}','${MIN_IHOUR}'))")
+
+                        for FHR in `seq ${FHR_START} ${FHR_INCR} ${FHR_END}`; do
+                            export FHR=$(printf "%02d" $FHR)
+
+                            for NBRHD_WIDTH in $NBRHD_WIDTHS; do
+                                export NBRHD_WIDTH=${NBRHD_WIDTH}
+
+                                python $USHevs/cam/cam_stats_snowfall_create_job_script.py
+                                export err=$?; err_chk
+                                export njob=$((njob+1))
+                            done
+                        done
                     done
                 done
             done
         done
-    done 
+    done
 done
 
 # Create Generate POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_grid2obs_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
     export err=$?; err_chk
 fi
 
@@ -178,7 +196,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run All HiRes Window ARW2 grid2obs/stats Generate Jobs
+# Run All HiRes Window FV3 snowfall/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
@@ -202,7 +220,6 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
-    set -x
     while [ $nc -le $ncount_job ]; do
         job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
         if [ -f "$job_file" ]; then
@@ -211,7 +228,6 @@ else
         fi
         nc=$((nc+1))
     done
-    set -x
 fi
 
 # Copy Generate Output to Main Directory
@@ -224,26 +240,22 @@ shopt -u nullglob
 
 export job_type="gather"
 export njob=1
-for VERIF_TYPE in $VERIF_TYPES; do
-    export VERIF_TYPE=$VERIF_TYPE
+for NEST in $NEST_LIST; do
+    export NEST=$NEST
     source $config
-    source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-    if [[ ! -z $VHOUR_LIST ]]; then
-        # Create Output Directories
-        python $USHevs/cam/cam_create_output_dirs.py
-        export err=$?; err_chk
+    # Create Output Directories
+    python $USHevs/cam/cam_create_output_dirs.py
+    export err=$?; err_chk
     
-        # Create Gather Job Script
-        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-        export err=$?; err_chk
-        export njob=$((njob+1))
-    fi
+    # Create Gather Job Script
+    python $USHevs/cam/cam_stats_snowfall_create_job_script.py
+    export err=$?; err_chk
+    export njob=$((njob+1))
 done
-
 
 # Create Gather POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_grid2obs_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
     export err=$?; err_chk
 fi
 
@@ -251,7 +263,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run All HiRes Window ARW2 grid2obs/stats Gather Jobs
+# Run All HiRes Window FV3 snowfall/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
@@ -275,7 +287,6 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
-    set -x
     while [ $nc -le $ncount_job ]; do
         job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
         if [ -f "$job_file" ]; then
@@ -284,7 +295,6 @@ else
         fi
         nc=$((nc+1))
     done
-    set -x
 fi
 
 # Copy Gather Output to Main Directory
@@ -297,24 +307,19 @@ shopt -u nullglob
 
 export job_type="gather2"
 export njob=1
-export VERIF_TYPE=$VERIF_TYPE
 source $config
-export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
-if [[ ! -z $VHOUR_LIST ]]; then
-    # Create Output Directories
-    python $USHevs/cam/cam_create_output_dirs.py
-    export err=$?; err_chk
+# Create Output Directories
+python $USHevs/cam/cam_create_output_dirs.py
+export err=$?; err_chk
 
-    # Create Gather 2 Job Script
-    python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-    export err=$?; err_chk
-    export njob=$((njob+1))
-fi
-
+# Create Gather 2 Job Script
+python $USHevs/cam/cam_stats_snowfall_create_job_script.py
+export err=$?; err_chk
+export njob=$((njob+1))
 
 # Create Gather 2 POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_grid2obs_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
     export err=$?; err_chk
 fi
 
@@ -322,7 +327,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run All HiRes Window ARW2 grid2obs/stats Gather 2 Jobs
+# Run All HiRes Window FV3 snowfall/stats Gather 2 Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
@@ -346,7 +351,6 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
-    set -x
     while [ $nc -le $ncount_job ]; do
         job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
         if [ -f "$job_file" ]; then
@@ -355,7 +359,6 @@ else
         fi
         nc=$((nc+1))
     done
-    set -x
 fi
 
 # Copy Gather 2 Output to Main Directory
@@ -384,27 +387,26 @@ if [ "$vhr" -ge "$last_cyc" ]; then
         export job_type="gather3"
         export njob=1
         source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
         # Create Output Directories
         python $USHevs/cam/cam_create_output_dirs.py
         export err=$?; err_chk
 
         # Create Gather 3 Job Script
-        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+        python $USHevs/cam/cam_stats_snowfall_create_job_script.py
         export err=$?; err_chk
         export njob=$((njob+1))
 
         # Create Gather 3 POE Job Scripts
         if [ $USE_CFP = YES ]; then
-            python $USHevs/cam/cam_stats_grid2obs_create_poe_job_scripts.py
+            python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
             export err=$?; err_chk
         fi
 
-        # Create Reformat Gather 3 Directories
+        # Create Gather 3 Working Directories
         python $USHevs/cam/cam_create_child_workdirs.py
         export err=$?; err_chk
 
-        # Run All NAM Nest grid2obs/stats Gather 3 Jobs
+        # Run All HiRes Window FV3 snowfall/stats Gather 3 Jobs
         chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
         ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
         nc=1
@@ -428,7 +430,6 @@ if [ "$vhr" -ge "$last_cyc" ]; then
                 nc=$((nc+1))
             done
         else
-            set -x
             while [ $nc -le $ncount_job ]; do
                 job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job${nc}"
                 if [ -f "$job_file" ]; then
@@ -437,7 +438,6 @@ if [ "$vhr" -ge "$last_cyc" ]; then
                 fi
                 nc=$((nc+1))
             done
-            set -x
         fi
 
         # Copy Gather 3 Output to Main Directory

@@ -2,7 +2,7 @@
 
 # =============================================================================
 #
-# NAME: exevs_namnest_snowfall_stats.sh
+# NAME: exevs_stats_namnest_snowfall.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS NAM Nest Snowfall - Statistics 
 #          job

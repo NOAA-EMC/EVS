@@ -2,10 +2,10 @@
 
 # =============================================================================
 #
-# NAME: exevs_hireswfv3_precip_stats.sh
+# NAME: exevs_stats_hrrr_precip.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS HiRes Window FV3 Precipitation 
-#           - Statistics job
+# PURPOSE: Handle all components of an EVS HRRR Precipitation - Statistics
+#          job
 # DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_STATS 
 #
 # =============================================================================
@@ -16,7 +16,7 @@ set -x
 export machine=${machine:-"WCOSS2"}
 export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 last_cyc="22"
-NEST_LIST="conus ak pr hi" # this is reset after reformat
+NEST_LIST="conus ak"
 export BOOL_NBRHD=False
 
 # Reformat MET Data
@@ -86,7 +86,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run all HiRes Window FV3 Member precip/stats Reformat jobs
+# Run all HRRR precip/stats Reformat jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
@@ -130,7 +130,6 @@ for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
 done
 shopt -u nullglob
 
-NEST_LIST="conus ak"
 # Generate MET Data
 export job_type="generate"
 export njob=1
@@ -163,6 +162,7 @@ for NEST in $NEST_LIST; do
                 export err=$?; err_chk
 
                 # Create Generate Job Script
+                all_fhrs=""
                 for FHR_GROUP in $FHR_GROUP_LIST; do
                     export FHR_GROUP=$FHR_GROUP
                     TARGET_FHR_END="FHR_END_${FHR_GROUP}"
@@ -170,17 +170,22 @@ for NEST in $NEST_LIST; do
                     export FHR_END=${!TARGET_FHR_END}
                     export FHR_INCR=${!TARGET_FHR_INCR}
                     export FHR_START=$(python -c "import cam_util; print(cam_util.get_fhr_start('${VHOUR}','${ACC}','${FHR_INCR}','${MIN_IHOUR}'))")
-
+                    
                     for FHR in `seq ${FHR_START} ${FHR_INCR} ${FHR_END}`; do
                         export FHR=$(printf "%02d" $FHR)
+                        all_fhrs="$all_fhrs $FHR"
+                    done
+                done
+                unique_fhrs=$(echo $all_fhrs | tr ' ' '\n' | sort -n | uniq)
+                
+                for FHR in $unique_fhrs; do
+                    export FHR
+                    for NBRHD_WIDTH in $NBRHD_WIDTHS; do
+                        export NBRHD_WIDTH=${NBRHD_WIDTH}
 
-                        for NBRHD_WIDTH in $NBRHD_WIDTHS; do
-                            export NBRHD_WIDTH=${NBRHD_WIDTH}
-
-                            python $USHevs/cam/cam_stats_precip_create_job_script.py
-                            export err=$?; err_chk
-                            export njob=$((njob+1))
-                        done
+                        python $USHevs/cam/cam_stats_precip_create_job_script.py
+                        export err=$?; err_chk
+                        export njob=$((njob+1))
                     done
                 done
             done
@@ -198,7 +203,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run All HiRes Window FV3 Member precip/stats Generate Jobs
+# Run All HRRR precip/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
@@ -242,6 +247,7 @@ for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
 done
 shopt -u nullglob
 
+# Create Gather Job Script
 export job_type="gather"
 export njob=1
 for NEST in $NEST_LIST; do
@@ -263,11 +269,11 @@ if [ $USE_CFP = YES ]; then
     export err=$?; err_chk
 fi
 
-# Create Gather  Working Directories
+# Create Gather Working Directories
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run All HiRes Window FV3 Member precip/stats Gather Jobs
+# Run All HRRR precip/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1
@@ -311,6 +317,7 @@ for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
 done
 shopt -u nullglob
 
+# Create Gather 2 Job Script
 export job_type="gather2"
 export njob=1
 source $config
@@ -333,7 +340,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run All HiRes Window FV3 Member precip/stats Gather 2 Jobs
+# Run All HRRR precip/stats Gather 2 Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
 nc=1

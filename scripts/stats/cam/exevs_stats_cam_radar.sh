@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ##################################################################################
-# Name of Script: exevs_cam_radar_stats.sh
+# Name of Script: exevs_stats_cam_radar.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script runs METplus to generate radar
 #                    verification statistics for deterministic and ensemble CAMs.

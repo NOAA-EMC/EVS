@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_cam_severe_stats.sh
+# Name of Script: exevs_stats_cam_severe.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script runs METplus to generate severe 
 #                    verification statistics for HREF and deterministic CAMs.
