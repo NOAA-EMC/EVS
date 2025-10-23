@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_ens_gefs_wave_prep.sh                       
+# Name of Script: exevs_prep_global_ens_gefs_wave.sh                       
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                  
 # Mallory Row / mallory.row@noaa.gov 
 # Samira Ardani / samira.ardani@noaa.gov
