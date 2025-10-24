@@ -52,8 +52,8 @@ export KEEPDATA=${KEEPDATA:-NO}
 ### developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER"
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
-export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}_devonly/${evs_ver_2d}
+export COMOUT=${OUTPUTROOT}/${NET}_devonly/${evs_ver_2d}/${STEP}/${COMPONENT}
  
 export run_mpi='yes'
 export gather='yes'
