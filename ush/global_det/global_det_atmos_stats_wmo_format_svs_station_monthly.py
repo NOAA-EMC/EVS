@@ -363,7 +363,7 @@ for time_score_iter in time_score_iter_list:
                         wmo_v = '%s' % float('%.4g' % wmo_v)
                     VDATE_monthly_svs_lines.append(
                         f"centre={wmo_centre},model={wmo_model},d={wmo_d},"
-                        +f"parm={wmo_param},t={wmo_t},s={wmo_s},st={wmo_st},"
+                        +f"par={wmo_param},t={wmo_t},s={wmo_s},st={wmo_st},"
                         +f"lat={wmo_lat},lon={wmo_lon},lam={wmo_lam},"
                         +f"lom={wmo_lom},se={wmo_se},me={wmo_me},sc={wmo_sc},"
                         +f"th={wmo_th},n={wmo_n},v={wmo_v}\n"
