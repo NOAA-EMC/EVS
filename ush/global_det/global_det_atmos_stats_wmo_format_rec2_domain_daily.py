@@ -199,6 +199,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
                                 wmo_v = str(
                                     round(float(stat_line.iloc[0][met_stat]),3)
                                 )
+                                wmo_n = stat_line['TOTAL'].values[0]
                             else:
                                 wmo_v = 'nil'
                             if wmo_sc == 'sd' and str(wmo_s) == '12':
@@ -221,7 +222,7 @@ for wmo_verif in list(wmo_verif_info_dict.keys()):
                                 f"centre={wmo_centre},model={wmo_model},"
                                 +f"ref={wmo_ref},t={wmo_t},s={wmo_s},"
                                 +f"par={wmo_par},dom={wmo_dom},"
-                                +f"d={wmo_d},sc={wmo_sc},v={wmo_v}\n"
+                                +f"d={wmo_d},sc={wmo_sc},n={wmo_n},v={wmo_v}\n"
                             )
 
 # Write daily file
