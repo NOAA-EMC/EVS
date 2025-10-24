@@ -1,4 +1,4 @@
-#PBS -N jevs_statS_cam_hireswfv3_severe_00
+#PBS -N jevs_stats_cam_hireswfv3_severe_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
