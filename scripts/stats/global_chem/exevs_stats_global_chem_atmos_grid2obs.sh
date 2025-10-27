@@ -39,7 +39,7 @@ export METPLUS_PATH
 grid2obs_list="${DATA_TYPE}"
 
 export init_cyc="00 12"
-let fcst_hr_inc=1
+let fcst_hr_inc=3
 
 for ObsType in ${grid2obs_list}; do
     export ObsType
