@@ -1,4 +1,4 @@
-#PBS -N evs_global_det_wave_prep
+#PBS -N evs_global_det_prep_wave
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -55,7 +55,7 @@ export OBSNAME="ndbc"
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_GLOBAL_DET_PREP
+$HOMEevs/jobs/JEVS_PREP_GLOBAL_DET
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

@@ -1,10 +1,10 @@
-#PBS -N jevs_global_det_atmos_prep_00
+#PBS -N jevs_global_det_prep_wave_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:45:00
-#PBS -l place=exclhost,select=1:ncpus=1:mem=100GB
+#PBS -l walltime=00:10:00
+#PBS -l place=shared,select=1:ncpus=1:mem=15GB
 #PBS -l debug=true
 
 set -x 
@@ -17,7 +17,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export SENDMAIL=YES
 export KEEPDATA=NO
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_prep}
+export job=${PBS_JOBNAME:-jevs_global_det_prep_wave}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -35,19 +35,19 @@ export envir=prod
 export NET=evs
 export STEP=prep
 export COMPONENT=global_det
-export RUN=atmos
+export RUN=wave
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN
 
-export MODELNAME="cfs cmc cmc_regional dwd fnmoc gfs imd jma metfra ukmet ecmwf"
-export OBSNAME="osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_nam"
+export MODELNAME="gfs"
+export OBSNAME="prepbufr_gdas ndbc jason3"
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_GLOBAL_DET_PREP
+$HOMEevs/jobs/JEVS_PREP_GLOBAL_DET
 
-######################################################################
-# Purpose: This does the prep work for the global deterministic atmospheric
-######################################################################
+#####################################################################
+# Purpose: This does the prep work for the global deterministic wave
+#####################################################################

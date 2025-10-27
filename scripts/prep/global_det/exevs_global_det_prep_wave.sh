@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_wave_prep.sh
+# Name of Script: exevs_global_det_prep_wave.sh
 # Developers: Deanna Spindler / Deanna.Spindler@noaa.gov
 #             Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script is run for the global_det wave prep step
