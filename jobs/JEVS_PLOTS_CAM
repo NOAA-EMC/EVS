@@ -119,9 +119,9 @@ echo $COMPATH
 #######################################################################
 
 if [ $MODELNAME = nam_firewxnest ]; then
- $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+ $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}.sh
 else
- $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+ $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${MODELNAME}_${VERIF_CASE}.sh
 fi
 export err=$?; err_chk
 
