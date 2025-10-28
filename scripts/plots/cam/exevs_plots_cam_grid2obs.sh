@@ -2,9 +2,9 @@
 
 # =============================================================================
 #
-# NAME: exevs_cam_headline_plots.sh
+# NAME: exevs_plots_cam_grid2obs.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS CAM Headline - Plots job
+# PURPOSE: Handle all components of an EVS CAM Grid2Obs - Plots job
 # DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_PLOTS 
 #
 # =============================================================================
@@ -30,13 +30,13 @@ python ${USHevs}/cam/cam_production_restart.py
 export err=$?; err_chk
 
 # Create Job Script 
-python $USHevs/cam/cam_plots_headline_create_job_scripts.py
+python $USHevs/cam/cam_plots_grid2obs_create_job_scripts.py
 export err=$?; err_chk
 export njob=$((njob+1))
 
 # Create POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_plots_headline_create_poe_job_scripts.py
+    python $USHevs/cam/cam_plots_grid2obs_create_poe_job_scripts.py
     export err=$?; err_chk
 fi
 
@@ -44,7 +44,7 @@ fi
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run All CAM headline/plots Jobs
+# Run All CAM grid2obs/plots Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/plotting_job_scripts/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/plotting_job_scripts/job* 2>/dev/null |wc -l)
 nc=1
@@ -56,7 +56,7 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,core cfp"
+            launcher="mpiexec -np $nproc -ppn $ncpu --cpu-bind verbose,depth cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -67,6 +67,7 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
+    set -x
     while [ $nc -le $ncount_job ]; do
         job_file="${DATA}/${VERIF_CASE}/plotting_job_scripts/job${nc}"
         if [ -f "$job_file" ]; then
@@ -75,6 +76,7 @@ else
         fi
         nc=$((nc+1))
     done
+    set -x
 fi
 
 # Copy Plots Output to Main Directory
@@ -102,14 +104,14 @@ if [ -d $log_dir ]; then
 fi
 
 # Tar and Copy output files to EVS COMOUT directory
-find ${DATA}/${VERIF_CASE}/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##' -T -
+find ${DATA}/${VERIF_CASE}/* -name "*.png" -type f -not -path "*workdirs*" -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar --transform='s#.*/##' -T -
 
 if [ $SENDCOM = YES ]; then
-    FILE=${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar
+    FILE=${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar
     if [ -s "$FILE" ]; then
        cp -v ${FILE} ${COMOUTplots}/.
     fi
 fi
 if [ $SENDDBN = YES ]; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar
+     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${EVAL_PERIOD}.v${VDATE}.tar
 fi

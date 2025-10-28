@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ##################################################################################
-# Name of Script: exevs_cam_radar_plots.sh
+# Name of Script: exevs_plots_cam_severe.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
-# Purpose of Script: This script runs METplus to generate radar
+# Purpose of Script: This script runs METplus to generate severe
 #                    verification graphics for deterministic and ensemble CAMs.
 ##################################################################################
 
@@ -23,8 +23,8 @@ set -x
 ############################################################
 
 export machine=${machine:-"WCOSS2"}
-export MODELS="hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3, href_pmmn"
-export VERIF_TYPE="mrms"
+export MODELS="hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3, href"
+export VERIF_TYPE="lsr"
 export DATE_TYPE="INIT"
 export eval_period=`echo ${EVAL_PERIOD} | tr '[:upper:]' '[:lower:]'`
 export pastdays=`echo ${EVAL_PERIOD} | cut -c 5-6`
@@ -33,11 +33,6 @@ export VALID_END=""
 export INIT_BEG=""
 export INIT_END=""
 export FCST_VALID_HOUR=""
-export FCST_LEAD="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60"
-
-#PLOT_TYPES="threshold_average lead_average performance_diagram"
-DOMAINS="alaska conus"
-FCST_INIT_HOURS="0 6 12 18"
 
 
 ############################################################
@@ -66,7 +61,8 @@ export MET_VERSION="${MET_VERSION%.}"
 
 
 ############################################################
-# Write poescript for each domain and use case
+# Symlink .stat files from COMIN
+# Mainly for HREF when product is included in model name 
 ############################################################
 
 # Create working directories 
@@ -76,7 +72,7 @@ mkdir -p ${OUTPUT_DIR}
 mkdir -p ${DATA}/out/logs # main log output dir
 
 
-model_list="hrrr namnest hireswarw hireswarwmem2 hireswfv3 href_pmmn"
+model_list="hrrr namnest hireswarw hireswarwmem2 hireswfv3 href"
 
 for model in ${model_list}; do
    n=0
@@ -104,12 +100,18 @@ for model in ${model_list}; do
 done
 
 
+############################################################
+# Write poescript for each domain and use case
+############################################################
 
+DOMAINS="conus"
 
 if [ "$LINE_TYPE" = "nbrcnt" ]; then
    PLOT_TYPES="lead_average threshold_average"
 elif [ "$LINE_TYPE" = "nbrctc" ]; then
    PLOT_TYPES="lead_average performance_diagram threshold_average"
+elif [ "$LINE_TYPE" = "pstd" ]; then
+   PLOT_TYPES="lead_average threshold_average"
 fi
 
 
@@ -118,25 +120,38 @@ njob=0
 #Loop over plot types
 for PLOT_TYPE in ${PLOT_TYPES}; do
 
+   if [ "$PLOT_TYPE" = "lead_average" ]; then
+      FCST_INIT_HOURS="0,6,12,18"
+   else
+      FCST_INIT_HOURS="0 6 12 18"
+   fi
+
    # Loop over domains
    for DOMAIN in ${DOMAINS}; do
 
-      # Set list of fields based on domain
-      if [ "$DOMAIN" = "conus" ]; then
-         RADAR_FIELDS="REFC RETOP"
-      elif [ "$DOMAIN" = "alaska" ]; then
-         RADAR_FIELDS="REFC"
-      fi
-
-      # Loop over radar fields
-      for RADAR_FIELD in ${RADAR_FIELDS}; do
+      # Loop over forecast initializations
+      for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
+	
+         if [ "$FCST_INIT_HOUR" = "0,6,12,18" ]; then
+          # export FCST_LEADs="24,30,36,42,48,54,60"
+            export FCST_LEADs="24,36,48,60"
+         elif [ "$FCST_INIT_HOUR" = "0" ]; then
+            export FCST_LEADs="36 60"
+         elif [ "$FCST_INIT_HOUR" = "6" ]; then
+            export FCST_LEADs="30 54"
+         elif [ "$FCST_INIT_HOUR" = "12" ]; then
+            export FCST_LEADs="24 48"
+         elif [ "$FCST_INIT_HOUR" = "18" ]; then
+            export FCST_LEADs="42"
+         fi
 
          # Loop over forecast initializations
-         for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
+         for FCST_LEAD in ${FCST_LEADs}; do
 	
-            echo "${USHevs}/${COMPONENT}/evs_cam_plots_radar.sh $PLOT_TYPE $DOMAIN $RADAR_FIELD $LINE_TYPE $FCST_INIT_HOUR $njob" >> $DATA/poescript
+            echo "${USHevs}/${COMPONENT}/evs_cam_plots_severe.sh $PLOT_TYPE $DOMAIN $LINE_TYPE $FCST_INIT_HOUR $FCST_LEAD $njob" >> $DATA/poescript
             mkdir -p ${DATA}/out/workdirs/job${njob}/logs
             njob=$((njob+1))
+
 
          done
 
@@ -145,7 +160,6 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
    done
 
 done
-
 
 
 ###################################################################
@@ -157,7 +171,7 @@ chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=${DATA}/poescript
 
-export USE_CFP=YES
+export USE_CFP=NO
 
 if [ "$USE_CFP" = "YES" ]; then
 
