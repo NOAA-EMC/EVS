@@ -1,4 +1,4 @@
-#PBS -N jevs_plots_global_chem_atmos_grid2obs_airnow_last90days
+#PBS -N jevs_plots_global_chem_atmos_grid2obs_hourly_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -23,7 +23,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 export SENDCOM=YES
 export KEEPDATA=NO
 export SENDDBN=NO
-export job=${PBS_JOBNAME:-jevs_plots_global_chem_atmos_grid2obs_airnow_last90days}
+export job=${PBS_JOBNAME:-jevs_plots_global_chem_atmos_grid2obs_hourly_last31days}
 export jobid=${job}.${PBS_JOBID:-$$}
 export vhr=00
 
@@ -44,8 +44,8 @@ export STEP=plots
 export COMPONENT=global_chem
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export DATA_TYPE=airnow
-export NDAYS=90
+export DATA_TYPE=hourly
+export NDAYS=31
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
 export TMPDIR=${DATAROOT}
@@ -59,5 +59,5 @@ ${HOMEevs}/jobs/JEVS_PLOTS_GLOBAL_CHEM
 
 ######################################################################
 # Purpose: This does the plotting work for the global chemistry
-#          grid-to-observations airnow for last 90 days
+#          grid-to-observations hourly for last 31 days
 ######################################################################
