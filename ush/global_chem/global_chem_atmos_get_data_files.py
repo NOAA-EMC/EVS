@@ -23,8 +23,6 @@ STEP = os.environ['STEP']
 DATA = os.environ['DATA']
 COMIN = os.environ['COMIN']
 model_list = os.environ['model_list'].split(' ')
-g2op_type_list = os.environ['g2op_type_list'].split(' ')
-g2op_obsvar_list = os.environ['g2op_obsvar_list'].split(' ')
 model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 model_file_format_list = os.environ['model_file_format_list'].split(' ')
 start_date = os.environ['start_date']
@@ -32,7 +30,7 @@ end_date = os.environ['end_date']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
-VERIF_CASE_STEP_obsvar_list = (os.environ[VERIF_CASE_STEP_abbrev+'_obsvar_list'] \
+VERIF_CASE_STEP_src_list = (os.environ[VERIF_CASE_STEP_abbrev+'_src_list'] \
                              .split(' '))
 USER = os.environ['USER']
 evs_run_mode = os.environ['evs_run_mode']
@@ -66,23 +64,24 @@ if STEP == 'plots' :
         model_evs_data_dir = model_evs_data_dir_list[model_idx]
         for obs_idx in range(len(VERIF_CASE_STEP_type_list)):
             obstype = VERIF_CASE_STEP_type_list[obs_idx]
-            obsvar  = VERIF_CASE_STEP_obsvar_list[obs_idx]
+            obssrc  = VERIF_CASE_STEP_src_list[obs_idx]
             date_dt = start_date_dt
             while date_dt <= end_date_dt:
                 if date_type == 'VALID':
                     if evs_run_mode == 'production':
                         source_model_date_stat_file = os.path.join(
-                            model_evs_data_dir, model+'.'+obstype+obsvar+"."
+                            model_evs_data_dir, model+'.'+obssrc+'_'+obstype+'.'
                             +'v'+date_dt.strftime('%Y%m%d')+'.stat'
                         )
                     else:
                         source_model_date_stat_file = os.path.join(
-                            model_evs_data_dir, model+'.'+obstype+obsvar+"."
+                            model_evs_data_dir,
+                            'evs.stats.'+model+'_'+obssrc+'_'+obstype+"."+RUN+'.'+VERIF_CASE+'.'
                             +'v'+date_dt.strftime('%Y%m%d')+'.stat'
                         )
                     dest_model_date_stat_file = os.path.join(
                         VERIF_CASE_STEP_data_dir, model,
-                        model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
+                        model+'_'+obstype+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
                 if not os.path.exists(dest_model_date_stat_file):
                     if gda_util.check_file_exists_size(

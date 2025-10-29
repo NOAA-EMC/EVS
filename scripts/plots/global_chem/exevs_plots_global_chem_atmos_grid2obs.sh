@@ -30,54 +30,47 @@ ObsType=`echo ${DATA_TYPE} | tr A-Z a-z`
 export ObsType
 
 IFS=' ' read -ra obstype_list <<< "${g2op_type_list}"
-IFS=' ' read -ra obsvar_list <<< "${g2op_obsvar_list}"
+IFS=' ' read -ra obssrc_list <<< "${g2op_src_list}"
 let num_obstype=${#obstype_list[@]}
+let num_obssrc=${#obssrc_list[@]}
 if [ ${num_obstype} -lt 1 ]; then
-    echo "WARNING: There is no variable to be plotted ${g2op_type_list}, program exit"
+    echo "DEBUG: There is no obs variable to be plotted, ${MODELNAME} ${RUN} ${VERIF_CASE} ${STEP} step will be skipped"
     exit
 fi
-
-varid="undefined"
-let iobstype=0
-while [ ${iobstype} -lt ${num_obstype} ]; do
-    if [ "${ObsType}" == "${obstype_list[${iobstype}]}" ]; then
-        export varid=${obsvar_list[${iobstype}]}
-    fi
-    ((iobstype++))
-done
-
-if [ "${varid}" == "undefined" ]; then
-    echo "WARNING: can not find observation index for variable ${ObsType}, program exit"
+if [ ${num_obstype} -ne ${num_obssrc} ]; then
+    echo "DEBUG: The number of obs variables to be plotted is different from obs sources, ${MODELNAME} ${RUN} ${VERIF_CASE} ${STEP} step will be skipped"
     exit
 fi
-
-# Bring in all stats files, and rename files to include display name
-# for different models or types of solution defined in ${config}
 
 IFS=' ' read -ra mdl_list <<< "${model_list}"
 IFS=' ' read -ra mdl_idir_list <<< "${model_evs_stats_dir_list}"
 let num_mdl=${#mdl_list[@]}
 if [ ${num_mdl} -gt 10 ]; then
-    echo "number of model to be plotted can not exceed 10"
+	echo "DEBUG: The number of models to be plotted exceeds the maximum (=10), ${MODELNAME} ${RUN} ${VERIF_CASE} ${STEP} step will be skipped"
     exit
 fi
 let imdl=0
 while [ ${imdl} -lt ${num_mdl} ]; do
-    mdl=${mdl_list[${imdl}]}
-    mdl_id=$( echo ${mdl_list[${imdl}]} | awk -F${MODELNAME} '{print $2}' )
+    modelid=${mdl_list[${imdl}]}
     idir=${mdl_idir_list[${imdl}]}
-    NOW=${VDATE_START}
-    while [ ${NOW} -le ${VDATE_END} ]; do
-        cpfile=evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${varid}.v${NOW}.stat
-        sedfile=${mdl}.${ObsType}${varid}.v${NOW}.stat
-        if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
-            cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
-            sed "s/${model1}/${mdl}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
-        else
-            echo "DEBUG ${MODELNAME} ${STEP} :: Can not find ${idir}/${MODELNAME}.${NOW}/${cpfile}"
-        fi
-        cdate=${NOW}"00"
-        NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
+    let ivar=0
+    while [ ${ivar} -lt ${num_obstype} ]; do
+	obsvar=${obstype_list[${ivar}]}
+	obssrc=${obssrc_list[${ivar}]}
+        NOW=${VDATE_START}
+        while [ ${NOW} -le ${VDATE_END} ]; do
+            cpfile=evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}_${obssrc}_${obsvar}.v${NOW}.stat
+            sedfile=${modelid}_${obssrc}_${obsvar}.v${NOW}.stat
+            if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
+                cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
+                sed "s/${model1}/${modelid}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
+            else
+                echo "DEBUG: There is a missing stats file ${idir}.${NOW}/${cpfile}, the missing file will be skipped"
+            fi
+            cdate=${NOW}"00"
+            NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
+        done
+        ((ivar++))
     done
     ((imdl++))
 done
@@ -169,9 +162,9 @@ if [ "${SENDCOM}" == "YES" ]; then
     for VERIF_TYPE in ${g2op_type_list}; do
         tar_file_combine=${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.${fig_name_label}.v${end_date}.tar
         large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${tar_file_combine}
-        tar_file_count=$(find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files -type f 2>/dev/null | wc -l)
+        tar_file_count=$(find ${DATA}/${VERIF_CASE}_${STEP}/plot_output/tar_files ${VERIF_CASE}_${VERIF_TYPE}*.tar 2>/dev/null | wc -l)
         if [ ${tar_file_count} -ne 0 ]; then
-            tar -cvf ${large_tar_file} *.tar
+            tar -cvf ${large_tar_file} ${VERIF_CASE}_${VERIF_TYPE}*.tar
         fi
         if [ -f ${large_tar_file} ]; then
            cp -v ${large_tar_file} ${COMOUT}/.

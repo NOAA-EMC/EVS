@@ -220,8 +220,17 @@ class PlotSpecs:
         """
         var_name_level = var_name+'/'+var_level
         var_plot_name_dict = {
-            'AOTK/L0': 'Aerosol Optical Depth at 550nm',
+            'OZCON1/A1': 'Surface Layer Hourly Ozone Concentration',
+            'OZMAX8/L1': 'Daily Maximum 8-hour Average Ozone Concentration',
             'PMTF/L0': 'Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
+            'PMTF/L1': 'Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
+            'PMTF/Z8': 'Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
+            'PMTC/L0': 'Particulate matter with diameters $\u2264$ 10 $\u03bcm$',
+            'PMTC/L1': 'Particulate matter with diameters $\u2264$ 10 $\u03bcm$',
+            'PMTC/Z8': 'Particulate matter with diameters $\u2264$ 10 $\u03bcm$',
+            'PMAVE/A23': '24hr-Average Particulate matter with diameters $\u2264$ 2.5 $\u03bcm$',
+            'AOTK/L0': 'Aerosol Optical Depth at 550nm',
+            'AOD/L0': 'Aerosol Optical Depth at 550nm',
             'APCP/A24': '24 hour Accumulated Precipitation',
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
@@ -460,8 +469,10 @@ class PlotSpecs:
             'aeronet': 'AERONET',
             'aeronet_aod': 'AERONET',
             'abi': 'GOES ABI',
+            'abiaod': 'GOES ABI',
             'abi_aod': 'GOES ABI',
             'viirs': 'VIIRS',
+            'viirsaod': 'VIIRS',
             'viirs_aod': 'VIIRS'
         }
         if ob_name in list(obs_plot_name_dict.keys()):
@@ -503,6 +514,7 @@ class PlotSpecs:
              'GLOBAL': 'Global',
              'GreatBasin': 'Great Basin',
              'GreatLakes': 'Great Lakes',
+             'Hawaii': 'Hawaii',
              'Mezquital': 'Mezquital',
              'MidAtlantic': 'Mid-Atlantic',
              'N60N90': '60N-90N',
@@ -516,6 +528,7 @@ class PlotSpecs:
              'PacificNW': 'Pacific Northwest',
              'PacificSW': 'Pacific Southwest',
              'Prairie': 'Prairie',
+             'PuertoRico': 'Puerto Rico',
              'S60S90': '60S-90S',
              'SAMERICA': 'South America',
              'SAO': 'Southern Atlantic Ocean',
@@ -687,18 +700,19 @@ class PlotSpecs:
         if plot_info_dict['fcst_var_name'] == 'ICEEX_DAILYAVG' \
                 and units == '10^6_km^2':
             units = 'x'+units.replace('_', ' ')
-        elif plot_info_dict['fcst_var_name'] == 'AOTK':
+        elif plot_info_dict['fcst_var_name'] == 'AOTK' or plot_info_dict['fcst_var_name'] == 'AOD':
             units = 'unitless'
-        elif plot_info_dict['fcst_var_name'] == 'PMTF':
+        elif plot_info_dict['fcst_var_name'] == 'PMTF' or plot_info_dict['fcst_var_name'] == 'PMAVE' or plot_info_dict['fcst_var_name'] == 'PMTC':
             units = '$\u03bcg/m^3$'
+        elif plot_info_dict['fcst_var_name'] == 'OZCON1' or plot_info_dict['fcst_var_name'] == 'OZMAX8':
+            units = 'ppbV'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
-            if plot_info_dict['fcst_var_name'] == 'AOTK':
-                plot_title = plot_title+', '+var_thresh_for_title.replace("ge","$\u2265$")
-            elif plot_info_dict['fcst_var_name'] == 'PMTF':
-                plot_title = plot_title+', '+var_thresh_for_title.replace("gt","$\u003E$")+' '+units
+            var_thresh_symbol = var_thresh_for_title.replace("gt","$\u003E$").replace("ge","$\u2265$")
+            if plot_info_dict['fcst_var_name'] == 'AOTK' or plot_info_dict['fcst_var_name'] == 'AOD':
+                plot_title = plot_title+', '+var_thresh_symbol
             else:
-                plot_title = plot_title+', '+var_thresh_for_title+' '+units
+                plot_title = plot_title+', '+var_thresh_symbol+' '+units
             thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
             if plot_info_dict['fcst_var_name'] == 'APCP':
                 thresh_in = round(thresh_value*0.0393701, 3)
@@ -786,7 +800,6 @@ class PlotSpecs:
             date_info_dict['end_date'], '%Y%m%d'
         )
         ndays = int((end_date_dt - start_date_dt).total_seconds()/86400) + 1
-        ndays_savefig_name = 'last'+str(ndays)+'days'
 
         savefig_name_label = plot_info_dict['fig_name_label']
 
@@ -852,6 +865,7 @@ class PlotSpecs:
             'GLOBAL': 'glb',
             'GreatBasin': 'buk_grb',
             'GreatLakes': 'buk_grlk',
+            'Hawaii': 'hawaii',
             'Mezquital': 'buk_mez',
             'MidAtlantic': 'buk_matl',
             'N60N90': 'n60',
@@ -865,6 +879,7 @@ class PlotSpecs:
             'PacificNW': 'buk_npw',
             'PacificSW': 'buk_psw',
             'Prairie': 'buk_pra',
+            'PuertoRico':'puertorico',
             'S60S90': 's60',
             'SAMERICA': 'samer',
             'SAO': 'sao',

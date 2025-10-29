@@ -313,16 +313,10 @@ class ThresholdAverage:
                     f"{thresh[0:2]}{str(convert_thresh_K_to_F)}"
                 )
             ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] == 'AOTK':
+        elif self.plot_info_dict['fcst_var_name'] in [ 'PMTF', 'PMTC', 'AOTK' ]:
             convert_thresh_list = []
             for thresh in self.plot_info_dict['fcst_var_threshs']:
-                convert_thresh_sign = thresh.replace("ge","$\u2265$")
-                convert_thresh_list.append(convert_thresh_sign)
-            ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] == 'PMTF':
-            convert_thresh_list = []
-            for thresh in self.plot_info_dict['fcst_var_threshs']:
-                convert_thresh_sign = thresh.replace("gt","$\u003E$")
+                convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
                 convert_thresh_list.append(convert_thresh_sign)
             ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
         else:
