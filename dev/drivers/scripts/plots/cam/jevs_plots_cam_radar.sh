@@ -30,7 +30,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+export evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 
 ############################################################
@@ -48,9 +48,9 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONEN
 export nproc=64
 ############################################################
 
-export vhr=${vhr:-${vhr}}
-export EVAL_PERIOD=${EVAL_PERIOD:-${EVAL_PERIOD}}
-export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
+export vhr=${vhr:-00}
+export EVAL_PERIOD=${EVAL_PERIOD:-LAST31DAYS}
+export LINE_TYPE=${LINE_TYPE:-nbrctc}
 
 export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
