@@ -1,4 +1,4 @@
-#PBS -N evs_plots_global_chem_atmos_grid2obs_aeronet_last31days
+#PBS -N evs_plots_global_chem_atmos_grid2obs_hourly_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -57,8 +57,8 @@ export USE_CFP=YES
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export DATA_TYPE=aeronet
-export NDAYS=31
+export DATA_TYPE=hourly
+export NDAYS=90
 
 ######################################################################
 # Execute j-job

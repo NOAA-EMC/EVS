@@ -426,9 +426,7 @@ suite evs_nco
               time 00:30
           endfamily
           family global_chem
-            task jevs_plots_global_chem_atmos_grid2obs_aeronet_last90days
-              time 00:45
-            task jevs_plots_global_chem_atmos_grid2obs_airnow_last90days
+            task jevs_plots_global_chem_atmos_grid2obs_hourly_last90days
               time 00:45
             task jevs_plots_global_chem_headline_grid2obs_last90days
               time 00:45
