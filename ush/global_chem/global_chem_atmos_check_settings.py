@@ -105,7 +105,7 @@ evs_global_chem_atmos_settings_dict['RUN_GRID2GRID_PLOTS'] = [
     'g2gp_event_equalization'
 ]
 evs_global_chem_atmos_settings_dict['RUN_GRID2OBS_PLOTS'] = [
-    'g2op_model_plot_name_list', 'g2op_type_list', 'g2gp_src_list',
+    'g2op_model_plot_name_list', 'g2op_type_list', 'g2op_src_list',
     'g2op_event_equalization'
 ]
 
@@ -115,9 +115,9 @@ verif_case_step_settings_dict = {
         'viirsaod': ['init_hr_list', 'valid_hr_list']
     },
     'RUN_GRID2OBS_PLOTS': {
-        'pm25': ['init_hr_list', 'valid_hr_list']
-        'pm10': ['init_hr_list', 'valid_hr_list']
-        'aod': ['init_hr_list', 'valid_hr_list'],
+        'pm25': ['init_hr_list', 'valid_hr_list'],
+        'pm10': ['init_hr_list', 'valid_hr_list'],
+        'aod': ['init_hr_list', 'valid_hr_list']
     }
 }
 

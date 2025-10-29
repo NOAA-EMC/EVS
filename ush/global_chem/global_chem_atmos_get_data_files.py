@@ -70,7 +70,7 @@ if STEP == 'plots' :
                 if date_type == 'VALID':
                     if evs_run_mode == 'production':
                         source_model_date_stat_file = os.path.join(
-                            model_evs_data_dir, model+'.'+obssrc+'_'+obstype+'.'
+                            model_evs_data_dir, model+'_'+obssrc+'_'+obstype+'.'
                             +'v'+date_dt.strftime('%Y%m%d')+'.stat'
                         )
                     else:
