@@ -581,7 +581,7 @@ def check_plot_files(job_dict):
             if plot_dict['plot'] == 'time_series':
                 if plot_dict['stat'] == 'FBAR_OBAR' \
                         and str(plot_dict['forecast_hour']) not in \
-                        ['24', '48', '72', '96', '120']:
+                        ['00', '24', '48', '72', '96', '120']:
                     continue
                 if init_hr not in init_hrs:
                     continue

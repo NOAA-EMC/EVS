@@ -186,13 +186,13 @@ for pm10_job in list(filter_stats_jobs_dict['pm10'].keys()):
         if pm10_job == 'PM10':
             (filter_stats_jobs_dict['pm10'][f"{pm10_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
-                 'gt5',  'gt10', 'gt15', 'gt25', 'gt35',
-                 'gt40', 'gt50', 'gt60', 'gt80', 'gt100'
+                 'gt10', 'gt20',  'gt30', 'gt40', 'gt60',
+                 'gt80', 'gt100', 'gt200'
              ]
             (filter_stats_jobs_dict['pm10'][f"{pm10_job}_Thresh"]\
              ['obs_var_dict']['threshs']) = [
-                 'gt5',  'gt10', 'gt15', 'gt25', 'gt35',
-                 'gt40', 'gt50', 'gt60', 'gt80', 'gt100'
+                 'gt10', 'gt20',  'gt30', 'gt40', 'gt60',
+                 'gt80', 'gt100', 'gt200'
              ]
 #### aod
 for aod_job in list(filter_stats_jobs_dict['aod'].keys()):
@@ -219,13 +219,13 @@ for aod_job in list(filter_stats_jobs_dict['aod'].keys()):
         if aod_job == 'AOD':
             (filter_stats_jobs_dict['aod'][f"{aod_job}_Thresh"]\
              ['fcst_var_dict']['threshs']) = [
-                 'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
-                 'ge2.0'
+                 'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8',
+                 'ge1.0', 'ge2.0'
              ]
             (filter_stats_jobs_dict['aod'][f"{aod_job}_Thresh"]\
              ['obs_var_dict']['threshs']) = [
-                 'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8', 'ge1.0',
-                 'ge2.0'
+                 'ge0.1', 'ge0.2', 'ge0.4', 'ge0.6', 'ge0.8',
+                 'ge1.0', 'ge2.0'
              ]
 if JOB_GROUP == 'filter_stats':
     JOB_GROUP_dict = filter_stats_jobs_dict
