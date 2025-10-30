@@ -778,6 +778,16 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             full_job_levels_dict[full_level_key]
                         )
                     job_env_dict['MODEL'] = model_list[model_idx]
+                    if JOB_GROUP == 'generate_stats' \
+                            and job_env_dict['MODEL'] == 'ukmet' \
+                            and verif_type_job =='RelHum':
+                        # Prevent restart from using its full fhr_list
+                        # for RH (not avail past F120 in ukmet)
+                        job_env_dict['fhr_list'] = "'" + ', '.join(str(x) for x in \
+                                (int(t) for t in full_job_fhr_list.strip("'").split(',')) if x <= 120) + "'"
+                        print(job_env_dict['fhr_list'])
+                    else:
+                        job_env_dict['fhr_list'] = full_job_fhr_list
                     njobs+=1
                     job_env_dict['job_num'] = str(njobs)
                     # Create job file

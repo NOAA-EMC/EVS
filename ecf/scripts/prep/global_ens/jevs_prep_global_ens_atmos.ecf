@@ -1,10 +1,10 @@
-#PBS -N evs_global_ens_naefs_atmos_prep
+#PBS -N evs_prep_global_ens_atmos
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:shared,select=1:ncpus=34:mem=50GB
+#PBS -l walltime=06:00:00
+#PBS -l place=vscatter:exclhost,select=2:ncpus=42:mem=200GB
 #PBS -l debug=true
 
 export model=evs
@@ -34,6 +34,7 @@ module load cfp/${cfp_ver}
 module load cdo/${cdo_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
+module load bufr/${bufr_ver}
 module list
 
 ############################################################
@@ -48,15 +49,12 @@ export OMP_NUM_THREADS=1
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2grid
-export MODELNAME=naefs
-export run_mpi=yes
-export get_gefs_bc_apcp24h=yes
-export get_model_bc=yes
+export MODELNAME=gefs
 
 ############################################################
 # Execute j-job
 ############################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
+${HOMEevs}/jobs/JEVS_PREP_GLOBAL_ENS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

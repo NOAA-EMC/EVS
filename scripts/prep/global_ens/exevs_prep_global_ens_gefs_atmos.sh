@@ -1,7 +1,7 @@
 #!/bin/ksh
 #*****************************************************************************************
 # Purposes: 1. Set up required environment parameters 
-#           2. Run global_ens_gefs_atmos_prep job
+#           2. Run jevs_prep_global_ens_gefs_atmos job
 #
 # Notes: this job will:
 #           1. Retrive/regrid analysis/observational data (1 degree and 1.5 degree for
