@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_wave_prep
+#PBS -N jevs_prep_global_ens_wave
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -49,7 +49,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 
-export job=${PBS_JOBNAME:-jevs_global_ens_wave_prep}
+export job=${PBS_JOBNAME:-jevs_prep_global_ens_wave}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -57,7 +57,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/JEVS_GLOBAL_ENS_PREP
+$HOMEevs/jobs/JEVS_PREP_GLOBAL_ENS
 
 ######################################################################
 # Purpose: This does the prep work for the global_ens GEFS-Wave model

@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_headline_prep
+#PBS -N jevs_prep_global_ens_headline
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
@@ -35,7 +35,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export run_mpi=no
@@ -46,5 +46,5 @@ export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
 if [ -z "$MAILTO" ]; then
    echo "MAILTO variable is not defined. Exiting without continuing."
 else
-  ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
+  ${HOMEevs}/jobs/JEVS_PREP_GLOBAL_ENS
 fi
