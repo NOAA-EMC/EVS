@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=1:50:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=64
+#PBS -l place=vscatter:exclhost,select=1:ncpus=64:ompthreads=1:mem=40GB
 #PBS -l debug=true
 
 
@@ -44,7 +44,7 @@ export MODELNAME=${COMPONENT}
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}_${LINE_TYPE}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export nproc=64
 ############################################################
 
