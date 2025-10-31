@@ -91,19 +91,19 @@ mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
 # Execute the script                
 ####################################    
 if [ "${RUN}" == "headline" ] ; then
-    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh $VDATE $MODELNAME upper
 elif [ "${RUN}" == "wmo" ] ; then
-    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh $VDATE $MODELNAME upper
 elif [ "${RUN}" == "atmos" ] ; then
     if [ "${VERIF_CASE}" == "grid2grid" ] ; then
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh $VDATE $MODELNAME upper
     elif [ "${VERIF_CASE}" == "grid2obs" ] || [ "${VERIF_CASE}" == "cnv" ] ; then
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_grid2obs_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_grid2obs.sh $VDATE $MODELNAME $VERIF_CASE
     else
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_grid2grid_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_grid2grid.sh $VDATE $MODELNAME $VERIF_CASE
     fi 
 elif [ "${RUN}" == "wave" ] ; then
-        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+        $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh
 fi
 export err=$?; err_chk
 
