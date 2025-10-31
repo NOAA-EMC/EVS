@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_gefs_wave_grid2obs_stats
+#PBS -N jevs_stats_global_ens_gefs_wave_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -51,7 +51,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export run_mpi='yes'
 export gather='yes'
 
-export job=${PBS_JOBNAME:-jevs_global_ens_gefs_wave_grid2obs_stats}
+export job=${PBS_JOBNAME:-jevs_stats_global_ens_gefs_wave_grid2obs}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -59,7 +59,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
+${HOMEevs}/jobs/JEVS_STATS_GLOBAL_ENS
 
 #######################################################################
 # Purpose: This calculates the stats for the global_ens GEFS-Wave model

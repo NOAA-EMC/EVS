@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_gefs_atmos_snowfall_stats
+#PBS -N jevs_stats_global_ens_gefs_atmos_sea_ice
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=1:mem=4GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter,select=1:ncpus=1:mem=1GB
 #PBS -l debug=true
 
 set -x
@@ -20,7 +20,7 @@ export NET=evs
 export RUN=atmos
 export STEP=stats
 export COMPONENT=global_ens
-export VERIF_CASE=snowfall
+export VERIF_CASE=sea_ice
 export MODELNAME=gefs
 
 module reset
@@ -33,12 +33,12 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 export KEEPDATA=NO
 
 export vhr=00
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 #export SENDMAIL=YES
 export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
 
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
+${HOMEevs}/jobs/JEVS_STATS_GLOBAL_ENS

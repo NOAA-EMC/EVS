@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_gfs_headline_grid2grid_stats
-#PBS -j oe 
+#PBS -N jevs_stats_global_ens_naefs_atmos_grid2grid
+#PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
-#PBS -l place=vscatter,select=1:ncpus=1:mem=1GB
+#PBS -l walltime=00:45:00
+#PBS -l place=vscatter,select=1:ncpus=2:mem=20GB
 #PBS -l debug=true
 
 set -x
@@ -17,11 +17,11 @@ source $HOMEevs/versions/run.ver
 
 export envir=prod
 export NET=evs
-export RUN=headline
+export RUN=atmos
 export STEP=stats
 export COMPONENT=global_ens
 export VERIF_CASE=grid2grid
-export MODELNAME=gfs
+export MODELNAME=naefs
 
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -33,14 +33,14 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 export KEEPDATA=NO
 
 export vhr=00
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
+
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_headline_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export run_mpi=no
 #export SENDMAIL=YES
 export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
 
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
+${HOMEevs}/jobs/JEVS_STATS_GLOBAL_ENS
