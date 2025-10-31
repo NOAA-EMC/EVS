@@ -1,6 +1,6 @@
 #!/bin/bash
 ################################################################################
-# Name of Script: exevs_global_ens_wave_gefs_grid2obs_plots.sh                       
+# Name of Script: exevs_plots_global_ens_wave_gefs_grid2obs.sh                       
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                    
 # Samira Ardani / samira.ardani@noaa.gov
 # Updates on 202505:
