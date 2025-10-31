@@ -1,10 +1,10 @@
-#PBS -N evs_global_ens_cmce_atmos_grid2grid_stats
+#PBS -N evs_stats_global_ens_ecme_atmos_precip
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=01:10:00
-#PBS -l place=vscatter:shared,select=1:ncpus=2:mem=50GB
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter:shared,select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
 export model=evs
@@ -46,13 +46,13 @@ fi
 export OMP_NUM_THREADS=1
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=grid2grid
-export MODELNAME=cmce
+export VERIF_CASE=precip
+export MODELNAME=ecme
 
 ############################################################
 # Execute j-job
 ############################################################
-${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
+${HOMEevs}/jobs/JEVS_STATS_GLOBAL_ENS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
