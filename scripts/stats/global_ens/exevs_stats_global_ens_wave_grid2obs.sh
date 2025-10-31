@@ -1,6 +1,6 @@
 #!/bin/bash
 ################################################################################
-# Name of Script: exevs_global_ens_wave_grid2obs_stats.sh                       
+# Name of Script: exevs_stats_global_ens_wave_grid2obs.sh                       
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                    
 # Mallory Row / Mallory.Row@noaa.gov
 # Samira Ardani / samira.ardani@noaa.gov
