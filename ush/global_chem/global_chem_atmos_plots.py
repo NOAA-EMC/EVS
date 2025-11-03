@@ -430,7 +430,7 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = False
             if plot_info_dict['stat'] == 'FBAR_OBAR' \
                     and str(date_info_dict['forecast_hour']) not in \
-                    ['00', '24', '48', '72', '96', '120']:
+                    ['0', '24', '48', '72', '96', '120']:
                 make_ts = False
             if make_ts:
                 plot_ts = gdap_ts.TimeSeries(logger, job_input_dir+'/..',
