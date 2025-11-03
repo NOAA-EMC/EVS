@@ -76,9 +76,9 @@ fi
 env
 
 if [ $RUN = headline ]; then
-    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_atmos_${RUN}_${STEP}.sh
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_atmos_${RUN}.sh
 else
-    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh
 fi
 export err=$?; err_chk
 

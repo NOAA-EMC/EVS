@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_atmos_long_term_plots.sh
+# Name of Script: exevs_plots_global_det_atmos_long_term.sh
 # Developers: Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script is run for the global_det atmos plots step
 #                    for the long-term verification. It uses EMC-developed
