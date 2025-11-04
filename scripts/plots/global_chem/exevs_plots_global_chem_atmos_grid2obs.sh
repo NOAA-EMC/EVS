@@ -53,17 +53,19 @@ let imdl=0
 while [ ${imdl} -lt ${num_mdl} ]; do
     modelid=${mdl_list[${imdl}]}
     idir=${mdl_idir_list[${imdl}]}
+    target_model="${modelid%v[0-9]*}"   ## model name separate by version number started with "v"
+    upper_model="${target_model^^}"     ## Upper case model name as in the stats files
     let ivar=0
     while [ ${ivar} -lt ${num_obstype} ]; do
 	obsvar=${obstype_list[${ivar}]}
 	obssrc=${obssrc_list[${ivar}]}
         NOW=${VDATE_START}
         while [ ${NOW} -le ${VDATE_END} ]; do
-            cpfile=evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}_${obssrc}_${obsvar}.v${NOW}.stat
+            cpfile=evs.stats.${target_model}.${RUN}.${VERIF_CASE}_${obssrc}_${obsvar}.v${NOW}.stat
             sedfile=${modelid}_${obssrc}_${obsvar}.v${NOW}.stat
-            if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
-                cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
-                sed "s/${model1}/${modelid}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
+            if [ -s ${idir}/${target_model}.${NOW}/${cpfile} ]; then
+                cp -v ${idir}/${target_model}.${NOW}/${cpfile} ${STATDIR}
+                sed "s/${upper_model}/${modelid}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
             else
                 echo "DEBUG: There is a missing stats file ${idir}.${NOW}/${cpfile}, the missing file will be skipped"
             fi
