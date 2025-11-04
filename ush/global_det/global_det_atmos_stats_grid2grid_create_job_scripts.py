@@ -986,7 +986,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             ukmet_fhr_rm_list = []
                             for fhr_chk in (job_env_dict['fhr_list']\
                                             .split(', ')):
-                                if int(fhr_chk) <= 120:
+                                if fhr_chk.strip().isdigit() and int(fhr_chk.strip()) <= 120:
                                     ukmet_fhr_list.append(fhr_chk)
                                 else:
                                     ukmet_fhr_rm_list.append(fhr_chk)
@@ -1028,7 +1028,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             ukmet_fhr_rm_list = []
                             for fhr_chk in (job_env_dict['fhr_list']\
                                             .split(', ')):
-                                if int(fhr_chk) <= 120:
+                                if fhr_chk.strip().isdigit() and int(fhr_chk.strip()) <= 120:
                                     ukmet_fhr_list.append(fhr_chk)
                                 else:
                                     ukmet_fhr_rm_list.append(fhr_chk)
@@ -1076,7 +1076,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     job_env_dict['fhr_list'].split(', ')
                                 )
                                 for fhr_chk in mod_full_fhr_list:
-                                    if int(fhr_chk) <= mod_fhr_thresh:
+                                    if fhr_chk.strip().isdigit() and int(fhr_chk.strip()) <= mod_fhr_thresh:
                                         mod_lefhr_list.append(fhr_chk)
                                     else:
                                         mod_gtfhr_list.append(fhr_chk)
