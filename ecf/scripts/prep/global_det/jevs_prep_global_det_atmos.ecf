@@ -1,4 +1,4 @@
-#PBS -N evs_global_det_prep_atmos
+#PBS -N evs_prep_global_det_atmos
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%

@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_atmos_wmo_stats.sh
+# Name of Script: exevs_stats_global_det_atmos_wmo.sh
 # Developers: Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script is run for the global_det atmos WMO stats step.
 #                    It does grid-to-grid and grid-to-observations following the

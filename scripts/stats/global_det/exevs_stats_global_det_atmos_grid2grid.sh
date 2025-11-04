@@ -1,15 +1,16 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_atmos_grid2obs_stats.sh
+# Name of Script: exevs_stats_global_det_atmos_grid2grid.sh
 # Developers: Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script is run for the global_det atmos stats step
-#                    for the grid-to-obs verification. It uses METplus to
+#                    for the grid-to-grid verification. It uses METplus to
 #                    generate the statistics.
 ###############################################################################
 
 set -x
 
-export VERIF_CASE_STEP_abbrev="g2os"
+export VERIF_CASE_STEP_abbrev="g2gs"
+export MET_PYTHON_EXE=/apps/prod/ve/intel/19.1.3.304/python/3.10.4/evs/2.0/bin/python
 
 echo "RUN MODE:$evs_run_mode"
 
@@ -34,8 +35,8 @@ export err=$?; err_chk
 
 # Send for missing files
 if [ $SENDMAIL = YES ] ; then
-    if ls $DATA/grid2obs_stats/data/mail_* 1> /dev/null 2>&1; then
-        for FILE in $DATA/grid2obs_stats/data/mail_*; do
+    if ls $DATA/grid2grid_stats/data/mail_* 1> /dev/null 2>&1; then
+        for FILE in $DATA/grid2grid_stats/data/mail_*; do
             $FILE
         done
     fi
@@ -44,8 +45,8 @@ fi
 # Create and run job scripts for reformat_data, assemble_data, generate_stats, and gather_stats
 for group in reformat_data assemble_data generate_stats gather_stats; do
     export JOB_GROUP=$group
-    echo "Creating and running jobs for grid-to-obs stats: ${JOB_GROUP}"
-    python $USHevs/global_det/global_det_atmos_stats_grid2obs_create_job_scripts.py
+    echo "Creating and running jobs for grid-to-grid stats: ${JOB_GROUP}"
+    python $USHevs/global_det/global_det_atmos_stats_grid2grid_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/*
     nc=1

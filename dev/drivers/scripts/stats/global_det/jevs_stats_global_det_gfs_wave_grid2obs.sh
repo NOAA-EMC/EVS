@@ -1,4 +1,4 @@
-#PBS -N jevs_global_det_gfs_wave_grid2obs_stats_00
+#PBS -N jevs_stats_global_det_gfs_wave_grid2obs_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -17,7 +17,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export SENDMAIL=YES
 export KEEPDATA=NO
-export job=${PBS_JOBNAME:-jevs_global_det_gfs_wave_grid2obs_stats}
+export job=${PBS_JOBNAME:-jevs_stats_global_det_gfs_wave_grid2obs}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -51,7 +51,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
+$HOMEevs/jobs/JEVS_STATS_GLOBAL_DET
 
 #######################################################################
 # Purpose: This does the statistics work for the global deterministic

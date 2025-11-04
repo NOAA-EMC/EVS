@@ -1,4 +1,4 @@
-#PBS -N jevs_global_det_metfra_atmos_grid2grid_stats_00
+#PBS -N jevs_stats_global_det_cmc_regional_atmos_grid2grid_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -17,7 +17,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export SENDMAIL=YES
 export KEEPDATA=NO
-export job=${PBS_JOBNAME:-jevs_global_det_metfra_atmos_grid2grid_stats}
+export job=${PBS_JOBNAME:-jevs_stats_global_det_cmc_regional_atmos_grid2grid}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -41,7 +41,7 @@ export STEP=stats
 export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2grid
-export MODELNAME=metfra
+export MODELNAME=cmc_regional
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
@@ -51,9 +51,9 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
+$HOMEevs/jobs/JEVS_STATS_GLOBAL_DET
 
 ######################################################################
 # Purpose: This does the statistics work for the global deterministic
-#          atmospheric grid-to-grid component for METFRA
+#          atmospheric grid-to-grid component for CMC regional
 ######################################################################

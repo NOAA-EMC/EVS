@@ -1,10 +1,10 @@
-#PBS -N jevs_global_det_gfs_atmos_grid2grid_stats_00
+#PBS -N jevs_stats_global_det_ecmwf_atmos_grid2obs_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:10:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=225GB
+#PBS -l walltime=00:25:00
+#PBS -l place=vscatter,select=1:ncpus=14:ompthreads=1:mem=25GB
 #PBS -l debug=true
 
 set -x
@@ -17,7 +17,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export SENDMAIL=YES
 export KEEPDATA=NO
-export job=${PBS_JOBNAME:-jevs_global_det_gfs_atmos_grid2grid_stats}
+export job=${PBS_JOBNAME:-jevs_stats_global_det_ecmwf_atmos_grid2obs}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export vhr=00
@@ -31,7 +31,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export machine=WCOSS2
 export USE_CFP=YES
-export nproc=128
+export nproc=14
 
 export MAILTO='alicia.bentley@noaa.gov,qi.shi@noaa.gov'
 
@@ -40,8 +40,8 @@ export NET=evs
 export STEP=stats
 export COMPONENT=global_det
 export RUN=atmos
-export VERIF_CASE=grid2grid
-export MODELNAME=gfs
+export VERIF_CASE=grid2obs
+export MODELNAME=ecmwf
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
@@ -51,9 +51,9 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 # CALL executable job script here
-$HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
+$HOMEevs/jobs/JEVS_STATS_GLOBAL_DET
 
 ######################################################################
 # Purpose: This does the statistics work for the global deterministic
-#          atmospheric grid-to-grid component for GFS
+#          atmospheric grid-to-observations component for ECMWF
 ######################################################################
