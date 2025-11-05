@@ -66,8 +66,8 @@ ENDDATE_dt = datetime.datetime.strptime(
 )
 valid_date_dt = STARTDATE_dt
 while valid_date_dt <= ENDDATE_dt:
-    for fhr_str in fhr_list:
-        fhr = int(fhr_str)
+    for fhr_str in [f for f in fhr_list if f.strip()]:
+        fhr = int(fhr_str)        
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
         input_file = gda_util.format_filler(
             file_format, valid_date_dt, init_date_dt, str(fhr), {}
