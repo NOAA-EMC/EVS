@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_atmos_gefs_profile3_last90days_plots
+#PBS -N jevs_plots_global_ens_atmos_gefs_profile3_last90days
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
