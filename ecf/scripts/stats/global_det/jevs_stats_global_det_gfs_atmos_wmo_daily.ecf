@@ -1,10 +1,10 @@
-#PBS -N evs_global_det_ecmwf_atmos_grid2obs_stats
+#PBS -N evs_stats_global_det_gfs_atmos_wmo_daily
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:25:00
-#PBS -l place=vscatter:shared,select=1:ncpus=14:ompthreads=1:mem=25GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=175GB
 #PBS -l debug=true
 
 export model=evs
@@ -44,18 +44,18 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=14
+export nproc=128
 export USE_CFP=YES
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=grid2obs
-export MODELNAME=ecmwf
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
+export VERIF_CASE=wmo
+export MODELNAME=gfs
+export temporal=daily
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
+$HOMEevs/jobs/JEVS_STATS_GLOBAL_DET
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort
