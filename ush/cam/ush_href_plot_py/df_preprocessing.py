@@ -116,7 +116,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
                 + f" {str(model)} data according to the output_base template,"
                 + f" given domain, variable, etc..."
             )
-            logger.info"Continuing ...")
+            logger.info("Continuing ...")
             continue
         if not clear_prune_dir:
             logger.debug(f"Creating dataframe using pruned data from {fpath}")
