@@ -65,7 +65,7 @@ mkdir -p $COMOUT
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_atmos_${RUN}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_atmos_${RUN}.sh
 export err=$?; err_chk
 
 if [ "$KEEPDATA" != "YES" ] ; then
