@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_prep_atmos.sh
+# Name of Script: exevs_prep_global_det_atmos.sh
 # Developers: Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script is run for the global_det atmos prep step
 ###############################################################################
