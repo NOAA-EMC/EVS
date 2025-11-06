@@ -88,7 +88,7 @@ wmo_svs_report_file_format = os.path.join(
 )
 
 # WMO Verifcations
-wmo_verif_list = ['grid2grid_upperair', 'grid2obs_upperair', 'grid2obs_sfc']
+wmo_verif_list = ['grid2grid_upperair']
 wmo_init_hour_list = ['00', '12']
 wmo_verif_settings_dict = {
     'grid2grid_upperair': {'valid_hour_list': ['00', '12'],
@@ -144,69 +144,70 @@ if JOB_GROUP == 'summarize_stats':
     ndaily_stat_files = len(os.listdir(VYYYYmm_daily_stats_dir))
     job_env_dict['daily_stats_dir'] = VYYYYmm_daily_stats_dir
     # Filter surface station information
-    print('Gathering and filtering station information from '
+    if 'grid2obs_sfc' in wmo_verif_list or 'grid2obs_upperair' in wmo_verif_list:
+        print('Gathering and filtering station information from '
            +os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*'))
-    tmp_station_info_file_list = glob.glob(
-        os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*')
-    )
-    tmp_filtered_station_info_file = gda_util.format_filler(
-        filtered_station_file_format, VDATE_dt, VDATE_dt, 'anl',
-        {'output_dir': DATA}
-    )
-    output_filtered_station_info_file = gda_util.format_filler(
-        filtered_station_file_format, VDATE_dt, VDATE_dt, 'anl',
-        {'output_dir': COMOUT}
-    )
-    have_filtered_station_info = os.path.exists(
-        output_filtered_station_info_file
-    )
-    if have_filtered_station_info:
-        gda_util.copy_file(output_filtered_station_info_file,
-                           tmp_filtered_station_info_file)
-    else:
-        station_info = []
-        column_name_list = gda_util.get_met_line_type_cols('hold', MET_ROOT,
-                                                            met_ver, 'MPR')
-        for station_info_file in tmp_station_info_file_list:
-            station_info_file_df = pd.read_csv(
-                station_info_file, sep=" ", skiprows=1, skipinitialspace=True,
-                keep_default_na=False, dtype='str', header=None,
-                names=column_name_list
+        tmp_station_info_file_list = glob.glob(
+            os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*')
+             )
+        tmp_filtered_station_info_file = gda_util.format_filler(
+            filtered_station_file_format, VDATE_dt, VDATE_dt, 'anl',
+            {'output_dir': DATA}
+            ) 
+        output_filtered_station_info_file = gda_util.format_filler(
+            filtered_station_file_format, VDATE_dt, VDATE_dt, 'anl',
+            {'output_dir': COMOUT}
             )
-            station_info.append(station_info_file_df)
-        station_info_df = pd.concat(station_info, axis=0, ignore_index=True)
-        if len(station_info_df) == 0:
-            have_station_info = False
-            print("NOTE: Could not read in station information from file "
-                  +os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*'))
+        have_filtered_station_info = os.path.exists(
+            output_filtered_station_info_file
+            )
+        if have_filtered_station_info:
+           gda_util.copy_file(output_filtered_station_info_file,
+                           tmp_filtered_station_info_file)
         else:
-            have_station_info = True
-        del station_info_file_df
-        filtered_station_info_list = []
-        for obs_sid_lead, obs_sid_lead_df \
+           station_info = []
+           column_name_list = gda_util.get_met_line_type_cols('hold', MET_ROOT,
+                                                            met_ver, 'MPR')
+           for station_info_file in tmp_station_info_file_list:
+               station_info_file_df = pd.read_csv(
+                  station_info_file, sep=" ", skiprows=1, skipinitialspace=True,
+                   keep_default_na=False, dtype='str', header=None,
+                   names=column_name_list
+               )
+               station_info.append(station_info_file_df)
+           station_info_df = pd.concat(station_info, axis=0, ignore_index=True)
+           if len(station_info_df) == 0:
+              have_station_info = False
+              print("NOTE: Could not read in station information from file "
+                  +os.path.join(DATA, f"{VDATE_dt:%Y%m}_station_info", '*'))
+           else:
+              have_station_info = True
+           del station_info_file_df
+           filtered_station_info_list = []
+           for obs_sid_lead, obs_sid_lead_df \
                 in station_info_df.groupby(by=['OBS_SID', 'FCST_LEAD']):
-            sid_lead_valid_hr_list = []
-            for fcst_valid_beg in obs_sid_lead_df['FCST_VALID_BEG'].unique():
+             sid_lead_valid_hr_list = []
+             for fcst_valid_beg in obs_sid_lead_df['FCST_VALID_BEG'].unique():
                 if fcst_valid_beg.split('_')[1] not in sid_lead_valid_hr_list:
                     sid_lead_valid_hr_list.append(fcst_valid_beg.split('_')[1])
-            for vhr in sid_lead_valid_hr_list:
+             for vhr in sid_lead_valid_hr_list:
                 x = obs_sid_lead_df[
                     obs_sid_lead_df['FCST_VALID_BEG'].str.contains(vhr)
                 ]
                 filtered_station_info_list.append(
                     x[x['FCST_VALID_BEG'] == x['FCST_VALID_BEG'].max()]
                )
-        filtered_station_info_df = pd.concat(
-            filtered_station_info_list, axis=0, ignore_index=True
-        )
-        filtered_station_info_df.to_csv(
-            tmp_filtered_station_info_file, index=None, sep=' ', mode='w'
-        )
-        if SENDCOM == 'YES':
-            gda_util.copy_file(
-                tmp_filtered_station_info_file,
-                output_filtered_station_info_file
-            )
+           filtered_station_info_df = pd.concat(
+                filtered_station_info_list, axis=0, ignore_index=True
+                 )
+           filtered_station_info_df.to_csv(
+                tmp_filtered_station_info_file, index=None, sep=' ', mode='w'
+                  )
+           if SENDCOM == 'YES':
+                gda_util.copy_file(
+                   tmp_filtered_station_info_file,
+                   output_filtered_station_info_file
+                 )
     # Make job scripts
     VYYYYmm_monthly_stats_dir = os.path.join(DATA, f"{VYYYYmm}_monthly_stats")
     job_env_dict['monthly_stats_dir'] = VYYYYmm_monthly_stats_dir
@@ -490,7 +491,8 @@ elif JOB_GROUP == 'write_reports':
                           +'; fi\n')
                 job.write('export err=$?; err_chk')
     # Write jobs for svs
-    for param in ['t2m', 'ff10m', 'dd10m', 'tp24', 'td2m', 'rh2m',
+    if 'grid2obs_sfc' in wmo_verif_list:
+       for param in ['t2m', 'ff10m', 'dd10m', 'tp24', 'td2m', 'rh2m',
                   'tcc', 'tp06']:
         if param == 'tp24':
             valid_hour_list = ['0', '12']
@@ -580,7 +582,8 @@ elif JOB_GROUP == 'concatenate_reports':
     valid_time_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
     job_env_dict['VDATE'] = VDATE
     # Write jobs for svs
-    for param in ['t2m', 'ff10m', 'dd10m', 'tp24', 'td2m', 'rh2m',
+    if 'grid2obs_sfc' in wmo_verif_list:
+      for param in ['t2m', 'ff10m', 'dd10m', 'tp24', 'td2m', 'rh2m',
                   'tcc', 'tp06']:
         njobs+=1
         job_env_dict['job_num'] = str(njobs)

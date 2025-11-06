@@ -1469,7 +1469,7 @@ def check_model_files(job_dict):
     fhr_list = []
     fhr_check_input_dict = {}
     fhr_check_output_dict = {}
-    job_dict_fhr_list = job_dict['fhr_list'].split(', ')
+    job_dict_fhr_list = [int(x.strip().strip("'").strip('"')) for x in str(job_dict['fhr_list']).split(',') if x.strip()]
     for fhr in [int(i) for i in job_dict_fhr_list]:
         fhr_check_input_dict[str(fhr)] = {}
         fhr_check_output_dict[str(fhr)] = {}
