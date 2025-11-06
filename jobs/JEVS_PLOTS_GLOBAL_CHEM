@@ -85,7 +85,11 @@ fi
 # Execute the script
 ########################################
 
-${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh
+if [ "${DATA_TYPE}" == "proddev2" ]; then
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}_r2o.sh
+else
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh
+fi
 export err=$?; err_chk
 
 msg="JOB ${job} HAS COMPLETED NORMALLY."

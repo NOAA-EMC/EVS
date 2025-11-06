@@ -221,7 +221,8 @@ class LeadAverage:
             xticks = self.date_info_dict['forecast_hours']
         else:
             xticks = []
-            for fhr in self.date_info_dict['forecast_hours']:
+            ## for fhr in self.date_info_dict['forecast_hours']:
+            for fhr in [ f for f in self.date_info_dict['forecast_hours'] if f ]:
                 if int(fhr) % 24 == 0:
                     xticks.append(fhr)
             if len(xticks) > n_xticks:

@@ -421,7 +421,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                    valid_hr_inc))
             if 'Daily' in verif_type_job:
                 daily_fhr_list = []
-                for fhr in job_env_dict['fhr_list'].split(', '):
+                for fhr in [ f for f in job_env_dict['fhr_list'].split(', ') if f]:
                     if int(fhr) >= 24 and int(fhr) % 24 == 0:
                         daily_fhr_list.append(str(fhr))
                     job_env_dict['fhr_list'] = ', '.join(daily_fhr_list)
@@ -688,7 +688,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job.write('\n')
                         if run_global_chem_atmos_plot == 'plots_tof120':
                             fhrs_tof120 = []
-                            for fhr in job_env_dict['fhr_list'].split(', '):
+                            for fhr in [ f for f in job_env_dict['fhr_list'].split(', ') if f]:
                                 if int(fhr) <= 120:
                                     fhrs_tof120.append(str(fhr))
                             job.write(

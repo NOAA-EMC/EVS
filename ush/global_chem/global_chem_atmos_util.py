@@ -166,7 +166,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
             valid_time_dt = date_dt
         elif date_type == 'INIT':
             init_time_dt = date_dt
-        for fhr in fhr_list:
+        for fhr in [f for f in fhr_list if f.strip()]:
             if fhr == 'anl':
                 forecast_hour = 0
             else:
@@ -432,7 +432,7 @@ def check_plot_files(job_dict):
                   int(job_dict['init_hr_end'])+int(job_dict['init_hr_inc']),
                   int(job_dict['init_hr_inc']))
         )
-        fhrs = [int(i) for i in job_dict['fhr_list'].split(', ')]
+        fhrs = [int(i) for i in job_dict['fhr_list'].split(', ') if i]
     if job_dict['JOB_GROUP'] == 'make_plots':
         from global_chem_atmos_plots_specs import PlotSpecs
         plot_specs = PlotSpecs('NA', job_dict['plot'])
@@ -1407,7 +1407,7 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                     else:
                         df_dtype_dict[col] = np.float64
                 model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
-                for valid_date in met_format_valid_dates:
+                for valid_date in [vlddy for vlddy in met_format_valid_datesi if vlddy]:
                     model_stat_file_df_valid_date_idx_list = (
                         model_stat_file_df.index[
                             model_stat_file_df['FCST_VALID_BEG'] == valid_date
