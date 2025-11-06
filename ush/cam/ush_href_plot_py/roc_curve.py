@@ -486,7 +486,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if pivot_metric1.empty or pivot_metric2.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name} and/or"
+            f"Could not find {metric1_name} and/or"
             + f" {metric2_name} stats for {print_varname} at any threshold. "
         )
         logger.warning(

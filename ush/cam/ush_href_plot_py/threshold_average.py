@@ -364,7 +364,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     if pivot_metric.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric_name}"
+            f"Could not find {metric_name}"
             + f" stats for {print_varname} at any level. "
             + f"This often happens when processed data are all NaNs, "
             + f" which are removed.  Check for seasonal cases where critical "
