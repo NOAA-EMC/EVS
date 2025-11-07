@@ -322,7 +322,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     if (metric2_name and (pivot_metric1.empty or pivot_metric2.empty)):
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name} and/or"
+            f"Could not find {metric1_name} and/or"
             + f" {metric2_name} stats for {print_varname} at any pressure"
             + f" level. This often happens when processed data are all NaNs, "
             + f" which are removed.  Check for seasonal cases where critical "
@@ -334,7 +334,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name}"
+            f"Could not find {metric1_name}"
             + f" stats for {print_varname} at any pressure level. "
             + f"This often happens when processed data are all NaNs, "
             + f" which are removed.  Check for seasonal cases where critical "
