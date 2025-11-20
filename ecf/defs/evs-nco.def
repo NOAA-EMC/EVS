@@ -536,19 +536,19 @@ suite evs_nco
             task jevs_stats_global_ens_gefs_atmos_cnv
               trigger :TIME >= 1000 and :TIME < 1600 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_gefs_atmos_grid2grid
-              trigger :TIME >= 0830 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 0830 and :TIME < 1430 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_gefs_atmos_grid2obs
               trigger :TIME >= 0945 and :TIME < 1600 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_gefs_atmos_precip
               trigger :TIME >= 1000 and :TIME < 1600 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_cmce_atmos_grid2grid
-              trigger :TIME >= 0930 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 0930 and :TIME < 1530 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_cmce_atmos_grid2obs
               trigger :TIME >= 1000 and :TIME < 1600 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_cmce_atmos_precip
               trigger :TIME >= 1000 and :TIME < 1600 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_ecme_atmos_grid2grid
-              trigger :TIME >= 0900 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 0900 and :TIME < 1500 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_ecme_atmos_grid2obs
               trigger :TIME >= 1000 and :TIME < 1600 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_ecme_atmos_precip
@@ -1545,68 +1545,67 @@ suite evs_nco
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/prep'
           family global_det
             task jevs_prep_global_det_atmos
-              time 18:10
+              trigger :TIME >= 1810 or :TIME < 0010
           endfamily
           family cam
             task jevs_prep_cam_radar_vhr_18
-              time 18:15
+              trigger :TIME >= 1815 or :TIME < 0015
               edit VHR '18'
             task jevs_prep_cam_radar_vhr_19
-              time 19:05
+              trigger :TIME >= 1905 or :TIME < 0105
               edit VHR '19'
             task jevs_prep_cam_radar_vhr_20
-              time 20:05
+              trigger :TIME >= 2005 or :TIME < 0205
               edit VHR '20'
             task jevs_prep_cam_radar_vhr_21
-              time 21:05
+              trigger :TIME >= 2105 or :TIME < 0305
               edit VHR '21'
             task jevs_prep_cam_radar_vhr_22
-              time 22:05
+              trigger :TIME >= 2205 or :TIME < 0405
               edit VHR '22'
             task jevs_prep_cam_radar_vhr_23
-              time 23:05
+              trigger :TIME >= 2305 or :TIME < 0505
               edit VHR '23'
-            task jevs_prep_cam_namnest_precip_vhr_18
-              time 18:15
-              edit VHR '18'
-            task jevs_prep_cam_hrrr_precip_vhr_18
-              time 18:15
-              edit VHR '18'
-            task jevs_prep_cam_hireswfv3_precip_vhr_18
-              time 18:15
-              edit VHR '18'
             task jevs_prep_cam_hireswarw_precip_vhr_18
-              time 18:15
+              trigger :TIME >= 1815 or :TIME < 0015
               edit VHR '18'
             task jevs_prep_cam_hireswarwmem2_precip_vhr_18
-              time 18:15
+              trigger (:TIME >= 1815 or :TIME < 0015) and jevs_prep_cam_hireswarw_precip_vhr_18 == complete
+              edit VHR '18'
+            task jevs_prep_cam_hireswfv3_precip_vhr_18
+              trigger (:TIME >= 1815 or :TIME < 0015) and jevs_prep_cam_hireswarwmem2_precip_vhr_18 == complete
+              edit VHR '18'
+            task jevs_prep_cam_hrrr_precip_vhr_18
+              trigger (:TIME >= 1815 or :TIME < 0015) and jevs_prep_cam_hireswfv3_precip_vhr_18 == complete
+              edit VHR '18'
+            task jevs_prep_cam_namnest_precip_vhr_18
+              trigger (:TIME >= 1815 or :TIME < 0015) and jevs_prep_cam_hrrr_precip_vhr_18 == complete
               edit VHR '18'
             task jevs_prep_cam_hrrr_severe_vhr_18
-              time 18:15
+              trigger :TIME >= 1815 or :TIME < 0015
               edit VHR '18'
             task jevs_prep_cam_namnest_severe_vhr_18
-              time 18:15
+              trigger (:TIME >= 1815 or :TIME < 0015) and jevs_prep_cam_hrrr_severe_vhr_18 == complete
               edit VHR '18'
-
           endfamily
         endfamily   # 18 prep
         family stats
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/stats'
           family rtofs
             task jevs_stats_rtofs_ndbc_grid2obs
-              trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
+              trigger (:TIME >= 2200 or :TIME < 0400) and ../../../../06/evs/prep/rtofs == complete
             task jevs_stats_rtofs_argo_grid2obs
-              trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
+              trigger (:TIME >= 2200 or :TIME < 0400) and ../../../../06/evs/prep/rtofs == complete
             task jevs_stats_rtofs_aviso_grid2grid
-              trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
+              trigger (:TIME >= 2200 or :TIME < 0400) and ../../../../06/evs/prep/rtofs == complete
             task jevs_stats_rtofs_ghrsst_grid2grid
-              trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
+              trigger (:TIME >= 2200 or :TIME < 0400) and ../../../../06/evs/prep/rtofs == complete
             task jevs_stats_rtofs_osisaf_grid2grid
-              trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
+              trigger (:TIME >= 2200 or :TIME < 0400) and ../../../../06/evs/prep/rtofs == complete
             task jevs_stats_rtofs_smap_grid2grid
-              trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
+              trigger (:TIME >= 2200 or :TIME < 0400) and ../../../../06/evs/prep/rtofs == complete
             task jevs_stats_rtofs_smos_grid2grid
-              trigger :TIME >= 2200 and ../../../../06/evs/prep/rtofs == complete
+              trigger (:TIME >= 2200 or :TIME < 0400) and ../../../../06/evs/prep/rtofs == complete
           endfamily
           family mesoscale
             task jevs_stats_mesoscale_nam_precip_vhr_18
