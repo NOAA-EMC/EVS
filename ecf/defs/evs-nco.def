@@ -85,9 +85,9 @@ suite evs_nco
           endfamily
           family aqm
             task jevs_prep_aqm_atmos_grid2obs
-              trigger :TIME >= 0000 and :TIME < 0600
+              trigger :TIME >= 0500 and :TIME < 1100
             task jevs_prep_aqm_atmos_grid2grid
-              trigger :TIME >= 0000 and :TIME < 0600
+              trigger :TIME >= 0515 and :TIME < 1115
           endfamily
           family global_chem
             task jevs_prep_global_chem_atmos_grid2obs
@@ -318,19 +318,19 @@ suite evs_nco
               trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
               edit VHR '00'
             task jevs_stats_aqm_atmos_grid2obs_vhr_01
-              trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_00 == complete
               edit VHR '01'
             task jevs_stats_aqm_atmos_grid2obs_vhr_02
-              trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_01 == complete
               edit VHR '02'
             task jevs_stats_aqm_atmos_grid2grid_vhr_00
               trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
               edit VHR '00'
             task jevs_stats_aqm_atmos_grid2grid_vhr_01
-              trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_00 == complete
               edit VHR '01'
             task jevs_stats_aqm_atmos_grid2grid_vhr_02
-              trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0530 and :TIME < 1130 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_01 == complete
               edit VHR '02'
           endfamily
           family analyses
@@ -391,10 +391,10 @@ suite evs_nco
           endfamily
           family global_chem
             task jevs_stats_global_chem_atmos_grid2obs_airnow_vhr_00
-              trigger :TIME >= 0545 and :TIME < 1145 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
+              trigger :TIME >= 0545 and :TIME < 1145 and ../../../../../00/evs/v2.0/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
               edit VHR '00'
             task jevs_stats_global_chem_atmos_grid2obs_aeronet_vhr_00
-              trigger :TIME >= 0545 and :TIME < 1145 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
+              trigger :TIME >= 0545 and :TIME < 1145 and ../../../../../00/evs/v2.0/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
               edit VHR '00'
           endfamily
         endfamily    # 00 stats
@@ -464,59 +464,59 @@ suite evs_nco
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/prep'
           family rtofs
             task jevs_prep_rtofs
-              time 07:00
+              trigger :TIME >= 0700 and :TIME < 1300
           endfamily
           family global_ens
             task jevs_prep_global_ens_wave
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
           endfamily
           family mesoscale
             task jevs_prep_mesoscale_grid2obs
-              time 07:30
+              trigger :TIME >= 0730 and :TIME < 1330
               edit VHR '07'
           endfamily
           family cam
             task jevs_prep_cam_radar_vhr_06
-              time 06:05
+              trigger :TIME >= 0605 and :TIME < 1205
               edit VHR '06'
             task jevs_prep_cam_radar_vhr_07
-              time 07:05
+              trigger :TIME >= 0705 and :TIME < 1305
               edit VHR '07'
             task jevs_prep_cam_radar_vhr_08
-              time 08:05
+              trigger :TIME >= 0805 and :TIME < 1405
               edit VHR '08'
             task jevs_prep_cam_radar_vhr_09
-              time 09:05
+              trigger :TIME >= 0905 and :TIME < 1505
               edit VHR '09'
             task jevs_prep_cam_radar_vhr_10
-              time 10:05
+              trigger :TIME >= 1005 and :TIME < 1605
               edit VHR '10'
             task jevs_prep_cam_radar_vhr_11
-              time 11:05
+              trigger :TIME >= 1105 and :TIME < 1705
               edit VHR '11'
-            task jevs_prep_cam_namnest_precip_vhr_06
-              time 06:00
-              edit VHR '06'
-            task jevs_prep_cam_hrrr_precip_vhr_06
-              time 06:00
-              edit VHR '06'
-            task jevs_prep_cam_hireswfv3_precip_vhr_06
-              time 06:00
-              edit VHR '06'
             task jevs_prep_cam_hireswarw_precip_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_prep_cam_hireswarwmem2_precip_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200 and jevs_prep_cam_hireswarw_precip_vhr_06 == complete
+              edit VHR '06'
+            task jevs_prep_cam_hireswfv3_precip_vhr_06
+              trigger :TIME >= 0600 and :TIME < 1200 and jevs_prep_cam_hireswarwmem2_precip_vhr_06 == complete
+              edit VHR '06'
+            task jevs_prep_cam_hrrr_precip_vhr_06
+              trigger :TIME >= 0600 and :TIME < 1200 and jevs_prep_cam_hireswfv3_precip_vhr_06 == complete
+              edit VHR '06'
+            task jevs_prep_cam_namnest_precip_vhr_06
+              trigger :TIME >= 0600 and :TIME < 1200 and jevs_prep_cam_hrrr_precip_vhr_06 == complete
               edit VHR '06'
             task jevs_prep_cam_hrrr_severe_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_prep_cam_namnest_severe_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200 and jevs_prep_cam_hrrr_severe_vhr_06 == complete
               edit VHR '06'
             task jevs_prep_cam_severe
-              time 07:30
+              trigger :TIME >= 0730 and :TIME < 1330
               edit VHR '07'
           endfamily
         endfamily    # 06 prep
@@ -524,455 +524,425 @@ suite evs_nco
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/stats'
           family global_ens
             task jevs_stats_global_ens_gefs_atmos_snowfall
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_cmce_atmos_snowfall
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_ecme_atmos_snowfall
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_gefs_atmos_sst
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_gefs_atmos_sea_ice
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_gefs_atmos_cnv
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_gefs_atmos_grid2grid
-              trigger :TIME >= 0830 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete    # walltime=03:30:00
+              trigger :TIME >= 0830 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_gefs_atmos_grid2obs
-              trigger :TIME >= 0945 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 0945 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_gefs_atmos_precip
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_cmce_atmos_grid2grid
-              trigger :TIME >= 0930 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete    # walltime=02:30:00
+              trigger :TIME >= 0930 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_cmce_atmos_grid2obs
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_cmce_atmos_precip
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_ecme_atmos_grid2grid
-              trigger :TIME >= 0900 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete    # walltime=03:00:00
+              trigger :TIME >= 0900 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_ecme_atmos_grid2obs
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_ecme_atmos_precip
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_naefs_atmos_grid2grid
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_naefs_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_naefs_atmos == complete
             task jevs_stats_global_ens_naefs_atmos_grid2obs
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_naefs_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_naefs_atmos == complete and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_atmos == complete
             task jevs_stats_global_ens_naefs_atmos_precip
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_naefs_atmos == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_naefs_atmos == complete
             task jevs_stats_global_ens_gfs_headline_grid2grid
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_headline == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_headline == complete
             task jevs_stats_global_ens_gefs_headline_grid2grid
-              trigger :TIME >= 1000 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_headline == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_headline == complete
             task jevs_stats_global_ens_naefs_headline_grid2grid
-              trigger :TIME >= 1100 and ../../../../00/evs/prep/global_ens/jevs_prep_global_ens_headline == complete
+              trigger :TIME >= 1100 and :TIME < 1700 and ../../../../../00/evs/v2.0/prep/global_ens/jevs_prep_global_ens_headline == complete
             task jevs_stats_global_ens_gefs_wave_grid2obs
-              trigger :TIME >= 1000 and ../../../../06/evs/prep/global_ens/jevs_prep_global_ens_wave == complete
+              trigger :TIME >= 1000 and :TIME < 1600 and ../../../../../06/evs/v2.0/prep/global_ens/jevs_prep_global_ens_wave == complete
           endfamily
           family wafs
             task jevs_stats_wafs_atmos
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
           endfamily
           family mesoscale
             task jevs_stats_mesoscale_nam_precip_vhr_06
-              time 06:10
+              trigger :TIME >= 0610 and :TIME < 1210
               edit VHR '06'
             task jevs_stats_mesoscale_nam_precip_vhr_07
-              time 07:10
+              trigger :TIME >= 0710 and :TIME < 1310
               edit VHR '07'
             task jevs_stats_mesoscale_nam_precip_vhr_08
-              time 08:10
+              trigger :TIME >= 0810 and :TIME < 1410
               edit VHR '08'
             task jevs_stats_mesoscale_nam_precip_vhr_09
-              time 09:10
+              trigger :TIME >= 0910 and :TIME < 1510
               edit VHR '09'
             task jevs_stats_mesoscale_nam_precip_vhr_10
-              time 10:10
+              trigger :TIME >= 1010 and :TIME < 1610
               edit VHR '10'
             task jevs_stats_mesoscale_nam_precip_vhr_11
-              time 11:00
+              trigger :TIME >= 1100 and :TIME < 1700
               edit VHR '11'
             task jevs_stats_mesoscale_rap_precip_vhr_06
-              time 06:10
+              trigger :TIME >= 0610 and :TIME < 1210
               edit VHR '06'
             task jevs_stats_mesoscale_rap_precip_vhr_07
-              time 07:10
+              trigger :TIME >= 0710 and :TIME < 1310
               edit VHR '07'
             task jevs_stats_mesoscale_rap_precip_vhr_08
-              time 08:10
+              trigger :TIME >= 0810 and :TIME < 1410
               edit VHR '08'
             task jevs_stats_mesoscale_rap_precip_vhr_09
-              time 09:10
+              trigger :TIME >= 0910 and :TIME < 1510
               edit VHR '09'
             task jevs_stats_mesoscale_rap_precip_vhr_10
-              time 10:10
+              trigger :TIME >= 1010 and :TIME < 1610
               edit VHR '10'
             task jevs_stats_mesoscale_rap_precip_vhr_11
-              time 11:00
+              trigger :TIME >= 1100 and :TIME < 1700
               edit VHR '11'
             task jevs_stats_mesoscale_nam_grid2obs
-              trigger :TIME >= 0800 and ../../prep/mesoscale/jevs_prep_mesoscale_grid2obs == complete
+              trigger :TIME >= 0700 and :TIME < 1300
               edit VHR '08'
             task jevs_stats_mesoscale_rap_grid2obs
-              trigger :TIME >= 0830 and ../../prep/mesoscale/jevs_prep_mesoscale_grid2obs == complete
+              trigger :TIME >= 0730 and :TIME < 1330
               edit VHR '08'
             task jevs_stats_mesoscale_nam_snowfall_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_mesoscale_rap_snowfall_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_mesoscale_sref_precip
-              time 09:30
+              trigger :TIME >= 0930 and :TIME < 1530
             task jevs_stats_mesoscale_sref_grid2obs
-              time 09:30
+              trigger :TIME >= 0930 and :TIME < 1530
           endfamily
           family cam
             task jevs_stats_cam_nam_firewxnest_grid2obs_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_cam_nam_firewxnest_grid2obs_vhr_07
-              time 07:00
+              trigger :TIME >= 0700 and :TIME < 1300
               edit VHR '07'
             task jevs_stats_cam_nam_firewxnest_grid2obs_vhr_08
-              time 08:00
+              trigger :TIME >= 0800 and :TIME < 1400
               edit VHR '08'
             task jevs_stats_cam_nam_firewxnest_grid2obs_vhr_09
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
             task jevs_stats_cam_nam_firewxnest_grid2obs_vhr_10
-              time 10:00
+              trigger :TIME >= 1000 and :TIME < 1600
               edit VHR '10'
-            task jevs_stats_cam_nam_firewxnest_grid2obs_vhr_11    # walltime=02:00:00
-              time 10:10
+            task jevs_stats_cam_nam_firewxnest_grid2obs_vhr_11
+              trigger :TIME >= 1010 and :TIME < 1610
               edit VHR '11'
             task jevs_stats_cam_hireswarwmem2_radar_vhr_06
-              time 06:40
+              trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '06'
             task jevs_stats_cam_hireswarwmem2_radar_vhr_07
-              time 07:40
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '07'
             task jevs_stats_cam_hireswarwmem2_radar_vhr_08
-              time 08:40
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '08'
             task jevs_stats_cam_hireswarwmem2_radar_vhr_09
-              time 09:40
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '09'
             task jevs_stats_cam_hireswarwmem2_radar_vhr_10
-              time 10:40
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '10'
             task jevs_stats_cam_hireswarwmem2_radar_vhr_11
-              time 11:40
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '11'
             task jevs_stats_cam_hireswarw_radar_vhr_06
-              time 06:40
+              trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '06'
             task jevs_stats_cam_hireswarw_radar_vhr_07
-              time 07:40
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '07'
             task jevs_stats_cam_hireswarw_radar_vhr_08
-              time 08:40
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '08'
             task jevs_stats_cam_hireswarw_radar_vhr_09
-              time 09:40
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '09'
             task jevs_stats_cam_hireswarw_radar_vhr_10
-              time 10:40
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '10'
             task jevs_stats_cam_hireswarw_radar_vhr_11
-              time 11:40
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '11'
             task jevs_stats_cam_hireswfv3_radar_vhr_06
-              time 06:40
+              trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '06'
             task jevs_stats_cam_hireswfv3_radar_vhr_07
-              time 07:40
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '07'
             task jevs_stats_cam_hireswfv3_radar_vhr_08
-              time 08:40
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '08'
             task jevs_stats_cam_hireswfv3_radar_vhr_09
-              time 09:40
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '09'
             task jevs_stats_cam_hireswfv3_radar_vhr_10
-              time 10:40
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '10'
             task jevs_stats_cam_hireswfv3_radar_vhr_11
-              time 11:40
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '11'
             task jevs_stats_cam_href_radar_vhr_06
-              time 06:40
+              trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '06'
             task jevs_stats_cam_href_radar_vhr_07
-              time 07:40
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '07'
             task jevs_stats_cam_href_radar_vhr_08
-              time 08:40
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '08'
             task jevs_stats_cam_href_radar_vhr_09
-              time 09:40
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '09'
             task jevs_stats_cam_href_radar_vhr_10
-              time 10:40
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '10'
             task jevs_stats_cam_href_radar_vhr_11
-              time 11:40
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '11'
             task jevs_stats_cam_hrrr_radar_vhr_06
-              time 06:40
+              trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '06'
             task jevs_stats_cam_hrrr_radar_vhr_07
-              time 07:40
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '07'
             task jevs_stats_cam_hrrr_radar_vhr_08
-              time 08:40
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '08'
             task jevs_stats_cam_hrrr_radar_vhr_09
-              time 09:40
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '09'
             task jevs_stats_cam_hrrr_radar_vhr_10
-              time 10:40
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '10'
             task jevs_stats_cam_hrrr_radar_vhr_11
-              time 11:40
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '11'
             task jevs_stats_cam_namnest_radar_vhr_06
-              time 06:40
+              trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '06'
             task jevs_stats_cam_namnest_radar_vhr_07
-              time 07:40
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '07'
             task jevs_stats_cam_namnest_radar_vhr_08
-              time 08:40
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '08'
             task jevs_stats_cam_namnest_radar_vhr_09
-              time 09:40
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '09'
             task jevs_stats_cam_namnest_radar_vhr_10
-              time 10:40
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '10'
             task jevs_stats_cam_namnest_radar_vhr_11
-              time 11:40
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '11'
             task jevs_stats_cam_hireswarw_snowfall_vhr_06
-              time 06:30
+              trigger :TIME >= 0630 and :TIME < 1230
               edit VHR '06'
             task jevs_stats_cam_hireswarwmem2_snowfall_vhr_06
-              time 06:30
+              trigger :TIME >= 0630 and :TIME < 1230
               edit VHR '06'
             task jevs_stats_cam_hireswfv3_snowfall_vhr_06
-              time 06:30
+              trigger :TIME >= 0630 and :TIME < 1230
               edit VHR '06'
             task jevs_stats_cam_hrrr_snowfall_vhr_06
-              time 06:30
+              trigger :TIME >= 0630 and :TIME < 1230
               edit VHR '06'
             task jevs_stats_cam_namnest_snowfall_vhr_06
-              time 06:30
+              trigger :TIME >= 0630 and :TIME < 1230
               edit VHR '06'
             task jevs_stats_cam_hireswarw_grid2obs_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_cam_hireswarw_grid2obs_vhr_09
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
             task jevs_stats_cam_hireswarwmem2_grid2obs_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_cam_hireswarwmem2_grid2obs_vhr_09
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
             task jevs_stats_cam_hireswfv3_grid2obs_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_cam_hireswfv3_grid2obs_vhr_09
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
             task jevs_stats_cam_hrrr_grid2obs_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_cam_hrrr_grid2obs_vhr_09
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
             task jevs_stats_cam_namnest_grid2obs_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_cam_namnest_grid2obs_vhr_09
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
-            task jevs_stats_cam_hireswarwmem2_severe
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_hireswarwmem2_severe_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_prep_cam_hireswarwmem2_severe_vhr_12 == complete
-              edit VHR '08'
-            task jevs_stats_cam_hireswarw_severe
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_hireswarw_severe_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_prep_cam_hireswarw_severe_vhr_12 == complete
-              edit VHR '08'
-            task jevs_stats_cam_hireswfv3_severe
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_hireswfv3_severe_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_prep_cam_hireswfv3_severe_vhr_12 == complete
-              edit VHR '08'
-            task jevs_stats_cam_href_severe
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_href_severe_vhr_00 == complete and ../../../../12/evs/prep/cam/jevs_prep_cam_href_severe_vhr_12 == complete
-              edit VHR '08'
             task jevs_stats_cam_hrrr_severe
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_hrrr_severe_prep_vhr_00 == complete and ../../../../06/evs/prep/cam/jevs_prep_cam_hrrr_severe_vhr_06 == complete
+              trigger :TIME >= 0800 and :TIME < 1400 and ../../../../../00/evs/v2.0/prep/cam/jevs_cam_hrrr_severe_prep_vhr_00 == complete and ../../../../../06/evs/v2.0/prep/cam/jevs_cam_hrrr_severe_prep_vhr_06 == complete
               edit VHR '08'
             task jevs_stats_cam_namnest_severe
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/cam/jevs_prep_cam_namnest_severe_vhr_00 == complete and ../../../../06/evs/prep/cam/jevs_prep_cam_namnest_severe_vhr_06 == complete
+              trigger :TIME >= 0800 and :TIME < 1400 and ../../../../../00/evs/v2.0/prep/cam/jevs_cam_namnest_severe_prep_vhr_00 == complete and ../../../../../06/evs/v2.0/prep/cam/jevs_cam_namnest_severe_prep_vhr_06 == complete
               edit VHR '08'
             task jevs_stats_cam_href_grid2obs
-              time 07:30
+              trigger :TIME >= 0730 and :TIME < 1330
             task jevs_stats_cam_href_precip
-              time 08:30
+              trigger :TIME >= 0830 and :TIME < 1430
             task jevs_stats_cam_href_snowfall
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
             task jevs_stats_cam_href_spcoutlook
-              trigger :TIME >= 0830 and ../../prep/cam/jevs_prep_cam_severe == complete
+              trigger :TIME >= 0830 and :TIME < 1430 and ../../prep/cam/jevs_prep_cam_severe == complete
           endfamily
           family aqm
             task jevs_stats_aqm_atmos_grid2obs_vhr_03
-              trigger :TIME >= 0600 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
               edit VHR '03'
             task jevs_stats_aqm_atmos_grid2obs_vhr_04
-              trigger :TIME >= 0610 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_03 == complete
               edit VHR '04'
             task jevs_stats_aqm_atmos_grid2obs_vhr_05
-              trigger :TIME >= 0620 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_04 == complete
               edit VHR '05'
             task jevs_stats_aqm_atmos_grid2obs_vhr_06
-              trigger :TIME >= 0630 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_05 == complete
               edit VHR '06'
             task jevs_stats_aqm_atmos_grid2obs_vhr_07
-              trigger :TIME >= 0730 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_06 == complete
               edit VHR '07'
             task jevs_stats_aqm_atmos_grid2obs_vhr_08
-              trigger :TIME >= 0740 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_07 == complete
               edit VHR '08'
             task jevs_stats_aqm_atmos_grid2obs_vhr_09
-              trigger :TIME >= 0750 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_08 == complete
               edit VHR '09'
             task jevs_stats_aqm_atmos_grid2obs_vhr_10
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_09 == complete
               edit VHR '10'
             task jevs_stats_aqm_atmos_grid2obs_vhr_11
-              trigger :TIME >= 0810 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_10 == complete
               edit VHR '11'
-            task jevs_stats_aqm_atmos_grid2obs_vhr_12
-              trigger :TIME >= 1135 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
-              edit VHR '12'
-            task jevs_stats_aqm_atmos_grid2obs_vhr_13
-              trigger :TIME >= 1145 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
-              edit VHR '13'
-            task jevs_stats_aqm_atmos_grid2obs_vhr_14
-              trigger :TIME >= 1155 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
-              edit VHR '14'
             task jevs_stats_aqm_atmos_grid2grid_vhr_03
-              trigger :TIME >= 0600 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
               edit VHR '03'
             task jevs_stats_aqm_atmos_grid2grid_vhr_04
-              trigger :TIME >= 0610 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_03 == complete
               edit VHR '04'
             task jevs_stats_aqm_atmos_grid2grid_vhr_05
-              trigger :TIME >= 0620 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_04 == complete
               edit VHR '05'
             task jevs_stats_aqm_atmos_grid2grid_vhr_06
-              trigger :TIME >= 0630 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_05 == complete
               edit VHR '06'
             task jevs_stats_aqm_atmos_grid2grid_vhr_07
-              trigger :TIME >= 0730 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_06 == complete
               edit VHR '07'
             task jevs_stats_aqm_atmos_grid2grid_vhr_08
-              trigger :TIME >= 0740 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_07 == complete
               edit VHR '08'
             task jevs_stats_aqm_atmos_grid2grid_vhr_09
-              trigger :TIME >= 0750 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_08 == complete
               edit VHR '09'
             task jevs_stats_aqm_atmos_grid2grid_vhr_10
-              trigger :TIME >= 0800 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_09 == complete
               edit VHR '10'
             task jevs_stats_aqm_atmos_grid2grid_vhr_11
-              trigger :TIME >= 0810 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_10 == complete
               edit VHR '11'
-            task jevs_stats_aqm_atmos_grid2grid_vhr_12
-              trigger :TIME >= 1135 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
-              edit VHR '12'
-            task jevs_stats_aqm_atmos_grid2grid_vhr_13
-              trigger :TIME >= 1145 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
-              edit VHR '13'
-            task jevs_stats_aqm_atmos_grid2grid_vhr_14
-              trigger :TIME >= 1155 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
-              edit VHR '14'
           endfamily
           family analyses
             task jevs_stats_analyses_urma_grid2obs_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_analyses_urma_grid2obs_vhr_07
-              time 07:00
+              trigger :TIME >= 0700 and :TIME < 1300
               edit VHR '07'
             task jevs_stats_analyses_urma_grid2obs_vhr_08
-              time 08:00
+              trigger :TIME >= 0800 and :TIME < 1400
               edit VHR '08'
             task jevs_stats_analyses_urma_grid2obs_vhr_09
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
             task jevs_stats_analyses_urma_grid2obs_vhr_10
-              time 10:00
+              trigger :TIME >= 1000 and :TIME < 1600
               edit VHR '10'
             task jevs_stats_analyses_urma_grid2obs_vhr_11
-              time 11:00
+              trigger :TIME >= 1100 and :TIME < 1700
               edit VHR '11'
             task jevs_stats_analyses_rtma_grid2obs_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_analyses_rtma_grid2obs_vhr_07
-              time 07:00
+              trigger :TIME >= 0700 and :TIME < 1300
               edit VHR '07'
             task jevs_stats_analyses_rtma_grid2obs_vhr_08
-              time 08:00
+              trigger :TIME >= 0800 and :TIME < 1400
               edit VHR '08'
             task jevs_stats_analyses_rtma_grid2obs_vhr_09
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
             task jevs_stats_analyses_rtma_grid2obs_vhr_10
-              time 10:00
+              trigger :TIME >= 1000 and :TIME < 1600
               edit VHR '10'
             task jevs_stats_analyses_rtma_grid2obs_vhr_11
-              time 11:00
+              trigger :TIME >= 1100 and :TIME < 1700
               edit VHR '11'
             task jevs_stats_analyses_rtma_ru_grid2obs_vhr_06
-              time 06:00
+              trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
             task jevs_stats_analyses_rtma_ru_grid2obs_vhr_07
-              time 07:00
+              trigger :TIME >= 0700 and :TIME < 1300
               edit VHR '07'
             task jevs_stats_analyses_rtma_ru_grid2obs_vhr_08
-              time 08:00
+              trigger :TIME >= 0800 and :TIME < 1400
               edit VHR '08'
             task jevs_stats_analyses_rtma_ru_grid2obs_vhr_09
-              time 09:00
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
             task jevs_stats_analyses_rtma_ru_grid2obs_vhr_10
-              time 10:00
+              trigger :TIME >= 1000 and :TIME < 1600
               edit VHR '10'
             task jevs_stats_analyses_rtma_ru_grid2obs_vhr_11
-              time 11:00
+              trigger :TIME >= 1100 and :TIME < 1700
               edit VHR '11'
           endfamily
           family global_chem
             task jevs_stats_global_chem_atmos_grid2obs_airnow_vhr_03
-              trigger :TIME >= 0615 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
-              edit VHR '03'
-            task jevs_stats_global_chem_atmos_grid2obs_aeronet_vhr_03
-              trigger :TIME >= 0615 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
+              trigger :TIME >= 0700 and :TIME < 1300 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
               edit VHR '03'
             task jevs_stats_global_chem_atmos_grid2obs_airnow_vhr_06
-              trigger :TIME >= 0705 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
-              edit VHR '06'
-            task jevs_stats_global_chem_atmos_grid2obs_aeronet_vhr_06
-              trigger :TIME >= 0705 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
+              trigger :TIME >= 0700 and :TIME < 1300 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete and ./jevs_stats_global_chem_atmos_grid2obs_airnow_vhr_03 == complete
               edit VHR '06'
             task jevs_stats_global_chem_atmos_grid2obs_airnow_vhr_09
-              trigger :TIME >= 0730 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
+              trigger :TIME >= 0700 and :TIME < 1300 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete and ./jevs_stats_global_chem_atmos_grid2obs_airnow_vhr_06 == complete
               edit VHR '09'
+            task jevs_stats_global_chem_atmos_grid2obs_aeronet_vhr_03
+              trigger :TIME >= 0700 and :TIME < 1300 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
+              edit VHR '03'
+            task jevs_stats_global_chem_atmos_grid2obs_aeronet_vhr_06
+              trigger :TIME >= 0700 and :TIME < 1300 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete and ./jevs_stats_global_chem_atmos_grid2obs_aeronet_vhr_03 == complete
+              edit VHR '06'
             task jevs_stats_global_chem_atmos_grid2obs_aeronet_vhr_09
-              trigger :TIME >= 0730 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete
+              trigger :TIME >= 0700 and :TIME < 1300 and ../../../../00/evs/prep/global_chem/jevs_prep_global_chem_atmos_grid2obs == complete and ./jevs_stats_global_chem_atmos_grid2obs_aeronet_vhr_06 == complete
               edit VHR '09'
           endfamily
         endfamily    # 06 stats
@@ -980,15 +950,15 @@ suite evs_nco
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/plots'
           family mesoscale
             task jevs_plots_mesoscale_grid2obs_last90days
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
-              time 09:00
             task jevs_plots_mesoscale_headline
+              trigger :TIME >= 0900 and :TIME < 1500
               edit VHR '09'
-              time 09:00
           endfamily
           family global_ens
 	    task jevs_plots_global_ens_wave_gefs_grid2obs_last90days
-              trigger :TIME >= 1135 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_wave_grid2obs == complete
+              trigger :TIME >= 1100 and :TIME < 1700 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_wave_grid2obs == complete
           endfamily
         endfamily    # 06 plots
       endfamily  # evs
@@ -1138,6 +1108,18 @@ suite evs_nco
               trigger :TIME >= 1325 and ../../prep/global_det/jevs_prep_global_det_wave == complete
           endfamily
           family cam
+            task jevs_stats_cam_hireswarwmem2_severe
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../../00/evs/v2.0/prep/cam/jevs_cam_hireswarwmem2_severe_prep_vhr_00 == complete and ../../../../../12/evs/v2.0/prep/cam/jevs_cam_hireswarwmem2_severe_prep_vhr_12 == complete
+              edit VHR '08'
+            task jevs_stats_cam_hireswarw_severe
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../../00/evs/v2.0/prep/cam/jevs_cam_hireswarw_severe_prep_vhr_00 == complete and ../../../../../12/evs/v2.0/prep/cam/jevs_cam_hireswarw_severe_prep_vhr_12 == complete
+              edit VHR '08'
+            task jevs_stats_cam_hireswfv3_severe
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../../00/evs/v2.0/prep/cam/jevs_cam_hireswfv3_severe_prep_vhr_00 == complete and ../../../../../12/evs/v2.0/prep/cam/jevs_cam_hireswfv3_severe_prep_vhr_12 == complete
+              edit VHR '08'
+            task jevs_stats_cam_href_severe
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../../00/evs/v2.0/prep/cam/jevs_cam_href_severe_prep_vhr_00 == complete and ../../../../../12/evs/v2.0/prep/cam/jevs_cam_href_severe_prep_vhr_12 == complete
+              edit VHR '08'
             task jevs_stats_cam_nam_firewxnest_grid2obs_vhr_12
               time 12:15
               edit VHR '12'
@@ -1311,6 +1293,15 @@ suite evs_nco
               edit VHR '15'
           endfamily
           family aqm
+            task jevs_stats_aqm_atmos_grid2obs_vhr_12
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
+              edit VHR '12'
+            task jevs_stats_aqm_atmos_grid2obs_vhr_13
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_12 == complete
+              edit VHR '13'
+            task jevs_stats_aqm_atmos_grid2obs_vhr_14
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete and ./jevs_stats_aqm_atmos_grid2obs_vhr_13 == complete
+              edit VHR '14'
             task jevs_stats_aqm_atmos_grid2obs_vhr_15
               trigger :TIME >= 1205 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2obs == complete
               edit VHR '15'
@@ -1337,6 +1328,16 @@ suite evs_nco
               edit VHR '22'
             task jevs_stats_aqm_atmos_grid2obs_vhr_23
               trigger :TIME >= 1330 and ../../../../00/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_00 == complete and ../../../../00/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_01 == complete and ../../../../00/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_02 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_03 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_04 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_05 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_06 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_07 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_08 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_09 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_10 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_11 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_12 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_13 == complete and ../../../../06/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_14 == complete and ../../../../12/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_15 == complete and ../../../../12/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_16 == complete and ../../../../12/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_17 == complete and ../../../../12/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_18 == complete and ../../../../12/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_19 == complete and ../../../../12/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_20 == complete and ../../../../12/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_21 == complete and ../../../../12/evs/stats/aqm/jevs_stats_aqm_atmos_grid2obs_vhr_22 == complete
+              edit VHR '23'
+            task jevs_stats_aqm_atmos_grid2grid_vhr_12
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
+              edit VHR '12'
+            task jevs_stats_aqm_atmos_grid2grid_vhr_13
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_12 == complete
+              edit VHR '13'
+            task jevs_stats_aqm_atmos_grid2grid_vhr_14
+              trigger :TIME >= 1200 and :TIME < 1800 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete and ./jevs_stats_aqm_atmos_grid2grid_vhr_13 == complete
+              edit VHR '14'
             task jevs_stats_aqm_atmos_grid2grid_vhr_15
               trigger :TIME >= 1205 and ../../../../00/evs/prep/aqm/jevs_prep_aqm_atmos_grid2grid == complete
               edit VHR '15'
