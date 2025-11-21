@@ -91,7 +91,7 @@ suite evs_nco
           endfamily
           family global_chem
             task jevs_prep_global_chem_atmos_grid2obs
-              time 05:30
+              trigger :TIME >= 0530 and :TIME < 1130
           endfamily
         endfamily    # 00 prep
         family stats
@@ -1896,7 +1896,7 @@ suite evs_nco
               trigger (:TIME >= 2200 or :TIME < 0400) and ../../prep/cam/jevs_cam_namnest_precip_prep_vhr_18 == complete and ./jevs_stats_cam_namnest_precip_vhr_19 == complete and ./jevs_stats_cam_namnest_precip_vhr_20 == complete and ./jevs_stats_cam_namnest_precip_vhr_21 == complete
               edit VHR '22'
             task jevs_stats_cam_hireswarw_grid2obs_vhr_18
-              time 18:15
+              trigger :TIME >= 1815 or :TIME < 0015
               edit VHR '18'
             task jevs_stats_cam_hireswarw_grid2obs_vhr_21
               trigger :TIME >= 2100 and ../../../../06/evs/stats/cam/jevs_stats_cam_hireswarw_grid2obs_vhr_06 == complete and ../../../../06/evs/stats/cam/jevs_stats_cam_hireswarw_grid2obs_vhr_09 == complete and ../../../../12/evs/stats/cam/jevs_stats_cam_hireswarw_grid2obs_vhr_12 == complete and ../../../../12/evs/stats/cam/jevs_stats_cam_hireswarw_grid2obs_vhr_15 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_hireswarw_grid2obs_vhr_18 == complete
