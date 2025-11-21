@@ -15,7 +15,6 @@ import glob
 import netCDF4 as netcdf
 import datetime
 import global_det_atmos_util as gda_util
-
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
@@ -36,7 +35,7 @@ var1_levels = os.environ['var1_levels']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_list = os.environ['fhr_list'].split(', ')
+fhr_list = [int(f.strip()) for f in os.environ['fhr_list'].split(',') if f.strip()]
 fhr_inc = '12'
 #fhr_end = os.environ['fhr_end']
 #fhr_inc = os.environ['fhr_inc']
