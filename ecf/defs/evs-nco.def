@@ -28,7 +28,7 @@ suite evs_nco
             task jevs_prep_global_ens_naefs_atmos
               trigger :TIME >= 0300 and :TIME < 0900
             task jevs_prep_global_ens_headline
-              trigger :TIME >= 0400 and :TIME < 1000 and ./jevs_prep_global_ens_atmos == complete and ./jevs_prep_global_ens_naefs_atmos == complete
+              trigger :TIME >= 0600 and :TIME < 1200 and ./jevs_prep_global_ens_atmos == complete and ./jevs_prep_global_ens_naefs_atmos == complete
           endfamily
           family cam
             task jevs_prep_cam_radar_vhr_00
