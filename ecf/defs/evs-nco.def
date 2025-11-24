@@ -1508,7 +1508,7 @@ suite evs_nco
           endfamily
           family global_det
             task jevs_plots_global_det_wave_grid2obs_last90days
-              trigger :TIME >= 1355 and :TIME >= 1955 and ../../stats/global_det/jevs_stats_global_det_gfs_wave_grid2obs == complete
+              trigger :TIME >= 1355 and :TIME < 1955 and ../../stats/global_det/jevs_stats_global_det_gfs_wave_grid2obs == complete
           endfamily
           family cam
             task jevs_plots_cam_href_grid2obs_ecnt_last90days
