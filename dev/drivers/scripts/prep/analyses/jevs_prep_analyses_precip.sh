@@ -1,4 +1,3 @@
-#PBS -S /bin/bash
 #PBS -N jevs_prep_analyses_precip
 #PBS -j oe
 #PBS -S /bin/bash
