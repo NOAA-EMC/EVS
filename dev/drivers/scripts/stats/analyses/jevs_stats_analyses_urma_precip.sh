@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N jevs_stats_analyses_urma_precip
 #PBS -j oe
 #PBS -S /bin/bash
