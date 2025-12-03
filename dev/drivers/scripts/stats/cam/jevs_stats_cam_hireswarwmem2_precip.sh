@@ -1,4 +1,3 @@
-#PBS -S /bin/bash
 #PBS -N jevs_stats_cam_hireswarwmem2_precip
 #PBS -j oe
 #PBS -S /bin/bash

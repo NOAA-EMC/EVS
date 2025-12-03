@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N jevs_stats_cam_hireswarw_snowfall
 #PBS -j oe
 #PBS -S /bin/bash
