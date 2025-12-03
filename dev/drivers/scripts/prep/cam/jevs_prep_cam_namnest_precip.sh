@@ -1,4 +1,3 @@
-#PBS -S /bin/bash
 #PBS -N jevs_prep_cam_namnest_precip
 #PBS -j oe
 #PBS -S /bin/bash

@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N jevs_stats_analyses_ccpa_precip
 #PBS -j oe
 #PBS -S /bin/bash
