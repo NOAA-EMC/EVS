@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N jevs_stats_analyses_rtma_ru_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
