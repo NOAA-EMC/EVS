@@ -92,62 +92,70 @@ for ObsType in ${grid2obs_list}; do
     for mdl_cyc in ${init_cyc}; do
       export mdl_cyc    ## variable used in *.conf
 
-      let ihr=0
-      num_fcst_in_metplus=0
-      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
-      while [ ${ihr} -le ${fcstmax} ]; do
-        filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit
-        fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
-        export fhr
+      restart_status_file="${COMOUTsmall}/completed/run_${MODELNAME}_${ObsType}_init_hr_t${mdl_cyc}z_valid_hr_t${vhr}z_grid2obs.completed"
+      if [ ! -s ${restart_status_file} ]; then
+        let ihr=0
+        num_fcst_in_metplus=0
+        if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+        while [ ${ihr} -le ${fcstmax} ]; do
+          filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit
+          fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
+          export fhr
     
-        export datehr=${VDATE}${vhr}
-        adate=`${NDATE} -${ihr} ${datehr}`
-        aday=`echo ${adate} |cut -c1-8`
-        acyc=`echo ${adate} |cut -c9-10`
-        if [ "${acyc}" == "${mdl_cyc}" ]; then
-          fcst_file=${EVSINprep}/${RUN}.${aday}/${MODELNAME}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.reduced.grib2
-          if [ -s ${fcst_file} ]; then
-            echo "${fhr} found"
-            echo ${fhr} >> ${recorded_temp_list}
-            let "num_fcst_in_metplus=num_fcst_in_metplus+1"
-          else
-            echo "PREP_OUTPUT_MISSING: Pre-processed Global-Chemical output ${fcst_file} is missing. The missing Global-Chemical forecast file will be skipped"
+          export datehr=${VDATE}${vhr}
+          adate=`${NDATE} -${ihr} ${datehr}`
+          aday=`echo ${adate} |cut -c1-8`
+          acyc=`echo ${adate} |cut -c9-10`
+          if [ "${acyc}" == "${mdl_cyc}" ]; then
+            fcst_file=${EVSINprep}/${RUN}.${aday}/${MODELNAME}/${acyc}/${RUN}/pgrb2ap25/${MODELNAME}.${RUN}.t${acyc}z.a2d_0p25.f${filehr}.reduced.grib2
+            if [ -s ${fcst_file} ]; then
+              echo "${fhr} found"
+              echo ${fhr} >> ${recorded_temp_list}
+              let "num_fcst_in_metplus=num_fcst_in_metplus+1"
+            else
+              echo "PREP_OUTPUT_MISSING: Pre-processed Global-Chemical output ${fcst_file} is missing. The missing Global-Chemical forecast file will be skipped"
+            fi 
           fi 
-        fi 
-        let "ihr=ihr+3"
-      done
-      if [ -s ${recorded_temp_list} ]; then
-        export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
-      fi
-      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
-      export num_fcst_in_metplus
-      echo "number of fcst lead in_metplus point_stat for ${CMODEL}-aerosol ${obs_var} == ${num_fcst_in_metplus}"
-    
-      if [ ${num_fcst_in_metplus} -gt 0 -a ${num_obs_found} -eq 1 ]; then
-        export fcsthours=${fcsthours_list}
-        #############################
-        # run Point Stat Analysis
-        #############################
-        run_metplus.py ${point_stat_conf_file} ${config_common}
-        export err=$?; err_chk
-      else
-        if [ ${num_obs_found} -eq 0 ]; then
-            echo "DEBUG: There is no pre-processed ${OBSTYPE} OBS, the metplus stats process will be skipped"
+          let "ihr=ihr+3"
+        done
+        if [ -s ${recorded_temp_list} ]; then
+          export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
         fi
-        if [ ${num_fcst_in_metplus} -eq 0 ]; then
-            echo "DEBUG: There is no pre-processed ${obs_var} ${CMODEL}-aerosol ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+        if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+        export num_fcst_in_metplus
+        echo "number of fcst lead in_metplus point_stat for ${CMODEL}-aerosol ${obs_var} == ${num_fcst_in_metplus}"
+    
+        if [ ${num_fcst_in_metplus} -gt 0 -a ${num_obs_found} -eq 1 ]; then
+          export fcsthours=${fcsthours_list}
+          #############################
+          # run Point Stat Analysis
+          #############################
+          run_metplus.py ${point_stat_conf_file} ${config_common}
+          export err=$?; err_chk
+        else
+          if [ ${num_obs_found} -eq 0 ]; then
+              echo "DEBUG: There is no pre-processed ${OBSTYPE} OBS, the metplus stats process will be skipped"
+          fi
+          if [ ${num_fcst_in_metplus} -eq 0 ]; then
+              echo "DEBUG: There is no pre-processed ${obs_var} ${CMODEL}-aerosol ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+          fi
+        fi
+        if [ "${SENDCOM}" == "YES" ]; then
+          SOURCE_DIR=${RUNTIME_STATS}/${VDATE}.stat
+          if [ -d ${SOURCE_DIR} ]; then      ## does not exist if run_metplus.py did not execute
+            stat_file_count=$(
+                find "$SOURCE_DIR" -type f -size +0c -name "*${OutputId}*" -printf "1\n" 2>/dev/null | wc -l
+            )
+            if [ ${stat_file_count} -ne 0 ]; then
+              mkdir -p ${COMOUTsmall}
+              mkdir -p ${COMOUTsmall}/completed
+              find "$SOURCE_DIR" -type f -size +0c -name "*${OutputId}*" -exec cp -v {} "$COMOUTsmall/" \;
+              echo "run ${MODELNAME} ${ObsType} init hr=t${mdl_cyc}z valid hr=t${vhr}z grid2obs completed" > ${restart_status_file}
+            fi
+          fi
         fi
       fi
     done   ## hour loop
-    if [ "${SENDCOM}" == "YES" ]; then
-      if [ -d ${RUNTIME_STATS}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
-        stat_file_count=$(find ${RUNTIME_STATS}/${VDATE}.stat -name "*${OutputId}*" | wc -l)
-        if [ ${stat_file_count} -ne 0 ]; then
-          mkdir -p ${COMOUTsmall}
-          cp -v ${RUNTIME_STATS}/${VDATE}.stat/*${OutputId}* ${COMOUTsmall}
-        fi
-      fi
-    fi
     if [ "${vhr}" == "21" ]; then
       stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
@@ -155,7 +163,7 @@ for ObsType in ${grid2obs_list}; do
         cd ${finalstat}
         run_metplus.py ${stat_analysis_conf_file} ${config_common}
         export err=$?; err_chk
-        if [ ${SENDCOM} = "YES" ]; then
+        if [ "${SENDCOM}" == "YES" ]; then
           cpfile=${finalstat}/${StatFileId}.v${VDATE}.stat
           if [ -s ${cpfile} ]; then
             mkdir -p ${COMOUTfinal}
