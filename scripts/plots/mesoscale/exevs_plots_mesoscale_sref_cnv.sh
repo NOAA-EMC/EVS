@@ -227,7 +227,7 @@ for VAR in $VARS ; do
          echo "if [ ${score_type} = lead_average ] ; then " >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
          echo " if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_*${thresh}.png ] ; then" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "  cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_*${thresh}.png $all_plots" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-	 echo "  >${plot_dir}/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "  echo completed >${plot_dir}/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "  if [ $SENDCOM = YES ] ; then" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "    cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_*${thresh}.png $restart" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "    cp -v ${plot_dir}/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed $restart" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
@@ -236,7 +236,7 @@ for VAR in $VARS ; do
 	 echo "else" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
          echo " if [ -s ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_${lead}.png ] ; then" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "   cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_${lead}.png $all_plots" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-	 echo "   >${plot_dir}/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+	 echo "   echo completed >${plot_dir}/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
          echo "  if [ $SENDCOM = YES ] ; then" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "    cp -v ${plot_dir}/${score_type}_regional_conus_valid_${valid_time}z_${var_short}_${stat}_${lead}.png $restart" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 	 echo "    cp -v ${plot_dir}/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.completed $restart" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh

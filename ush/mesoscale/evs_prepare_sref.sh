@@ -204,7 +204,7 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
       export err=$?; err_chk
       cp $COMINccpa/ccpa.${vday}/$vhr/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
-      >${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed
+      echo completed >${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed
     fi
 
     if [ $SENDCOM = YES ] ; then
@@ -234,7 +234,7 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
       export err=$?; err_chk
       cp $COMINccpa/ccpa.${vday}/$vhr3/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
-      >${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed
+      echo completed >${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed
     fi
 
     if [ $SENDCOM = YES ] ; then
@@ -264,7 +264,7 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
        export err=$?; err_chk
        cp $COMINccpa/ccpa.${next}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
-       >${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed
+       echo completed >${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid212_grid240.f00.completed
      fi
 
      if [ $SENDCOM = YES ] ; then
@@ -302,7 +302,7 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
 
       #Save for restart
       if [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid212.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid212.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid212.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid212.06h.f00.nc ] ; then
-        >${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid212.f00.completed
+        echo completed >${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid212.f00.completed
         if [ $SENDCOM = YES ] ; then
 	  cp ${WORK}/ccpa.${vday}/ccpa.t*z.grid212.06h.f00.nc ${COMOUTrestart}/ccpa.${vday} 
        	  cp ${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid212.f00.completed ${COMOUTrestart}/ccpa.${vday}
@@ -330,7 +330,7 @@ if [ $modnam = ccpa ] && [ ! -e $DATA/ccpa.missing ] ; then
 
       #Save for restart
       if [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid240.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid240.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid240.06h.f00.nc ] && [ -s ${WORK}/ccpa.${vday}/ccpa.t03z.grid240.06h.f00.nc ] ; then
-       >${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid240.f00.completed
+       echo completed >${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid240.f00.completed
        if [ $SENDCOM = YES ] ; then
 	 cp ${WORK}/ccpa.${vday}/ccpa.t*z.grid240.06h.f00.nc ${COMOUTrestart}/ccpa.${vday}
 	 cp ${WORK}/ccpa.${vday}/ccpa6h.t03_09_15_21z.grid240.f00.completed ${COMOUTrestart}/ccpa.${vday}
