@@ -12,6 +12,7 @@
 ###   04/30/2025   Ho-Chun Huang  Remove email function for missing 
 ###                               pre-processed forecast output
 ###   06/04/2025   Ho-Chun Huang  mv from global_ens to global_chem
+###   12/05/2025   Ho-Chun Huang  add restart function and non-zero size copying
 ###
 ########################################################################
 set -x
@@ -93,7 +94,9 @@ for ObsType in ${grid2obs_list}; do
       export mdl_cyc    ## variable used in *.conf
 
       restart_status_file="${COMOUTsmall}/completed/run_${MODELNAME}_${ObsType}_init_hr_t${mdl_cyc}z_valid_hr_t${vhr}z_grid2obs.completed"
-      if [ ! -s ${restart_status_file} ]; then
+      if [ -s ${restart_status_file} ]; then
+        echo "Found Restart status file - the ${MODELNAME} ${ObsType} init hr=t${mdl_cyc}z valid hr=t${vhr}z will be skipped"
+      else
         let ihr=0
         num_fcst_in_metplus=0
         if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
@@ -151,6 +154,8 @@ for ObsType in ${grid2obs_list}; do
               mkdir -p ${COMOUTsmall}/completed
               find "$SOURCE_DIR" -type f -size +0c -name "*${OutputId}*" -exec cp -v {} "$COMOUTsmall/" \;
               echo "run ${MODELNAME} ${ObsType} init hr=t${mdl_cyc}z valid hr=t${vhr}z grid2obs completed" > ${restart_status_file}
+            else
+              echo "DEBUG: NO none-zero stats file *${OutputId}* found in ${SOURCE_DIR}"
             fi
           fi
         fi
