@@ -104,7 +104,7 @@ for  obsv in prepbufr ; do
        echo "if [ -s \$output_base/stat/point_stat*FHR${fhr}_CNV_${fhr}0000L_*${vhr}0000V.stat ] ; then" >> run_sref_cnv_${fhr}_${vhr}.sh
        echo " cp \$output_base/stat/point_stat*FHR${fhr}_CNV_${fhr}0000L_*${vhr}0000V.stat $all_stats" >> run_sref_cnv_${fhr}_${vhr}.sh
        echo " [[ $SENDCOM = YES ]] && cp \$output_base/stat/point_stat*FHR${fhr}_CNV_${fhr}0000L_*${vhr}0000V.stat $COMOUTsmall" >> run_sref_cnv_${fhr}_${vhr}.sh
-       echo " >\$output_base/stat/run_sref_cnv_${fhr}_${vhr}.completed" >> run_sref_cnv_${fhr}_${vhr}.sh
+       echo " echo completed >\$output_base/stat/run_sref_cnv_${fhr}_${vhr}.completed" >> run_sref_cnv_${fhr}_${vhr}.sh
        echo " [[ $SENDCOM = YES ]] && cp \$output_base/stat/run_sref_cnv_${fhr}_${vhr}.completed $COMOUTrestart" >> run_sref_cnv_${fhr}_${vhr}.sh
        echo "fi" >> run_sref_cnv_${fhr}_${vhr}.sh
 
@@ -129,6 +129,6 @@ if [ -s ${DATA}/scripts/run_all_sref_cnv_poe.sh ] ; then
  chmod 775 run_all_sref_cnv_poe.sh
  mpiexec  -n 15 -ppn 15 --cpu-bind verbose,core cfp ${DATA}/scripts/run_all_sref_cnv_poe.sh
  export err=$?; err_chk
- >$COMOUTrestart/evs_sref_cnv.completed
+ echo completed >$COMOUTrestart/evs_sref_cnv.completed
 fi
 
