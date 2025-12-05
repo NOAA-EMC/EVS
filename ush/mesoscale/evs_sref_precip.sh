@@ -89,7 +89,7 @@ for  obsv in ccpa ; do
          echo "  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GenEnsProd_fcstSREF_obsCCPA_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "  export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "  if [ -s \$output_base/stat/GenEnsProd_*${fhr}_*_${vhr}0000V_ens.nc ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
-	 echo "    >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GenEnsProd.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "   echo completed >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GenEnsProd.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/GenEnsProd_*${fhr}_*_${vhr}0000V_ens.nc $COMOUTrestart" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GenEnsProd.completed $COMOUTrestart" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "  fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
@@ -105,7 +105,7 @@ for  obsv in ccpa ; do
          echo "  export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "  if [ -s \$output_base/stat/ensemble_stat_*G212_FHR${fhr}*${vhr}*.stat ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    cp \$output_base/stat/ensemble_stat_*G212_FHR${fhr}*${vhr}*.stat $all_stats" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
-	 echo "    >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.EnsembleStat.completed"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "    echo completed >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.EnsembleStat.completed"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/ensemble_stat_*G212_FHR${fhr}*${vhr}*.stat $COMOUTrestart" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.EnsembleStat.completed $COMOUTrestart" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "  fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
@@ -120,7 +120,7 @@ for  obsv in ccpa ; do
          echo "  export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "  if [ -s \$output_base/stat/grid_stat_*G212_MEAN_${fhr}*${vhr}*.stat ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "    cp \$output_base/stat/grid_stat_*G212_MEAN_${fhr}*${vhr}*.stat $all_stats" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
-	 echo "    >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "    echo completed >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/grid_stat_*G212_MEAN_${fhr}*${vhr}*.stat $COMOUTrestart" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean.completed $COMOUTrestart">> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "  fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
@@ -135,7 +135,7 @@ for  obsv in ccpa ; do
          echo "  export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "  if [ -s \$output_base/stat/grid_stat_*G212_PROB_${fhr}*${vhr}*.stat ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    cp \$output_base/stat/grid_stat_*G212_PROB_${fhr}*${vhr}*.stat $all_stats" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
-	 echo "    >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GridStat_prob.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "    echo completed >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GridStat_prob.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/grid_stat_*G212_PROB_${fhr}*${vhr}*.stat $COMOUTrestart" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GridStat_prob.completed $COMOUTrestart">> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "  fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
@@ -153,7 +153,7 @@ for  obsv in ccpa ; do
          echo "  export err=\$?; err_chk" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "  if [ -s \$output_base/stat/grid_stat_*G240_MEAN_${fhr}*${vhr}*.stat ] ; then" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    cp \$output_base/stat/grid_stat_*G240_MEAN_${fhr}*${vhr}*.stat $all_stats" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
-	 echo "    >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean_G240.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
+	 echo "    echo completed >\$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean_G240.completed" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/grid_stat_*G240_MEAN_${fhr}*${vhr}*.stat $COMOUTrestart" >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
 	 echo "    [[ $SENDCOM = YES ]] && cp \$output_base/stat/${domain}.${obsv}.${fhr}.${vhr}.GridStat_mean_G240.completed $COMOUTrestart">> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
          echo "  fi " >> run_sref_mpi_${domain}.${obsv}.${fhr}.${vhr}.sh
