@@ -117,7 +117,9 @@ link_master_to_cyc "jevs_stats_mesoscale_rap_snowfall_vhr" "$cyc"
 cd $ECF_DIR/scripts/stats/aqm
 echo "Linking AQM stats ..."
 cyc=$(seq 0 23)
-link_master_to_cyc "jevs_stats_aqm_vhr" "$cyc"
+link_master_to_cyc "jevs_stats_aqm_atmos_grid2grid_vhr" "$cyc"
+cyc=$(seq 0 23)
+link_master_to_cyc "jevs_stats_aqm_atmos_grid2obs_vhr" "$cyc"
 
 # ANALYSES files
 cd $ECF_DIR/scripts/prep/analyses
@@ -142,9 +144,9 @@ link_master_to_cyc "jevs_stats_analyses_ccpa_precip_vhr" "$cyc"
 # GLOBAL-CHEM files
 cd $ECF_DIR/scripts/stats/global_chem
 echo "Linking GLOBAL_CHEM stats ..."
-cyc=$(seq 0 3 23)
+cyc=$(seq 0 3 21)
 link_master_to_cyc "jevs_stats_global_chem_atmos_grid2obs_aeronet_vhr" "$cyc"
-cyc=$(seq 0 3 23)
+cyc=$(seq 0 3 21)
 link_master_to_cyc "jevs_stats_global_chem_atmos_grid2obs_airnow_vhr" "$cyc"
 
 echo "Done."
