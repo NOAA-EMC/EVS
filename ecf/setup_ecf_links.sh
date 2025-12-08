@@ -40,7 +40,7 @@ link_master_to_cyc "jevs_prep_cam_namnest_severe_vhr" "$cyc"
 cyc=$(seq 0 12 23)
 link_master_to_cyc "jevs_prep_cam_hireswarw_severe_vhr" "$cyc"
 cyc=$(seq 0 12 23)
-link_master_to_cyc "jevs_prep_hireswarwmem2_severe_vhr" "$cyc"
+link_master_to_cyc "jevs_prep_cam_hireswarwmem2_severe_vhr" "$cyc"
 cyc=$(seq 0 12 23)
 link_master_to_cyc "jevs_prep_cam_hireswfv3_severe_vhr" "$cyc"
 cyc=$(seq 0 12 23)
