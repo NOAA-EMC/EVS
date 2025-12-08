@@ -73,6 +73,6 @@ for resolution in $resolutions ; do
 done
 
 if [ $SENDCOM = YES ] ; then
-    [ -z "`ls -A $STATSOUTfinal`" ] || cp -v $STATSOUTfinal/* $COMOUTfinal/.
-    [ -z "`ls -A $STATSOUTsmall`" ] || cp -v $STATSOUTsmall/* $COMOUTsmall/.
+    [ -z "`ls -A $STATSOUTfinal`" ] || find  $STATSOUTfinal -type f -size +0 -exec cp {} -v $COMOUTfinal/. \;
+    [ -z "`ls -A $STATSOUTsmall`" ] || find  $STATSOUTsmall -type f -size +0 -exec cp {} -v $COMOUTsmall/. \;
 fi
