@@ -1474,9 +1474,9 @@ suite evs_nco
             task jevs_plots_global_ens_atmos_gefs_precip_last90days
               trigger :TIME >= 1400 and :TIME < 2000 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_cmce_atmos_precip == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_ecme_atmos_precip == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_precip == complete
             task jevs_plots_global_ens_atmos_gefs_grid2obs_last90days
-              trigger :TIME >= 1400 and :TIME < 2000 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_cmce_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_ecme_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
+              trigger :TIME >= 1415 and :TIME < 2015 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_cmce_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_ecme_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
             task jevs_plots_global_ens_atmos_gefs_grid2obs_separate_last90days
-              trigger :TIME >= 1400 and :TIME < 2000 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_cmce_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_ecme_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
+              trigger :TIME >= 1415 and :TIME < 2015 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_cmce_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_ecme_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
             task jevs_plots_global_ens_atmos_gefs_grid2grid_last90days
               trigger :TIME >= 1400 and :TIME < 2000 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_cmce_atmos_grid2grid == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_ecme_atmos_grid2grid == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2grid == complete
           endfamily
