@@ -142,7 +142,7 @@ else
 fi
 
 if [ "${RUN}" == "chem" ]; then
-    export EVSINprep=${EVSINprep:-${COMIN}/prep/${COMPONENT}}
+    export EVSINrrfs=${EVSINrrfs:-${COMIN}/prep/${COMPONENT}}
     export DATA_TYPE=${DATA_TYPE:-aeronet_aod}
     # alternative choice is an option different from aqobs
     export airnow_hourly_type=${airnow_hourly_type:-aqobs}
@@ -158,7 +158,7 @@ if [ $VERIF_CASE = radar ] || [ $VERIF_CASE = severe ]; then
 elif [ $MODELNAME = nam_firewxnest ] || [ $MODELNAME = rrfs_firewxnest ]; then
    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 elif [ "${RUN}" == "chem" ]; then
-    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}.sh
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}.sh
 else
    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 fi

@@ -122,8 +122,9 @@ export COMINrrfs=${COMINrrfs:-$(compath.py ${envir}/com/rrfs/${rrfs_ver})}
 if [ "${RUN}" == "chem" ]; then
     export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
     export DCOMINaeronet=${DCOMINaeronet:-${DCOMROOT}}
-    export COMOUTprepmdl=${COMOUTprepmdl:-${COMOUT}/${RUN}.${INITDATE}/${MODELNAME}}
-    export COMOUTprepobs=${COMOUTprepobs:-${COMOUT}/${RUN}.${INITDATE}/obs}
+    export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
+    export COMOUTprepmdl=${COMOUTprepmdl:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}}
+    export COMOUTprepobs=${COMOUTprepobs:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/obs}
    
     # alternative choice is an option different from aqobs
     export airnow_hourly_type=${airnow_hourly_type:-aqobs}
@@ -155,7 +156,7 @@ fi
 # Execute the script 
 ####################################
 if [ "${RUN}" == "chem" ]; then
-    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}.sh
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}.sh
 else
     $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 fi

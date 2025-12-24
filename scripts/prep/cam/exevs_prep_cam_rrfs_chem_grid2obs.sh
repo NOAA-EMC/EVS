@@ -152,9 +152,9 @@ for OBTTYPE in ${obstype}; do
                         export err=$?; err_chk
                         if [ ${SENDCOM} = "YES" ]; then
                             cpfile=${finalprep}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
-                            if [ -e ${cpfile} ]; then
+                            if [ -e ${cpfile} ]; then 
                                 mkdir -p ${COMOUTprepobs}
-                                cp -v ${cpfile} ${COMOUTprepobs}
+				cp -v ${cpfile} ${COMOUTprepobs}
                             fi
                         fi
                     fi
@@ -211,11 +211,12 @@ for mdl_cyc in "${cyc_opt[@]}"; do
     com_rrfs=${COMINrrfs}/${MODELNAME}.${INITDATE}/${mdl_cyc}
     if [ -d ${com_rrfs} ]; then
         prep_rrfs=${COMOUTprepmdl}/${mdl_cyc}
+        if [ ! -d ${prep_rrfs} ]; then mkdir -p ${prep_rrfs}; fi
         let hour_now=1
         let max_hour=84
         let total_num_file=${max_hour}
   
-        if [ "${check_restart}" == "YES" ] && [ -d  ${prep_rrfs} ]; then   ## Check RRFS reduced grib2 files for RESTART ability
+        if [ "${check_restart}" == "YES" ]; then   ## Check RRFS reduced grib2 files for RESTART ability
             checkfile="${MODELNAME}.t${mdl_cyc}z.prslev.f*.reduced.grib2"
             mdl_file_count=$(find ${prep_rrfs} -name ${checkfile} | wc -l )
             if [ ${mdl_file_count} -eq 0 ]; then
@@ -246,7 +247,6 @@ for mdl_cyc in "${cyc_opt[@]}"; do
             if [ -s ${check_reduced_file} ]; then
                 echo "Found file ${check_reduced_file}"
                 if [ ${SENDCOM} = "YES" ]; then
-                    if [ ! -d ${prep_rrfs} ]; then mkdir -p ${prep_rrfs}; fi
                     cp -v ${check_reduced_file} ${prep_rrfs}
                 fi
             elif [ -s ${check_full_file} ]; then
@@ -274,7 +274,6 @@ for mdl_cyc in "${cyc_opt[@]}"; do
 		echo "DEBUG: Number of extracted record is ${number_of_record} for file extract_pm10"
                 cat extract_pm25 extract_pm10 extract_aod > ${reduced_rec_grib2}
                 if [ ${SENDCOM} = "YES" ]; then
-                    if [ ! -d ${prep_rrfs} ]; then mkdir -p ${prep_rrfs}; fi
                     cp -v ${reduced_rec_grib2} ${prep_rrfs}
                 fi
             else
