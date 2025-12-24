@@ -78,7 +78,7 @@ for ObsType in ${grid2obs_list}; do
     stat_analysis_conf_file=${CONFIGevs}/Statanalysis_fcstRRFSAero_obs${OBSTYPE}.conf
 
     if [ "${ObsSrc}" == "aeronet" ]; then
-        check_file=${EVSINprep}/${RUN}.${VDATE}/obs/${ObsSrc}_All_${VDATE}_lev15.nc
+        check_file=${EVSINrrfs}/${RUN}.${VDATE}/obs/${ObsSrc}_All_${VDATE}_lev15.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
@@ -91,7 +91,7 @@ for ObsType in ${grid2obs_list}; do
         vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
         vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
-        check_file=${EVSINprep}/${RUN}.${vld_date}/obs/${ObsSrc}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+        check_file=${EVSINrrfs}/${RUN}.${vld_date}/obs/${ObsSrc}_${HOURLY_INPUT_TYPE}_${vld_time}.nc
         num_obs_found=0
         if [ -s ${check_file} ]; then
           num_obs_found=1
@@ -118,7 +118,7 @@ for ObsType in ${grid2obs_list}; do
         aday=`echo ${adate} |cut -c1-8`
         acyc=`echo ${adate} |cut -c9-10`
         if [ "${acyc}" == "${mdl_cyc}" ]; then
-          fcst_file=${EVSINprep}/${RUN}.${aday}/${MODELNAME}/${acyc}/${MODELNAME}.t${acyc}z.prslev.f${filehr}.reduced.grib2
+          fcst_file=${EVSINrrfs}/${RUN}.${aday}/${MODELNAME}/${acyc}/${MODELNAME}.t${acyc}z.prslev.f${filehr}.reduced.grib2
           if [ -s ${fcst_file} ]; then
             if [ "${check_restart}" == "YES" ]; then
               point_stat_file="${COMOUTsmall}/point_stat_${OutputId}_${fhr}0000L_${VDATE}_${vhr}0000V.stat"
@@ -158,18 +158,18 @@ for ObsType in ${grid2obs_list}; do
             echo "DEBUG: There is no pre-processed ${ObsVar} ${CMODEL}-smoke and dust ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
         fi
       fi
-    done   ## init hour loop
-    if [ "${SENDCOM}" == "YES" ]; then
-      if [ -d ${RUNTIME_STATS}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
-        stat_file_count=$(find ${RUNTIME_STATS}/${VDATE}.stat -name "*${OutputId}*" | wc -l)
-        if [ ${stat_file_count} -ne 0 ]; then
-          mkdir -p ${COMOUTsmall}
-          cp -v ${RUNTIME_STATS}/${VDATE}.stat/*${OutputId}* ${COMOUTsmall}
-        else
-          echo "DEBUG: NO stats file *${OutputId}* found in ${RUNTIME_STATS}/${VDATE}.stat"
+      if [ "${SENDCOM}" == "YES" ]; then
+        if [ -d ${RUNTIME_STATS}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
+          stat_file_count=$(find ${RUNTIME_STATS}/${VDATE}.stat -name "*${OutputId}*" | wc -l)
+          if [ ${stat_file_count} -ne 0 ]; then
+            mkdir -p ${COMOUTsmall}
+            cp -v ${RUNTIME_STATS}/${VDATE}.stat/*${OutputId}* ${COMOUTsmall}
+          else
+            echo "DEBUG: NO stats file *${OutputId}* found in ${RUNTIME_STATS}/${VDATE}.stat"
+          fi
         fi
       fi
-    fi
+    done   ## init hour loop
     if [ "${vhr}" == "23" ]; then
       stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
       if [ ${stat_file_count} -ne 0 ]; then
