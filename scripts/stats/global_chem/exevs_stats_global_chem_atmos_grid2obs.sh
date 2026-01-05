@@ -37,7 +37,7 @@ export METPLUS_PATH
 
 grid2obs_list="${DATA_TYPE}"
 
-export init_cyc="00 06 12 18"
+export init_cyc="00 12"
 
 for ObsType in ${grid2obs_list}; do
     export ObsType
