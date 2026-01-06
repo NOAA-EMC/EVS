@@ -860,7 +860,7 @@ def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
 
 def prep_prod_prepbufr_file(source_file, dest_file, date_dt,
                             log_missing_file):
-    """! Do prep work for obsproc prepbufr nam files
+    """! Do prep work for obsproc prepbufr gdas files
 
          Args:
              source_file      - source file (string)
@@ -887,7 +887,7 @@ def prep_prod_prepbufr_file(source_file, dest_file, date_dt,
             run_shell_command([SPLIT_BY_SUBSET, prepped_file])
     else:
         log_missing_file_obs(log_missing_file, source_file,
-                             f"Prepbufr NAM",
+                             f"Prepbufr GDAS",
                              date_dt)
     if check_file_exists_size(split_file):
         copy_file(split_file, dest_file)
