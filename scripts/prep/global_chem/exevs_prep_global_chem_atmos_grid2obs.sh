@@ -12,6 +12,7 @@
 ###   01/30/2024   Ho-Chun Huang  for a single email of missing files of both OBS and FCST
 ###   05/01/2025   Ho-Chun Huang  Remove email function for missing model forecast output
 ###   05/22/2025   Ho-Chun Huang  Move from global_ens chem to global_chem
+###   01/06/2026   Ho-Chun Huang  remove init cycle 06Z and 18Z
 ###
 ########################################################################
 #

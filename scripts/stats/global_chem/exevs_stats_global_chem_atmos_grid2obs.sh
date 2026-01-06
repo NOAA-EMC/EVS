@@ -13,6 +13,7 @@
 ###                               pre-processed forecast output
 ###   06/04/2025   Ho-Chun Huang  mv from global_ens to global_chem
 ###   12/05/2025   Ho-Chun Huang  add restart function and non-zero size copying
+###   01/06/2026   Ho-Chun Huang  remove init cycle 06Z and 18Z
 ###
 ########################################################################
 set -x

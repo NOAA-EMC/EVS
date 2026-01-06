@@ -7,6 +7,7 @@
 ## CONTRIBUTORS: Ho-Chun Huang, ho-chun.huang@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 ## PURPOSE: Set up configurations to run EVS Global Chemistry standalone
 ##---------------------------------------------------------------------------
+##   01/06/2026   Ho-Chun Huang  remove init cycle 06Z and 18Z
 ##--------------------------------------------------------------------------
 
 set -x
