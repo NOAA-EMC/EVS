@@ -12,6 +12,7 @@
 ###   01/30/2024   Ho-Chun Huang  for a single email of missing files of both OBS and FCST
 ###   05/01/2025   Ho-Chun Huang  Remove email function for missing model forecast output
 ###   05/22/2025   Ho-Chun Huang  Move from global_ens chem to global_chem
+###   01/06/2026   Ho-Chun Huang  remove init cycle 06Z and 18Z
 ###
 ########################################################################
 #
@@ -155,7 +156,7 @@ match_aod_4="aerosol_wavelength >=5.45e-07,<=5.65e-07"
 match_pm25_1="PMTF"
 match_pm25_2="aerosol=Total Aerosol"
 match_pm25_3="aerosol_size <2.5e-06"
-declare -a cyc_opt=( 00 06 12 18 )
+declare -a cyc_opt=( 00 12 )
 let inc=3
 for mdl_cyc in "${cyc_opt[@]}"; do
     com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/chem/pgrb2ap25   ## FOR GEFS-chem
