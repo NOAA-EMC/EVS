@@ -59,4 +59,5 @@ export st4_ver=v4.1
 export ukmet_ver=v2.2
 export urma_ver=v2.10
 export wafs_ver=v7.0
+export gcafs_ver=v1.0
 
