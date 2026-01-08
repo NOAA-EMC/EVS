@@ -1,10 +1,10 @@
-#PBS -N jevs_prep_global_chem_atmos_grid2obs
+#PBS -N jevs_stats_global_chem_atmos_grid2obs_aeronet_aod
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
-#PBS -l place=shared,select=1:ncpus=1:mem=10GB:prepost=true
+#PBS -l walltime=00:15:00
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -12,18 +12,12 @@ set -x
 cd $PBS_O_WORKDIR
 
 export model=evs
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
-evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+evs_ver_2d=$(echo ${evs_ver} | cut -d'.' -f1-2)
 
-############################################################
-## Load modules
-############################################################
-############################################################
-## Specify environment variables
-############################################################
 ############################################################
 # Load modules
 ############################################################
@@ -31,18 +25,18 @@ module reset
 
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/dev/modulefiles/global_chem/global_chem_prep.sh
+source $HOMEevs/dev/modulefiles/global_chem/global_chem_stats.sh
 
 ############################################################
-## set some variables
-#############################################################
+## Specify environment variables
+############################################################
 export KEEPDATA=NO
 export SENDMAIL=YES
 export SENDDBN=NO
 
 export envir=prod
 export NET=${NET:-evs}
-export STEP=${STEP:-prep}
+export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_chem}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
@@ -50,31 +44,28 @@ export MODELNAME=${MODELNAME:-gcafs}
 export modsys=${modsys:-gcafs}
 export mod_ver=${mod_ver:-${gcafs_ver}}
 
-export INITDATE=${INITDATE:-$(date --date="3 days ago" +%Y%m%d)}
-echo "INITDATE=${INITDATE}"
+export DATA_TYPE=aeronet_aod 
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/${envir}/tmp
-export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${RUN}_${VERIF_CASE}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}_${DATA_TYPE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 ############################################################
-## CALL executable job script here
-#############################################################
+# CALL executable job script here
+############################################################
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
-
     echo "MAILTO variable is not defined. Exiting without continuing."
-
 else
-
-    ${HOMEevs}/jobs/JEVS_PREP_GLOBAL_CHEM
-
+    export vhr
+    echo "vhr = ${vhr}"
+    ${HOMEevs}/jobs/JEVS_STATS_GLOBAL_CHEM
 fi
-
-#######################################################################
-# Purpose: This does the prep work for the global_chem GEFS-Chem model
+######################################################################
+## Purpose: This job will generate the grid2obs statistics using AERONET AOD
+##          for the Global Chemistry model.
 #######################################################################

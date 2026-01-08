@@ -41,7 +41,7 @@ date_type = os.environ['date_type']
 NDAYS = os.environ['NDAYS']
 fig_name_label = os.environ['fig_name_label']
 dir_name_label = fig_name_label
-obs_src_name=os.environ['OBS_SRC']
+obs_src_name=os.environ['obs_src_name']
 restart_mode = os.environ['restart_mode']
 plot_verbosity = os.environ['plot_verbosity']
 VERIF_TYPE = os.environ['VERIF_TYPE']
@@ -166,7 +166,7 @@ if JOB_GROUP in ['filter_stats', 'make_plots']:
     init_hrs = list(range(int(init_hr_start),
                           int(init_hr_end)+int(init_hr_inc),
                           int(init_hr_inc)))
-    fhrs = [int(i) for i in fhr_list.split(', ')]
+    fhrs = [int(i) for i in fhr_list.split(', ') if i]
 
 # Set up plot information dictionary
 if JOB_GROUP != 'tar_images':
@@ -390,6 +390,8 @@ elif JOB_GROUP == 'make_plots':
     met_info_dict = original_met_info_dict.copy()
     if plot == 'time_series':
         import global_chem_atmos_plots_time_series as gdap_ts
+        plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for ts_info in \
                 list(itertools.product(valid_hrs, fhrs, var_info)):
             date_info_dict['valid_hr_start'] = str(ts_info[0])
@@ -402,8 +404,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = ts_info[2][1][0]
             plot_info_dict['obs_var_level'] = ts_info[2][1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[2][1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
-            plot_info_dict['obs_src_name'] = obs_src_name
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -430,7 +430,7 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = False
             if plot_info_dict['stat'] == 'FBAR_OBAR' \
                     and str(date_info_dict['forecast_hour']) not in \
-                    ['24', '48', '72', '96', '120']:
+                    ['0', '24', '48', '72', '96', '120']:
                 make_ts = False
             if make_ts:
                 plot_ts = gdap_ts.TimeSeries(logger, job_input_dir+'/..',
@@ -445,6 +445,8 @@ elif JOB_GROUP == 'make_plots':
                                        job_COMOUT_image_name)
     elif plot == 'lead_average':
         import global_chem_atmos_plots_lead_average as gdap_la
+        plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for la_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(la_info[0])
             date_info_dict['valid_hr_end'] = str(la_info[0])
@@ -456,8 +458,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = la_info[1][1][0]
             plot_info_dict['obs_var_level'] = la_info[1][1][1]
             plot_info_dict['obs_var_thresh'] = la_info[1][1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
-            plot_info_dict['obs_src_name'] = obs_src_name
             job_work_image_name = plot_specs.get_savefig_name(
                 job_work_dir, plot_info_dict, date_info_dict
             )
@@ -497,6 +497,8 @@ elif JOB_GROUP == 'make_plots':
                                        job_COMOUT_image_name)
     elif plot == 'valid_hour_average':
         import global_chem_atmos_plots_valid_hour_average as gdap_vha
+        plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for vha_info in list(itertools.product(var_info)):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
@@ -508,8 +510,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = vha_info[0][1][0]
             plot_info_dict['obs_var_level'] = vha_info[0][1][1]
             plot_info_dict['obs_var_thresh'] = vha_info[0][1][2]
-            plot_info_dict['fig_name_label'] = fig_name_label
-            plot_info_dict['obs_src_name'] = obs_src_name
             job_work_image_name = plot_specs.get_savefig_name(
                 job_work_dir, plot_info_dict, date_info_dict
             )
@@ -554,6 +554,8 @@ elif JOB_GROUP == 'make_plots':
                                        job_COMOUT_image_name)
     elif plot == 'threshold_average':
         import global_chem_atmos_plots_threshold_average as gdap_ta
+        plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for ta_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(ta_info[0])
             date_info_dict['valid_hr_end'] = str(ta_info[0])
@@ -564,8 +566,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
-            plot_info_dict['fig_name_label'] = fig_name_label
-            plot_info_dict['obs_src_name'] = obs_src_name
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -618,6 +618,8 @@ elif JOB_GROUP == 'make_plots':
                                            job_COMOUT_image_name)
     elif plot == 'performance_diagram':
         import global_chem_atmos_plots_performance_diagram as gdap_pd
+        plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['obs_src_name'] = obs_src_name
         for pd_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(pd_info[0])
             date_info_dict['valid_hr_end'] = str(pd_info[0])
@@ -627,8 +629,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
-            plot_info_dict['fig_name_label'] = fig_name_label
-            plot_info_dict['obs_src_name'] = obs_src_name
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])

@@ -221,7 +221,8 @@ class LeadAverage:
             xticks = self.date_info_dict['forecast_hours']
         else:
             xticks = []
-            for fhr in self.date_info_dict['forecast_hours']:
+            ## for fhr in self.date_info_dict['forecast_hours']:
+            for fhr in [ f for f in self.date_info_dict['forecast_hours'] if f ]:
                 if int(fhr) % 24 == 0:
                     xticks.append(fhr)
             if len(xticks) > n_xticks:
@@ -481,7 +482,7 @@ class LeadAverage:
                         if not np.ma.is_masked(ci_max):
                             stat_min_max_dict['ax2_stat_max'] = ci_max
                     cmasked_ci_forecast_hours = np.ma.compressed(
-                            masked_ci_forecast_hoursi
+                            masked_ci_forecast_hours
                     )
                     cmasked_model_num_model1_diff_ci_data = np.ma.compressed(
                             masked_model_num_model1_diff_ci_data

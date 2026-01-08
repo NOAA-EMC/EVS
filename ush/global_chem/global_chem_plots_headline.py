@@ -105,7 +105,7 @@ icnt=0
 for headline_type in input_obs_types:
     # locate obs src array index
     obsidx = input_obs_types.index(headline_type)
-    if headline_type == "airnow_pm25":
+    if headline_type == "pm25":
         icnt += 1
         ### Headline Score Plot : Grid-to-OBS - AIRNOW PM25 hourly concentration CONUS
         ###                                      Last 90 days 00Z CYCLE DAY1 FCST 
@@ -221,7 +221,123 @@ for headline_type in input_obs_types:
                   +headline1_copy_image_name)
             shutil.copy2(headline1_image_name, headline1_copy_image_name)
         
-    elif headline_type == "aeronet_aod":
+    elif headline_type == "pm10":
+        icnt += 1
+        ### Headline Score Plot : Grid-to-OBS - AIRNOW PM10 hourly concentration CONUS
+        ###                                      Last 90 days 00Z CYCLE DAY1 FCST 
+        print("\nHeadline Score Plot "+str(icnt)+" : Grid-to-OBS - AIRNOW PM10 hourly concentration CONUS "
+              +"Last 90 days 00Z CYCLE DAY1 FCST")
+        # Set fixed plot values
+        headline1_plot = 'time_series'
+        headline1_ndays = 90
+        headline1_model_info_dict = {
+            'model1': {'name': input_model_names[0],
+                       'plot_name': input_plot_names[0],
+                       'obs_name': 'AIRNOW_HOURLY_AQOBS'},
+        }
+        headline1_plot_info_dict = {
+            'line_type': 'SL1L2',
+            'grid': 'G004',
+            'stat': 'FBAR_OBAR',
+            'vx_mask': 'CONUS',
+            'event_equalization': 'YES',
+            'interp_method': 'BILIN',
+            'interp_points': '4',
+            'fcst_var_name': 'PMTC',
+            'fcst_var_level': 'L0',
+            'fcst_var_thresh': 'NA',
+            'obs_var_name': 'PM10',
+            'obs_var_level': 'A1',
+            'obs_var_thresh': 'NA',
+            'ob_name':'AIRNOW_HOURLY_AQOBS', 
+            'obs_src_name': input_obs_srcs[obsidx],
+            'fig_name_label': fig_name_label
+        }
+        now = datetime.datetime.now()
+        headline1_date_info_dict = {
+            'date_type': 'VALID',
+            'start_date': (VDATE_END_dt - datetime.timedelta(days=headline1_ndays-1))\
+                           .strftime('%Y%m%d'),
+            'end_date': VDATE_END_dt.strftime('%Y%m%d'),
+            'valid_hr_start': '00',
+            'valid_hr_end': '00',
+            'valid_hr_inc': '24',
+            'init_hr_start': '00',
+            'init_hr_end': '00',
+            'init_hr_inc': '24',
+            'forecast_hour': '24',
+            'forecast_day': '1',
+            'fday_start': '1',
+            'fday_end': '1',
+            'fday_inc': '1'
+        }
+        headline1_job_name = (
+            RUN+'_'+headline1_plot_info_dict['line_type']+'_'
+            +headline1_plot_info_dict['stat']+'_'
+            +headline1_plot_info_dict['vx_mask']+'_'
+            +headline1_plot_info_dict['fcst_var_name']+'_'
+            +headline1_plot_info_dict['fcst_var_level']+'_'
+            +'fhr'+headline1_date_info_dict['forecast_hour']+'_'
+            +headline1_plot+'_'+str(headline1_ndays)+'days_'
+            +headline1_date_info_dict['valid_hr_start']+'Z'
+        )
+        # Set output
+        headline1_output_dir = os.path.join(DATA, headline1_job_name)
+        gda_util.make_dir(headline1_output_dir)
+        # Set up logging
+        now = datetime.datetime.now()
+        headline1_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'
+                                              +RUN+'_'+STEP+'_'+headline1_job_name
+                                              +'_runon'
+                                              +now.strftime('%Y%m%d%H%M%S')+'.log')
+        logger1 = gda_util.get_logger(headline1_logging_file)
+        # Get model daily stat files and condense
+        headline1_start_date_dt = datetime.datetime.strptime(
+            headline1_date_info_dict['start_date'], '%Y%m%d'
+        )
+        headline1_end_date_dt = datetime.datetime.strptime(
+            headline1_date_info_dict['end_date'], '%Y%m%d'
+        )
+        #
+        ## Creates condensed statistics files for plotting, based on selected criteria.
+        #
+        for model_num in list(headline1_model_info_dict.keys()):
+            model = headline1_model_info_dict[model_num]['name']
+            obs_name = headline1_model_info_dict[model_num]['obs_name']
+            logger1.info("Condensing model .stat files for job")
+            gda_util.condense_model_stat_files(
+                logger1, linked_stat_base_dir, headline1_output_dir, model,
+                obs_name, headline1_plot_info_dict['vx_mask'],
+                headline1_plot_info_dict['fcst_var_name'],
+                headline1_plot_info_dict['fcst_var_level'],
+                headline1_plot_info_dict['obs_var_name'],
+                headline1_plot_info_dict['obs_var_level'],
+                headline1_plot_info_dict['line_type']
+            )
+        # Make plot
+        plot_specs = PlotSpecs(logger1, headline1_plot)
+        import global_chem_atmos_plots_time_series as gdap_ts
+        plot_ts = gdap_ts.TimeSeries(logger1, headline1_output_dir,
+                                     headline1_output_dir,
+                                     headline1_model_info_dict,
+                                     headline1_date_info_dict,
+                                     headline1_plot_info_dict,
+                                     met_info_dict, logo_dir)
+        plot_ts.make_time_series()
+        
+        # Rename and copy to main image directory
+        for headline1_image_name in glob.glob(
+            os.path.join(headline1_output_dir, '*.png')
+        ):
+            headline1_copy_image_name = os.path.join(
+                images_dir,
+                headline1_image_name.rpartition('/')[2]
+            )
+            print("Copying "+headline1_image_name+" to "
+                  +headline1_copy_image_name)
+            shutil.copy2(headline1_image_name, headline1_copy_image_name)
+        
+    elif headline_type == "aod":
         icnt += 1
         ### Headline Score Plot : Grid-to-OBS - AERONET AOD observations GLOBAL
         ###                                      Last 90 days 00Z CYCLE DAY1 FCST 

@@ -9,6 +9,7 @@
 #
 #   Change Logs:
 #    09/02/2025  Ho-Chun Huang    move cpreq to cp -v to comply with EE2
+#    10/07/2025   Ho-Chun Huang  Revise code for GCAFSv1 naming and data structure
 ###############################################################################
 
 set -x
@@ -27,12 +28,12 @@ mkdir -p ${STATDIR} ${linked_stat_base_dir}
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
-gcafs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1}' )
+gcafs_ver_id=$( echo ${gcafs_ver} | awk -F"." '{print $1}' )
 export modelid=${MODELNAME}${gcafs_ver_id}
 #
 # Define the verification variables and observation sources
-declare -a obstype_list=("airnow_pm25" "aeronet_aod")
-declare -a obssrc_list=("airnow" "aeronet")
+declare -a obstype_list=("pm25" "pm10" "aod")
+declare -a obssrc_list=("airnow" "airnow" "aeronet")
 
 # Define the model names, plot names, and stats directory
 declare -a mdl_list=("${modelid}")
@@ -87,17 +88,20 @@ while [ ${imdl} -lt ${#mdl_list[@]} ]; do
     idir=${mdl_idir_list[${imdl}]}
     linked_plot_stat_dir=${linked_stat_base_dir}/${input_plots_model_name}
     if [ ! -d ${linked_plot_stat_dir} ]; then mkdir -p ${linked_plot_stat_dir}; fi
-    for ivar in "${obstype_list[@]}"; do
+    let ivar=0
+    while [ ${ivar} -lt ${num_obs_type} ]; do
+        obsvar=${obstype_list[${ivar}]}
+        obssrc=${obssrc_list[${ivar}]}
         ## get 2 additional day's stat for day 1 forecast
         cdate=${VDATE_START}"00"
         NOW=$( ${NDATE} -48 ${cdate} | cut -c1-8 )
         while [ ${NOW} -le ${VDATE_END} ]; do
-            cpfile=evs.stats.${MODELNAME}.atmos.${VERIF_CASE}_${ivar}.v${NOW}.stat
-            sedfile=${input_plots_model_name}_${ivar}.v${NOW}.stat
+            cpfile=evs.stats.${MODELNAME}.atmos.${VERIF_CASE}_${obssrc}_${obsvar}.v${NOW}.stat
+            sedfile=${input_plots_model_name}_${obssrc}_${obsvar}.v${NOW}.stat
             if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
                 cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
                 sed "s/${model1}/${input_plots_model_name}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
-                dest_model_date_stat_file=${linked_plot_stat_dir}/${input_plots_model_name}_${ivar}_v${NOW}.stat
+                dest_model_date_stat_file=${linked_plot_stat_dir}/${input_plots_model_name}_${obssrc}_${obsvar}_v${NOW}.stat
                 ln -s ${STATDIR}/${sedfile} ${dest_model_date_stat_file}
             else
                 echo "DEBUG :: Input Stats ${idir}/${MODELNAME}.${NOW}/${cpfile} is missing and it will be skipped"
@@ -105,6 +109,7 @@ while [ ${imdl} -lt ${#mdl_list[@]} ]; do
             cdate=${NOW}"00"
             NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
         done
+        ((ivar++))
     done
     ((imdl++))
 done

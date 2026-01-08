@@ -44,9 +44,9 @@ export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-global_chem}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export MODELNAME=${MODELNAME:-gefs}
-export modsys=${modsys:-gefs}
-export mod_ver=${mod_ver:-${gefs_ver}}
+export MODELNAME=${MODELNAME:-gcafs}
+export modsys=${modsys:-gcafs}
+export mod_ver=${mod_ver:-${gcafs_ver}}
 
 ########################################
 # Set EVS directories
@@ -72,7 +72,7 @@ mkdir -p ${COMOUT}
 
 export machine=${machine:-WCOSS2}
 export evs_run_mode=${evs_run_mode:-production}
-export DATA_TYPE=${DATA_TYPE:-aeronet}
+export DATA_TYPE=${DATA_TYPE:-hourly}
 export OBS_SRC=${OBS_SRC:-${DATA_TYPE}}
 export restart_mode=${restart_mode:-YES}
 export fig_name_label=${fig_name_label:-last${NDAYS}days}
@@ -85,7 +85,11 @@ fi
 # Execute the script
 ########################################
 
-${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh
+if [ "${DATA_TYPE}" == "proddev2" ]; then
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}_r2o.sh
+else
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh
+fi
 export err=$?; err_chk
 
 msg="JOB ${job} HAS COMPLETED NORMALLY."

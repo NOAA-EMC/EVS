@@ -166,7 +166,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
             valid_time_dt = date_dt
         elif date_type == 'INIT':
             init_time_dt = date_dt
-        for fhr in fhr_list:
+        for fhr in [f for f in fhr_list if f.strip()]:
             if fhr == 'anl':
                 forecast_hour = 0
             else:
@@ -432,7 +432,7 @@ def check_plot_files(job_dict):
                   int(job_dict['init_hr_end'])+int(job_dict['init_hr_inc']),
                   int(job_dict['init_hr_inc']))
         )
-        fhrs = [int(i) for i in job_dict['fhr_list'].split(', ')]
+        fhrs = [int(i) for i in job_dict['fhr_list'].split(', ') if i]
     if job_dict['JOB_GROUP'] == 'make_plots':
         from global_chem_atmos_plots_specs import PlotSpecs
         plot_specs = PlotSpecs('NA', job_dict['plot'])
@@ -525,7 +525,7 @@ def check_plot_files(job_dict):
             plot_info_list = list(itertools.product(valid_hrs, var_info))
         elif job_dict['plot'] == 'valid_hour_average':
             plot_info_list = list(itertools.product(var_info))
-        elif job_dict['plot'] in ['performance_diagram','threshold_average']:
+        elif job_dict['plot'] in ['performance_diagram', 'threshold_average']:
             plot_info_list = list(itertools.product(valid_hrs, fhrs))
         if job_dict['plot'] in ['performance_diagram', 'threshold_average']:
             fcst_var_thresh_list = (job_dict['fcst_var_thresh_list']\
@@ -581,7 +581,7 @@ def check_plot_files(job_dict):
             if plot_dict['plot'] == 'time_series':
                 if plot_dict['stat'] == 'FBAR_OBAR' \
                         and str(plot_dict['forecast_hour']) not in \
-                        ['24', '48', '72', '96', '120']:
+                        ['0', '24', '48', '72', '96', '120']:
                     continue
                 if init_hr not in init_hrs:
                     continue
@@ -740,7 +740,7 @@ def initialize_job_env_dict(verif_type, group,
             )
             fhr_list = [str(i) for i in fhr_range]
         job_env_dict['fhr_list'] = ', '.join(fhr_list)
-        if verif_type in ['pres_levs', 'means', 'sfc', 'ptype', 'abi', 'viirs', 'aeronet', 'airnow']:
+        if verif_type in ['abiaod', 'viirsaod', 'pm25', 'pm10', 'ozone', 'ozmax8', 'pmave', 'aod' ]:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
                 .split(' ')
@@ -1010,7 +1010,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
         'GLOBAL': 'glb',
         'GreatBasin': 'buk_grb',
         'GreatLakes': 'buk_grlk',
-        'hawaii': 'hawaii',
+        'Hawaii': 'hawaii',
         'Mezquital': 'buk_mez',
         'MidAtlantic': 'buk_matl',
         'N60N90': 'n60',
@@ -1024,6 +1024,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
         'PacificNW': 'buk_npw',
         'PacificSW': 'buk_psw',
         'Prairie': 'buk_pra',
+        'PuertoRico': 'puertorico',
         'prico': 'prico',
         'S60S90': 's60',
         'SAO': 'sao',
@@ -1406,6 +1407,7 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                     else:
                         df_dtype_dict[col] = np.float64
                 model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
+                ## for valid_date in [vlddy for vlddy in met_format_valid_dates if vlddy]:
                 for valid_date in met_format_valid_dates:
                     model_stat_file_df_valid_date_idx_list = (
                         model_stat_file_df.index[

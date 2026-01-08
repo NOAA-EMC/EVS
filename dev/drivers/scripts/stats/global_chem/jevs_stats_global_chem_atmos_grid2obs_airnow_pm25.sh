@@ -1,9 +1,9 @@
-#PBS -N jevs_stats_global_chem_atmos_grid2obs_aeronet
+#PBS -N jevs_stats_global_chem_atmos_grid2obs_airnow_pm25
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A EVS-DEV
-#PBS -l walltime=00:15:00
+#PBS -A VERF-DEV
+#PBS -l walltime=00:10:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
@@ -12,7 +12,7 @@ set -x
 cd $PBS_O_WORKDIR
 
 export model=evs
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -21,6 +21,7 @@ evs_ver_2d=$(echo ${evs_ver} | cut -d'.' -f1-2)
 ############################################################
 # Load modules
 ############################################################
+
 module reset
 
 module load prod_envir/${prod_envir_ver}
@@ -40,11 +41,11 @@ export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_chem}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export MODELNAME=${MODELNAME:-gefs}
-export modsys=${modsys:-gefs}
-export mod_ver=${mod_ver:-${gefs_ver}}
+export MODELNAME=${MODELNAME:-gcafs}
+export modsys=${modsys:-gcafs}
+export mod_ver=${mod_ver:-${gcafs_ver}}
 
-export DATA_TYPE=aeronet 
+export DATA_TYPE=airnow_pm25
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
@@ -59,13 +60,13 @@ export jobid=$job.${PBS_JOBID:-$$}
 export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
-    echo "MAILTO variable is not defined. Exiting without continuing."
+   echo "MAILTO variable is not defined. Exiting without continuing."
 else
     export vhr
     echo "vhr = ${vhr}"
     ${HOMEevs}/jobs/JEVS_STATS_GLOBAL_CHEM
 fi
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics using AERONET AOD
+## Purpose: This job will generate the grid2obs statistics using AirNOW PM2.5
 ##          for the Global Chemistry model.
 #######################################################################
