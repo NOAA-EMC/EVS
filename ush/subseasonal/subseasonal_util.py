@@ -562,14 +562,14 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
                 f.write('\n'.join(thin_var_level_list) + '\n')
             # Extract from source_afile
             extract_a_cmd = (
-                f"grep -Ff {pattern_file} {source_afile}.idx | "
-                f"{WGRIB2} -i {source_afile} -grib {prepped_file}"
+                f" 'grep -Ff {pattern_file} {source_afile}.idx | "
+                f"{WGRIB2} -i {source_afile} -grib {prepped_file}' "
             )
             run_shell_command(['sh', '-c', extract_a_cmd])
             # Extract from source_bfile and APPEND
             extract_b_cmd = (
-                f"grep -Ff {pattern_file} {source_bfile}.idx | "
-                f"{WGRIB2} -i {source_bfile} -append -grib {prepped_file}"
+                f" 'grep -Ff {pattern_file} {source_bfile}.idx | "
+                f"{WGRIB2} -i {source_bfile} -append -grib {prepped_file}' "
             )
             run_shell_command(['sh', '-c', extract_b_cmd])
             # Clean up the pattern file
