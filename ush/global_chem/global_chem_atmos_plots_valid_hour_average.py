@@ -85,7 +85,6 @@ class ValidHourAverage:
         )
         self.logger.info("Reading in model stat files "
                          +f"from {self.input_dir}")
-        ## for valid_hour in [vldhr for vldhr in valid_hours if vldhr]:
         for valid_hour in valid_hours:
             self.logger.debug(f"Building data for valid hour {valid_hour}")
             for forecast_hour in self.date_info_dict['forecast_hours']:
