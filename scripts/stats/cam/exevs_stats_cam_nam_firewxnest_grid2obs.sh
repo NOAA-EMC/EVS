@@ -69,60 +69,48 @@ fi
 
 if [ $vhr = 00 -o $vhr = 06 -o $vhr = 12 -o $vhr = 18 ]
 then
- tmnum=06
+ tmnum=00
 elif [ $vhr = 01 -o $vhr = 07 -o $vhr = 13 -o $vhr = 19 ]
 then
- tmnum=05
+ tmnum=00
 elif [ $vhr = 02 -o $vhr = 08 -o $vhr = 14 -o $vhr = 20 ]
 then
- tmnum=04
+ tmnum=00
 elif [ $vhr = 03 -o $vhr = 09 -o $vhr = 15 -o $vhr = 21 ]
 then
- tmnum=03
+ tmnum=00
 elif [ $vhr = 04 -o $vhr = 10 -o $vhr = 16 -o $vhr = 22 ]
 then
- tmnum=02
+ tmnum=00
 elif [ $vhr = 05 -o $vhr = 11 -o $vhr = 17 -o $vhr = 23 ]
 then
- tmnum=01
+ tmnum=00
 fi
 
-obdate=`$NDATE +6 $datehr`
+obdate=$datehr
 obday=`echo $obdate |cut -c1-8`
 obhr=`echo $obdate |cut -c9-10`
+obcyc=${obhr}
 
-if [ $vhr -lt 06 -a $vhr -ge 00 ]
-then
- obcyc=06
-elif [ $vhr -lt 12 -a $vhr -ge 06 ]
-then
- obcyc=12
-elif [ $vhr -lt 18 -a $vhr -ge 12 ]
-then
- obcyc=18
-elif [ $vhr -ge 18 ]
-then
- obcyc=00
-fi
 
-if [ -e $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} ]
+if [ -e $COMINobsproc/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum} ]
 then
  obfound=1
- mkdir -p $DATA/$OBSDIR/nam.${obday}
-  cp -v $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
-  split_by_subset $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
+ mkdir -p $DATA/$OBSDIR/rrfs.${obday}
+  cp -v $COMINobsproc/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum}
+  split_by_subset $DATA/$OBSDIR/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum}
   for subset in ADPUPA ADPSFC MSONET SFCSHP; do
     if [ -e $subset ]; then
      cat $subset >> prepbufr.tmp
     fi
   done
   if [ -e prepbufr.tmp ]; then
-   mv prepbufr.tmp $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
+   mv prepbufr.tmp $DATA/$OBSDIR/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum}
   else
    obfound=0
   fi
 else
-  echo "WARNING: File $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum} is missing."
+  echo "WARNING: File $COMINobsproc/${MODELNAME}.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum} is missing."
 fi
 
 echo $obfound
