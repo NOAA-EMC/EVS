@@ -91,7 +91,6 @@ if STEP == 'plots':
             )
         if SENDCOM == 'YES':
             output_dir_list.append(
-                ## os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_src}_{VERIF_CASE_STEP_type}",
                 os.path.join(COMOUT, f"{VERIF_CASE}_{VERIF_CASE_STEP_type}",
                              dir_name_label)
             )
