@@ -27,6 +27,9 @@ if [ $SENDCOM = YES ] ; then
 fi
 
 export eval_period=${EVAL_PERIOD} 
+
+eval_period_lower=`echo $EVAL_PERIOD | tr '[A-Z]' '[a-z]'`
+
 export interp_pnts=''
 
 export init_end=$VDATE
@@ -206,7 +209,7 @@ for fcst_valid_hour in $fcst_valid_hours ; do
         fi
 
 	save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}
-	plot_dir=$save_dir/sfc_upper/last90days
+	plot_dir=$save_dir/sfc_upper/$eval_period_lower
 	mkdir -p $plot_dir
         mkdir -p $save_dir/data
 

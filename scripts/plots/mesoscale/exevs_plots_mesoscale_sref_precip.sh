@@ -27,6 +27,8 @@ fi
 
 export eval_period=${EVAL_PERIOD}
 
+eval_period_lower=`echo $EVAL_PERIOD | tr '[A-Z]' '[a-z]'`
+
 export interp_pnts=''
 
 export init_end=$VDATE
@@ -172,7 +174,7 @@ for stats in  ets fbias fss ; do
 	#*******************************************************************************************************************
 
         save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}
-	plot_dir=$save_dir/precip/last90days
+	plot_dir=$save_dir/precip/$eval_period_lower
 	mkdir -p $plot_dir
         mkdir -p $save_dir/data
 
