@@ -1407,7 +1407,6 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                     else:
                         df_dtype_dict[col] = np.float64
                 model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
-                ## for valid_date in [vlddy for vlddy in met_format_valid_dates if vlddy]:
                 for valid_date in met_format_valid_dates:
                     model_stat_file_df_valid_date_idx_list = (
                         model_stat_file_df.index[
