@@ -25,7 +25,9 @@ if [ $SENDCOM = YES ] ; then
  fi
 fi
 
-export eval_period='TEST'
+export eval_period=${EVAL_PERIOD}
+
+eval_period_lower=`echo $EVAL_PERIOD | tr '[A-Z]' '[a-z]'`
 
 export interp_pnts=''
 
@@ -172,7 +174,7 @@ for stats in  ets fbias fss ; do
 	#*******************************************************************************************************************
 
         save_dir=$DATA/plots/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}
-	plot_dir=$save_dir/precip/${valid_beg}-${valid_end}
+	plot_dir=$save_dir/precip/$eval_period_lower
 	mkdir -p $plot_dir
         mkdir -p $save_dir/data
 
@@ -190,8 +192,6 @@ for stats in  ets fbias fss ; do
         echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
         echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
-
-        echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
 
 
         if [ $score_type = valid_hour_average ] ; then
