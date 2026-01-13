@@ -44,6 +44,9 @@ _COMROOT_/evs/_SHORTVER_/plots/
 + /global_ens/
 + /global_ens/*._PDYm2_/***
 + /global_ens/*._PDYm1_/***
++ /global_chem/
++ /global_chem/*._PDYm5_/***
++ /global_chem/*._PDYm4_/***
 + /mesoscale/
 + /mesoscale/*._PDYm3_/***
 + /mesoscale/*._PDYm2_/***
