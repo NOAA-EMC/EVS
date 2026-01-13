@@ -27,7 +27,9 @@ if [ $SENDCOM = YES ] ; then
  fi
 fi
 
-export eval_period='TEST'
+export eval_period=${EVAL_PERIOD}
+
+eval_period_lower=`echo $EVAL_PERIOD | tr '[A-Z]' '[a-z]'`
 
 export interp_pnts=''
 
@@ -165,7 +167,7 @@ for VAR in $VARS ; do
         verif_type=conus_sfc
 
         save_dir=$DATA/plots/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}
-	plot_dir=$save_dir/sfc_upper/${valid_beg}-${valid_end}
+	plot_dir=$save_dir/sfc_upper/$eval_period_lower
         mkdir -p $plot_dir
 	mkdir -p $save_dir/data
 
@@ -184,8 +186,6 @@ for VAR in $VARS ; do
         echo "export verif_type=$verif_type" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
         echo "export log_level=DEBUG" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
-
-        echo "export eval_period=TEST" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
 
         if [ $score_type = valid_hour_average ] ; then

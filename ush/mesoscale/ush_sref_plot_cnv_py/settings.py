@@ -105,6 +105,12 @@ class Presets():
         the online documentation to learn how to use these libraries.
         '''
         self.date_presets = {
+            'LAST90DAYS': {
+                'valid_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
+                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
+                'init_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
+                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
+            },
             'PAST30DAYS': {
                 'valid_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
