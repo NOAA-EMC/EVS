@@ -534,15 +534,8 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
     """
     # Environment variables and executables
     WGRIB2 = os.environ['WGRIB2']
-    EXECevs = os.environ['EXECevs']
-    # Working file names
-    working_file1 = prepped_file+'.tmp1'
-    # Prep file
+    # Prep file and define the variables/levels for extraction
     if prep_method == 'full': 
-        if forecast_hour == 0:
-            wgrib_fhr = 'anl'
-        else:
-            wgrib_fhr = forecast_hour
         thin_var_level_list = [
             'HGT:500 mb',
             'ULWRF:top of atmosphere',
@@ -563,19 +556,25 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
         
         if check_file_exists_size(source_afile) \
                 and check_file_exists_size(source_bfile):
-            run_shell_command(['>', prepped_file])
-            for thin_var_level in thin_var_level_list:
-                run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                                   source_afile+'|'+WGRIB2, '-i', 
-                                   source_afile,
-                                   '-grib', working_file1])
-                run_shell_command(['cat', working_file1, '>>', prepped_file])
-                run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                                   source_bfile+'|'+WGRIB2, '-i',
-                                   source_bfile,
-                                   '-grib', working_file1])
-                run_shell_command(['cat', working_file1, '>>', prepped_file])
-                os.remove(working_file1)
+            # Create a temporary pattern file for grep
+            pattern_file = f"{prepped_file}.patterns"
+            with open(pattern_file, 'w') as f:
+                f.write('\n'.join(thin_var_level_list) + '\n')
+            # Extract from source_afile
+            extract_a_cmd = (
+                f" 'grep -Ff {pattern_file} {source_afile}.idx | "
+                f"{WGRIB2} -i {source_afile} -grib {prepped_file}' "
+            )
+            run_shell_command(['sh', '-c', extract_a_cmd])
+            # Extract from source_bfile and APPEND
+            extract_b_cmd = (
+                f" 'grep -Ff {pattern_file} {source_bfile}.idx | "
+                f"{WGRIB2} -i {source_bfile} -append -grib {prepped_file}' "
+            )
+            run_shell_command(['sh', '-c', extract_b_cmd])
+            # Clean up the pattern file
+            if os.path.exists(pattern_file):
+                os.remove(pattern_file)
         else:
             log_missing_file_model(log_missing_file, source_afile,
                                    'gefs', init_dt,
