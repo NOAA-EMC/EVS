@@ -1,4 +1,4 @@
-#PBS -N evs_plots_cam_nam_firewxnest_grid2obs_last31days
+#PBS -N evs_plots_cam_firewxnest_grid2obs_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -53,8 +53,7 @@ fi
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export MODELNAME=nam_firewxnest
-export modsys=nam
+export MODELNAME=firewxnest
 
 ############################################################
 # Execute j-job
