@@ -244,7 +244,7 @@ for OBS in OBSNAME:
                 vtype_list = ['pres_levs', 'sfc']
             elif OBS == 'prepbufr_rrfs':
                 vtype_list = ['sfc', 'ptype']
-                offset_hr = int(f"{CDATE_dt:%H}")%6
+                offset_hr = int(0)
                 offset_date_dt = CDATE_dt + datetime.timedelta(hours=offset_hr)
                 input_file = gda_util.format_filler(
                     obs_dict['input_file_format'], offset_date_dt,
