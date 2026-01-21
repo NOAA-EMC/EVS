@@ -451,7 +451,7 @@ generate_stats_jobs_dict = {
                                           'PointStat_fcstGLOBAL_DET_'
                                           +'obsPrepbufr_Thresh.conf'
                                       )]},
-        'Ceiling': {'env': {'prepbufr': 'nam',
+        'Ceiling': {'env': {'prepbufr': 'rrfs',
                             'obs_window': '900',
                             'msg_type': 'ADPSFC',
                             'var1_fcst_name': 'HGT',
