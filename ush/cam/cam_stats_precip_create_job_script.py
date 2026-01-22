@@ -127,6 +127,7 @@ if VERIF_CASE == 'precip':
             )
         MODEL_PCP_COMBINE_METHOD = os.environ['MODEL_PCP_COMBINE_METHOD']
         MODEL_PCP_COMBINE_COMMAND = os.environ['MODEL_PCP_COMBINE_COMMAND']
+        USE_ZERO_ACCUM = os.environ['USE_ZERO_ACCUM']
     elif job_type == 'generate':
         MODEL_ACC = os.environ['MODEL_ACC']
         OBS_ACC = os.environ['OBS_ACC']
@@ -219,6 +220,7 @@ if VERIF_CASE == 'precip':
         job_env_vars_dict['ACC'] = ACC
         job_env_vars_dict['MODEL_PCP_COMBINE_METHOD'] = MODEL_PCP_COMBINE_METHOD
         job_env_vars_dict['MODEL_PCP_COMBINE_COMMAND'] = MODEL_PCP_COMBINE_COMMAND
+        job_env_vars_dict['USE_ZERO_ACCUM'] = USE_ZERO_ACCUM
         job_dependent_vars['FHR_START'] = {
             'exec_value': '',
             'bash_value': (
