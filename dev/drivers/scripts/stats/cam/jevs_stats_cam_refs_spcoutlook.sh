@@ -39,9 +39,6 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export jobid=$job.${PBS_JOBID:-$$}
 
-export COMINrefs=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0
-export EVSINspcotlk=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver_2d/prep/cam
-
 export MAILTO='andrew.benjamin@noaa.gov,binbin.zhou@noaa.gov'
 if [ -z "$MAILTO" ]; then
 

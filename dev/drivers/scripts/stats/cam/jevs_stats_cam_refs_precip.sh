@@ -37,8 +37,6 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export COMINrefs=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0
-
 export prepare=yes
 export verif_precip=yes
 export verif_snowfall=no

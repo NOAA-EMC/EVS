@@ -40,8 +40,6 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export COMINrefs=/lfs/h2/emc/ptmp/emc.lam/para/com/refs/v1.0
-
 export MAILTO='andrew.benjamin@noaa.gov,binbin.zhou@noaa.gov'
 if [ -z "$MAILTO" ]; then
 
