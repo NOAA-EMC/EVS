@@ -13,7 +13,6 @@ export OMP_NUM_THREADS=1
 
 export NET=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS/repo_refs/EVS
 source $HOMEevs/versions/run.ver
 
 export STEP=stats
