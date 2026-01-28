@@ -698,30 +698,30 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                         evs_run_mode, gdas_dest_file_format
                     )
             if VERIF_CASE_STEP_type in ['sfc', 'ptype']:
-                # NAM prepbufr
-                nam_prod_file_format = os.path.join(
+                # rrfs prepbufr
+                rrfs_prod_file_format = os.path.join(
                     COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
-                    'prepbufr_nam', 'pb2nc_nam_'+VERIF_CASE_STEP_type
+                    'prepbufr_rrfs', 'pb2nc_rrfs_'+VERIF_CASE_STEP_type
                     +'_valid{valid?fmt=%Y%m%d%H}.nc'
                 )
-                nam_arch_file_format = os.path.join(
+                rrfs_arch_file_format = os.path.join(
                      archive_obs_data_dir, 'prepbufr_gdas',
-                     'pb2nc_nam_'+VERIF_CASE_STEP_type
+                     'pb2nc_rrfs_'+VERIF_CASE_STEP_type
                      +'_valid{valid?fmt=%Y%m%d%H}.nc'
                 )
-                VERIF_CASE_STEP_nam_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'prepbufr_nam'
+                VERIF_CASE_STEP_rrfs_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'prepbufr_rrfs'
                 )
-                gda_util.make_dir(VERIF_CASE_STEP_nam_dir)
-                nam_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_nam_dir,
-                    'prepbufr.nam.'+VERIF_CASE_STEP_type+'.'
+                gda_util.make_dir(VERIF_CASE_STEP_rrfs_dir)
+                rrfs_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_rrfs_dir,
+                    'prepbufr.rrfs.'+VERIF_CASE_STEP_type+'.'
                     +'{valid?fmt=%Y%m%d%H}'
                 )
                 gda_util.get_truth_file(
-                    VERIF_CASE_STEP_type_valid_time, 'Prepbufr NAM',
-                    nam_prod_file_format, nam_arch_file_format, evs_run_mode,
-                    nam_dest_file_format
+                    VERIF_CASE_STEP_type_valid_time, 'Prepbufr RRFS',
+                    rrfs_prod_file_format, rrfs_arch_file_format, evs_run_mode,
+                    rrfs_dest_file_format
                 )
 elif STEP == 'plots' :
     # Read in VERIF_CASE_STEP related environment variables

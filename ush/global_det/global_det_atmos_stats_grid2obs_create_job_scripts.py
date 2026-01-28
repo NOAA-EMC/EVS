@@ -111,7 +111,7 @@ assemble_data_jobs_dict = {
                   ]}
     },
     'sfc': {
-        'TempAnom2m': {'env': {'prepbufr': 'nam',
+        'TempAnom2m': {'env': {'prepbufr': 'rrfs',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'TMP',
@@ -313,7 +313,7 @@ generate_stats_jobs_dict = {
                                     )]}
     },
     'ptype': {
-        'Rain': {'env': {'prepbufr': 'nam',
+        'Rain': {'env': {'prepbufr': 'rrfs',
                          'obs_window': '900',
                          'msg_type': 'ADPSFC',
                          'var1_fcst_name': 'CRAIN',
@@ -331,7 +331,7 @@ generate_stats_jobs_dict = {
                                   'PointStat_fcstGLOBAL_DET_'
                                   +'obsPrepbufr_Thresh_Ptype.conf'
                               )]},
-        'Snow': {'env': {'prepbufr': 'nam',
+        'Snow': {'env': {'prepbufr': 'rrfs',
                          'obs_window': '900',
                          'msg_type': 'ADPSFC',
                          'var1_fcst_name': 'CSNOW',
@@ -349,7 +349,7 @@ generate_stats_jobs_dict = {
                                   'PointStat_fcstGLOBAL_DET_'
                                   +'obsPrepbufr_Thresh_Ptype.conf'
                               )]},
-        'FrzRain': {'env': {'prepbufr': 'nam',
+        'FrzRain': {'env': {'prepbufr': 'rrfs',
                             'obs_window': '900',
                             'msg_type': 'ADPSFC',
                             'var1_fcst_name': 'CFRZR',
@@ -367,7 +367,7 @@ generate_stats_jobs_dict = {
                                      'PointStat_fcstGLOBAL_DET_'
                                      +'obsPrepbufr_Thresh_Ptype.conf'
                                  )]},
-        'IcePel': {'env': {'prepbufr': 'nam',
+        'IcePel': {'env': {'prepbufr': 'rrfs',
                            'obs_window': '900',
                            'msg_type': 'ADPSFC',
                            'var1_fcst_name': 'CICEP',
@@ -385,7 +385,7 @@ generate_stats_jobs_dict = {
                                     'PointStat_fcstGLOBAL_DET_'
                                     +'obsPrepbufr_Thresh_Ptype.conf'
                                 )]},
-        'Ptype': {'env': {'prepbufr': 'nam',
+        'Ptype': {'env': {'prepbufr': 'rrfs',
                           'obs_window': '900',
                           'msg_type': 'ADPSFC',
                           'met_config_overrides': ''},
@@ -451,7 +451,7 @@ generate_stats_jobs_dict = {
                                           'PointStat_fcstGLOBAL_DET_'
                                           +'obsPrepbufr_Thresh.conf'
                                       )]},
-        'Ceiling': {'env': {'prepbufr': 'nam',
+        'Ceiling': {'env': {'prepbufr': 'rrfs',
                             'obs_window': '900',
                             'msg_type': 'ADPSFC',
                             'var1_fcst_name': 'HGT',
@@ -473,7 +473,7 @@ generate_stats_jobs_dict = {
                                      'PointStat_fcstGLOBAL_DET_'
                                      +'obsPrepbufr_Thresh.conf'
                                  )]},
-        'DailyAvg_TempAnom2m': {'env': {'prepbufr': 'nam',
+        'DailyAvg_TempAnom2m': {'env': {'prepbufr': 'rrfs',
                                         'obs_window': '900',
                                         'msg_type': 'ADPSFC',
                                         'var1_fcst_name': 'TMP',
@@ -502,7 +502,7 @@ generate_stats_jobs_dict = {
                                                 +'obsPrepbufr_MPRtoSL1L2.conf'
                                             ),
                                             'fi']},
-        'Dewpoint2m': {'env': {'prepbufr': 'nam',
+        'Dewpoint2m': {'env': {'prepbufr': 'rrfs',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'DPT',
@@ -544,7 +544,7 @@ generate_stats_jobs_dict = {
                                        'PointStat_fcstGLOBAL_DET_'
                                        +'obsPrepbufr_Thresh.conf'
                                    )]},
-        'RelHum2m': {'env': {'prepbufr': 'nam',
+        'RelHum2m': {'env': {'prepbufr': 'rrfs',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
                              'var1_fcst_name': 'RH',
@@ -560,7 +560,7 @@ generate_stats_jobs_dict = {
                                       'PointStat_fcstGLOBAL_DET_'
                                       +'obsPrepbufr_Thresh.conf'
                                   )]},
-        'SeaLevelPres': {'env': {'prepbufr': 'nam',
+        'SeaLevelPres': {'env': {'prepbufr': 'rrfs',
                                  'obs_window': '900',
                                  'msg_type': 'ADPSFC',
                                  'var1_fcst_name': 'PRMSL',
@@ -578,7 +578,7 @@ generate_stats_jobs_dict = {
                                           'PointStat_fcstGLOBAL_DET_'
                                           +'obsPrepbufr.conf'
                                       )]},
-        'Temp2m': {'env': {'prepbufr': 'nam',
+        'Temp2m': {'env': {'prepbufr': 'rrfs',
                            'obs_window': '900',
                            'msg_type': 'ADPSFC',
                            'var1_fcst_name': 'TMP',
@@ -592,7 +592,7 @@ generate_stats_jobs_dict = {
                                     'PointStat_fcstGLOBAL_DET_'
                                     +'obsPrepbufr.conf'
                                 )]},
-        'TotCloudCover': {'env': {'prepbufr': 'nam',
+        'TotCloudCover': {'env': {'prepbufr': 'rrfs',
                                   'obs_window': '900',
                                   'msg_type': 'ADPSFC',
                                   'var1_fcst_name': 'TCDC',
@@ -611,7 +611,7 @@ generate_stats_jobs_dict = {
                                            'PointStat_fcstGLOBAL_DET_'
                                            +'obsPrepbufr_Thresh.conf'
                                        )]},
-        'UWind10m': {'env': {'prepbufr': 'nam',
+        'UWind10m': {'env': {'prepbufr': 'rrfs',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
                              'var1_fcst_name': 'UGRD',
@@ -625,7 +625,7 @@ generate_stats_jobs_dict = {
                                       'PointStat_fcstGLOBAL_DET_'
                                        +'obsPrepbufr.conf'
                                   )]},
-        'Visibility': {'env': {'prepbufr': 'nam',
+        'Visibility': {'env': {'prepbufr': 'rrfs',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'VIS',
@@ -648,7 +648,7 @@ generate_stats_jobs_dict = {
                                         'PointStat_fcstGLOBAL_DET_'
                                         +'obsPrepbufr_Thresh.conf'
                                     )]},
-        'VWind10m': {'env': {'prepbufr': 'nam',
+        'VWind10m': {'env': {'prepbufr': 'rrfs',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
                              'var1_fcst_name': 'VGRD',
@@ -662,7 +662,7 @@ generate_stats_jobs_dict = {
                                       'PointStat_fcstGLOBAL_DET_'
                                        +'obsPrepbufr.conf'
                                   )]},
-        'WindGust': {'env': {'prepbufr': 'nam',
+        'WindGust': {'env': {'prepbufr': 'rrfs',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
                              'var1_fcst_name': 'GUST',
@@ -676,7 +676,7 @@ generate_stats_jobs_dict = {
                                       'PointStat_fcstGLOBAL_DET_'
                                        +'obsPrepbufr.conf'
                                   )]},
-        'VectorWind10m': {'env': {'prepbufr': 'nam',
+        'VectorWind10m': {'env': {'prepbufr': 'rrfs',
                                   'obs_window': '900',
                                   'msg_type': 'ADPSFC',
                                   'var1_fcst_name': 'UGRD',
