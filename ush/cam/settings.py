@@ -578,6 +578,10 @@ class ModelSpecs():
                 'settings_key':'NAM_NEST', 
                 'plot_name':'NAM Nest'
             },
+            'nam_firewxnest': {
+                'settings_key':'NAM_FIREWXNEST', 
+                'plot_name':'NAM FireWx Nest'
+            },
             'HRRRAK': {
                 'settings_key':'HRRR', 
                 'plot_name':'HRRR'
@@ -597,6 +601,14 @@ class ModelSpecs():
             'RAPNA': {
                 'settings_key':'RAP', 
                 'plot_name':'RAP'
+            },
+            'rrfs': {
+                'settings_key':'RRFS', 
+                'plot_name':'RRFS'
+            },
+            'rrfs_firewxnest': {
+                'settings_key':'RRFS_FIREWXNEST', 
+                'plot_name':'RRFS FireWX Nest'
             },
             'RRFS_A': {
                 'settings_key':'RRFS_A', 
@@ -732,6 +744,15 @@ class ModelSpecs():
             'NAM_NEST': {'color': '#1e3cff',
                      'marker': 'o', 'markersize': 10,
                      'linestyle': 'solid', 'linewidth': 1.8},
+            'NAM_FIREWXNEST': {'color': '#1e3cff',
+                     'marker': '^', 'markersize': 11,
+                     'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFS': {'color': '#696969',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFS_FIREWXNEST': {'color': '#696969',
+                       'marker': '^', 'markersize': 11,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'RRFS_A': {'color': '#00dc00',
                       'marker': 'o', 'markersize': 10,
                       'linestyle': 'solid', 'linewidth': 1.8},
@@ -842,6 +863,7 @@ class Reference():
                                       'nohrsc': 'NOHRSC',
                                       'raob': 'RAOB',
                                       'metar': 'METAR',
+                                      'conus_sfc': 'METAR',
                                       'lsr': 'Local Storm Reports (LSR)',
         }
         self.variable_translator = {'TMP': 'Temperature',
