@@ -1250,10 +1250,8 @@ def get_prepbufr_templates(indir, vdates, paths=[], obsname='both', already_prep
         vh = vdate.strftime('%H')
         vd = vdate.strftime('%Y%m%d')
         if vh in ['00', '03', '06', '09', '12', '15', '18', '21']:
-            if vh in ['03', '09', '15', '21']:
-                offsets = ['03']
-            elif vh in ['00', '06', '12', '18']:
-                offsets = ['00', '06']
+            offset = ['00']
+            if vh in ['00', '06', '12', '18']:
                 if obsname in ['both', 'raob']:
                     if not already_preprocessed:
                         prepbufr_templates.append(os.path.join(
@@ -1276,13 +1274,13 @@ def get_prepbufr_templates(indir, vdates, paths=[], obsname='both', already_prep
                     if not already_preprocessed:
                         template = os.path.join(
                             indir, 
-                            'nam.{VDATE}',
-                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                            'rrfs.{VDATE}',
+                            'rrfs.t{VHOUR}z.prepbufr.tm{OFFSET}'
                         )
                     else:
                         template = os.path.join(
                             indir, 
-                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                            'rrfs.t{VHOUR}z.prepbufr.tm{OFFSET}'
                         )
                     prepbufr_paths.append(fname_constructor(
                         template, VDATE=use_vd, VHOUR=use_vh, OFFSET=offset
