@@ -1250,7 +1250,7 @@ def get_prepbufr_templates(indir, vdates, paths=[], obsname='both', already_prep
         vh = vdate.strftime('%H')
         vd = vdate.strftime('%Y%m%d')
         if vh in ['00', '03', '06', '09', '12', '15', '18', '21']:
-            offset = ['00']
+            offsets = ['00']
             if vh in ['00', '06', '12', '18']:
                 if obsname in ['both', 'raob']:
                     if not already_preprocessed:
