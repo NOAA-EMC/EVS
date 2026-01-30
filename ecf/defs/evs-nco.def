@@ -920,6 +920,14 @@ suite evs_nco
               trigger :TIME >= 0830 and :TIME < 1430
             task jevs_stats_cam_href_spcoutlook
               trigger :TIME >= 0830 and :TIME < 1430 and ../../prep/cam/jevs_prep_cam_severe == complete
+            task jevs_stats_cam_refs_grid2obs 
+              trigger :TIME >= 0730 and :TIME < 1330
+            task jevs_stats_cam_refs_precip
+              trigger :TIME >= 0830 and :TIME < 1430
+            task jevs_stats_cam_refs_snowfall 
+              trigger :TIME >= 0830 and :TIME < 1430
+            task jevs_stats_cam_refs_spcoutlook 
+              trigger :TIME >= 0830 and :TIME < 1430 and ../../prep/cam/jevs_prep_cam_severe == complete
           endfamily
           family aqm
             task jevs_stats_aqm_atmos_grid2obs_vhr_03
