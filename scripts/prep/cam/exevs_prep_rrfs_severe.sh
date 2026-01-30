@@ -117,18 +117,17 @@ fi
 # Copy hourly output to $COMOUT
 ###################################################################
 
-output_dirs="pcp_combine sspf"
-
+# Copy final output to $COMOUT
 if [ $SENDCOM = YES ]; then
-   mkdir -p $COMOUT/${RUN}.${INITDATE}/${modsys}
-   for output_dir in ${output_dirs}; do
-      if [ "$(ls -A $DATA/$output_dir)" ]; then
-         for FILE in $DATA/${output_dir}/${modsys}.${INITDATE}/*; do
-            if [ -s "$FILE" ]; then
-               cp -v $FILE $COMOUT/${modsys}.${INITDATE}
-            fi
-         done
-      fi
-   done
+ mkdir -p $COMOUT/${RUN}.${INITDATE}/${modsys}
+ for FILE in $DATA/pcp_combine/${modsys}.${INITDATE}/*; do
+    if [ -s "$FILE" ]; then
+       cp -v $FILE $COMOUT/${RUN}.${INITDATE}/${modsys}/.
+    fi
+ done
+ for FILE in $DATA/sspf/${modsys}.${INITDATE}/*; do
+    if [ -s "$FILE" ]; then
+       cp -v $FILE $COMOUT/${RUN}.${INITDATE}/${modsys}/.
+    fi
+ done
 fi
-
