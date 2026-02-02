@@ -1,11 +1,11 @@
 #!/bin/bash -e
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
-## NCEP EMC Verification System (EVS) - NAM_FIREWXNEST Atmospheric
+## NCEP EMC Verification System (EVS) - FIREWXNEST Atmospheric
 ##
 ## CONTRIBUTORS: Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 ## Perry Shafran
-## PURPOSE: Set up configurations to run EVS NAM_FIREWXNEST
+## PURPOSE: Set up configurations to run EVS FIREWX verification
 ##---------------------------------------------------------------------------
 ##--------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_list:             model names
 #model_stat_dir_list:    directory path to model .stat files
 #model_file_format_list: file format of model files
-export model_list="NAM_FIREWXNEST"
+export model_list="NAM_FIREWXNEST, RRFS_FIREWXNEST"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
 export OUTPUTROOT="$DATAROOT"
