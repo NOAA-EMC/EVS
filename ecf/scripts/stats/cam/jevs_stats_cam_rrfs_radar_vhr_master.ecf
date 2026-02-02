@@ -1,10 +1,10 @@
-#PBS -N evs_plots_cam_nam_firewxnest_grid2obs_last31days
+#PBS -N evs_stats_cam_rrfs_radar_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=shared,select=1:ncpus=1:mem=100GB
+#PBS -l walltime=00:25:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=3:mem=75GB
 #PBS -l debug=true
 
 export model=evs
@@ -16,7 +16,7 @@ export model=evs
 ############################################################
 set -x
 export COMPONENT=cam
-export STEP=plots
+export STEP=stats
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
@@ -35,9 +35,6 @@ module load nco/${nco_ver}
 module load cdo/${cdo_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
-module load proj/${proj_ver}
-module load geos/${geos_ver}
-module load imagemagick/${imagemagick_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module list
@@ -52,14 +49,17 @@ else
 fi
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=grid2obs
-export MODELNAME=nam_firewxnest
-export modsys=nam
+export VERIF_CASE=radar
+export MODELNAME=rrfs
+export modsys=rrfs
+export USE_CFP=YES
+export nproc=3
+export OMP_NUM_THREADS=1
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_PLOTS_CAM
+$HOMEevs/jobs/JEVS_STATS_CAM
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

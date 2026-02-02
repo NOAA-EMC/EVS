@@ -125,6 +125,15 @@ elif [ ${MODELNAME} = namnest ]; then
    export MODEL_INPUT_DIR=${COMINnam}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.${DOMAIN}nest.hiresf{lead?fmt=%2H}.tm00.grib2
 
+elif [ ${MODELNAME} = rrfs ]; then
+
+   fhr_min=0
+   fhr_max=60
+   fhr_inc=1
+
+   export MODEL_INPUT_DIR=${COMINrrfs}
+   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/{init?fmt=%H}/${modsys}.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.${DOM}.grib2
+
 fi
 
 
@@ -193,6 +202,13 @@ while [ $fhr -le $fhr_max ]; do
    elif [ ${MODELNAME} = namnest ]; then
       ihr_avail="00 06 12 18"
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.${DOMAIN}nest.hiresf$(printf "%02d" $fhr).tm00.grib2
+   elif [ ${MODELNAME} = rrfs ]; then
+      if [ $fhr -le 18 ]; then
+         ihr_avail="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+      else
+         ihr_avail="00 06 12 18"
+      fi
+      export fcst_file=${modsys}.${IDATE}/${INIT_HR}/${modsys}.t${INIT_HR}z.prslev.3km.f$(printf "%03d" $fhr).${DOM}.grib2
    fi
 
    if echo "$ihr_avail" | grep -qw "$INIT_HR"; then

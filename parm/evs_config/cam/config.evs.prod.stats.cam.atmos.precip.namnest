@@ -47,6 +47,7 @@ if [ "$ACC" = "01" ]; then
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
     export OBS_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4"
+    export USE_ZERO_ACCUM="False"
     if [[ "01 04 07 10 13 16 19 22" =~ (^|[[:space:]])$VHOUR($|[[:space:]]) ]]; then
         export MODEL_PCP_COMBINE_METHOD="ADD"
         export MODEL_PCP_COMBINE_COMMAND=""
@@ -99,6 +100,7 @@ elif [ "$ACC" = "03" ]; then
     export OBS_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4,ge50.8"
     export MODEL_PCP_COMBINE_METHOD="ADD"
     export MODEL_PCP_COMBINE_COMMAND=""
+    export USE_ZERO_ACCUM="False"
 elif [ "$ACC" = "24" ]; then
     export MODEL_ACC="03"
     export BUCKET_INTERVAL="3"
@@ -118,6 +120,7 @@ elif [ "$ACC" = "24" ]; then
     export OBS_THRESH="ge0.254,ge2.54,ge6.35,ge12.7,ge25.4,ge38.1,ge50.8,ge76.2,ge101.6,ge152.4"
     export MODEL_PCP_COMBINE_METHOD="ADD"
     export MODEL_PCP_COMBINE_COMMAND=""
+    export USE_ZERO_ACCUM="False"
 else
     err_exit "The provided ACC, $ACC, is not supported for $MODELNAME"
 fi

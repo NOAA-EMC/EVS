@@ -2,10 +2,10 @@
 
 # =============================================================================
 # 
-# NAME: config.evs.prod.stats.cam.atmos.precip.hrrr 
+# NAME: config.evs.prod.stats.cam.atmos.precip.rrfs 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Set up configurations to run EVS HRRR Precipitation - Statistics
-# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_hrrr_precip_stats.sh
+# PURPOSE: Set up configurations to run EVS RRFS Precipitation - Statistics
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_rrfs_precip_stats.sh
 # 
 # =============================================================================
 
@@ -20,12 +20,12 @@ export RESTART_DIR="${COMOUTsmall}/restart/c${vhr}"
 export COMPLETED_JOBS_DIR="completed_jobs"
 
 # Time Settings
-export FHR_END_FULL="48"
+export FHR_END_FULL="84"
 export FHR_INCR_FULL="6"
 export FHR_END_SHORT="18"
 
 # Model/Obs Settings
-export COMINfcst=${COMINhrrr}
+export COMINfcst=${COMINrrfs}
 
 # Additional Verification Settings
 if [ "$ACC" = "01" ]; then
@@ -37,6 +37,10 @@ if [ "$ACC" = "01" ]; then
     if [ "$NEST" = "conus" ]; then
         export OBS_LEV="A1"
     elif [ "$NEST" = "ak" ]; then
+        export OBS_LEV="Z0"
+    elif [ "$NEST" = "hi" ]; then
+        export OBS_LEV="Z0"
+    elif [ "$NEST" = "pr" ]; then
         export OBS_LEV="Z0"
     else
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
@@ -55,6 +59,10 @@ elif [ "$ACC" = "03" ]; then
         export OBS_LEV="A3"
     elif [ "$NEST" = "ak" ]; then
         export OBS_LEV="Z0"
+    elif [ "$NEST" = "hi" ]; then
+        export OBS_LEV="Z0"
+    elif [ "$NEST" = "pr" ]; then
+        export OBS_LEV="Z0"
     else
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
@@ -71,6 +79,10 @@ elif [ "$ACC" = "24" ]; then
     if [ "$NEST" = "conus" ]; then
         export OBS_LEV="A24"
     elif [ "$NEST" = "ak" ]; then
+        export OBS_LEV="Z0"
+    elif [ "$NEST" = "hi" ]; then
+        export OBS_LEV="Z0"
+    elif [ "$NEST" = "pr" ]; then
         export OBS_LEV="Z0"
     else
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
@@ -94,18 +106,38 @@ if [ "$BOOL_NBRHD" = True ]; then
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G240"
-        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.conus.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
         export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
-        export FHR_INCR_SHORT="3"
+        export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G091"
-        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.ak.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
+    elif [ "$NEST" = "hi" ]; then
+        export VERIF_TYPE="mrms"
+        export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
+        export OBSNAME="mrms"
+        export FHR_INCR_SHORT="1"
+        export MIN_IHOUR="00"
+        export GRID="G196"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.2p5km.f{lead?fmt=%3H}.hi.grib2"
+        export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"
+    elif [ "$NEST" = "pr" ]; then
+        export VERIF_TYPE="mrms"
+        export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
+        export OBSNAME="mrms"
+        export FHR_INCR_SHORT="1"
+        export MIN_IHOUR="00"
+        export GRID="G194"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.2p5km.f{lead?fmt=%3H}.pr.grib2"
+        export MASK_POLY_LIST="${FIXevs}/masks/Puerto_Rico_G194.nc"
     else
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
@@ -121,18 +153,38 @@ else
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G212"
-        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.conus.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G212_CONUS.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
         export COMINobs=${EVSINmrms}
         export OBS_ACC="VARIABLE"
         export OBSNAME="mrms"
-        export FHR_INCR_SHORT="3"
+        export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G216"
-        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.conus.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G216.nc"
+    elif [ "$NEST" = "hi" ]; then
+        export VERIF_TYPE="mrms"
+        export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
+        export OBSNAME="mrms"
+        export FHR_INCR_SHORT="1"
+        export MIN_IHOUR="00"
+        export GRID="G196"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.2p5km.f{lead?fmt=%3H}.hi.grib2"
+        export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"
+    elif [ "$NEST" = "pr" ]; then
+        export VERIF_TYPE="mrms"
+        export COMINobs=${EVSINmrms}
+        export OBS_ACC="VARIABLE"
+        export OBSNAME="mrms"
+        export FHR_INCR_SHORT="1"
+        export MIN_IHOUR="00"
+        export GRID="G194"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.2p5km.f{lead?fmt=%3H}.pr.grib2"
+        export MASK_POLY_LIST="${FIXevs}/masks/Puerto_Rico_G194.nc"
     else
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi

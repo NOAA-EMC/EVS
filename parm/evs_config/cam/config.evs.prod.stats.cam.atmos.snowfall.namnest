@@ -30,6 +30,9 @@ export FHR_INCR_SHORT="6"
 export COMINfcst=${COMINnam}
 
 # Additional Verification Settings
+export USE_ZERO_ACCUM_WEASD="True"
+export USE_ZERO_ACCUM_SNOD="True"
+export USE_ZERO_ACCUM_ASNOW="True"
 if [ "$ACC" = "06" ]; then
     export MODEL_ACC="06"
     export OBS_ACC="06"
