@@ -61,34 +61,8 @@ fi
 # Set some model-specific variables
 ###################################################################
 
-if [ ${MODELNAME} = hireswarw ]; then
 
-   fhr_min=1
-   fhr_max=48
-   fhr_inc=1
-   
-   export MODEL_INPUT_DIR=${COMINhiresw}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.${DOM}.grib2
-
-elif [ ${MODELNAME} = hireswarwmem2 ]; then
-
-   fhr_min=1
-   fhr_max=48
-   fhr_inc=1
-
-   export MODEL_INPUT_DIR=${COMINhiresw}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.${DOM}mem2.grib2
-
-elif [ ${MODELNAME} = hireswfv3 ]; then
-
-   fhr_min=1
-   fhr_max=60
-   fhr_inc=1
-
-   export MODEL_INPUT_DIR=${COMINhiresw}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.${DOM}.grib2
-
-elif [ ${MODELNAME} = href ]; then
+if [ ${MODELNAME} = href ]; then
 
    if [ $PROD = pmmn ]; then
       export ENSPROD=pmmn
@@ -115,15 +89,6 @@ elif [ ${MODELNAME} = hrrr ]; then
    elif [ $DOMAIN = conus ]; then
       export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${DOMAIN}/${modsys}.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2
    fi
-
-elif [ ${MODELNAME} = namnest ]; then
-
-   fhr_min=0
-   fhr_max=60
-   fhr_inc=1
-
-   export MODEL_INPUT_DIR=${COMINnam}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.${DOMAIN}nest.hiresf{lead?fmt=%2H}.tm00.grib2
 
 elif [ ${MODELNAME} = rrfs ]; then
 
@@ -156,35 +121,7 @@ while [ $fhr -le $fhr_max ]; do
    export INIT_HR=`$NDATE -$fhr ${VDATE}${vhr} | cut -c 9-10`
 
    # Define forecast filename for each model 
-   if [ ${MODELNAME} = hireswarw ]; then
-      if [ $DOMAIN = alaska ]; then
-         ihr_avail="06 18"
-      else
-         ihr_avail="00 12"
-      fi
-      export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.arw_5km.f$(printf "%02d" $fhr).${DOM}.grib2
-   elif [ ${MODELNAME} = hireswarwmem2 ]; then
-      if [ $DOMAIN = alaska ]; then
-         ihr_avail="06 18"
-      else
-         ihr_avail="00 12"
-      fi
-      export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.arw_5km.f$(printf "%02d" $fhr).${DOM}mem2.grib2
-   elif [ ${MODELNAME} = hireswfv3 ]; then
-      if [ $DOMAIN = alaska ]; then
-         ihr_avail="06 18"
-      else
-         ihr_avail="00 12"
-      fi
-      export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.fv3_5km.f$(printf "%02d" $fhr).${DOM}.grib2
-   elif [ ${MODELNAME} = href ]; then
-      if [ $DOMAIN = alaska ]; then
-         ihr_avail="06 18"
-      else
-         ihr_avail="00 12"
-      fi
-      export fcst_file=${modsys}.${IDATE}/ensprod/${modsys}.t${INIT_HR}z.${DOM}.${ENSPROD}.f$(printf "%02d" $fhr).grib2
-   elif [ ${MODELNAME} = hrrr ]; then
+   if [ ${MODELNAME} = hrrr ]; then
       if [ $fhr -le 18 ]; then
          if [ $DOMAIN = alaska ]; then
             ihr_avail="00 03 06 09 12 15 18 21"
@@ -199,9 +136,6 @@ while [ $fhr -le $fhr_max ]; do
       elif [ $DOMAIN = conus ]; then
          export fcst_file=${modsys}.${IDATE}/${DOMAIN}/${modsys}.t${INIT_HR}z.wrfprsf$(printf "%02d" $fhr).grib2
       fi
-   elif [ ${MODELNAME} = namnest ]; then
-      ihr_avail="00 06 12 18"
-      export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.${DOMAIN}nest.hiresf$(printf "%02d" $fhr).tm00.grib2
    elif [ ${MODELNAME} = rrfs ]; then
       if [ $fhr -le 18 ]; then
          ihr_avail="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
