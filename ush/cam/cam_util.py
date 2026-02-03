@@ -85,6 +85,12 @@ def get_data_type(fname):
             'not':[],
             'type': 'fcst'
         },
+        'RRFS Forecast': {
+            'and':['rrfs'],
+            'or':[''],
+            'not':['firewx','prepbufr'],
+            'type': 'fcst'
+        },
         'HiRes Window ARW Forecast': {
             'and':['hiresw','arw'],
             'or':[''],

@@ -104,7 +104,8 @@ else
   else
     export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
   fi
-  export EVSINnam=${EVSINnam:-$COMIN/stats/$COMPONENT/$MODELNAME}
+  export EVSINrrfs=${EVSINrrfs:-$COMIN/stats/$COMPONENT/rrfs_$MODELNAME}
+  export EVSINnam=${EVSINnam:-$COMIN/stats/$COMPONENT/nam_$MODELNAME}
   echo $COMPATH
   [[ ! -d $COMOUTplots ]] && mkdir -p $COMOUTplots
 fi
@@ -118,7 +119,7 @@ echo $COMPATH
 # Execute the script.
 #######################################################################
 
-if [ $MODELNAME = nam_firewxnest ]; then
+if [ $MODELNAME = firewxnest ]; then
  $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}.sh
 else
  $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${MODELNAME}_${VERIF_CASE}.sh
