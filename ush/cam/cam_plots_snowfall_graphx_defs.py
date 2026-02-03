@@ -22,7 +22,7 @@ graphics = {
     'cam':{
         'snowfall':{
             'nohrsc':{
-                'fcst_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr':{
+                'fcst_group1, rrfs, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -130,7 +130,7 @@ graphics = {
                         }
                     },
                 },
-                'fcst_group2, namnest, hireswfv3':{
+                'fcst_group2, rrfs, namnest, hireswfv3':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -238,7 +238,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group1, fcst_group1, var_group1, namnest, hrrr':{
+                'init_group1, fcst_group1, var_group1, rrfs, namnest, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -346,7 +346,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group1, fcst_group1, var_group2, hrrr':{
+                'init_group1, fcst_group1, var_group2, rrfs, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -454,7 +454,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group1, fcst_group2, var_group1, namnest':{
+                'init_group1, fcst_group2, var_group1, rrfs, namnest':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -562,7 +562,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group2, fcst_group1, var_group1, namnest, hrrr':{
+                'init_group2, fcst_group1, var_group1, rrfs, namnest, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -670,7 +670,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group2, fcst_group1, var_group2, hrrr':{
+                'init_group2, fcst_group1, var_group2, rrfs, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -739,7 +739,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group2, fcst_group2, var_group1, namnest':{
+                'init_group2, fcst_group2, var_group1, rrfs, namnest':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
