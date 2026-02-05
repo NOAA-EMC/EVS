@@ -144,7 +144,11 @@ if [ $VERIF_CASE = radar ] || [ $VERIF_CASE = severe ]; then
 elif [ $MODELNAME = nam_firewxnest ] || [ $MODELNAME = rrfs_firewxnest ]; then
    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}.sh
 else
-   $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${MODELNAME}_${VERIF_CASE}.sh
+   if [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
+      $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_rrfsmem_${VERIF_CASE}.sh
+   else
+      $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${MODELNAME}_${VERIF_CASE}.sh
+   fi
 fi
 
 export err=$?; err_chk
