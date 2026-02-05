@@ -1238,6 +1238,22 @@ suite evs_nco
               trigger :TIME >= 1230 and :TIME < 1830 and ../../../../06/evs/stats/cam/jevs_stats_cam_href_spcoutlook == complete
             task jevs_plots_cam_href_grid2obs_cape_last90days
               trigger :TIME >= 1430 and :TIME < 2030 and ../../../../06/evs/stats/cam/jevs_stats_cam_href_grid2obs == complete
+            task jevs_plots_cam_refs_grid2obs_ecnt_last90days
+              trigger :TIME >= 1230 and :TIME < 1830 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
+            task jevs_plots_cam_refs_grid2obs_ctc_last90days
+              trigger :TIME >= 1230 and :TIME < 1830 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
+            task jevs_plots_cam_refs_snowfall_last90days
+              trigger :TIME >= 1230 and :TIME < 1830 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_snowfall == complete
+            task jevs_plots_cam_refs_profile_last90days
+              trigger :TIME >= 1230 and :TIME < 1830 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
+            task jevs_plots_cam_refs_precip_last90days
+              trigger :TIME >= 1230 and :TIME < 1830 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_precip == complete
+            task jevs_plots_cam_refs_precip_spatial
+              trigger :TIME >= 1230 and :TIME < 1830 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_precip == complete
+            task jevs_plots_cam_refs_spcoutlook_last90days
+              trigger :TIME >= 1230 and :TIME < 1830 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_spcoutlook == complete
+            task jevs_plots_cam_refs_grid2obs_cape_last90days
+              trigger :TIME >= 1430 and :TIME < 2030 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
           endfamily 
         endfamily   # 12 plots
       endfamily  # evs

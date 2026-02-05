@@ -32,8 +32,6 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p ${DATA}
 cd ${DATA}
 
-export envir=${envir:-prod}
-
 export NET=${NET:-evs}
 export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-aqm}
@@ -83,7 +81,7 @@ export fig_name_label=${fig_name_label:-last${NDAYS}days}
 # Execute the script.
 #######################################################################
 
-export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${MODELNAME}.${VERIF_CASE}.${DATA_TYPE}}
+export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.prod.${STEP}.${MODELNAME}.${VERIF_CASE}.${DATA_TYPE}}
 
 if [ "${RUN}" == "headline" ]; then
     ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${MODELNAME}_${RUN}.sh

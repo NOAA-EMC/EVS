@@ -3537,8 +3537,8 @@ def check_weekly_truth_files(job_dict):
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'prepbufr':
                 prepbufr_file_format = os.path.join(
-                    verif_case_dir, 'data', 'prepbufr_nam',
-                    'prepbufr.nam.'
+                    verif_case_dir, 'data', 'prepbufr_gdas',
+                    'prepbufr.gdas.'
                     +'{valid?fmt=%Y%m%d%H}'
                 )
                 nf = 0
@@ -3555,14 +3555,14 @@ def check_weekly_truth_files(job_dict):
                     job_dict['job_num_work_dir'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_nam_valid'
+                    +job_dict['VERIF_TYPE']+'_gdas_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 pb2nc_COMOUT_output_file_format = os.path.join(
                     job_dict['COMOUT'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_nam_valid'
+                    +job_dict['VERIF_TYPE']+'_gdas_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 nf = 0
@@ -3707,8 +3707,8 @@ def check_days6_10_truth_files(job_dict):
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'prepbufr':
                 prepbufr_file_format = os.path.join(
-                    verif_case_dir, 'data', 'prepbufr_nam',
-                    'prepbufr.nam.'
+                    verif_case_dir, 'data', 'prepbufr_gdas',
+                    'prepbufr.gdas.'
                     +'{valid?fmt=%Y%m%d%H}'
                 )
                 nf = 0
@@ -3725,14 +3725,14 @@ def check_days6_10_truth_files(job_dict):
                     job_dict['job_num_work_dir'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_nam_valid'
+                    +job_dict['VERIF_TYPE']+'_gdas_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 pb2nc_COMOUT_output_file_format = os.path.join(
                     job_dict['COMOUT'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_nam_valid'
+                    +job_dict['VERIF_TYPE']+'_gdas_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 nf = 0
