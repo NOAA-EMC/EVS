@@ -134,10 +134,10 @@ if job_type == 'generate':
     plot_this_var = False
     if VAR_NAME in var_defs:
         if VERIF_TYPE in var_defs[VAR_NAME]:
-            if 'refsmem' in MODELNAME:
-                if 'refsmem' in var_defs[VAR_NAME][VERIF_TYPE]:
+            if 'rrfsmem' in MODELNAME:
+                if 'rrfsmem' in var_defs[VAR_NAME][VERIF_TYPE]:
                     plot_this_var = True
-                    var_def = var_defs[VAR_NAME][VERIF_TYPE]['refsmem']]
+                    var_def = var_defs[VAR_NAME][VERIF_TYPE]['rrfsmem']]
             else:
                 if MODELNAME in var_defs[VAR_NAME][VERIF_TYPE]:
                     plot_this_var = True

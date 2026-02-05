@@ -466,7 +466,7 @@ if proceed:
                     '{IHOUR}',
                     'rrfs.t{IHOUR}z.prslev.3km.f0{FHR}.conus.grib2'
                 ))
-        elif 'refsmem' in MODELNAME:
+        elif 'rrfsmem' in MODELNAME:
             if NEST == 'conus':
                 fcst_templates.append(os.path.join(
                     COMINfcst,
