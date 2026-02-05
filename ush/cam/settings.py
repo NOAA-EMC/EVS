@@ -270,74 +270,6 @@ class ModelSpecs():
         be defined here as aliases of the same model settings, if desired.
         '''
         self.model_alias = {
-            'ARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'ARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'FV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'NMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'AKARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'AKARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'AKFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'AKNEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'AKNMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'CONUSARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'CONUSARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'CONUSFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'CONUSNEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'CONUSNMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'hireswarw': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'hireswarwmem2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'hireswfv3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
             'HREF_MEAN':{
                 'settings_key':'HREF_MEAN', 
                 'plot_name':'HREF Mean'
@@ -462,46 +394,6 @@ class ModelSpecs():
                 'settings_key':'NARRE_MEAN', 
                 'plot_name':'NARRE Mean'
             },
-            'HIARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'HIARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'HIFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'HINMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'HAWAIINEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'PRARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'PRARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'PRFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'PRNMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'PRICONEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
             'FV3LAMDA': {
                 'settings_key':'LAMDA', 
                 'plot_name':'FV3LAM-DA'
@@ -566,22 +458,6 @@ class ModelSpecs():
                 'settings_key':'LAMX', 
                 'plot_name':'FV3LAM-X'
             },
-            'NAM_NEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'NAM_FIREWXNEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Fire Wx Nest'
-            },
-            'namnest': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'nam_firewxnest': {
-                'settings_key':'NAM_FIREWXNEST', 
-                'plot_name':'NAM FireWx Nest'
-            },
             'HRRRAK': {
                 'settings_key':'HRRR', 
                 'plot_name':'HRRR'
@@ -589,10 +465,6 @@ class ModelSpecs():
             'hrrr': {
                 'settings_key':'HRRR', 
                 'plot_name':'HRRR'
-            },
-            'NAMNA': {
-                'settings_key':'NAM', 
-                'plot_name':'NAM'
             },
             'RAPAK': {
                 'settings_key':'RAP', 
@@ -711,15 +583,6 @@ class ModelSpecs():
             'HMON': {'color': '#8400c8',
                      'marker': 'o', 'markersize': 10,
                      'linestyle': 'solid', 'linewidth': 1.8},
-            'HRW_ARW': {'color': '#00dc00',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HRW_ARW2': {'color': '#e69f00',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HRW_FV3': {'color': '#56b4e9',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREF_MEAN': {'color': '#000000',
                      'marker': 'o', 'markersize': 10,
                      'linestyle': 'solid', 'linewidth': 1.8},
@@ -740,12 +603,6 @@ class ModelSpecs():
                      'linestyle': 'solid', 'linewidth': 1.8},
             'NAM': {'color': '#1e3cff',
                      'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'NAM_NEST': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'NAM_FIREWXNEST': {'color': '#1e3cff',
-                     'marker': '^', 'markersize': 11,
                      'linestyle': 'solid', 'linewidth': 1.8},
             'RRFS': {'color': '#696969',
                        'marker': 'o', 'markersize': 10,
