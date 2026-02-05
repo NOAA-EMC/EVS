@@ -48,17 +48,12 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-if [ -n "%MEM:%" ]; then
-  export mem=${mem:-%MEM:%}
-else
-  export mem=1
-fi
 export USE_CFP=YES
 export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="precip"
-export MODELNAME="rrfsmem${mem}"
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.rrfsmem
+export MODELNAME="rrfsmem"
+export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 ############################################################
 # Execute j-job
