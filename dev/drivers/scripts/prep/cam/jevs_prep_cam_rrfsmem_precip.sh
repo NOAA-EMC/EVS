@@ -35,7 +35,7 @@ export MODELNAME="rrfsmem${mem}"
 # EVS Settings
 export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
-export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
+export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.rrfsmem
 
 # Load Modules
 source $HOMEevs/versions/run.ver
