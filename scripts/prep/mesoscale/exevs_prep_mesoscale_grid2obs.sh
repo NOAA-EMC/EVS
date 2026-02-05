@@ -56,11 +56,13 @@ fi
 # Send missing data alert if needed
 if [ $data_missing ]; then
 
-   echo "WARNING: File $DCOMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip is missing"
+   msg="WARNING: GenVxMask did not run for date ${OTLK_DATE}, likely because there were no SPC outlooks issued for days 1-3"
+   echo "${msg}"
+
    if [ $SENDMAIL = YES ]; then
-      export subject="SPC OTLK Data Missing for EVS ${COMPONENT}"
-      echo "WARNING: The ${OTLK_DATE} SPC outlook file(s) is missing. METplus will not run." > mailmsg
-      echo "Missing files are $DCOMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip" >> mailmsg
+      export subject="SPC Day 1-3 Outlooks Not Available for EVS ${COMPONENT}"
+      echo "${msg}" > mailmsg
+      echo "If this seems incorrect, inspect the files at $DCOMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_${OTLK_DATE}*.zip" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $MAILTO
    fi
