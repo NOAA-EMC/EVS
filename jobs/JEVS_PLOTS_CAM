@@ -105,7 +105,6 @@ else
     export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
   fi
   export EVSINrrfs=${EVSINrrfs:-$COMIN/stats/$COMPONENT/rrfs_$MODELNAME}
-  export EVSINnam=${EVSINnam:-$COMIN/stats/$COMPONENT/nam_$MODELNAME}
   echo $COMPATH
   [[ ! -d $COMOUTplots ]] && mkdir -p $COMOUTplots
 fi
