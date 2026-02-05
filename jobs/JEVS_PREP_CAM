@@ -128,7 +128,11 @@ fi
 ####################################
 # Execute the script 
 ####################################
-$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${STEP}_${MODELNAME}_${VERIF_CASE}.sh
+if [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
+   $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${STEP}_rrfsmem_${VERIF_CASE}.sh
+else
+   $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${STEP}_${MODELNAME}_${VERIF_CASE}.sh
+fi
 export err=$?; err_chk
 
 if [ "$KEEPDATA" != "YES" ]; then
