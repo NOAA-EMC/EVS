@@ -94,6 +94,9 @@ if proceed:
             COMINfcst = os.environ['COMINhrrr']
         elif MODELNAME == 'rrfs':
             COMINfcst = os.environ['COMINrrfs']
+        elif 'rrfsmem' in MODELNAME:
+            COMINfcst = os.environ['COMINrrfs']
+            mem = os.environ['mem']
         else:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized. Quitting ...")
             sys.exit(1)
@@ -462,6 +465,47 @@ if proceed:
                     'rrfs.{IDATE}',
                     '{IHOUR}',
                     'rrfs.t{IHOUR}z.prslev.3km.f0{FHR}.conus.grib2'
+                ))
+        elif 'refsmem' in MODELNAME:
+            if NEST == 'conus':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.3km.f0{FHR}.conus.grib2'
+                ))
+            elif NEST == 'ak':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.3km.f0{FHR}.ak.grib2'
+                ))
+            elif NEST == 'hi':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.2p5km.f0{FHR}.hi.grib2'
+                ))
+            elif NEST == 'pr':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.2p5km.f0{FHR}.pr.grib2'
+                ))
+            else:
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.3km.f0{FHR}.conus.grib2'
                 ))
         else:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized."
