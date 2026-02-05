@@ -28,7 +28,7 @@ module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDMAIL=YES
 export SENDDBN=NO
 
