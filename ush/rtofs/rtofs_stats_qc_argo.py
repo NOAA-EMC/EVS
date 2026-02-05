@@ -18,8 +18,7 @@ import numpy as np
 # Read in environment variables to use
 VDATE = os.environ['VDATE']
 DATA = os.environ['DATA']
-DCOMROOT = os.environ['DCOMROOT']
-COMROOT = os.environ ['COMROOT']
+COMINrtofs = os.environ['COMINrtofs']
 COMIN = os.environ ['COMIN']
 SENDCOM = os.environ['SENDCOM']
 COMOUTsmall = os.environ['COMOUTsmall']
@@ -36,15 +35,16 @@ mDATE_YMD = datetime.datetime.strftime(mDATE, '%Y%m%d')
 p1DATE_YMD = datetime.datetime.strftime(p1DATE, '%Y%m%d')
 p2DATE_YMD = datetime.datetime.strftime(p2DATE, '%Y%m%d')
 
-rtofs_qc_1 = os.path.join(COMROOT,
-                        'rtofs',f"{rtofs_ver}",f"rtofs.{p1DATE_YMD}",
+rtofs_qc_1 = os.path.join(COMINrtofs,
+                        f"rtofs.{p1DATE_YMD}",
                         'ncoda/logs/profile_qc',
                         f"prof_argo_rpt.{VDATE_YMD.strftime('%Y%m%d')}00.txt")
 
+
 shutil.copy2(rtofs_qc_1,COMOUTsmall) 
 
-rtofs_qc_2 = os.path.join(COMROOT,
-                        'rtofs',f"{rtofs_ver}",f"rtofs.{p2DATE_YMD}",
+rtofs_qc_2 = os.path.join(COMINrtofs,
+                        f"rtofs.{p2DATE_YMD}",
                         'ncoda/logs/profile_qc',
                         f"prof_argo_rpt.{p1DATE_YMD}00.txt")
 
