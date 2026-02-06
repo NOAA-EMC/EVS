@@ -30,7 +30,7 @@ export STEP="stats"
 export COMPONENT="cam"
 export RUN="atmos"
 export VERIF_CASE="precip"
-export mem="${mem:1}"
+export mem="${mem:-1}"
 export MODELNAME="rrfsmem${mem}"
 
 # EVS Settings
