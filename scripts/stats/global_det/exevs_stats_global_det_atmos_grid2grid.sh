@@ -10,7 +10,6 @@
 set -x
 
 export VERIF_CASE_STEP_abbrev="g2gs"
-export MET_PYTHON_EXE=/apps/prod/ve/intel/19.1.3.304/python/3.10.4/evs/2.0/bin/python
 
 echo "RUN MODE:$evs_run_mode"
 

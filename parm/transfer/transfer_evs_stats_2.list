@@ -59,6 +59,9 @@ _COMROOT_/evs/_SHORTVER_/stats/
 + /global_ens/*._PDYm3_/***
 + /global_ens/*._PDYm2_/***
 + /global_ens/*._PDYm1_/***
++ /global_chem/
++ /global_chem/*._PDYm4_/***
++ /global_chem/*._PDYm3_/***
 - *
 B 100000
 

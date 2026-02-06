@@ -33,8 +33,6 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 
-export envir=${envir:-prod}
-
 # Define COMIN/COMOUT variables:
 
 echo ${COMPATH}
@@ -78,7 +76,7 @@ export restart_mode=${restart_mode:-YES}
 export fig_name_label=${fig_name_label:-last${NDAYS}days}
 
 if [ "${RUN}" != "headline" ]; then
-    export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
+    export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
 fi
 
 ########################################
