@@ -13,8 +13,8 @@ Environment Variables (Inputs):
         The verification case (e.g., 'precip', 'snowfall', 'grid2obs').
     COMPONENT, SENDMAIL, VHR, jobid, FIXevs, VDATE, VHOUR, FHR_END_FULL, 
     FHR_END_SHORT, NEST, MODELNAME, FHR_INCR_FULL, FHR_INCR_SHORT, 
-    FHR_GROUP_LIST, MIN_IHOUR, COMINobsproc, COMINnam, DCOMINnohrsc, 
-    OBS_ACC, ACC, COMINfcst, COMINhiresw, COMINhrrr, EVSINmrms, EVSINccpa, 
+    FHR_GROUP_LIST, MIN_IHOUR, COMINobsproc, DCOMINnohrsc, 
+    OBS_ACC, ACC, COMINfcst, COMINhrrr, COMINrrfs, EVSINmrms, EVSINccpa, 
     DCOMINmrms, COMINccpa, etc.:
         Various environment variables specifying file locations, model names, 
         and configuration options.
@@ -82,14 +82,6 @@ if proceed:
             ACC = os.environ['ACC']
         elif VERIF_CASE == 'precip':
             ACC = os.environ['ACC']
-        if MODELNAME == 'namnest':
-            COMINfcst = os.environ['COMINnam']
-        elif MODELNAME == 'hireswarw':
-            COMINfcst = os.environ['COMINhiresw']
-        elif MODELNAME == 'hireswarwmem2':
-            COMINfcst = os.environ['COMINhiresw']
-        elif MODELNAME == 'hireswfv3':
-            COMINfcst = os.environ['COMINhiresw']
         elif MODELNAME == 'hrrr':
             COMINfcst = os.environ['COMINhrrr']
         elif MODELNAME == 'rrfs':
@@ -254,143 +246,7 @@ if proceed:
             ]
         else:
             fcst_templates = []
-        if MODELNAME == 'namnest':
-            if NEST == 'conus':
-                fcst_templates.append(os.path.join(
-                    COMINfcst, 
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.conusnest.hiresf{FHR}.tm00.grib2'
-                ))
-            elif NEST == 'ak':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.alaskanest.hiresf{FHR}.tm00.grib2'
-                ))
-            elif NEST == 'hi':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.hawaiinest.hiresf{FHR}.tm00.grib2'
-                ))
-            elif NEST == 'pr':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.priconest.hiresf{FHR}.tm00.grib2'
-                ))
-            else:
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.conusnest.hiresf{FHR}.tm00.grib2'
-                ))
-        elif MODELNAME == 'hireswarw':
-            if NEST == 'conus':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.conus.grib2'
-                ))
-            elif NEST == 'ak':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.ak.grib2'
-                ))
-            elif NEST == 'hi':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.hi.grib2'
-                ))
-            elif NEST == 'pr':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.pr.grib2'
-                ))
-            elif NEST == 'gu':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.guam.grib2'
-                ))
-            else:
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.conus.grib2'
-                ))
-        elif MODELNAME == 'hireswarwmem2':
-            if NEST == 'conus':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.conusmem2.grib2'
-                ))
-            elif NEST == 'ak':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.akmem2.grib2'
-                ))
-            elif NEST == 'hi':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.himem2.grib2'
-                ))
-            elif NEST == 'pr':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.prmem2.grib2'
-                ))
-            else:
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.arw_5km.f{FHR}.conusmem2.grib2'
-                ))
-        elif MODELNAME == 'hireswfv3':
-            if NEST == 'conus':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.fv3_5km.f{FHR}.conus.grib2'
-                ))
-            elif NEST == 'ak':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.fv3_5km.f{FHR}.ak.grib2'
-                ))
-            elif NEST == 'hi':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.fv3_5km.f{FHR}.hi.grib2'
-                ))
-            elif NEST == 'pr':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.fv3_5km.f{FHR}.pr.grib2'
-                ))
-            elif NEST == 'gu':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.fv3_5km.f{FHR}.guam.grib2'
-                ))
-            else:
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'hiresw.{IDATE}',
-                    'hiresw.t{IHOUR}z.fv3_5km.f{FHR}.conus.grib2'
-                ))
-        elif MODELNAME == 'hrrr':
+        if MODELNAME == 'hrrr':
             if NEST == 'conus':
                 fcst_templates.append(os.path.join(
                     COMINfcst,

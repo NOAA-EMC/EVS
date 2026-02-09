@@ -17,9 +17,7 @@ export PRUNEDIR=$DATA/prune
 mkdir -p $PRUNEDIR
 
 model1=`echo rrfs_$MODELNAME | tr a-z A-Z`
-model2=`echo nam_$MODELNAME | tr a-z A-Z`
 export model1
-export model2
 
 STARTDATE=${VDATE}00
 ENDDATE=${PDYm31}00
@@ -44,22 +42,6 @@ while [ $DATE -ge $ENDDATE ]; do
      mv $STATDIR/temp4.stat $STATDIR/evs.stats.rrfs_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
      rm -f $STATDIR/temp*stat
     fi
-
-	if [ -e ${EVSINnam}.$DAY/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
-	then
-	 cp -v ${EVSINnam}.$DAY/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
-
-	 sed "s/$model2/nam_$MODELNAME/g" $STATDIR/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
-	 sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
-	 sed "s/TDO/DPT/g" $STATDIR/temp2.stat > $STATDIR/temp3.stat
-	 sed "s/MXGS/GUST/g" $STATDIR/temp3.stat > $STATDIR/temp4.stat
-	 mv $STATDIR/temp4.stat $STATDIR/evs.stats.nam_${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
-	 rm -f $STATDIR/temp*stat
-	fi
-
-	if [ -e $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
-	 cp -v $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
-	fi
 
 	if [ -e $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
 	 cp -v $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
