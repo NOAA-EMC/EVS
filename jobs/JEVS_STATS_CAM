@@ -107,7 +107,6 @@ export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CAS
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export COMINhref=${COMINhref:-$(compath.py $envir/com/href/$href_ver)}
 export COMINhrrr=${COMINhrrr:-$(compath.py $envir/com/hrrr/$hrrr_ver)}
 export COMINrrfs=${COMINrrfs:-$(compath.py $envir/com/rrfs/$rrfs_ver)}
 export COMINrefs=${COMINrefs:-$(compath.py $envir/com/refs/$refs_ver)}
