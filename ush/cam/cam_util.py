@@ -73,12 +73,6 @@ def get_data_type(fname):
             'not':[],
             'type': 'gen'
         },
-        'NAM Nest Forecast': {
-            'and':['nam', 'nest'],
-            'or':[''],
-            'not':['firewx'],
-            'type': 'fcst'
-        },
         'HRRR Forecast': {
             'and':['hrrr'],
             'or':[''],
@@ -89,24 +83,6 @@ def get_data_type(fname):
             'and':['rrfs'],
             'or':[''],
             'not':['firewx','prepbufr'],
-            'type': 'fcst'
-        },
-        'HiRes Window ARW Forecast': {
-            'and':['hiresw','arw'],
-            'or':[''],
-            'not':['mem2'],
-            'type': 'fcst'
-        },
-        'HiRes Window ARW2 Forecast': {
-            'and':['hiresw','arw','mem2'],
-            'or':[''],
-            'not':[],
-            'type': 'fcst'
-        },
-        'HiRes Window FV3 Forecast': {
-            'and':['hiresw','fv3'],
-            'or':[''],
-            'not':[],
             'type': 'fcst'
         },
     }

@@ -28,27 +28,11 @@ link_master_to_cyc "jevs_prep_cam_rrfs_precip_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_rrfsmem_precip_vhr" "$cyc"
 cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_prep_cam_namnest_precip_vhr" "$cyc"
-cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_hrrr_precip_vhr" "$cyc"
-cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_prep_cam_hireswfv3_precip_vhr" "$cyc"
-cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_prep_cam_hireswarw_precip_vhr" "$cyc"
-cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_prep_cam_hireswarwmem2_precip_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_hrrr_severe_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_rrfs_severe_vhr" "$cyc"
-cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_prep_cam_namnest_severe_vhr" "$cyc"
-cyc=$(seq 0 12 23)
-link_master_to_cyc "jevs_prep_cam_hireswarw_severe_vhr" "$cyc"
-cyc=$(seq 0 12 23)
-link_master_to_cyc "jevs_prep_cam_hireswarwmem2_severe_vhr" "$cyc"
-cyc=$(seq 0 12 23)
-link_master_to_cyc "jevs_prep_cam_hireswfv3_severe_vhr" "$cyc"
 cyc=$(seq 0 12 23)
 link_master_to_cyc "jevs_prep_cam_href_severe_vhr" "$cyc"
 cd $ECF_DIR/scripts/stats/cam
@@ -56,45 +40,15 @@ echo "Linking CAM stats ..."
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr" "$cyc"
 cyc=$(seq 0 23)
-link_master_to_cyc "jevs_stats_cam_nam_firewxnest_grid2obs_vhr" "$cyc"
-cyc=$(seq 0 23)
-link_master_to_cyc "jevs_stats_cam_hireswarwmem2_radar_vhr" "$cyc"
-cyc=$(seq 0 23)
-link_master_to_cyc "jevs_stats_cam_hireswarw_radar_vhr" "$cyc"
-cyc=$(seq 0 23)
-link_master_to_cyc "jevs_stats_cam_hireswfv3_radar_vhr" "$cyc"
-cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_cam_href_radar_vhr" "$cyc"
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_cam_hrrr_radar_vhr" "$cyc"
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_cam_rrfs_radar_vhr" "$cyc"
-cyc=$(seq 0 23)
-link_master_to_cyc "jevs_stats_cam_namnest_radar_vhr" "$cyc"
-cyc=$(seq 19 22)
-link_master_to_cyc "jevs_stats_cam_hireswarwmem2_precip_vhr" "$cyc"
-cyc=$(seq 19 22)
-link_master_to_cyc "jevs_stats_cam_hireswarw_precip_vhr" "$cyc"
-cyc=$(seq 19 22)
-link_master_to_cyc "jevs_stats_cam_hireswfv3_precip_vhr" "$cyc"
 cyc=$(seq 19 22)
 link_master_to_cyc "jevs_stats_cam_hrrr_precip_vhr" "$cyc"
 cyc=$(seq 19 22)
 link_master_to_cyc "jevs_stats_cam_rrfs_precip_vhr" "$cyc"
-cyc=$(seq 19 22)
-link_master_to_cyc "jevs_stats_cam_namnest_precip_vhr" "$cyc"
-cyc=$(seq 2 3)
-link_master_to_cyc "jevs_stats_cam_hireswarw_grid2obs_vhr" "$cyc"
-cyc=$(seq 6 3 23)
-link_master_to_cyc "jevs_stats_cam_hireswarw_grid2obs_vhr" "$cyc"
-cyc=$(seq 2 3)
-link_master_to_cyc "jevs_stats_cam_hireswarwmem2_grid2obs_vhr" "$cyc"
-cyc=$(seq 6 3 23)
-link_master_to_cyc "jevs_stats_cam_hireswarwmem2_grid2obs_vhr" "$cyc"
-cyc=$(seq 2 3)
-link_master_to_cyc "jevs_stats_cam_hireswfv3_grid2obs_vhr" "$cyc"
-cyc=$(seq 6 3 23)
-link_master_to_cyc "jevs_stats_cam_hireswfv3_grid2obs_vhr" "$cyc"
 cyc=$(seq 2 3)
 link_master_to_cyc "jevs_stats_cam_hrrr_grid2obs_vhr" "$cyc"
 cyc=$(seq 6 3 23)
@@ -103,22 +57,10 @@ cyc=$(seq 2 3)
 link_master_to_cyc "jevs_stats_cam_rrfs_grid2obs_vhr" "$cyc"
 cyc=$(seq 6 3 23)
 link_master_to_cyc "jevs_stats_cam_rrfs_grid2obs_vhr" "$cyc"
-cyc=$(seq 2 3)
-link_master_to_cyc "jevs_stats_cam_namnest_grid2obs_vhr" "$cyc"
-cyc=$(seq 6 3 23)
-link_master_to_cyc "jevs_stats_cam_namnest_grid2obs_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_stats_cam_rrfs_snowfall_vhr" "$cyc"
 cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_stats_cam_namnest_snowfall_vhr" "$cyc"
-cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_stats_cam_hrrr_snowfall_vhr" "$cyc"
-cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_stats_cam_hireswfv3_snowfall_vhr" "$cyc"
-cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_stats_cam_hireswarw_snowfall_vhr" "$cyc"
-cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_stats_cam_hireswarwmem2_snowfall_vhr" "$cyc"
 # MESOSCALE files
 cd $ECF_DIR/scripts/stats/mesoscale
 echo "Linking MESOSCALE stats ..."
