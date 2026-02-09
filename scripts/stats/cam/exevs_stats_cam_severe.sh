@@ -67,14 +67,9 @@ fi
 # Set some model-specific variables
 ####################################################################
 
-if [ ${MODELNAME} = hireswarw ] || [ ${MODELNAME} = hireswarwmem2 ] || [ ${MODELNAME} = href ]; then
+if [ ${MODELNAME} = href ]; then
    fhr_min=24
    fhr_max=48
-   fhr_inc=12
-
-elif [ ${MODELNAME} = hireswfv3 ]; then
-   fhr_min=24
-   fhr_max=60
    fhr_inc=12
 
 elif [ ${MODELNAME} = hrrr ]; then
@@ -82,7 +77,7 @@ elif [ ${MODELNAME} = hrrr ]; then
    fhr_max=48
    fhr_inc=6
 
-elif [ ${MODELNAME} = namnest ] || [ ${MODELNAME} = rrfs ] || [ ${MODELNAME} = refs ]; then
+elif [ ${MODELNAME} = rrfs ] || [ ${MODELNAME} = refs ]; then
    fhr_min=24
    fhr_max=60
    fhr_inc=6
