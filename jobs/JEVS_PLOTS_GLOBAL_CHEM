@@ -35,6 +35,8 @@ setpdy.sh
 
 # Define COMIN/COMOUT variables:
 
+echo ${COMPATH}
+
 export NET=${NET:-evs}
 export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-global_chem}
