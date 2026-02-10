@@ -36,8 +36,6 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 
-export envir=${envir:-prod}
-
 # Define COMIN/COMOUT variables:
 
 echo ${COMPATH}
