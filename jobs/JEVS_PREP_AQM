@@ -37,8 +37,6 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 
-export envir=${envir:-prod}
-
 export NET=${NET:-evs}
 export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-aqm}
