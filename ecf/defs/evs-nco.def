@@ -55,6 +55,9 @@ suite evs_nco
             task jevs_prep_cam_rrfs_precip_vhr_00
               trigger :TIME >= 0030 and :TIME < 0630 and jevs_prep_cam_hrrr_precip_vhr_00 == complete
               edit VHR '00'
+            task jevs_prep_cam_rrfsmem_precip_vhr_00
+              trigger :TIME >= 0030 and :TIME < 0630 and jevs_prep_cam_rrfs_precip_vhr_00 == complete
+              edit VHR '00'
             task jevs_prep_cam_hrrr_severe_vhr_00
               trigger :TIME >= 0000 and :TIME < 0600
               edit VHR '00'
@@ -403,6 +406,9 @@ suite evs_nco
               edit VHR '06'
             task jevs_prep_cam_rrfs_precip_vhr_06
               trigger :TIME >= 0630 and :TIME < 1230 and jevs_prep_cam_hrrr_precip_vhr_06 == complete
+              edit VHR '06'
+            task jevs_prep_cam_rrfsmem_precip_vhr_06
+              trigger :TIME >= 0630 and :TIME < 1230 and jevs_prep_cam_rrfs_precip_vhr_06 == complete
               edit VHR '06'
             task jevs_prep_cam_hrrr_severe_vhr_06
               trigger :TIME >= 0600 and :TIME < 1200
@@ -827,6 +833,9 @@ suite evs_nco
               edit VHR '12'
             task jevs_prep_cam_rrfs_precip_vhr_12
               trigger :TIME >= 1230 and :TIME < 1830 and jevs_prep_cam_hrrr_precip_vhr_12 == complete
+              edit VHR '12'
+            task jevs_prep_cam_rrfsmem_precip_vhr_12
+              trigger :TIME >= 1230 and :TIME < 1830 and jevs_prep_cam_rrfs_precip_vhr_12 == complete
               edit VHR '12'
             task jevs_prep_cam_hrrr_severe_vhr_12
               trigger :TIME >= 1200 and :TIME < 1800
@@ -1296,6 +1305,9 @@ suite evs_nco
               edit VHR '18'
             task jevs_prep_cam_rrfs_precip_vhr_18
               trigger (:TIME >= 1830 or :TIME < 0030) and jevs_prep_cam_hrrr_precip_vhr_18 == complete
+              edit VHR '18'
+            task jevs_prep_cam_rrfsmem_precip_vhr_18
+              trigger (:TIME >= 1830 or :TIME < 0030) and jevs_prep_cam_rrfs_precip_vhr_18 == complete
               edit VHR '18'
             task jevs_prep_cam_hrrr_severe_vhr_18
               trigger :TIME >= 1815 or :TIME < 0015

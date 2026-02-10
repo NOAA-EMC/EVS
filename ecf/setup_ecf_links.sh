@@ -26,6 +26,8 @@ link_master_to_cyc "jevs_prep_cam_radar_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_rrfs_precip_vhr" "$cyc"
 cyc=$(seq 0 6 23)
+link_master_to_cyc "jevs_prep_cam_rrfsmem_precip_vhr" "$cyc"
+cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_hrrr_precip_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_hrrr_severe_vhr" "$cyc"
