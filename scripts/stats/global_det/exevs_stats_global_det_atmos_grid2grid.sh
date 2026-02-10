@@ -10,6 +10,7 @@
 set -x
 
 export VERIF_CASE_STEP_abbrev="g2gs"
+export MET_PYTHON_EXE=$( which python )
 
 echo "RUN MODE:$evs_run_mode"
 
