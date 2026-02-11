@@ -242,7 +242,7 @@ if proceed:
                     COMINrrfs, 
                     'firewx.{IDATE}',
                     '{IHOUR}',
-                    'rrfs.t{IHOUR}z.prslev.1p5km.f{FHR}.firewx.grib2'
+                    'rrfs.t{IHOUR}z.prslev.1p5km.f0{FHR}.firewx.grib2'
                 )
             ]
         else:
