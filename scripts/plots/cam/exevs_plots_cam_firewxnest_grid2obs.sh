@@ -51,6 +51,12 @@ while [ $DATE -ge $ENDDATE ]; do
 	 cp -v $COMIN/stats/$COMPONENT/rrfs.$DAY/evs.stats.rrfs.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 	fi
 
+    for mem in {1..5}; do
+        if [ -e $COMIN/stats/$COMPONENT/rrfsmem${mem}.$DAY/evs.stats.rrfsmem${mem}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
+         cp -v $COMIN/stats/$COMPONENT/rrfsmem${mem}.$DAY/evs.stats.rrfsmem${mem}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+        fi
+    done
+
 	DATE=`$NDATE -24 $DATE`
 
 done
