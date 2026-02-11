@@ -62,8 +62,8 @@ for ObsType in ${grid2obs_list}; do
     export OutputId=${MODELNAME}_${ObsType}_${obs_var}            # config variable
     export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}_${obs_var} # config variable
     export OBSTYPE=`echo ${ObsType} | tr a-z A-Z`    # config variable
-    point_stat_conf_file="${CONFIGevs}/PointStat_fcst${CMODEL}Aero_obs${OBSTYPE}.conf"
-    stat_analysis_conf_file="${CONFIGevs}/Statanalysis_fcst${CMODEL}Aero_obs${OBSTYPE}.conf"
+    point_stat_conf_file="${CONFIGevs}/PointStat_fcst${CMODEL}_obs${OBSTYPE}.conf"
+    stat_analysis_conf_file="${CONFIGevs}/Statanalysis_fcst${CMODEL}_obs${OBSTYPE}.conf"
 
     if [ "${ObsType}" == "aeronet" ]; then
         fcstmax=120
@@ -128,7 +128,7 @@ for ObsType in ${grid2obs_list}; do
         fi
         if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
         export num_fcst_in_metplus
-        echo "number of fcst lead in_metplus point_stat for ${CMODEL}-aerosol ${obs_var} == ${num_fcst_in_metplus}"
+        echo "number of fcst lead in_metplus point_stat for ${CMODEL} ${obs_var} == ${num_fcst_in_metplus}"
     
         if [ ${num_fcst_in_metplus} -gt 0 -a ${num_obs_found} -eq 1 ]; then
           export fcsthours=${fcsthours_list}
