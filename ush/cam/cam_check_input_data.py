@@ -75,14 +75,14 @@ if proceed:
         MIN_IHOUR = os.environ['MIN_IHOUR']
         if VERIF_CASE == 'grid2obs':
             COMINobsproc = os.environ['COMINobsproc']
-            COMINnam = os.environ['COMINnam']
+            COMINrrfs = os.environ['COMINrrfs']
         elif VERIF_CASE == 'snowfall':
             DCOMINnohrsc = os.environ['DCOMINnohrsc']
             OBS_ACC = os.environ['OBS_ACC']
             ACC = os.environ['ACC']
         elif VERIF_CASE == 'precip':
             ACC = os.environ['ACC']
-        elif MODELNAME == 'hrrr':
+        if MODELNAME == 'hrrr':
             COMINfcst = os.environ['COMINhrrr']
         elif MODELNAME == 'rrfs':
             COMINfcst = os.environ['COMINrrfs']
@@ -239,9 +239,10 @@ if proceed:
         if VERIF_CASE == 'grid2obs' and NEST == 'firewx':
             fcst_templates = [
                 os.path.join(
-                    COMINnam, 
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.firewxnest.hiresf{FHR}.tm00.grib2'
+                    COMINrrfs, 
+                    'firewx.{IDATE}',
+                    '{IHOUR}',
+                    'rrfs.t{IHOUR}z.prslev.1p5km.f{FHR}.firewx.grib2'
                 )
             ]
         else:
