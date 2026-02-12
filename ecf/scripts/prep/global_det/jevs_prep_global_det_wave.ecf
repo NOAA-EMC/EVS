@@ -50,7 +50,7 @@ fi
 export NET=evs
 export RUN=wave
 export MODELNAME="gfs"
-export OBSNAME="ndbc"
+export OBSNAME="ndbc jason3 prepbufr_gdas"
 
 ############################################################
 # Execute j-job
