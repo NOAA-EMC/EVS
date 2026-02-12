@@ -755,6 +755,7 @@ class Reference():
                                       'nohrsc': 'NOHRSC',
                                       'raob': 'RAOB',
                                       'metar': 'METAR',
+                                      'ptype': 'METAR',
                                       'conus_sfc': 'METAR',
                                       'lsr': 'Local Storm Reports (LSR)',
         }
