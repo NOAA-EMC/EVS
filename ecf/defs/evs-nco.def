@@ -336,43 +336,43 @@ suite evs_nco
             task jevs_stats_cam_rrfs_grid2obs_vhr_03
               trigger :TIME >= 0330 and :TIME < 0930
               edit VHR '03'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem1
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem_1
               trigger :TIME >= 0230 and :TIME < 0830
               edit VHR '02'
               edit MEM '1'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem2
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem_2
               trigger :TIME >= 0230 and :TIME < 0830
               edit VHR '02'
               edit MEM '2'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem3
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem_3
               trigger :TIME >= 0230 and :TIME < 0830
               edit VHR '02'
               edit MEM '3'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem4
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem_4
               trigger :TIME >= 0230 and :TIME < 0830
               edit VHR '02'
               edit MEM '4'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem5
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_02_mem_5
               trigger :TIME >= 0230 and :TIME < 0830
               edit VHR '02'
               edit MEM '5'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem1
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem_1
               trigger :TIME >= 0330 and :TIME < 0930
               edit VHR '03'
               edit MEM '1'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem2
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem_2
               trigger :TIME >= 0330 and :TIME < 0930
               edit VHR '03'
               edit MEM '2'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem3
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem_3
               trigger :TIME >= 0330 and :TIME < 0930
               edit VHR '03'
               edit MEM '3'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem4
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem_4
               trigger :TIME >= 0330 and :TIME < 0930
               edit VHR '03'
               edit MEM '4'
-            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem5
+            task jevs_stats_cam_rrfsmem_grid2obs_vhr_03_mem_5
               trigger :TIME >= 0330 and :TIME < 0930
               edit VHR '03'
               edit MEM '5'
@@ -492,7 +492,7 @@ suite evs_nco
           endfamily
           family cam
             task jevs_plots_cam_firewxnest_grid2obs_last31days
-              trigger :TIME >= 0030 and :TIME < 0630 and ../../../../18/evs/stats/cam/jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr_23 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_hrrr_grid2obs_vhr_21 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_rrfs_grid2obs_vhr_21 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem1 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem2 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem3 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem4 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem5 == complete
+              trigger :TIME >= 0030 and :TIME < 0630 and ../../../../18/evs/stats/cam/jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr_23 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_hrrr_grid2obs_vhr_21 == complete and ../../../../18/evs/stats/cam/jevs_stats_cam_rrfs_grid2obs_vhr_21 == complete
           endfamily
           family global_chem
             task jevs_plots_global_chem_atmos_grid2obs_aeronet_last90days
