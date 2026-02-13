@@ -75,17 +75,20 @@ if proceed:
         MIN_IHOUR = os.environ['MIN_IHOUR']
         if VERIF_CASE == 'grid2obs':
             COMINobsproc = os.environ['COMINobsproc']
-            COMINnam = os.environ['COMINnam']
+            COMINrrfs = os.environ['COMINrrfs']
         elif VERIF_CASE == 'snowfall':
             DCOMINnohrsc = os.environ['DCOMINnohrsc']
             OBS_ACC = os.environ['OBS_ACC']
             ACC = os.environ['ACC']
         elif VERIF_CASE == 'precip':
             ACC = os.environ['ACC']
-        elif MODELNAME == 'hrrr':
+        if MODELNAME == 'hrrr':
             COMINfcst = os.environ['COMINhrrr']
         elif MODELNAME == 'rrfs':
             COMINfcst = os.environ['COMINrrfs']
+        elif 'rrfsmem' in MODELNAME:
+            COMINfcst = os.environ['COMINrrfs']
+            mem = os.environ['mem']
         else:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized. Quitting ...")
             sys.exit(1)
@@ -236,9 +239,10 @@ if proceed:
         if VERIF_CASE == 'grid2obs' and NEST == 'firewx':
             fcst_templates = [
                 os.path.join(
-                    COMINnam, 
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.firewxnest.hiresf{FHR}.tm00.grib2'
+                    COMINrrfs, 
+                    'firewx.{IDATE}',
+                    '{IHOUR}',
+                    'rrfs.t{IHOUR}z.prslev.1p5km.f0{FHR}.firewx.grib2'
                 )
             ]
         else:
@@ -318,6 +322,47 @@ if proceed:
                     'rrfs.{IDATE}',
                     '{IHOUR}',
                     'rrfs.t{IHOUR}z.prslev.3km.f0{FHR}.conus.grib2'
+                ))
+        elif 'rrfsmem' in MODELNAME:
+            if NEST == 'conus':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.3km.f0{FHR}.conus.grib2'
+                ))
+            elif NEST == 'ak':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.3km.f0{FHR}.ak.grib2'
+                ))
+            elif NEST == 'hi':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.2p5km.f0{FHR}.hi.grib2'
+                ))
+            elif NEST == 'pr':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.2p5km.f0{FHR}.pr.grib2'
+                ))
+            else:
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'rrfsens.{IDATE}',
+                    '{IHOUR}',
+                    f'm00{mem}',
+                    'rrfs.t{IHOUR}z.'+f'm00{mem}.'+'prslev.3km.f0{FHR}.conus.grib2'
                 ))
         else:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized."
