@@ -74,3 +74,7 @@ else
     ${HOMEevs}/jobs/JEVS_PREP_GLOBAL_CHEM
 
 fi
+
+#######################################################################
+# Purpose: This does the prep work for the global_chem GCAFS model
+#######################################################################
