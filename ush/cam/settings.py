@@ -502,30 +502,6 @@ class ModelSpecs():
                 'settings_key':'RRFSMEM5', 
                 'plot_name':'REFS Mem. 5'
             },
-            'RRFS_A': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A'
-            },
-            'RRFS_A_AK': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Alaska'
-            },
-            'RRFS_A_PR': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Puerto Rico'
-            },
-            'RRFS_A_HI': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Hawaii'
-            },
-            'RRFS_A_CONUS': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A CONUS'
-            },
-            'RRFS_A_NACONUS': {
-                'settings_key':'RRFS_A_NA', 
-                'plot_name':'RRFS-A N. America'
-            },
             'mrms': {
                 'settings_key':'MRMS', 
                 'plot_name':'MRMS'
@@ -645,12 +621,6 @@ class ModelSpecs():
             'RRFSMEM5': {'color': '#696969',
                        'marker': 'o', 'markersize': 10,
                        'linestyle': 'solid', 'linewidth': 1.8},
-            'RRFS_A': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 10,
-                      'linestyle': 'solid', 'linewidth': 1.8},
-            'RRFS_A_NA': {'color': '#00dc00',
-                      'marker': 'P', 'markersize': 11,
-                      'linestyle': 'dashed', 'linewidth': 1.8},
             'GFS': {'color': '#000000',
                     'marker': 'o', 'markersize': 10,
                     'linestyle': 'solid', 'linewidth': 2.},
