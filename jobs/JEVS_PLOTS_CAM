@@ -68,7 +68,7 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh 31
 . ./PDY
 
-if [ $MODELNAME = href ] || [ $MODELNAME = refs ] ; then
+if [ $MODELNAME = refs ] ; then
    export VDATE=${VDATE:-$PDYm2}
    export INITDATE=${INITDATE:-$PDYm2}
    export eval_period=${EVAL_PERIOD:-last90days}
@@ -91,16 +91,12 @@ fi
 ####################################
 export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
-if  [ $MODELNAME = href ] || [ $MODELNAME = refs ] ; then
+if [ $MODELNAME = refs ] ; then
   export EVSINapcp24mean=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}/stats/$COMPONENT/${RUN}.${VDATE}/$MODELNAME/precip/precip_mean24
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
   export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
   export DATA_IN=${DATA_IN:-$DATAROOT}
-  if  [ $MODELNAME = href ] ; then
-    export ush_dir=$USHevs/cam/ush_href_plot_py
-  else
-    export ush_dir=$USHevs/cam/ush_refs_plot_py
-  fi
+  export ush_dir=$USHevs/cam/ush_refs_plot_py
 else
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
