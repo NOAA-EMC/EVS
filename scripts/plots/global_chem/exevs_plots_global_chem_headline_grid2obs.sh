@@ -9,6 +9,7 @@
 #
 #   Change Logs:
 #    09/02/2025  Ho-Chun Huang    move cpreq to cp -v to comply with EE2
+#    02/17/2026  Ho-Chun Huang    modified for GCAFSv1
 ###############################################################################
 
 set -x

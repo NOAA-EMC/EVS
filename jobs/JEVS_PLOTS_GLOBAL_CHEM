@@ -57,7 +57,7 @@ export USHevs=${USHevs:-${HOMEevs}/ush}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
 export VDATE_END=${VDATE_END:-$PDYm4}
-export NDAYS=${NDAYS:-31}
+export NDAYS=${NDAYS:-90}
 export VDATE_START=${VDATE_START:-$(finddate.sh ${VDATE_END} d-$((${NDAYS}-1)))}
 
 ########################################
