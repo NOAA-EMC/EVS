@@ -1,7 +1,7 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_prep_href_severe.sh
-# Contact(s):     Binbin Zhou (binbin.zhou@noaa.gov)
+# Name of Script: exevs_prep_refs_severe.sh
+# Contact(s):     Marcel Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script preprocesses HREF SSPFs for 
 #                    CAM severe verification.
 ###############################################################################
@@ -34,7 +34,7 @@ export MODEL_INPUT_DIR=${DATA}/mem_files
 mkdir -p ${MODEL_INPUT_DIR}
 
 
-# Define settings for 00Z HREF time-lagged members
+# Define settings for 00Z REFS time-lagged members
 if [ $vhr -eq 00 ];then
 
    nloop=1
@@ -60,7 +60,7 @@ if [ $vhr -eq 00 ];then
    fhr_end1_lag6=42
    fhr_end1_lag12=48
 
-# Define settings for 12Z HREF time-lagged members
+# Define settings for 12Z REFS time-lagged members
 elif [ $vhr -eq 12 ]; then
 
    nloop=2
@@ -108,7 +108,7 @@ nfiles=0
 i=1
 
    # Define settings for first and second 24-h periods
-   # Only valid for 12Z HREF
+   # Only valid for 12Z REFS
    if [ $k -eq 0 ]; then
       export fhr_beg=$fhr_beg1
       export fhr_end=$fhr_end1
