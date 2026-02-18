@@ -62,32 +62,20 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh 31
 . ./PDY
 
-if [ $MODELNAME = sref ] ; then
-    export VDATE=${VDATE:-$PDYm2}
-    if [ $VERIF_CASE = precip ] ; then
-        export ush_dir=$USHevs/mesoscale/ush_sref_plot_precip_py
-    elif [ $VERIF_CASE = cnv ] ; then
-        export ush_dir=$USHevs/mesoscale/ush_sref_plot_cnv_py
-    else  
-        export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
-    fi
-    export EVAL_PERIOD=${EVAL_PERIOD:-'LAST90DAYS'}
+if [ $VERIF_CASE = grid2obs ]; then
+    export VDATE=${VDATE:-$PDYm1}
+    export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
+elif [ $VERIF_CASE = precip ]; then
+    export VDATE=${VDATE:-$PDYm1}
+    export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
+elif [ $VERIF_CASE = snowfall ]; then
+    export VDATE=${VDATE:-$PDYm1}
+    export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
+elif [ $VERIF_CASE = headline ]; then
+    export VDATE=${VDATE:-$PDYm1}
 else
-    if [ $VERIF_CASE = grid2obs ]; then
-        export VDATE=${VDATE:-$PDYm1}
-	export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
-    elif [ $VERIF_CASE = precip ]; then
-        export VDATE=${VDATE:-$PDYm1}
-	export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
-    elif [ $VERIF_CASE = snowfall ]; then
-        export VDATE=${VDATE:-$PDYm1}
-	export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
-    elif [ $VERIF_CASE = headline ]; then
-        export VDATE=${VDATE:-$PDYm1}
-    else
-        echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
-        exit 1
-    fi
+    echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
+    exit 1
 fi
 
 
@@ -111,13 +99,8 @@ else
   export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
 fi
 
-if [ $MODELNAME = sref ] ; then
-  export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}	
-  [[ ! -d $COMOUTplots ]] && mkdir -p $COMOUTplots
-else
-  export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats
-  mkdir -p $COMOUT
-fi
+export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats
+mkdir -p $COMOUT
 
 echo $COMPATH
 
@@ -125,11 +108,7 @@ echo $COMPATH
 ####################################
 # Execute the script.
 ####################################
-if [ $MODELNAME = sref ] ; then
-    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}.sh
-else
-    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${VERIF_CASE}.sh
-fi 
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${VERIF_CASE}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
