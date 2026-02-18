@@ -62,7 +62,6 @@ export rap_ver=v5.1
 export rrfs_ver=v1.0
 export rtma_ver=v2.10
 export rtofs_ver=v2.5
-export sref_ver=v7.1
 export st4_ver=v4.1
 export ukmet_ver=v2.2
 export urma_ver=v2.10
