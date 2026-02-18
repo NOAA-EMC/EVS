@@ -2,7 +2,7 @@
 ###############################################################################
 # Name of Script: exevs_prep_refs_severe.sh
 # Contact(s):     Marcel Caron (marcel.caron@noaa.gov)
-# Purpose of Script: This script preprocesses HREF SSPFs for 
+# Purpose of Script: This script preprocesses REFS SSPFs for 
 #                    CAM severe verification.
 ###############################################################################
 
@@ -41,53 +41,56 @@ if [ $vhr -eq 00 ];then
 
    export IDATE_lag=${IDATE_lag:-`$NDATE -12 ${INITDATE}${vhr} | cut -c 1-8`}
 
-   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
-   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
-   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
-   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
-   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/nam
-   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/hiresw
-   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/hiresw
-   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/hiresw
-   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/hrrr
-   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/nam
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
+   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM11_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM12_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM13_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM14_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
 
    export cyc_lag6=18
-   export cyc_lag12=12
 
    fhr_beg1=12
    fhr_end1=36
    fhr_end1_lag6=42
-   fhr_end1_lag12=48
 
 # Define settings for 12Z REFS time-lagged members
 elif [ $vhr -eq 12 ]; then
 
    nloop=2
 
-   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
-   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
-   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
-   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
-   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/nam
-   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
-   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
-   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hiresw
-   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
-   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/nam
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
+   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM11_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM12_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM13_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM14_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
 
    export cyc_lag6=06
-   export cyc_lag12=00
 
    fhr_beg1=00
    fhr_end1=24
    fhr_end1_lag6=30
-   fhr_end1_lag12=36
    
    fhr_beg2=24
    fhr_end2=48
    fhr_end2_lag6=54
-   fhr_end2_lag12=60
 
 else
 
@@ -100,7 +103,7 @@ fi
 # Check for forecast files to process
 ###################################################################
 k=0
-min_file_req=7
+min_file_req=13
 
 while [ $k -lt $nloop ]; do
 
@@ -113,13 +116,11 @@ i=1
       export fhr_beg=$fhr_beg1
       export fhr_end=$fhr_end1
       export fhr_end_lag6=$fhr_end1_lag6
-      export fhr_end_lag12=$fhr_end1_lag12
 
    elif [ $k -eq 1 ]; then
       export fhr_beg=$fhr_beg2
       export fhr_end=$fhr_end2
       export fhr_end_lag6=$fhr_end2_lag6
-      export fhr_end_lag12=$fhr_end2_lag12
       
    fi
 
@@ -129,48 +130,64 @@ i=1
 
 
    # Loop over all members to check that they exist
-   while [ $i -le 10 ]; do
+   while [ $i -le 14 ]; do
 
       # Define path to forecast file for each member
       if [ $i -eq 1 ]; then
-	 export mem1=hireswarw.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem1=rrfs.m000ctl.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM1_INPUT_DIR}/${mem1}
 
       elif [ $i -eq 2 ]; then
-	 export mem2=hireswarwmem2.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem2=rrfsmem1.m0001.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM2_INPUT_DIR}/${mem2}
 
       elif [ $i -eq 3 ]; then
-	 export mem3=hireswfv3.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem3=rrfsmem2.m0002.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM3_INPUT_DIR}/${mem3}
 
       elif [ $i -eq 4 ]; then
-	 export mem4=hrrr.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem4=rrfsmem3.m0003.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM4_INPUT_DIR}/${mem4}
 
       elif [ $i -eq 5 ]; then
-	 export mem5=namnest.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem5=rrfsmem4.m0004.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM5_INPUT_DIR}/${mem5}
 
       elif [ $i -eq 6 ]; then
-	 export mem6=hireswarw.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
+	 export mem6=rrfsmem5.m0005.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM6_INPUT_DIR}/${mem6}
 
       elif [ $i -eq 7 ]; then
-	 export mem7=hireswarwmem2.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
+	 export mem7=hrrr.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM7_INPUT_DIR}/${mem7}
 
       elif [ $i -eq 8 ]; then
-	 export mem8=hireswfv3.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
+	 export mem8=rrfs.m000ctl.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
          export fcst_file=${MEM8_INPUT_DIR}/${mem8}
 
       elif [ $i -eq 9 ]; then
-	 export mem9=hrrr.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+	 export mem9=rrfsmem1.m0001.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
          export fcst_file=${MEM9_INPUT_DIR}/${mem9}
 
       elif [ $i -eq 10 ]; then
-	 export mem10=namnest.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+	 export mem10=rrfsmem2.m0002.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
          export fcst_file=${MEM10_INPUT_DIR}/${mem10}
+
+      elif [ $i -eq 11 ]; then
+	 export mem11=rrfsmem3.m0003.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+         export fcst_file=${MEM11_INPUT_DIR}/${mem11}
+
+      elif [ $i -eq 12 ]; then
+	 export mem12=rrfsmem4.m0004.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+         export fcst_file=${MEM12_INPUT_DIR}/${mem12}
+
+      elif [ $i -eq 13 ]; then
+	 export mem13=rrfsmem5.m0005.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+         export fcst_file=${MEM13_INPUT_DIR}/${mem13}
+
+      elif [ $i -eq 14 ]; then
+	 export mem14=hrrr.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+         export fcst_file=${MEM14_INPUT_DIR}/${mem14}
 
       fi
 
@@ -194,17 +211,17 @@ i=1
    ###################################################################
 
    if [ $nfiles -ge $min_file_req ]; then
-      if [ "$nfiles" -eq "7" ]; then
-         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem8, $mem10"
-         export nmem="7"
+      if [ "$nfiles" -eq "13" ]; then
+         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13"
+         export nmem="13"
          export ens_thresh="1.0"
       else
-         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10"
-         export nmem="10"
-         export ens_thresh="0.7"
+         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13, $mem14"
+         export nmem="14"
+         export ens_thresh="0.92"
       fi
       echo "Found $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${INITDATE} cycle at F${fhr_end}"
-      ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GenEnsProd_fcstHREF_MXUPHL_SurrogateSevere.conf
+      ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GenEnsProd_fcstREFS_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
 
       if [ $SENDCOM = YES ]; then
