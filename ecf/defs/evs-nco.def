@@ -682,10 +682,6 @@ suite evs_nco
             task jevs_stats_mesoscale_rap_snowfall_vhr_06
               trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
-            task jevs_stats_mesoscale_sref_precip
-              trigger :TIME >= 0930 and :TIME < 1530
-            task jevs_stats_mesoscale_sref_grid2obs
-              trigger :TIME >= 0930 and :TIME < 1530
           endfamily
           family cam
             task jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr_06
@@ -1680,20 +1676,6 @@ suite evs_nco
             task jevs_plots_mesoscale_snowfall_last90days 
               trigger :TIME >= 1300 and :TIME < 1900
               edit VHR '13'
-            task jevs_plots_mesoscale_sref_grid2obs_last90days
-              trigger :TIME >= 1300 and :TIME < 1900 and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_sref_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
-            task jevs_plots_mesoscale_sref_precip_last90days
-              trigger :TIME >= 1300 and :TIME < 1900 and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_sref_precip == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_precip == complete
-            task jevs_plots_mesoscale_sref_cnv_last90days
-              trigger :TIME >= 1300 and :TIME < 1900 and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_sref_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
-            task jevs_plots_mesoscale_sref_cape_last90days
-              trigger :TIME >= 1300 and :TIME < 1900 and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_sref_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
-            task jevs_plots_mesoscale_sref_cloud_last90days
-              trigger :TIME >= 1300 and :TIME < 1900 and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_sref_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
-            task jevs_plots_mesoscale_sref_td2m_last90days
-              trigger :TIME >= 1300 and :TIME < 1900 and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_sref_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
-            task jevs_plots_mesoscale_sref_precip_spatial
-              trigger :TIME >= 1300 and :TIME < 1900 and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_sref_precip == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_precip == complete
             task jevs_plots_mesoscale_precip_last90days
               trigger :TIME >= 1815 or :TIME < 0015 and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_nam_precip == complete and ../../../../06/evs/stats/global_ens/jevs_stats_mesoscale_rap_precip == complete
               edit VHR '13'
