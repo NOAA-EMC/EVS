@@ -20,7 +20,7 @@ export MODEL_INPUT_DIR=${COMINrrfs}
 if [ $MEMNUM = ctl ]; then
    export MODEL_INPUT_TEMPLATE=rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.conus.grib2
 else
-   export MODEL_INPUT_TEMPLATE=rrfsens.{init?fmt=%Y%m%d}/{init?fmt=%2H}/m00${MEMNUM}/${MODELNAME}.t{init?fmt=%2H}z.m00${MEMNUM}.prslev.3km.f{lead?fmt=%3H}.conus.grib2
+   export MODEL_INPUT_TEMPLATE=rrfsens.{init?fmt=%Y%m%d}/{init?fmt=%2H}/m00${MEMNUM}/rrfs.t{init?fmt=%2H}z.m00${MEMNUM}.prslev.3km.f{lead?fmt=%3H}.conus.grib2
 fi
 
 
@@ -62,7 +62,7 @@ i=1
       if [ $MEMNUM = ctl ]; then
          export fcst_file=rrfs.${INITDATE}/${vhr}/${MODELNAME}.t${vhr}z.prslev.3km.f$(printf "%03d" $fhr).conus.grib2
       else
-         export fcst_file=rrfsens.${INITDATE}/${vhr}/m00${MEMNUM}/${MODELNAME}.t${vhr}z.m00${MEMNUM}.prslev.3km.f$(printf "%03d" $fhr).conus.grib2
+         export fcst_file=rrfsens.${INITDATE}/${vhr}/m00${MEMNUM}/rrfs.t${vhr}z.m00${MEMNUM}.prslev.3km.f$(printf "%03d" $fhr).conus.grib2
       fi
 
       if [ -s ${MODEL_INPUT_DIR}/$fcst_file ]; then
@@ -91,8 +91,8 @@ i=1
    else
 
       if [ $SENDMAIL = YES ]; then
-          export subject="${MODELNAME} mem00${MEMNUM} Forecast Data Missing for EVS ${COMPONENT}"
-          echo "Warning: Only $nfiles ${MODELNAME} mem00${MEMNUM} forecast files found for ${vhr}Z ${INITDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg${JOBNUM}
+          export subject="${MODELNAME} (Member ${MEMNUM}) Forecast Data Missing for EVS ${COMPONENT}"
+          echo "Warning: Only $nfiles ${MODELNAME} (Member ${MEMNUM}) forecast files found for ${vhr}Z ${INITDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg${JOBNUM}
           echo "Job ID: $jobid" >> mailmsg${JOBNUM}
           cat mailmsg${JOBNUM} | mail -s "$subject" $MAILTO
       fi
