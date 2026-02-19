@@ -3,7 +3,7 @@
 # Name of Script: exevs_stats_cam_severe.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script runs METplus to generate severe 
-#                    verification statistics for HREF and deterministic CAMs.
+#                    verification statistics for REFS and deterministic CAMs.
 ###############################################################################
 
 
@@ -67,17 +67,17 @@ fi
 # Set some model-specific variables
 ####################################################################
 
-if [ ${MODELNAME} = href ]; then
+if [ ${MODELNAME} = refs ]; then
    fhr_min=24
-   fhr_max=48
-   fhr_inc=12
+   fhr_max=54
+   fhr_inc=6
 
 elif [ ${MODELNAME} = hrrr ]; then
    fhr_min=24
    fhr_max=48
    fhr_inc=6
 
-elif [ ${MODELNAME} = rrfs ] || [ ${MODELNAME} = refs ]; then
+elif [ ${MODELNAME} = rrfs ]; then
    fhr_min=24
    fhr_max=60
    fhr_inc=6

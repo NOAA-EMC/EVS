@@ -54,6 +54,7 @@ elif [ $DOMAIN = alaska ]; then
 
    export MASK_POLY_LIST=$FIXevs/masks/Alaska_${VERIF_GRID}.nc
 
+
 fi
 
 
@@ -62,7 +63,7 @@ fi
 ###################################################################
 
 
-if [ ${MODELNAME} = href ]; then
+if [ ${MODELNAME} = refs ]; then
 
    if [ $PROD = pmmn ]; then
       export ENSPROD=pmmn
@@ -71,10 +72,10 @@ if [ ${MODELNAME} = href ]; then
    fi
 
    fhr_min=1
-   fhr_max=48
+   fhr_max=60
    fhr_inc=1
 
-   export MODEL_INPUT_DIR=${COMINhref}
+   export MODEL_INPUT_DIR=${COMINrefs}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/ensprod/${modsys}.t{init?fmt=%2H}z.${DOM}.${ENSPROD}.f{lead?fmt=%2H}.grib2
 
 elif [ ${MODELNAME} = hrrr ]; then
@@ -143,6 +144,11 @@ while [ $fhr -le $fhr_max ]; do
          ihr_avail="00 06 12 18"
       fi
       export fcst_file=${modsys}.${IDATE}/${INIT_HR}/${modsys}.t${INIT_HR}z.prslev.3km.f$(printf "%03d" $fhr).${DOM}.grib2
+   
+   elif [ ${MODELNAME} = refs ]; then
+      ihr_avail="00 06 12 18"
+      export fcst_file=${modsys}.${IDATE}/ensprod/${modsys}.t${INIT_HR}z.${DOM}.${ENSPROD}.f$(printf "%02d" $fhr).grib2
+   
    fi
 
    if echo "$ihr_avail" | grep -qw "$INIT_HR"; then
@@ -206,7 +212,7 @@ if [ $nfcst -ge 1 ] && [ "$obs_found" = 1 ]; then
 
    if [ $PROD = det ] || [ $PROD = pmmn ]; then
 
-      if [ $MODELNAME = href ]; then
+      if [ $MODELNAME = refs ]; then
          export MODEL=${MODELNAME}_pmmn
       else
          export MODEL=${MODELNAME}
@@ -219,21 +225,21 @@ if [ $nfcst -ge 1 ] && [ "$obs_found" = 1 ]; then
 
       export MODEL=${MODELNAME}
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/EnsembleStat_fcstHREF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/EnsembleStat_fcstREFS_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = ppf ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPPF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstREFSPPF_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = prob ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPROB_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstREFSPROB_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    fi
