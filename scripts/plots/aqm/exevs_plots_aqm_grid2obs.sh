@@ -187,11 +187,11 @@ if [ "${SENDCOM}" == "YES" ]; then
                 cp -v ${large_tar_file} ${COMOUT}/.
             fi
         fi
+        if [ "${SENDDBN}" == "YES" ]; then
+            ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${tar_file_combine}
+        fi
     done
     cd ${DATA}
 fi
 
-if [ "${SENDDBN}" == "YES" ]; then
-    ${DBNROOT}/bin/dbn_alert MODEL EVS_RZDM ${job} ${COMOUT}/${tar_file_combine}
-fi
 exit
