@@ -398,45 +398,11 @@ if JOB_GROUP == 'assemble_data':
                                                                 '15','21'] \
                                     and fhr > 21:
                                 continue
-                            if MODELNAME == 'nam':
-                                if f"{init_dt:%H}" in ['06', '18']:
-                                    bucket_intvl = 3
-                                elif f"{init_dt:%H}" in ['00', '12']:
-                                    bucket_intvl = 12
-                                if accum == '01' and \
-                                        fhr % bucket_intvl != 1:
-                                    pcp_combine_method = 'SUBTRACT'
-                                else:
-                                    pcp_combine_method = 'SUM'
-                                if pcp_combine_method == 'SUM':
-                                    if accum == '01':
-                                        input_accum = '01'
-                                        input_level = 'A1'
-                                    elif job_env_dict['area'] \
-                                            in ['hawaii', 'puerto_rico'] \
-                                            and f"{init_dt:%H}" in ['00', '12']:
-                                        input_accum = '12'
-                                        input_level = 'A12'
-                                    else:
-                                        input_accum = '03'
-                                        input_level = 'A3'
-                                if pcp_combine_method == 'SUBTRACT':
-                                    accum_in_fhr_file = fhr % bucket_intvl
-                                    if accum_in_fhr_file == 0:
-                                        accum_in_fhr_file = bucket_intvl
-                                    shift_sec = (fhr - accum_in_fhr_file)*3600
-                                    input_accum = (
-                                        'A{lead?fmt=%H?shift=-'+str(shift_sec)
-                                        +'}'
-                                    )
-                                    input_level = input_accum
-                            else: # assuming continuous buckets
-                                bucket_intvl = (
-                                    job_env_dict['fcst_hour'].zfill(1)
-                                )
-                                pcp_combine_method = 'SUBTRACT'
-                                input_accum = 'A{lead?fmt=%H}'
-                                input_level = input_accum
+                            # assuming continuous buckets
+                            bucket_intvl = job_env_dict['fcst_hour'].zfill(1)
+                            pcp_combine_method = 'SUBTRACT'
+                            input_accum = 'A{lead?fmt=%H}'
+                            input_level = input_accum
                             job_env_dict['pcp_combine_method'] = (
                                 pcp_combine_method
                             )

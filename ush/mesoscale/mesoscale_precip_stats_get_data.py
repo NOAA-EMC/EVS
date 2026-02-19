@@ -76,78 +76,30 @@ for VHOUR in VHOUR_LIST:
                             and fhr > 21:
                         continue
                     model_file_pairs_for_accum_list = []
-                    if MODELNAME == 'nam':
-                        if accum == '01':
-                            COMINmodel_file = m_util.format_filler(
-                                COMINmodel_file_template, valid_dt, init_dt,
-                                str(fhr), {}
-                            )
-                            DATAmodel_file = m_util.format_filler(
-                                DATAmodel_file_template, valid_dt, init_dt,
-                                str(fhr), {}
-                            )
-                            model_file_pairs_for_accum_list.append(
-                                (COMINmodel_file, DATAmodel_file)
-                            )
-                            if f"{init_dt:%H}" in ['00', '12']:
-                                precip_bucket = 12
-                            else:
-                                precip_bucket = 3
-                            if fhr % precip_bucket != 1 and fhr-1 >=0:
-                                COMINmodel_file = m_util.format_filler(
-                                    COMINmodel_file_template, valid_dt,
-                                    init_dt, str(fhr-1), {}
-                                )
-                                DATAmodel_file = m_util.format_filler(
-                                    DATAmodel_file_template, valid_dt, init_dt,
-                                    str(fhr-1), {}
-                                )
-                                model_file_pairs_for_accum_list.append(
-                                    (COMINmodel_file, DATAmodel_file)
-                                )  
-                        else:
-                            nfiles_in_accum = int(accum)/3
-                            nfile = 1
-                            while nfile <= nfiles_in_accum:
-                                nfile_fhr = fhr - ((nfile-1)*3)
-                                if nfile_fhr >= 0:
-                                    COMINmodel_file = m_util.format_filler(
-                                        COMINmodel_file_template, valid_dt,
-                                        init_dt, str(nfile_fhr), {}
-                                    )
-                                    DATAmodel_file = m_util.format_filler(
-                                        DATAmodel_file_template, valid_dt, init_dt,
-                                        str(nfile_fhr), {}
-                                    )
-                                    model_file_pairs_for_accum_list.append(
-                                        (COMINmodel_file, DATAmodel_file)
-                                    )
-                                nfile+=1
-                    else:
-                        # Assuming continuous precip buckets
+                    # Assuming continuous precip buckets
+                    COMINmodel_file = m_util.format_filler(
+                        COMINmodel_file_template, valid_dt, init_dt,
+                        str(fhr), {}
+                    )
+                    DATAmodel_file = m_util.format_filler(
+                        DATAmodel_file_template, valid_dt, init_dt,
+                        str(fhr), {}
+                    )
+                    model_file_pairs_for_accum_list.append(
+                        (COMINmodel_file, DATAmodel_file)
+                    )
+                    if fhr - int(accum) >= 0:
                         COMINmodel_file = m_util.format_filler(
                             COMINmodel_file_template, valid_dt, init_dt,
-                            str(fhr), {}
+                            str(fhr - int(accum)), {}
                         )
                         DATAmodel_file = m_util.format_filler(
                             DATAmodel_file_template, valid_dt, init_dt,
-                            str(fhr), {}
+                            str(fhr - int(accum)), {}
                         )
                         model_file_pairs_for_accum_list.append(
                             (COMINmodel_file, DATAmodel_file)
-                        )
-                        if fhr - int(accum) >= 0:
-                            COMINmodel_file = m_util.format_filler(
-                                COMINmodel_file_template, valid_dt, init_dt,
-                                str(fhr - int(accum)), {}
-                            )
-                            DATAmodel_file = m_util.format_filler(
-                                DATAmodel_file_template, valid_dt, init_dt,
-                                str(fhr - int(accum)), {}
-                            )
-                            model_file_pairs_for_accum_list.append(
-                                (COMINmodel_file, DATAmodel_file)
-                            )
+                       )
                     for model_file_pair in model_file_pairs_for_accum_list:
                         COMINmodel_file = model_file_pair[0]
                         DATAmodel_file = model_file_pair[1]

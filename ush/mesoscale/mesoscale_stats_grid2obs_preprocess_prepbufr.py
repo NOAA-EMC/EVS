@@ -6,8 +6,7 @@ Abstract: Preprocess input prepbufr files and store the preprocessed file in
           DATA. Preprocessing currently includes splitting each file into
           multiple files by subset (i.e. message type, e.g., ADPUPA), and
           concatenating the desired subsets to a new smaller file.
-Run By: scripts/stats/mesoscale/exevs_nam_grid2obs_stats.sh
-        scripts/stats/mesoscale/exevs_rap_grid2obs_stats.sh
+Run By: scripts/stats/mesoscale/exevs_rap_grid2obs_stats.sh
 '''
 import os
 from datetime import datetime

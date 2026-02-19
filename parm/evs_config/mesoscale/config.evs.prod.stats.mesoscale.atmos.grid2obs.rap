@@ -4,7 +4,7 @@
 # 
 # NAME: config.evs.prod.stats.mesoscale.atmos.grid2obs.rap
 # CONTRIBUTOR(S): roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Set up configurations to run EVS NAM Nest Grid2Obs - Statistics
+# PURPOSE: Set up configurations to run EVS RAP Grid2Obs - Statistics
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
 # 
 # =============================================================================

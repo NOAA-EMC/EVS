@@ -57,11 +57,8 @@ if proceed:
         MIN_IHOUR = os.environ['MIN_IHOUR']
         if VERIF_CASE == 'grid2obs':
             COMINobsproc = os.environ['COMINobsproc']
-            COMINnam = os.environ['COMINnam']
             COMINrap = os.environ['COMINrap']
-        if MODELNAME == 'nam':
-            COMINfcst = os.environ['COMINnam']
-        elif MODELNAME == 'rap':
+        if MODELNAME == 'rap':
             COMINfcst = os.environ['COMINrap']
         else:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized. Quitting ...")
@@ -77,16 +74,12 @@ if proceed:
                     if group == 'SHORT':
                         fhr_incr = int(FHR_INCR_SHORT)
                         fhr_end = int(FHR_END_SHORT)
-                        if MODELNAME == 'nam':
-                            MIN_IHOUR = "00"
-                        elif MODELNAME == 'rap':
+                        if MODELNAME == 'rap':
                             MIN_IHOUR = "00"
                     elif group == 'FULL':
                         fhr_incr = int(FHR_INCR_FULL)
                         fhr_end = int(FHR_END_FULL)
-                        if MODELNAME == 'nam':
-                            MIN_IHOUR = "00"
-                        elif MODELNAME == 'rap':
+                        if MODELNAME == 'rap':
                             MIN_IHOUR = "03"
                     else:
                         print(f"Unrecognized FHR_GROUP ({group}) ... Quitting.")
@@ -193,44 +186,7 @@ if proceed:
     # Make list of paths
     if STEP == 'stats':
         fcst_templates = []
-        if MODELNAME == 'nam':
-            if NEST == 'conus':
-                fcst_templates.append(os.path.join(
-                    COMINfcst, 
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.awip32{FHR}.tm00.grib2'
-                ))
-            elif NEST == 'ak':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.awip32{FHR}.tm00.grib2'
-                ))
-            elif NEST == 'akc':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.awip32{FHR}.tm00.grib2'
-                ))
-            elif NEST == 'conusc':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.awip32{FHR}.tm00.grib2'
-                ))
-            elif NEST == 'conusp':
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.awip12{FHR}.tm00.grib2'
-                ))
-            else:
-                fcst_templates.append(os.path.join(
-                    COMINfcst,
-                    'nam.{IDATE}',
-                    'nam.t{IHOUR}z.awip32{FHR}.tm00.grib2'
-                ))
-        elif MODELNAME == 'rap':
+        if MODELNAME == 'rap':
             if NEST == 'conus':
                 fcst_templates.append(os.path.join(
                     COMINfcst,
