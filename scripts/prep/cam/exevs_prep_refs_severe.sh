@@ -48,6 +48,32 @@ if [ $vhr -eq 00 ];then
    export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
    export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
    export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
+   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/rrfs
+   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/rrfs
+   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/rrfs
+   export MEM11_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/rrfs
+   export MEM12_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/rrfs
+   export MEM13_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/rrfs
+   export MEM14_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${IDATE_lag}/hrrr
+
+   export cyc_lag6=18
+
+   fhr_beg1=12
+   fhr_end1=36
+   fhr_end1_lag6=42
+
+# Define settings for 06Z REFS time-lagged members
+elif [ $vhr -eq 06 ]; then
+
+   nloop=2
+
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
    export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
    export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
    export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
@@ -56,12 +82,16 @@ if [ $vhr -eq 00 ];then
    export MEM13_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
    export MEM14_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
 
-   export cyc_lag6=18
+   export cyc_lag6=00
 
-   fhr_beg1=12
-   fhr_end1=36
-   fhr_end1_lag6=42
+   fhr_beg1=06
+   fhr_end1=30
+   fhr_end1_lag6=36
 
+   fhr_beg2=30
+   fhr_end2=54
+   fhr_end2_lag6=60
+   
 # Define settings for 12Z REFS time-lagged members
 elif [ $vhr -eq 12 ]; then
 
@@ -92,6 +122,32 @@ elif [ $vhr -eq 12 ]; then
    fhr_end2=48
    fhr_end2_lag6=54
 
+# Define settings for 18Z REFS time-lagged members
+elif [ $vhr -eq 18 ]; then
+
+   nloop=1
+
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
+   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM11_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM12_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM13_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/rrfs
+   export MEM14_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/hrrr
+
+   export cyc_lag6=12
+
+   fhr_beg1=18
+   fhr_end1=42
+   fhr_end1_lag6=48
+
 else
 
    err_exit "The current vhr, $vhr, is not supported for $MODELNAME. Exiting"
@@ -103,7 +159,7 @@ fi
 # Check for forecast files to process
 ###################################################################
 k=0
-min_file_req=13
+min_file_req=12
 
 while [ $k -lt $nloop ]; do
 
@@ -211,14 +267,18 @@ i=1
    ###################################################################
 
    if [ $nfiles -ge $min_file_req ]; then
-      if [ "$nfiles" -eq "13" ]; then
+      if [ "$nfiles" -eq "12" ]; then
+         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13"
+         export nmem="12"
+         export ens_thresh="1.0"
+      elif [ "$nfiles" -eq "13" ]; then
          export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13"
          export nmem="13"
-         export ens_thresh="1.0"
+         export ens_thresh="0.92"
       else
          export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13, $mem14"
          export nmem="14"
-         export ens_thresh="0.92"
+         export ens_thresh="0.85"
       fi
       echo "Found $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${INITDATE} cycle at F${fhr_end}"
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GenEnsProd_fcstREFS_MXUPHL_SurrogateSevere.conf
