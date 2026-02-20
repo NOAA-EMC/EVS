@@ -482,29 +482,25 @@ class ModelSpecs():
                 'settings_key':'RRFS_FIREWXNEST', 
                 'plot_name':'RRFS FireWX Nest'
             },
-            'RRFS_A': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A'
+            'rrfsmem1': {
+                'settings_key':'RRFSMEM1', 
+                'plot_name':'REFS Mem. 1'
             },
-            'RRFS_A_AK': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Alaska'
+            'rrfsmem2': {
+                'settings_key':'RRFSMEM2', 
+                'plot_name':'REFS Mem. 2'
             },
-            'RRFS_A_PR': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Puerto Rico'
+            'rrfsmem3': {
+                'settings_key':'RRFSMEM3', 
+                'plot_name':'REFS Mem. 3'
             },
-            'RRFS_A_HI': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Hawaii'
+            'rrfsmem4': {
+                'settings_key':'RRFSMEM4', 
+                'plot_name':'REFS Mem. 4'
             },
-            'RRFS_A_CONUS': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A CONUS'
-            },
-            'RRFS_A_NACONUS': {
-                'settings_key':'RRFS_A_NA', 
-                'plot_name':'RRFS-A N. America'
+            'rrfsmem5': {
+                'settings_key':'RRFSMEM5', 
+                'plot_name':'REFS Mem. 5'
             },
             'mrms': {
                 'settings_key':'MRMS', 
@@ -610,12 +606,21 @@ class ModelSpecs():
             'RRFS_FIREWXNEST': {'color': '#000000',
                        'marker': '^', 'markersize': 11,
                        'linestyle': 'solid', 'linewidth': 1.8},
-            'RRFS_A': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 10,
-                      'linestyle': 'solid', 'linewidth': 1.8},
-            'RRFS_A_NA': {'color': '#00dc00',
-                      'marker': 'P', 'markersize': 11,
-                      'linestyle': 'dashed', 'linewidth': 1.8},
+            'RRFSMEM1': {'color': '#1e3cff',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFSMEM2': {'color': '#00dc00',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFSMEM3': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFSMEM4': {'color': '#56b4e9',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFSMEM5': {'color': '#696969',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'GFS': {'color': '#000000',
                     'marker': 'o', 'markersize': 10,
                     'linestyle': 'solid', 'linewidth': 2.},
@@ -720,6 +725,7 @@ class Reference():
                                       'nohrsc': 'NOHRSC',
                                       'raob': 'RAOB',
                                       'metar': 'METAR',
+                                      'ptype': 'METAR',
                                       'conus_sfc': 'METAR',
                                       'lsr': 'Local Storm Reports (LSR)',
         }
@@ -2332,7 +2338,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'cape'},
-                        'HPBL': {'fcst_var_names': ['HGT','HPBL'],
+                        'HPBL': {'fcst_var_names': ['HPBL'],
                                  'fcst_var_levels': ['L0','PBL'],
                                  'fcst_var_thresholds': '',
                                  'fcst_var_options': '',
@@ -2434,7 +2440,7 @@ class Reference():
                                                           + ' >=4000'),
                                     'obs_var_options': '',
                                     'plot_group':'cape'},
-                        'HPBL': {'fcst_var_names': ['HGT','HPBL'],
+                        'HPBL': {'fcst_var_names': ['HPBL'],
                                  'fcst_var_levels': ['L0','PBL'],
                                  'fcst_var_thresholds': '<=500, >=2000',
                                  'fcst_var_options': '',
