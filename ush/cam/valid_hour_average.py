@@ -419,12 +419,12 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     if units in reference.unit_conversions:
         unit_convert = True
         var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+            unit_convert = False
         if str(var_long_name_key).upper() == 'HGT':
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                 if units in ['m', 'gpm']:
                     units = 'gpm'
-            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
-                unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
         elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):

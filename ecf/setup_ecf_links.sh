@@ -45,10 +45,14 @@ cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_cam_hrrr_radar_vhr" "$cyc"
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_cam_rrfs_radar_vhr" "$cyc"
+cyc=$(seq 0 23)
+link_master_to_cyc "jevs_stats_cam_rrfsmem_radar_vhr" "$cyc"
 cyc=$(seq 19 22)
 link_master_to_cyc "jevs_stats_cam_hrrr_precip_vhr" "$cyc"
 cyc=$(seq 19 22)
 link_master_to_cyc "jevs_stats_cam_rrfs_precip_vhr" "$cyc"
+cyc=$(seq 19 22)
+link_master_to_cyc "jevs_stats_cam_rrfsmem_precip_vhr" "$cyc"
 cyc=$(seq 2 3)
 link_master_to_cyc "jevs_stats_cam_hrrr_grid2obs_vhr" "$cyc"
 cyc=$(seq 6 3 23)
@@ -57,6 +61,10 @@ cyc=$(seq 2 3)
 link_master_to_cyc "jevs_stats_cam_rrfs_grid2obs_vhr" "$cyc"
 cyc=$(seq 6 3 23)
 link_master_to_cyc "jevs_stats_cam_rrfs_grid2obs_vhr" "$cyc"
+cyc=$(seq 2 3)
+link_master_to_cyc "jevs_stats_cam_rrfsmem_grid2obs_vhr" "$cyc"
+cyc=$(seq 6 3 23)
+link_master_to_cyc "jevs_stats_cam_rrfsmem_grid2obs_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_stats_cam_rrfs_snowfall_vhr" "$cyc"
 cyc=$(seq 0 6 23)

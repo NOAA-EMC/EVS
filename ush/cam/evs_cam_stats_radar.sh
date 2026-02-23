@@ -100,6 +100,15 @@ elif [ ${MODELNAME} = rrfs ]; then
    export MODEL_INPUT_DIR=${COMINrrfs}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/{init?fmt=%H}/${modsys}.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.${DOM}.grib2
 
+elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
+
+   fhr_min=0
+   fhr_max=60
+   fhr_inc=1
+
+   export MODEL_INPUT_DIR=${COMINrrfs}
+   export MODEL_INPUT_TEMPLATE=${modsys}ens.{init?fmt=%Y%m%d}/{init?fmt=%H}/m00${mem}/${modsys}.t{init?fmt=%2H}z.m00${mem}.prslev.3km.f{lead?fmt=%3H}.${DOM}.grib2
+
 fi
 
 
@@ -148,6 +157,10 @@ while [ $fhr -le $fhr_max ]; do
    elif [ ${MODELNAME} = refs ]; then
       ihr_avail="00 06 12 18"
       export fcst_file=${modsys}.${IDATE}/ensprod/${modsys}.t${INIT_HR}z.${DOM}.${ENSPROD}.f$(printf "%02d" $fhr).grib2
+   
+   elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
+      ihr_avail="00 06 12 18"
+      export fcst_file=${modsys}ens.${IDATE}/${INIT_HR}/m00${mem}/${modsys}.t${INIT_HR}z.m00${mem}.prslev.3km.f$(printf "%03d" $fhr).${DOM}.grib2
    
    fi
 

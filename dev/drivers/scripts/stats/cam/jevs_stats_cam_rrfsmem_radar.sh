@@ -1,10 +1,10 @@
-#PBS -N jevs_plots_cam_radar_00
+#PBS -N jevs_stats_cam_rrfsmem_radar
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=2:05:00
-#PBS -l place=vscatter,select=1:ncpus=64:ompthreads=1:mem=60GB
+#PBS -l walltime=00:15:00
+#PBS -l select=1:ncpus=3:mem=35GB
 #PBS -l debug=true
 
 
@@ -13,15 +13,17 @@ set -x
 cd $PBS_O_WORKDIR
 
 
+
 ############################################################
 # Load modules
 ############################################################
 
 
+export OMP_NUM_THREADS=1
 export model=evs
 export NET=evs
+export STEP=stats
 export COMPONENT=cam
-export STEP=plots
 export RUN=atmos
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
@@ -30,7 +32,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-export evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
+export vhr=${vhr:-${vhr}}
 
 
 ############################################################
@@ -38,19 +42,17 @@ export evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
 export VERIF_CASE=radar
-export MODELNAME=${COMPONENT}
-export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}_${LINE_TYPE}}
+export mem="${mem:-1}"
+export MODELNAME=rrfsmem${mem}
+export modsys=rrfs
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${vhr}}
 export jobid=$job.${PBS_JOBID:-$$}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
-export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
-export nproc=64
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
+export USE_CFP=YES
+export nproc=3
 ############################################################
-
-export vhr=${vhr:-00}
-export EVAL_PERIOD=${EVAL_PERIOD:-LAST31DAYS}
-export LINE_TYPE=${LINE_TYPE:-nbrctc}
 
 export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
@@ -67,13 +69,13 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/JEVS_PLOTS_CAM
+   $HOMEevs/jobs/JEVS_STATS_CAM
 
 fi
 
 
 ######################################################################
-# Purpose: This job generates radar verification graphics
-#          for the CAM component (deterministic and ensemble CAMs)
+# Purpose: This job generates radar verification statistics
+#          for the RRFS
 ######################################################################
 
