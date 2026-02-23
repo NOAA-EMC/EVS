@@ -106,9 +106,9 @@ for DAY in range(1,4):
                         NAME = cutil.run_shell_command([
                                'gis_dump_dbf', 
                                os.path.join(OTLK_DIR,f'{SHP_FILE}.dbf'),
-                               '|', 'egrep', '-A', '5', f'"^Record {REC}"',
-                               '|', 'tail','-1',
-                               '|', 'cut', '-d\'"\'', '-f2'],
+                               '|', 'sed', '-n', f"'\^Record[[:space:]]\\+{REC}/,/^Record[[:space:]]\\+[0-9]\\+/p'" # Get info from Record #REC
+                               '|', 'grep', '-m1', "'LABEL'" # Get the label line from Record #REC
+                               '|', 'cut', '-d\'"\'', '-f2'], # Get the label value 
                                capture_output=True)
                         NAME = NAME.replace('\n','')
                         regexp="^[^:. ()]*$"
