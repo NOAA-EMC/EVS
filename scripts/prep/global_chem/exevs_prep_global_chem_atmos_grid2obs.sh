@@ -153,7 +153,7 @@ done
 match_aod_1=":AOTK:"
 match_aod_2="aerosol=Total Aerosol"
 match_aod_3="aerosol_size <2e-05"
-match_aod_4="aerosol_wavelength >=5.5e-07,<=5.5e-07"
+match_aod_4="aerosol_wavelength >=5.45e-07,<=5.65e-07"
 match_pm25_1="PMTF"
 match_pm25_2="aerosol=Total Aerosol"
 match_pm25_3="aerosol_size <2.5e-06"
