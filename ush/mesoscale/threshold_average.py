@@ -219,10 +219,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     
     # Remove from date_hours the valid/init hours that don't exist in the 
     # dataframe
-    date_hours = np.array(date_hours)[[
-        str(x) in df[str(date_type).upper()].dt.hour.astype(str).tolist() 
-        for x in date_hours
-    ]]
+    #date_hours = np.array(date_hours)[[
+    #    str(x) in df[str(date_type).upper()].dt.hour.astype(str).tolist() 
+    #    for x in date_hours
+    #]]
 
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
