@@ -39,12 +39,6 @@ def get_data_type(fname):
             'not':[],
             'type': 'gen'
         },
-        'NAM': {
-            'and':[''],
-            'or':['nam'],
-            'not':[],
-            'type': 'fcst'
-        },
         'RAP': {
             'and':[''],
             'or':['rap'],

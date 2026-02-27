@@ -38,9 +38,9 @@ evs_mesoscale_settings_dict = {}
 if evs_run_mode == 'production':
     evs_mesoscale_settings_dict['evs'] = [
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'nproc', 'NET', 
-        'HOMEevs', 'config', 'evs_ver', 'nam_ver', 'obsproc_ver', 'pid', 'DATA', 
+        'HOMEevs', 'config', 'evs_ver', 'rap_ver', 'obsproc_ver', 'pid', 'DATA',
         'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE',
-        'HOMEevs', 'config', 'evs_ver', 'nam_ver', 'obsproc_ver', 'pid', 'DATA', 
+        'HOMEevs', 'config', 'evs_ver', 'rap_ver', 'obsproc_ver', 'pid', 'DATA',
         'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 'EVSIN',
         'FIXevs', 'evs_run_mode'
     ]
@@ -49,7 +49,7 @@ else:
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 
         'nproc', 'NET', 'STEP', 
         'COMPONENT', 'RUN', 'VERIF_CASE', 'HOMEevs', 
-        'config', 'evs_ver', 'nam_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 'EVSIN',
+        'config', 'evs_ver', 'rap_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 'EVSIN',
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs',  'evs_run_mode'
     ]
 evs_mesoscale_settings_dict['shared'] = []

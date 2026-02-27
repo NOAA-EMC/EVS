@@ -52,7 +52,6 @@ export INITDATE=${INITDATE:-$PDYm1}
 export OTLK_DATE=${OTLK_DATE:-$INITDATE}
 
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
 export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export DCOMINspc=${DCOMINspc:-$DCOMROOT}

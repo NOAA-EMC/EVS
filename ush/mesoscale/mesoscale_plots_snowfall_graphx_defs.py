@@ -5,7 +5,7 @@ graphics = {
     'mesoscale':{
         'snowfall':{
             'nohrsc':{
-                'domain_group1, nam, rap?shift=-3':{
+                'domain_group1, rap?shift=-3':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -119,7 +119,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, nam, rap?shift=-3':{
+                'domain_group2, rap?shift=-3':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -233,7 +233,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group3, nam, rap?shift=-3':{
+                'domain_group3, rap?shift=-3':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -347,7 +347,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group4, nam, rap?shift=-3':{
+                'domain_group4, rap?shift=-3':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -461,7 +461,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group5, nam, rap?shift=-3':{
+                'domain_group5, rap?shift=-3':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -575,7 +575,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, nam, rap?shift=-3, gfs':{
+                'domain_group1, rap?shift=-3, gfs':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -689,7 +689,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, nam, rap?shift=-3, gfs':{
+                'domain_group2, rap?shift=-3, gfs':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -803,7 +803,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group3, nam, rap?shift=-3, gfs':{
+                'domain_group3, rap?shift=-3, gfs':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -917,7 +917,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group4, nam, rap?shift=-3, gfs':{
+                'domain_group4, rap?shift=-3, gfs':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1031,7 +1031,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group5, nam, rap?shift=-3, gfs':{
+                'domain_group5, rap?shift=-3, gfs':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',

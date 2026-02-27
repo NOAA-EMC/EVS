@@ -3,7 +3,7 @@
 Name: mesoscale_atmos_copy_job_dir_output.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This copies MPMD working directory output to common DATA directory
-Run By: scripts/stats/mesoscale/exevs_nam_mesoscale_precip_stats.sh
+Run By: scripts/stats/mesoscale/exevs_rap_mesoscale_precip_stats.sh
 '''
 
 import os

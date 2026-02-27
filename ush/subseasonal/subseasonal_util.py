@@ -156,7 +156,7 @@ def log_missing_file_obs(log_missing_file, missing_file, obs, valid_dt):
     if not os.path.exists(log_missing_file):
         with open(log_missing_file, "w") as lmf:
             lmf.write("#!/bin/bash\n")
-            if obs == 'nam':
+            if obs == 'gdas':
                 lmf.write(f'export subject="{obs.upper()} prepbufr Data '
                           +'Missing for '
                           +'EVS subseasonal"\n')

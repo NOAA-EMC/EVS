@@ -230,14 +230,6 @@ if job_type == 'reformat':
             'bash_conditional_value': '"03"',
             'bash_conditional_else_value': '"00"'
         }
-    elif MODELNAME == 'nam':
-        job_dependent_vars['MIN_IHOUR'] = {
-            'exec_value': '',
-            'bash_value': '',
-            'bash_conditional': '[[ ${FHR_GROUP} == "FULL" ]]',
-            'bash_conditional_value': '"00"',
-            'bash_conditional_else_value': '"00"'
-        }
         
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
@@ -328,14 +320,6 @@ elif job_type == 'generate':
                 'bash_value': '',
                 'bash_conditional': '[[ ${FHR_GROUP} == "FULL" ]]',
                 'bash_conditional_value': '"03"',
-                'bash_conditional_else_value': '"00"'
-        }
-    elif MODELNAME == 'nam':
-        job_dependent_vars['MIN_IHOUR'] = {
-                'exec_value': '',
-                'bash_value': '',
-                'bash_conditional': '[[ ${FHR_GROUP} == "FULL" ]]',
-                'bash_conditional_value': '"00"',
                 'bash_conditional_else_value': '"00"'
         }
 #---
