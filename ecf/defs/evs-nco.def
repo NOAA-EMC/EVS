@@ -22,6 +22,10 @@ suite evs_nco
         edit PROJ 'VERF'
         family prep
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/prep'
+          family aigefs
+            task jevs_prep_aigefs_atmos
+              trigger :TIME >= 0300 and :TIME < 0900
+          endfamily
           family global_ens
             task jevs_prep_global_ens_atmos
               trigger :TIME >= 0300 and :TIME < 0900
