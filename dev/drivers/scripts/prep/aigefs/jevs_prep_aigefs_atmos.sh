@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:30:00
-#PBS -l place=vscatter:exclhost,select=2:ncpus=48:mem=400GB:prepost=true
+#PBS -l place=vscatter,select=2:ncpus=48:mem=400GB:prepost=true
 #PBS -l debug=true
 
 set -x
@@ -29,8 +29,6 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 export vhr=00
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
-export COMINaigefs=/lfs/h1/ops/prod/com/aigefs/${aigefs_ver}
-export COMINhgefs=/lfs/h1/ops/prod/com/hgefs/${hgefs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs/$envir/tmp
 

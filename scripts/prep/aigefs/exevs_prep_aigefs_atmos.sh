@@ -4,8 +4,7 @@
 #           2. Run exevs_prep_aigefs_atmos job
 #
 # Notes: this job will:
-#           1. Retrive/regrid analysis/observational data (1 degree and 1.5 degree for
-#              WMO). 
+#           1. Retrive/regrid analysis/observational data (1x1 degree). 
 #           2. Retrive required fields from AIGEFS and large operational GEFS 
 #              member files to form smaller member files.
 #           3. Regrid the smaller files to required grid (1x1 degree).
