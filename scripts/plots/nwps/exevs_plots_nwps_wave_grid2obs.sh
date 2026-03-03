@@ -135,7 +135,7 @@ for wfo in ${WFO}; do
 # Gather all the files 
 #######################
 
-	periods='LAST31DAYS LAST90DAYS'
+	periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
 	if [ $gather = yes ] ; then
 		nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
 		echo "Found ${nc} ${DATA}/images/*.png "

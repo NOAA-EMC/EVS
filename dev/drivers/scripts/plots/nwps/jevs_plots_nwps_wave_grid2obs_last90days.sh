@@ -1,4 +1,4 @@
-#PBS -N jevs_plots_nwps_wave_grid2obs
+#PBS -N jevs_plots_nwps_wave_grid2obs_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -49,11 +49,12 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT=/lfs/h2/emc/ptmp/$USER
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}
+export EVAL_PERIOD="last90days"
 
 export run_mpi='yes'
 export gather='yes'
 
-export job=${PBS_JOBNAME:-jevs_plots_nwps_wave_grid2obs}
+export job=${PBS_JOBNAME:-jevs_plots_nwps_wave_grid2obs_last90days}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
