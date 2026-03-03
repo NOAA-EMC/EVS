@@ -70,7 +70,7 @@ mkdir -p ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 ####################################
 # Execute the script                
 ####################################
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."

@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_nwps_wave_grid2obs_stats.sh
+# Name of Script: exevs_stats_nwps_wave_grid2obs.sh
 # Purpose of Script: To create stat files for NWPS forecasts verified with
 #    NDBC buoy data using MET/METplus.
 # Author: Samira Ardani (samira.ardani@noaa.gov)

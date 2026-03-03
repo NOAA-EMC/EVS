@@ -1,4 +1,4 @@
-#PBS -N jevs_nwps_wave_grid2obs_stats
+#PBS -N jevs_stats_nwps_wave_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -58,7 +58,7 @@ export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}
 export run_mpi='yes'
 export gather='yes'
  
-export job=${PBS_JOBNAME:-jevs_nwps_wave_grid2obs_stats}
+export job=${PBS_JOBNAME:-jevs_stats_nwps_wave_grid2obs}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -67,7 +67,7 @@ export SITE=$(cat /etc/cluster_name)
 ## CALL executable job script here
 #############################################################
 
-$HOMEevs/jobs/JEVS_NWPS_STATS
+$HOMEevs/jobs/JEVS_STATS_NWPS
 
 ######################################################################
 # Purpose: The job and task scripts work together to create stat

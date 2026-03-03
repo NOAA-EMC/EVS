@@ -1,4 +1,4 @@
-#PBS -N jevs_nwps_wave_grid2obs_prep
+#PBS -N jevs_prep_nwps_wave_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -57,7 +57,7 @@ export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}/${RUN}
 
-export job=${PBS_JOBNAME:-jevs_nwps_wave_grid2obs_prep}
+export job=${PBS_JOBNAME:-jevs_prep_nwps_wave_grid2obs}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -65,7 +65,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 #############################################################
-$HOMEevs/jobs/JEVS_NWPS_PREP
+$HOMEevs/jobs/JEVS_PREP_NWPS
 
 #######################################################################
 # Purpose: This does the prep work for the NWPS wave model

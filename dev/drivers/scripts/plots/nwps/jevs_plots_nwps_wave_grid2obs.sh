@@ -1,4 +1,4 @@
-#PBS -N jevs_nwps_wave_grid2obs_plots
+#PBS -N jevs_plots_nwps_wave_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -53,7 +53,7 @@ export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}
 export run_mpi='yes'
 export gather='yes'
 
-export job=${PBS_JOBNAME:-jevs_nwps_wave_grid2obs_plots}
+export job=${PBS_JOBNAME:-jevs_plots_nwps_wave_grid2obs}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -61,7 +61,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/JEVS_NWPS_PLOTS
+${HOMEevs}/jobs/JEVS_PLOTS_NWPS
 
 #########################################################################
 # Purpose: This job creates the plots for the NWPS wave model
