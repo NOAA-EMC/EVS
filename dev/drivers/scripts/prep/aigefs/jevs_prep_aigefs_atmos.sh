@@ -18,7 +18,6 @@ export STEP=prep
 export COMPONENT=aigefs
 export RUN=atmos
 export MODELNAME=aigefs
-export VERIF_CASE=grid2grid
 
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -32,7 +31,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs/$envir/tmp
 
-export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${RUN}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
