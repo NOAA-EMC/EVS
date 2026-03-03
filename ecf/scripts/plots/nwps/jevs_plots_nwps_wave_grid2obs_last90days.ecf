@@ -1,4 +1,4 @@
-#PBS -N evs_plots_nwps_wave_grid2obs
+#PBS -N evs_plots_nwps_wave_grid2obs_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -46,6 +46,7 @@ export MODELNAME=nwps
 export OBTYPE=NDBC_STANDARD
 export run_mpi='yes'
 export gather='yes'
+export EVAL_PERIOD="last90days"
 
 ############################################################
 # Execute j-job
