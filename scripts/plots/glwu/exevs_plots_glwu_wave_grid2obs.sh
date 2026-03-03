@@ -131,8 +131,8 @@ export err=$?; err_chk
 #####################
 # Gather all the files 
 #######################
+periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
 
-periods='LAST31DAYS LAST90DAYS'
 if [ $gather = yes ] ; then
 	echo "copying all images into one directory"
 	nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
