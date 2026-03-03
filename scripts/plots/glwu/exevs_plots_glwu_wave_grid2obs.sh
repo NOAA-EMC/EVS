@@ -1,6 +1,6 @@
 #!/bin/bash
 ##################################################################################
-# Name of Script: exevs_glwu_wave_grid2obs_plots.sh                           
+# Name of Script: exevs_plots_glwu_wave_grid2obs.sh                           
 # Samira Ardani / samira.ardani@noaa.gov                                    
 # Purpose of Script: Run the grid2obs plots for GLWU wave model           
 #                      
