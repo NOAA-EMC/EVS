@@ -30,7 +30,6 @@ export COMPONENT=${COMPONENT:-aigefs}
 export RUN=${RUN:-atmos}
 export MODELNAME=${MODELNAME:-aigefs}
 export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
-export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export OBTYPE=${OBTYPE:-GDAS}
 
 ####################################
@@ -91,9 +90,7 @@ export COMOUTaigefs=${COMOUTaigefs:-${COMOUT}/${RUN}.${INITDATE}/aigefs}
 export COMOUThgefs=${COMOUThgefs:-${COMOUT}/${RUN}.${INITDATE}/hgefs}
 export COMOUTcompleted=${COMOUTcompleted:-${COMOUT}/${RUN}.${INITDATE}/completed}
 
-if [ "${RUN}" == "headline" ]; then
-    mkdir -p $COMOUTaigefs $COMOUThgefs
-elif [ "${RUN}" == "atmos" ]; then
+if [ "${RUN}" == "atmos" ]; then
     mkdir -p $COMOUTgefs $COMOUTaigefs $COMOUThgefs $COMOUTcompleted
 fi
 
