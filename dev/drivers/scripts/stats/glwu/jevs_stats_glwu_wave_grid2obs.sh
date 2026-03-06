@@ -57,7 +57,7 @@ export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}
 export run_mpi='yes'
 export gather='yes'
  
-export job=${PBS_JOBNAME:-jevs_stats_glwu_wave_grid2obs}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)

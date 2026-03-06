@@ -54,7 +54,7 @@ export EVAL_PERIOD="last90days"
 export run_mpi='yes'
 export gather='yes'
 
-export job=${PBS_JOBNAME:-jevs_plots_glwu_wave_grid2obs_last90days}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}_${EVAL_PERIOD}}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
