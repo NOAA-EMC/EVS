@@ -61,7 +61,7 @@ for wfo in $wfos; do
 		for HH in ${HHs}; do
 			DATAfilename=${DATA}/gribs/${wfo}_nwps_${CG}_${INITDATE}_${HH}00.grib2
 			if [ ! -s ${DATAfilename} ]; then
-				echo "WARNING: NO NWPS forecast was available for valid date ${INITDATE}"
+				echo "WARNING: NO NWPS forecast was available for valid date ${INITDATE}${HH} for ${wfo}"
 			else
 				fcst=0
 				while (( $fcst <= 144 )); do
@@ -83,7 +83,7 @@ for wfo in $wfos; do
 								cp -v $DATAfilename_fhr ${ARCmodel}/.
 							fi
 						else
-							echo "WARNING: No NWPS Forecast Data was available for ${INITDATE}${HH}"
+							echo "WARNING: No NWPS Forecast Data was available for ${INITDATE}${HH} for ${wfo}"
 						fi
 					fi
 					fcst=$(( $fcst+ 24 ))
