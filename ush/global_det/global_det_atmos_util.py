@@ -642,6 +642,58 @@ def prep_prod_gfs_file(source_file, dest_file, init_dt, forecast_hour,
                                init_dt, str(forecast_hour).zfill(3))
     copy_file(prepped_file, dest_file)
 
+def prep_prod_aigfs_file(source_file1, source_file2, dest_file, init_dt, forecast_hour,
+                         prep_method, log_missing_file):
+    """! Do prep work for FNMOC production files
+                
+         Args:
+             source_file1     - aigfs sfc file (string)
+             source_file2     - aigfs pres file (string)
+             dest_file        - destination file (string)
+             init_dt          - initialization date (datetime)
+             forecast_hour    - forecast hour (string)
+             prep_method      - name of prep method to do
+                                (string)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+
+         Returns:        
+    """
+    # Environment variables and executables
+    # Working file names
+    prepped_file = os.path.join(os.getcwd(),
+                                'atmos.'+dest_file.rpartition('/')[2])
+    # Prep file
+    if check_file_exists_size(source_file1) and check_file_exists_size(source_file2):
+        if not check_grib2_file_corrupt(source_file1) and \
+           not check_grib2_file_corrupt(source_file2):
+            # Copy first file
+            copy_file(source_file1, prepped_file)
+            # Append second file
+            subprocess.run(
+                #f"wgrib2 {source_file2} -set_grib_type same -append -grib_out {prepped_file}",
+                f"cat {source_file1} {source_file2} > {prepped_file}",
+                shell=True,
+                check=True
+            )
+            copy_file(prepped_file, dest_file)
+        else:    
+            log_missing_file_model(
+                log_missing_file,
+                source_file1,
+                'aigfs',
+                init_dt,
+                str(forecast_hour).zfill(3)
+            )
+    else:
+        log_missing_file_model(
+            log_missing_file,
+            source_file1,
+            'aigfs',
+            init_dt,
+            str(forecast_hour).zfill(3)
+        )            
+
 def prep_prod_fnmoc_file(source_file, dest_file, init_dt, forecast_hour,
                          prep_method, log_missing_file):
     """! Do prep work for FNMOC production files
