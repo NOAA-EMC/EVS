@@ -560,13 +560,13 @@ for MODEL in MODELNAME:
                     tmp_fcst_file_dir = tmp_fcst_file.rpartition('/')[0]
                     gda_util.make_dir(tmp_fcst_file_dir)
                     if MODEL == 'aigfs':
-                       gda_util.prep_prod_aigfs_file(input_sfc_file,
-                                                input_pres_file,
-                                                tmp_fcst_file,
-                                                CDATE_dt,
-                                                str(fcst_hr),
-                                                'full',
-                                                log_missing_file)
+                        gda_util.prep_prod_aigfs_file(input_sfc_file,
+                                                      input_pres_file,
+                                                      tmp_fcst_file,
+                                                      CDATE_dt,
+                                                      str(fcst_hr),
+                                                      'full',
+                                                      log_missing_file)
                     if SENDCOM == 'YES':
                         gda_util.copy_file(tmp_fcst_file, output_fcst_file)
                 else:

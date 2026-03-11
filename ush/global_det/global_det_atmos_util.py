@@ -644,7 +644,7 @@ def prep_prod_gfs_file(source_file, dest_file, init_dt, forecast_hour,
 
 def prep_prod_aigfs_file(source_file1, source_file2, dest_file, init_dt, forecast_hour,
                          prep_method, log_missing_file):
-    """! Do prep work for FNMOC production files
+    """! Do prep work for AIGFS production files
                 
          Args:
              source_file1     - aigfs sfc file (string)
@@ -663,36 +663,53 @@ def prep_prod_aigfs_file(source_file1, source_file2, dest_file, init_dt, forecas
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
-    # Prep file
-    if check_file_exists_size(source_file1) and check_file_exists_size(source_file2):
-        if not check_grib2_file_corrupt(source_file1) and \
-           not check_grib2_file_corrupt(source_file2):
-            # Copy first file
-            copy_file(source_file1, prepped_file)
-            # Append second file
-            subprocess.run(
-                #f"wgrib2 {source_file2} -set_grib_type same -append -grib_out {prepped_file}",
-                f"cat {source_file1} {source_file2} > {prepped_file}",
-                shell=True,
-                check=True
-            )
-            copy_file(prepped_file, dest_file)
-        else:    
-            log_missing_file_model(
-                log_missing_file,
-                source_file1,
-                'aigfs',
-                init_dt,
-                str(forecast_hour).zfill(3)
-            )
-    else:
+    # Check if source files are missing or corrupted
+    missing_files = []
+    corrupt_files = []
+
+    # Check existence
+    if not check_file_exists_size(source_file1):
+           missing_files.append(source_file1)
+
+    if not check_file_exists_size(source_file2):
+           missing_files.append(source_file2)
+
+    #Check corruption only if file exists
+    if source_file1 not in missing_files:
+        if check_grib2_file_corrupt(source_file1):
+             corrupt_files.append(source_file1)
+
+    if source_file2 not in missing_files:
+        if check_grib2_file_corrupt(source_file2):
+             corrupt_files.append(source_file2)
+
+    # Log missing files
+    for f in missing_files:
         log_missing_file_model(
-            log_missing_file,
-            source_file1,
-            'aigfs',
-            init_dt,
-            str(forecast_hour).zfill(3)
-        )            
+                               log_missing_file,
+                               f,
+                               'aigfs',
+                               init_dt,
+                               str(forecast_hour).zfill(3)
+                               )
+    # Log corrupt files
+    for f in corrupt_files:
+        log_missing_file_model(
+                               log_missing_file,
+                               f + " (CORRUPTED)",
+                               'aigfs',
+                               init_dt,
+                               str(forecast_hour).zfill(3)
+                               )
+
+    # Continue only if everything is good
+    if not missing_files and not corrupt_files:
+        subprocess.run(
+                       f"cat {source_file1} {source_file2} > {prepped_file}",
+                       shell=True,
+                       check=True
+                       )
+    copy_file(prepped_file, dest_file)    
 
 def prep_prod_fnmoc_file(source_file, dest_file, init_dt, forecast_hour,
                          prep_method, log_missing_file):
