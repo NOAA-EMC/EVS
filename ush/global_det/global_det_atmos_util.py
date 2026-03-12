@@ -704,11 +704,7 @@ def prep_prod_aigfs_file(source_file1, source_file2, dest_file, init_dt, forecas
 
     # Continue only if everything is good
     if not missing_files and not corrupt_files:
-        subprocess.run(
-                       f"cat {source_file1} {source_file2} > {prepped_file}",
-                       shell=True,
-                       check=True
-                       )
+        run_shell_command(['cat',source_file1, source_file2, '>',prepped_file])
     copy_file(prepped_file, dest_file)    
 
 def prep_prod_fnmoc_file(source_file, dest_file, init_dt, forecast_hour,
