@@ -25,6 +25,7 @@ COMINcfs = os.environ['COMINcfs']
 COMINcmc = os.environ['COMINcmc']
 COMINukmet = os.environ['COMINukmet']
 COMINgfs = os.environ['COMINgfs']
+COMINaigfs = os.environ['COMINaigfs']
 COMINccpa = os.environ['COMINccpa']
 COMINobsproc = os.environ['COMINobsproc']
 DCOMINcmc_precip = os.environ['DCOMINcmc_precip']
@@ -275,6 +276,7 @@ for OBS in OBSNAME:
 ###### MODELS
 # Get operational global deterministic model data
 # Global Forecast System - gfs
+# Artificial Intelligence Global Forecast System - aigfs
 # Climate Forecast System - cfs
 # Japan Meteorological Agency - jma
 # European Centre for Medium-Range Weather Forecasts - ecmwf
@@ -355,6 +357,16 @@ global_det_model_dict = {
             'inithours': ['00', '12'],
             'fcst_hrs': list(range(0, 72+3, 3))
                         + list(range(78, 240+6, 6))},
+    'aigfs': {'input_pres_file_format': os.path.join(COMINaigfs, '{init?fmt=%2H}',
+                                                  'model','atmos','grib2','aigfs.'
+                                                  +'t{init?fmt=%2H}z.pres.'
+                                                  +'f{lead?fmt=%3H}.grib2'),
+              'input_sfc_file_format': os.path.join(COMINaigfs, '{init?fmt=%2H}',
+                                                  'model','atmos','grib2','aigfs.'
+                                                  +'t{init?fmt=%2H}z.sfc.'
+                                                  +'f{lead?fmt=%3H}.grib2'),
+              'inithours': ['00', '06', '12', '18'],
+              'fcst_hrs': range(0, 384+6, 6)},    
     'imd': {'input_fcst_file_format': os.path.join(DCOMINimd,
                                                    'gdas1.t{init?fmt=%2H}z.'
                                                    +'grbf{lead?fmt=%2H}'),
@@ -517,6 +529,48 @@ for MODEL in MODELNAME:
                             )
                 else:
                     print(f"{output_fcst_file} exists")
+            #aigfs sfc and pres files
+            if 'input_sfc_file_format' in list(model_dict.keys())\
+                and 'input_pres_file_format' in list(model_dict.keys()):
+                #sfc file
+                input_sfc_file = gda_util.format_filler(
+                    model_dict['input_sfc_file_format'], VDATE_dt, CDATE_dt,
+                    str(fcst_hr), {}
+                )
+                #pres file
+                input_pres_file = gda_util.format_filler(
+                    model_dict['input_pres_file_format'], VDATE_dt, CDATE_dt,
+                    str(fcst_hr), {}
+                )       
+                tmp_fcst_file = gda_util.format_filler(
+                    tmp_fcst_file_format, VDATE_dt, CDATE_dt,
+                    str(fcst_hr), {'model': MODEL}
+                )       
+                output_fcst_file = os.path.join(
+                    output_INITDATE, MODEL, tmp_fcst_file.rpartition('/')[2]
+                )
+  
+                if not os.path.exists(output_fcst_file):
+                    print("----> Trying to create "+tmp_fcst_file)
+                    log_missing_file = os.path.join(
+                        DATA, 'mail_missing_'+MODEL+'_fhr'
+                        +str(fcst_hr).zfill(3)+'_init'
+                        +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+                    )
+                    tmp_fcst_file_dir = tmp_fcst_file.rpartition('/')[0]
+                    gda_util.make_dir(tmp_fcst_file_dir)
+                    if MODEL == 'aigfs':
+                        gda_util.prep_prod_aigfs_file(input_sfc_file,
+                                                      input_pres_file,
+                                                      tmp_fcst_file,
+                                                      CDATE_dt,
+                                                      str(fcst_hr),
+                                                      'full',
+                                                      log_missing_file)
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(tmp_fcst_file, output_fcst_file)
+                else:
+                    print(f"{output_fcst_file} exists")                    
             # Forecast files: Precip
             if 'input_precip_file_format' in list(model_dict.keys()):
                 input_precip_file = gda_util.format_filler(
