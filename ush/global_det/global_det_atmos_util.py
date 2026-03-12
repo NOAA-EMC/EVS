@@ -642,6 +642,71 @@ def prep_prod_gfs_file(source_file, dest_file, init_dt, forecast_hour,
                                init_dt, str(forecast_hour).zfill(3))
     copy_file(prepped_file, dest_file)
 
+def prep_prod_aigfs_file(source_file1, source_file2, dest_file, init_dt, forecast_hour,
+                         prep_method, log_missing_file):
+    """! Do prep work for AIGFS production files
+                
+         Args:
+             source_file1     - aigfs sfc file (string)
+             source_file2     - aigfs pres file (string)
+             dest_file        - destination file (string)
+             init_dt          - initialization date (datetime)
+             forecast_hour    - forecast hour (string)
+             prep_method      - name of prep method to do
+                                (string)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
+
+         Returns:        
+    """
+    # Environment variables and executables
+    # Working file names
+    prepped_file = os.path.join(os.getcwd(),
+                                'atmos.'+dest_file.rpartition('/')[2])
+    # Check if source files are missing or corrupted
+    missing_files = []
+    corrupt_files = []
+
+    # Check existence
+    if not check_file_exists_size(source_file1):
+           missing_files.append(source_file1)
+
+    if not check_file_exists_size(source_file2):
+           missing_files.append(source_file2)
+
+    #Check corruption only if file exists
+    if source_file1 not in missing_files:
+        if check_grib2_file_corrupt(source_file1):
+             corrupt_files.append(source_file1)
+
+    if source_file2 not in missing_files:
+        if check_grib2_file_corrupt(source_file2):
+             corrupt_files.append(source_file2)
+
+    # Log missing files
+    for f in missing_files:
+        log_missing_file_model(
+                               log_missing_file,
+                               f,
+                               'aigfs',
+                               init_dt,
+                               str(forecast_hour).zfill(3)
+                               )
+    # Log corrupt files
+    for f in corrupt_files:
+        log_missing_file_model(
+                               log_missing_file,
+                               f + " (CORRUPTED)",
+                               'aigfs',
+                               init_dt,
+                               str(forecast_hour).zfill(3)
+                               )
+
+    # Continue only if everything is good
+    if not missing_files and not corrupt_files:
+        run_shell_command(['cat',source_file1, source_file2, '>',prepped_file])
+    copy_file(prepped_file, dest_file)    
+
 def prep_prod_fnmoc_file(source_file, dest_file, init_dt, forecast_hour,
                          prep_method, log_missing_file):
     """! Do prep work for FNMOC production files
