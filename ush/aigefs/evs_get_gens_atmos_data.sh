@@ -1,7 +1,7 @@
 #!/bin/ksh
 #######################################################################################
 # Purposes: 
-#   1. Retrive/regrid analysis/observations (to 1 degree and to 1.5 degree for WMO)
+#   1. Retrive/regrid analysis/observations (to 1 degree)
 #   2. Retrive required fields from AIGEFS and large operational GEFS member
 #      files to form smaller member files
 #   3. Regrid the smaller files to required grid (1x1 degree).
@@ -564,77 +564,5 @@ if [ $modnam = aigefs_apcp24h ] ; then
       done
     done
 
-fi
-
-############################################################
-# Get 24 hour NOHRSC snowfall data
-############################################################
-if [ $modnam = nohrsc24h ] ; then
-  for ihour in 00 12 ; do
-    snowfall=$DCOMINnohrsc/${vday}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${vday}${ihour}_grid184.grb2
-    if [ -s $snowfall ] ; then
-      cp -v $snowfall $WORKtask/nohrsc.t${ihour}z.grid184.grb2
-      if [ $SENDCOM="YES" ] ; then
-        if [ -s $WORKtask/nohrsc.t${ihour}z.grid184.grb2 ]; then
-          cp -v $WORKtask/nohrsc.t${ihour}z.grid184.grb2 $COMOUTgefs/nohrsc.t${ihour}z.grid184.grb2
-        fi
-      fi
-    else
-      echo "WARNING: $snowfall is not available"
-      if [ $SENDMAIL = YES ]; then
-        export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
-        echo "Warning: No NOHRSC analysis available for ${vday}${ihour}" > mailmsg
-        echo "Missing file is $snowfall" >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $MAILTO
-      fi
-    fi
-  done
-fi
-
-################################################################################
-# Get GEFS members WEASD & SNOD 24 hour snowfall accumulation through PcpCombine
-################################################################################
-if [ $modnam = gefs_snow24h ] ; then
-   export output_base=${WORKtask}/snow/gefs_snow24h.${gens_ihour}
-   export lead
-   export ihour
-   export mb
-   export model=gefs
-   export modelpath=$COMOUTgefs
-   export snow
-   for ihour in $gens_ihour ; do
-     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-       typeset -a lead_arr
-       for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         file1=gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2
-         if [ $lead_chk -ge 108 ]; then
-           file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((lead_chk-24))).grib2
-         else
-           strip_lead_chk=$(echo $lead_chk | sed 's/^0*//')
-           file2=gefs.ens${mb}.t${ihour}z.grid3.f$(printf '%03d' $((strip_lead_chk-24))).grib2
-         fi              
-         if [ -s $COMOUTgefs/$file1 -a -s $COMOUTgefs/$file2 ] ; then    
-           lead_arr[${#lead_arr[*]}+1]=${lead_chk}
-         else
-           echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f*.grib2 does not exist"
-         fi
-       done
-       lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
-       if [ ! -z $lead ]; then
-         for snow in WEASD SNOD ; do
-           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf  
-         done
-       fi
-       unset lead_arr
-     done
-     if [ $SENDCOM="YES" ] ; then
-       for FILE in $output_base/*.nc ; do
-         if [ -s $FILE ]; then 
-           cp -v $FILE $COMOUTgefs/.
-         fi
-       done
-     fi
-   done
 fi
 

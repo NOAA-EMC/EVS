@@ -19,7 +19,6 @@ mkdir -p $WORK/completed
 #*************************************************************
 >run_get_all_gens_atmos_poe.sh
 >run_get_all_gens_apcp24h_poe.sh
->run_get_all_gens_snow24h_poe.sh
 
 for model in gefs aigefs ; do 
   if [ $model = gefs ] ; then
@@ -144,29 +143,6 @@ for model in gefs aigefs ; do
       done	
     fi			
 
-    if [ $get_gefs_snow24h = yes ] ; then
-      for ihour in 00 12 ; do
-	#*********************************************
-	# Build sub-task scripts for GEFS 24h snowfall
-	#*********************************************
-        >get_data_${model}_${ihour}_snow24h.sh
-        # Check for restart: if this task has been completed in the previous run, then skip it
-	if [ ! -e $COMOUTcompleted/get_data_${model}_${ihour}_snow24h.completed ] ; then
-	  echo "$USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh ${model}_snow24h $ihour 0 384" >> get_data_${model}_${ihour}_snow24h.sh
-
-          # Indicate this task is completed for restart
-	  echo ">$WORK/completed/get_data_${model}_${ihour}_snow24h.completed" >> get_data_${model}_${ihour}_snow24h.sh
-	  echo "echo "get_data_${model}_${ihour}_snow24h task is completed" >> $WORK/completed/get_data_${model}_${ihour}_snow24h.completed" >> get_data_${model}_${ihour}_snow24h.sh
-	  echo "if [ $SENDCOM = YES ] ; then" >> get_data_${model}_${ihour}_snow24h.sh
-	  echo "  cp -f $WORK/completed/get_data_${model}_${ihour}_snow24h.completed $COMOUTcompleted" >> get_data_${model}_${ihour}_snow24h.sh
-	  echo "fi" >> get_data_${model}_${ihour}_snow24h.sh
-
-	  chmod +x get_data_${model}_${ihour}_snow24h.sh
-	  echo "${DATA}/get_data_${model}_${ihour}_snow24h.sh" >> run_get_all_gens_snow24h_poe.sh
-	fi
-      done
-    fi
-
   elif [ $model = aigefs ] ; then  
     if [ $get_aigefs = yes ] ; then 
       for ihour in 00 06 12 18 ; do
@@ -265,29 +241,6 @@ for model in gefs aigefs ; do
       done
     fi
 
-    if [ $get_aigefs_snow24h = yes ] ; then
-      for ihour in 00 12 ; do
-        #*********************************************
-	# Build sub-task scripts for CMCE 24h snowfall
-	#*********************************************
-        >get_data_${model}_${ihour}_snow24h.sh
-	# Check for restart: if this task has been completed in the previous run, then skip it
-	if [ ! -e $COMOUTcompleted/get_data_${model}_${ihour}_snow24h.completed ] ; then
-          echo "$USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh ${model}_snow24h $ihour 0 384" >> get_data_${model}_${ihour}_snow24h.sh
-
-          # Indicate this task is completed for restart
-	  echo ">$WORK/completed/get_data_${model}_${ihour}_snow24h.completed" >> get_data_${model}_${ihour}_snow24h.sh
-	  echo "echo "get_data_${model}_${ihour}_snow24h task is completed" >> $WORK/completed/get_data_${model}_${ihour}_snow24h.completed" >> get_data_${model}_${ihour}_snow24h.sh
-	  echo "if [ $SENDCOM = YES ] ; then" >> get_data_${model}_${ihour}_snow24h.sh
-	  echo "  cp -f $WORK/completed/get_data_${model}_${ihour}_snow24h.completed $COMOUTcompleted" >> get_data_${model}_${ihour}_snow24h.sh
-	  echo "fi" >> get_data_${model}_${ihour}_snow24h.sh
-
-	  chmod +x get_data_${model}_${ihour}_snow24h.sh
-	  echo "${DATA}/get_data_${model}_${ihour}_snow24h.sh" >> run_get_all_gens_snow24h_poe.sh
-	fi
-      done
-    fi
-
   else
     echo "WARNING: wrong model: $model"
   fi
@@ -315,12 +268,6 @@ if [ $run_mpi = yes ] ; then
     export err=$?; err_chk
   fi
 
-  if [ -s run_get_all_gens_snow24h_poe.sh ] ; then
-    chmod +x run_get_all_gens_snow24h_poe.sh
-    ${DATA}/run_get_all_gens_snow24h_poe.sh
-    export err=$?; err_chk
-  fi
-
 else
 
   if [ -s run_get_all_gens_atmos_poe.sh ] ; then
@@ -332,12 +279,6 @@ else
   if [ -s run_get_all_gens_apcp24h_poe.sh ] ; then
     chmod +x run_get_all_gens_apcp24h_poe.sh
     ${DATA}/run_get_all_gens_apcp24h_poe.sh
-    export err=$?; err_chk
-  fi
-
-  if [ -s run_get_all_gens_snow24h_poe.sh ] ; then
-    chmod +x run_get_all_gens_snow24h_poe.sh
-    ${DATA}/run_get_all_gens_snow24h_poe.sh
     export err=$?; err_chk
   fi
 

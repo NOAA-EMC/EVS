@@ -38,9 +38,6 @@ export get_gefs_apcp06h=${get_gefs_apcp06h:-'no'}
 export get_aigefs_apcp06h=${get_aigefs_apcp06h:-'no'}
 export get_gefs_apcp24h=${get_gefs_apcp24h:-'yes'}
 export get_aigefs_apcp24h=${get_aigefs_apcp24h:-'yes'}
-export get_gefs_snow24h=${get_gefs_snow24h:-'no'}
-export get_aigefs_snow24h=${get_aigefs_snow24h:-'no'}
-export get_nohrsc24h=${get_nohrsc24h:-'no'}
 export get_forecast=${get_forecast:-'yes'}
 
 export vday=$INITDATE
@@ -104,21 +101,6 @@ if [ $get_ccpa = yes ] ; then
     echo "get_ccpa_data task is completed" >> $WORK/completed/get_ccpa_data.completed
     if [ $SENDCOM="YES" ] ; then
       cp -f $WORK/completed/get_ccpa_data.completed $COMOUTcompleted
-    fi
-  fi
-fi
-
-if [ $get_nohrsc24h = yes ] ; then
-  # Check for restart: if this task has been completed in the previous run, then skip it
-  if [ ! -e $COMOUTcompleted/get_nohrsc24h_data.completed ] ; then
-    $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh nohrsc24h
-    export err=$?; err_chk
-
-    # Indicate this task is completed for restart
-    >$WORK/completed/get_nohrsc24h_data.completed
-    echo "get_nohrsc24h_data task is completed" >> $WORK/completed/get_nohrsc24h_data.completed
-    if [ $SENDCOM="YES" ] ; then
-      cp -f $WORK/completed/get_nohrsc24h_data.completed $COMOUTcompleted
     fi
   fi
 fi
