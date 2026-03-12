@@ -144,7 +144,7 @@ for wfo in ${WFO}; do
 	if [ $gather = yes ] ; then
 		if [ "$(ls -A "${DATA}/images")" ]; then
 		echo "Found ${DATA}/images/*.png "
-		
+		nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
 		for period in ${periods} ; do
 			period_lower=$(echo ${period,,})
 			if [ ${period} = 'LAST31DAYS' ] ; then
