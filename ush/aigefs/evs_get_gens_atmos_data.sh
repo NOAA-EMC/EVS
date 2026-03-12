@@ -392,40 +392,6 @@ if [ $modnam = ccpa ] ; then
   done
 fi
 
-############################################
-# Get GEFS members APCP 6 hour accumulation
-############################################
-if [ $modnam = gefs_apcp06h ] ; then
-   for ihour in $gens_ihour ; do
-     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-       typeset -Z3 hhh
-       fhr=06
-       while [ $fhr -le 384 ] ; do
-         hhh=$fhr
-         if [ -s $COMINgefs/gefs.$vday/$ihour/atmos/pgrb2ap5/gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh} ] ; then
-           gefs=$COMINgefs/gefs.$vday/$ihour/atmos/pgrb2ap5/gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh}
-           $WGRIB2 -match "APCP" $gefs | $WGRIB2 -i $gefs -grib $WORKtask/gefs.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2
-           $WGRIB2 $WORKtask/gefs.ens${mb}.t${ihour}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 
-         else
-           echo "WARNING: $COMINgefs/gefs.$vday/$ihour/atmos/pgrb2ap5/gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh} does not exist. Use $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 instead"
-           gefs=$COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
-           if [ -s $gefs ]; then
-             $WGRIB2 -match "APCP" $gefs | $WGRIB2 -i $gefs -grib $WORKtask/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
-           else
-             echo "WARNING: $gefs does not exist"
-           fi
-         fi
-         if [ $SENDCOM="YES" ] ; then
-           if [ -s $WORKtask/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 ]; then
-             cp -v $WORKtask/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.06h.f${hhh}.grib2
-           fi
-         fi
-         fhr=$((fhr+6))
-       done
-     done
-   done
-fi
-
 ################################################################
 # Get GEFS members APCP 24 hour accumulation through PcpCombine
 ################################################################

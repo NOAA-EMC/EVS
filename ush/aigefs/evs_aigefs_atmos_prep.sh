@@ -97,29 +97,6 @@ for model in gefs aigefs ; do
       done
     fi
 
-    if [ $get_gefs_apcp06h = yes ] ; then
-      for ihour in 00 06 12 18 ; do 
-        #****************************************
-        # Build sub-task scripts for GEFS 6h APCP
-        #****************************************
-        >get_data_${model}_${ihour}_apcp06h.sh
-        # Check for restart: if this task has been completed in the previous run, then skip it
-	if [ ! -e $COMOUTcompleted/get_data_${model}_${ihour}_apcp06h.completed ] ; then
-          echo "$USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh ${model}_apcp06h $ihour 0 384" >> get_data_${model}_${ihour}_apcp06h.sh
-
-	  # Indicate this task is completed for restart
-	  echo ">$WORK/completed/get_data_${model}_${ihour}_apcp06h.completed" >> get_data_${model}_${ihour}_apcp06h.sh
-	  echo "echo "get_data_${model}_${ihour}_apcp06h task is completed" >> $WORK/completed/get_data_${model}_${ihour}_apcp06h.completed" >> get_data_${model}_${ihour}_apcp06h.sh
-	  echo "if [ $SENDCOM = YES ] ; then" >> get_data_${model}_${ihour}_apcp06h.sh
-	  echo "  cp -f $WORK/completed/get_data_${model}_${ihour}_apcp06h.completed $COMOUTcompleted" >> get_data_${model}_${ihour}_apcp06h.sh
-	  echo "fi" >> get_data_${model}_${ihour}_apcp06h.sh
-
-	  chmod +x get_data_${model}_${ihour}_apcp06h.sh
-	  echo "${DATA}/get_data_${model}_${ihour}_apcp06h.sh" >> run_get_all_gens_atmos_poe.sh
-	fi
-      done
-    fi
-
     if [ $get_gefs_apcp24h = yes ] ; then
       for ihour in 00 12 ; do
 	#*****************************************
@@ -192,29 +169,6 @@ for model in gefs aigefs ; do
 	  echo "${DATA}/get_data_${model}_${ihour}_${fhr_range}.sh" >> run_get_all_gens_atmos_poe.sh
 	fi
        done
-      done
-    fi 
-
-    if [ $get_aigefs_apcp06h = yes ] ; then
-      for ihour in 00 12 ; do
-        #****************************************
-        # Build sub-task scripts for CMCE 6h APCP
-	#****************************************
-        >get_data_${model}_${ihour}_apcp06h.sh
-	# Check for restart: if this task has been completed in the previous run, then skip it
-	if [ ! -e $COMOUTcompleted/get_data_${model}_${ihour}_apcp06h.completed ] ; then
-          echo "$USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh ${model}_apcp06h $ihour 0 384" >> get_data_${model}_${ihour}_apcp06h.sh
-
-          # Indicate this task is completed for restart
-	  echo ">$WORK/completed/get_data_${model}_${ihour}_apcp06h.completed" >> get_data_${model}_${ihour}_apcp06h.sh
-	  echo "echo "get_data_${model}_${ihour}_apcp06h task is completed" >> $WORK/completed/get_data_${model}_${ihour}_apcp06h.completed" >> get_data_${model}_${ihour}_apcp06h.sh
-	  echo "if [ $SENDCOM = YES ] ; then" >> get_data_${model}_${ihour}_apcp06h.sh
-	  echo "  cp -f $WORK/completed/get_data_${model}_${ihour}_apcp06h.completed $COMOUTcompleted" >> get_data_${model}_${ihour}_apcp06h.sh
-	  echo "fi" >> get_data_${model}_${ihour}_apcp06h.sh
-
-	  chmod +x get_data_${model}_${ihour}_apcp06h.sh
-	  echo "${DATA}/get_data_${model}_${ihour}_apcp06h.sh" >> run_get_all_gens_atmos_poe.sh
-	fi
       done
     fi 
 
