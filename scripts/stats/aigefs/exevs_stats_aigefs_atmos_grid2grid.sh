@@ -32,7 +32,7 @@ export gefs_number=30
 export aigefs_number=31
 export hgefs_number=62
 
-if [ $ens = gefs ] && [ $verif_case = upper ] ; then
+if [ $verif_case = upper ] ; then
      if [ ! -s ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
         if [ $SENDMAIL = YES ]; then
           export subject="GFS analysis data missing"
@@ -46,38 +46,6 @@ if [ $ens = gefs ] && [ $verif_case = upper ] ; then
         $USHevs/${COMPONENT}/evs_${COMPONENT}_atmos_grid2grid.sh $ens ${verif_case}
         export err=$?; err_chk
      fi
-fi
-
-if [ $ens = aigefs ] && [ $verif_case = upper ] ; then
-     if [ ! -s ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
-       if [ $SENDMAIL = YES ]; then
-         export subject="GFS analysis data missing"
-         echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg 
-         echo "Missing file is ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2" >> mailmsg
-         echo "Job ID: $jobid" >> mailmsg
-         cat mailmsg | mail -s "$subject" $MAILTO
-       fi
-     else
-       echo "All $ens $verif_case validation data are available, continuing ..."
-       $USHevs/${COMPONENT}/evs_${COMPONENT}_atmos_grid2grid.sh $ens ${verif_case}
-       export err=$?; err_chk
-     fi
-fi
-
-if [ $ens = hgefs ] && [ $verif_case = upper ] ; then
-      if [ ! -s ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
-        if [ $SENDMAIL = YES ]; then
-          export subject="GFS analysis data missing"
-          echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg
-          echo "Missing file is ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2" >> mailmsg
-          echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $MAILTO
-	fi
-      else
-        echo "All $ens $verif_case validation data are available, continuing ..."
-        $USHevs/${COMPONENT}/evs_${COMPONENT}_atmos_grid2grid.sh $ens ${verif_case}
-        export err=$?; err_chk
-      fi
 fi
 
 if [ $verif_case = precip ] ; then

@@ -31,7 +31,6 @@ export RUN=${RUN:-atmos}
 export MODELNAME=${MODELNAME:-aigefs}
 export MODNAM=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export OBTYPE=${OBTYPE:-GDAS}
 
 ####################################
 # Set EVS directories

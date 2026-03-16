@@ -96,12 +96,6 @@ for field in $fields ; do
       else
         fhrs='fhr1 fhr2 fhr3 fhr4'
       fi
-    elif [ $field = cloud ] ; then
-      if [ $modnam = hgefs ] ; then
-        fhrs='fhr30 fhr31 fhr33'
-      else
-        fhrs='fhr30 fhr31 fhr32 fhr33'
-      fi
     elif [ $field = sfc ] ; then
       if [ $modnam = hgefs ] ; then
         fhrs='fhr21 fhr22 fhr23'
@@ -110,9 +104,7 @@ for field in $fields ; do
       fi
     fi
 
-    if [ $field = cloud ] ; then
-       metplus_jobs="GenEnsProd EnsembleStat PointStat"
-    elif [ $field = sfc ] ; then
+    if [ $field = sfc ] ; then
        metplus_jobs="GenEnsProd EnsembleStat PointStat"
     elif [ $field = profile ] ; then
        metplus_jobs="EnsembleStat"
@@ -135,13 +127,6 @@ for field in $fields ; do
               leads_chk="102 108 114 120 126 132 138 144 150 156 162 168 174 180 186 192"
             elif [ $fhr = fhr3 ] ; then
               leads_chk="198 204 210 216 222 228 234 240"
-            # For cloud 
-            elif [ $fhr = fhr30 ] ; then
-              leads_chk="006 012 018 024 030 036 042 048 054 060 066 072 078 084 090 096 102 108 114 120 126" 
-            elif [ $fhr = fhr31 ] ; then
-              leads_chk="132 138 144 150 156 162 168 174 180 186 192 198 204 210 216 222 228 234 240" 
-            elif [ $fhr = fhr33 ] ; then
-              leads_chk="000"
             # For sfc
             elif [ $fhr = fhr21 ] ; then
               leads_chk="000 006 012 018 024 030 036 042 048 054 060 066 072 078 084 090 096" 
@@ -160,15 +145,6 @@ for field in $fields ; do
               leads_chk="198 204 210 216 222 228 234 240 246 252 258 264 270 276 282 288"
             elif [ $fhr = fhr4 ] ; then
               leads_chk="294 300 306 312 318 324 330 336 342 348 354 360 366 372 378 384"
-            # For cloud 
-            elif [ $fhr = fhr30 ] ; then
-              leads_chk="006 012 018 024 030 036 042 048 054 060 066 072 078 084 090 096 102 108 114 120 126"
-            elif [ $fhr = fhr31 ] ; then
-              leads_chk="132 138 144 150 156 162 168 174 180 186 192 198 204 210 216 222 228 234 240 246 252"
-            elif [ $fhr = fhr32 ] ; then
-              leads_chk="258 264 270 276 282 288 294 300 306 312 318 324 330 336 342 348 354 360 366 372 378 384"
-            elif [ $fhr = fhr33 ] ; then
-              leads_chk="000"
             # For sfc
             elif [ $fhr = fhr21 ] ; then
               leads_chk="000 006 012 018 024 030 036 042 048 054 060 066 072 078 084 090 096"
@@ -233,29 +209,8 @@ for field in $fields ; do
           echo  "export climtail='.grib1'" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
           echo  "export members=$mbrs" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
           echo  "export lead=$lead" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-          if [ $field = cloud ] ; then
-              if [ $metplus_job = GenEnsProd ] || [ $metplus_job = EnsembleStat ] ; then
-                if [ $fhr = fhr33 ] ; then
-                  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_F000.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                  echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                else
-                  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                  echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                fi
-              elif [ $metplus_job = PointStat ]; then
-                if [ $fhr = fhr33 ] ; then
-                  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_mean_F000.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                  echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_prob_F000.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                  echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                else
-                  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_mean.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                  echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_prob.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                  echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                fi
-              fi
-          elif [ $field = sfc ] || [ $field = upper ]; then
+
+          if [ $field = sfc ] || [ $field = upper ]; then
               conf_MODNAM=${MODNAM}
               if [ $metplus_job = GenEnsProd ] || [ $metplus_job = EnsembleStat ] ; then
                 echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${conf_MODNAM}_obsPREPBUFR_${fieldUPPER}_climoERA5.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
@@ -268,6 +223,7 @@ for field in $fields ; do
               echo "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}.conf" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
               echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
           fi
+
           if [ $metplus_job = EnsembleStat ] ; then
               if [ $SENDCOM="YES" ] ; then
                   echo "for FILE in \$output_base/stat/${modnam}/ensemble_stat*.stat ; do" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
