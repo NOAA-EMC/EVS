@@ -114,6 +114,8 @@ class TimeSeriesFhrMean:
             forecast_hours = self.date_info_dict['forecast_hours']
             if forecast_hours:
                 fhr_max = int(forecast_hours[-1])
+            else:
+                fhr_max = 84
         self.logger.info(f"Maximum FCST Hrs is = {fhr_max}")
         sel_fhr_start=(int(selected_fcst_day)-1)*24+1
         sel_fhr_end=int(selected_fcst_day)*24
