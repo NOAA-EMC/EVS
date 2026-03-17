@@ -905,7 +905,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                                               'fnmoc', 'imd',
                                                               'jma', 'ukmet']:
                             write_job_cmds = False
-                        # JMA and AIGFS does not have Relative Humidity
+                        # JMA and AIGFS do not have Relative Humidity
                         if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
                                 and verif_type_job == 'RelHum' \
                                 and job_env_dict['MODEL'] in ['jma', 'aigfs']:
