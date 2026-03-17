@@ -920,7 +920,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             write_job_cmds = False
                         # CMC, FNMOC and AIGFS do not have variables at all levels
                         if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
-                                and job_env_dict['MODEL'] in ['cmc', 'fnmoc','aigfs']:
+                                and job_env_dict['MODEL'] in ['cmc', 'fnmoc', 'aigfs']:
                             if job_env_dict['MODEL'] == 'cmc':
                                 mod_rm_level_list = [
                                     'P400', 'P300', 'P200', 'P150', 'P100',

@@ -1422,9 +1422,10 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
         elif 'qpf_verif/METFRA' in source_file:
             prep_prod_metfra_file(source_file, dest_file, init_time_dt,
                                   forecast_hour, 'precip', log_missing_file)
-        elif '.precip.' in dest_file and 'com/gfs' in source_file \
+        elif '.precip.' in dest_file \
+                and any(x in source_file for x in ['com/gfs', '/aigfs']) \
                 and int(forecast_hour) in [3,6]:
-            ### Need to prepare special files for GFS precip for
+            ### Need to prepare special files for GFS and AIGFS precip
             ### for f003 and f006 as APCP variables in the files
             ### are the same and throw WARNING from MET
             if check_file_exists_size(source_file):

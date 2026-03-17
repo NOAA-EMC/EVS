@@ -1001,7 +1001,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 and job_env_dict['MODEL'] == 'jma':
                             write_job_cmds = False
                     elif JOB_GROUP == 'generate_stats':
-                        #remove variable that AIGFS do not have
+                        #remove variable that AIGFS does not have
                         if verif_type == 'means'\
                                 and job_env_dict['MODEL'] == 'aigfs'\
                                 and verif_type_job \
@@ -1015,7 +1015,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if verif_type == 'pres_levs' \
                                 and job_env_dict['MODEL'] \
                                 in ['cmc', 'cmc_regional', 'dwd', 'ecmwf',
-                                    'fnmoc', 'jma', 'metfra', 'ukmet','aigfs'] \
+                                    'fnmoc', 'jma', 'metfra', 'ukmet', 'aigfs'] \
                                 and verif_type_job == 'Ozone':
                             write_job_cmds = False
                         # IMD does not have Ozone Mixing Ratio at 925mb
