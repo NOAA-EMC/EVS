@@ -1,6 +1,6 @@
 #!/bin/bash
 ##################################################################################
-# Name of Script: exevs_nwps_wave_grid2obs_plots.sh                           
+# Name of Script: exevs_plots_nwps_wave_grid2obs.sh                           
 # Samira Ardani / samira.ardani@noaa.gov                                    
 # Purpose of Script: Run the grid2obs plots for NWPS wave model           
 #           Updates: 
@@ -81,24 +81,29 @@ for wfo in ${WFO}; do
 ####################
 # quick error check 
 ####################
-	nc=`ls ${DATA}/stats/evs.stats.nwps.${wfo}*stat | wc -l | awk '{print $1}'`
-	echo " Found ${nc} ${DATA}/stats/evs.stats.nwps.${wfo}*stat file for ${VDATE} "
-	if [ "${nc}" != '0' ]
-		then
-		set -x
-		echo "Successfully copied the NWPS *.stat file for ${VDATE}"
-		[[ "$LOUD" = YES ]] && set -x
+	if [ -s ${DATA}/stats/evs.stats.nwps.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
+		
+		nc=`ls ${DATA}/stats/evs.stats.nwps.${wfo}*stat | wc -l | awk '{print $1}'`
+		echo " Found ${nc} ${DATA}/stats/evs.stats.nwps.${wfo}*stat file for ${VDATE} "
+		if [ "${nc}" != '0' ]
+			then
+			set -x
+			echo "Successfully copied the NWPS *.stat file for ${VDATE}"
+			[[ "$LOUD" = YES ]] && set -x
+		else
+			set -x
+			echo ' '
+			echo '**************************************** '
+			echo '*** WARNING: NO NWPS *.stat FILES *** '
+			echo "             for ${wfo} at ${VDATE} "
+			echo '**************************************** '
+			echo ' '
+			echo "${MODELNAME}_${RUN} $VDATE $vhour : NWPS *.stat files missing."
+			[[ "$LOUD" = YES ]] && set -x
+			continue # This will skip the rest of the loop for this WFO
+		fi
 	else
-		set -x
-		echo ' '
-		echo '**************************************** '
-		echo '*** WARNING: NO NWPS *.stat FILES *** '
-		echo "             for ${wfo} at ${VDATE} "
-		echo '**************************************** '
-		echo ' '
-		echo "${MODELNAME}_${RUN} $VDATE $vhour : NWPS *.stat files missing."
-		[[ "$LOUD" = YES ]] && set -x
-		continue # This will skip the rest of the loop for this WFO
+		echo "WARNING: ${DATA}/stats/evs.stats.nwps.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
 	fi
 #################################
 ## Make the command files for cfp 
@@ -117,7 +122,7 @@ for wfo in ${WFO}; do
 	cd ${DATA}
 	chmod 775 ${DATA}/plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
 	if [ ${run_mpi} = 'yes' ] ; then
-		mpiexec -np 36 --cpu-bind verbose,depth cfp plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
+		mpiexec -np 200 -ppn 100 --cpu-bind verbose,depth cfp plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
 	else
 		echo "not running mpiexec"
 		sh plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
@@ -135,11 +140,11 @@ for wfo in ${WFO}; do
 # Gather all the files 
 #######################
 
-	periods='LAST31DAYS LAST90DAYS'
+	periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
 	if [ $gather = yes ] ; then
+		if [ "$(ls -A "${DATA}/images")" ]; then
+		echo "Found ${DATA}/images/*.png "
 		nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
-		echo "Found ${nc} ${DATA}/images/*.png "
-		
 		for period in ${periods} ; do
 			period_lower=$(echo ${period,,})
 			if [ ${period} = 'LAST31DAYS' ] ; then
@@ -184,6 +189,11 @@ for wfo in ${WFO}; do
 			fi
 
 		done
+		else
+		echo "Found no png images. Folder is empty"
+		fi
+
+
 	else  
 		echo "not copying the plots"
 	fi
