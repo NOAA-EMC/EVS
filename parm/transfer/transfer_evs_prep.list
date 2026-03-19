@@ -41,6 +41,9 @@ _COMROOT_/evs/_SHORTVER_/prep/
 + /global_chem/
 + /global_chem/*._PDYm4_/***
 + /global_chem/*._PDYm3_/***
++ /mesoscale/
++ /mesoscale/*._PDYm2_/***
++ /mesoscale/*._PDYm1_/***
 + /nfcens/
 + /nfcens/wave._PDYm2_/***
 + /nfcens/wave._PDYm1_/***
