@@ -137,7 +137,7 @@ else
    [[ ! -d $COMOUTsmall ]] && mkdir -p $COMOUTsmall
 fi
 
-if [ "${RUN}" == "chem" ]; then
+if [[ "${RUN}" == "chem" ]]; then
     export EVSINrrfs=${EVSINrrfs:-${COMIN}/prep/${COMPONENT}}
     export DATA_TYPE=${DATA_TYPE:-aeronet_aod}
     # alternative choice is an option different from aqobs

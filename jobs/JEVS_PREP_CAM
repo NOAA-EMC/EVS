@@ -116,7 +116,7 @@ export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 
 mkdir -p $COMOUT
 
-if [ "${RUN}" == "chem" ]; then
+if [[ "${RUN}" == "chem" ]]; then
     export DCOMINairnow=${DCOMINairnow:-${DCOMROOT}}
     export DCOMINaeronet=${DCOMINaeronet:-${DCOMROOT}}
     export COMOUTprepmdl=${COMOUTprepmdl:-${COMOUT}/${RUN}.${INITDATE}/${MODELNAME}}
@@ -147,7 +147,7 @@ fi
 ####################################
 # Execute the script 
 ####################################
-if [ "${RUN}" == "chem" ]; then
+if [[ "${RUN}" == "chem" ]]; then
     ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}.sh
 else
     if [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
