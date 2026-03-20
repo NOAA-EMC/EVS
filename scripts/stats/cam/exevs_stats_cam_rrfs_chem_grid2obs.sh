@@ -2,13 +2,12 @@
 ########################################################################
 ###  UNIX Script Documentation Block
 ###                      .
-### Script name:         exevs_cam_chem_rrfs_grid2obs_stats.sh
-### Script description:  To run grid-to-grid verification on RRFS chem
+### Script name:         exevs_stats_cam_rrfs_chem_grid2obs.sh
+### Script description:  To run grid-to-grid verification on RRFS-Smoke and Dust
 ###
 ###   Change Logs:
 ###
-###   04/30/2025   Ho-Chun Huang  Remove email function for missing 
-###                               Prep-Obs input and Fcst Mdl output
+###   03/20/2026   Ho-Chun Huang  Revised code for RRFS-CHem from AQM stats code
 ###                                 
 ###
 ########################################################################
@@ -20,7 +19,7 @@ recorded_temp_list=${DATA}/fcstlist_in_metplus
 #
 ## For temporary stoage on the working dirary before moving to COMOUT
 #
-export finalstat=${DATA}/final  # config variable
+export finalstat=${DATA}/final
 mkdir -p ${finalstat}
 
 export CMODEL=`echo ${MODELNAME} | tr a-z A-Z`  # define config variable
@@ -44,36 +43,36 @@ check_restart=$( echo ${restart_mode} | tr a-z A-Z )
 
 for ObsType in ${grid2obs_list}; do
     export ObsType
-    export ObsSrc=$( echo ${ObsType} | awk -F"_" '{print $1}' )  # config variable
+    export ObsSrc=$( echo ${ObsType} | awk -F"_" '{print $1}' )
     export ObsVar=$( echo ${ObsType} | awk -F"_" '{print $2}' )
-    export OBSTYPE=$( echo ${ObsType} | tr a-z A-Z )             # config variable
+    export OBSTYPE=$( echo ${ObsType} | tr a-z A-Z )           
     case ${ObsType} in
-        aeronet_aod) export OBS_STANLYS_TYPE="AERONET_AOD";;     # config variable
+        aeronet_aod) export OBS_STANLYS_TYPE="AERONET_AOD";;   
         airnow_pm25) if [ "${airnow_hourly_type}" == "aqobs" ]; then
-                   export HOURLY_INPUT_TYPE="hourly_aqobs"       # config variable
-                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQOBS" # config variable
+                   export HOURLY_INPUT_TYPE="hourly_aqobs"     
+                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQOBS"
                  else
-                   export HOURLY_INPUT_TYPE="hourly_data"          # config variable
-                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQDATA"  # config variable
+                   export HOURLY_INPUT_TYPE="hourly_data"        
+                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQDATA"
                  fi;;
         airnow_pm10) if [ "${airnow_hourly_type}" == "aqobs" ]; then
-                   export HOURLY_INPUT_TYPE="hourly_aqobs"        # config variable
-                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQOBS"  # config variable
+                   export HOURLY_INPUT_TYPE="hourly_aqobs"      
+                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQOBS"
                  else
-                   export HOURLY_INPUT_TYPE="hourly_data"          # config variable
-                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQDATA"  # config variable
+                   export HOURLY_INPUT_TYPE="hourly_data"        
+                   export OBS_STANLYS_TYPE="AIRNOW_HOURLY_AQDATA"
                  fi;;
         *)       echo "ObsType=${ObsType} is not defined, set to default aeronet"
                  export ObsType="aeronet_aod"
-                 export ObsSrc=$( echo ${ObsType} | awk -F"_" '{print $1}' )  # config variable
+                 export ObsSrc=$( echo ${ObsType} | awk -F"_" '{print $1}' )
                  export ObsVar=$( echo ${ObsType} | awk -F"_" '{print $2}' )
 		 export OBSTYPE=$( echo ${ObsType} | tr a-z A-Z )
-                 export OBS_STANLYS_TYPE="AERONET_AOD";;              # config variable
+                 export OBS_STANLYS_TYPE="AERONET_AOD";;            
     esac
 
-    export RUNTIME_STATS=${DATA}/point_stat/${MODELNAME}_${ObsType}               # config variable
-    export OutputId=${MODELNAME}_${ObsType}                                       # config variable
-    export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType} # config variable
+    export RUNTIME_STATS=${DATA}/point_stat/${MODELNAME}_${ObsType}             
+    export OutputId=${MODELNAME}_${ObsType}                                     
+    export StatFileId=${NET}.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}_${ObsType}
     point_stat_conf_file=${CONFIGevs}/PointStat_fcstRRFSAero_obs${OBSTYPE}.conf
     stat_analysis_conf_file=${CONFIGevs}/Statanalysis_fcstRRFSAero_obs${OBSTYPE}.conf
 

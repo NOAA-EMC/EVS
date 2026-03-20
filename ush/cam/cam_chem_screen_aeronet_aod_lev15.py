@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 ###############################################################################
-# Name of Script: 
+# Name of Script: cam_chem_screen_aeronet_aod_lev15.py
 # Contact(s):     Ho-Chun Huang (ho-chun.huang@noaa.gov)
 # Purpose of Script: Read AERONET AOD file and remove bad records with
 #                    inconsistent columns number as header

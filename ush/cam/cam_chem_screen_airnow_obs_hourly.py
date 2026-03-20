@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 ###############################################################################
-# Name of Script: 
+# Name of Script: cam_chem_screen_airnow_obs_hourly.py
 # Contact(s):     Ho-Chun Huang (ho-chun.huang@noaa.gov)
 # Purpose of Script: Read Hourly AIRNOW PM25/OZONE file and remove bad records
 #                    with inconsistent columns number as header

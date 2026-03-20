@@ -2,13 +2,12 @@
 ########################################################################
 ###  UNIX Script Documentation Block
 ###                      .
-### Script name:         exevs_cam_chem_rrfs_grid2obs_prep.sh
-### Script description:  To run grid-to-obs verification on RRFS-SD (CAM chem-component)
+### Script name:         exevs_prep_cam_rrfs_chem_grid2obs.sh
+### Script description:  To run grid-to-obs verification on RRFS-Smoke and Dust
 ### Original Author   :  Ho-Chun Huang
 ###
 ###   Change Logs:
-###   04/30/2025   Ho-Chun Huang  Update warning message for dcom input obs
-###                               and Remove sendmail for missing FCST model output
+###   03/20/2026   Ho-Chun Huang  Revised code for RRFS-Chem from AQM prep code
 ###
 ########################################################################
 #

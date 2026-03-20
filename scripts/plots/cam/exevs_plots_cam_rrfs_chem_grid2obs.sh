@@ -1,16 +1,14 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_cam_rrfs_chem_grid2obs_plots
+# Name of Script: exevs_plots_cam_rrfs_chem_grid2obs.sh
 # Developers: Ho-Chun Huang / Ho-Chun.Huang@noaa.gov
 #
-# Original Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
-# Original Author: Mallory Row / Mallory.Row@noaa.gov
-# Purpose of Script: This script is run for the rrfs-chem plots step for
-#                    the grid-to-obs verification. It uses EMC-developed
+# Purpose of Script: This script is run for the RRFS-Smoke and Dust plots step
+#                    for the grid-to-obs verification. It uses EMC-developed
 #                    python scripts to do the plotting.
 #
 #   Change Logs:
-#   11/21/2024   Ho-Chun Huang  Use AQM CFP approach for regular plots
+#   03/20/2026   Ho-Chun Huang  Revise code for RRFS-Chem from AQM plots code
 ###############################################################################
 
 set -x
@@ -19,9 +17,9 @@ set -x
 export VERIF_CASE_STEP_abbrev="g2op"
 echo "RUN MODE:${evs_run_mode}"
 
-## Need temporary staging area for renaming and/or updating model
-## name id in the stats files
-## STATDIR is used in the environemnt setting in ${config} 
+## STATDIR is a temporary staging area for renaming
+## and/or updating model name id in the stats files.
+## STATDIR is used in the environemnt setting in ${config}. 
 export STATDIR=${DATA}/stats_staging
 mkdir -p ${STATDIR}
 
@@ -53,7 +51,7 @@ IFS=' ' read -ra mdl_list <<< "${model_list}"
 IFS=' ' read -ra mdl_idir_list <<< "${model_evs_stats_dir_list}"
 let num_mdl=${#mdl_list[@]}
 if [ ${num_mdl} -gt 10 ]; then
-	echo "DEBUG: The number of models to be plotted exceeds the maximum (=10), ${MODELNAME} ${RUN} ${VERIF_CASE} ${STEP} step will be skipped"
+    echo "DEBUG: The number of models to be plotted exceeds the maximum (=10), ${MODELNAME} ${RUN} ${VERIF_CASE} ${STEP} step will be skipped"
     exit
 fi
 let imdl=0
@@ -128,7 +126,7 @@ for group in "${proc_list[@]}"; do
                 nselect=$(cat ${PBS_NODEFILE} | wc -l)
                 nnp=$((${nselect} * ${nproc}))
                 launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
-            elif [ "${machine}" == "HERA" ] || [ "${machine}" = "ORION" ] || [ "${machine}" = "S4" ] || [ "${machine}" == "JET" ]; then
+            elif [ "${machine}" == "URSA" ] || [ "${machine}" = "ORION" ] || [ "${machine}" = "S4" ] || [ "${machine}" == "JET" ]; then
                 export SLURM_KILL_BAD_EXIT=0
                 launcher="srun --export=ALL --multi-prog"
             fi

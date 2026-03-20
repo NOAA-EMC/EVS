@@ -5,7 +5,7 @@ Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This does a check on the run's configuration
           settings for rrfs-chem plots jobs.
-Run By: scripts/plots/cam/exevs_cam_rrfs_chem_grid2obs_plots.sh
+Run By: scripts/plots/cam/exevs_plots_cam_rrfs_chem_grid2obs.sh
 '''
 
 import sys

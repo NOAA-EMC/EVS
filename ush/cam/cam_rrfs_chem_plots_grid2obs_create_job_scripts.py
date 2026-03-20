@@ -6,7 +6,7 @@ Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
           jobs scripts contain all the necessary environment variables
           and commands to needed to run them.
-Run By: scripts/plots/cam/exevs_cam_rrfs_chem_grid2obs_plots.sh
+Run By: scripts/plots/cam/exevs_plots_cam_rrfs_chem_grid2obs.sh
 '''
 
 import sys
