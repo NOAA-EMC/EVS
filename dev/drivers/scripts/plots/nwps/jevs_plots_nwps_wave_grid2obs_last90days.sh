@@ -1,10 +1,10 @@
-#PBS -N jevs_nwps_wave_grid2obs_plots
+#PBS -N jevs_plots_nwps_wave_grid2obs_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=03:00:00
-#PBS -l place=vscatter,select=1:ncpus=36:mem=50G
+#PBS -l walltime=04:00:00
+#PBS -l place=vscatter,select=2:ncpus=100:mem=100G
 #PBS -l debug=true
 
 set -x
@@ -49,11 +49,12 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT=/lfs/h2/emc/ptmp/$USER
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}
+export EVAL_PERIOD="last90days"
 
 export run_mpi='yes'
 export gather='yes'
 
-export job=${PBS_JOBNAME:-jevs_nwps_wave_grid2obs_plots}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}_${EVAL_PERIOD}}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -61,7 +62,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/JEVS_NWPS_PLOTS
+${HOMEevs}/jobs/JEVS_PLOTS_NWPS
 
 #########################################################################
 # Purpose: This job creates the plots for the NWPS wave model
