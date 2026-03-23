@@ -65,6 +65,6 @@ export SITE=$(cat /etc/cluster_name)
 ${HOMEevs}/jobs/JEVS_PLOTS_GLWU
 
 #########################################################################
-# Purpose: This job creates the plots for the NFCENS wave model
+# Purpose: This job creates the plots for the GLWU wave model
 # Author: Samira ardani (samira.ardani@noaa.gov)
 #########################################################################
