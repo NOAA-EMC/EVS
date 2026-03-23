@@ -3,8 +3,7 @@
 ##---------------------------------------------------------------------------
 ## NCEP EMC Verification System (EVS) - AIGFS Atmospheric
 ##
-## CONTRIBUTORS: Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-##               Qi Shi, qi.shi@noaa.gov
+## CONTRIBUTORS: Qi Shi, qi.shi@noaa.gov
 ## PURPOSE: Set up configurations to run EVS AIGFS Atmospheric standalone
 ##---------------------------------------------------------------------------
 ##--------------------------------------------------------------------------
