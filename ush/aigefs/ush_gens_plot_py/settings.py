@@ -69,8 +69,6 @@ class Templates():
         "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
         '''
         self.output_base_template = "{MODEL_LOWER}/{MODEL}_{valid?fmt=%Y%m%d}*"
-        #self.output_base_template = "{MODEL}.{valid?fmt=%Y%m%d}/evs.stats.{MODEL}.atmos.grid2obs.v{valid?fmt=%Y%m%d}*"
-        #self.output_base_template = "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
 
 class Paths():
     def __init__(self):
@@ -698,10 +696,6 @@ class Reference():
         of the Reference() class (i.e., below...)
         '''
         self.unit_conversions = {
-            #'kg/m^2': {
-            #    'convert_to': 'in',
-            #    'formula': self.formulas.mm_to_in
-            #},
             'kg/m^2': {
                  'convert_to': 'mm',
                  'formula': self.formulas.mm_to_mm
@@ -1089,8 +1083,6 @@ class Reference():
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
                     'interp': 'NEAREST',
-                    #'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'], 
-                    #Added 'G003','NHEM','SHEM','TROPICS','CONUS' for global_ens: 
                     'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO', 'G003','NHEM','SHEM','TROPICS','CONUS'],
                     'var_dict': {
                         'HGT': {'fcst_var_names': ['HGT'],
