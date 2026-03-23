@@ -265,7 +265,7 @@ verif_case_step_check_len_dict = {
     },
     'RUN_AI_GRID2GRID_PLOTS': {
         'precip': [],
-        'pres_levs': ['truth_name_list'],
+        'pres_levs': ['truth_name_list']
     },
     'RUN_AI_GRID2OBS_PLOTS': {
         'pres_levs': [],
