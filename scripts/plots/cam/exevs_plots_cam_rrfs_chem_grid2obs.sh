@@ -27,9 +27,6 @@ mkdir -p ${STATDIR}
 source ${config}
 export err=$?; err_chk
 
-model1=`echo ${MODELNAME} | tr a-z A-Z`
-export model1
-
 #
 # Bring in all stats files, and change into display name
 # for different models or types of solution defined in ${config}
@@ -54,30 +51,28 @@ if [ ${num_mdl} -gt 10 ]; then
     echo "DEBUG: The number of models to be plotted exceeds the maximum (=10), ${MODELNAME} ${RUN} ${VERIF_CASE} ${STEP} step will be skipped"
     exit
 fi
-let imdl=0
-while [ ${imdl} -lt ${num_mdl} ]; do
-    modelid=${mdl_list[${imdl}]}
+for imdl in "${!mdl_list[@]}"; do
+    model_name=${mdl_list[${imdl}]}
     idir=${mdl_idir_list[${imdl}]}
-    let ivar=0
-    while [ ${ivar} -lt ${num_obstype} ]; do
+    target_model="${model_name%v[0-9]*}"   ## model name separate by version number started with "v"
+    upper_model="${target_model^^}"     ## Upper case model name as in the stats files
+    for ivar in "${!obstype_list[@]}"; do
 	obsvar=${obstype_list[${ivar}]}
 	obssrc=${obssrc_list[${ivar}]}
         NOW=${VDATE_START}
         while [ ${NOW} -le ${VDATE_END} ]; do
-            cpfile=evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}_${obssrc}_${obsvar}.v${NOW}.stat
-            sedfile=${modelid}_${obssrc}_${obsvar}.v${NOW}.stat
-            if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
-                cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
-                sed "s/${model1}/${modelid}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
+            cpfile=evs.stats.${target_model}.${RUN}.${VERIF_CASE}_${obssrc}_${obsvar}.v${NOW}.stat
+            sedfile=${model_name}_${obssrc}_${obsvar}.v${NOW}.stat
+            if [ -s ${idir}/${target_model}.${NOW}/${cpfile} ]; then
+                cp -v ${idir}/${target_model}.${NOW}/${cpfile} ${STATDIR}
+                sed "s/${upper_model}/${model_name}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
             else
                 echo "DEBUG: There is a missing stats file ${idir}.${NOW}/${cpfile}, the missing file will be skipped"
             fi
             cdate=${NOW}"00"
             NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
         done
-        ((ivar++))
     done
-    ((imdl++))
 done
 
 # Make directory
