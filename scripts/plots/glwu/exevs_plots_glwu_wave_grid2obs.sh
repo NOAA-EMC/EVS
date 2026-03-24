@@ -1,6 +1,6 @@
 #!/bin/bash
 ##################################################################################
-# Name of Script: exevs_glwu_wave_grid2obs_plots.sh                           
+# Name of Script: exevs_plots_glwu_wave_grid2obs.sh                           
 # Samira Ardani / samira.ardani@noaa.gov                                    
 # Purpose of Script: Run the grid2obs plots for GLWU wave model           
 #                      
@@ -113,7 +113,7 @@ chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 ###########################################
 
 if [ ${run_mpi} = 'yes' ] ; then
-	mpiexec -np 36 --cpu-bind verbose,core --depth=3 cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
+	mpiexec -np 128 --cpu-bind verbose,core cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 else
 	echo "not running mpiexec"
 	sh plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
@@ -131,8 +131,8 @@ export err=$?; err_chk
 #####################
 # Gather all the files 
 #######################
+periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
 
-periods='LAST31DAYS LAST90DAYS'
 if [ $gather = yes ] ; then
 	echo "copying all images into one directory"
 	nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')

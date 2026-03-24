@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_glwu_wave_grid2obs_prep.sh
+# Name of Script: exevs_prep_glwu_wave_grid2obs.sh
 # Purpose of Script: To pre-process glwu forecast data into the same spatial
 #    and temporal scales as validation data.
 # Author: Samira Ardani (samira.ardani@noaa.gov)
