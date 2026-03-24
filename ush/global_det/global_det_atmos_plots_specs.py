@@ -1220,7 +1220,7 @@ class PlotSpecs:
                        'linestyle': 'solid', 'linewidth': 1.5},
             'aigfs': {'color': '#1e3cff',
                       'marker': 'X', 'markersize': 7,
-                      'linestyle': 'solid', 'linewidth': 3},
+                      'linestyle': 'solid', 'linewidth': 1.5},
             'cfs': {'color': '#56b4e9',
                     'marker': 'o', 'markersize': 6,
                     'linestyle': 'solid', 'linewidth': 1.5},
