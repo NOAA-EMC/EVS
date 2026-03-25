@@ -1,0 +1,63 @@
+#PBS -N evs_plots_aigefs_atmos_aigefs_profile1_last90days
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=00:25:00
+#PBS -l place=vscatter:exclhost,select=10:ncpus=33:mpiprocs=33:mem=170GB:prepost=true
+#PBS -l debug=true
+
+export model=evs
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+set -x
+export COMPONENT=aigefs
+export STEP=plots
+
+module load PrgEnv-intel/${PrgEnvintel_ver}
+module load intel/${intel_ver}
+module load ve/evs/${ve_evs_ver}
+module load gsl/${gsl_ver}
+module load libjpeg/${libjpeg_ver}
+module load libpng/${libpng_ver}
+module load zlib/${zlib_ver}
+module load jasper/${jasper_ver}
+module load udunits/${udunits_ver}
+module load cray-pals/${craypals_ver}
+module load cfp/${cfp_ver}
+module load imagemagick/${imagemagick_ver}
+module list
+
+############################################################
+# Specify environment variables
+############################################################
+if [ -n "%VHR:%" ]; then
+  export vhr=${vhr:-%VHR:%}
+else
+  export vhr=00
+fi
+export OMP_NUM_THREADS=2
+export NET=evs
+export RUN=atmos
+export VERIF_CASE=profile1
+export MODELNAME=aigefs
+export past_days=90
+export valid_time=both
+
+############################################################
+# Execute j-job
+############################################################
+${HOMEevs}/jobs/JEVS_PLOTS_AIGEFS
+if [ $? -ne 0 ]; then
+   ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
+   ecflow_client --abort
+   exit
+fi
+
+%include <tail.h>
+%manual
+%end
