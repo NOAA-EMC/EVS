@@ -76,7 +76,7 @@ if [ ${MODELNAME} = refs ]; then
    fhr_inc=1
 
    export MODEL_INPUT_DIR=${COMINrefs}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/ensprod/${modsys}.t{init?fmt=%2H}z.${DOM}.${ENSPROD}.f{lead?fmt=%2H}.grib2
+   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/ensprod/${modsys}.t{init?fmt=%2H}z.${ENSPROD}.f{lead?fmt=%2H}.${DOM}.grib2
 
 elif [ ${MODELNAME} = hrrr ]; then
 
@@ -156,7 +156,7 @@ while [ $fhr -le $fhr_max ]; do
    
    elif [ ${MODELNAME} = refs ]; then
       ihr_avail="00 06 12 18"
-      export fcst_file=${modsys}.${IDATE}/ensprod/${modsys}.t${INIT_HR}z.${DOM}.${ENSPROD}.f$(printf "%02d" $fhr).grib2
+      export fcst_file=${modsys}.${IDATE}/${INIT_HR}/ensprod/${modsys}.t${INIT_HR}z.${ENSPROD}.f$(printf "%02d" $fhr).${DOM}.grib2
    
    elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
       ihr_avail="00 06 12 18"
