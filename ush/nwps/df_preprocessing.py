@@ -27,7 +27,7 @@ import plot_util
 
 def get_valid_range(logger, date_type, date_range, date_hours, fleads):
     if None in date_hours:
-        e = (f"FATAL ERROR: One or more FCST_{date_type}_HOURS is Nonetype. This may be"
+        e = (f"One or more FCST_{date_type}_HOURS is Nonetype. This may be"
              + f" because the input string is empty.")
         logger.error(e)
         raise ValueError(e)
@@ -45,7 +45,7 @@ def get_valid_range(logger, date_type, date_range, date_hours, fleads):
     elif date_type == 'VALID':
         valid_range = date_range
     else:
-        e = (f"FATAL ERROR: Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
+        e = (f"Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
              + f" VALID or INIT")
         logger.error(e)
         raise ValueError(e)
@@ -78,16 +78,16 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
                 str(var_name).upper(), model_list, obtype
             )
         else:
-            e1 = f"FATAL ERROR: {stats_dir} exists but is empty."
+            e1 = f"{stats_dir} exists but is empty."
             e2 = f"Populate {stats_dir} and retry."
-            logger.error(e1)
-            logger.error(e2)
+            logger.warning(e1)
+            logger.warning(e2)
             raise OSError(e1+"\n"+e2)
     else:
-        e1 = f"FATAL ERROR: {stats_dir} does not exist."
+        e1 = f"{stats_dir} does not exist."
         e2 = f"Create and populate {stats_dir} and retry."
-        logger.error(e1)
-        logger.error(e2)
+        logger.warning(e1)
+        logger.warning(e2)
         raise OSError(e1+"\n"+e2)
     return pruned_data_dir
 

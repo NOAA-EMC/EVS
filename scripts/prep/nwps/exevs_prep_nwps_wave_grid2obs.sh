@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_nwps_wave_grid2obs_prep.sh
+# Name of Script: exevs_prep_nwps_wave_grid2obs.sh
 # Purpose of Script: To pre-process nwps forecast data into the same spatial
 #    and temporal scales as validation data.
 # Author: Samira Ardani (samira.ardani@noaa.gov)
@@ -61,7 +61,7 @@ for wfo in $wfos; do
 		for HH in ${HHs}; do
 			DATAfilename=${DATA}/gribs/${wfo}_nwps_${CG}_${INITDATE}_${HH}00.grib2
 			if [ ! -s ${DATAfilename} ]; then
-				echo "WARNING: NO NWPS forecast was available for valid date ${INITDATE}"
+				echo "WARNING: NO NWPS forecast was available for init date ${INITDATE}${HH} for ${wfo}"
 			else
 				fcst=0
 				while (( $fcst <= 144 )); do
@@ -83,7 +83,7 @@ for wfo in $wfos; do
 								cp -v $DATAfilename_fhr ${ARCmodel}/.
 							fi
 						else
-							echo "WARNING: No NWPS Forecast Data was available for ${INITDATE}${HH}"
+							echo "WARNING: No NWPS Forecast Data was available for init date ${INITDATE}${HH} for ${wfo}"
 						fi
 					fi
 					fcst=$(( $fcst+ 24 ))
@@ -119,10 +119,10 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 		fi
 	fi
 else
-	echo "WARNING: No NDBC data was available for valid date ${INITDATE}."
+	echo "WARNING: No NDBC data was available for init date ${INITDATE}."
 	if [ $SENDMAIL = YES ]; then
 		export subject="NDBC Data Missing for EVS ${COMPONENT}"
-		echo "WARNING: No NDBC data was available for valid date ${INITDATE}." > mailmsg
+		echo "WARNING: No NDBC data was available for init date ${INITDATE}." > mailmsg
 		echo "Missing files are located at $COMINobs/${INITDATE}/validation_data/marine/buoy/." >> mailmsg
 		echo "Job ID: $jobid" >> mailmsg
 		cat mailmsg | mail -s "$subject" $MAILTO
