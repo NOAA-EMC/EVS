@@ -64,7 +64,9 @@ valid_VERIF_CASE_STEP_type_opts_dict = {
     'RUN_GRID2GRID_PLOTS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
                             'sea_ice', 'snow', 'sst'],
     'RUN_GRID2OBS_STATS': ['pres_levs', 'ptype', 'sfc'],
-    'RUN_GRID2OBS_PLOTS': ['pres_levs', 'ptype', 'sfc']
+    'RUN_GRID2OBS_PLOTS': ['pres_levs', 'ptype', 'sfc'],
+    'RUN_AI_GRID2GRID_PLOTS': ['precip', 'pres_levs'],
+    'RUN_AI_GRID2OBS_PLOTS': ['pres_levs', 'sfc']
 }
 for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
     if VERIF_CASE_STEP_type \
@@ -125,6 +127,14 @@ evs_global_det_atmos_settings_dict['RUN_GRID2OBS_PLOTS'] = [
     'g2op_model_plot_name_list', 'g2op_type_list',
     'g2op_event_equalization'
 ]
+evs_global_det_atmos_settings_dict['RUN_AI_GRID2GRID_PLOTS'] = [
+    'g2gp_model_plot_name_list', 'g2gp_type_list',
+    'g2gp_event_equalization'
+]
+evs_global_det_atmos_settings_dict['RUN_AI_GRID2OBS_PLOTS'] = [
+    'g2op_model_plot_name_list', 'g2op_type_list',
+    'g2op_event_equalization'
+]
 
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_STATS': {
@@ -159,6 +169,14 @@ verif_case_step_settings_dict = {
     'RUN_GRID2OBS_PLOTS': {
         'pres_levs': ['init_hr_list', 'valid_hr_list'],
         'ptype': ['init_hr_list', 'valid_hr_list'],
+        'sfc': ['init_hr_list', 'valid_hr_list']
+    },
+    'RUN_AI_GRID2GRID_PLOTS': {
+        'precip': ['init_hr_list'],
+        'pres_levs': ['truth_name_list', 'init_hr_list', 'valid_hr_list'],
+    },
+    'RUN_AI_GRID2OBS_PLOTS': {
+        'pres_levs': ['init_hr_list', 'valid_hr_list'],
         'sfc': ['init_hr_list', 'valid_hr_list']
     }
 }
@@ -245,6 +263,14 @@ verif_case_step_check_len_dict = {
         'ptype': [],
         'sfc': []
     },
+    'RUN_AI_GRID2GRID_PLOTS': {
+        'precip': [],
+        'pres_levs': ['truth_name_list']
+    },
+    'RUN_AI_GRID2OBS_PLOTS': {
+        'pres_levs': [],
+        'sfc': []
+    }
 }
 for verif_type in verif_type_list:
     for check_list in verif_case_step_check_len_dict[
