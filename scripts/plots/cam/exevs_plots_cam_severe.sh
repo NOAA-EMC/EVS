@@ -62,7 +62,7 @@ export MET_VERSION="${MET_VERSION%.}"
 
 ############################################################
 # Symlink .stat files from COMIN
-# Mainly for HREF when product is included in model name 
+# Mainly for REFS when product is included in model name 
 ############################################################
 
 # Create working directories 
