@@ -1,10 +1,10 @@
-#PBS -N evs_glwu_wave_grid2obs_plots
+#PBS -N evs_plots_nwps_wave_grid2obs_last31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:mem=500G
+#PBS -l walltime=02:30:00
+#PBS -l place=vscatter,select=2:ncpus=100:mem=100G
 #PBS -l debug=true
 
 export model=evs
@@ -15,7 +15,7 @@ export model=evs
 # Load modules
 ############################################################
 set -x
-export COMPONENT=glwu
+export COMPONENT=nwps
 export STEP=plots
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
@@ -42,15 +42,16 @@ fi
 export NET=evs
 export RUN=wave
 export VERIF_CASE=grid2obs
-export MODELNAME=glwu
+export MODELNAME=nwps
 export OBTYPE=NDBC_STANDARD
 export run_mpi='yes'
 export gather='yes'
+export EVAL_PERIOD="last31days"
 
 ############################################################
 # Execute j-job
 ############################################################
-$HOMEevs/jobs/JEVS_GLWU_PLOTS
+$HOMEevs/jobs/JEVS_PLOTS_NWPS
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
    ecflow_client --abort

@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_glwu_stats.sh
+# Name of Script: exevs_stats_glwu_wave_grid2obs.sh
 # Purpose of Script: To create stat files for GLWU forecasts verified with
 #    NDBC buoy data using MET/METplus.
 # Developer: Samira Ardani (samira.ardani@noaa.gov)

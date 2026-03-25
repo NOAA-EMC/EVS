@@ -10,7 +10,7 @@ date
 #########################################################
 # obtain unique LSF id (jobid) and make temp directories 
 #########################################################
-export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
@@ -18,27 +18,20 @@ cd $DATA
 # Run setpdy and initialize PDY variables 
 ##########################################
 export cycle=${cycle:-t00z}
-setpdy.sh 17
+setpdy.sh 20
 . ./PDY
-export VDATE=${VDATE:-${PDYm1}}
+export INITDATE=${INITDATE:-${PDYm1}}
 export NEXTDATE=${NEXTDATE:-${PDY}}
-
-####################################
-# Set data directives
-####################################
-export SENDECF=${SENDECF:-YES}
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
 
 ####################################
 # Define NET/RUN variables          
 ####################################
 export NET=${NET:-evs}
 export MODEL=${MODEL:-evs}
-export STEP=${STEP:-stats}
-export COMPONENT=${COMPONENT:-nwps}
-export MODELNAME=${MODELNAME:-nwps}
-export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-glwu}
+export MODELNAME=${MODELNAME:-glwu}
+export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
 export OBTYPE=${OBTYPE:-NDBC}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
@@ -51,30 +44,35 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config}
+
+####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINnwps=${COMINnwps:-$(compath.py ${envir}/com/${MODELNAME}/${nwps_ver})}
-export EVSINndbcnc=${COMIN}/prep/${COMPONENT}
-export EVSINgdasnc=${COMIN}/prep/${COMPONENT}
-export ARCmodel=${COMIN}/prep/${COMPONENT}
+export COMINglwu=${COMINglwu:-$(compath.py ${envir}/com/${MODELNAME}/${glwu_ver})} 
+export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
+export DCOMINndbc=${DCOMINndbc:-$DCOMROOT}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}/${RUN}}
+export ARCmodel=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
-export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}}
-export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
-
-mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal} 
+# make the directory where the ARCmodel and gdasnc will be kept
+mkdir -p ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 
 ####################################
 # Execute the script                
 ####################################
-
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}_${VERIF_CASE}.sh
 export err=$?; err_chk
-	
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 
