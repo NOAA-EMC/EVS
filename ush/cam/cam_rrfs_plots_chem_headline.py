@@ -33,6 +33,7 @@ met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
 envir = os.environ['envir']
 fig_name_label = os.environ['fig_name_label']
+plot_diff_fig = os.environ['plot_diff_fig']
 input_obstype_list= os.environ['plot_obstype_list']
 input_obssrc_list= os.environ['plot_obssrc_list']
 input_model_list= os.environ['plot_model_list']
@@ -131,6 +132,7 @@ for headline_type in input_obs_types:
             'obs_var_thresh': 'NA',
             'ob_name':'AIRNOW_HOURLY_AQOBS', 
             'obs_src_name': input_obs_srcs[obsidx],
+            'plot_diff_fig': plot_diff_fig,
             'fig_name_label': fig_name_label
         }
         now = datetime.datetime.now()
@@ -248,6 +250,7 @@ for headline_type in input_obs_types:
             'obs_var_thresh': 'NA',
             'ob_name':'AIRNOW_HOURLY_AQOBS', 
             'obs_src_name': input_obs_srcs[obsidx],
+            'plot_diff_fig': plot_diff_fig,
             'fig_name_label': fig_name_label
         }
         now = datetime.datetime.now()
@@ -365,6 +368,7 @@ for headline_type in input_obs_types:
             'obs_var_thresh': 'NA',
             'ob_name':'AERONET_AOD', 
             'obs_src_name': input_obs_srcs[obsidx],
+            'plot_diff_fig': plot_diff_fig,
             'fig_name_label': fig_name_label
         }
         now = datetime.datetime.now()

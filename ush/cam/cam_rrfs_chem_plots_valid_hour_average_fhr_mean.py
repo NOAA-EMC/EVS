@@ -271,7 +271,16 @@ class ValidHourAverageFhrMean:
                     valid_hours_ci_df.loc[model_idx, valid_hour] = ci
         # Set up plot
         self.logger.info(f"Setting up plot")
-        plot_specs_vhafm = PlotSpecs(self.logger, 'valid_hour_average_fhr_mean')
+        if str(self.plot_info_dict['plot_diff_fig']).upper() == 'YES':
+            include_difference_plot = True
+        else:
+            include_difference_plot = False
+
+        if include_difference_plot:
+            plot_specs_vhafm = PlotSpecs(self.logger, 'valid_hour_average_fhr_mean')
+        else:
+            plot_specs_vhafm = PlotSpecs(self.logger, 'valid_hour_average_no_diffplot')
+
         plot_specs_vhafm .set_up_plot()
         n_xticks = 12
         if len(valid_hours) < n_xticks:
@@ -335,30 +344,41 @@ class ValidHourAverageFhrMean:
         )
         # Make plot
         self.logger.info(f"Making plot")
-        fig, (ax1, ax2) = plt.subplots(2,1,
+
+        if include_difference_plot:
+            fig, (ax1, ax2) = plt.subplots(2,1,
                                        figsize=(plot_specs_vhafm.fig_size[0],
                                                 plot_specs_vhafm.fig_size[1]),
                                        sharex=True)
+        else:
+            fig, ax1 = plt.subplots(1,1,figsize=(plot_specs_vhafm.fig_size[0],
+                                            plot_specs_vhafm.fig_size[1] ))
+
         fig.suptitle(plot_title)
         ax1.grid(True)
         ax1.set_ylabel(stat_plot_name)
-        ax2.grid(True)
-        ax2.set_xlabel('Valid Hour')
-        ax2.set_xlim([valid_hours[0], valid_hours[-1]])
-        ax2.set_xticks(valid_hours[::xtick_intvl])
-        ax2.set_ylabel('Difference')
-        ax2.set_title('Difference from '
-                      +self.model_info_dict['model1']['plot_name'], loc='left')
-        props = {'boxstyle': 'square',
-                 'pad': 0.35,
-                 'facecolor': 'white',
-                 'linestyle': 'solid',
-                 'linewidth': 1,
-                 'edgecolor': 'black'}
-        ax2.text(0.995, 1.05, 'Note: points outside the '
-                 +'outline bars are significant at the 95% '
-                 +'confidence level', ha='right', va='center',
-                 fontsize=13, bbox=props, transform=ax2.transAxes)
+        if include_difference_plot:
+            ax2.grid(True)
+            ax2.set_xlabel('Valid Hour')
+            ax2.set_xlim([valid_hours[0], valid_hours[-1]])
+            ax2.set_xticks(valid_hours[::xtick_intvl])
+            ax2.set_ylabel('Difference')
+            ax2.set_title('Difference from '
+                          +self.model_info_dict['model1']['plot_name'], loc='left')
+            props = {'boxstyle': 'square',
+                     'pad': 0.35,
+                     'facecolor': 'white',
+                     'linestyle': 'solid',
+                     'linewidth': 1,
+                     'edgecolor': 'black'}
+            ax2.text(0.995, 1.05, 'Note: points outside the '
+                     +'outline bars are significant at the 95% '
+                     +'confidence level', ha='right', va='center',
+                     fontsize=13, bbox=props, transform=ax2.transAxes)
+        else:
+            ax1.set_xlabel('Valid Hour')
+            ax1.set_xlim([valid_hours[0], valid_hours[-1]])
+            ax1.set_xticks(valid_hours[::xtick_intvl])
         if plot_left_logo:
             left_logo_img = fig.figimage(
                 left_logo_img_array, left_logo_xpixel_loc,
@@ -374,16 +394,17 @@ class ValidHourAverageFhrMean:
         model_idx_list = (
             valid_hours_avg_df.index.get_level_values(0).unique().tolist()
         )
-        ci_bar_max_widths = np.append(
-            np.diff(valid_hours), valid_hours[-1]-valid_hours[-2]
-        )/1.5
-        ci_bar_min_widths = np.append(
-            np.diff(valid_hours), valid_hours[-1]-valid_hours[-2]
-        )/len(list(self.model_info_dict.keys()))
-        ci_bar_intvl_widths = (
-            (ci_bar_max_widths-ci_bar_min_widths)
-            /len(list(self.model_info_dict.keys()))
-        )
+        if include_difference_plot:
+            ci_bar_max_widths = np.append(
+                np.diff(valid_hours), valid_hours[-1]-valid_hours[-2]
+            )/1.5
+            ci_bar_min_widths = np.append(
+                np.diff(valid_hours), valid_hours[-1]-valid_hours[-2]
+            )/len(list(self.model_info_dict.keys()))
+            ci_bar_intvl_widths = (
+                (ci_bar_max_widths-ci_bar_min_widths)
+                /len(list(self.model_info_dict.keys()))
+            )
         for model_idx in model_idx_list:
             model_num = model_idx.split('/')[0]
             model_num_name = model_idx.split('/')[1]
@@ -439,129 +460,130 @@ class ValidHourAverageFhrMean:
             else:
                 self.logger.debug(f"{model_num} [{model_num_name},"
                                   +f"{model_num_plot_name}] has no points")
-            masked_model_num_model1_diff_data = np.ma.masked_invalid(
-                model_num_data - model1_masked_model_num_data
-            )
-            model_num_diff_npts = (
-                len(masked_model_num_model1_diff_data)
-                - np.ma.count_masked(masked_model_num_model1_diff_data)
-            )
-            masked_diff_valid_hours = np.ma.masked_where(
-                np.ma.getmask(masked_model_num_model1_diff_data),
-                valid_hours_avg_df.columns.values.tolist()
-            )
-            if model_num_diff_npts != 0:
-                self.logger.debug(f"Plotting {model_num} [{model_num_name},"
-                                  +f"{model_num_plot_name}] difference from "
-                                  +"model1 ["
-                                  +f"{self.model_info_dict['model1']['name']},"
-                                  +self.model_info_dict['model1']['plot_name']
-                                  +"]")
-                ax2.plot(
-                    masked_diff_valid_hours,
-                    masked_model_num_model1_diff_data,
-                    color = model_num_plot_settings_dict['color'],
-                    linestyle = model_num_plot_settings_dict['linestyle'],
-                    linewidth = model_num_plot_settings_dict['linewidth'],
-                    marker = model_num_plot_settings_dict['marker'],
-                    markersize = model_num_plot_settings_dict['markersize'],
-                    zorder = (len(list(self.model_info_dict.keys()))
-                              - model_idx_list.index(model_idx) + 4)
+            if include_difference_plot:
+                masked_model_num_model1_diff_data = np.ma.masked_invalid(
+                    model_num_data - model1_masked_model_num_data
                 )
-                if masked_model_num_model1_diff_data.min() \
-                        < stat_min_max_dict['ax2_stat_min'] \
-                        or np.ma.is_masked(stat_min_max_dict['ax2_stat_min']):
-                    stat_min_max_dict['ax2_stat_min'] = (
-                        masked_model_num_model1_diff_data.min()
+                model_num_diff_npts = (
+                    len(masked_model_num_model1_diff_data)
+                    - np.ma.count_masked(masked_model_num_model1_diff_data)
+                )
+                masked_diff_valid_hours = np.ma.masked_where(
+                    np.ma.getmask(masked_model_num_model1_diff_data),
+                    valid_hours_avg_df.columns.values.tolist()
+                )
+                if model_num_diff_npts != 0:
+                    self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                                      +f"{model_num_plot_name}] difference from "
+                                      +"model1 ["
+                                      +f"{self.model_info_dict['model1']['name']},"
+                                      +self.model_info_dict['model1']['plot_name']
+                                      +"]")
+                    ax2.plot(
+                        masked_diff_valid_hours,
+                        masked_model_num_model1_diff_data,
+                        color = model_num_plot_settings_dict['color'],
+                        linestyle = model_num_plot_settings_dict['linestyle'],
+                        linewidth = model_num_plot_settings_dict['linewidth'],
+                        marker = model_num_plot_settings_dict['marker'],
+                        markersize = model_num_plot_settings_dict['markersize'],
+                        zorder = (len(list(self.model_info_dict.keys()))
+                                  - model_idx_list.index(model_idx) + 4)
                     )
-                if masked_model_num_model1_diff_data.max() \
-                        > stat_min_max_dict['ax2_stat_max'] \
-                        or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
-                    stat_min_max_dict['ax2_stat_max'] = (
-                        masked_model_num_model1_diff_data.max()
-                    )
-            else:
-                self.logger.debug(f"{model_num} [{model_num_name},"
-                                  +f"{model_num_plot_name}] difference from "
-                                  +"model1 ["
-                                  +f"{self.model_info_dict['model1']['name']},"
-                                  +self.model_info_dict['model1']['plot_name']
-                                  +"] has no points")
-            if model_num == 'model1':
-                ax2.plot(
-                    valid_hours_avg_df.columns.values.tolist(),
-                    np.zeros_like(valid_hours_avg_df.columns.values.tolist()),
-                    color = model_num_plot_settings_dict['color'],
-                    linestyle = model_num_plot_settings_dict['linestyle'],
-                    linewidth = model_num_plot_settings_dict['linewidth'],
-                    marker = None,
-                    markersize = model_num_plot_settings_dict['markersize'],
-                    zorder = (len(list(self.model_info_dict.keys()))
-                              - model_idx_list.index(model_idx) + 4)
-                )
-            if model_num != 'model1':
-                masked_model_num_model1_diff_ci_data = np.ma.masked_invalid(
-                    valid_hours_ci_df.loc[model_idx]
-                )
-                model_num_ci_npts = (
-                    len(masked_model_num_model1_diff_ci_data)
-                    - np.ma.count_masked(masked_model_num_model1_diff_ci_data)
-                )
-                masked_ci_valid_hours = np.ma.masked_where(
-                    np.ma.getmask(masked_model_num_model1_diff_ci_data),
-                    valid_hours_ci_df.columns.values.tolist()
-                )
-                self.logger.debug(f"Plotting {model_num} ["
-                                  +f"{model_num_name},"
-                                  +f"{model_num_plot_name}] difference "
-                                  +"from mode1 ["
-                                  +self.model_info_dict['model1']['name']
-                                  +","
-                                  +self.model_info_dict['model1']['plot_name']
-                                  +"] confidence intervals")
-                if model_num_ci_npts != 0:
-                    ci_min = masked_model_num_model1_diff_ci_data.min()
-                    ci_max = masked_model_num_model1_diff_ci_data.max()
-                    if ci_min < stat_min_max_dict['ax2_stat_min'] \
+                    if masked_model_num_model1_diff_data.min() \
+                            < stat_min_max_dict['ax2_stat_min'] \
                             or np.ma.is_masked(stat_min_max_dict['ax2_stat_min']):
-                        if not np.ma.is_masked(ci_min):
-                            stat_min_max_dict['ax2_stat_min'] = ci_min
-                    if ci_max > stat_min_max_dict['ax2_stat_max'] \
-                            or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
-                        if not np.ma.is_masked(ci_max):
-                            stat_min_max_dict['ax2_stat_max'] = ci_max
-                    cmasked_ci_valid_hours = masked_ci_valid_hours
-                    cmasked_model_num_model1_diff_ci_data = masked_model_num_model1_diff_ci_data
-                    cmasked_ci_bar_max_widths = np.ma.masked_where(
-                            np.ma.getmask(masked_model_num_model1_diff_ci_data),
-                            ci_bar_max_widths
-                    )
-                    cmasked_ci_bar_intvl_widths = np.ma.masked_where(
-                            np.ma.getmask(masked_model_num_model1_diff_ci_data),
-                            ci_bar_intvl_widths
-                    )
-                    for vhr_idx in range(len(cmasked_ci_valid_hours)):
-                        vhr = cmasked_ci_valid_hours[vhr_idx]
-                        vhr_ci = (
-                            cmasked_model_num_model1_diff_ci_data[vhr_idx]
+                        stat_min_max_dict['ax2_stat_min'] = (
+                            masked_model_num_model1_diff_data.min()
                         )
-                        ax2.bar(vhr, 2*np.absolute(vhr_ci),
-                                bottom=-1*np.absolute(vhr_ci),
-                                width=(cmasked_ci_bar_max_widths[vhr_idx]
-                                       -(cmasked_ci_bar_intvl_widths[vhr_idx]
-                                       *model_idx_list.index(model_idx))),
-                                color = 'None',
-                                edgecolor=model_num_plot_settings_dict['color'],
-                                linewidth=1)
+                    if masked_model_num_model1_diff_data.max() \
+                            > stat_min_max_dict['ax2_stat_max'] \
+                            or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
+                        stat_min_max_dict['ax2_stat_max'] = (
+                            masked_model_num_model1_diff_data.max()
+                        )
                 else:
-                    self.logger.debug(f"{model_num} ["
+                    self.logger.debug(f"{model_num} [{model_num_name},"
+                                      +f"{model_num_plot_name}] difference from "
+                                      +"model1 ["
+                                      +f"{self.model_info_dict['model1']['name']},"
+                                      +self.model_info_dict['model1']['plot_name']
+                                      +"] has no points")
+                if model_num == 'model1':
+                    ax2.plot(
+                        valid_hours_avg_df.columns.values.tolist(),
+                        np.zeros_like(valid_hours_avg_df.columns.values.tolist()),
+                        color = model_num_plot_settings_dict['color'],
+                        linestyle = model_num_plot_settings_dict['linestyle'],
+                        linewidth = model_num_plot_settings_dict['linewidth'],
+                        marker = None,
+                        markersize = model_num_plot_settings_dict['markersize'],
+                        zorder = (len(list(self.model_info_dict.keys()))
+                                  - model_idx_list.index(model_idx) + 4)
+                    )
+                if model_num != 'model1':
+                    masked_model_num_model1_diff_ci_data = np.ma.masked_invalid(
+                        valid_hours_ci_df.loc[model_idx]
+                    )
+                    model_num_ci_npts = (
+                        len(masked_model_num_model1_diff_ci_data)
+                        - np.ma.count_masked(masked_model_num_model1_diff_ci_data)
+                    )
+                    masked_ci_valid_hours = np.ma.masked_where(
+                        np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                        valid_hours_ci_df.columns.values.tolist()
+                    )
+                    self.logger.debug(f"Plotting {model_num} ["
                                       +f"{model_num_name},"
                                       +f"{model_num_plot_name}] difference "
                                       +"from mode1 ["
                                       +self.model_info_dict['model1']['name']
                                       +","
                                       +self.model_info_dict['model1']['plot_name']
-                                      +"] confidence intervals has no points")
+                                      +"] confidence intervals")
+                    if model_num_ci_npts != 0:
+                        ci_min = masked_model_num_model1_diff_ci_data.min()
+                        ci_max = masked_model_num_model1_diff_ci_data.max()
+                        if ci_min < stat_min_max_dict['ax2_stat_min'] \
+                                or np.ma.is_masked(stat_min_max_dict['ax2_stat_min']):
+                            if not np.ma.is_masked(ci_min):
+                                stat_min_max_dict['ax2_stat_min'] = ci_min
+                        if ci_max > stat_min_max_dict['ax2_stat_max'] \
+                                or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
+                            if not np.ma.is_masked(ci_max):
+                                stat_min_max_dict['ax2_stat_max'] = ci_max
+                        cmasked_ci_valid_hours = masked_ci_valid_hours
+                        cmasked_model_num_model1_diff_ci_data = masked_model_num_model1_diff_ci_data
+                        cmasked_ci_bar_max_widths = np.ma.masked_where(
+                                np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                                ci_bar_max_widths
+                        )
+                        cmasked_ci_bar_intvl_widths = np.ma.masked_where(
+                                np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                                ci_bar_intvl_widths
+                        )
+                        for vhr_idx in range(len(cmasked_ci_valid_hours)):
+                            vhr = cmasked_ci_valid_hours[vhr_idx]
+                            vhr_ci = (
+                                cmasked_model_num_model1_diff_ci_data[vhr_idx]
+                            )
+                            ax2.bar(vhr, 2*np.absolute(vhr_ci),
+                                    bottom=-1*np.absolute(vhr_ci),
+                                    width=(cmasked_ci_bar_max_widths[vhr_idx]
+                                           -(cmasked_ci_bar_intvl_widths[vhr_idx]
+                                           *model_idx_list.index(model_idx))),
+                                    color = 'None',
+                                    edgecolor=model_num_plot_settings_dict['color'],
+                                    linewidth=1)
+                    else:
+                        self.logger.debug(f"{model_num} ["
+                                          +f"{model_num_name},"
+                                          +f"{model_num_plot_name}] difference "
+                                          +"from mode1 ["
+                                          +self.model_info_dict['model1']['name']
+                                          +","
+                                          +self.model_info_dict['model1']['plot_name']
+                                          +"] confidence intervals has no points")
         subplot_num = 1
         for ax in fig.get_axes():
             stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
@@ -700,6 +722,7 @@ def main():
         'obs_var_level': 'OBS_VAR_LEVEL',
         'obs_var_thresh': 'OBS_VAR_THRESH',
         'fig_name_label': 'FIG_NAME_LABEL',
+        'plot_diff_fig': 'PLOT_DIFF_FIG',
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',

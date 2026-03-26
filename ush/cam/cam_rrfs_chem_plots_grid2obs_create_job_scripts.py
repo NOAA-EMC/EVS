@@ -40,6 +40,7 @@ end_date = os.environ['end_date']
 NDAYS = str(os.environ['NDAYS'])
 fig_name_label = os.environ['fig_name_label']
 dir_name_label = fig_name_label
+plot_diff_fig = os.environ['plot_diff_fig']
 restart_mode = os.environ['restart_mode']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
@@ -124,7 +125,6 @@ condense_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
 for pm25_job in list(condense_stats_jobs_dict['pm25'].keys()):
     if pm25_job == 'PM25':
         pm25_job_line_types = ['SL1L2', 'CTC' ]
-        ## pm25_job_line_types = ['SL1L2']
     else:
         pm25_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['pm25'][pm25_job]['line_types'] = pm25_job_line_types
@@ -132,7 +132,6 @@ for pm25_job in list(condense_stats_jobs_dict['pm25'].keys()):
 for pm10_job in list(condense_stats_jobs_dict['pm10'].keys()):
     if pm10_job == 'PM10':
         pm10_job_line_types = ['SL1L2', 'CTC' ]
-        ## pm10_job_line_types = ['SL1L2' ]
     else:
         pm10_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['pm10'][pm10_job]['line_types'] = pm10_job_line_types
@@ -140,7 +139,6 @@ for pm10_job in list(condense_stats_jobs_dict['pm10'].keys()):
 for aod_job in list(condense_stats_jobs_dict['aod'].keys()):
     if aod_job == 'AOD':
         aod_job_line_types = ['SL1L2', 'CTC' ]
-        ## aod_job_line_types = ['SL1L2']
     else:
         aod_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['aod'][aod_job]['line_types'] = aod_job_line_types
@@ -284,7 +282,7 @@ for pm25_job in list(make_plots_jobs_dict['pm25'].keys()):
     if pm25_job in ['PM25']:
         pm25_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     elif pm25_job in ['PM25_Thresh']:
-        pm25_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
+        pm25_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean']
     else:
         pm25_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['pm25'][pm25_job]['plots'] = pm25_job_plots
@@ -321,7 +319,7 @@ for pm10_job in list(make_plots_jobs_dict['pm10'].keys()):
     if pm10_job in ['PM10']:
         pm10_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     elif pm10_job in ['PM10_Thresh']:
-        pm10_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
+        pm10_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean']
     else:
         pm10_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['pm10'][pm10_job]['plots'] = pm10_job_plots
@@ -359,21 +357,11 @@ for aod_job in list(make_plots_jobs_dict['aod'].keys()):
     if aod_job in ['AOD']:
         aod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     elif aod_job in ['AOD_Thresh']:
-        aod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'threshold_average']
+        aod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean']
     else:
         aod_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['aod'][aod_job]['plots'] = aod_job_plots
 
-#### for aod_job in list(make_plots_jobs_dict['aod'].keys()):
-####     if aod_job in ['AOD']:
-####         make_plots_jobs_dict['aod'][f"{aod_job}_PerfDiag"] = copy.deepcopy(
-####              make_plots_jobs_dict['aod'][f"{aod_job}_Thresh"]
-####             )
-####         (make_plots_jobs_dict['aod'][f"{aod_job}_PerfDiag"]\
-####          ['line_type_stats']) = ['CTC/PERFDIAG']
-####         make_plots_jobs_dict['aod'][f"{aod_job}_PerfDiag"]['plots'] = [
-####             'performance_diagram'
-####         ]
 if JOB_GROUP == 'make_plots':
     JOB_GROUP_dict = make_plots_jobs_dict
 
@@ -416,6 +404,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['end_date'] = end_date
         job_env_dict['NDAYS'] = NDAYS
         job_env_dict['fig_name_label'] = fig_name_label
+        job_env_dict['plot_diff_fig'] = plot_diff_fig
         job_env_dict['restart_mode'] = restart_mode
         job_env_dict['obs_src_name'] = VERIF_CASE_STEP_src_list[src_idx]
         job_env_dict['date_type'] = 'VALID'

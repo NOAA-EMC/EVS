@@ -97,7 +97,7 @@ else:
 evs_cam_rrfs_chem_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
     'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM',
-    'model_evs_stats_dir_list', 'restart_mode', 'fig_name_label'
+    'model_evs_stats_dir_list', 'restart_mode', 'plot_diff_fig', 'fig_name_label'
 ]
 evs_cam_rrfs_chem_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
 evs_cam_rrfs_chem_settings_dict['RUN_GRID2GRID_PLOTS'] = [

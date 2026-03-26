@@ -1890,6 +1890,7 @@ def initialize_job_env_dict(verif_type, group,
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
     job_env_dict['fig_name_label'] = os.environ['fig_name_label']
+    job_env_dict['plot_diff_fig'] = os.environ['plot_diff_fig']
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'filter_stats', 'make_plots']:
         if verif_case_step_abbrev_type+'_fhr_list' in list(os.environ.keys()):

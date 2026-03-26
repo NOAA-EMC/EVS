@@ -131,6 +131,7 @@ if [[ "$MODELNAME" == "rrfs" && "$RUN" == chem* ]]; then
   export DATA_TYPE=${DATA_TYPE:-hourly}
   export restart_mode=${restart_mode:-YES}
   export fig_name_label=${fig_name_label:-last${NDAYS}days}
+  export plot_diff_fig=${plot_diff_fig:-NO}
   export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${MODELNAME}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
 fi
 
