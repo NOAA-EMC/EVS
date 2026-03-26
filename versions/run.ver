@@ -36,6 +36,8 @@ export w3emc_ver=2.12.0
 export wgrib2_ver=2.0.8
 export zlib_ver=1.2.11
 
+export aigefs_ver=v1.0
+export aigfs_ver=v1.0
 export aqm_ver=v7.0
 export ccpa_ver=v4.2
 export cfs_ver=v2.3
@@ -44,6 +46,7 @@ export fnmoc_ver=v1.1
 export gefs_ver=v12.3
 export gfs_ver=v16.3
 export glwu_ver=v2.0
+export hgefs_ver=v1.0
 export hiresw_ver=v8.1
 export hourly_ver=v0.0
 export href_ver=v3.1

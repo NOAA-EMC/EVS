@@ -1,0 +1,109 @@
+#!/bin/bash
+# JOB card created for aigefs prep jobs
+# Updated by L. Gwen Chen (lichuan.chen@noaa.gov), 10/03/2025
+
+########################################
+# Preliminary data setup step
+########################################
+set -x
+
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-aigefs}
+export RUN=${RUN:-atmos}
+export MODELNAME=${MODELNAME:-aigefs}
+export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
+export OBTYPE=${OBTYPE:-GDAS}
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=${EXECevs:-${HOMEevs}/exec}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
+export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
+export USHevs=${USHevs:-${HOMEevs}/ush}
+export FIXevs=${FIXevs:-${HOMEevs}/fix}
+
+##########################################
+# Run setpdy and initialize PDY variables 
+##########################################
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
+setpdy.sh 20
+. ./PDY
+
+export INITDATE=${INITDATE:-${PDYm2}}
+
+##################################################
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls 
+### SENDECF  - Flag Events on ecFLOW
+### SENDMAIL - Send email if file is missing
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
+
+####################################
+# Define COMIN/COMOUT variables
+####################################
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export COMINgfs=${COMINgfs:-$(compath.py $envir/com/gfs/${gfs_ver})}
+export COMINgefs=${COMINgefs:-$(compath.py ${envir}/com/gefs/${gefs_ver})}
+export COMINaigefs=${COMINaigefs:-$(compath.py ${envir}/com/aigefs/${aigefs_ver})}
+export COMINhgefs=${COMINhgefs:-$(compath.py ${envir}/com/hgefs/${hgefs_ver})}
+export DCOMIN=${DCOMIN:-${DCOMROOT}}
+export COMINccpa=${COMINccpa:-$(compath.py $envir/com/ccpa/${ccpa_ver})}
+export COMINobsproc=${COMINobsproc:-$(compath.py $envir/com/obsproc/${obsproc_ver})}
+export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
+export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
+export DCOMINghrsst=${DCOMINghrsst:-$DCOMROOT}
+
+export EVSINgefs=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs
+export EVSINaigefs=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/aigefs
+export EVSINhgefs=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/hgefs
+
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/${COMPONENT} 
+mkdir -p $COMOUT
+
+export COMOUTgefs=${COMOUTgefs:-${COMOUT}/${RUN}.${INITDATE}/gefs}
+export COMOUTaigefs=${COMOUTaigefs:-${COMOUT}/${RUN}.${INITDATE}/aigefs}
+export COMOUThgefs=${COMOUThgefs:-${COMOUT}/${RUN}.${INITDATE}/hgefs}
+export COMOUTcompleted=${COMOUTcompleted:-${COMOUT}/${RUN}.${INITDATE}/completed}
+
+if [ "${RUN}" == "atmos" ]; then
+    mkdir -p $COMOUTgefs $COMOUTaigefs $COMOUThgefs $COMOUTcompleted
+fi
+
+####################################
+# Execute the script                
+####################################
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${RUN}.sh
+export err=$?; err_chk
+
+if [ "${KEEPDATA}" != "YES" ]; then
+    cd ${DATAROOT}
+    rm -rf ${DATA}
+fi
+
+date
+

@@ -533,6 +533,13 @@ class LeadAverage:
                                       +"confidence intervals has no points")
         subplot_num = 1
         for ax in fig.get_axes():
+            #remove x-axis labels between 6hr and 24hr to help readability
+            xticks = ax.get_xticks()
+            labels = ax.get_xticklabels()
+            for t, label in zip(xticks, labels):
+                if 6 < t < 24:
+                     label.set_visible(False)
+ 
             stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
             stat_max = stat_min_max_dict['ax'+str(subplot_num)+'_stat_max']
             preset_y_axis_tick_min = ax.get_yticks()[0]
