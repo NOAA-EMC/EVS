@@ -49,6 +49,7 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 MODELNAME = os.environ['MODELNAME'].split(' ')
 OBSNAME = os.environ['OBSNAME'].split(' ')
+ECMWF_FILE_EXT=os.environ.get('ECMWF_FILE_EXT', '1')
 
 # Make COMOUT directory for dates
 output_INITDATE = COMOUT+'.'+INITDATE
@@ -329,13 +330,13 @@ global_det_model_dict = {
             'fcst_hrs': range(24, 72+12, 12)},
     'ecmwf': {'input_fcst_file_format': os.path.join(DCOMINecmwf,
                                                      'U1D{init?fmt=%m%d%H}00'
-                                                     +'{valid?fmt=%m%d%H}001'),
+                                                     +'{valid?fmt=%m%d%H}00'+f'{ECMWF_FILE_EXT}'),
               'input_anl_file_format': os.path.join(DCOMINecmwf,
                                                     'U1D{init?fmt=%m%d%H}00'
-                                                    +'{init?fmt=%m%d%H}011'),
+                                                    +'{init?fmt=%m%d%H}01'+f'{ECMWF_FILE_EXT}'),
               'input_precip_file_format': os.path.join(DCOMINecmwf_precip,
                                                        'UWD{init?fmt=%Y%m%d%H%M}'
-                                                       +'{valid?fmt=%m%d%H%M}1'),
+                                                       +'{valid?fmt=%m%d%H%M}'+f'{ECMWF_FILE_EXT}'),
               'inithours': ['00', '12'],
               'fcst_hrs': range(0, 240+6, 6)},
     'fnmoc': {'input_fcst_file_format': os.path.join(DCOMINfnmoc,

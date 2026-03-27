@@ -84,6 +84,7 @@ export COMINobsproc=${COMINobsproc:-$(compath.py $envir/com/obsproc/${obsproc_ve
 export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
 export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
 export DCOMINghrsst=${DCOMINghrsst:-$DCOMROOT}
+export DCOMINecmwf=${DCOMINecmwf:-$DCOMROOT}
 
 export COMINgefs_bc=${COMINgefs_bc:-$COMINnaefs}
 export DCOMINcmce_bc=${DCOMINcmce_bc:-$DCOMIN}
