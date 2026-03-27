@@ -33,14 +33,16 @@ cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_hrrr_severe_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_rrfs_severe_vhr" "$cyc"
-cyc=$(seq 0 12 23)
-link_master_to_cyc "jevs_prep_cam_href_severe_vhr" "$cyc"
+cyc=$(seq 0 6 23)
+link_master_to_cyc "jevs_prep_cam_rrfsmem_severe_vhr" "$cyc"
+cyc=$(seq 0 6 23)
+link_master_to_cyc "jevs_prep_cam_refs_severe_vhr" "$cyc"
 cd $ECF_DIR/scripts/stats/cam
 echo "Linking CAM stats ..."
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr" "$cyc"
 cyc=$(seq 0 23)
-link_master_to_cyc "jevs_stats_cam_href_radar_vhr" "$cyc"
+link_master_to_cyc "jevs_stats_cam_refs_radar_vhr" "$cyc"
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_cam_hrrr_radar_vhr" "$cyc"
 cyc=$(seq 0 23)

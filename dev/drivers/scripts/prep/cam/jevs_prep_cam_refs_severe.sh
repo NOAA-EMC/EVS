@@ -1,10 +1,10 @@
-#PBS -N jevs_stats_cam_href_radar
+#PBS -N jevs_prep_cam_refs_severe
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=9:mem=500GB
+#PBS -l place=shared,select=1:ncpus=1:mem=20GB
 #PBS -l debug=true
 
 
@@ -18,10 +18,9 @@ cd $PBS_O_WORKDIR
 ############################################################
 
 
-export OMP_NUM_THREADS=1
 export model=evs
 export NET=evs
-export STEP=stats
+export STEP=prep
 export COMPONENT=cam
 export RUN=atmos
 
@@ -41,15 +40,13 @@ export vhr=${vhr:-${vhr}}
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export VERIF_CASE=radar
-export MODELNAME=href
-export modsys=href
+export VERIF_CASE=severe
+export MODELNAME=refs
+export modsys=refs
 export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${vhr}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
-export USE_CFP=YES
-export nproc=9
 ############################################################
 
 export SENDCOM=${SENDCOM:-YES}
@@ -66,13 +63,13 @@ if [ -z "$MAILTO" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/JEVS_STATS_CAM
+   $HOMEevs/jobs/JEVS_PREP_CAM
 
 fi
 
 
 ######################################################################
-# Purpose: This job generates radar verification statistics
-#          for the HREF
+# Purpose: This job preprocesses HREF member data for use in
+#          CAM severe verification job
 ######################################################################
 

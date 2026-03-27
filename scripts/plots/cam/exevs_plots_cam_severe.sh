@@ -62,7 +62,7 @@ export MET_VERSION="${MET_VERSION%.}"
 
 ############################################################
 # Symlink .stat files from COMIN
-# Mainly for HREF when product is included in model name 
+# Mainly for REFS when product is included in model name 
 ############################################################
 
 # Create working directories 
@@ -85,7 +85,7 @@ for model in ${model_list}; do
       stat_file=evs.stats.${model}.${RUN}.${VERIF_CASE}.v${day}.stat
       dest=${STAT_OUTPUT_BASE_DIR}/${model}.${day}/${stat_file}
 
-      if [ "${model:0:4}" = "href" ]; then
+      if [ "${model:0:4}" = "refs" ]; then
 	 origin=${COMIN}/stats/${COMPONENT}/${model:0:4}.${day}/${stat_file}
       else
 	 origin=${COMIN}/stats/${COMPONENT}/${model}.${day}/${stat_file}

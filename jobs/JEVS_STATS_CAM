@@ -87,7 +87,7 @@ elif [ $VERIF_CASE = severe ] ; then
    export REP_DATE=$(finddate.sh $VDATE d-1)
 
 elif [ $VERIF_CASE = spcoutlook ] ; then
-   #for HREF grid2obs SPC outlook 
+   #for REFS grid2obs SPC outlook 
    export VDATE=${VDATE:-$PDYm1}
 
 else

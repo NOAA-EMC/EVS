@@ -1,10 +1,10 @@
-#PBS -N evs_stats_cam_href_severe
+#PBS -N evs_stats_cam_refs_radar_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:10:00
-#PBS -l place=shared,select=1:ncpus=1:mem=500MB
+#PBS -l walltime=00:15:00
+#PBS -l select=1:ncpus=9:mem=8GB
 #PBS -l debug=true
 
 export model=evs 
@@ -38,7 +38,7 @@ module load wgrib2/${wgrib2_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module list
-   
+
 ############################################################
 # Specify environment variables
 ############################################################
@@ -49,9 +49,11 @@ else
 fi
 export NET=evs
 export RUN=atmos
-export VERIF_CASE=severe
-export MODELNAME=href
-export modsys=href
+export VERIF_CASE=radar
+export MODELNAME=refs
+export modsys=refs
+export USE_CFP=YES
+export nproc=9
 export OMP_NUM_THREADS=1
 
 ############################################################
