@@ -1,9 +1,9 @@
-#PBS -N jevs_stats_aigefs_atmos_aigefs_precip
+#PBS -N jevs_stats_aigefs_gefs_atmos_precip
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:20:00
+#PBS -l walltime=00:15:00
 #PBS -l place=vscatter,select=1:ncpus=5:mem=30GB:prepost=true
 #PBS -l debug=true
 
@@ -47,7 +47,7 @@ export OMP_NUM_THREADS=1
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=precip
-export MODELNAME=aigefs
+export MODELNAME=gefs
 
 ############################################################
 # Execute j-job

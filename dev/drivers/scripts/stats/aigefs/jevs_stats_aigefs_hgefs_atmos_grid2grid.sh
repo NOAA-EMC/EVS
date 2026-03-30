@@ -1,10 +1,10 @@
-#PBS -N jevs_stats_aigefs_atmos_hgefs_grid2obs
+#PBS -N jevs_stats_aigefs_hgefs_atmos_grid2grid
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:15:00
-#PBS -l place=vscatter,select=1:ncpus=16:mem=50GB:prepost=true
+#PBS -l place=vscatter,select=1:ncpus=4:mem=100GB:prepost=true
 #PBS -l debug=true
 
 set -x
@@ -18,7 +18,7 @@ export STEP=stats
 export COMPONENT=aigefs
 export RUN=atmos
 export MODELNAME=hgefs
-export VERIF_CASE=grid2obs
+export VERIF_CASE=grid2grid
 
 module reset
 module load prod_envir/${prod_envir_ver}
