@@ -37,7 +37,7 @@ mkdir -p ${MODEL_INPUT_DIR}
 # Define settings for 00Z REFS time-lagged members
 if [ $vhr -eq 00 ];then
 
-   nloop=1
+   nloop=2
 
    export IDATE_lag=${IDATE_lag:-`$NDATE -12 ${INITDATE}${vhr} | cut -c 1-8`}
 
@@ -61,6 +61,10 @@ if [ $vhr -eq 00 ];then
    fhr_beg1=12
    fhr_end1=36
    fhr_end1_lag6=42
+
+   fhr_beg2=36
+   fhr_end2=60
+   fhr_end2_lag6=66 # these members won't exist, but we only need 6 members
 
 # Define settings for 06Z REFS time-lagged members
 elif [ $vhr -eq 06 ]; then
@@ -159,7 +163,7 @@ fi
 # Check for forecast files to process
 ###################################################################
 k=0
-min_file_req=12
+min_file_req=6
 
 while [ $k -lt $nloop ]; do
 
@@ -267,7 +271,11 @@ i=1
    ###################################################################
 
    if [ $nfiles -ge $min_file_req ]; then
-      if [ "$nfiles" -eq "12" ]; then
+      if [ "$nfiles" -eq "6" ]; then
+         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6"
+         export nmem="6"
+         export ens_thresh="1.0"
+      elif [ "$nfiles" -eq "12" ]; then
          export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13"
          export nmem="12"
          export ens_thresh="1.0"

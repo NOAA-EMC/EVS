@@ -69,7 +69,7 @@ fi
 
 if [ ${MODELNAME} = refs ]; then
    fhr_min=24
-   fhr_max=54
+   fhr_max=60
    fhr_inc=6
 
 elif [ ${MODELNAME} = hrrr ]; then

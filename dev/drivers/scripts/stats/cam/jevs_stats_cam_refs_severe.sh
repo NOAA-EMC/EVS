@@ -71,6 +71,6 @@ fi
 
 ######################################################################
 # Purpose: This job generates severe verification statistics
-#          for the HREF
+#          for the REFS
 ######################################################################
 
