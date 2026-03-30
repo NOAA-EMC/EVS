@@ -70,7 +70,7 @@ fi
 
 
 ######################################################################
-# Purpose: This job preprocesses HREF member data for use in
+# Purpose: This job preprocesses REFS member data for use in
 #          CAM severe verification job
 ######################################################################
 

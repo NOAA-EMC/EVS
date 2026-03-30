@@ -73,6 +73,6 @@ fi
 
 ######################################################################
 # Purpose: This job generates radar verification statistics
-#          for the HREF
+#          for the REFS
 ######################################################################
 
