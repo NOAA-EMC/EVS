@@ -125,6 +125,7 @@ condense_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
 for pm25_job in list(condense_stats_jobs_dict['pm25'].keys()):
     if pm25_job == 'PM25':
         pm25_job_line_types = ['SL1L2', 'CTC' ]
+        ## pm25_job_line_types = ['SL1L2']
     else:
         pm25_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['pm25'][pm25_job]['line_types'] = pm25_job_line_types
@@ -132,6 +133,7 @@ for pm25_job in list(condense_stats_jobs_dict['pm25'].keys()):
 for pm10_job in list(condense_stats_jobs_dict['pm10'].keys()):
     if pm10_job == 'PM10':
         pm10_job_line_types = ['SL1L2', 'CTC' ]
+        ## pm10_job_line_types = ['SL1L2' ]
     else:
         pm10_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['pm10'][pm10_job]['line_types'] = pm10_job_line_types
@@ -139,6 +141,7 @@ for pm10_job in list(condense_stats_jobs_dict['pm10'].keys()):
 for aod_job in list(condense_stats_jobs_dict['aod'].keys()):
     if aod_job == 'AOD':
         aod_job_line_types = ['SL1L2', 'CTC' ]
+        ## aod_job_line_types = ['SL1L2']
     else:
         aod_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['aod'][aod_job]['line_types'] = aod_job_line_types
@@ -282,7 +285,7 @@ for pm25_job in list(make_plots_jobs_dict['pm25'].keys()):
     if pm25_job in ['PM25']:
         pm25_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     elif pm25_job in ['PM25_Thresh']:
-        pm25_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean']
+        pm25_job_plots = ['threshold_average_fhrvhr_mean']
     else:
         pm25_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['pm25'][pm25_job]['plots'] = pm25_job_plots
@@ -319,7 +322,7 @@ for pm10_job in list(make_plots_jobs_dict['pm10'].keys()):
     if pm10_job in ['PM10']:
         pm10_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     elif pm10_job in ['PM10_Thresh']:
-        pm10_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean']
+        pm10_job_plots = ['threshold_average_fhrvhr_mean']
     else:
         pm10_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['pm10'][pm10_job]['plots'] = pm10_job_plots
@@ -357,11 +360,21 @@ for aod_job in list(make_plots_jobs_dict['aod'].keys()):
     if aod_job in ['AOD']:
         aod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean', 'valid_hour_average_fhr_mean']
     elif aod_job in ['AOD_Thresh']:
-        aod_job_plots = ['time_series_fhr_mean', 'lead_average_vhr_mean']
+        aod_job_plots = ['threshold_average_fhrvhr_mean']
     else:
         aod_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['aod'][aod_job]['plots'] = aod_job_plots
 
+#### for aod_job in list(make_plots_jobs_dict['aod'].keys()):
+####     if aod_job in ['AOD']:
+####         make_plots_jobs_dict['aod'][f"{aod_job}_PerfDiag"] = copy.deepcopy(
+####              make_plots_jobs_dict['aod'][f"{aod_job}_Thresh"]
+####             )
+####         (make_plots_jobs_dict['aod'][f"{aod_job}_PerfDiag"]\
+####          ['line_type_stats']) = ['CTC/PERFDIAG']
+####         make_plots_jobs_dict['aod'][f"{aod_job}_PerfDiag"]['plots'] = [
+####             'performance_diagram'
+####         ]
 if JOB_GROUP == 'make_plots':
     JOB_GROUP_dict = make_plots_jobs_dict
 
@@ -597,7 +610,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 else:
                     plot_valid_hrs_loop = valid_hrs
                 if job_env_dict['plot'] in ['threshold_average',
-                                            'performance_diagram']:
+                                            'performance_diagram',
+                                            'threshold_average_fhrvhr_mean' ]:
                     plot_fcst_threshs_loop = [
                         verif_type_plot_jobs_dict[verif_type_job]\
                         ['fcst_var_dict']['threshs']
@@ -614,41 +628,28 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 if job_env_dict['plot'] in  [ 'valid_hour_average_fhr_mean',
                                               'time_series_fhr_mean' ]:
                     for plot_loop_info in list(
-                        itertools.product(plot_valid_hrs_loop,
-                                          plot_fcst_threshs_loop,
+                        itertools.product( plot_fcst_threshs_loop,
                                           plot_fcst_levels_loop,
                                           plot_fdays_loop,
                                           plot_init_hrs_loop)
                     ):
-                        job_env_dict['fday_start'] = str(plot_loop_info[3])
-                        job_env_dict['fday_end']   = str(plot_loop_info[3])
+                        job_env_dict['fday_start'] = str(plot_loop_info[2])
+                        job_env_dict['fday_end']   = str(plot_loop_info[2])
                         job_env_dict['fday_inc']   = str(fday_inc)
     
-                        job_env_dict['init_hr_start'] = str(plot_loop_info[4]).zfill(2)
-                        job_env_dict['init_hr_end']   = str(plot_loop_info[4]).zfill(2)
+                        job_env_dict['init_hr_start'] = str(plot_loop_info[3]).zfill(2)
+                        job_env_dict['init_hr_end']   = str(plot_loop_info[3]).zfill(2)
                         job_env_dict['init_hr_inc']   = str(init_hr_inc)
     
-                        if job_env_dict['plot'] in  [ 'valid_hour_average_fhr_mean',
-                                                      'time_series_fhr_mean' ]:
-                            job_env_dict['valid_hr_start'] = str(
-                                plot_loop_info[0][0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_end'] = str(
-                                plot_loop_info[0][-1]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-                        else:
-                            job_env_dict['valid_hr_start'] = str(
-                                plot_loop_info[0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_end'] = str(
-                                plot_loop_info[0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_inc'] = '24'
+                        job_env_dict['valid_hr_start'] = str(valid_hr_start).zfill(2)
+                        job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
+                        job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
+
+    
                         if job_env_dict['plot'] in ['threshold_average',
                                                     'performance_diagram']:
                             job_env_dict['fcst_var_thresh_list'] = ', '.join(
-                                    plot_loop_info[1]
+                                    plot_loop_info[0]
                             )
                             job_env_dict['obs_var_thresh_list'] = ', '.join(
                                 verif_type_plot_jobs_dict[verif_type_job]\
@@ -656,22 +657,22 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             )
                         else:
                             job_env_dict['fcst_var_thresh_list'] = (
-                                plot_loop_info[1]
+                                plot_loop_info[0]
                             )
                             job_env_dict['obs_var_thresh_list'] = (
                                 verif_type_plot_jobs_dict[verif_type_job]\
                                 ['obs_var_dict']['threshs']\
                                 [verif_type_plot_jobs_dict[verif_type_job]\
                                  ['fcst_var_dict']['threshs']\
-                                 .index(plot_loop_info[1])]
+                                 .index(plot_loop_info[0])]
                             )
-                        job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
+                        job_env_dict['fcst_var_level_list'] = plot_loop_info[1]
                         job_env_dict['obs_var_level_list'] = (
                             verif_type_plot_jobs_dict[verif_type_job]\
                             ['obs_var_dict']['levels']\
                             [verif_type_plot_jobs_dict[verif_type_job]\
                             ['fcst_var_dict']['levels']\
-                            .index(plot_loop_info[2])]
+                            .index(plot_loop_info[1])]
                         )
                         run_cam_rrfs_chem_plots = ['plots']
                         ##
@@ -720,7 +721,175 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                 job.write('export err=$?; err_chk'+'\n')
                             job.close()
     
-                elif job_env_dict['plot'] in  [ 'lead_average', 'lead_average_vhr_mean' ]:
+                elif job_env_dict['plot'] in  [ 'threshold_average_fhrvhr_mean' ]:
+                    for plot_loop_info in list(
+                        itertools.product( plot_fcst_levels_loop,
+                                          plot_fdays_loop,
+                                          plot_init_hrs_loop)
+                    ):
+                        job_env_dict['fcst_var_level_list'] = plot_loop_info[0]
+                        job_env_dict['obs_var_level_list'] = (
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['obs_var_dict']['levels']\
+                            [verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['levels']\
+                            .index(plot_loop_info[0])]
+                        )
+                        job_env_dict['fday_start'] = str(plot_loop_info[1])
+                        job_env_dict['fday_end']   = str(plot_loop_info[1])
+                        job_env_dict['fday_inc']   = str(fday_inc)
+    
+                        job_env_dict['init_hr_start'] = str(plot_loop_info[2]).zfill(2)
+                        job_env_dict['init_hr_end']   = str(plot_loop_info[2]).zfill(2)
+                        job_env_dict['init_hr_inc']   = str(init_hr_inc)
+    
+                        job_env_dict['valid_hr_start'] = str(valid_hr_start).zfill(2)
+                        job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
+                        job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
+
+                        job_env_dict['fcst_var_thresh_list'] = ', '.join(
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['threshs']
+                        )
+                        job_env_dict['obs_var_thresh_list'] = ', '.join(
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['obs_var_dict']['threshs']
+                        )
+                        run_cam_rrfs_chem_plots = ['plots']
+                        ##
+                        for run_cam_rrfs_chem_plot in run_cam_rrfs_chem_plots:
+                            # Set up output directories
+                            njobs+=1
+                            job_env_dict['job_id'] = 'job'+str(njobs)
+                            job_work_dir, job_DATA_dir, job_COMOUT_dir = (
+                                gda_util.get_plot_job_dirs(DATA, COMOUT, JOB_GROUP,
+                                                           job_env_dict)
+                            )
+                            job_env_dict['job_work_dir'] = job_work_dir
+                            job_env_dict['job_DATA_dir'] = job_DATA_dir
+                            job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
+                            if SENDCOM == 'YES':
+                                gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                            else:
+                                gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                            write_job_cmds = True
+                            if restart_mode == 'YES':    # Check plot files
+                                plot_files_exist = gda_util.check_plot_files(
+                                    job_env_dict
+                                )
+                                if plot_files_exist:
+                                    write_job_cmds = False
+                            # Create job file
+                            job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                                    'job'+str(njobs))
+                            print("Creating job script: "+job_file)
+                            job = open(job_file, 'w')
+                            job.write('#!/bin/bash\n')
+                            job.write('set -x\n')
+                            job.write('\n')
+                            # Set any environment variables for special cases
+                            # Write environment variables
+                            job_env_dict['job_id'] = 'job'+str(njobs)
+                            for name, value in job_env_dict.items():
+                                if name not in dont_write_env_var_list:
+                                    job.write('export '+name+'="'+value+'"\n')
+                            job.write('\n')
+                            if write_job_cmds:
+                                job.write(
+                                    gda_util.python_command('cam_rrfs_chem_plots.py',
+                                                            [])+'\n'
+                                )
+                                job.write('export err=$?; err_chk'+'\n')
+                            job.close()
+    
+                elif job_env_dict['plot'] in  [ 'lead_average_vhr_mean' ]:
+                    for plot_loop_info in list(
+                        itertools.product( plot_fcst_threshs_loop,
+                                          plot_fcst_levels_loop,
+                                          plot_init_hrs_loop)
+                    ):
+                        job_env_dict['init_hr_start'] = str(plot_loop_info[2]).zfill(2)
+                        job_env_dict['init_hr_end'] = str(plot_loop_info[2]).zfill(2)
+                        job_env_dict['init_hr_inc'] = str(init_hr_inc)
+    
+                        job_env_dict['valid_hr_start'] = str(valid_hr_start).zfill(2)
+                        job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
+                        job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
+
+                        if job_env_dict['plot'] in ['threshold_average',
+                                                    'performance_diagram']:
+                            job_env_dict['fcst_var_thresh_list'] = ', '.join(
+                                    plot_loop_info[0]
+                            )
+                            job_env_dict['obs_var_thresh_list'] = ', '.join(
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['threshs']
+                            )
+                        else:
+                            job_env_dict['fcst_var_thresh_list'] = (
+                                plot_loop_info[0]
+                            )
+                            job_env_dict['obs_var_thresh_list'] = (
+                                verif_type_plot_jobs_dict[verif_type_job]\
+                                ['obs_var_dict']['threshs']\
+                                [verif_type_plot_jobs_dict[verif_type_job]\
+                                 ['fcst_var_dict']['threshs']\
+                                 .index(plot_loop_info[0])]
+                            )
+                        job_env_dict['fcst_var_level_list'] = plot_loop_info[1]
+                        job_env_dict['obs_var_level_list'] = (
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['obs_var_dict']['levels']\
+                            [verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['levels']\
+                            .index(plot_loop_info[1])]
+                        )
+                        run_cam_rrfs_chem_plots = ['plots']
+                        for run_cam_rrfs_chem_plot in run_cam_rrfs_chem_plots:
+                            # Set up output directories
+                            njobs+=1
+                            job_env_dict['job_id'] = 'job'+str(njobs)
+                            job_work_dir, job_DATA_dir, job_COMOUT_dir = (
+                                gda_util.get_plot_job_dirs(DATA, COMOUT, JOB_GROUP,
+                                                           job_env_dict)
+                            )
+                            job_env_dict['job_work_dir'] = job_work_dir
+                            job_env_dict['job_DATA_dir'] = job_DATA_dir
+                            job_env_dict['job_COMOUT_dir'] = job_COMOUT_dir
+                            if SENDCOM == 'YES':
+                                gda_util.make_dir(job_env_dict['job_COMOUT_dir'])
+                            else:
+                                gda_util.make_dir(job_env_dict['job_DATA_dir'])
+                            write_job_cmds = True
+                            if restart_mode == 'YES':    # Check plot files
+                                plot_files_exist = gda_util.check_plot_files(
+                                    job_env_dict
+                                )
+                                if plot_files_exist:
+                                    write_job_cmds = False
+                            # Create job file
+                            job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                                    'job'+str(njobs))
+                            print("Creating job script: "+job_file)
+                            job = open(job_file, 'w')
+                            job.write('#!/bin/bash\n')
+                            job.write('set -x\n')
+                            job.write('\n')
+                            # Set any environment variables for special cases
+                            # Write environment variables
+                            job_env_dict['job_id'] = 'job'+str(njobs)
+                            for name, value in job_env_dict.items():
+                                if name not in dont_write_env_var_list:
+                                    job.write('export '+name+'="'+value+'"\n')
+                            job.write('\n')
+                            if write_job_cmds:
+                                job.write(
+                                    gda_util.python_command('cam_rrfs_chem_plots.py',
+                                                            [])+'\n'
+                                )
+                                job.write('export err=$?; err_chk'+'\n')
+                            job.close()
+                elif job_env_dict['plot'] in  [ 'lead_average' ]:
                     for plot_loop_info in list(
                         itertools.product(plot_valid_hrs_loop,
                                           plot_fcst_threshs_loop,
@@ -731,22 +900,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job_env_dict['init_hr_end'] = str(plot_loop_info[3]).zfill(2)
                         job_env_dict['init_hr_inc'] = str(init_hr_inc)
     
-                        if job_env_dict['plot'] == 'lead_average_vhr_mean':
-                            job_env_dict['valid_hr_start'] = str(
-                                plot_loop_info[0][0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_end'] = str(
-                                plot_loop_info[0][-1]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-                        else:
-                            job_env_dict['valid_hr_start'] = str(
-                                plot_loop_info[0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_end'] = str(
-                                plot_loop_info[0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_inc'] = '24'
+                        job_env_dict['valid_hr_start'] = str(
+                            plot_loop_info[0]
+                        ).zfill(2)
+                        job_env_dict['valid_hr_end'] = str(
+                            plot_loop_info[0]
+                        ).zfill(2)
+                        job_env_dict['valid_hr_inc'] = '24'
 
                         if job_env_dict['plot'] in ['threshold_average',
                                                     'performance_diagram']:
