@@ -55,7 +55,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}"
+      input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G227.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then      
@@ -178,7 +178,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr}"
+      input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G198.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -303,7 +303,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.hi.f${fhr}"
+      input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.hi.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G139.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -424,7 +424,7 @@ for dom in $domains ; do
        ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
        iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-       input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.pr.f${fhr}"
+       input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.pr.f${fhr}"
        input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G200.nc"
 
        if [ -s $input_fcst ] && [ -s $input_obsv ] ; then

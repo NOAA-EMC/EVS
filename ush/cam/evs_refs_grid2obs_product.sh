@@ -52,7 +52,7 @@ for prod in mean prob ; do
       ihr=`$NDATE -$fhr $VDATE$valid_run|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_run|cut -c 1-8`
   
-      input_fcst="$COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.conus.${prod}.f${fhr}.grib2"
+      input_fcst="$COMINrefs/refs.${iday}/${ihr}/ensprod/refs.t${ihr}z.${prod}.f${fhr}.conus.grib2"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid_run}z.G227.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -68,9 +68,9 @@ for prod in mean prob ; do
        echo  "export obsvgrid=G227" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
        if [ $prod = sclr ] ; then
-         echo  "export modelgrid=conus.prob" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
+         echo  "export modelgrid=prob" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        else
-         echo  "export modelgrid=conus.${prod}" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
+         echo  "export modelgrid=${prod}" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        fi 
 
        echo  "export obsvhead=$obsv" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
@@ -85,7 +85,7 @@ for prod in mean prob ; do
        echo  "export regrid=G227" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export modelhead=$model" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export modelpath=$COMREFS" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
-       echo  "export modeltail='.grib2'" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo  "export modeltail='.conus.grib2'" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export extradir='ensprod/'" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
        echo  "export verif_grid=''" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
@@ -165,7 +165,7 @@ for prod in mean prob ; do
       ihr=`$NDATE -$fhr $VDATE$valid_run|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_run|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.ak.${prod}.f${fhr}.grib2"
+      input_fcst="$COMINrefs/refs.${iday}/${ihr}/ensprod/refs.t${ihr}z.${prod}.f${fhr}.ak.grib2"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid_run}z.G198.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -182,9 +182,9 @@ for prod in mean prob ; do
        echo  "export obsvgrid=G198" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
        if [ $prod = sclr ] ; then
-         echo  "export modelgrid=ak.prob" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
+         echo  "export modelgrid=prob" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        else
-         echo  "export modelgrid=ak.${prod}" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
+         echo  "export modelgrid=${prod}" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        fi
        echo  "export verif_grid=''" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export verif_poly='${maskpath}/Alaska_HREF.nc' " >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
@@ -200,7 +200,7 @@ for prod in mean prob ; do
        echo  "export regrid=NONE" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export modelhead=$model" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export modelpath=$COMREFS" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
-       echo  "export modeltail='.grib2'" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
+       echo  "export modeltail='.ak.grib2'" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
        echo  "export extradir='ensprod/'" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
 
  

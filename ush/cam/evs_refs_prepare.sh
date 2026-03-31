@@ -261,7 +261,7 @@ if [ "$data" = "apcp24h_conus" ] ; then
       fyyyymmdd=${fcst_time:0:8}
       fcyc=${fcst_time:8:2}
       mkdir -p $WORK/refs.${fyyyymmdd}
-      export modelpath=${COMREFS}/refs.${fyyyymmdd}/ensprod
+      export modelpath=${COMREFS}/refs.${fyyyymmdd}/${fcyc}/ensprod
       export prod 
 
       fhr_3=$((fhr-3))
@@ -332,7 +332,7 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       fyyyymmdd=${fcst_time:0:8}
       export fcyc=${fcst_time:8:2} #Alaska only has 06 cycle run 
       mkdir -p refs.${fyyyymmdd}
-      export modelpath=${COMREFS}/refs.${fyyyymmdd}/ensprod
+      export modelpath=${COMREFS}/refs.${fyyyymmdd}/${fcyc}/ensprod
       export prod
 
       fhr_3=$((fhr-3))
@@ -347,7 +347,7 @@ if [ "$data" = "apcp24h_alaska" ] ; then
      for prod in mean avrg pmmn lpmm ; do
 
 
-      if [ -s $modelpath/refs.t${fcyc}z.ak.${prod}.f${fhr}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.ak.${prod}.f${fhr_3}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.ak.${prod}.f${fhr_6}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.ak.${prod}.f${fhr_9}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.ak.${prod}.f${fhr_12}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.ak.${prod}.f${fhr_15}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.ak.${prod}.f${fhr_18}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.ak.${prod}.f${fhr_21}.grib2 ] ; then
+      if [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_3}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_6}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_9}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_12}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_15}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_18}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_21}.ak.grib2 ] ; then
 
       #################################################################################################
       # Restart: first check if refs.${fyyyymmdd}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists
@@ -695,7 +695,7 @@ if [ "$data" = "sfc" ] ; then
       echo "    typeset -Z2 hh" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    hh=\$fhr      " >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "      for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 ; do" >> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "        refs=$COMREFS/refs.${day}/verf_g2g/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        refs=$COMREFS/refs.${day}/${cyc}/verf_g2g/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "        if [ -s \$refs ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          $WGRIB2 \$refs|grep --file=$DATA/pat|$WGRIB2 -i \$refs -grib  \$work/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          if [ \$mbr = 01 ] || [ \$mbr = 02 ] || [ \$mbr = 03 ] || [ \$mbr = 04 ] || [ \$mbr = 05 ] || [ \$mbr = 06 ] || [ \$mbr = 13 ] ; then " >> run_prepare.${day}.${cyc}.${domain}.sh

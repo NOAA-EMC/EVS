@@ -113,7 +113,7 @@ for prod in mean ; do
      ihr=`$NDATE -$fhr $VDATE$valid|cut -c 9-10`
      iday=`$NDATE -$fhr $VDATE$valid|cut -c 1-8`
 
-     input_fcst="$COMINrefs/refs.${iday}/ensprod/refs.t${ihr}z.conus.${prod}.f${fhr}.grib2"
+     input_fcst="$COMINrefs/refs.${iday}/${ihr}/ensprod/refs.t${ihr}z.${prod}.f${fhr}.conus.grib2"
      input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid}z.G227.nc"
 
      if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -142,7 +142,7 @@ for prod in mean ; do
        echo  "export domain=CONUS" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo  "export obsvgrid=G227" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
-       echo  "export modelgrid=conus.${prod}" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export modelgrid=${prod}" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
        echo  "export obsvhead=$obsv" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo  "export obsvpath=$WORK" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
@@ -155,7 +155,7 @@ for prod in mean ; do
        echo  "export regrid=G227" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo  "export modelhead=$model" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo  "export modelpath=$COMREFS" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
-       echo  "export modeltail='.grib2'" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
+       echo  "export modeltail='.conus.grib2'" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
        echo  "export extradir='ensprod/'" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
 
        echo  "export verif_grid=''" >> run_refs_${model}.${dom}.${valid}.${fhr}_spcoutlook.sh
