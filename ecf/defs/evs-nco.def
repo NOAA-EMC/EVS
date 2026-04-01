@@ -327,6 +327,26 @@ suite evs_nco
             task jevs_stats_cam_rrfs_snowfall_vhr_00
               trigger :TIME >= 0030 and :TIME < 0630
               edit VHR '00'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_00_mem_1
+              trigger :TIME >= 0030 and :TIME < 0630
+              edit VHR '00'
+              edit MEM '1'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_00_mem_2
+              trigger :TIME >= 0030 and :TIME < 0630
+              edit VHR '00'
+              edit MEM '2'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_00_mem_3
+              trigger :TIME >= 0030 and :TIME < 0630
+              edit VHR '00'
+              edit MEM '3'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_00_mem_4
+              trigger :TIME >= 0030 and :TIME < 0630
+              edit VHR '00'
+              edit MEM '4'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_00_mem_5
+              trigger :TIME >= 0030 and :TIME < 0630
+              edit VHR '00'
+              edit MEM '5'
             task jevs_stats_cam_hrrr_grid2obs_vhr_02
               trigger :TIME >= 0230 and :TIME < 0830
               edit VHR '02'
@@ -904,6 +924,26 @@ suite evs_nco
             task jevs_stats_cam_rrfs_snowfall_vhr_06
               trigger :TIME >= 0630 and :TIME < 1230
               edit VHR '06'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_1
+              trigger :TIME >= 0630 and :TIME < 1230
+              edit VHR '06'
+              edit MEM '1'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_2
+              trigger :TIME >= 0630 and :TIME < 1230
+              edit VHR '06'
+              edit MEM '2'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_3
+              trigger :TIME >= 0630 and :TIME < 1230
+              edit VHR '06'
+              edit MEM '3'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_4
+              trigger :TIME >= 0630 and :TIME < 1230
+              edit VHR '06'
+              edit MEM '4'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_5
+              trigger :TIME >= 0630 and :TIME < 1230
+              edit VHR '06'
+              edit MEM '5'
             task jevs_stats_cam_hrrr_grid2obs_vhr_06
               trigger :TIME >= 0630 and :TIME < 1230
               edit VHR '06'
@@ -1443,6 +1483,26 @@ suite evs_nco
             task jevs_stats_cam_rrfs_snowfall_vhr_12
               trigger :TIME >= 1230 and :TIME < 1830
               edit VHR '12'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_1
+              trigger :TIME >= 1230 and :TIME < 1830
+              edit VHR '12'
+              edit MEM '1'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_2
+              trigger :TIME >= 1230 and :TIME < 1830
+              edit VHR '12'
+              edit MEM '2'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_3
+              trigger :TIME >= 1230 and :TIME < 1830
+              edit VHR '12'
+              edit MEM '3'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_4
+              trigger :TIME >= 1230 and :TIME < 1830
+              edit VHR '12'
+              edit MEM '4'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_5
+              trigger :TIME >= 1230 and :TIME < 1830
+              edit VHR '12'
+              edit MEM '5'
             task jevs_stats_cam_hrrr_grid2obs_vhr_12
               trigger :TIME >= 1230 and :TIME < 1830
               edit VHR '12'
@@ -2095,6 +2155,26 @@ suite evs_nco
             task jevs_stats_cam_rrfs_snowfall_vhr_18
               trigger (:TIME >= 1830 or :TIME < 0030) and ../../../../06/evs/stats/cam/jevs_stats_cam_rrfs_snowfall_vhr_06 == complete and ../../../../12/evs/stats/cam/jevs_stats_cam_rrfs_snowfall_vhr_12 == complete
               edit VHR '18'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_1
+              trigger (:TIME >= 1830 or :TIME < 0030) and ../../../../06/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_1 == complete and ../../../../12/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_1 == complete
+              edit VHR '18'
+              edit MEM '1'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_2
+              trigger (:TIME >= 1830 or :TIME < 0030) and ../../../../06/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_2 == complete and ../../../../12/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_2 == complete
+              edit VHR '18'
+              edit MEM '2'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_3
+              trigger (:TIME >= 1830 or :TIME < 0030) and ../../../../06/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_3 == complete and ../../../../12/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_3 == complete
+              edit VHR '18'
+              edit MEM '3'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_4
+              trigger (:TIME >= 1830 or :TIME < 0030) and ../../../../06/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_4 == complete and ../../../../12/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_4 == complete
+              edit VHR '18'
+              edit MEM '4'
+            task jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_5
+              trigger (:TIME >= 1830 or :TIME < 0030) and ../../../../06/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_06_mem_5 == complete and ../../../../12/evs/stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_12_mem_5 == complete
+              edit VHR '18'
+              edit MEM '5'
             task jevs_stats_cam_hrrr_precip_vhr_19
               trigger (:TIME >= 1900 or :TIME < 0100) and ../../prep/cam/jevs_cam_hrrr_precip_prep_vhr_18 == complete
               edit VHR '19'
@@ -2358,7 +2438,7 @@ suite evs_nco
               trigger (:TIME >= 2230 or :TIME < 0430) and ../../stats/cam/jevs_stats_cam_hrrr_precip_vhr_22 == complete and ../../stats/cam/jevs_stats_cam_rrfs_precip_vhr_22 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_precip_vhr_22_mem_1 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_precip_vhr_22_mem_2 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_precip_vhr_22_mem_3 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_precip_vhr_22_mem_4 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_precip_vhr_22_mem_5 == complete
               edit VHR '21'
             task jevs_plots_cam_snowfall_last90days
-              trigger (:TIME >= 2100 or :TIME < 0300) and ../../stats/cam/jevs_stats_cam_hrrr_snowfall_vhr_18 == complete and ../../stats/cam/jevs_stats_cam_rrfs_snowfall_vhr_18 == complete
+              trigger (:TIME >= 2100 or :TIME < 0300) and ../../stats/cam/jevs_stats_cam_hrrr_snowfall_vhr_18 == complete and ../../stats/cam/jevs_stats_cam_rrfs_snowfall_vhr_18 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_1 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_2 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_3 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_4 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_snowfall_vhr_18_mem_5 == complete
               edit VHR '21'
             task jevs_plots_cam_grid2obs_last90days
               trigger (:TIME >= 2100 or :TIME < 0300) and ../../stats/cam/jevs_stats_cam_hrrr_grid2obs_vhr_21 == complete and ../../stats/cam/jevs_stats_cam_rrfs_grid2obs_vhr_21 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_1 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_2 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_3 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_4 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_5 == complete
