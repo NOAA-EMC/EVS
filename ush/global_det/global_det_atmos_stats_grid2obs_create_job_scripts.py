@@ -905,14 +905,22 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                                               'fnmoc', 'imd',
                                                               'jma', 'ukmet']:
                             write_job_cmds = False
-                        # JMA does not have Relative Humidity
+                        # JMA and AIGFS do not have Relative Humidity
                         if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
                                 and verif_type_job == 'RelHum' \
-                                and job_env_dict['MODEL'] == 'jma':
+                                and job_env_dict['MODEL'] in ['jma', 'aigfs']:
                             write_job_cmds = False
-                        # CMC and FNMOC do not have variables at all levels
+                        #AIGFS does not have all sfc variables
+                        if job_env_dict['VERIF_TYPE'] == 'sfc' \
+                                and verif_type_job in [\
+                                'CAPEMixedLayer', 'CAPESfcBased', 'Ceiling',\
+                                'Dewpoint2m', 'RelHum2m', 'TotCloudCover',\
+                                'Visibility', 'WindGust','PBLHeight']\
+                                and job_env_dict['MODEL'] == 'aigfs':
+                            write_job_cmds = False
+                        # CMC, FNMOC and AIGFS do not have variables at all levels
                         if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
-                                and job_env_dict['MODEL'] in ['cmc', 'fnmoc']:
+                                and job_env_dict['MODEL'] in ['cmc', 'fnmoc', 'aigfs']:
                             if job_env_dict['MODEL'] == 'cmc':
                                 mod_rm_level_list = [
                                     'P400', 'P300', 'P200', 'P150', 'P100',
@@ -931,6 +939,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     mod_rm_level_list.append('P200')
                                     mod_rm_level_list.append('P150')
                                     mod_rm_level_list.append('P100')
+                            elif job_env_dict['MODEL'] == 'aigfs':
+                                mod_rm_level_list = [
+                                    'P20', 'P10', 'P5', 'P1'
+                                ]
                             for dtype in ['fcst', 'obs']:
                                 dtype_level_list = (
                                     job_env_dict[f"var1_{dtype}_levels"]\

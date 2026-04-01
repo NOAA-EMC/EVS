@@ -169,7 +169,7 @@ while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
             output_file_data.close()
             input_file_data.close()
     else:
-        print("\nWARNING: "+input_file+" does not exist")
+        print("WARNING: "+input_file+" does not exist")
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
     fhr+=int(valid_hr_inc)
     
