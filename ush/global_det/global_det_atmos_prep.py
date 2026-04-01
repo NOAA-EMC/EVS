@@ -49,7 +49,7 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 MODELNAME = os.environ['MODELNAME'].split(' ')
 OBSNAME = os.environ['OBSNAME'].split(' ')
-ECMWF_FILE_EXT=os.environ.get('ECMWF_FILE_EXT', '1')
+ECMWF_FILE_EXT=os.environ['ECMWF_FILE_EXT']
 
 # Make COMOUT directory for dates
 output_INITDATE = COMOUT+'.'+INITDATE
