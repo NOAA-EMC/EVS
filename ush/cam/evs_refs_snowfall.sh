@@ -39,14 +39,28 @@ for obsv in 6h 24h  ; do
     # Build sub-jobs
     # ****************************
     if [ $obsv = 6h ] ; then
-        export fhrs="06 12 18 24 30 36 42 48"
+        export fhrs="06 12 18 24 30 36 42 48 54 60"
         export vhrs="00 06 12 18"
     elif [ $obsv = 24h ] ; then
-        export fhrs="24 30 36 42 48"
+        export fhrs="24 30 36 42 48 54 60"
         export vhrs="00 12"
     fi
 
     for fhr in $fhrs; do
+     #Before fhr=48, all 14 members are available
+        if [[ $fhr -le 42 ]]; then
+            export nmem=14
+            export members=14
+        elif [[ $fhr -le 48 ]]; then
+            export nmem=13
+            export members=13
+        elif [[ $fhr -le 54 ]]; then
+            export nmem=12
+            export members=12
+        else
+            export nmem=6
+            export members=6
+        fi
 
         for vhr in $vhrs; do
             >run_refs_snow${obsv}.${fhr}.${vhr}.sh
@@ -67,8 +81,6 @@ for obsv in 6h 24h  ; do
 
 	   if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
             
-            export nmem=14
-	    export members=14
 
 	    echo "#!/bin/ksh" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh  
 	    echo "set -x" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh  

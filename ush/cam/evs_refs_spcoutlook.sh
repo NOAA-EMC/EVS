@@ -108,7 +108,7 @@ for prod in mean ; do
 
     export domain=$dom
 
-    for fhr in 06 12 18 24 30 36 42 48 ; do
+    for fhr in 06 12 18 24 30 36 42 48 54 60 ; do
 	
      ihr=`$NDATE -$fhr $VDATE$valid|cut -c 9-10`
      iday=`$NDATE -$fhr $VDATE$valid|cut -c 1-8`

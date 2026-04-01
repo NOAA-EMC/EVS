@@ -256,7 +256,7 @@ if [ "$data" = "apcp24h_conus" ] ; then
    obsv_vcyc=${vday}${vcyc}
 
    export fhr
-   for fhr in 24 30 36 42 48 ; do
+   for fhr in 24 30 36 42 48 54 60 ; do
       fcst_time=`$NDATE -$fhr $obsv_vcyc`
       fyyyymmdd=${fcst_time:0:8}
       fcyc=${fcst_time:8:2}
@@ -327,7 +327,7 @@ if [ "$data" = "apcp24h_alaska" ] ; then
    obsv_vcyc=${vday}${vcyc}
 
    export fhr
-   for fhr in 24 30 36 42 48 ; do  
+   for fhr in 24 30 36 42 48 54 60 ; do  
       fcst_time=`$NDATE -$fhr $obsv_vcyc`
       fyyyymmdd=${fcst_time:0:8}
       export fcyc=${fcst_time:8:2} #Alaska only has 06 cycle run 
@@ -691,7 +691,7 @@ if [ "$data" = "sfc" ] ; then
       echo "set -x" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "work=$work" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "cd \$work">> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 ; do" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 ; do" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    typeset -Z2 hh" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    hh=\$fhr      " >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "      for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 ; do" >> run_prepare.${day}.${cyc}.${domain}.sh

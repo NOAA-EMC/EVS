@@ -10,7 +10,6 @@
 set -x 
 
 domain=$1
-nmbrs=14
 
 if [ $domain = all ] ; then
   domains="CONUS Alaska HI PR"
@@ -37,7 +36,16 @@ for dom in $domains ; do
        
      for valid_at in 00 12 ; do
 
-      for fhr in 06 12 18 24 30 36 42 48 ; do
+      for fhr in 06 12 18 24 30 36 42 48 54 60 ; do
+        if [[ $fhr -le 42 ]]; then
+            export nmbrs=14
+        elif [[ $fhr -le 48 ]]; then
+            export nmbrs=13
+        elif [[ $fhr -le 54 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
      
      
 	#****************************
@@ -164,7 +172,16 @@ for dom in $domains ; do
 
       for valid_at in 00 12 ; do 
 
-       for fhr in 06 12 18 24 30 36 42 48 ; do 
+       for fhr in 06 12 18 24 30 36 42 48 54 60; do 
+        if [[ $fhr -le 42 ]]; then
+            export nmbrs=14
+        elif [[ $fhr -le 48 ]]; then
+            export nmbrs=13
+        elif [[ $fhr -le 54 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
@@ -289,7 +306,16 @@ for dom in $domains ; do
 
       for valid_at in 00 12 ; do
 
-       for fhr in 06 12 18 24 30 36 42 48 ; do
+       for fhr in 06 12 18 24 30 36 42 48 54 60 ; do
+        if [[ $fhr -le 42 ]]; then
+            export nmbrs=14
+        elif [[ $fhr -le 48 ]]; then
+            export nmbrs=13
+        elif [[ $fhr -le 54 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
@@ -410,7 +436,16 @@ for dom in $domains ; do
 
       for valid_at in 00 12 ; do
 
-       for fhr in 06 12 18 24 30 36 42 48 ; do
+       for fhr in 06 12 18 24 30 36 42 48 54 60 ; do
+        if [[ $fhr -le 42 ]]; then
+            export nmbrs=14
+        elif [[ $fhr -le 48 ]]; then
+            export nmbrs=13
+        elif [[ $fhr -le 54 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 

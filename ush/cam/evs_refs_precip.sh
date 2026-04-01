@@ -87,19 +87,16 @@ for obsvtype in ccpa mrms ; do
 	    fi
 	 fi
 
-	 #Before fhr=48, all 14 members are available
-	 export nmem=14
-	 export members=14
 
 	 for vhr in $vhrs; do
            if [ $acc = 24h ] ; then
-	     export fhrs="24 30 36 42 48"
+	     export fhrs="24 30 36 42 48 54 60"
 	   else
 	     if [ $prod = system ] ; then 
 	           if [ $vhr = 00 ] || [ $vhr = 06 ] || [ $vhr = 12 ] || [ $vhr = 18 ] ; then
-		     export fhrs="06 12 18 24 30 36 42 48"
+		     export fhrs="06 12 18 24 30 36 42 48 54 60"
 	           elif [ $vhr = 03 ] || [ $vhr = 09 ] || [ $vhr = 15 ] || [ $vhr = 21 ] ; then
-		     export fhrs="03 09 15 21 27 33 39 45"
+		     export fhrs="03 09 15 21 27 33 39 45 51 57"
 	           fi 
              else
                  if [ $acc = 01h ] ; then
@@ -126,6 +123,20 @@ for obsvtype in ccpa mrms ; do
              fi		      
            fi
           for fhr in $fhrs; do
+             #Before fhr=48, all 14 members are available
+                if [[ $fhr -le 42 ]]; then
+                    export nmem=14
+                    export members=14
+                elif [[ $fhr -le 48 ]]; then
+                    export nmem=13
+                    export members=13
+                elif [[ $fhr -le 54 ]]; then
+                    export nmem=12
+                    export members=12
+                else
+                    export nmem=6
+                    export members=6
+                fi
 
                >run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                

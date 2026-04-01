@@ -32,9 +32,9 @@ for prod in mean prob ; do
 
     for valid_run in 00 03 06 09 12 15 18 21 ; do
       if [ $valid_run = 00 ] || [ $valid_run = 06 ] || [ $valid_run = 12 ] || [ $valid_run = 18 ] ; then
-        fhrs="06 12 18 24 30 36 42 48"
+        fhrs="06 12 18 24 30 36 42 48 54 60"
       elif [ $valid_run = 03 ] || [ $valid_run = 09 ] || [ $valid_run = 15 ] || [ $valid_run = 21 ] ; then
-        fhrs="03 09 15 21 27 33 39 45" 
+        fhrs="03 09 15 21 27 33 39 45 51 57" 
       fi
 
      for fhr in $fhrs ; do
@@ -146,9 +146,9 @@ for prod in mean prob ; do
 
     for valid_run in 00 03 06 09 12 15 18 21 ; do
       if [ $valid_run = 00 ] || [ $valid_run = 06 ] || [ $valid_run = 12 ] || [ $valid_run = 18 ] ; then
-        fhrs="06 12 18 24 30 36 42 48"
+        fhrs="06 12 18 24 30 36 42 48 54 60"
       elif [ $valid_run = 03 ] || [ $valid_run = 09 ] || [ $valid_run = 15 ] || [ $valid_run = 21 ] ; then
-        fhrs="03 09 15 21 27 33 39 45"
+        fhrs="03 09 15 21 27 33 39 45 51 57"
       fi
 
     for fhr in $fhrs ; do
