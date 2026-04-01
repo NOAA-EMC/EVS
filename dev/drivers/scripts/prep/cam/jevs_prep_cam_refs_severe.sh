@@ -53,6 +53,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
+export SENDMAIL=${SENDMAIL:-NO}
 
 export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,andrew.benjamin@noaa.gov'}
 
@@ -69,7 +70,7 @@ fi
 
 
 ######################################################################
-# Purpose: This job preprocesses HREF member data for use in
+# Purpose: This job preprocesses REFS member data for use in
 #          CAM severe verification job
 ######################################################################
 

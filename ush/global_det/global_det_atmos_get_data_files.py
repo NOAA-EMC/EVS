@@ -737,11 +737,18 @@ elif STEP == 'plots' :
         while date_dt <= end_date_dt:
             if date_type == 'VALID':
                 if evs_run_mode == 'production':
-                    source_model_date_stat_file = os.path.join(
-                        model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
-                        'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'.'
-                        +'v'+date_dt.strftime('%Y%m%d')+'.stat'
-                    )
+                    if VERIF_CASE == 'ai_grid2grid' or VERIF_CASE == 'ai_grid2obs':
+                        source_model_date_stat_file = os.path.join(
+                             model_evs_data_dir + '.' + date_dt.strftime('%Y%m%d'),
+                             'evs.stats.' + model + '.' + RUN + '.' + VERIF_CASE[3:] + '.'
+                             + 'v' + date_dt.strftime('%Y%m%d') + '.stat'
+                              )
+                    else:
+                        source_model_date_stat_file = os.path.join(
+                            model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
+                            'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'.'
+                            +'v'+date_dt.strftime('%Y%m%d')+'.stat'
+                            )
                 else:
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir, 'evs_data',
