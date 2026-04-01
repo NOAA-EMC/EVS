@@ -130,9 +130,17 @@ for obsvtype in ccpa mrms ; do
                 elif [[ $fhr -le 48 ]]; then
                     export nmem=13
                     export members=13
-                elif [[ $fhr -le 54 ]]; then
+                elif [[ $fhr -le 51 ]]; then
                     export nmem=12
                     export members=12
+                elif [[ $fhr -le 54 ]]; then
+                    if [[ "${prod}" == "system" ]]; then
+                        export nmem=12
+                        export members=12
+                    else
+                        export nmem=6
+                        export members=6
+                    fi
                 else
                     export nmem=6
                     export members=6

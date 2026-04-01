@@ -54,7 +54,7 @@ for obsv in 6h 24h  ; do
         elif [[ $fhr -le 48 ]]; then
             export nmem=13
             export members=13
-        elif [[ $fhr -le 54 ]]; then
+        elif [[ $fhr -le 51 ]]; then
             export nmem=12
             export members=12
         else

@@ -41,7 +41,7 @@ for dom in $domains ; do
             export nmbrs=14
         elif [[ $fhr -le 48 ]]; then
             export nmbrs=13
-        elif [[ $fhr -le 54 ]]; then
+        elif [[ $fhr -le 51 ]]; then
             export nmbrs=12
         else
             export nmbrs=6
@@ -177,7 +177,7 @@ for dom in $domains ; do
             export nmbrs=14
         elif [[ $fhr -le 48 ]]; then
             export nmbrs=13
-        elif [[ $fhr -le 54 ]]; then
+        elif [[ $fhr -le 51 ]]; then
             export nmbrs=12
         else
             export nmbrs=6
@@ -307,11 +307,7 @@ for dom in $domains ; do
       for valid_at in 00 12 ; do
 
        for fhr in 06 12 18 24 30 36 42 48 54 60 ; do
-        if [[ $fhr -le 42 ]]; then
-            export nmbrs=14
-        elif [[ $fhr -le 48 ]]; then
-            export nmbrs=13
-        elif [[ $fhr -le 54 ]]; then
+        if [[ $fhr -le 54 ]]; then
             export nmbrs=12
         else
             export nmbrs=6
@@ -437,11 +433,7 @@ for dom in $domains ; do
       for valid_at in 00 12 ; do
 
        for fhr in 06 12 18 24 30 36 42 48 54 60 ; do
-        if [[ $fhr -le 42 ]]; then
-            export nmbrs=14
-        elif [[ $fhr -le 48 ]]; then
-            export nmbrs=13
-        elif [[ $fhr -le 54 ]]; then
+        if [[ $fhr -le 54 ]]; then
             export nmbrs=12
         else
             export nmbrs=6

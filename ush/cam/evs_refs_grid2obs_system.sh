@@ -35,7 +35,7 @@ for dom in CONUS Alaska ; do
             export nmbrs=14
         elif [[ $fhr -le 48 ]]; then
             export nmbrs=13
-        elif [[ $fhr -le 54 ]]; then
+        elif [[ $fhr -le 51 ]]; then
             export nmbrs=12
         else
             export nmbrs=6
@@ -202,7 +202,7 @@ for dom in CONUS Alaska ; do
             export nmbrs=14
         elif [[ $fhr -le 48 ]]; then
             export nmbrs=13
-        elif [[ $fhr -le 54 ]]; then
+        elif [[ $fhr -le 51 ]]; then
             export nmbrs=12
         else
             export nmbrs=6
