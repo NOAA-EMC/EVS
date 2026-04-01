@@ -3,8 +3,8 @@
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
-#PBS -l place=vscatter,select=1:ncpus=112:mem=325GB
+#PBS -l walltime=02:40:00
+#PBS -l place=vscatter,select=1:ncpus=112:mem=450GB
 #PBS -l debug=true
 
 set -x 
@@ -28,7 +28,7 @@ module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
-export vhr=00
+export vhr=${vhr:-00}
 
 export gather=yes
 
