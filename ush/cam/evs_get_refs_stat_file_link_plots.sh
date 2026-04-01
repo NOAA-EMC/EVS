@@ -41,11 +41,7 @@ for MODEL in $MODEL_LIST ; do
 
   cd $model_archive
 
-  if [ ${model:0:4} = href ] ; then
-    model_stat_dir=${COM_IN}/cam/href.${day}
-  elif [ ${model:0:4} = refs ] ; then
-    model_stat_dir=${COM_IN}/cam/refs.${day}
-  fi
+  model_stat_dir=${COM_IN}/cam/refs.${day}
 
   stat_file=${model_stat_dir}/evs.stats.${model}.${VRF_CASE}.v${day}.stat
 
