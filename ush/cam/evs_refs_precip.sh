@@ -147,7 +147,7 @@ for obsvtype in ccpa mrms ; do
 	      elif [ $extra = "ensprod" ] ; then
 		 input_fcst=${modelpath}/refs.${iday}/${ihr}/ensprod/refs.t${ihr}z.${prod}.f${fhr}.${domain}.grib2
               else
-		 input_fcst=${modelpath}/refs.${iday}/refs${prod}.t${ihr}z.${grid}.24h.f${fhr}.nc
+		 input_fcst=${modelpath}/refs.${iday}/${ihr}/refs${prod}.t${ihr}z.${grid}.24h.f${fhr}.nc
 	      fi
 
 	      input_obsv="$WORK/${obsvtype}.${VDATE}/${obsv}.t${vhr}z.*"
@@ -298,7 +298,7 @@ for obsvtype in ccpa mrms ; do
                   elif [ $prod = system ] ; then
                      echo  "export modelgrid=conus" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
-                     echo  "export modelgrid=conus.${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modelgrid=${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   fi
                   if [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
@@ -318,7 +318,7 @@ for obsvtype in ccpa mrms ; do
                   elif [ $prod = system ] ; then
                      echo  "export modelgrid=ak" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
-                     echo  "export modelgrid=ak.${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modelgrid=${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   fi
                   if [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
@@ -338,7 +338,7 @@ for obsvtype in ccpa mrms ; do
                   elif [ $prod = system ] ; then
                      echo  "export modelgrid=conus" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
-                     echo  "export modelgrid=conus.${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modelgrid=${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   fi
                   if [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
@@ -357,7 +357,7 @@ for obsvtype in ccpa mrms ; do
                   elif [ $prod = system ] ; then
                      echo  "export modelgrid=ak" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
-                     echo  "export modelgrid=ak.${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modelgrid=${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   fi
                   if [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
