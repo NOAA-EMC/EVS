@@ -1,10 +1,10 @@
-#PBS -N jevs_stats_aigefs_atmos_hgefs_precip
+#PBS -N jevs_stats_aigefs_aigefs_atmos_precip
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
-#PBS -l place=vscatter,select=1:ncpus=5:mem=25GB:prepost=true
+#PBS -l walltime=00:20:00
+#PBS -l place=vscatter,select=1:ncpus=5:mem=30GB:prepost=true
 #PBS -l debug=true
 
 set -x
@@ -17,7 +17,7 @@ export NET=evs
 export STEP=stats
 export COMPONENT=aigefs
 export RUN=atmos
-export MODELNAME=hgefs
+export MODELNAME=aigefs
 export VERIF_CASE=precip
 
 module reset
@@ -32,7 +32,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
+export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
