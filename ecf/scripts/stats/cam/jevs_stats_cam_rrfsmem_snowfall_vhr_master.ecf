@@ -58,7 +58,7 @@ export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="snowfall"
 export MODELNAME="rrfsmem${mem}"
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
+export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.rrfsmem
 
 ############################################################
 # Execute j-job
