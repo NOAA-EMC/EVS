@@ -21,7 +21,7 @@ export RUN=atmos
 export VERIF_CASE=precip
 export MODELNAME=refs
 export KEEPDATA=NO
-export SENDMAIL=YES
+export SENDMAIL=${SENDMAIL:-NO}
 
 module reset
 module load prod_envir/${prod_envir_ver}
