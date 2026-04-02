@@ -20,9 +20,9 @@ export RESTART_DIR="${COMOUTsmall}/restart/c${vhr}"
 export COMPLETED_JOBS_DIR="completed_jobs"
 
 # Time Settings
-export FHR_END_FULL="84"
+export FHR_END_FULL="60"
 export FHR_INCR_FULL="6"
-export FHR_END_SHORT="18"
+export FHR_END_SHORT="60"
 
 # Model/Obs Settings
 export COMINfcst=${COMINrrfs}
@@ -32,7 +32,7 @@ export USE_ZERO_ACCUM_WEASD="True"
 export USE_ZERO_ACCUM_SNOD="True"
 export USE_ZERO_ACCUM_ASNOW="False"
 if [ "$ACC" = "06" ]; then
-    export FHR_GROUP_LIST="SHORT FULL"
+    export FHR_GROUP_LIST="FULL"
     export MODEL_ACC="06"
     export OBS_ACC="06"
     export BUCKET_INTERVAL="6"
@@ -69,7 +69,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     export OUTPUT_FLAG_CATEG="NONE"
     export NBRHD_WIDTHS="1 3 5 7 9 11 13 17 21 25 31 35 39 43 47 53 57 63"
     if [ "$NEST" = "conus" ]; then
-        export FHR_INCR_SHORT="1"
+        export FHR_INCR_SHORT="6"
         export VERIF_TYPE="nohrsc"
         export COMINobs=${DCOMINnohrsc}
         export OBSNAME=${VERIF_TYPE}
@@ -90,7 +90,7 @@ else
     export OUTPUT_FLAG_CATEG="STAT"
     export NBRHD_WIDTHS="1"
     if [ "$NEST" = "conus" ]; then
-        export FHR_INCR_SHORT="1"
+        export FHR_INCR_SHORT="6"
         export VERIF_TYPE="nohrsc"
         export COMINobs=${DCOMINnohrsc}
         export OBSNAME=${VERIF_TYPE}
