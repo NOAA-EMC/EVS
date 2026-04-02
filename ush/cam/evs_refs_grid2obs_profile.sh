@@ -10,7 +10,6 @@
 set -x 
 
 domain=$1
-nmbrs=14
 
 if [ $domain = all ] ; then
   domains="CONUS Alaska HI PR"
@@ -37,7 +36,16 @@ for dom in $domains ; do
        
      for valid_at in 00 12 ; do
 
-      for fhr in 06 12 18 24 30 36 42 48 ; do
+      for fhr in 06 12 18 24 30 36 42 48 54 60 ; do
+        if [[ $fhr -le 42 ]]; then
+            export nmbrs=14
+        elif [[ $fhr -le 48 ]]; then
+            export nmbrs=13
+        elif [[ $fhr -le 51 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
      
      
 	#****************************
@@ -55,7 +63,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}"
+      input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G227.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then      
@@ -164,7 +172,16 @@ for dom in $domains ; do
 
       for valid_at in 00 12 ; do 
 
-       for fhr in 06 12 18 24 30 36 42 48 ; do 
+       for fhr in 06 12 18 24 30 36 42 48 54 60; do 
+        if [[ $fhr -le 42 ]]; then
+            export nmbrs=14
+        elif [[ $fhr -le 48 ]]; then
+            export nmbrs=13
+        elif [[ $fhr -le 51 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
@@ -178,7 +195,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr}"
+      input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G198.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -289,7 +306,12 @@ for dom in $domains ; do
 
       for valid_at in 00 12 ; do
 
-       for fhr in 06 12 18 24 30 36 42 48 ; do
+       for fhr in 06 12 18 24 30 36 42 48 54 60 ; do
+        if [[ $fhr -le 54 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
@@ -303,7 +325,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.hi.f${fhr}"
+      input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.hi.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G139.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -410,7 +432,12 @@ for dom in $domains ; do
 
       for valid_at in 00 12 ; do
 
-       for fhr in 06 12 18 24 30 36 42 48 ; do
+       for fhr in 06 12 18 24 30 36 42 48 54 60 ; do
+        if [[ $fhr -le 54 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
@@ -424,7 +451,7 @@ for dom in $domains ; do
        ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
        iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-       input_fcst="$COMINrefs/refs.${iday}/verf_g2g/refs.*.t${ihr}z.pr.f${fhr}"
+       input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.pr.f${fhr}"
        input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G200.nc"
 
        if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
