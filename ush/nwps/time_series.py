@@ -322,8 +322,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 
                 # Option A: Replace with NaN (Recommended for Time Series to keep gaps)
                 df_aggregated.loc[(df_aggregated[stat_col] > 1.0) | (df_aggregated[stat_col] < -1.0), stat_col] = np.nan
-
-                    
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
         index=str(date_type).upper()
