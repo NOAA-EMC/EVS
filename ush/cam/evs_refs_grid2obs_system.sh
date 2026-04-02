@@ -15,7 +15,6 @@ cd $DATA/scripts
 >run_all_refs_system_poe.sh
 
 export obsv=prepbufr
-export nmbrs=14
 
 for dom in CONUS Alaska ; do
 
@@ -26,12 +25,21 @@ for dom in CONUS Alaska ; do
       for valid_at in 00 03 06 09 12 15 18 21 ; do
 
         if [ $valid_at = 00 ] || [ $valid_at = 06 ] || [ $valid_at = 12 ] || [ $valid_at = 18 ] ; then
-	    fhrs='06 12 18 24 30 36 42 48'
+	    fhrs='06 12 18 24 30 36 42 48 54 60'
 	elif [ $valid_at = 03 ] || [ $valid_at = 09 ] || [ $valid_at = 15 ] || [ $valid_at = 21 ] ; then
-	    fhrs='03 09 15 21 27 33 39 45'
+	    fhrs='03 09 15 21 27 33 39 45 51 57'
 	fi
 
        for fhr in $fhrs ; do
+        if [[ $fhr -le 42 ]]; then
+            export nmbrs=14
+        elif [[ $fhr -le 48 ]]; then
+            export nmbrs=13
+        elif [[ $fhr -le 51 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
      	
 	 #**********************
 	 # Build sub-jobs
@@ -184,12 +192,21 @@ for dom in CONUS Alaska ; do
       for valid_at in 00 03 06 09 12 15 18 21 ; do
 
          if [ $valid_at = 00 ] || [ $valid_at = 06 ] || [ $valid_at = 12 ] || [ $valid_at = 18 ] ; then
-           fhrs='06 12 18 24 30 36 42 48'
+           fhrs='06 12 18 24 30 36 42 48 54 60'
          elif [ $valid_at = 03 ] || [ $valid_at = 09 ] || [ $valid_at = 15 ] || [ $valid_at = 21 ] ; then
-           fhrs='03 09 15 21 27 33 39 45'
+           fhrs='03 09 15 21 27 33 39 45 51 57'
          fi
    
        for fhr in $fhrs ; do	 
+        if [[ $fhr -le 42 ]]; then
+            export nmbrs=14
+        elif [[ $fhr -le 48 ]]; then
+            export nmbrs=13
+        elif [[ $fhr -le 51 ]]; then
+            export nmbrs=12
+        else
+            export nmbrs=6
+        fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_system.sh
 
