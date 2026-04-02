@@ -123,7 +123,7 @@ for obsvtype in ccpa mrms ; do
              fi		      
            fi
           for fhr in $fhrs; do
-             #Before fhr=48, all 14 members are available
+                #Before fhr=48, all 14 members are available
                 if [[ $fhr -le 42 ]]; then
                     export nmem=14
                     export members=14

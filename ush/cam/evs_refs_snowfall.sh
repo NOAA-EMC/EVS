@@ -47,7 +47,7 @@ for obsv in 6h 24h  ; do
     fi
 
     for fhr in $fhrs; do
-     #Before fhr=48, all 14 members are available
+    #Before fhr=48, all 14 members are available
         if [[ $fhr -le 42 ]]; then
             export nmem=14
             export members=14
@@ -77,7 +77,7 @@ for obsv in 6h 24h  ; do
 	    iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
 
 	    input_fcst=$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}
-            input_obsv=$COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_${obsv}_${VDATE}${vhr}_grid184.grb2
+        input_obsv=$COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_${obsv}_${VDATE}${vhr}_grid184.grb2
 
 	   if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
             
