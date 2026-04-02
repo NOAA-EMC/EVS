@@ -476,7 +476,9 @@ for MODEL in MODELNAME:
                                                     log_missing_file)
                     elif MODEL == 'ecmwf':
                         if fcst_hr == 0:
-                            input_fcst_file = input_fcst_file[:-2]+'11'
+                            input_fcst_file = (
+                                input_fcst_file[:-3]+'1'+f'{ECMWF_FILE_EXT}'
+                            )
                         gda_util.prep_prod_ecmwf_file(input_fcst_file,
                                                       tmp_fcst_file,
                                                       CDATE_dt,
