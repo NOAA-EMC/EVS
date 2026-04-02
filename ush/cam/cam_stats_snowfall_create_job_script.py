@@ -139,9 +139,15 @@ if job_type in ['generate', 'reformat']:
     plot_this_var = False
     if VAR_NAME in var_defs:
         if VERIF_TYPE in var_defs[VAR_NAME]:
-            if MODELNAME in var_defs[VAR_NAME][VERIF_TYPE]:
-                plot_this_var = True
+            if 'rrfsmem' in MODELNAME:
+                if 'rrfsmem' in var_defs[VAR_NAME][VERIF_TYPE]:
+                    plot_this_var = True
+                    var_def = var_defs[VAR_NAME][VERIF_TYPE]['rrfsmem']
+            else:
+                if MODELNAME in var_defs[VAR_NAME][VERIF_TYPE]:
+                    plot_this_var = True
                 var_def = var_defs[VAR_NAME][VERIF_TYPE][MODELNAME]
+            if plot_this_var:
                 FCST_VAR_NAME = var_def['var1_fcst_name']
                 FCST_VAR_LEVELS = var_def['var1_fcst_levels']
                 FCST_VAR_THRESHOLDS = var_def['var1_fcst_thresholds']
