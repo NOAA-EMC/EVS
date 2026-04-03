@@ -3,8 +3,8 @@
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
-#PBS -l place=vscatter,select=1:ncpus=112:mem=325GB
+#PBS -l walltime=02:40:00
+#PBS -l place=vscatter,select=1:ncpus=112:mem=450GB
 #PBS -l debug=true
 
 set -x 
@@ -21,14 +21,14 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=refs
 export KEEPDATA=NO
-export SENDMAIL=YES
+export SENDMAIL=${SENDMAIL:-NO}
 
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
-export vhr=00
+export vhr=${vhr:-00}
 
 export gather=yes
 
@@ -40,7 +40,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export MAILTO='andrew.benjamin@noaa.gov,binbin.zhou@noaa.gov'
+export MAILTO='andrew.benjamin@noaa.gov,marcel.caron@noaa.gov'
 if [ -z "$MAILTO" ]; then
 
    echo "MAILTO variable is not defined. Exiting without continuing."
