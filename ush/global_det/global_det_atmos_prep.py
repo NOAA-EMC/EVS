@@ -476,8 +476,10 @@ for MODEL in MODELNAME:
                                                     log_missing_file)
                     elif MODEL == 'ecmwf':
                         if fcst_hr == 0:
+                            replace_end = f"1{ECMWF_FILE_EXT}"
+                            replace_index = -1 * len(replace_end)
                             input_fcst_file = (
-                                input_fcst_file[:-3]+'1'+f'{ECMWF_FILE_EXT}'
+                                f"{input_fcst_file[:replace_index]}{replace_end}"
                             )
                         gda_util.prep_prod_ecmwf_file(input_fcst_file,
                                                       tmp_fcst_file,
