@@ -49,7 +49,7 @@ export nproc=64
 ############################################################
 
 export vhr=${vhr:-00}
-export EVAL_PERIOD=${EVAL_PERIOD:-LAST31DAYS}
+export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
 export LINE_TYPE=${LINE_TYPE:-nbrctc}
 
 export SENDMAIL=${SENDMAIL:-YES}
