@@ -125,7 +125,6 @@ condense_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
 for pm25_job in list(condense_stats_jobs_dict['pm25'].keys()):
     if pm25_job == 'PM25':
         pm25_job_line_types = ['SL1L2', 'CTC' ]
-        ## pm25_job_line_types = ['SL1L2']
     else:
         pm25_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['pm25'][pm25_job]['line_types'] = pm25_job_line_types
@@ -133,7 +132,6 @@ for pm25_job in list(condense_stats_jobs_dict['pm25'].keys()):
 for pm10_job in list(condense_stats_jobs_dict['pm10'].keys()):
     if pm10_job == 'PM10':
         pm10_job_line_types = ['SL1L2', 'CTC' ]
-        ## pm10_job_line_types = ['SL1L2' ]
     else:
         pm10_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['pm10'][pm10_job]['line_types'] = pm10_job_line_types
@@ -141,7 +139,6 @@ for pm10_job in list(condense_stats_jobs_dict['pm10'].keys()):
 for aod_job in list(condense_stats_jobs_dict['aod'].keys()):
     if aod_job == 'AOD':
         aod_job_line_types = ['SL1L2', 'CTC' ]
-        ## aod_job_line_types = ['SL1L2']
     else:
         aod_job_line_types = ['SL1L2']
     condense_stats_jobs_dict['aod'][aod_job]['line_types'] = aod_job_line_types
@@ -365,16 +362,7 @@ for aod_job in list(make_plots_jobs_dict['aod'].keys()):
         aod_job_plots = ['time_series', 'lead_average']
     make_plots_jobs_dict['aod'][aod_job]['plots'] = aod_job_plots
 
-#### for aod_job in list(make_plots_jobs_dict['aod'].keys()):
-####     if aod_job in ['AOD']:
-####         make_plots_jobs_dict['aod'][f"{aod_job}_PerfDiag"] = copy.deepcopy(
-####              make_plots_jobs_dict['aod'][f"{aod_job}_Thresh"]
-####             )
-####         (make_plots_jobs_dict['aod'][f"{aod_job}_PerfDiag"]\
-####          ['line_type_stats']) = ['CTC/PERFDIAG']
-####         make_plots_jobs_dict['aod'][f"{aod_job}_PerfDiag"]['plots'] = [
-####             'performance_diagram'
-####         ]
+
 if JOB_GROUP == 'make_plots':
     JOB_GROUP_dict = make_plots_jobs_dict
 
@@ -628,44 +616,33 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 if job_env_dict['plot'] in  [ 'valid_hour_average_fhr_mean',
                                               'time_series_fhr_mean' ]:
                     for plot_loop_info in list(
-                        itertools.product( plot_fcst_threshs_loop,
+                        itertools.product(plot_fcst_threshs_loop,
                                           plot_fcst_levels_loop,
                                           plot_fdays_loop,
                                           plot_init_hrs_loop)
                     ):
-                        job_env_dict['fday_start'] = str(plot_loop_info[2])
-                        job_env_dict['fday_end']   = str(plot_loop_info[2])
-                        job_env_dict['fday_inc']   = str(fday_inc)
+                        job_env_dict['fday_start']     = str(plot_loop_info[2])
+                        job_env_dict['fday_end']       = str(plot_loop_info[2])
+                        job_env_dict['fday_inc']       = str(fday_inc)
     
-                        job_env_dict['init_hr_start'] = str(plot_loop_info[3]).zfill(2)
-                        job_env_dict['init_hr_end']   = str(plot_loop_info[3]).zfill(2)
-                        job_env_dict['init_hr_inc']   = str(init_hr_inc)
+                        job_env_dict['init_hr_start']  = str(plot_loop_info[3]).zfill(2)
+                        job_env_dict['init_hr_end']    = str(plot_loop_info[3]).zfill(2)
+                        job_env_dict['init_hr_inc']    = str(init_hr_inc)
     
                         job_env_dict['valid_hr_start'] = str(valid_hr_start).zfill(2)
-                        job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
-                        job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-
+                        job_env_dict['valid_hr_end']   = str(valid_hr_end).zfill(2)
+                        job_env_dict['valid_hr_inc']   = str(valid_hr_inc)
     
-                        if job_env_dict['plot'] in ['threshold_average',
-                                                    'performance_diagram']:
-                            job_env_dict['fcst_var_thresh_list'] = ', '.join(
-                                    plot_loop_info[0]
-                            )
-                            job_env_dict['obs_var_thresh_list'] = ', '.join(
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['threshs']
-                            )
-                        else:
-                            job_env_dict['fcst_var_thresh_list'] = (
-                                plot_loop_info[0]
-                            )
-                            job_env_dict['obs_var_thresh_list'] = (
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['threshs']\
-                                [verif_type_plot_jobs_dict[verif_type_job]\
-                                 ['fcst_var_dict']['threshs']\
-                                 .index(plot_loop_info[0])]
-                            )
+                        job_env_dict['fcst_var_thresh_list'] = (
+                            plot_loop_info[0]
+                        )
+                        job_env_dict['obs_var_thresh_list'] = (
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['obs_var_dict']['threshs']\
+                            [verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['threshs']\
+                            .index(plot_loop_info[0])]
+                        )
                         job_env_dict['fcst_var_level_list'] = plot_loop_info[1]
                         job_env_dict['obs_var_level_list'] = (
                             verif_type_plot_jobs_dict[verif_type_job]\
@@ -723,7 +700,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
     
                 elif job_env_dict['plot'] in  [ 'threshold_average_fhrvhr_mean' ]:
                     for plot_loop_info in list(
-                        itertools.product( plot_fcst_levels_loop,
+                        itertools.product(plot_fcst_levels_loop,
                                           plot_fdays_loop,
                                           plot_init_hrs_loop)
                     ):
@@ -735,18 +712,18 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             ['fcst_var_dict']['levels']\
                             .index(plot_loop_info[0])]
                         )
-                        job_env_dict['fday_start'] = str(plot_loop_info[1])
-                        job_env_dict['fday_end']   = str(plot_loop_info[1])
-                        job_env_dict['fday_inc']   = str(fday_inc)
+                        job_env_dict['fday_start']     = str(plot_loop_info[1])
+                        job_env_dict['fday_end']       = str(plot_loop_info[1])
+                        job_env_dict['fday_inc']       = str(fday_inc)
     
-                        job_env_dict['init_hr_start'] = str(plot_loop_info[2]).zfill(2)
-                        job_env_dict['init_hr_end']   = str(plot_loop_info[2]).zfill(2)
-                        job_env_dict['init_hr_inc']   = str(init_hr_inc)
+                        job_env_dict['init_hr_start']  = str(plot_loop_info[2]).zfill(2)
+                        job_env_dict['init_hr_end']    = str(plot_loop_info[2]).zfill(2)
+                        job_env_dict['init_hr_inc']    = str(init_hr_inc)
     
                         job_env_dict['valid_hr_start'] = str(valid_hr_start).zfill(2)
-                        job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
-                        job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-
+                        job_env_dict['valid_hr_end']   = str(valid_hr_end).zfill(2)
+                        job_env_dict['valid_hr_inc']   = str(valid_hr_inc)
+    
                         job_env_dict['fcst_var_thresh_list'] = ', '.join(
                             verif_type_plot_jobs_dict[verif_type_job]\
                             ['fcst_var_dict']['threshs']
@@ -804,38 +781,28 @@ for verif_type in VERIF_CASE_STEP_type_list:
     
                 elif job_env_dict['plot'] in  [ 'lead_average_vhr_mean' ]:
                     for plot_loop_info in list(
-                        itertools.product( plot_fcst_threshs_loop,
+                        itertools.product(plot_fcst_threshs_loop,
                                           plot_fcst_levels_loop,
                                           plot_init_hrs_loop)
                     ):
-                        job_env_dict['init_hr_start'] = str(plot_loop_info[2]).zfill(2)
-                        job_env_dict['init_hr_end'] = str(plot_loop_info[2]).zfill(2)
-                        job_env_dict['init_hr_inc'] = str(init_hr_inc)
+                        job_env_dict['init_hr_start']  = str(plot_loop_info[2]).zfill(2)
+                        job_env_dict['init_hr_end']    = str(plot_loop_info[2]).zfill(2)
+                        job_env_dict['init_hr_inc']    = str(init_hr_inc)
     
                         job_env_dict['valid_hr_start'] = str(valid_hr_start).zfill(2)
-                        job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
-                        job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-
-                        if job_env_dict['plot'] in ['threshold_average',
-                                                    'performance_diagram']:
-                            job_env_dict['fcst_var_thresh_list'] = ', '.join(
-                                    plot_loop_info[0]
-                            )
-                            job_env_dict['obs_var_thresh_list'] = ', '.join(
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['threshs']
-                            )
-                        else:
-                            job_env_dict['fcst_var_thresh_list'] = (
-                                plot_loop_info[0]
-                            )
-                            job_env_dict['obs_var_thresh_list'] = (
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['threshs']\
-                                [verif_type_plot_jobs_dict[verif_type_job]\
-                                 ['fcst_var_dict']['threshs']\
-                                 .index(plot_loop_info[0])]
-                            )
+                        job_env_dict['valid_hr_end']   = str(valid_hr_end).zfill(2)
+                        job_env_dict['valid_hr_inc']   = str(valid_hr_inc)
+    
+                        job_env_dict['fcst_var_thresh_list'] = (
+                            plot_loop_info[0]
+                        )
+                        job_env_dict['obs_var_thresh_list'] = (
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['obs_var_dict']['threshs']\
+                            [verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['threshs']\
+                            .index(plot_loop_info[0])]
+                        )
                         job_env_dict['fcst_var_level_list'] = plot_loop_info[1]
                         job_env_dict['obs_var_level_list'] = (
                             verif_type_plot_jobs_dict[verif_type_job]\
@@ -908,26 +875,16 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         ).zfill(2)
                         job_env_dict['valid_hr_inc'] = '24'
 
-                        if job_env_dict['plot'] in ['threshold_average',
-                                                    'performance_diagram']:
-                            job_env_dict['fcst_var_thresh_list'] = ', '.join(
-                                    plot_loop_info[1]
-                            )
-                            job_env_dict['obs_var_thresh_list'] = ', '.join(
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['threshs']
-                            )
-                        else:
-                            job_env_dict['fcst_var_thresh_list'] = (
-                                plot_loop_info[1]
-                            )
-                            job_env_dict['obs_var_thresh_list'] = (
-                                verif_type_plot_jobs_dict[verif_type_job]\
-                                ['obs_var_dict']['threshs']\
-                                [verif_type_plot_jobs_dict[verif_type_job]\
-                                 ['fcst_var_dict']['threshs']\
-                                 .index(plot_loop_info[1])]
-                            )
+                        job_env_dict['fcst_var_thresh_list'] = (
+                            plot_loop_info[1]
+                        )
+                        job_env_dict['obs_var_thresh_list'] = (
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['obs_var_dict']['threshs']\
+                            [verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['threshs']\
+                            .index(plot_loop_info[1])]
+                        )
                         job_env_dict['fcst_var_level_list'] = plot_loop_info[2]
                         job_env_dict['obs_var_level_list'] = (
                             verif_type_plot_jobs_dict[verif_type_job]\
