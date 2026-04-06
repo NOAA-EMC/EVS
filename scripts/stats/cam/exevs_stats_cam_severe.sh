@@ -82,10 +82,17 @@ elif [ ${MODELNAME} = rrfs ]; then
    fhr_max=60
    fhr_inc=6
 
+elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
+   fhr_min=24
+   fhr_max=60
+   fhr_inc=6
+
 fi
 
 if [ ${MODELNAME} = rrfs ]; then
     mod="rrfs.m000ctl"
+elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
+    mod="${MODELNAME}.m000${mem}"
 else
     mod="${MODELNAME}"
 fi
