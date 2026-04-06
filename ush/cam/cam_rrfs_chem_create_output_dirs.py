@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''
 Name: cam_rrfs_chem_create_output_dirs.py
-Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This creates the base directories and their subdirectories.
 Run By: scripts/plots/cam/exevs_plots_cam_rrfs_chem_grid2obs.sh

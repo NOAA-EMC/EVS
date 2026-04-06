@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''
 Name: cam_rrfs_chem_plots.py
-Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This is the driver script for creating plots.
 Run By: individual plotting job scripts generated through

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''
 Name: cam_rrfs_chem_plots_lead_average.py
-Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a lead average plot.
           (x-axis: forecast hour; y-axis: statistics value)

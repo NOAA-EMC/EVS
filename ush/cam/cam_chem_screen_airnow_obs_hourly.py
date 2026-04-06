@@ -8,7 +8,7 @@
 # History Log:
 #              
 #   04/04/2025   Ho-Chun Huang  Use default number of column to handle AirNOW 
-#                               hourly file even it is a radom text file
+#                               hourly file even it is a random text file
 #
 ###############################################################################
 

@@ -46,7 +46,7 @@ for OBTTYPE in ${obstype}; do
         if [ "${check_restart}" == "YES" ]; then   ## Check ASCII2NC AERONET AOD file for RESTART ability
             checkfile=${COMOUTprepobs}/${OBTTYPE}_All_${INITDATE}_lev15.nc
             if [ -s ${checkfile} ]; then
-		msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
+                msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
                 if [ ${msg} -eq 0 ]; then flag_process_ascii_aeronet="NO"; fi
             fi
         fi
@@ -152,7 +152,7 @@ for OBTTYPE in ${obstype}; do
                             cpfile=${finalprep}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
                             if [ -e ${cpfile} ]; then 
                                 mkdir -p ${COMOUTprepobs}
-				cp -v ${cpfile} ${COMOUTprepobs}
+                                cp -v ${cpfile} ${COMOUTprepobs}
                             fi
                         fi
                     fi

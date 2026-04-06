@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''
 Name: cam_rrfs_chem_check_settings.py
-Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This does a check on the run's configuration
           settings for rrfs-chem plots jobs.
