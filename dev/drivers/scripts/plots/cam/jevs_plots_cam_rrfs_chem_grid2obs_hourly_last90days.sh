@@ -26,7 +26,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source ${HOMEevs}/dev/modulefiles/aqm/aqm_plots.sh
+source ${HOMEevs}/dev/modulefiles/cam/cam_plots.sh
 
 ############################################################
 ## For dev testing
@@ -47,7 +47,6 @@ export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_h
 export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
-export SENDMAIL=YES
 export SENDDBN=NO
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
@@ -61,18 +60,8 @@ export nproc=128    ## nproc must match with the ncpus allocation above
 export DATA_TYPE=hourly
 export NDAYS=90
 
-export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
-
-if [ -z "$MAILTO" ]; then
-
-   echo "MAILTO variable is not defined. Exiting without continuing."
-
-else
-
-   # CALL executable job script here
-   ${HOMEevs}/jobs/JEVS_PLOTS_CAM
-
-fi
+# CALL executable job script here
+${HOMEevs}/jobs/JEVS_PLOTS_CAM
 
 exit
 

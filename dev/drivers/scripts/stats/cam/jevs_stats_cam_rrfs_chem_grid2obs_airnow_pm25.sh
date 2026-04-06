@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:40:00
-#PBS -l place=shared,select=1:ncpus=1:mem=10GB:prepost=true
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -18,12 +18,6 @@ source $HOMEevs/versions/run.ver
 
 evs_ver_2d=$(echo ${evs_ver} | cut -d'.' -f1-2)
 
-############################################################
-## Load modules
-############################################################
-############################################################
-## Specify environment variables
-############################################################
 ############################################################
 # Load modules
 ############################################################
