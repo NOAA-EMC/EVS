@@ -1,11 +1,11 @@
 #!/bin/bash
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
-## NCEP EMC Verification System (EVS) - GEFS Chemistry
+## NCEP EMC Verification System (EVS) - RRFS Chemistry
 ##
 ## ORIGINAL AUTHOR: Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 ## CONTRIBUTORS: Ho-Chun Huang, ho-chun.huang@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-## PURPOSE: Set up configurations to run EVS GEFS Chemistry standalone
+## PURPOSE: Set up configurations to run EVS RRFS Chemistry standalone
 ##---------------------------------------------------------------------------
 ##--------------------------------------------------------------------------
 
@@ -18,9 +18,6 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 ####################################################
 ## SET TO "YES" or "NO"
 ## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
-export RUN_GRID2GRID_STATS="NO"
-export RUN_GRID2GRID_PLOTS="NO"
-export RUN_GRID2OBS_STATS="NO"
 export RUN_GRID2OBS_PLOTS="YES"
 
 ####################################################
