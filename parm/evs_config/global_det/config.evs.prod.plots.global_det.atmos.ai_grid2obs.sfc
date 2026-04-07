@@ -1,0 +1,66 @@
+#!/bin/bash
+##---------------------------------------------------------------------------
+##---------------------------------------------------------------------------
+## NCEP EMC Verification System (EVS) - AIGFS Atmospheric
+##
+## CONTRIBUTORS: Qi Shi, qi.shi@noaa.gov
+## PURPOSE: Set up configurations to run EVS AIGFS Atmospheric standalone
+##---------------------------------------------------------------------------
+##--------------------------------------------------------------------------
+
+set -x
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+####################################################
+# WHAT METPLUS USE CASES TO RUN FOR GFS ATMOSPHERIC
+####################################################
+## SET TO "YES" or "NO"
+## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
+export RUN_GRID2GRID_STATS="NO"
+export RUN_GRID2GRID_PLOTS="NO"
+export RUN_GRID2OBS_STATS="NO"
+export RUN_GRID2OBS_PLOTS="YES"
+
+####################################################
+# GENERAL SETTINGS APPLIED TO ALL USE CASES
+####################################################
+## INPUT DATA SETTINGS
+#model_list:                 model names
+#model_evs_data_dir_list:    base path to "evs_data" directory
+#model_file_format_list:     file format of model files
+export model_list="gfs aigfs"
+export model_evs_data_dir_list="$COMIN/stats/$COMPONENT/gfs $COMIN/stats/$COMPONENT/aigfs"
+export model_file_format_list="$COMROOT/gfs/${gfs_ver}/gfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/gfs.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H} ${COMIN}/prep/global_det/atmos.{init?fmt=%Y%m%d}/aigfs/aigfs.t{init?fmt=%H}z.f{lead?fmt=%3H}"
+## OUTPUT DATA SETTINGS
+#OUTPUTROOT: base output directory
+export OUTPUTROOT="$DATAROOT"
+## DATE SETTINGS
+#start_date:       verification start date, format YYYYMMDD
+#end_date:         verification end date, format YYYYMMDD
+export start_date=$VDATE_START
+export end_date=$VDATE_END
+####################################################
+# SETTINGS FOR SPECIFIC USE CASES
+####################################################
+
+if [ $RUN_GRID2OBS_PLOTS = YES ]; then
+    #g2op_model_plot_name_list: list of models reference name on plots
+    #g2op_type_list: list type of verifications to run for grid-to-grid: pres_levs, ptype, sfc
+    #g2op_event_equalization: do event equalization (YES) or not (NO)
+    #g2op_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2op_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2op*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2op_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
+    export g2op_model_plot_name_list="gfs aigfs"
+    export g2op_type_list="sfc"
+    export g2op_event_equalization="NO"
+    export g2op_sfc_init_hr_list="00 06 12 18"
+    export g2op_sfc_valid_hr_list="00 03 06 09 12 15 18 21"
+    export g2op_sfc_fhr_list="24 72 120 168 240 312 384"
+fi
+echo "END: $(basename ${BASH_SOURCE[0]})"

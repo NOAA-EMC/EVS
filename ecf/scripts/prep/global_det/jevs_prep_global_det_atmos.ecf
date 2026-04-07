@@ -49,7 +49,7 @@ else
 fi
 export NET=evs
 export RUN=atmos
-export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc jma metfra ukmet"
+export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc aigfs jma metfra ukmet"
 export OBSNAME="osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_nam"
 
 ############################################################
