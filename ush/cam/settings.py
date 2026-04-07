@@ -129,34 +129,6 @@ class Presets():
         the online documentation to learn how to use these libraries.
         '''
         self.date_presets = {
-            'LAST90DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d')
-            },
-            'LAST31DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d')
-            },
             'last90days': {
                 'valid_beg': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
@@ -185,48 +157,6 @@ class Presets():
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
                 ).strftime('%Y%m%d')
             },
-            'LAST30DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d')
-            },
-            'LAST7DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=7)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=7)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
-                ).strftime('%Y%m%d')
-            },
-            'LAST3DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=3)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=3)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
-                ).strftime('%Y%m%d')
-            },
             'PDYM1': {
                 'valid_beg': '',
                 'valid_end': (
@@ -236,24 +166,6 @@ class Presets():
                 'init_end': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
                     ).strftime('%Y%m%d'),
-            },
-            '2020': {
-                'valid_beg': '20200101',
-                'valid_end': '20201231',
-                'init_beg': '20200101',
-                'init_end': '20201231'
-            },
-            '2021': {
-                'valid_beg': '20210101',
-                'valid_end': '20211231',
-                'init_beg': '20210101',
-                'init_end': '20211231'
-            },
-            '2022': {
-                'valid_beg': '20220101',
-                'valid_end': '20221231',
-                'init_beg': '20220101',
-                'init_end': '20221231'
             },
         }
             
