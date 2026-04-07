@@ -42,6 +42,8 @@ export RUN=${RUN:-chem}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export MODELNAME=${MODELNAME:-rrfs}
 
+export vhr=00
+
 export INITDATE=${INITDATE:-$(date --date="3 days ago" +%Y%m%d)}
 echo "INITDATE=${INITDATE}"
 
