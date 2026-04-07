@@ -369,10 +369,6 @@ class ThresholdAverageFhrVhrMean:
             fig, ax1 = plt.subplots(1,1,figsize=(plot_specs_ta.fig_size[0],
                                             plot_specs_ta.fig_size[1] ))
 
-        if self.plot_info_dict['fcst_var_name'] == 'DPT' \
-                and self.plot_info_dict['fcst_var_level'] == 'Z2':
-            plot_title = plot_title.replace('2 meter Dewpoint (K)',
-                                            '2 meter Dewpoint (F)')
         fig.suptitle(plot_title)
         ax1.grid(True)
         ax1.set_ylabel(stat_plot_name)
@@ -381,18 +377,7 @@ class ThresholdAverageFhrVhrMean:
             ax2.set_xlabel('Threshold')
             ax2.set_xlim([xticks[0], xticks[-1]])
             ax2.set_xticks(xticks[::xtick_intvl])
-            if self.plot_info_dict['fcst_var_name'] == 'DPT' \
-                    and self.plot_info_dict['fcst_var_level'] == 'Z2':
-                convert_thresh_list = []
-                for thresh in self.plot_info_dict['fcst_var_threshs']:
-                    convert_thresh_K_to_F = round(
-                        round((((float(thresh[2:])-273.15)*9)/5)+32)
-                    )
-                    convert_thresh_list.append(
-                        f"{thresh[0:2]}{str(convert_thresh_K_to_F)}"
-                    )
-                ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-            elif self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'PMTF', 'PMTC' ]:
+            if self.plot_info_dict['fcst_var_name'] in [ 'AOTK', 'PMTF', 'PMTC' ]:
                 convert_thresh_list = []
                 for thresh in self.plot_info_dict['fcst_var_threshs']:
                     convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
@@ -419,7 +404,7 @@ class ThresholdAverageFhrVhrMean:
             ax1.set_xlabel('Threshold')
             ax1.set_xlim([xticks[0], xticks[-1]])
             ax1.set_xticks(xticks[::xtick_intvl])
-            if self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'PMTF', 'PMTC' ]:
+            if self.plot_info_dict['fcst_var_name'] in [ 'AOTK', 'PMTF', 'PMTC' ]:
                 convert_thresh_list = []
                 for thresh in self.plot_info_dict['fcst_var_threshs']:
                     convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
@@ -646,16 +631,14 @@ class ThresholdAverageFhrVhrMean:
             preset_y_axis_tick_min = ax.get_yticks()[0]
             preset_y_axis_tick_max = ax.get_yticks()[-1]
             preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]
-            ## if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
-            if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+            if self.plot_info_dict['stat'] in ['RMSE'] and subplot_num == 1:
                 y_axis_tick_inc = 0.1
             else:
                 y_axis_tick_inc = preset_y_axis_tick_inc
             if np.ma.is_masked(stat_min):
                 y_axis_min = preset_y_axis_tick_min
             else:
-                ## if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
-                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['RMSE'] and subplot_num == 1:
                     y_axis_min = round(stat_min,1) - y_axis_tick_inc
                 else:
                     y_axis_min = preset_y_axis_tick_min
@@ -664,8 +647,7 @@ class ThresholdAverageFhrVhrMean:
             if np.ma.is_masked(stat_max):
                 y_axis_max = preset_y_axis_tick_max
             else:
-                ## if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
-                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['RMSE'] and subplot_num == 1:
                     y_axis_max = 1
                 else:
                     y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
