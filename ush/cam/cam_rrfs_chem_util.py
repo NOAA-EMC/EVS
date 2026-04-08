@@ -299,11 +299,9 @@ def check_plot_files(job_dict):
             plot_info_list = list(itertools.product(var_info))
         elif job_dict['plot'] in ['performance_diagram', 'threshold_average']:
             plot_info_list = list(itertools.product(valid_hrs, fhrs))
-        elif job_dict['plot'] == 'time_series_fhr_mean':
-            plot_info_list = list(itertools.product(var_info))
-        elif job_dict['plot'] in ['lead_average_vhr_mean']:
-            plot_info_list = list(itertools.product(var_info))
-        elif job_dict['plot'] == 'valid_hour_average_fhr_mean':
+        elif job_dict['plot'] in [ 'time_series_fhr_mean', 'lead_average_vhr_mean',
+                                   'valid_hour_average_fhr_mean',
+                                   'threshold_average_fhrvhr_mean' ]:
             plot_info_list = list(itertools.product(var_info))
         if job_dict['plot'] in ['performance_diagram', 'threshold_average']:
             fcst_var_thresh_list = (job_dict['fcst_var_thresh_list']\
@@ -350,7 +348,8 @@ def check_plot_files(job_dict):
                 plot_dict['obs_var_level'] = plot_info[0][1][1]
                 plot_dict['obs_var_thresh'] = plot_info[0][1][2]
             elif plot_dict['plot'] in ['time_series_fhr_mean', 'lead_average_vhr_mean',
-                                        'valid_hour_average_fhr_mean' ]:
+                                       'valid_hour_average_fhr_mean',
+                                       'threshold_average_fhrvhr_mean' ]:
                 plot_dict['fcst_var_name'] = plot_info[0][0][0]
                 plot_dict['fcst_var_level'] = plot_info[0][0][1]
                 plot_dict['fcst_var_thresh'] = plot_info[0][0][2]
@@ -378,7 +377,8 @@ def check_plot_files(job_dict):
                     os.path.exists(plot_check)
                 )
             elif plot_dict['plot'] in ['time_series_fhr_mean', 'lead_average_vhr_mean',
-                                        'valid_hour_average_fhr_mean' ]:
+                                       'valid_hour_average_fhr_mean',
+                                       'threshold_average_fhrvhr_mean' ]:
                 plot_check = plot_specs.get_savefig_name(
                     plot_dict['job_COMOUT_dir'], plot_dict, plot_dict
                 )
