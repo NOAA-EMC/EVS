@@ -186,8 +186,6 @@ chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=${DATA}/poescript
 
-export USE_CFP=NO
-
 if [ "$USE_CFP" = "YES" ]; then
 
    echo "running cfp"
