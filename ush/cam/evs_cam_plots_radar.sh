@@ -18,9 +18,9 @@ export FCST_INIT_HOUR=$5
 export JOBNUM=$6
 export job_name="job${JOBNUM}"
 
-export SAVE_DIR=${DATA}/out/workdirs/job${JOBNUM}
+export SAVE_DIR=${DATA}/out/workdirs/${job_name}
 export LOG_DIR=${SAVE_DIR}/logs
-export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job${JOBNUM}_$($NDATE)_$$.out"
+export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_${job_name}_$($NDATE)_$$.out"
 
 
 ###################################################################
@@ -73,7 +73,7 @@ fi
 ###################################################################
 
 if [[ -f "${RESTART_DIR}/${COMPLETED_JOBS_DIR}/${job_name}" ]]; then
-    echo "NOTE: Jobs were restarted and job${JOBNUM} has already completed.  Continuing."
+    echo "NOTE: Jobs were restarted and ${job_name} has already completed.  Continuing."
 else
     if [ $PLOT_TYPE = performance_diagram ]; then
 
