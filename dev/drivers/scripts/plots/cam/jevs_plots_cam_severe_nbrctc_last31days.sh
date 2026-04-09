@@ -1,4 +1,4 @@
-#PBS -N jevs_plots_cam_severe_00
+#PBS -N jevs_plots_cam_severe_nbrctc_last31days_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -40,6 +40,8 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export VERIF_CASE=severe
 export MODELNAME=${COMPONENT}
+export EVAL_PERIOD=last31days
+export LINE_TYPE=nbrctc
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}_${LINE_TYPE}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
@@ -48,8 +50,6 @@ export nproc=64
 ############################################################
 
 export vhr=${vhr:-00}
-export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
-export LINE_TYPE=${LINE_TYPE:-nbrctc}
 
 export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
@@ -72,7 +72,8 @@ fi
 
 
 ######################################################################
-# Purpose: This job generates severe verification graphics
+# Purpose: This job generates severe NBRCTC verification graphics
 #          for the CAM component (deterministic and ensemble CAMs)
+#          over the last 31 days
 ######################################################################
 
