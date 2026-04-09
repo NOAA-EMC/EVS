@@ -1,4 +1,4 @@
-#PBS -N jevs_stats_aigefs_atmos_hgefs_grid2obs
+#PBS -N jevs_stats_aigefs_hgefs_atmos_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
