@@ -53,6 +53,9 @@ export STAT_OUTPUT_BASE_TEMPLATE="{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL
 export OUTPUT_DIR=${DATA}/out/${VERIF_CASE}/${eval_period}
 export IMG_HEADER=${NET}.${COMPONENT}
 
+export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart"
+export COMPLETED_JOBS_DIR="completed_jobs_${LINE_TYPE}_${EVAL_PERIOD}"
+
 export LOG_LEVEL="DEBUG"
 
 export PYTHONDONTWRITEBYTECODE=1
@@ -66,13 +69,16 @@ export MET_VERSION="${MET_VERSION%.}"
 
 
 ############################################################
-# Write poescript for each domain and use case
+# Symlink .stat files from COMIN
 ############################################################
 
 # Create working directories 
 mkdir -p ${PRUNE_DIR}
 mkdir -p ${STAT_OUTPUT_BASE_DIR}
 mkdir -p ${OUTPUT_DIR}
+mkdir -p ${RESTART_DIR}
+mkdir -p ${RESTART_DIR}/${COMPLETED_JOBS_DIR}
+mkdir -p ${RESTART_DIR}/${VERIF_CASE}/${EVAL_PERIOD}
 mkdir -p ${DATA}/out/logs # main log output dir
 
 
@@ -104,6 +110,17 @@ for model in ${model_list}; do
 done
 
 
+############################################################
+# Check for Restart Files
+############################################################
+
+python ${USHevs}/cam/cam_production_restart.py
+export err=$?; err_chk
+
+
+############################################################
+# Write poescript for each domain and use case
+############################################################
 
 
 if [ "$LINE_TYPE" = "nbrcnt" ]; then
@@ -136,6 +153,7 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
 	
             echo "${USHevs}/${COMPONENT}/evs_cam_plots_radar.sh $PLOT_TYPE $DOMAIN $RADAR_FIELD $LINE_TYPE $FCST_INIT_HOUR $njob" >> $DATA/poescript
             mkdir -p ${DATA}/out/workdirs/job${njob}/logs
+            mkdir -p ${DATA}/out/workdirs/job${njob}/${COMPLETED_JOBS_DIR}
             njob=$((njob+1))
 
          done
