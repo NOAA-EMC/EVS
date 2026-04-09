@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l ncpus=8:ompthreads=1:mem=800MB
+#PBS -l select=1:ncpus=8:ompthreads=1:mem=800MB
 #PBS -l debug=true
 
 
