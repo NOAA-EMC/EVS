@@ -91,7 +91,7 @@ while [ ${hourix} -lt 31 ]; do
   vmdh=` echo ${vymdh} | cut -c5-10`
   vhour=`${NHOUR} ${vymdh} ${ymdh}`
   if [ ${hourix} = 0 ] ; then
-    DCD=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/DCD${imdh}00${vmdh}001
+    DCD=${DCOMINecmwf}/$yyyymmdd/wgrbbul/ecmwf/DCD${imdh}00${vmdh}00${ECMWF_FILE_EXT}
     if [ -s $DCD ] ; then
       >$WORKtask/ecmanl.t${ihour}z.grid3.f000.grib1
       chmod 640 $WORKtask/ecmanl.t${ihour}z.grid3.f000.grib1
@@ -122,7 +122,7 @@ while [ ${hourix} -lt 31 ]; do
   #*************************************************************
   # Retrieve required fields from ECME member files E1E in DCOM
   #*************************************************************
-  E1E=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
+  E1E=${DCOMINecmwf}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}00${ECMWF_FILE_EXT}
   if [ ! -s $E1E ]; then
     echo "WARNING: $E1E is not available"
     if [ $SENDMAIL = YES ]; then
@@ -172,7 +172,7 @@ while [ ${hourix} -lt 31 ]; do
   vymdh=`${NDATE} ${hourinc} ${ymdh}`
   vmdh=` echo ${vymdh} | cut -c5-10`
   vhour=`${NHOUR} ${vymdh} ${ymdh}`
-  E1E=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
+  E1E=${DCOMINecmwf}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}00${ECMWF_FILE_EXT}
   if [ -s $E1E ]; then
     >E1E_apcp.${hourinc}
     chmod 640 E1E_apcp.${hourinc}
@@ -241,7 +241,7 @@ while [ ${hourix} -lt 31 ]; do
   vymdh=`${NDATE} ${hourinc} ${ymdh}`
   vmdh=` echo ${vymdh} | cut -c5-10`
   vhour=`${NHOUR} ${vymdh} ${ymdh}`
-  E1E=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
+  E1E=${DCOMINecmwf}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}00${ECMWF_FILE_EXT}
   if [ -s $E1E ]; then
     >E1E_vertical.${hourinc}
     chmod 640 E1E_vertical.${hourinc}
