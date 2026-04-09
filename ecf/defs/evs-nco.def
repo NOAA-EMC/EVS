@@ -2463,6 +2463,12 @@ suite evs_nco
             task jevs_plots_cam_grid2obs_last90days
               trigger (:TIME >= 2100 or :TIME < 0300) and ../../stats/cam/jevs_stats_cam_hrrr_grid2obs_vhr_21 == complete and ../../stats/cam/jevs_stats_cam_rrfs_grid2obs_vhr_21 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_1 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_2 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_3 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_4 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_5 == complete
               edit VHR '21'
+            task jevs_plots_cam_severe_nbrctc_last90days
+              trigger (:TIME >= 2100 or :TIME < 0300) and ../../stats/cam/jevs_stats_cam_hrrr_severe == complete and ../../stats/cam/jevs_stats_cam_rrfs_severe == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_1 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_2 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_3 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_4 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_5 == complete
+              edit VHR '21'
+            task jevs_plots_cam_severe_nbrcnt_last90days
+              trigger (:TIME >= 2100 or :TIME < 0300) and ../../stats/cam/jevs_stats_cam_hrrr_severe == complete and ../../stats/cam/jevs_stats_cam_rrfs_severe == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_1 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_2 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_3 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_4 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_severe_mem_5 == complete
+              edit VHR '21'
             task jevs_plots_cam_headline
               trigger (:TIME >= 2100 or :TIME < 0300) and ../../stats/cam/jevs_stats_cam_hrrr_grid2obs_vhr_21 == complete and ../../stats/cam/jevs_stats_cam_rrfs_grid2obs_vhr_21 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_1 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_2 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_3 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_4 == complete and ../../stats/cam/jevs_stats_cam_rrfsmem_grid2obs_vhr_21_mem_5 == complete
               edit VHR '21'
