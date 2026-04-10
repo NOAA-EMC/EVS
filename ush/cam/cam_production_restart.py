@@ -57,7 +57,10 @@ elif STEP == 'plots':
     COMOUTplots = os.environ['COMOUTplots']
     RESTART_DIR = os.environ['RESTART_DIR']
     COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
-    working_dir = os.path.join(DATA, VERIF_CASE, 'out')
+    if VERIF_CASE in ['radar','severe']:
+        working_dir = os.path.join(DATA, 'out')
+    else:
+        working_dir = os.path.join(DATA, VERIF_CASE, 'out')
     completed_jobs_dir = os.path.join(
         RESTART_DIR, 
         COMPLETED_JOBS_DIR
