@@ -358,7 +358,10 @@ def mark_job_completed(restart_dir, data_dir, verif_case,
         raise ValueError(e)
 
     restart_out = Path(restart_dir) / completed_jobs_dirname
-    data_out = Path(data_dir) / verif_case
+    if verif_case in ['radar', 'severe']:
+        data_out = Path(data_dir)
+    else:
+        data_out = Path(data_dir) / verif_case
     if job_type:
         restart_out = restart_out / job_type
         data_out = data_out / 'METplus_output' / 'workdirs' / job_type / job_name / completed_jobs_dirname / job_type
