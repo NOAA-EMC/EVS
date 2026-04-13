@@ -69,7 +69,11 @@ setpdy.sh 8
 . ./PDY
 
 if [ $VERIF_CASE = grid2obs ] ; then
-    export VDATE=${VDATE:-$PDYm1}
+    if [ "${RUN}" == "chem" ]; then
+        export VDATE=${VDATE:-$PDYm3}
+    else
+        export VDATE=${VDATE:-$PDYm1}
+    fi
 
 elif [ $VERIF_CASE = precip ] ; then
     export VDATE=${VDATE:-$PDYm2}
@@ -133,6 +137,14 @@ else
    [[ ! -d $COMOUTsmall ]] && mkdir -p $COMOUTsmall
 fi
 
+if [[ "${RUN}" == "chem" ]]; then
+    export EVSINrrfs=${EVSINrrfs:-${COMIN}/prep/${COMPONENT}}
+    export DATA_TYPE=${DATA_TYPE:-aeronet_aod}
+    # alternative choice is an option different from aqobs
+    export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+    export restart_mode=${restart_mode:-YES}
+fi
+
 ####################################
 # Execute the script 
 ####################################
@@ -142,6 +154,8 @@ elif [ $MODELNAME = rrfs_firewxnest ]; then
    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}.sh
 elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_rrfsmem_${VERIF_CASE}.sh
+elif [ "${RUN}" == "chem" ]; then
+    ${HOMEevs}/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}.sh
 else
    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${MODELNAME}_${VERIF_CASE}.sh
 fi
