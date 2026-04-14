@@ -138,23 +138,54 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
    # Loop over domains
    for DOMAIN in ${DOMAINS}; do
 
-      # Set list of fields based on domain
-      if [ "$DOMAIN" = "conus" ]; then
+      if [ $DOMAIN = conus ]; then
+
+         vx_mask_list="CONUS CONUS_East CONUS_West CONUS_Central CONUS_South"
          RADAR_FIELDS="REFC RETOP"
-      elif [ "$DOMAIN" = "alaska" ]; then
+
+      elif [ $DOMAIN = alaska ]; then
+
+         vx_mask_list="Alaska"
          RADAR_FIELDS="REFC"
+
       fi
 
       # Loop over radar fields
       for RADAR_FIELD in ${RADAR_FIELDS}; do
+         if [ $RADAR_FIELD = REFC ]; then
 
-         # Loop over forecast initializations
-         for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
-	
-            echo "${USHevs}/${COMPONENT}/evs_cam_plots_radar.sh $PLOT_TYPE $DOMAIN $RADAR_FIELD $LINE_TYPE $FCST_INIT_HOUR $njob" >> $DATA/poescript
-            mkdir -p ${DATA}/out/workdirs/job${njob}/logs
-            mkdir -p ${DATA}/out/workdirs/job${njob}/${COMPLETED_JOBS_DIR}
-            njob=$((njob+1))
+            if [ "${PLOT_TYPE}" = "threshold_average" ] || [ "${PLOT_TYPE}" = "performance_diagram" ]; then
+                export fcst_threshes=">=20,>=30,>=40,>=50"
+            else
+                export fcst_threshes=">=20 >=30 >=40 >=50"
+            fi
+
+         elif [ $RADAR_FIELD = RETOP ]; then
+
+            if [ "${PLOT_TYPE}" = "threshold_average" ] || [ "${PLOT_TYPE}" = "performance_diagram" ]; then
+                export fcst_threshes=">=20,>=30,>=40"
+            else
+                export fcst_threshes=">=20 >=30 >=40"
+            fi
+
+         fi
+
+         # Loop over forecast thresholds
+         for fcst_thresh in ${fcst_threshes}; do
+
+             # Loop over forecast initializations
+             for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
+
+                for vx_mask in ${vx_mask_list}; do
+        
+                    echo "${USHevs}/${COMPONENT}/evs_cam_plots_radar.sh \"$PLOT_TYPE\" \"$DOMAIN\" \"$RADAR_FIELD\" \"$LINE_TYPE\" \"$FCST_INIT_HOUR\" \"${vx_mask}\" \"${fcst_thresh}\" \"$njob\"" >> $DATA/poescript
+                    mkdir -p ${DATA}/out/workdirs/job${njob}/logs
+                    mkdir -p ${DATA}/out/workdirs/job${njob}/${COMPLETED_JOBS_DIR}
+                    njob=$((njob+1))
+
+                done
+
+             done
 
          done
 
@@ -178,7 +209,7 @@ export MP_CMDFILE=${DATA}/poescript
 if [ "$USE_CFP" = "YES" ]; then
 
    echo "running cfp"
-   mpiexec -np $nproc --cpu-bind verbose,core cfp ${MP_CMDFILE} 
+   mpiexec -np $nproc -ppn $ncpu --cpu-bind verbose,depth cfp ${MP_CMDFILE} 
    export err=$?; err_chk
    echo "done running cfp"
 

@@ -52,6 +52,7 @@ else
 fi
 export USE_CFP=YES
 export nproc=64
+export ncpu=64
 export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="radar"
