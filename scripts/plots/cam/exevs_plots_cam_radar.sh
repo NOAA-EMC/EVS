@@ -138,12 +138,12 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
    # Loop over domains
    for DOMAIN in ${DOMAINS}; do
 
-      if [ $DOMAIN = conus ]; then
+      if [ "$DOMAIN" = "conus" ]; then
 
          vx_mask_list="CONUS CONUS_East CONUS_West CONUS_Central CONUS_South"
          RADAR_FIELDS="REFC RETOP"
 
-      elif [ $DOMAIN = alaska ]; then
+      elif [ "$DOMAIN" = "alaska" ]; then
 
          vx_mask_list="Alaska"
          RADAR_FIELDS="REFC"
@@ -152,7 +152,7 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
 
       # Loop over radar fields
       for RADAR_FIELD in ${RADAR_FIELDS}; do
-         if [ $RADAR_FIELD = REFC ]; then
+         if [ "$RADAR_FIELD" = "REFC" ]; then
 
             if [ "${PLOT_TYPE}" = "threshold_average" ] || [ "${PLOT_TYPE}" = "performance_diagram" ]; then
                 export fcst_threshes=">=20,>=30,>=40,>=50"
@@ -160,7 +160,7 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
                 export fcst_threshes=">=20 >=30 >=40 >=50"
             fi
 
-         elif [ $RADAR_FIELD = RETOP ]; then
+         elif [ "$RADAR_FIELD" = "RETOP" ]; then
 
             if [ "${PLOT_TYPE}" = "threshold_average" ] || [ "${PLOT_TYPE}" = "performance_diagram" ]; then
                 export fcst_threshes=">=20,>=30,>=40"
