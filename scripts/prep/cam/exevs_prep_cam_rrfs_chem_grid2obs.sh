@@ -203,7 +203,7 @@ for mdl_cyc in "${cyc_opt[@]}"; do
   
         # --- RESTART Logic ---
         if [ "${check_restart}" == "YES" ]; then
-            checkfile_pattern="${MODELNAME}.t${mdl_cyc}z.2dfld.f*.trim.grib2"
+            checkfile_pattern="${MODELNAME}.t${mdl_cyc}z.evsin.f*.trim.grib2"
             mdl_file_count=$(find "${prep_rrfs}" -name "${checkfile_pattern}" | wc -l)
             
             if [ ${mdl_file_count} -eq ${max_hour} ]; then
