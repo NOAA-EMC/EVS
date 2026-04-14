@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=2:05:00
-#PBS -l select=1:ncpus=64:ompthreads=1:mem=60GB
+#PBS -l walltime=0:15:00
+#PBS -l select=1:ncpus=64:ompthreads=1:mem=50GB
 #PBS -l debug=true
 
 
@@ -47,6 +47,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export nproc=64
+export ncpu=64
 ############################################################
 
 export vhr=${vhr:-00}
