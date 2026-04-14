@@ -117,7 +117,7 @@ for ObsType in ${grid2obs_list}; do
         aday=`echo ${adate} |cut -c1-8`
         acyc=`echo ${adate} |cut -c9-10`
         if [ "${acyc}" == "${mdl_cyc}" ]; then
-          fcst_file=${EVSINrrfs}/${RUN}.${aday}/${MODELNAME}/${acyc}/${MODELNAME}.t${acyc}z.prslev.f${filehr}.trim.grib2
+          fcst_file=${EVSINrrfs}/${RUN}.${aday}/${MODELNAME}/${acyc}/${MODELNAME}.t${acyc}z.evsin.f${filehr}.trim.grib2
           if [ -s ${fcst_file} ]; then
             if [ "${check_restart}" == "YES" ]; then
               point_stat_file="${COMOUTsmall}/point_stat_${OutputId}_${fhr}0000L_${VDATE}_${vhr}0000V.stat"
