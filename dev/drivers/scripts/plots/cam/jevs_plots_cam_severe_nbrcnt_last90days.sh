@@ -1,10 +1,10 @@
-#PBS -N jevs_plots_cam_severe_00
+#PBS -N jevs_plots_cam_severe_nbrcnt_last90days_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=64:ompthreads=1:mem=800MB
+#PBS -l select=1:ncpus=1:ompthreads=1:mem=800MB
 #PBS -l debug=true
 
 
@@ -38,25 +38,25 @@ export evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
 export VERIF_CASE=severe
 export MODELNAME=${COMPONENT}
+export EVAL_PERIOD=last90days
+export LINE_TYPE=nbrcnt
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}_${LINE_TYPE}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
-export nproc=64
+export nproc=1
 ############################################################
 
 export vhr=${vhr:-00}
-export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
-export LINE_TYPE=${LINE_TYPE:-nbrctc}
 
 export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
+export USE_CFP=${USE_CFP:-NO}
 
 export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,andrew.benjamin@noaa.gov'}
 
@@ -73,7 +73,8 @@ fi
 
 
 ######################################################################
-# Purpose: This job generates severe verification graphics
+# Purpose: This job generates severe NBRCNT verification graphics
 #          for the CAM component (deterministic and ensemble CAMs)
+#          over the last 90 days
 ######################################################################
 

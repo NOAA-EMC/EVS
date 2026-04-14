@@ -48,6 +48,9 @@ export STAT_OUTPUT_BASE_TEMPLATE="{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL
 export OUTPUT_DIR=${DATA}/out/${VERIF_CASE}/${eval_period}
 export IMG_HEADER=${NET}.${COMPONENT}
 
+export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart"
+export COMPLETED_JOBS_DIR="completed_jobs_${LINE_TYPE}_${EVAL_PERIOD}"
+
 export LOG_LEVEL="DEBUG"
 
 export PYTHONDONTWRITEBYTECODE=1
@@ -69,6 +72,9 @@ export MET_VERSION="${MET_VERSION%.}"
 mkdir -p ${PRUNE_DIR}
 mkdir -p ${STAT_OUTPUT_BASE_DIR}
 mkdir -p ${OUTPUT_DIR}
+mkdir -p ${RESTART_DIR}
+mkdir -p ${RESTART_DIR}/${COMPLETED_JOBS_DIR}
+mkdir -p ${RESTART_DIR}/${VERIF_CASE}/${EVAL_PERIOD}
 mkdir -p ${DATA}/out/logs # main log output dir
 
 
@@ -98,6 +104,14 @@ for model in ${model_list}; do
       n=$((n+1))
    done
 done
+
+
+############################################################
+# Check For Restart Files
+############################################################
+
+python ${USHevs}/cam/cam_production_restart.py
+export err=$?; err_chk
 
 
 ############################################################
@@ -150,6 +164,7 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
 	
             echo "${USHevs}/${COMPONENT}/evs_cam_plots_severe.sh $PLOT_TYPE $DOMAIN $LINE_TYPE $FCST_INIT_HOUR $FCST_LEAD $njob" >> $DATA/poescript
             mkdir -p ${DATA}/out/workdirs/job${njob}/logs
+            mkdir -p ${DATA}/out/workdirs/job${njob}/${COMPLETED_JOBS_DIR}
             njob=$((njob+1))
 
 
@@ -170,8 +185,6 @@ chmod 775 $DATA/poescript
 
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=${DATA}/poescript
-
-export USE_CFP=NO
 
 if [ "$USE_CFP" = "YES" ]; then
 
