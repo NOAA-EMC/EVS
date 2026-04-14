@@ -778,9 +778,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
 
         ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
         ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
-
-        # If the range is extremely small (nearly a flat line), add a fixed buffer
-        yticks = np.arange(ylim_min, ylim_max + round_to_nearest, round_to_nearest)
+    y_span = ylim_max - ylim_min
+    if y_span == 0: y_span = 1.0 # Prevent math error if data is perfectly flat
+    
+    ylim_min -= (y_span * 0.1)
+    ylim_max += (y_span * 0.1)    
+    # If the range is extremely small (nearly a flat line), add a fixed buffer
 
     if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
         ylim_min = float(
