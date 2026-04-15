@@ -56,6 +56,7 @@ export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
+export ECMWF_FILE_EXT=${ECMWF_FILE_EXT:-1}
 export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver)}
 export COMINcfs=${COMINcfs:-$(compath.py $envir/cfs/$cfs_ver/cfs.$INITDATE)}
 export COMINcmc=${COMINcmc:-$(compath.py $envir/cmc/$cmc_ver/cmc.$INITDATE)}

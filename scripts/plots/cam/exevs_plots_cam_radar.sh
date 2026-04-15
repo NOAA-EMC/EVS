@@ -53,6 +53,9 @@ export STAT_OUTPUT_BASE_TEMPLATE="{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL
 export OUTPUT_DIR=${DATA}/out/${VERIF_CASE}/${eval_period}
 export IMG_HEADER=${NET}.${COMPONENT}
 
+export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart/${LINE_TYPE}"
+export COMPLETED_JOBS_DIR="completed_jobs_${EVAL_PERIOD}"
+
 export LOG_LEVEL="DEBUG"
 
 export PYTHONDONTWRITEBYTECODE=1
@@ -66,13 +69,16 @@ export MET_VERSION="${MET_VERSION%.}"
 
 
 ############################################################
-# Write poescript for each domain and use case
+# Symlink .stat files from COMIN
 ############################################################
 
 # Create working directories 
 mkdir -p ${PRUNE_DIR}
 mkdir -p ${STAT_OUTPUT_BASE_DIR}
 mkdir -p ${OUTPUT_DIR}
+mkdir -p ${RESTART_DIR}
+mkdir -p ${RESTART_DIR}/${COMPLETED_JOBS_DIR}
+mkdir -p ${RESTART_DIR}/${VERIF_CASE}/${EVAL_PERIOD}
 mkdir -p ${DATA}/out/logs # main log output dir
 
 
@@ -104,6 +110,17 @@ for model in ${model_list}; do
 done
 
 
+############################################################
+# Check for Restart Files
+############################################################
+
+python ${USHevs}/cam/cam_production_restart.py
+export err=$?; err_chk
+
+
+############################################################
+# Write poescript for each domain and use case
+############################################################
 
 
 if [ "$LINE_TYPE" = "nbrcnt" ]; then
@@ -121,22 +138,54 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
    # Loop over domains
    for DOMAIN in ${DOMAINS}; do
 
-      # Set list of fields based on domain
       if [ "$DOMAIN" = "conus" ]; then
+
+         vx_mask_list="CONUS CONUS_East CONUS_West CONUS_Central CONUS_South"
          RADAR_FIELDS="REFC RETOP"
+
       elif [ "$DOMAIN" = "alaska" ]; then
+
+         vx_mask_list="Alaska"
          RADAR_FIELDS="REFC"
+
       fi
 
       # Loop over radar fields
       for RADAR_FIELD in ${RADAR_FIELDS}; do
+         if [ "$RADAR_FIELD" = "REFC" ]; then
 
-         # Loop over forecast initializations
-         for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
-	
-            echo "${USHevs}/${COMPONENT}/evs_cam_plots_radar.sh $PLOT_TYPE $DOMAIN $RADAR_FIELD $LINE_TYPE $FCST_INIT_HOUR $njob" >> $DATA/poescript
-            mkdir -p ${DATA}/out/workdirs/job${njob}/logs
-            njob=$((njob+1))
+            if [ "${PLOT_TYPE}" = "threshold_average" ] || [ "${PLOT_TYPE}" = "performance_diagram" ]; then
+                export fcst_threshes=">=20,>=30,>=40,>=50"
+            else
+                export fcst_threshes=">=20 >=30 >=40 >=50"
+            fi
+
+         elif [ "$RADAR_FIELD" = "RETOP" ]; then
+
+            if [ "${PLOT_TYPE}" = "threshold_average" ] || [ "${PLOT_TYPE}" = "performance_diagram" ]; then
+                export fcst_threshes=">=20,>=30,>=40"
+            else
+                export fcst_threshes=">=20 >=30 >=40"
+            fi
+
+         fi
+
+         # Loop over forecast thresholds
+         for fcst_thresh in ${fcst_threshes}; do
+
+             # Loop over forecast initializations
+             for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
+
+                for vx_mask in ${vx_mask_list}; do
+        
+                    echo "${USHevs}/${COMPONENT}/evs_cam_plots_radar.sh \"$PLOT_TYPE\" \"$DOMAIN\" \"$RADAR_FIELD\" \"$LINE_TYPE\" \"$FCST_INIT_HOUR\" \"${vx_mask}\" \"${fcst_thresh}\" \"$njob\"" >> $DATA/poescript
+                    mkdir -p ${DATA}/out/workdirs/job${njob}/logs
+                    mkdir -p ${DATA}/out/workdirs/job${njob}/${COMPLETED_JOBS_DIR}
+                    njob=$((njob+1))
+
+                done
+
+             done
 
          done
 
@@ -157,12 +206,10 @@ chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=${DATA}/poescript
 
-export USE_CFP=YES
-
 if [ "$USE_CFP" = "YES" ]; then
 
    echo "running cfp"
-   mpiexec -np $nproc --cpu-bind verbose,core cfp ${MP_CMDFILE} 
+   mpiexec -np $nproc -ppn $ncpu --cpu-bind verbose,depth cfp ${MP_CMDFILE} 
    export err=$?; err_chk
    echo "done running cfp"
 
