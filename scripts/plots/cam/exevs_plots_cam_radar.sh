@@ -53,8 +53,8 @@ export STAT_OUTPUT_BASE_TEMPLATE="{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL
 export OUTPUT_DIR=${DATA}/out/${VERIF_CASE}/${eval_period}
 export IMG_HEADER=${NET}.${COMPONENT}
 
-export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart"
-export COMPLETED_JOBS_DIR="completed_jobs_${LINE_TYPE}_${EVAL_PERIOD}"
+export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart/${LINE_TYPE}"
+export COMPLETED_JOBS_DIR="completed_jobs_${EVAL_PERIOD}"
 
 export LOG_LEVEL="DEBUG"
 
