@@ -1,10 +1,10 @@
-#PBS -N jevs_plots_cam_radar_00
+#PBS -N jevs_plots_cam_radar_nbrctc_last31days_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=2:05:00
-#PBS -l place=vscatter,select=1:ncpus=64:ompthreads=1:mem=60GB
+#PBS -l walltime=0:30:00
+#PBS -l select=1:ncpus=64:ompthreads=1:mem=70GB
 #PBS -l debug=true
 
 
@@ -38,25 +38,26 @@ export evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
 export VERIF_CASE=radar
 export MODELNAME=${COMPONENT}
+export EVAL_PERIOD=last31days
+export LINE_TYPE=nbrctc
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}_${LINE_TYPE}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export nproc=64
+export ncpu=64
 ############################################################
 
 export vhr=${vhr:-00}
-export EVAL_PERIOD=${EVAL_PERIOD:-last31days}
-export LINE_TYPE=${LINE_TYPE:-nbrctc}
 
 export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
+export USE_CFP=${USE_CFP:-YES}
 
 export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,andrew.benjamin@noaa.gov'}
 
@@ -73,7 +74,8 @@ fi
 
 
 ######################################################################
-# Purpose: This job generates radar verification graphics
+# Purpose: This job generates radar NBRCTC verification graphics
 #          for the CAM component (deterministic and ensemble CAMs)
+#          over the last 31 days
 ######################################################################
 
