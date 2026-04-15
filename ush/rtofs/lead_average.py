@@ -761,14 +761,29 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         ylim_min = (np.floor(y_min/round_to_nearest)*round_to_nearest)- 0.5 * margin
         ylim_max = (np.ceil(y_max/round_to_nearest)*round_to_nearest)+ 0.5 * margin
     else:
-        round_to_nearest_categories = y_range_categories/0.2
-        y_range = y_max-y_min
-        round_to_nearest =  round_to_nearest_categories[
-        np.digitize(y_range, y_range_categories[:-1])
-        ]
-        ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest 
-        ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+        # If the range is very small, don't let the interval get too tiny
+        y_range = y_max - y_min
 
+        # We use a larger divisor (e.g., 5 or 10) instead of 0.2
+        # to ensure fewer, more readable ticks
+        round_to_nearest_categories = y_range_categories / 5.0
+
+        round_to_nearest = round_to_nearest_categories[
+            np.digitize(y_range, y_range_categories[:-1])
+        ]
+
+        # Safety check: Force a minimum step size if the math produces 0
+        if round_to_nearest < 0.01:
+            round_to_nearest = 0.05
+
+        ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
+        ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+    y_span = ylim_max - ylim_min
+    if y_span == 0: y_span = 1.0 # Prevent math error if data is perfectly flat
+    
+    ylim_min -= (y_span * 0.1)
+    ylim_max += (y_span * 0.1)    
+    # If the range is extremely small (nearly a flat line), add a fixed buffer
 
     if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
         ylim_min = float(
@@ -781,7 +796,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         yticks = np.arange(-1, 1.1, 0.1)
     else:
         yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
-    
+        if len(yticks) > 8:
+            yticks = np.linspace(ylim_min, ylim_max, 5)
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
         if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':

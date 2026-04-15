@@ -36,6 +36,7 @@ RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 OBSNAME = os.environ['OBSNAME'].split(' ')
+ECMWF_FILE_EXT = os.environ['ECMWF_FILE_EXT']
 
 # Make COMOUT directory for dates
 COMOUT_INITDATE = COMOUT+'.'+INITDATE
@@ -63,7 +64,7 @@ subseasonal_obs_dict = {
                                                'wgrbbul',
                                                'ecmwf',
                                                'DCD{init?fmt=%m%d%H}00'
-                                               +'{init?fmt=%m%d%H}001'),
+                                               +'{init?fmt=%m%d%H}00'+f'{ECMWF_FILE_EXT}'),
                       'arch_file_format': os.path.join(COMOUT_INITDATE,                                                              'ecmwf',
                                                        'ecmwf.'
                                                        +'{init?fmt=%Y%m%d%H}'

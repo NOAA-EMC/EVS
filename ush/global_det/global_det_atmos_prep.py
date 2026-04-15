@@ -49,6 +49,7 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 MODELNAME = os.environ['MODELNAME'].split(' ')
 OBSNAME = os.environ['OBSNAME'].split(' ')
+ECMWF_FILE_EXT=os.environ['ECMWF_FILE_EXT']
 
 # Make COMOUT directory for dates
 output_INITDATE = COMOUT+'.'+INITDATE
@@ -329,13 +330,13 @@ global_det_model_dict = {
             'fcst_hrs': range(24, 72+12, 12)},
     'ecmwf': {'input_fcst_file_format': os.path.join(DCOMINecmwf,
                                                      'U1D{init?fmt=%m%d%H}00'
-                                                     +'{valid?fmt=%m%d%H}001'),
+                                                     +'{valid?fmt=%m%d%H}00'+f'{ECMWF_FILE_EXT}'),
               'input_anl_file_format': os.path.join(DCOMINecmwf,
                                                     'U1D{init?fmt=%m%d%H}00'
-                                                    +'{init?fmt=%m%d%H}011'),
+                                                    +'{init?fmt=%m%d%H}01'+f'{ECMWF_FILE_EXT}'),
               'input_precip_file_format': os.path.join(DCOMINecmwf_precip,
                                                        'UWD{init?fmt=%Y%m%d%H%M}'
-                                                       +'{valid?fmt=%m%d%H%M}1'),
+                                                       +'{valid?fmt=%m%d%H%M}'+f'{ECMWF_FILE_EXT}'),
               'inithours': ['00', '12'],
               'fcst_hrs': range(0, 240+6, 6)},
     'fnmoc': {'input_fcst_file_format': os.path.join(DCOMINfnmoc,
@@ -475,7 +476,11 @@ for MODEL in MODELNAME:
                                                     log_missing_file)
                     elif MODEL == 'ecmwf':
                         if fcst_hr == 0:
-                            input_fcst_file = input_fcst_file[:-2]+'11'
+                            replace_end = f"1{ECMWF_FILE_EXT}"
+                            replace_index = -1 * len(replace_end)
+                            input_fcst_file = (
+                                f"{input_fcst_file[:replace_index]}{replace_end}"
+                            )
                         gda_util.prep_prod_ecmwf_file(input_fcst_file,
                                                       tmp_fcst_file,
                                                       CDATE_dt,
