@@ -106,7 +106,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G240"
-        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.conus.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.3km.f{lead?fmt=%3H}.conus.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
@@ -116,7 +116,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G091"
-        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.ak.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.3km.f{lead?fmt=%3H}.ak.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
     elif [ "$NEST" = "hi" ]; then
         export VERIF_TYPE="mrms"
@@ -126,7 +126,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G196"
-        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.2p5km.f{lead?fmt=%3H}.hi.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.2p5km.f{lead?fmt=%3H}.hi.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"
     elif [ "$NEST" = "pr" ]; then
         export VERIF_TYPE="mrms"
@@ -136,7 +136,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G194"
-        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.2p5km.f{lead?fmt=%3H}.pr.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.2p5km.f{lead?fmt=%3H}.pr.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Puerto_Rico_G194.nc"
     else
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
@@ -153,7 +153,7 @@ else
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G212"
-        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.conus.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.3km.f{lead?fmt=%3H}.conus.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G212_CONUS.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
@@ -163,7 +163,7 @@ else
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G216"
-        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.3km.f{lead?fmt=%3H}.conus.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.3km.f{lead?fmt=%3H}.conus.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G216.nc"
     elif [ "$NEST" = "hi" ]; then
         export VERIF_TYPE="mrms"
@@ -173,7 +173,7 @@ else
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G196"
-        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.2p5km.f{lead?fmt=%3H}.hi.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.2p5km.f{lead?fmt=%3H}.hi.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"
     elif [ "$NEST" = "pr" ]; then
         export VERIF_TYPE="mrms"
@@ -183,7 +183,7 @@ else
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G194"
-        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.2p5km.f{lead?fmt=%3H}.pr.grib2"
+        export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.2p5km.f{lead?fmt=%3H}.pr.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Puerto_Rico_G194.nc"
     else
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"

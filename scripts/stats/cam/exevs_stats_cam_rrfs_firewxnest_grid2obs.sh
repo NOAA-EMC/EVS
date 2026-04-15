@@ -14,7 +14,7 @@ export OBSDIR=OBS
 mkdir -p $DATA/$OBSDIR
 export modsys=rrfs
 export regionnest=firewx
-export outtyp="prslev.1p5km"
+export outtyp="2dfld.1p5km"
 
 model1=`echo $MODELNAME | tr a-z A-Z`
 export model1
