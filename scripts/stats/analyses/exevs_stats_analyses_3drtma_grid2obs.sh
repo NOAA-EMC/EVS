@@ -57,12 +57,12 @@ do
 if [ $type = "2dvaranl" ]
 then
         export typtag="_anl"
-elif [ $type = "2dvarges" ]
+elif [ $type = "3dvarges" ]
 then
         export typtag="_ges"
 	fhr="01"
 fi
-for modnam in 3drtma2p5
+for modnam in 3drtma
 do
 export modnam
 export outtyp=$type
@@ -71,7 +71,7 @@ export OBSDIR=OBS_$modnam
 model1=`echo $MODELNAME | tr a-z A-Z`
 export model1
 
-if [ $modnam = "3drtma2p5" ]
+if [ $modnam = "3drtma" ]
 then
 	rtmafound=0
 	export grid=CONUS
@@ -99,7 +99,7 @@ if [ ! -e $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}0000L_${VDATE}_${vhr}
 then
 if [ $rtmafound -eq 1 -a $obfound -eq 1 ]
 then
-run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstANALYSES_RU_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
+run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstANALYSES_3D_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
 export err=$?; err_chk
 
 
