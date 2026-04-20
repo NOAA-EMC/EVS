@@ -1,10 +1,10 @@
 #/bin/bash
 
 ##################################################################################
-# Name of Script: exevs_stats_analyses_rtma_ru_grid2obs.sh
+# Name of Script: exevs_stats_analyses_3drtma_grid2obs.sh
 # Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
 # Purpose of Script: This script runs METplus to generate 
-#                    verification statistics for analyses and first guess for rtma-ru
+#                    verification statistics for analyses and first guess for 3Drtma
 ##################################################################################
 
 
@@ -62,7 +62,7 @@ then
         export typtag="_ges"
 	fhr="01"
 fi
-for modnam in rtma2p5_ru
+for modnam in 3drtma2p5
 do
 export modnam
 export outtyp=$type
@@ -71,7 +71,7 @@ export OBSDIR=OBS_$modnam
 model1=`echo $MODELNAME | tr a-z A-Z`
 export model1
 
-if [ $modnam = "rtma2p5_ru" ]
+if [ $modnam = "3drtma2p5" ]
 then
 	rtmafound=0
 	export grid=CONUS
@@ -93,7 +93,7 @@ fi
 	fi
        fi
 
-# Run METplus for rtma_ru vs obs
+# Run METplus for 3Drtma vs obs
 
 if [ ! -e $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}0000L_${VDATE}_${vhr}0000V.stat ]
 then
@@ -110,7 +110,7 @@ if [ $SENDCOM = YES ]; then
 fi
 
 else
-  echo "WARNING: NO RTMA-RU OR OBS DATA, METplus will not run."
+  echo "WARNING: NO 3DRTMA OR OBS DATA, METplus will not run."
   echo "WARNING: RTMAFOUND, OBFOUND", $rtmafound, $obfound
 fi
 else
