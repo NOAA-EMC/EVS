@@ -132,11 +132,11 @@ for NEST in $NEST_LIST; do
     export NEST=$NEST
     for VERIF_TYPE in $VERIF_TYPES; do
         export VERIF_TYPE=$VERIF_TYPE
-        var_set_num=0
+        export var_set_num=0
         if [ "$VERIF_TYPE" = "raob" ]; then
-            var_set_max=2
+            var_set_max=2 # Run the loop twice
         else
-            var_set_max=1
+            var_set_max=1 # Run the loop once
         fi
         while (( var_set_num < var_set_max )); do
             source $config
@@ -178,7 +178,7 @@ for NEST in $NEST_LIST; do
                     done
                 done
             done
-            ((var_set_num++))
+            ((++var_set_num))
         done
     done 
 done
