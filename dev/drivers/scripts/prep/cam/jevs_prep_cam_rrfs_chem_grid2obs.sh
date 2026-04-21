@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:40:00
-#PBS -l place=shared,select=1:ncpus=1:mem=10GB
+#PBS -l walltime=00:20:00
+#PBS -l place=shared,select=1:ncpus=1:mem=15GB
 #PBS -l debug=true
 
 set -x
@@ -30,7 +30,7 @@ source $HOMEevs/dev/modulefiles/cam/cam_prep.sh
 ############################################################
 ## set some variables
 #############################################################
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDMAIL=YES
 export SENDDBN=NO
 

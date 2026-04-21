@@ -203,13 +203,13 @@ for mdl_cyc in "${cyc_opt[@]}"; do
   
         # --- RESTART Logic ---
         if [ "${check_restart}" == "YES" ]; then
-            checkfile_pattern="${MODELNAME}.t${mdl_cyc}z.prslev.f*.trim.grib2"
+            checkfile_pattern="${MODELNAME}.t${mdl_cyc}z.evsin.f*.trim.grib2"
             mdl_file_count=$(find "${prep_rrfs}" -name "${checkfile_pattern}" | wc -l)
             
             if [ ${mdl_file_count} -eq ${max_hour} ]; then
                 # Check if the last file is healthy
                 fhr3_last=$(printf %3.3d ${max_hour})
-                last_file="${prep_rrfs}/${MODELNAME}.t${mdl_cyc}z.prslev.f${fhr3_last}.trim.grib2"
+                last_file="${prep_rrfs}/${MODELNAME}.t${mdl_cyc}z.evsin.f${fhr3_last}.trim.grib2"
                 if wgrib2 -V "${last_file}" > /dev/null 2>&1; then
                     echo "DEBUG :: Cycle ${mdl_cyc} complete. Skipping."
                     continue 
@@ -221,8 +221,8 @@ for mdl_cyc in "${cyc_opt[@]}"; do
         # --- Extraction Loop ---
         while [ ${hour_now} -le ${max_hour} ]; do
             fhr3=$(printf %3.3d ${hour_now})
-            mdl_full_grib2="${MODELNAME}.t${mdl_cyc}z.prslev.3km.f${fhr3}.na.grib2"
-            mdl_trim_grib2="${MODELNAME}.t${mdl_cyc}z.prslev.f${fhr3}.trim.grib2"
+            mdl_full_grib2="${MODELNAME}.t${mdl_cyc}z.2dfld.3km.f${fhr3}.na.grib2"
+            mdl_trim_grib2="${MODELNAME}.t${mdl_cyc}z.evsin.f${fhr3}.trim.grib2"
             
             check_full_file="${com_rrfs_mdl}/${mdl_full_grib2}"
             check_trim_file="${com_rrfs_mdl}/${mdl_trim_grib2}"
