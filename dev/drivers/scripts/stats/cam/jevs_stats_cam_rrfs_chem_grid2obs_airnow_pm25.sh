@@ -31,7 +31,7 @@ source $HOMEevs/dev/modulefiles/cam/cam_stats.sh
 ############################################################
 # set some variables
 ############################################################
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDMAIL=YES
 export SENDDBN=NO
 
