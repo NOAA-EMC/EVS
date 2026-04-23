@@ -50,16 +50,16 @@ fi
 
 echo $obfound
 
-# Search for analysis (2dvaranl) or first guess (2dvarges) file
+# Search for analysis (anl) or first guess (fgs) file
 
-for type in 2dvaranl 2dvarges
+for type in anl_prslev fgs_prslev
 do
-if [ $type = "2dvaranl" ]
+if [ $type = "anl_prslev" ]
 then
         export typtag="_anl"
-elif [ $type = "3dvarges" ]
+elif [ $type = "fgs_prslev" ]
 then
-        export typtag="_ges"
+        export typtag="_fgs"
 	fhr="01"
 fi
 for modnam in rtma3d
@@ -79,7 +79,7 @@ then
 
 fi
 
-       if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}00z.${outtyp}_prslev_ndfd.grib2 ]
+       if [ -e $COMINrtma/${modnam}.${VDATE}/conus/${modnam}.t${vhr}00z.${outtyp}_ndfd.grib2 ]
        then
          rtmafound=1
        else
@@ -131,8 +131,8 @@ then
        run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
        if [ $SENDCOM = "YES" ]; then
-	 if [ -s $finalstat/evs.stats.${regionnest}_ru${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-           cp -v $finalstat/evs.stats.${regionnest}_ru${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
+	 if [ -s $finalstat/evs.stats.${regionnest}_3D${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+           cp -v $finalstat/evs.stats.${regionnest}_3D${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
 	 fi
        fi
 
