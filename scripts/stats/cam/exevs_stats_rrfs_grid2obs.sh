@@ -42,11 +42,11 @@ for NEST in $NEST_LIST; do
             # Check User's Configuration Settings
             python $USHevs/cam/cam_check_settings.py
             export err=$?; err_chk
-     
+        
             # Check Availability of Input Data
             python $USHevs/cam/cam_check_input_data.py
             export err=$?; err_chk
-     
+        
             # Create Output Directories
             python $USHevs/cam/cam_create_output_dirs.py
             export err=$?; err_chk
@@ -132,44 +132,53 @@ for NEST in $NEST_LIST; do
     export NEST=$NEST
     for VERIF_TYPE in $VERIF_TYPES; do
         export VERIF_TYPE=$VERIF_TYPE
-        source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-        for VAR_NAME in $VAR_NAME_LIST; do
-            export VAR_NAME=$VAR_NAME
-            for VHOUR in $VHOUR_LIST; do
-                export VHOUR=$VHOUR
-                # Check User's Configuration Settings
-                python $USHevs/cam/cam_check_settings.py
-                export err=$?; err_chk
-         
-                # Create Output Directories
-                python $USHevs/cam/cam_create_output_dirs.py
-                export err=$?; err_chk
-        
-                all_fhrs="" 
-                for FHR_GROUP in $FHR_GROUP_LIST; do
-                    export FHR_GROUP=$FHR_GROUP
-                    TARGET_FHR_END="FHR_END_${FHR_GROUP}"
-                    TARGET_FHR_INCR="FHR_INCR_${FHR_GROUP}"
-                    export FHR_END=${!TARGET_FHR_END}
-                    export FHR_INCR=${!TARGET_FHR_INCR}
-                    export FHR_START=$(python -c "import cam_util; print(cam_util.get_fhr_start('${VHOUR}',0,'${FHR_INCR}','${MIN_IHOUR}'))")
-                
-                    for FHR in `seq ${FHR_START} ${FHR_INCR} ${FHR_END}`; do
-                        export FHR=$(printf "%02d" $FHR)
-                        all_fhrs="$all_fhrs $FHR"
+        export var_set_num=0
+        if [ "$VERIF_TYPE" = "raob" ]; then
+            var_set_max=2 # Run the loop twice
+        else
+            var_set_max=1 # Run the loop once
+        fi
+        while (( var_set_num < var_set_max )); do
+            source $config
+            source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
+            for VAR_NAME in $VAR_NAME_LIST; do
+                export VAR_NAME=$VAR_NAME
+                for VHOUR in $VHOUR_LIST; do
+                    export VHOUR=$VHOUR
+                    # Check User's Configuration Settings
+                    python $USHevs/cam/cam_check_settings.py
+                    export err=$?; err_chk
+             
+                    # Create Output Directories
+                    python $USHevs/cam/cam_create_output_dirs.py
+                    export err=$?; err_chk
+            
+                    all_fhrs="" 
+                    for FHR_GROUP in $FHR_GROUP_LIST; do
+                        export FHR_GROUP=$FHR_GROUP
+                        TARGET_FHR_END="FHR_END_${FHR_GROUP}"
+                        TARGET_FHR_INCR="FHR_INCR_${FHR_GROUP}"
+                        export FHR_END=${!TARGET_FHR_END}
+                        export FHR_INCR=${!TARGET_FHR_INCR}
+                        export FHR_START=$(python -c "import cam_util; print(cam_util.get_fhr_start('${VHOUR}',0,'${FHR_INCR}','${MIN_IHOUR}'))")
+                    
+                        for FHR in `seq ${FHR_START} ${FHR_INCR} ${FHR_END}`; do
+                            export FHR=$(printf "%02d" $FHR)
+                            all_fhrs="$all_fhrs $FHR"
+                        done
+                    done
+                    unique_fhrs=$(echo $all_fhrs | tr ' ' '\n' | sort -n | uniq)
+
+                    for FHR in $unique_fhrs; do
+                        export FHR
+                          
+                        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+                        export err=$?; err_chk
+                        export njob=$((njob+1))
                     done
                 done
-                unique_fhrs=$(echo $all_fhrs | tr ' ' '\n' | sort -n | uniq)
-
-                for FHR in $unique_fhrs; do
-                    export FHR
-                      
-                    python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-                    export err=$?; err_chk
-                    export njob=$((njob+1))
-                done
             done
+            ((++var_set_num))
         done
     done 
 done
