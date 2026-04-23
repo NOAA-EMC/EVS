@@ -16,8 +16,8 @@ C            NAEFS member files
 C         3. The NAEFS verification will use GFS anaylysis as validation
 C            data
 C            
-C    Last update: 12/5/2023, Binbin Zhou  Lynker@?NCEP/EMC
-C                    Remove goto statements required by NCO
+C    Last update: 4/21/2026, Mallory Row
+C                    Fix errors occuring with debug flags
        
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       use grib_mod
@@ -156,7 +156,7 @@ C  raw data
        kpd11_cmce(12)=0
        kpd10_gefs(12)=103
        kpd10_cmce(12)=103
-  
+
        read_gfs=1
        read_gefs=1
        read_cmc=1
@@ -177,11 +177,11 @@ C  raw data
 
        !write(*,*) 'jf=',jf
 
-       allocate(gfsa(10,jf)) 
-       allocate(cmca(10,jf))
-       allocate(gefs(10,jf))
-       allocate(cmce(10,jf)) 
-       allocate(cmce_adj(10,jf)) 
+       allocate(gfsa(12,jf))
+       allocate(cmca(12,jf))
+       allocate(gefs(12,jf))
+       allocate(cmce(12,jf))
+       allocate(cmce_adj(12,jf))
  
         !Open gefs and cmce member files to read
         open(1, file=gefs_file_list, status='old')
@@ -198,8 +198,8 @@ C  raw data
           jpd2=kpd2(i)
           
 
-          gfld_gfsanl%fld=0.0
-          gfld_cmcanl%fld=0.0
+          ! gfld_gfsanl%fld=0.0
+          ! gfld_cmcanl%fld=0.0
 
 
           jpd12=kpd12_gefs(i)
@@ -279,8 +279,8 @@ C  raw data
           jpd2=kpd2(i)
 
 
-          gfld_gefs%fld=0.0
-          gfld_cmce%fld=0.0
+          ! gfld_gefs%fld=0.0
+          ! gfld_cmce%fld=0.0
 
           jpd12=kpd12_gefs(i)
           jpd11=kpd11_gefs(i)
