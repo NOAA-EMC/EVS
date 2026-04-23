@@ -1,4 +1,4 @@
-#PBS -N jevs_stats_analyses_3drtma_grid2obs
+#PBS -N jevs_stats_analyses_rtma3d_grid2obs
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"

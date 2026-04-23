@@ -1,7 +1,7 @@
 #/bin/bash
 
 ##################################################################################
-# Name of Script: exevs_stats_analyses_3drtma_grid2obs.sh
+# Name of Script: exevs_stats_analyses_rtma3d_grid2obs.sh
 # Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
 # Purpose of Script: This script runs METplus to generate 
 #                    verification statistics for analyses and first guess for 3Drtma
@@ -62,7 +62,7 @@ then
         export typtag="_ges"
 	fhr="01"
 fi
-for modnam in 3drtma
+for modnam in rtma3d
 do
 export modnam
 export outtyp=$type
@@ -71,7 +71,7 @@ export OBSDIR=OBS_$modnam
 model1=`echo $MODELNAME | tr a-z A-Z`
 export model1
 
-if [ $modnam = "3drtma" ]
+if [ $modnam = "rtma3d" ]
 then
 	rtmafound=0
 	export grid=CONUS

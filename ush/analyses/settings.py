@@ -591,13 +591,13 @@ class ModelSpecs():
                 'settings_key':'URMA_GES',
                 'plot_name':'URMA GES'
             },  
-            '3drtma_anl': {
-                'settings_key':'RTMA_RU_ANL',
-                'plot_name':'RTMA_RU ANL'
+            'rtma3d_anl': {
+                'settings_key':'RTMA3D_ANL',
+                'plot_name':'3DRTMA ANL'
             },
-            '3drtma_ges': {
-                'settings_key':'RTMA_RU_GES',
-                'plot_name':'RTMA-RU GES'
+            'rtma3d_ges': {
+                'settings_key':'RTMA3D_GES',
+                'plot_name':'3DRTMA GES'
             }
         }
 
