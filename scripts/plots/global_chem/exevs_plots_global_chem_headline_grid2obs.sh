@@ -9,6 +9,7 @@
 #
 #   Change Logs:
 #    09/02/2025  Ho-Chun Huang    move cpreq to cp -v to comply with EE2
+#    02/17/2026  Ho-Chun Huang    modified for GCAFSv1
 ###############################################################################
 
 set -x
@@ -27,7 +28,7 @@ mkdir -p ${STATDIR} ${linked_stat_base_dir}
 model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
-gcafs_ver_id=$( echo ${gefs_ver} | awk -F"." '{print $1}' )
+gcafs_ver_id=$( echo ${gcafs_ver} | awk -F"." '{print $1}' )
 export modelid=${MODELNAME}${gcafs_ver_id}
 #
 # Define the verification variables and observation sources

@@ -2,7 +2,7 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A VERF-DEV
+#PBS -A EVS-DEV
 #PBS -l walltime=00:10:00
 #PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
@@ -41,9 +41,9 @@ export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_chem}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export MODELNAME=${MODELNAME:-gefs}
-export modsys=${modsys:-gefs}
-export mod_ver=${mod_ver:-${gefs_ver}}
+export MODELNAME=${MODELNAME:-gcafs}
+export modsys=${modsys:-gcafs}
+export mod_ver=${mod_ver:-${gcafs_ver}}
 
 export DATA_TYPE=airnow
 
