@@ -79,15 +79,15 @@ then
 
 fi
 
-       if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}00z.${outtyp}_ndfd.grb2 ]
+       if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}00z.${outtyp}_prslev_ndfd.grib2 ]
        then
          rtmafound=1
        else
-	echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp is missing; METplus will not run"
+	echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_prslev_ndfd.grib2_wexp is missing; METplus will not run"
 	if [ $SENDMAIL = "YES" ]; then
          export subject="CONUS Analysis Missing for EVS ${COMPONENT}"
          echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-         echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp" >> mailmsg
+         echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_prslev_ndfd.grib2_wexp" >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
@@ -141,7 +141,3 @@ else
 fi
 
 done
-
-
-exit
-
