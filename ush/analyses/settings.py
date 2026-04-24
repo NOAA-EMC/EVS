@@ -595,9 +595,9 @@ class ModelSpecs():
                 'settings_key':'RTMA3D_ANL',
                 'plot_name':'3DRTMA ANL'
             },
-            'rtma3d_ges': {
-                'settings_key':'RTMA3D_GES',
-                'plot_name':'3DRTMA GES'
+            'rtma3d_fgs': {
+                'settings_key':'RTMA3D_FGS',
+                'plot_name':'3DRTMA FGS'
             }
         }
 
@@ -631,10 +631,10 @@ class ModelSpecs():
             'URMA_GES': {'color': '#fb2020',
                          'marker': '^', 'markersize': 14,
                          'linestyle': 'solid', 'linewidth': 3.},
-            'RTMA_RU_ANL': {'color': '#000000',
+            'RTMA3D_ANL': {'color': '#000000',
                          'marker': 'o', 'markersize': 12,
                          'linestyle': 'solid', 'linewidth': 3.},
-            'RTMA_RU_GES': {'color': '#fb2020',
+            'RTMA3D_FGS': {'color': '#fb2020',
                          'marker': '^', 'markersize': 14,
                          'linestyle': 'solid', 'linewidth': 3.},
             'model3': {'color': '#1e3cff',
