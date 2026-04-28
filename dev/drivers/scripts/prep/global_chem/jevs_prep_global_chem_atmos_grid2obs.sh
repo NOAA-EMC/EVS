@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
-#PBS -l place=shared,select=1:ncpus=1:mem=10GB:prepost=true
+#PBS -l walltime=00:15:00
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -46,9 +46,9 @@ export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-global_chem}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export MODELNAME=${MODELNAME:-gefs}
-export modsys=${modsys:-gefs}
-export mod_ver=${mod_ver:-${gefs_ver}}
+export MODELNAME=${MODELNAME:-gcafs}
+export modsys=${modsys:-gcafs}
+export mod_ver=${mod_ver:-${gcafs_ver}}
 
 export INITDATE=${INITDATE:-$(date --date="3 days ago" +%Y%m%d)}
 echo "INITDATE=${INITDATE}"
@@ -76,5 +76,5 @@ else
 fi
 
 #######################################################################
-# Purpose: This does the prep work for the global_chem GEFS-Chem model
+# Purpose: This does the prep work for the global_chem GCAFS model
 #######################################################################

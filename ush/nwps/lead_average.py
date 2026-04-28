@@ -304,6 +304,15 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     df_aggregated = df_aggregated[
         df_aggregated.index.isin(model_list, level='MODEL')
     ]
+    for stat in [metric1_name, metric2_name]:
+        if stat and str(stat).upper() in ['CORR', 'PCOR']:
+            stat_col = str(stat).upper()
+            if stat_col in df_aggregated.columns:
+                # Log that we are cleaning lead averages
+                logger.info(f"Cleaning {stat_col} spikes (>1 or <-1) before averaging by lead.")
+
+                # Replace invalid values with NaN so they don't skew the mean
+                df_aggregated.loc[(df_aggregated[stat_col] > 1.0) | (df_aggregated[stat_col] < -1.0), stat_col] = np.nan
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
         index='LEAD_HOURS'
