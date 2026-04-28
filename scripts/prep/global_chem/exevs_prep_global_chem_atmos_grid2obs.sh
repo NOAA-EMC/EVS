@@ -184,7 +184,9 @@ for mdl_cyc in "${cyc_opt[@]}"; do
                 wgrib2 -match "${match_pm25_1}" -match "${match_pm25_2}" -match "${match_pm25_3}" ${check_full_file} -grib extract_pm25
                 cat extract_aod extract_pm25 >> ${mdl_trim_grib2}
                 if [ ${SENDCOM} = "YES" ]; then
-                    cp -v ${mdl_trim_grib2} ${prep_gc_mdl}
+                    if [ -s ${mdl_trim_grib2} ]; then
+                        cp -v ${mdl_trim_grib2} ${prep_gc_mdl}
+                    fi
                 fi
             else
                 echo "FCST_OUTPUT_MISSING: Global-Chemical forecast file ${check_full_file} is missing. The missing Global-Chemical forecast file will be skipped"
