@@ -35,9 +35,9 @@ export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-global_chem}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export MODELNAME=${MODELNAME:-gefs}
-export modsys=${modsys:-gefs}
-export mod_ver=${mod_ver:-${gefs_ver}}
+export MODELNAME=${MODELNAME:-gcafs}
+export modsys=${modsys:-gcafs}
+export mod_ver=${mod_ver:-${gcafs_ver}}
 
 # Run setpdy and initialize PDY variables
 setpdy.sh 8
@@ -55,7 +55,7 @@ export INITDATE=${INITDATE:-${PDYm3}}
 # Define COMIN/COMOUT variables:
 
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export COMINgefs=${COMINgefs:-$(compath.py $envir/com/gefs/${gefs_ver})}
+export COMINgcafs=${COMINgcafs:-$(compath.py $envir/com/${MODELNAME}/${gcafs_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 export COMOUTprepmdl=${COMOUTprepmdl:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}}
 export COMOUTprepobs=${COMOUTprepobs:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/obs}
