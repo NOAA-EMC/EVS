@@ -955,21 +955,21 @@ suite evs_nco
           endfamily
           family rtofs
             task jevs_plots_rtofs_argo_grid2obs_last60days
-              trigger :TIME >= 0800 and :TIME < 1200 and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_argo_grid2obs == complete
+              trigger :TIME >= 0800 and :TIME < 1200 and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_argo_grid2obs == complete
             task jevs_plots_rtofs_aviso_grid2grid_last60days
-              trigger :TIME >= 0800 and :TIME < 1200 and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_aviso_grid2grid == complete
+              trigger :TIME >= 0800 and :TIME < 1200 and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_aviso_grid2grid == complete
             task jevs_plots_rtofs_ghrsst_grid2grid_last60days
-              trigger :TIME >= 0800 and :TIME < 1200 and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_ghrsst_grid2grid == complete
+              trigger :TIME >= 0800 and :TIME < 1200 and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_ghrsst_grid2grid == complete
             task jevs_plots_rtofs_osisaf_grid2grid_last60days
-              trigger :TIME >= 0800 and :TIME < 1200 and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_osisaf_grid2grid == complete
+              trigger :TIME >= 0800 and :TIME < 1200 and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_osisaf_grid2grid == complete
             task jevs_plots_rtofs_smap_grid2grid_last60days
-              trigger :TIME >= 0815 and :TIME < 1200 and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_smap_grid2grid == complete
+              trigger :TIME >= 0815 and :TIME < 1200 and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_smap_grid2grid == complete
             task jevs_plots_rtofs_smos_grid2grid_last60days
-              trigger :TIME >= 0815 and :TIME < 1200 and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_smos_grid2grid == complete
+              trigger :TIME >= 0815 and :TIME < 1200 and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_smos_grid2grid == complete
             task jevs_plots_rtofs_ndbc_grid2obs_last60days
-              trigger :TIME >= 0815 and :TIME < 1200 and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_ndbc_grid2obs == complete
+              trigger :TIME >= 0815 and :TIME < 1200 and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_ndbc_grid2obs == complete
             task jevs_plots_rtofs_headline_grid2grid_last90days
-              trigger :TIME >= 0815 and :TIME < 1200 and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_argo_grid2obs == complete and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_ghrsst_grid2grid == complete and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_ndbc_grid2obs == complete and ../../../../../18/evs/v2.0/stats/rtofs/jevs_stats_rtofs_osisaf_grid2grid == complete
+              trigger :TIME >= 0815 and :TIME < 1200 and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_argo_grid2obs == complete and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_ghrsst_grid2grid == complete and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_ndbc_grid2obs == complete and ../../../../18/evs/stats/rtofs/jevs_stats_rtofs_osisaf_grid2grid == complete
           endfamily
           family global_chem
             task jevs_plots_global_chem_atmos_grid2obs_aeronet_last90days
