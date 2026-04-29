@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:10:00
-#PBS -l place=shared,select=1:ncpus=1:mem=10GB:prepost=true
+#PBS -l walltime=00:15:00
+#PBS -l place=shared,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 export model=evs
@@ -49,7 +49,7 @@ export OMP_NUM_THREADS=1
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export MODELNAME=gefs
+export MODELNAME=gcafs
 
 ############################################################
 ##  Execute j-job
