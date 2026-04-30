@@ -31,7 +31,7 @@ module load prod_envir/${prod_envir_ver}
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=NO
-export SENDMAIL=YES
+export SENDMAIL=NO
 export NET=evs
 export STEP=stats
 export COMPONENT=analyses
@@ -52,7 +52,7 @@ echo $vhr
 
 export mod_ver=${rtma_ver}
 export modsys=rtma
-export MODELNAME=rtma_ru
+export MODELNAME=rtma3d
 
 export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
 
