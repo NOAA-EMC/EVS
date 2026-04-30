@@ -1666,7 +1666,7 @@ suite evs_nco
               trigger :TIME >= 1815 or :TIME < 0015
               edit VHR '18'
             task jevs_stats_mesoscale_rap_precip_vhr_19
-              trigger :TIME >= 1910 or :TIME < 0110
+              trigger :TIME >= 1945 or :TIME < 0110
               edit VHR '19'
             task jevs_stats_mesoscale_rap_precip_vhr_20
               trigger :TIME >= 2010 or :TIME < 0210
