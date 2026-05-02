@@ -117,6 +117,7 @@ class NOHRSCSpatialMap:
                     sys.exit(0)
             else:
                 logger.debug(f"{nohrsc_grib2_file} does not exist")
+                sys.exit(0)
         else:
             self.logger.error("wgrib2 executable not in PATH")
             sys.exit(1)
