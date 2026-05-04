@@ -34,12 +34,11 @@ datehr=${VDATE}${vhr}
 obday=`echo $datehr |cut -c1-8`
 obhr=`echo $datehr |cut -c9-10`
 
-if [ -e $COMINobsproc/rtma_ru.${obday}/rtma_ru.t${obhr}00z.prepbufr.tm00 ]
-#if [ -e $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}00z.prepbufr.tm00 ]
+if [ -e $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 ]
 then
  obfound=1
 else
- echo "WARNING: $COMINobsproc/rtma_ru.${obday}/rtma_ru.t${obhr}z.prepbufr.tm00 is missing, METplus will not run"
+ echo "WARNING: $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 is missing, METplus will not run"
  if [ $SENDMAIL = "YES" ]; then
   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
   echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
