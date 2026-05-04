@@ -104,16 +104,20 @@ class NOHRSCSpatialMap:
             stderr=subprocess.DEVNULL
         )
         if check_wgrib2.returncode == 0:
-            self.logger.info(f"Converting {nohrsc_grib2_file} GRIB2 file to "
-                             +f"{nohrsc_netcdf_file} netCDF file")
-            run_convert = subprocess.run(
-                ['wgrib2', nohrsc_grib2_file, '-netcdf',
-                 nohrsc_netcdf_file]
-            )
-            if run_convert.returncode != 0:
-                self.logger.error("Could not convert {nohrsc_grib2_file} "
-                                  +'to netCDF using wgrib2')
-                sys.exit(1)
+            if os.path.exists(nohrsc_grib2_file):
+                self.logger.info(f"Converting {nohrsc_grib2_file} GRIB2 file to "
+                                 +f"{nohrsc_netcdf_file} netCDF file")
+                run_convert = subprocess.run(
+                    ['wgrib2', nohrsc_grib2_file, '-netcdf',
+                     nohrsc_netcdf_file]
+                )
+                if run_convert.returncode != 0:
+                    self.logger.error(f"Could not convert {nohrsc_grib2_file} "
+                                      +'to netCDF using wgrib2')
+                    sys.exit(0)
+            else:
+                self.logger.debug(f"{nohrsc_grib2_file} does not exist")
+                sys.exit(0)
         else:
             self.logger.error("wgrib2 executable not in PATH")
             sys.exit(1)
