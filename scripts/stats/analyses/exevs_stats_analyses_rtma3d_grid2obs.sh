@@ -131,8 +131,8 @@ then
        run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
        if [ $SENDCOM = "YES" ]; then
-	 if [ -s $finalstat/evs.stats.${regionnest}_3D${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-           cp -v $finalstat/evs.stats.${regionnest}_3D${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
+	 if [ -s $finalstat/evs.stats.${regionnest}3d${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+           cp -v $finalstat/evs.stats.${regionnest}3d${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
 	 fi
        fi
 
