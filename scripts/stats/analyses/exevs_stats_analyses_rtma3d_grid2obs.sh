@@ -34,11 +34,12 @@ datehr=${VDATE}${vhr}
 obday=`echo $datehr |cut -c1-8`
 obhr=`echo $datehr |cut -c9-10`
 
-if [ -e $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}00z.prepbufr.tm00 ]
+if [ -e $COMINobsproc/rtma_ru.${obday}/rtma_ru.t${obhr}00z.prepbufr.tm00 ]
+#if [ -e $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}00z.prepbufr.tm00 ]
 then
  obfound=1
 else
- echo "WARNING: $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 is missing, METplus will not run"
+ echo "WARNING: $COMINobsproc/rtma_ru.${obday}/rtma_ru.t${obhr}z.prepbufr.tm00 is missing, METplus will not run"
  if [ $SENDMAIL = "YES" ]; then
   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
   echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -79,15 +80,15 @@ then
 
 fi
 
-       if [ -e $COMINrtma/${modnam}.${VDATE}/conus/${modnam}.t${vhr}00z.${outtyp}_ndfd.grib2 ]
+       if [ -e $COMINrtma/${modnam}.${VDATE}/conus/${modnam}.t${vhr}z.${outtyp}_ndfd.grib2 ]
        then
          rtmafound=1
        else
-	echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_prslev_ndfd.grib2_wexp is missing; METplus will not run"
+	echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grib2 is missing; METplus will not run"
 	if [ $SENDMAIL = "YES" ]; then
          export subject="CONUS Analysis Missing for EVS ${COMPONENT}"
          echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-         echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_prslev_ndfd.grib2_wexp" >> mailmsg
+         echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grib2" >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
