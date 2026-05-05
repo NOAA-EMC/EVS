@@ -1423,40 +1423,22 @@ suite evs_nco
               trigger :TIME >= 1715 and :TIME < 2300
               edit VHR '17'
             task jevs_stats_analyses_rtma3d_grid2obs_vhr_12
-              trigger :TIME >= 1200 and :TIME < 1800
-              edit VHR '12'
-            task jevs_stats_analyses_rtma3d_grid2obs_vhr_13
-              trigger :TIME >= 1300 and :TIME < 1900
-              edit VHR '13'
-            task jevs_stats_analyses_rtma3d_grid2obs_vhr_14
-              trigger :TIME >= 1400 and :TIME < 2000
-              edit VHR '14'
-            task jevs_stats_analyses_rtma3d_grid2obs_vhr_15
-              trigger :TIME >= 1500 and :TIME < 2100
-              edit VHR '15'
-            task jevs_stats_analyses_rtma3d_grid2obs_vhr_16
-              trigger :TIME >= 1600 and :TIME < 2200
-              edit VHR '16'
-            task jevs_stats_analyses_rtma3d_grid2obs_vhr_17
-              trigger :TIME >= 1700 and :TIME < 2300
-            task jevs_stats_analyses_rtma_ru_grid2obs_vhr_12
               trigger :TIME >= 1215 and :TIME < 1800
               edit VHR '12'
-            task jevs_stats_analyses_rtma_ru_grid2obs_vhr_13
+            task jevs_stats_analyses_rtma3d_grid2obs_vhr_13
               trigger :TIME >= 1315 and :TIME < 1900
               edit VHR '13'
-            task jevs_stats_analyses_rtma_ru_grid2obs_vhr_14
+            task jevs_stats_analyses_rtma3d_grid2obs_vhr_14
               trigger :TIME >= 1415 and :TIME < 2000
               edit VHR '14'
-            task jevs_stats_analyses_rtma_ru_grid2obs_vhr_15
+            task jevs_stats_analyses_rtma3d_grid2obs_vhr_15
               trigger :TIME >= 1515 and :TIME < 2100
               edit VHR '15'
-            task jevs_stats_analyses_rtma_ru_grid2obs_vhr_16
+            task jevs_stats_analyses_rtma3d_grid2obs_vhr_16
               trigger :TIME >= 1615 and :TIME < 2200
               edit VHR '16'
-            task jevs_stats_analyses_rtma_ru_grid2obs_vhr_17
+            task jevs_stats_analyses_rtma3d_grid2obs_vhr_17
               trigger :TIME >= 1715 and :TIME < 2300
-              edit VHR '17'
           endfamily
           family global_chem
             task jevs_stats_global_chem_atmos_grid2obs_airnow_vhr_12
@@ -2020,8 +2002,6 @@ suite evs_nco
               trigger :TIME >= 1815 or :TIME < 0015
               edit VHR '18'
             task jevs_stats_analyses_rtma3d_grid2obs_vhr_19
-              trigger :TIME >= 1900 or :TIME < 0100
-            task jevs_stats_analyses_rtma_ru_grid2obs_vhr_19
               trigger :TIME >= 1945 or :TIME < 0100
               edit VHR '19'
             task jevs_stats_analyses_rtma3d_grid2obs_vhr_20

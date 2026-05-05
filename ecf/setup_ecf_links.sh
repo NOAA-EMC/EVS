@@ -127,7 +127,7 @@ echo "Linking ANALYSES stats ..."
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_analyses_urma_grid2obs_vhr" "$cyc"
 cyc=$(seq 0 23)
-link_master_to_cyc "jevs_stats_analyses_rtma_ru_grid2obs_vhr" "$cyc"
+link_master_to_cyc "jevs_stats_analyses_rtma3d_grid2obs_vhr" "$cyc"
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_stats_analyses_rtma_grid2obs_vhr" "$cyc"
 
