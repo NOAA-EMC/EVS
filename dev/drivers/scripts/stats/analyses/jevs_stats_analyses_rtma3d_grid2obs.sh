@@ -50,8 +50,8 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export vhr
 echo $vhr
 
-export mod_ver=${rtma_ver}
-export modsys=rtma
+export mod_ver=${rtma3d_ver}
+export modsys=rtma3d
 export MODELNAME=rtma3d
 
 export MAILTO="mallory.row@noaa.gov,samira.ardani@noaa.gov"

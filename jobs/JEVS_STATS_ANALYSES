@@ -70,6 +70,9 @@ fi
 if [ "$modsys" = "rtma" ] ; then
   mod_ver=$rtma_ver
 fi
+if [ "$modsys" = "rtma3d" ] ; then
+  mod_ver=$rtma3d_ver
+fi
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/$evs_ver)}
 export COMINrtma=${COMINrtma:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMINurma=${COMINurma:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}

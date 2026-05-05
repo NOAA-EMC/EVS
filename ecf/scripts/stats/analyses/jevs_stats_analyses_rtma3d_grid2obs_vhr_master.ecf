@@ -38,7 +38,7 @@ export vhr=%VHR%
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export modsys=rtma
+export modsys=rtma3d
 export MODELNAME=rtma3d
 
 ############################################################
