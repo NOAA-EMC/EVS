@@ -23,7 +23,7 @@ mkdir -p $DATA/stat
 export regionnest=rtma
 export fcstmax=$g2os_sfc_fhr_max
 
-export dirin=$COMINrtma3d
+export dirin=$COMINrtma
 
 export maskdir=$MASKS
 export fhr="00"
@@ -36,15 +36,15 @@ datehr=${VDATE}${vhr}
 obday=`echo $datehr |cut -c1-8`
 obhr=`echo $datehr |cut -c9-10`
 
-if [ -e $COMINobsproc_rtma3d/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 ]
+if [ -e $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 ]
 then
  obfound=1
 else
- echo "WARNING: $COMINobsproc_rtma3d/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 is missing, METplus will not run"
+ echo "WARNING: $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 is missing, METplus will not run"
  if [ $SENDMAIL = "YES" ]; then
   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
   echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-  echo "Missing file is $COMINobsproc_rtma3d/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00" >> mailmsg
+  echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00" >> mailmsg
   echo "Job ID: $jobid" >> mailmsg
   cat mailmsg | mail -s "$subject" $MAILTO
  fi
@@ -81,15 +81,15 @@ then
 
 fi
 
-       if [ -e $COMINrtma3d/${modnam}.${VDATE}/conus/${modnam}.t${vhr}z.${outtyp}_ndfd.grib2 ]
+       if [ -e $COMINrtma/${modnam}.${VDATE}/conus/${modnam}.t${vhr}z.${outtyp}_ndfd.grib2 ]
        then
          rtmafound=1
        else
-	echo "WARNING: $COMINrtma3d/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grib2 is missing; METplus will not run"
+	echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grib2 is missing; METplus will not run"
 	if [ $SENDMAIL = "YES" ]; then
          export subject="CONUS Analysis Missing for EVS ${COMPONENT}"
          echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-         echo "Missing file is $COMINrtma3d/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grib2" >> mailmsg
+         echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grib2" >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
