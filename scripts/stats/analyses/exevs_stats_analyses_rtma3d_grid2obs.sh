@@ -2,9 +2,11 @@
 
 ##################################################################################
 # Name of Script: exevs_stats_analyses_rtma3d_grid2obs.sh
-# Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
+# Contact(s):     Samira Ardani (samira.ardani@noaa.gov)
 # Purpose of Script: This script runs METplus to generate 
 #                    verification statistics for analyses and first guess for 3Drtma
+#                    Updates:
+#                    05/05/2026: Replaced RTMA_RU with 3D-RTMA
 ##################################################################################
 
 
