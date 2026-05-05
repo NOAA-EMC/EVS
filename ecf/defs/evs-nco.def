@@ -1439,6 +1439,7 @@ suite evs_nco
               edit VHR '16'
             task jevs_stats_analyses_rtma3d_grid2obs_vhr_17
               trigger :TIME >= 1715 and :TIME < 2300
+	      edit VHR '17'	
           endfamily
           family global_chem
             task jevs_stats_global_chem_atmos_grid2obs_airnow_vhr_12
