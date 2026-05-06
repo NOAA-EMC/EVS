@@ -56,7 +56,7 @@ export mod_ver=${ccpa_ver}
 export modsys=ccpa
 export MODELNAME=ccpa
 
-export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
+export MAILTO="mallory.row@noaa.gov,samira.ardani@noaa.gov"
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_STATS_ANALYSES
