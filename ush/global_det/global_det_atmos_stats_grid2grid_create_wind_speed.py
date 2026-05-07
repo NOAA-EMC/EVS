@@ -34,16 +34,12 @@ valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_list = os.environ['fhr_list'].split(', ')
-#fhr_start = os.environ['fhr_start']
-#fhr_end = os.environ['fhr_end']
-#fhr_inc = os.environ['fhr_inc']
 job_num_work_dir = os.environ['job_num_work_dir']
 # Needed netCDF variables
 req_var_level_list = ['FCST_UGRD_P850_FULL', 'OBS_UGRD_P850_FULL',
                       'FCST_UGRD_P250_FULL', 'OBS_UGRD_P250_FULL',
                       'FCST_VGRD_P850_FULL', 'OBS_VGRD_P850_FULL',
                       'FCST_VGRD_P250_FULL', 'OBS_VGRD_P250_FULL']
-#output_var_level = 'WNDSHR_P850_P200'
 levels = ['P850', 'P250']
 
 # Create fcst and obs wind speed data
