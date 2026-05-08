@@ -16,7 +16,7 @@ export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
 export MET_CONFIG_OVERRIDES=""
 
 # Restart Settings
-export RESTART_DIR="${COMOUTsmall}/restart/c${vhr}"
+export RESTART_DIR="${COMOUTsmall}/restart/${MODELNAME}/c${vhr}"
 export COMPLETED_JOBS_DIR="completed_jobs"
 
 # Time Settings
