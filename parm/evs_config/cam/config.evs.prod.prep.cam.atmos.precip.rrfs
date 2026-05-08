@@ -22,7 +22,7 @@ export COMPLETED_JOBS_DIR="completed_jobs"
 # Time Settings
 export IHOUR_FULL="00 06 12 18"
 export FHR_END_FULL="84"
-export FHR_INCR_FULL="6"
+export FHR_INCR_FULL="1"
 export FHR_END_SHORT="18"
 
 # Model/Obs Settings
