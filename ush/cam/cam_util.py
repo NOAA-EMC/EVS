@@ -680,7 +680,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                         met_tool,
                     ))
                     copy_files.append(
-                        f'{model}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                        f'{model}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
                     )
             else:
                 check_if_none = [
