@@ -685,7 +685,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             else:
                 check_if_none = [
                     data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
-                    vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc
+                    vdate, vhour, model, acc
                 ]
                 if any([var is None for var in check_if_none]):
                     e = (f"FATAL ERROR: None encountered as an argument while copying"
@@ -710,28 +710,6 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 copy_files.append(
                     f'{verif_type}.t{vhour}z.a{acc}h.{vx_mask}.nc'
                 )
-                # Copy forecasts
-                for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
-                    vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
-                    idt = vdt - td(hours=int(fhr))
-                    idate = idt.strftime('%Y%m%d')
-                    ihour = idt.strftime('%H')
-                    sub_dirs_in.append(os.path.join(
-                        'METplus_output',
-                        'workdirs',
-                        'reformat',
-                        f'job{njob}',
-                        verif_type,
-                        met_tool,
-                    ))
-                    sub_dirs_out.append(os.path.join(
-                        'METplus_output',
-                        verif_type,
-                        met_tool,
-                    ))
-                    copy_files.append(
-                        f'{model}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
-                    )
     elif met_tool == 'point_stat':
         check_if_none = [
             data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
