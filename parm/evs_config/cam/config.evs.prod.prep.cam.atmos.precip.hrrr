@@ -31,17 +31,9 @@ export COMINfcst=${COMINhrrr}
 # Additional Verification Settings
 if [ "$ACC" = "01" ]; then
     if [[ " $IHOUR_FULL " == *" $IHOUR "* ]]; then
-        if [ "$NEST" = "conus" ]; then
-            export FHR_GROUP_LIST="SHORT FULL"
-        else
-            export FHR_GROUP_LIST="FULL"
-        fi
+        export FHR_GROUP_LIST="FULL"
     else
-        if [ "$NEST" = "conus" ]; then
-            export FHR_GROUP_LIST="SHORT"
-        else
-            export FHR_GROUP_LIST=""
-        fi
+        export FHR_GROUP_LIST="SHORT"
     fi
     export MODEL_ACC="01"
     export BUCKET_INTERVAL=$MODEL_ACC
@@ -50,17 +42,9 @@ if [ "$ACC" = "01" ]; then
     export USE_ZERO_ACCUM="False"
 elif [ "$ACC" = "03" ]; then
     if [[ " $IHOUR_FULL " == *" $IHOUR "* ]]; then
-        if [ "$NEST" = "conus" ]; then
-            export FHR_GROUP_LIST="SHORT FULL"
-        else
-            export FHR_GROUP_LIST="FULL"
-        fi
+        export FHR_GROUP_LIST="FULL"
     else
-        if [ "$NEST" = "conus" ]; then
-            export FHR_GROUP_LIST="SHORT"
-        else
-            export FHR_GROUP_LIST=""
-        fi
+        export FHR_GROUP_LIST="SHORT"
     fi
     export MODEL_ACC="01"
     export BUCKET_INTERVAL=$MODEL_ACC
@@ -89,7 +73,7 @@ if [ "$NEST" = "conus" ]; then
     export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
 elif [ "$NEST" = "ak" ]; then
     export VERIF_TYPE="mrms"
-    export FHR_INCR_SHORT="3"
+    export FHR_INCR_SHORT="1"
     export MIN_IHOUR="00"
     export GRID="G216"
     export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"

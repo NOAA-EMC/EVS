@@ -31,7 +31,7 @@ export COMINfcst=${COMINrrfs}
 # Additional Verification Settings
 if [ "$ACC" = "01" ]; then
     if [[ " $IHOUR_FULL " == *" $IHOUR "* ]]; then
-        export FHR_GROUP_LIST="SHORT FULL"
+        export FHR_GROUP_LIST="FULL"
     else
         export FHR_GROUP_LIST="SHORT"
     fi
@@ -42,7 +42,7 @@ if [ "$ACC" = "01" ]; then
     export USE_ZERO_ACCUM="False"
 elif [ "$ACC" = "03" ]; then
     if [[ " $IHOUR_FULL " == *" $IHOUR "* ]]; then
-        export FHR_GROUP_LIST="SHORT FULL"
+        export FHR_GROUP_LIST="FULL"
     else
         export FHR_GROUP_LIST="SHORT"
     fi
