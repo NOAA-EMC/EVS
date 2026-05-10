@@ -26,14 +26,12 @@ for NEST in $NEST_LIST; do
     export NEST=$NEST
     for ACC in "01" "03" "24"; do
         export ACC=$ACC
-        if [ "${ACC}" = "01" ]; then
-            IHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
-        elif [ "${ACC}" = "03" ]; then
-            IHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
-        elif [ "${ACC}" = "24" ]; then
+        if [ "${NEST}" = "ak" ]; then
+            IHOUR_LIST="00 03 06 09 12 15 18 21"
+        elif [ "${NEST}" = "conus" ]; then
             IHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
         else
-            err_exit "${ACC} is not supported"
+            err_exit "${NEST} is not supported"
         fi
         source $USHevs/cam/cam_prep_precip_filter_init_hours_list.sh
 
