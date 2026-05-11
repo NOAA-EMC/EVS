@@ -4,8 +4,8 @@
 # 
 # NAME: config.evs.prod.prep.cam.atmos.precip.rrfsmem 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Set up configurations to run EVS RRFS Members Precipitation - Precipitation
-# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_rrfsmem_precip_prep.sh
+# PURPOSE: Set up configurations to run EVS RRFS Members Precipitation - Prepare
+# DEPENDENCIES: $HOMEevs/scripts/prep/cam/exevs_rrfsmem_precip_prep.sh
 # 
 # =============================================================================
 

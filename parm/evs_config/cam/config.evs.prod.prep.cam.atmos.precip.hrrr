@@ -4,8 +4,8 @@
 # 
 # NAME: config.evs.prod.prep.cam.atmos.precip.hrrr 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Set up configurations to run EVS HRRR Precipitation - Precipitation
-# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_hrrr_precip_prep.sh
+# PURPOSE: Set up configurations to run EVS HRRR Precipitation - Prepare
+# DEPENDENCIES: $HOMEevs/scripts/prep/cam/exevs_hrrr_precip_prep.sh
 # 
 # =============================================================================
 
