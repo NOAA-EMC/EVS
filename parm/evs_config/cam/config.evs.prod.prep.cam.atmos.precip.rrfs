@@ -67,32 +67,24 @@ else
 fi
 if [ "$NEST" = "conus" ]; then
     export VERIF_TYPE="ccpa"
-    #export OBS_ACC="VARIABLE"
-    #export OBSNAME="ccpa"
     export FHR_INCR_SHORT="1"
     export MIN_IHOUR="00"
     export GRID="G212"
     export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.3km.f{lead?fmt=%3H}.conus.grib2"
 elif [ "$NEST" = "ak" ]; then
     export VERIF_TYPE="mrms"
-    #export OBS_ACC="VARIABLE"
-    #export OBSNAME="mrms"
     export FHR_INCR_SHORT="1"
     export MIN_IHOUR="00"
     export GRID="G216"
     export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.3km.f{lead?fmt=%3H}.conus.grib2"
 elif [ "$NEST" = "hi" ]; then
     export VERIF_TYPE="mrms"
-    #export OBS_ACC="VARIABLE"
-    #export OBSNAME="mrms"
     export FHR_INCR_SHORT="1"
     export MIN_IHOUR="00"
     export GRID="G196"
     export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.2p5km.f{lead?fmt=%3H}.hi.grib2"
 elif [ "$NEST" = "pr" ]; then
     export VERIF_TYPE="mrms"
-    #export OBS_ACC="VARIABLE"
-    #export OBSNAME="mrms"
     export FHR_INCR_SHORT="1"
     export MIN_IHOUR="00"
     export GRID="G194"
