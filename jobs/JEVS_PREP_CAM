@@ -75,11 +75,7 @@ if [ $VERIF_CASE = grid2obs ] ; then
    fi
 
 elif [ $VERIF_CASE = precip ] ; then
-   if [ "${MODELNAME}" == "cam" ]; then
-       export INITDATE=${INITDATE:-$PDYm1}
-   else
-       export INITDATE=${INITDATE:-$PDYm2}
-   fi
+   export INITDATE=${INITDATE:-$PDYm1}
 
 elif [ $VERIF_CASE = radar ] ; then
    export INITDATE=${INITDATE:-$PDYm1}
