@@ -4,9 +4,8 @@
 #
 # NAME: exevs_prep_hrrr_precip.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS HRRR Precipitation - Statistics
-#          job
-# DEPENDENCIES: $HOMEevs/jobs/JEVS_STATS_CAM
+# PURPOSE: Handle all components of an EVS HRRR Precipitation - Prepare job
+# DEPENDENCIES: $HOMEevs/jobs/JEVS_PREP_CAM
 #
 # =============================================================================
 
