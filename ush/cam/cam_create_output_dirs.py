@@ -174,7 +174,7 @@ if STEP == 'prep':
         job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR))
         job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR))
     else:
-        job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'prep_job_scripts'))
+        job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'prep_job_scripts'))
 if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'reformat'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'generate'))
