@@ -13,7 +13,6 @@
 ###   05/01/2025   Ho-Chun Huang  Remove email function for missing model forecast output
 ###   05/22/2025   Ho-Chun Huang  Move from global_ens chem to global_chem
 ###   01/06/2026   Ho-Chun Huang  remove init cycle 06Z and 18Z
-###   01/13/2026   Ho-Chun Huang  Revise code for GCAFSv1 naming and data structure
 ###
 ########################################################################
 #
@@ -160,33 +159,31 @@ match_pm25_3="aerosol_size <2.5e-06"
 declare -a cyc_opt=( 00 12 )
 let inc=3
 for mdl_cyc in "${cyc_opt[@]}"; do
-    com_gc_mdl=${COMINgcafs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/products/${RUN}/grib2/0p25
+    com_gc_mdl=${COMINgefs}/${MODELNAME}.${INITDATE}/${mdl_cyc}/chem/pgrb2ap25   ## FOR GEFS-chem
     if [ -d ${com_gc_mdl} ]; then
-        prep_gc_mdl=${COMOUTprepmdl}/${mdl_cyc}/products/${RUN}/grib2/0p25
+        prep_gc_mdl=${COMOUTprepmdl}/${mdl_cyc}/${RUN}/pgrb2ap25
         mkdir -p ${prep_gc_mdl}
         let hour_now=0
         let max_hour=120
         while [ ${hour_now} -le ${max_hour} ]; do
             fhr=`printf %3.3d ${hour_now}`
-            mdl_full_grib2="${MODELNAME}.t${mdl_cyc}z.pres_a.0p25.f${fhr}.grib2"
-            mdl_trim_grib2="${MODELNAME}.${RUN}.t${mdl_cyc}z.0p25.f${fhr}.trim.grib2"
+            mdl_full_grib2=${MODELNAME}.chem.t${mdl_cyc}z.a2d_0p25.f${fhr}.grib2  ## FOR GEFS-chem
+            reduced_rec_grib2=${MODELNAME}.${RUN}.t${mdl_cyc}z.a2d_0p25.f${fhr}.reduced.grib2
             check_full_file=${com_gc_mdl}/${mdl_full_grib2}
-            check_trim_file=${com_gc_mdl}/${mdl_trim_grib2}
-            if [ -s ${check_trim_file} ]; then
-                echo "Found file ${check_trim_file}"
+            check_reduced_file=${com_gc_mdl}/${reduced_rec_grib2}
+            if [ -s ${check_reduced_file} ]; then
+                echo "Found file ${check_reduced_file}"
                 if [ ${SENDCOM} = "YES" ]; then
-                    cp -v ${check_trim_file} ${prep_gc_mdl}
+                    cp -v ${check_reduced_file} ${prep_gc_mdl}
                 fi
             elif [ -s ${check_full_file} ]; then
                 if [ -e extract_aod ]; then /bin/rm -rf extract_aod; fi
                 if [ -e extract_pm25 ]; then /bin/rm -rf extract_pm25; fi
                 wgrib2 -match "${match_aod_1}" -match "${match_aod_2}" -match "${match_aod_3}" -match "${match_aod_4}" ${check_full_file} -grib extract_aod
                 wgrib2 -match "${match_pm25_1}" -match "${match_pm25_2}" -match "${match_pm25_3}" ${check_full_file} -grib extract_pm25
-                cat extract_aod extract_pm25 >> ${mdl_trim_grib2}
+                cat extract_aod extract_pm25 >> ${reduced_rec_grib2}
                 if [ ${SENDCOM} = "YES" ]; then
-                    if [ -s ${mdl_trim_grib2} ]; then
-                        cp -v ${mdl_trim_grib2} ${prep_gc_mdl}
-                    fi
+                    cp -v ${reduced_rec_grib2} ${prep_gc_mdl}
                 fi
             else
                 echo "FCST_OUTPUT_MISSING: Global-Chemical forecast file ${check_full_file} is missing. The missing Global-Chemical forecast file will be skipped"
