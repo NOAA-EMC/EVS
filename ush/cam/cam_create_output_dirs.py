@@ -139,7 +139,6 @@ data_base_dir = os.path.join(DATA, VERIF_CASE, 'data')
 data_dir_list = [data_base_dir]
 if VERIF_CASE == 'precip':
     if STEP == 'prep':
-        data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         if MODELNAME == 'cam':
             data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
     elif STEP == 'stats':
