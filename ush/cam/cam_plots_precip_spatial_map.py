@@ -35,13 +35,12 @@ class PrecipSpatialMap:
     Create a precipitation spatial map graphic
     """
 
-    def __init__(self, logger, input_dir, output_dir, restart_dir, 
+    def __init__(self, logger, output_dir, restart_dir, 
                  model_info_dict, date_info_dict, plot_info_dict, 
                  met_info_dict, logo_dir):
         """! Initalize PrecipSpatialMap class
              Args:
                  logger           - logger object
-                 input_dir        - path to input directory (string)
                  output_dir       - path to output directory (string)
                  restart_dir      - path to restart directory (string)
                  model_info_dict  - model infomation dictionary (strings)
@@ -53,7 +52,6 @@ class PrecipSpatialMap:
              Returns:
         """
         self.logger = logger
-        self.input_dir = input_dir
         self.output_dir = output_dir
         self.restart_dir = restart_dir
         self.model_info_dict = model_info_dict
@@ -68,7 +66,7 @@ class PrecipSpatialMap:
              Returns:
         """
         self.logger.info(f"Creating preciptation spatial map...")
-        self.logger.debug(f"Input directory: {self.input_dir}")
+        self.logger.debug(f"Input directory: (see Model information dictionary)")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Restart directory: {self.restart_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -113,14 +111,15 @@ class PrecipSpatialMap:
         # Set Cartopy shapefile location
         config['data_dir'] = config['repo_data_dir']
         # Read in data
-        self.logger.info(f"Reading in model files from {self.input_dir}")
         for model_num in self.model_info_dict:
             model_num_dict = self.model_info_dict[model_num]
             model_num_name = model_num_dict['name']
             model_num_plot_name = model_num_dict['plot_name']
             model_num_obs_name = model_num_dict['obs_name']
+            model_num_input_dir = model_num_dict['input_dir']
+            self.logger.info(f"Reading in {model_num_name} files from {model_num_input_dir}")
             model_num_data_dir = os.path.join(
-                self.input_dir,
+                model_num_input_dir,
                 valid_date_dt.strftime('atmos.%Y%m%d'),
             )
             make_plot = False
@@ -178,8 +177,6 @@ class PrecipSpatialMap:
                 model_num_file = os.path.join(
                     model_num_data_dir,
                     model_num,
-                    'precip',
-                    'spatial_maps',
                     init_date_dt.strftime(
                        f'{model_num_name}.init%Y%m%d.t%Hz.'
                        + f'f{self.date_info_dict["forecast_hour"].zfill(3)}.'
@@ -458,7 +455,6 @@ class PrecipSpatialMap:
 
 def main():
     # Need settings
-    INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
     RESTART_DIR = os.environ['RESTART_DIR']
     LOGO_DIR = os.environ['HOME'],
@@ -525,7 +521,7 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = PrecipSpatialMap(logger, INPUT_DIR, OUTPUT_DIR, RESTART_DIR, 
+    p = PrecipSpatialMap(logger, OUTPUT_DIR, RESTART_DIR, 
                          MODEL_INFO_DICT, DATE_INFO_DICT, PLOT_INFO_DICT, 
                          MET_INFO_DICT, LOGO_DIR)
     p.make_precip_spatial_map()
