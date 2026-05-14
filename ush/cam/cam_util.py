@@ -28,6 +28,9 @@ from datetime import datetime, timedelta as td
 # Third-party imports
 import numpy as np
 
+# Local imports
+import string_template_substitution
+
 def flatten(xs):
     for x in xs: 
         if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
@@ -1331,3 +1334,164 @@ def get_obs_avail(indir, vdate, nest, obsname):
             return False
     else:
         raise ValueError(f"Invalid obsname: \"{obsname}\"")
+
+def _as_int(value, name):
+    """Convert value to int with a useful error message."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be convertible to int. Got: {value!r}")
+
+
+def _get_init_and_lead(VDATE, VHOUR, FHR):
+    """
+    Return init datetime and lead seconds from valid date/hour and forecast hour.
+
+    VDATE: YYYYMMDD
+    VHOUR: HH
+    FHR: forecast lead hour
+    """
+    fhr_int = _as_int(FHR, "FHR")
+    valid = datetime.strptime(f"{VDATE}{int(VHOUR):02d}", "%Y%m%d%H")
+    init = valid - timedelta(hours=fhr_int)
+    lead = fhr_int * 3600
+    return init, lead
+
+
+def _substitute_fcst_template(MODEL_INPUT_TEMPLATE, VDATE, VHOUR, FHR, ACC=None):
+    """
+    Substitute METplus-style template tags like:
+      {init?fmt=%Y%m%d}
+      {init?fmt=%2H}
+      {lead?fmt=%3H}
+      {level?fmt=%HH}
+
+    ACC is used as level for precip-style accumulation templates.
+    """
+    init, lead = _get_init_and_lead(VDATE, VHOUR, FHR)
+
+    kwargs = {
+        "init": init,
+        "lead": lead,
+    }
+
+    if ACC is not None:
+        kwargs["level"] = _as_int(ACC, "ACC") * 3600
+
+    if string_template_substitution is not None:
+        return string_template_substitution.do_string_sub(
+            MODEL_INPUT_TEMPLATE,
+            **kwargs
+        )
+
+    # Fallback, in case string_template_substitution is not importable.
+    out = MODEL_INPUT_TEMPLATE
+    out = out.replace("{init?fmt=%Y%m%d}", init.strftime("%Y%m%d"))
+    out = out.replace("{init?fmt=%2H}", init.strftime("%H"))
+    out = out.replace("{lead?fmt=%2H}", f"{_as_int(FHR, 'FHR'):02d}")
+    out = out.replace("{lead?fmt=%3H}", f"{_as_int(FHR, 'FHR'):03d}")
+
+    if ACC is not None:
+        out = out.replace("{level?fmt=%HH}", f"{_as_int(ACC, 'ACC'):02d}H")
+
+    return out
+
+
+def get_cam_fcst_file_path(
+    VERIF_CASE,
+    job_type,
+    COMINfcst=None,
+    MODEL_INPUT_TEMPLATE=None,
+    DATA=None,
+    VERIF_TYPE=None,
+    MODELNAME=None,
+    NEST=None,
+    VDATE=None,
+    VHOUR=None,
+    FHR=None,
+    ACC=None,
+    FCST_VAR_NAME=None,
+):
+    """
+    Build the forecast/input file path needed for a CAM METplus job card.
+
+    job_type should be something like:
+      reformat
+      generate
+
+    Returns:
+      full file path as string
+    """
+
+    verif_case = VERIF_CASE.lower()
+    job_type = job_type.lower()
+
+    if verif_case == "snowfall" and job_type == "generate":
+        if any(x is None for x in [DATA, VERIF_TYPE, MODELNAME, NEST,
+                                   VDATE, VHOUR, FHR, ACC, FCST_VAR_NAME]):
+            raise ValueError(
+                "snowfall generate requires DATA, VERIF_TYPE, MODELNAME, "
+                "NEST, VDATE, VHOUR, FHR, ACC, and FCST_VAR_NAME"
+            )
+
+        init, _ = _get_init_and_lead(VDATE, VHOUR, FHR)
+        fhr_int = _as_int(FHR, "FHR")
+        acc_int = _as_int(ACC, "ACC")
+
+        return os.path.join(
+            DATA,
+            verif_case,
+            "METplus_output",
+            VERIF_TYPE,
+            "pcp_combine",
+            f"{MODELNAME}.{FCST_VAR_NAME}.init{init:%Y%m%d}."
+            f"t{init:%H}z.f{fhr_int:03d}.a{acc_int:02d}h.{NEST}.nc"
+        )
+
+    # Default behavior for grid2obs, precip, and snowfall reformat:
+    # check COMINfcst/MODEL_INPUT_TEMPLATE.
+    if COMINfcst is None or MODEL_INPUT_TEMPLATE is None:
+        raise ValueError(
+            f"{VERIF_CASE} {job_type} requires COMINfcst and "
+            "MODEL_INPUT_TEMPLATE"
+        )
+
+    rel_path = _substitute_fcst_template(
+        MODEL_INPUT_TEMPLATE,
+        VDATE,
+        VHOUR,
+        FHR,
+        ACC=ACC
+    )
+
+    return os.path.join(COMINfcst, rel_path)
+
+
+def get_fcst_avail(**kwargs):
+    """
+    Return True if required CAM forecast/input file exists, else False.
+
+    Example:
+      fcst_is_avail = cutil.cam_fcst_file_available(
+          VERIF_CASE=VERIF_CASE,
+          job_type="generate",
+          COMINfcst=COMINfcst,
+          MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE,
+          DATA=DATA,
+          VERIF_TYPE=VERIF_TYPE,
+          MODELNAME=MODELNAME,
+          NEST=NEST,
+          VDATE=VDATE,
+          VHOUR=VHOUR,
+          FHR=FHR,
+          ACC=ACC,
+          FCST_VAR_NAME=FCST_VAR_NAME,
+      )
+    """
+    fcst_file = get_cam_fcst_file_path(**kwargs)
+
+    if os.path.exists(fcst_file):
+        return True
+
+    print(f"WARNING: Required forecast/input file not found: {fcst_file}")
+    return False

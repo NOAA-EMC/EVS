@@ -140,6 +140,11 @@ if VERIF_CASE == 'precip':
         COMPONENT = os.environ['COMPONENT']
         OBSNAME = os.environ['OBSNAME']
         COMINobs = os.environ['COMINobs']
+        fcst_avail = cutil.get_fcst_avail(
+            VERIF_CASE=VERIF_CASE, job_type=job_type, COMINfcst=COMINfcst, 
+            MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE, DATA=DATA,
+            VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
+            VHOUR=VHOUR, FHR=FHR, ACC=ACC, FCST_VAR_NAME=None)
         if OBS_ACC == 'VARIABLE': 
             OBS_ACC = cutil.get_obs_accums(
                 COMINobs, 
@@ -306,7 +311,7 @@ if VERIF_CASE == 'precip':
                     )
         if job_type == 'generate':
             if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                if OBS_ACC is not None:
+                if OBS_ACC is not None and fcst_avail:
                     job_cmd_list.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'

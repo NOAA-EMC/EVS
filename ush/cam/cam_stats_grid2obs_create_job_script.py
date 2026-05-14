@@ -75,6 +75,11 @@ if job_type == 'reformat':
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
     if NEST == 'firewx':
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
+        fcst_avail = cutil.get_fcst_avail(
+            VERIF_CASE=VERIF_CASE, job_type=job_type, COMINfcst=COMINfcst, 
+            MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE, DATA=DATA,
+            VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
+            VHOUR=VHOUR, FHR=FHR, ACC=None, FCST_VAR_NAME=None)
     OBSNAME = os.environ['OBSNAME']
     obs_avail = cutil.get_obs_avail(
         os.path.join(DATA, VERIF_CASE, 'data', VERIF_TYPE, 'prepbufr'), 
@@ -106,6 +111,11 @@ elif job_type == 'generate':
         EVSINspcotlk = os.environ['EVSINspcotlk']
 
     OBSNAME = os.environ['OBSNAME']
+    fcst_avail = cutil.get_fcst_avail(
+        VERIF_CASE=VERIF_CASE, job_type=job_type, COMINfcst=COMINfcst, 
+        MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE, DATA=DATA,
+        VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
+        VHOUR=VHOUR, FHR=FHR, ACC=None, FCST_VAR_NAME=None)
     obs_avail = cutil.get_obs_avail(
         os.path.join(DATA, VERIF_CASE, 'data', VERIF_TYPE, 'prepbufr'), 
         datetime.strptime(VDATE+VHOUR, '%Y%m%d%H'), 
@@ -323,7 +333,7 @@ elif STEP == 'stats':
     if job_type == 'reformat':
         if NEST == 'firewx':
             if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                if obs_avail:
+                if obs_avail and fcst_avail:
                     job_cmd_list_iterative.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
@@ -381,7 +391,7 @@ elif STEP == 'stats':
         if FCST_VAR2_NAME:
             if NEST == 'firewx':
                 if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                    if obs_avail:
+                    if obs_avail and fcst_avail:
                         job_cmd_list.append(
                             f'{metplus_launcher} -c {machine_conf} '
                             + f'-c {MET_PLUS_CONF}/'
@@ -417,7 +427,7 @@ elif STEP == 'stats':
                     spc_otlk_avail = bool(glob.glob(os.path.join(EVSINspcotlk,f'{RUN}.*',f'spc_otlk',f'spc_otlk.*.v{VDATE}*3km*')))
                 if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                     if spc_otlk_avail:
-                        if obs_avail:
+                        if obs_avail and fcst_avail:
                             job_cmd_list.append(
                                 f'{metplus_launcher} -c {machine_conf} '
                                 + f'-c {MET_PLUS_CONF}/'
@@ -478,7 +488,7 @@ elif STEP == 'stats':
                         )
             else:
                 if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                    if obs_avail:
+                    if obs_avail and fcst_avail:
                         job_cmd_list.append(
                             f'{metplus_launcher} -c {machine_conf} '
                             + f'-c {MET_PLUS_CONF}/'
@@ -510,7 +520,7 @@ elif STEP == 'stats':
             if NEST == 'firewx':
                 if VAR_NAME == 'PTYPE':
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                        if obs_avail:
+                        if obs_avail and fcst_avail:
                             job_cmd_list.append(
                                 f'{metplus_launcher} -c {machine_conf} '
                                 + f'-c {MET_PLUS_CONF}/'
@@ -582,7 +592,7 @@ elif STEP == 'stats':
                             )
                 else:
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                        if obs_avail:
+                        if obs_avail and fcst_avail:
                             job_cmd_list.append(
                                 f'{metplus_launcher} -c {machine_conf} '
                                 + f'-c {MET_PLUS_CONF}/'
@@ -619,7 +629,7 @@ elif STEP == 'stats':
                 if VAR_NAME == 'PTYPE':
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if spc_otlk_avail:
-                            if obs_avail:
+                            if obs_avail and fcst_avail:
                                 job_cmd_list.append(
                                     f'{metplus_launcher} -c {machine_conf} '
                                     + f'-c {MET_PLUS_CONF}/'
@@ -763,7 +773,7 @@ elif STEP == 'stats':
                 else:
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if spc_otlk_avail:
-                            if obs_avail:
+                            if obs_avail and fcst_avail:
                                 job_cmd_list.append(
                                     f'{metplus_launcher} -c {machine_conf} '
                                     + f'-c {MET_PLUS_CONF}/'
@@ -827,7 +837,7 @@ elif STEP == 'stats':
             else:
                 if VAR_NAME == 'PTYPE':
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                        if obs_avail:
+                        if obs_avail and fcst_avail:
                             job_cmd_list.append(
                                 f'{metplus_launcher} -c {machine_conf} '
                                 + f'-c {MET_PLUS_CONF}/'
@@ -898,7 +908,7 @@ elif STEP == 'stats':
                             )
                 else:
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                        if obs_avail:
+                        if obs_avail and fcst_avail:
                             job_cmd_list.append(
                                 f'{metplus_launcher} -c {machine_conf} '
                                 + f'-c {MET_PLUS_CONF}/'

@@ -156,6 +156,11 @@ if job_type in ['generate', 'reformat']:
                 OBS_VAR_LEVELS = var_def['var1_obs_levels']
                 OBS_VAR_THRESHOLDS = var_def['var1_obs_thresholds']
                 OBS_VAR_OPTIONS = var_def['var1_obs_options']
+                fcst_avail = cutil.get_fcst_avail(
+                    VERIF_CASE=VERIF_CASE, job_type=job_type, COMINfcst=COMINfcst, 
+                    MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE, DATA=DATA,
+                    VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
+                    VHOUR=VHOUR, FHR=FHR, ACC=ACC, FCST_VAR_NAME=FCST_VAR_NAME)
                 if job_type == 'reformat':
                     MODEL_PCP_COMBINE_COMMAND = MODEL_PCP_COMBINE_COMMAND.replace(
                         '{FCST_VAR_NAME}', FCST_VAR_NAME
@@ -313,7 +318,7 @@ if VERIF_CASE == 'snowfall':
     elif STEP == 'stats':
         if job_type == 'reformat':
             if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                if OBS_ACC is not None:
+                if OBS_ACC is not None and fcst_avail:
                     job_cmd_list_iterative.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
@@ -346,7 +351,7 @@ if VERIF_CASE == 'snowfall':
                     )
         if job_type == 'generate':
             if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                if OBS_ACC is not None:
+                if OBS_ACC is not None and fcst_avail:
                     job_cmd_list.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
