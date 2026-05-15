@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=3:ompthreads=1:mem=128GB
+#PBS -l walltime=00:15:00
+#PBS -l place=shared,select=1:ncpus=3:ompthreads=1:mem=90GB
 #PBS -l debug=true
 
 set -x
@@ -12,6 +12,7 @@ export model=evs
 export machine=WCOSS2
 
 # ECF Settings
+export SENDMAIL=YES
 export SENDECF=YES
 export SENDCOM=YES
 export KEEPDATA=NO
@@ -48,6 +49,7 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export vhr=${vhr:-${vhr}}
+export MAILTO="andrew.benjamin@noaa.gov,marcel.caron@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_PREP_CAM

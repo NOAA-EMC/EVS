@@ -4,64 +4,97 @@
 #
 # NAME: exevs_prep_rrfsmem_precip.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS REFS Member Precipitation - Prep job
+# PURPOSE: Handle all components of an EVS REFS Member Precipitation - Prepare job
 # DEPENDENCIES: $HOMEevs/jobs/JEVS_PREP_CAM
 #
 # =============================================================================
 
 set -x
 
-# Loop through REFS Member Precipitation configs
+# Set Basic Environment Variables
 export machine=${machine:-"WCOSS2"}
 export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
+last_cyc="22"
+NEST_LIST="conus ak pr hi"
+export BOOL_NBRHD=False
+
+# Reformat MET Data
 export njob=1
-for NEST in "conus" "ak" "pr" "hi"; do
+export run_restart=true
+for NEST in $NEST_LIST; do
     export NEST=$NEST
-    if [ "${NEST}" == "conus" ]; then
-        OBS_ACCs="01"
-    else
-        OBS_ACCs="01 03 24"
-    fi
-    for ACC in "24"; do
+    for ACC in "01" "03" "24"; do
         export ACC=$ACC
-        for OBS_ACC in $OBS_ACCs; do
-            export OBS_ACC=$OBS_ACC
+        if [ "${ACC}" = "01" ]; then
+            IHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+        elif [ "${ACC}" = "03" ]; then
+            IHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+        elif [ "${ACC}" = "24" ]; then
+            IHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+        else
+            err_exit "${ACC} is not supported"
+        fi
+        source $USHevs/cam/cam_prep_precip_filter_init_hours_list.sh
+
+        for IHOUR in $IHOUR_LIST; do
+            export IHOUR=$IHOUR
+            export VDATE=`$NDATE +$hrs ${INITDATE}${IHOUR} | cut -c 1-8`
+            
             source $config
-     
+            
             # Check User's Configuration Settings
             python $USHevs/cam/cam_check_settings.py
+            export err=$?; err_chk
+
+            # Check For Restart Files
+            if [ "$run_restart" = true ]; then
+                python ${USHevs}/cam/cam_production_restart.py
+                export err=$?; err_chk
+                export run_restart=false
+            fi
+
+            # Check Availability of Input Data
+            python $USHevs/cam/cam_check_input_data.py
             export err=$?; err_chk
      
             # Create Output Directories
             python $USHevs/cam/cam_create_output_dirs.py
             export err=$?; err_chk
-     
-            # Create Job Script 
-            python $USHevs/cam/cam_prep_precip_create_job_script.py
+
+            # Create Reformat Job Script 
+            python $USHevs/cam/cam_prep_model_precip_create_job_script.py
             export err=$?; err_chk
             export njob=$((njob+1))
         done
     done
 done
 
-# Create POE Job Scripts
+# Submit All Mail Messages
+if [ "$SENDMAIL" == "YES" ]; then
+    if [ ! -z "${MAILTO}" ]; then
+        $USHevs/cam/cam_submit_mail_messages.sh
+        export err=$?; err_chk
+    fi
+fi
+
+# Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_prep_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_prep_model_precip_create_poe_job_scripts.py
     export err=$?; err_chk
 fi
 
-# Create Working Directories
+# Create Reformat Working Directories
 python $USHevs/cam/cam_create_child_workdirs.py
 export err=$?; err_chk
 
-# Run all REFS Member precip/prep jobs
-chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/*
-ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/job* |wc -l)
+# Run all REFS Member precip/prep Reformat jobs
+chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/*
+ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/job* 2>/dev/null |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/poe* |wc -l)
+    ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/poe* |wc -l)
     while [ $nc -le $ncount_poe ]; do
-        poe_script=${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/poe_jobs${nc}
+        poe_script=${DATA}/${VERIF_CASE}/METplus_job_scripts/poe_jobs${nc}
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
@@ -74,41 +107,42 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
-        nc=$((nc+1))
-    done
-else
-    while [ $nc -le $ncount_job ]; do
-        ${DATA}/${VERIF_CASE}/${STEP}/prep_job_scripts/job${nc}
         export err=$?; err_chk
         nc=$((nc+1))
     done
+else
+    set -x
+    while [ $nc -le $ncount_job ]; do
+        job_file="${DATA}/${VERIF_CASE}/METplus_job_scripts/job${nc}"
+        if [ -f "$job_file" ]; then
+            $job_file
+            export err=$?; err_chk
+        fi
+        nc=$((nc+1))
+    done
+    set -x
 fi
 
-# Copy Prep Output to Main Directory
+# Copy Reformat Output to Main Directory
 shopt -s nullglob
-for CHILD_DIR in ${DATA}/${VERIF_CASE}/data/workdirs/*; do
-    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/data/.
+for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/*; do
+    cp -ruv $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
     export err=$?; err_chk
 done
 shopt -u nullglob
 
-for NEST in "conus" "ak" "pr" "hi"; do
-    export NEST=$NEST
-    source "$config"
-    # Copy files to desired location
-    #all commands to copy output files into the correct EVS COMOUT directory
-    if [ "$SENDCOM" = "YES" ]; then
-        for OBS_DIR_PATH in $DATA/$VERIF_CASE/data/$VERIF_TYPE/*; do
-            OBS_DIR=$(echo ${OBS_DIR_PATH##*/})
-            mkdir -p "$COMOUT/$OBS_DIR"
-            if [ ! -z "$(ls -A $OBS_DIR_PATH 2>/dev/null)" ]; then
-                for SUBDIR in "$OBS_DIR_PATH"/*; do
-                    if [ -d "$SUBDIR" ] && [ -n "$(ls -A "$SUBDIR" 2>/dev/null)" ]; then
-                       cp -vur "$SUBDIR" "$COMOUT/$OBS_DIR/."
-                    fi
-                done
-            fi
-        done
-    fi
-
-done
+# Copy files to desired location
+#all commands to copy output files into the correct EVS COMOUT directory
+if [ $SENDCOM = YES ]; then
+    mkdir -p $COMOUTsmall/$MODELNAME
+    for FILEn in $MET_PLUS_OUT/*/pcp_combine/*a??h*; do
+        if [ -f "$FILEn" ]; then
+            cp -vr $FILEn $COMOUTsmall/$MODELNAME/.
+        fi
+    done
+    for FILEn in $MET_PLUS_OUT/*/pcp_combine/*/*a??h*; do
+        if [ -f "$FILEn" ]; then
+            cp -vr $FILEn $COMOUTsmall/$MODELNAME/.
+        fi
+    done
+fi

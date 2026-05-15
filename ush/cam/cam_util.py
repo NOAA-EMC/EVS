@@ -127,17 +127,25 @@ def get_all_eval_periods(graphics):
                         )
     return np.unique(np.hstack(all_eval_periods))
 
-def get_fhr_start(vhour, acc, fhr_incr, min_ihour):
-    fhr_start = (
-        float(vhour) + float(min_ihour)
-        + (
-            float(fhr_incr)
-            * np.ceil(
-                (float(acc)-float(vhour)-float(min_ihour))
-                / float(fhr_incr)
+def get_fhr_start(hour, acc, fhr_incr, min_ihour, use_vhour=True):
+    if use_vhour:
+        fhr_start = (
+            float(hour) + float(min_ihour)
+            + (
+                float(fhr_incr)
+                * np.ceil(
+                    (float(acc)-float(hour)-float(min_ihour))
+                    / float(fhr_incr)
+                )
             )
         )
-    )
+    else:
+        fhr_start = (
+            float(fhr_incr)
+            * np.ceil(
+                float(acc) / float(fhr_incr)
+            )
+        )
     return int(fhr_start)
 
 def run_shell_command(command, capture_output=False):
@@ -363,8 +371,12 @@ def mark_job_completed(restart_dir, data_dir, verif_case,
     else:
         data_out = Path(data_dir) / verif_case
     if job_type:
-        restart_out = restart_out / job_type
-        data_out = data_out / 'METplus_output' / 'workdirs' / job_type / job_name / completed_jobs_dirname / job_type
+        if job_type == "prep_precip":
+            restart_out = restart_out
+            data_out = data_out / 'METplus_output' / 'workdirs' / job_name / completed_jobs_dirname
+        else:
+            restart_out = restart_out / job_type
+            data_out = data_out / 'METplus_output' / 'workdirs' / job_type / job_name / completed_jobs_dirname / job_type
     else:
         data_out = data_out / 'out' / 'workdirs' / job_name / completed_jobs_dirname
 
@@ -390,7 +402,8 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                          verif_case=None, verif_type=None, vx_mask=None, 
                          job_type=None, var_name=None, vhour=None, fhr=None, 
                          fhr_start=None, fhr_end=None, fhr_incr=None, 
-                         njob=None, acc=None, nbrhd=None, nbrhd_pt=None):
+                         njob=None, acc=None, nbrhd=None, nbrhd_pt=None,
+                         idate=None, ihour=None):
     sub_dirs_in = []
     sub_dirs_out = []
     copy_files = []
@@ -640,39 +653,45 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     f'{model}.{var_name}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
                 )
         else:
-            check_if_none = [
-                data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
-                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc
-            ]
-            if any([var is None for var in check_if_none]):
-                e = (f"FATAL ERROR: None encountered as an argument while copying"
-                     + f" {met_tool} METplus output to COMOUT directory.")
-                raise TypeError(e)
-            # Copy obs
-            sub_dirs_in.append(os.path.join(
-                'METplus_output',
-                'workdirs',
-                'reformat',
-                f'job{njob}',
-                verif_type,
-                met_tool,
-                f'{verif_type}.{vdate}'
-            ))
-            sub_dirs_out.append(os.path.join(
-                'METplus_output',
-                verif_type,
-                met_tool,
-                f'{verif_type}.{vdate}'
-            ))
-            copy_files.append(
-                f'{verif_type}.t{vhour}z.a{acc}h.{vx_mask}.nc'
-            )
-            # Copy forecasts
-            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
-                vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
-                idt = vdt - td(hours=int(fhr))
-                idate = idt.strftime('%Y%m%d')
-                ihour = idt.strftime('%H')
+            if vdate is None and idate is not None:
+                check_if_none = [
+                    data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+                    idate, ihour, fhr_start, fhr_end, fhr_incr, model, acc
+                ]
+                if any([var is None for var in check_if_none]):
+                    e = (f"FATAL ERROR: None encountered as an argument while copying"
+                         + f" {met_tool} METplus output to COMOUT directory.")
+                    raise TypeError(e)
+                # Copy forecasts
+                for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+                    idt = datetime.strptime(f'{idate}{ihour}', '%Y%m%d%H')
+                    idate = idt.strftime('%Y%m%d')
+                    ihour = idt.strftime('%H')
+                    sub_dirs_in.append(os.path.join(
+                        'METplus_output',
+                        'workdirs',
+                        f'job{njob}',
+                        verif_type,
+                        met_tool,
+                    ))
+                    sub_dirs_out.append(os.path.join(
+                        'METplus_output',
+                        verif_type,
+                        met_tool,
+                    ))
+                    copy_files.append(
+                        f'{model}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                    )
+            else:
+                check_if_none = [
+                    data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+                    vdate, vhour, model, acc
+                ]
+                if any([var is None for var in check_if_none]):
+                    e = (f"FATAL ERROR: None encountered as an argument while copying"
+                         + f" {met_tool} METplus output to COMOUT directory.")
+                    raise TypeError(e)
+                # Copy obs
                 sub_dirs_in.append(os.path.join(
                     'METplus_output',
                     'workdirs',
@@ -680,14 +699,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     f'job{njob}',
                     verif_type,
                     met_tool,
+                    f'{verif_type}.{vdate}'
                 ))
                 sub_dirs_out.append(os.path.join(
                     'METplus_output',
                     verif_type,
                     met_tool,
+                    f'{verif_type}.{vdate}'
                 ))
                 copy_files.append(
-                    f'{model}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                    f'{verif_type}.t{vhour}z.a{acc}h.{vx_mask}.nc'
                 )
     elif met_tool == 'point_stat':
         check_if_none = [

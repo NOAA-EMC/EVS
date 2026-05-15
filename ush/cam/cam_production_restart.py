@@ -37,7 +37,23 @@ STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
 
 # Copy files for restart
-if STEP == 'stats':
+if STEP == 'prep':
+    VERIF_CASE = os.environ['VERIF_CASE']
+    RESTART_DIR = os.environ['RESTART_DIR']
+    COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
+    working_dir = os.path.join(DATA, VERIF_CASE)
+    completed_jobs_dir = os.path.join(
+        RESTART_DIR, COMPLETED_JOBS_DIR
+    )
+    if os.path.exists(RESTART_DIR):
+        if (os.path.exists(completed_jobs_dir) 
+                and any(p.is_file() for p in Path(completed_jobs_dir).rglob('*'))):
+            print(f"Copying restart directory {RESTART_DIR} "
+                  +f"into working directory {working_dir}")
+            cutil.run_shell_command(
+                ['cp', '-rpv', RESTART_DIR, working_dir]
+            )
+elif STEP == 'stats':
     VERIF_CASE = os.environ['VERIF_CASE']
     RESTART_DIR = os.environ['RESTART_DIR']
     COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
