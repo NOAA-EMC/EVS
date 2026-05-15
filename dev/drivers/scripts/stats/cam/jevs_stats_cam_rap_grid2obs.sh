@@ -1,4 +1,4 @@
-#PBS -N jevs_stats_mesoscale_rap_grid2obs_00
+#PBS -N jevs_stats_cam_rap_grid2obs_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -18,7 +18,7 @@ set -x
   export SENDDBN=NO
   export SENDDBN_NTC=
   export SENDMAIL=YES
-  export job=${PBS_JOBNAME:-jevs_stats_mesoscale_rap_grid2obs}
+  export job=${PBS_JOBNAME:-jevs_stats_cam_rap_grid2obs}
   export jobid=$job.${PBS_JOBID:-$$}
   export SITE=$(cat /etc/cluster_name)
   export USE_CFP=YES
@@ -27,7 +27,7 @@ set -x
 # General Verification Settings
   export NET="evs"
   export STEP="stats"
-  export COMPONENT="mesoscale"
+  export COMPONENT="cam"
   export RUN="atmos"
   export VERIF_CASE="grid2obs"
   export MODELNAME="rap" 
@@ -40,7 +40,7 @@ set -x
 
 
 # EVS configuration
-  export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
+  export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 source $HOMEevs/versions/run.ver
 module reset
@@ -62,5 +62,5 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/JEVS_STATS_MESOSCALE
+. ${HOMEevs}/jobs/JEVS_STATS_CAM
 

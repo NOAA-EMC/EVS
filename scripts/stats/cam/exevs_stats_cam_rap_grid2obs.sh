@@ -1,10 +1,10 @@
 #!/bin/sh
 ###############################################################################
-# Name of Script: exevs_stats_mesoscale_rap_grid2obs.sh 
-# CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# Name of Script: exevs_stats_cam_rap_grid2obs.sh 
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # Purpose of Script: This script generates grid-to-observations
 #                    verification statistics using METplus for the
-#                    atmospheric component of RAP models
+#                    atmospheric component of RAP model
 # Log history:
 ###############################################################################
 
@@ -61,7 +61,7 @@ echo "*****************************"
         if [ $evs_run_mode = production ]; then
          # Check For Restart Files
 	 if [ "$run_restart" = true ]; then
-	     python ${USHevs}/mesoscale/mesoscale_production_restart.py
+	     python ${USHevs}/${COMPONENT}/${COMPONENT}_${MODELNAME}_production_restart.py
 	     export err=$?; err_chk
 	     export run_restart=false
 	 fi
@@ -71,24 +71,24 @@ echo "*****************************"
         for VHOUR in $VHOUR_LIST; do
            export VHOUR=$VHOUR
          # Check User's Configuration Settings
-           python $USHevs/mesoscale/mesoscale_check_settings.py
+           python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_check_settings.py
            export err=$?; err_chk
            
          # Check for data files
-           python $USHevs/mesoscale/mesoscale_check_input_data.py
+           python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_check_input_data.py
            export err=$?; err_chk
            
          # Create Output Directories	    
-           python $USHevs/mesoscale/mesoscale_create_output_dirs.py
+           python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_create_output_dirs.py
            export err=$?; err_chk
 
 	 # Preprocess Prepbufr Data
-	   python $USHevs/mesoscale/mesoscale_stats_grid2obs_preprocess_prepbufr.py
+	   python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_stats_grid2obs_preprocess_prepbufr.py
 	   export err=$?; err_chk
            
          # Create Reformat Job Script
 	   if [ ! -e ${RESTART_DIR}/completed_jobs/completed_jobs.txt_${job_type}_job${njob}.txt ]; then
-             python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
+             python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_stats_grid2obs_create_job_script.py
              export err=$?; err_chk
 	   fi
            
@@ -108,14 +108,14 @@ echo "*****************************"
 # Create Reformat POE Job Scripts
   if [ $USE_CFP = YES ]; then
      if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
-       python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
+       python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_stats_grid2obs_create_poe_job_scripts.py
        export err=$?; err_chk
      fi
   fi
 
 # Create Reformat Working Directories
   if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
-    python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+    python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_create_child_workdirs.py
     export err=$?; err_chk
   fi
 
@@ -187,16 +187,16 @@ echo "*****************************"
               export VHOUR=$VHOUR
               
 	    # Check User's Configuration Settings
-              python $USHevs/mesoscale/mesoscale_check_settings.py
+              python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_check_settings.py
               export err=$?; err_chk
               
             # Create Output Directories
-              python $USHevs/mesoscale/mesoscale_create_output_dirs.py
+              python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_create_output_dirs.py
               export err=$?; err_chk
               
             # Create Generate Job Script
 	      if [ ! -e ${RESTART_DIR}/completed_jobs/completed_jobs.txt_${job_type}_job${njob}.txt ]; then
-                python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
+                python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_stats_grid2obs_create_job_script.py
                 export err=$?; err_chk
               fi
               
@@ -214,14 +214,14 @@ echo "*****************************"
 # Create Generate POE Job Scripts
   if [ $USE_CFP = YES ]; then
      if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
-       python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
+       python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_stats_grid2obs_create_poe_job_scripts.py
        export err=$?; err_chk
      fi
   fi
 
 # Create Generate Working Directories
   if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
-    python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+    python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_create_child_workdirs.py
     export err=$?; err_chk
   fi
 
@@ -281,11 +281,11 @@ echo "*****************************"
      source $config
      
    # Create Output Directories
-     python $USHevs/mesoscale/mesoscale_create_output_dirs.py
+     python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_create_output_dirs.py
      export err=$?; err_chk
      
    # Create Gather Job Script
-     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
+     python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_stats_grid2obs_create_job_script.py
      export err=$?; err_chk
      
      export njob=$((njob+1))
@@ -299,14 +299,14 @@ echo "*****************************"
 # Create Gather POE Job Scripts
   if [ $USE_CFP = YES ]; then
     if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
-     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
+     python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_stats_grid2obs_create_poe_job_scripts.py
      export err=$?; err_chk
     fi
   fi
 
 # Create Gather Working Directories
   if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
-   python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+   python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_create_child_workdirs.py
    export err=$?; err_chk
   fi
 
@@ -381,11 +381,11 @@ echo "*****************************"
   source $config
   
 # Create Output Directories
-  python $USHevs/mesoscale/mesoscale_create_output_dirs.py
+  python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_create_output_dirs.py
   export err=$?; err_chk
 
 # Create Gather 3 Job Script
-  python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
+  python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_stats_grid2obs_create_job_script.py
   export err=$?; err_chk
   
   export njob=$((njob+1))
@@ -398,14 +398,14 @@ echo "*****************************"
 # Create Gather 3 POE Job Scripts
   if [ $USE_CFP = YES ]; then
    if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
-     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
+     python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_stats_grid2obs_create_poe_job_scripts.py
      export err=$?; err_chk
    fi
   fi
  
 # Create Gather 3 Working Directories
   if [ -e ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type} ]; then
-   python $USHevs/mesoscale/mesoscale_create_child_workdirs.py
+   python $USHevs/${COMPONENT}/${COMPONENT}_${MODELNAME}_create_child_workdirs.py
    export err=$?; err_chk
   fi
   

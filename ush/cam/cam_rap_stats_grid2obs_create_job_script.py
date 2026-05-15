@@ -2,11 +2,10 @@
  
 # =============================================================================
 #
-# NAME: mesoscale_stats_grid2obs_create_job_script.sh
+# NAME: cam_rap_stats_grid2obs_create_job_script.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS MESOSCALE Grid2Obs - Statistics job scripts
-# DEPENDENCIES: $SCRIPTSevs/mesoscale/stats/exevs_$MODELNAME_grid2obs_stats.sh
+# PURPOSE: Create EVS CAM Grid2Obs - Statistics job scripts
+# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_grid2obs_stats.sh
 #
 # =============================================================================
 
@@ -17,7 +16,7 @@ import re
 from datetime import datetime
 import numpy as np
 import mesoscale_util as cutil
-from mesoscale_stats_grid2obs_var_defs import generate_stats_jobs_dict as var_defs
+from cam_rap_stats_grid2obs_var_defs import generate_stats_jobs_dict as var_defs
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
@@ -52,9 +51,6 @@ if job_type == 'reformat':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
     VHOUR = os.environ['VHOUR']
-    #FHR_START = os.environ['FHR_START']
-    #FHR_INCR = os.environ['FHR_INCR']
-    #FHR_END = os.environ['FHR_END']
     FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
     FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
@@ -75,9 +71,6 @@ elif job_type == 'generate':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
     VHOUR = os.environ['VHOUR']
-    #FHR_START = os.environ['FHR_START']
-    #FHR_INCR = os.environ['FHR_INCR']
-    #FHR_END = os.environ['FHR_END']
     FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
     FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
@@ -195,9 +188,6 @@ if job_type == 'reformat':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
-    #job_env_vars_dict['FHR_START'] = FHR_START
-    #job_env_vars_dict['FHR_INCR'] = FHR_INCR
-    #job_env_vars_dict['FHR_END'] = FHR_END
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['FHR_GROUP_LIST'] = FHR_GROUP_LIST
     job_env_vars_dict['FHR_END_SHORT'] = FHR_END_SHORT
@@ -248,9 +238,6 @@ elif job_type == 'generate':
     job_env_vars_dict['VERIF_CASE'] = VERIF_CASE
     job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
-    #job_env_vars_dict['FHR_START'] = FHR_START
-    #job_env_vars_dict['FHR_INCR'] = FHR_INCR
-    #job_env_vars_dict['FHR_END'] = FHR_END
     job_env_vars_dict['FHR_GROUP_LIST'] = FHR_GROUP_LIST
     job_env_vars_dict['FHR_END_SHORT'] = FHR_END_SHORT
     job_env_vars_dict['FHR_INCR_SHORT'] = FHR_INCR_SHORT
@@ -361,7 +348,7 @@ elif STEP == 'stats':
         job_cmd_list_iterative.append(
             f'{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
-            + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
+            + f'PB2NC_fcstRAP_obs{VERIF_TYPE.upper()}.conf'
         )
         if SENDCOM == 'YES':
           job_cmd_list_iterative.append(
@@ -398,7 +385,7 @@ elif STEP == 'stats':
             job_cmd_list_iterative.append(
                 f'{metplus_launcher} -c {machine_conf} '
                 + f'-c {MET_PLUS_CONF}/'
-                + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}_VAR2.conf'
+                + f'PointStat_fcst{MODELNAME.upper()}_obs{VERIF_TYPE.upper()}_VAR2.conf'
             )
             if SENDCOM == 'YES':
               job_cmd_list_iterative.append(
@@ -441,7 +428,7 @@ elif STEP == 'stats':
                    job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
-                       + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
+                       + f'RegridDataPlane_fcst{MODELNAME.upper()}_PTYPE.conf'
                    )
                    if SENDCOM == 'YES':
                     job_cmd_list_iterative.append(
@@ -487,7 +474,7 @@ elif STEP == 'stats':
                    job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
-                       + f'PointStat_fcst{COMPONENT.upper()}_'
+                       + f'PointStat_fcst{MODELNAME.upper()}_'
                        + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
                    )
                    if SENDCOM == 'YES':
@@ -533,7 +520,7 @@ elif STEP == 'stats':
                      job_cmd_list_iterative.append(
                        f'{metplus_launcher} -c {machine_conf} '
                        + f'-c {MET_PLUS_CONF}/'
-                       + f'PointStat_fcst{COMPONENT.upper()}_'
+                       + f'PointStat_fcst{MODELNAME.upper()}_'
                        + f'obs{VERIF_TYPE.upper()}.conf'
                      )
                      if SENDCOM == 'YES':
@@ -575,7 +562,7 @@ elif STEP == 'stats':
         job_cmd_list_iterative.append(
             f'{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
-            + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
+            + f'StatAnalysis_fcst{MODELNAME.upper()}_obs{VERIF_TYPE.upper()}'
             + f'_GatherByDay.conf'
         )
         if SENDCOM == 'YES':
@@ -604,8 +591,6 @@ elif STEP == 'stats':
         )
         completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
         completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
-        print("completed job path", completed_job_path)
-        print("completed_job_restart_dir", completed_job_restart_dir)
         job_cmd_list_iterative.append(
             f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
         )
@@ -617,7 +602,7 @@ elif STEP == 'stats':
         job_cmd_list_iterative.append(
             f'{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
-            + f'StatAnalysis_fcst{COMPONENT.upper()}'
+            + f'StatAnalysis_fcst{MODELNAME.upper()}'
             + f'_GatherByCycle.conf'
         )
         if SENDCOM == 'YES':
@@ -646,8 +631,6 @@ elif STEP == 'stats':
         )
         completed_job_path = os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)
         completed_job_restart_dir = os.path.join(RESTART_DIR, "completed_jobs")
-        print("completed job path", completed_job_path)
-        print("completed_job_restart_dir", completed_job_restart_dir)
         job_cmd_list_iterative.append(
             f"if [ -f {completed_job_path} ] && [ $SENDCOM == YES ]; then cp -rpfv {completed_job_path} {completed_job_restart_dir}; fi"
         )
@@ -655,7 +638,7 @@ elif STEP == 'stats':
         job_cmd_list.append(
             f'{metplus_launcher} -c {machine_conf} '
             + f'-c {MET_PLUS_CONF}/'
-            + f'StatAnalysis_fcst{COMPONENT.upper()}'
+            + f'StatAnalysis_fcst{MODELNAME.upper()}'
             + f'_GatherByDay.conf'
         )
 elif STEP == 'plots':

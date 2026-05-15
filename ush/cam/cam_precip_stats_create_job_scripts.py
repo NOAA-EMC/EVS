@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
-Program Name: mesoscale_snowfall_stats_create_job_scripts.py
-Contact(s): Mallory Row
+Program Name: cam_precip_stats_create_job_scripts.py
+Contact(s): Marcel Caron
 Abstract: This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
           and commands to needed to run the specific
@@ -37,7 +37,6 @@ USE_CFP = os.environ['USE_CFP']
 VDATE = os.environ['VDATE']
 VHOUR_LIST = os.environ['VHOUR_LIST'].split(',')
 CYC_LIST = os.environ['CYC_LIST'].split(' ')
-MODEL_SNOWFALL_VARS = os.environ['MODEL_SNOWFALL_VARS'].split(' ')
 
 # Make job group directory
 JOB_GROUP_jobs_dir = os.path.join(DATA, 'jobs', JOB_GROUP)
@@ -48,310 +47,290 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 #### assemble_data jobs
 ################################################
 assemble_data_obs_jobs_dict = {
-    'accum24hr': {},
-    'accum06hr': {}
+    'accum24hr': {
+        '24hrCCPA': {'env': {'ccpa_file_accum': '6'},
+                     'commands': [m_util.metplus_command(
+                                      'PCPCombine_fcstRAP_obsCCPA.conf'
+                                  )]}
+    },
+    'accum03hr': {
+        '03hrCCPA': {'env': {'ccpa_file_accum': '3'},
+                     'commands': [m_util.metplus_command(
+                                      'PCPCombine_fcstRAP_obsCCPA.conf'
+                                  )]}
+    },
+    'accum01hr': {
+        '01hrCCPA': {'env': {'ccpa_file_accum': '1'},
+                     'commands': [m_util.metplus_command(
+                                      'PCPCombine_fcstRAP_obsCCPA.conf'
+                                  )]}
+    }
 }
 assemble_data_model_jobs_dict = {
     'accum24hr': {
-        '24hrAccum_ASNOW': {'env': {'snow_var': 'ASNOW'},
+        '24hrAccum_CONUS': {'env': {'area': 'conus'},
                             'commands': [m_util.metplus_command(
-                                             'PcpCombine_fcstMESOSCALE_snow_vars.conf'
+                                             'PCPCombine_fcstRAP_APCP.conf'
                                          )]},
-        '24hrAccum_SNOD': {'env': {'snow_var': 'SNOD'},
-                           'commands': [m_util.metplus_command(
-                                            'PcpCombine_fcstMESOSCALE_snow_vars.conf'
-                                        )]},
-        '24hrAccum_WEASD': {'env': {'snow_var': 'WEASD'},
-                            'commands': [m_util.metplus_command(
-                                             'PcpCombine_fcstMESOSCALE_snow_vars.conf'
-                                         )]},
+        '24hrAccum_ALASKA': {'env': {'area': 'alaska'},
+                              'commands': [m_util.metplus_command(
+                                              'PCPCombine_fcstRAP_APCP.conf'
+                                           )]},
+        '24hrAccum_HAWAII': {'env': {'area': 'hawaii'},
+                             'commands': [m_util.metplus_command(
+                                             'PCPCombine_fcstRAP_APCP.conf'
+                                          )]},
+        '24hrAccum_PUERTO_RICO': {'env': {'area': 'puerto_rico'},
+                                          'commands': [m_util.metplus_command(
+                                                           'PCPCombine_''fcstRAP_APCP.conf'
+                                                       )]},
     },
-    'accum06hr': {
-        '06hrAccum_ASNOW': {'env': {'snow_var': 'ASNOW'},
+    'accum03hr': {
+        '03hrAccum_CONUS': {'env': {'area': 'conus'},
                             'commands': [m_util.metplus_command(
-                                             'PcpCombine_fcstMESOSCALE_snow_vars.conf'
+                                             'PCPCombine_fcstRAP_APCP.conf'
                                          )]},
-        '06hrAccum_SNOD': {'env': {'snow_var': 'SNOD'},
-                           'commands': [m_util.metplus_command(
-                                            'PcpCombine_fcstMESOSCALE_snow_vars.conf'
-                                        )]},
-        '06hrAccum_WEASD': {'env': {'snow_var': 'WEASD'},
-                            'commands': [m_util.metplus_command(
-                                             'PcpCombine_fcstMESOSCALE_snow_vars.conf'
-                                         )]},
+        '03hrAccum_ALASKA': {'env': {'area': 'alaska'},
+                             'commands': [m_util.metplus_command(
+                                              'PCPCombine_fcstRAP_APCP.conf'
+                                          )]},
     },
+    'accum01hr': {
+        '01hrAccum_CONUS': {'env': {'area': 'conus'},
+                            'commands': [m_util.metplus_command(
+                                             'PCPCombine_fcstRAP_APCP.conf'
+                                         )]},
+        '01hrAccum_ALASKA': {'env': {'area': 'alaska'},
+                             'commands': [m_util.metplus_command(
+                                              'PCPCombine_fcstRAP_APCP.conf'
+                                          )]},
+    }
 }
 ################################################
 #### generate_stats jobs
 ################################################
 generate_stats_jobs_dict = {
     'accum24hr': {
-        '24hrAccum_ASNOW_CTC': {'env': {'snow_var': 'ASNOW',
-                                        'grid': os.environ['CTC_GRID'],
-                                        'obs': os.environ['VERIF_SOURCE'],
+        '24hrAccum_CONUS_CTC': {'env': {'area': 'conus',
+                                        'grid': os.environ['CONUS_CTC_GRID'],
+                                        'obs': os.environ['CONUS_VERIF_SOURCE'],
                                         'nbhrd_list': '1',
                                         'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS_Central.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +'_CONUS_South.nc'),
                                         'CTC_STAT_FLAG': 'STAT',
                                         'NBRCNT_STAT_FLAG': 'NONE'},
                                 'commands': [m_util.metplus_command(
-                                                 'GridStat_fcstMESOSCALE_obs'
-                                                 +os.environ['VERIF_SOURCE'].upper()
-                                                 +'.conf'
-                                             )]},
-        '24hrAccum_ASNOW_NBRCNT': {'env': {'snow_var': 'ASNOW',
-                                           'grid': os.environ['NBRCNT_GRID'],
-                                           'obs': os.environ['VERIF_SOURCE'],
+                                             'GridStat_fcstRAP_obs'
+                                             +os.environ['CONUS_VERIF_SOURCE'].upper()
+                                             +'.conf'
+                                         )]},
+        '24hrAccum_CONUS_NBRCNT': {'env': {'area': 'conus',
+                                           'grid': os.environ['CONUS_NBRCNT_GRID'],
+                                           'obs': os.environ['CONUS_VERIF_SOURCE'],
                                            'nbhrd_list': os.environ['NBRHD_WIDTHS'],
                                            'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS_Central.nc, {FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +'_CONUS_South.nc'),
                                            'CTC_STAT_FLAG': 'NONE',
                                            'NBRCNT_STAT_FLAG': 'STAT'},
                                    'commands': [m_util.metplus_command(
-                                                    'GridStat_fcstMESOSCALE_obs'
-                                                    +os.environ['VERIF_SOURCE'].upper()
+                                                    'GridStat_fcstRAP_obs'
+                                                    +os.environ['CONUS_VERIF_SOURCE'].upper()
                                                     +'.conf'
                                                 )]},
-        '24hrAccum_SNOD_CTC': {'env': {'snow_var': 'SNOD',
-                                       'grid': os.environ['CTC_GRID'],
-                                       'obs': os.environ['VERIF_SOURCE'],
-                                       'nbhrd_list': '1',
-                                       'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +f"_CONUS_Central.nc,{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +'_CONUS_South.nc'),
-                                       'CTC_STAT_FLAG': 'STAT',
-                                       'NBRCNT_STAT_FLAG': 'NONE'},
-                               'commands': [m_util.metplus_command(
-                                                'GridStat_fcstMESOSCALE_obs'
-                                                 +os.environ['VERIF_SOURCE'].upper()
+        '24hrAccum_ALASKA_CTC': {'env': {'area': 'alaska',
+                                         'grid': os.environ['ALASKA_CTC_GRID'],
+                                         'obs': os.environ['ALASKA_VERIF_SOURCE'],
+                                         'nbhrd_list': '1',
+                                         'mask_list': (f"{FIXevs}/masks/Alaska_"
+                                                       +f"{os.environ['ALASKA_CTC_GRID']}"
+                                                       +'.nc'),
+                                         'CTC_STAT_FLAG': 'STAT',
+                                         'NBRCNT_STAT_FLAG': 'NONE'},
+                                 'commands': [m_util.metplus_command(
+                                                 'GridStat_fcstRAP_obs'
+                                                 +os.environ['ALASKA_VERIF_SOURCE'].upper()
                                                  +'.conf'
-                                            )]},
-        '24hrAccum_SNOD_NBRCNT': {'env': {'snow_var': 'SNOD',
-                                          'grid': os.environ['NBRCNT_GRID'],
-                                          'obs': os.environ['VERIF_SOURCE'],
-                                          'nbhrd_list': os.environ['NBRHD_WIDTHS'],
-                                          'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +f"_CONUS_Central.nc, {FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +'_CONUS_South.nc'),
-                                          'CTC_STAT_FLAG': 'NONE',
-                                          'NBRCNT_STAT_FLAG': 'STAT'},
-                                  'commands': [m_util.metplus_command(
-                                                   'GridStat_fcstMESOSCALE_obs'
-                                                   +os.environ['VERIF_SOURCE'].upper()
-                                                   +'.conf'
-                                               )]},
-        '24hrAccum_WEASD_CTC': {'env': {'snow_var': 'WEASD',
-                                        'grid': os.environ['CTC_GRID'],
-                                        'obs': os.environ['VERIF_SOURCE'],
-                                        'nbhrd_list': '1',
-                                        'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
-                                                      +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
-                                                      +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
-                                                      +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
-                                                      +f"_CONUS_Central.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
-                                                      +'_CONUS_South.nc'),
-                                        'CTC_STAT_FLAG': 'STAT',
-                                        'NBRCNT_STAT_FLAG': 'NONE'},
-                                'commands': [m_util.metplus_command(
-                                                 'GridStat_fcstMESOSCALE_obs'
-                                                  +os.environ['VERIF_SOURCE'].upper()
-                                                  +'.conf'
-                                             )]},
-        '24hrAccum_WEASD_NBRCNT': {'env': {'snow_var': 'WEASD',
-                                           'grid': os.environ['NBRCNT_GRID'],
-                                           'obs': os.environ['VERIF_SOURCE'],
-                                           'nbhrd_list': os.environ['NBRHD_WIDTHS'],
-                                           'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
-                                                         +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
-                                                         +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
-                                                         +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
-                                                         +f"_CONUS_Central.nc, {FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
-                                                         +'_CONUS_South.nc'),
-                                           'CTC_STAT_FLAG': 'NONE',
-                                           'NBRCNT_STAT_FLAG': 'STAT'},
-                                   'commands': [m_util.metplus_command(
-                                                    'GridStat_fcstMESOSCALE_obs'
-                                                    +os.environ['VERIF_SOURCE'].upper()
-                                                    +'.conf'
-                                                )]},
+                                              )]},
+        '24hrAccum_ALASKA_NBRCNT': {'env': {'area': 'alaska',
+                                            'grid': os.environ['ALASKA_NBRCNT_GRID'],
+                                            'obs': os.environ['ALASKA_VERIF_SOURCE'],
+                                            'nbhrd_list': os.environ['NBRHD_WIDTHS'],
+                                            'CTC_STAT_FLAG': 'NONE',
+                                            'mask_list': (f"{FIXevs}/masks/Alaska_"
+                                                          +f"{os.environ['ALASKA_NBRCNT_GRID']}"
+                                                          +'.nc'),
+                                            'NBRCNT_STAT_FLAG': 'STAT'},
+                                    'commands': [m_util.metplus_command(
+                                                     'GridStat_fcstRAP_obs'
+                                                      +os.environ['ALASKA_VERIF_SOURCE'].upper()
+                                                      +'.conf'
+                                                 )]},
     },
-    'accum06hr': {
-        '06hrAccum_ASNOW_CTC': {'env': {'snow_var': 'ASNOW',
-                                        'grid': os.environ['CTC_GRID'],
-                                        'obs': os.environ['VERIF_SOURCE'],
+    'accum03hr': {
+        '03hrAccum_CONUS_CTC': {'env': {'area': 'conus',
+                                        'grid': os.environ['CONUS_CTC_GRID'],
+                                        'obs': os.environ['CONUS_VERIF_SOURCE'],
                                         'nbhrd_list': '1',
                                         'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS_Central.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +'_CONUS_South.nc'),
                                         'CTC_STAT_FLAG': 'STAT',
                                         'NBRCNT_STAT_FLAG': 'NONE'},
                                 'commands': [m_util.metplus_command(
-                                                 'GridStat_fcstMESOSCALE_obs'
-                                                 +os.environ['VERIF_SOURCE'].upper()
-                                                 +'.conf'
-                                             )]},
-        '06hrAccum_ASNOW_NBRCNT': {'env': {'area': 'ASNOW',
-                                           'grid': os.environ['NBRCNT_GRID'],
-                                           'obs': os.environ['VERIF_SOURCE'],
+                                             'GridStat_fcstRAP_obs'
+                                             +os.environ['CONUS_VERIF_SOURCE'].upper()
+                                             +'.conf'
+                                         )]},
+        '03hrAccum_CONUS_NBRCNT': {'env': {'area': 'conus',
+                                           'grid': os.environ['CONUS_NBRCNT_GRID'],
+                                           'obs': os.environ['CONUS_VERIF_SOURCE'],
                                            'nbhrd_list': os.environ['NBRHD_WIDTHS'],
                                            'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS_Central.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +'_CONUS_South.nc'),
                                            'CTC_STAT_FLAG': 'NONE',
                                            'NBRCNT_STAT_FLAG': 'STAT'},
-                                  'commands': [m_util.metplus_command(
-                                                   'GridStat_fcstMESOSCALE_obs'
-                                                   +os.environ['VERIF_SOURCE'].upper()
-                                                   +'.conf'
-                                               )]},
-        '06hrAccum_SNOD_CTC': {'env': {'snow_var': 'SNOD',
-                                       'grid': os.environ['CTC_GRID'],
-                                       'obs': os.environ['VERIF_SOURCE'],
-                                       'nbhrd_list': '1',
-                                       'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +f"_CONUS_Central.nc,{FIXevs}/masks/Bukovsky_"
-                                                     +f"{os.environ['CTC_GRID']}"
-                                                     +'_CONUS_South.nc'),
-                                       'CTC_STAT_FLAG': 'STAT',
-                                       'NBRCNT_STAT_FLAG': 'NONE'},
-                               'commands': [m_util.metplus_command(
-                                                'GridStat_fcstMESOSCALE_obs'
-                                                +os.environ['VERIF_SOURCE'].upper()
-                                                +'.conf'
-                                            )]},
-        '06hrAccum_SNOD_NBRCNT': {'env': {'area': 'SNOD',
-                                          'grid': os.environ['NBRCNT_GRID'],
-                                          'obs': os.environ['VERIF_SOURCE'],
-                                          'nbhrd_list': os.environ['NBRHD_WIDTHS'],
-                                          'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +f"_CONUS_Central.nc,{FIXevs}/masks/Bukovsky_"
-                                                        +f"{os.environ['NBRCNT_GRID']}"
-                                                        +'_CONUS_South.nc'),
-                                          'CTC_STAT_FLAG': 'NONE',
-                                          'NBRCNT_STAT_FLAG': 'STAT'},
-                                  'commands': [m_util.metplus_command(
-                                                   'GridStat_fcstMESOSCALE_obs'
-                                                     +os.environ['VERIF_SOURCE'].upper()
-                                                     +'.conf'
-                                               )]},
-        '06hrAccum_WEASD_CTC': {'env': {'snow_var': 'WEASD',
-                                        'grid': os.environ['CTC_GRID'],
-                                        'obs': os.environ['VERIF_SOURCE'],
+                                'commands': [m_util.metplus_command(
+                                                 'GridStat_fcstRAP_obs'
+                                                 +os.environ['CONUS_VERIF_SOURCE'].upper()
+                                                 +'.conf'
+                                             )]},
+        '03hrAccum_ALASKA_CTC': {'env': {'area': 'alaska',
+                                         'grid': os.environ['ALASKA_CTC_GRID'],
+                                         'obs': os.environ['ALASKA_VERIF_SOURCE'],
+                                         'nbhrd_list': '1',
+                                         'mask_list': (f"{FIXevs}/masks/Alaska_"
+                                                       +f"{os.environ['ALASKA_CTC_GRID']}"
+                                                       +'.nc'),
+                                         'CTC_STAT_FLAG': 'STAT',
+                                         'NBRCNT_STAT_FLAG': 'NONE'},
+                                 'commands': [m_util.metplus_command(
+                                                 'GridStat_fcstRAP_obs'
+                                                 +os.environ['ALASKA_VERIF_SOURCE'].upper()
+                                                 +'.conf'
+                                              )]},
+        '03hrAccum_ALASKA_NBRCNT': {'env': {'area': 'alaska',
+                                            'grid': os.environ['ALASKA_NBRCNT_GRID'],
+                                            'obs': os.environ['ALASKA_VERIF_SOURCE'],
+                                            'nbhrd_list': os.environ['NBRHD_WIDTHS'],
+                                            'mask_list': (f"{FIXevs}/masks/Alaska_"
+                                                          +f"{os.environ['ALASKA_NBRCNT_GRID']}"
+                                                          +'.nc'),
+                                            'CTC_STAT_FLAG': 'NONE',
+                                            'NBRCNT_STAT_FLAG': 'STAT'},
+                                    'commands': [m_util.metplus_command(
+                                                     'GridStat_fcstRAP_obs'
+                                                      +os.environ['ALASKA_VERIF_SOURCE'].upper()
+                                                      +'.conf'
+                                                 )]},
+    },
+    'accum01hr': {
+        '01hrAccum_CONUS_CTC': {'env': {'area': 'conus',
+                                        'grid': os.environ['CONUS_CTC_GRID'],
+                                        'obs': os.environ['CONUS_VERIF_SOURCE'],
                                         'nbhrd_list': '1',
                                         'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +f"_CONUS_Central.nc,{FIXevs}/masks/Bukovsky_"
-                                                      +f"{os.environ['CTC_GRID']}"
+                                                      +f"{os.environ['CONUS_CTC_GRID']}"
                                                       +'_CONUS_South.nc'),
                                         'CTC_STAT_FLAG': 'STAT',
                                         'NBRCNT_STAT_FLAG': 'NONE'},
                                 'commands': [m_util.metplus_command(
-                                                 'GridStat_fcstMESOSCALE_obs'
-                                                 +os.environ['VERIF_SOURCE'].upper()
-                                                 +'.conf'
-                                             )]},
-        '06hrAccum_WEASD_NBRCNT': {'env': {'area': 'WEASD',
-                                           'grid': os.environ['NBRCNT_GRID'],
-                                           'obs': os.environ['VERIF_SOURCE'],
+                                             'GridStat_fcstRAP_obs'
+                                             +os.environ['CONUS_VERIF_SOURCE'].upper()
+                                             +'.conf'
+                                         )]},
+        '01hrAccum_CONUS_NBRCNT': {'env': {'area': 'conus',
+                                           'grid': os.environ['CONUS_NBRCNT_GRID'],
+                                           'obs': os.environ['CONUS_VERIF_SOURCE'],
                                            'nbhrd_list': os.environ['NBRHD_WIDTHS'],
                                            'mask_list': (f"{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS_East.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS_West.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +f"_CONUS_Central.nc,{FIXevs}/masks/Bukovsky_"
-                                                         +f"{os.environ['NBRCNT_GRID']}"
+                                                         +f"{os.environ['CONUS_NBRCNT_GRID']}"
                                                          +'_CONUS_South.nc'),
                                            'CTC_STAT_FLAG': 'NONE',
                                            'NBRCNT_STAT_FLAG': 'STAT'},
-                                   'commands': [m_util.metplus_command(
-                                                    'GridStat_fcstMESOSCALE_obs'
-                                                    +os.environ['VERIF_SOURCE'].upper()
-                                                    +'.conf'
-                                                )]},
+                                'commands': [m_util.metplus_command(
+                                                 'GridStat_fcstRAP_obs'
+                                                 +os.environ['CONUS_VERIF_SOURCE'].upper()
+                                                 +'.conf'
+                                             )]},
+        '01hrAccum_ALASKA_CTC': {'env': {'area': 'alaska',
+                                         'grid': os.environ['ALASKA_CTC_GRID'],
+                                         'obs': os.environ['ALASKA_VERIF_SOURCE'],
+                                         'nbhrd_list': '1',
+                                         'mask_list': (f"{FIXevs}/masks/Alaska_"
+                                                       +f"{os.environ['ALASKA_CTC_GRID']}"
+                                                       +'.nc'),
+                                         'CTC_STAT_FLAG': 'STAT',
+                                         'NBRCNT_STAT_FLAG': 'NONE'},
+                                 'commands': [m_util.metplus_command(
+                                                 'GridStat_fcstRAP_obs'
+                                                 +os.environ['ALASKA_VERIF_SOURCE'].upper()
+                                                 +'.conf'
+                                              )]},
+        '01hrAccum_ALASKA_NBRCNT': {'env': {'area': 'alaska',
+                                            'grid': os.environ['ALASKA_NBRCNT_GRID'],
+                                            'obs': os.environ['ALASKA_VERIF_SOURCE'],
+                                            'nbhrd_list': os.environ['NBRHD_WIDTHS'],
+                                            'mask_list': (f"{FIXevs}/masks/Alaska_"
+                                                          +f"{os.environ['ALASKA_NBRCNT_GRID']}"
+                                                          +'.nc'),
+                                            'CTC_STAT_FLAG': 'NONE',
+                                            'NBRCNT_STAT_FLAG': 'STAT'},
+                                    'commands': [m_util.metplus_command(
+                                                     'GridStat_fcstRAP_obs'
+                                                      +os.environ['ALASKA_VERIF_SOURCE'].upper()
+                                                      +'.conf'
+                                                 )]},
     },
 }
 
@@ -360,15 +339,17 @@ generate_stats_jobs_dict = {
 ################################################
 gather_stats_jobs_dict = {'env': {},
                           'commands': [m_util.metplus_command(
-                              'StatAnalysis_fcstMESOSCALE.conf'
+                              'StatAnalysis_fcstRAP.conf'
                           )]}
 
 # Write jobs
 njob = 0
 if JOB_GROUP == 'assemble_data':
     for VHOUR in VHOUR_LIST:
-        accum_list = ['06']
-        if int(VHOUR) == 00 or int(VHOUR) == 12:
+        accum_list = ['01']
+        if int(VHOUR) % 3 == 0:
+            accum_list.append('03')
+        if int(VHOUR) == 12:
             accum_list.append('24')
         # Loop through and write job script for dates
         for accum in accum_list:
@@ -408,8 +389,6 @@ if JOB_GROUP == 'assemble_data':
                                         [accum_job]['env'].keys()):
                         job_env_dict[env_var] = (JOB_GROUP_accum_model_jobs_dict\
                                                  [accum_job]['env'][env_var])
-                    if job_env_dict['snow_var'] not in MODEL_SNOWFALL_VARS:
-                        continue
                     for fhr in fhrs:
                         init_dt = date_dt - datetime.timedelta(hours=fhr)
                         if f"{init_dt:%H}" in CYC_LIST:
@@ -419,49 +398,36 @@ if JOB_GROUP == 'assemble_data':
                                                                 '15','21'] \
                                     and fhr > 21:
                                 continue
-                            # Assuming continuous buckets
-                            if job_env_dict['snow_var'] == 'ASNOW':
-                                input_accum = 'A{lead?fmt=%H}'
-                                input_level = input_accum
-                                input_grib2_pdt = '8'
-                                job_env_dict['pcp_combine_method'] = 'SUBTRACT'
-                            else:
-                                input_accum = ''
-                                input_level = 'Z0'
-                                input_grib2_pdt = '0'
-                                job_env_dict['pcp_combine_method'] = 'USER_DEFINED'
+                            # assuming continuous buckets
+                            bucket_intvl = job_env_dict['fcst_hour'].zfill(1)
+                            pcp_combine_method = 'SUBTRACT'
+                            input_accum = 'A{lead?fmt=%H}'
+                            input_level = input_accum
+                            job_env_dict['pcp_combine_method'] = (
+                                pcp_combine_method
+                            )
                             job_env_dict['input_accum'] = input_accum
                             job_env_dict['input_level'] = input_level
-                            job_env_dict['input_grib2_pdt'] = input_grib2_pdt
                             job_env_dict['bucket_intvl'] = (
-                                job_env_dict['fcst_hour'].zfill(1)+'H'
+                                str(bucket_intvl)+'H'
                             )
-                            # Check for expected job input and output files
                             njob+=1
                             job_env_dict['job_num'] = str(njob)
                             job_env_dict['job_num_work_dir'] = os.path.join(
-                               DATA, f"{VERIF_CASE}", 'METplus_output',
-                               'job_work_dir', JOB_GROUP,
-                               f"job{job_env_dict['job_num']}"
+                                DATA, f"{VERIF_CASE}", 'METplus_output',
+                                'job_work_dir', JOB_GROUP,
+                                f"job{job_env_dict['job_num']}"
                             )
+                            # Check for expected job input and output files
                             (job_all_model_input_file_exist,
                              job_model_input_files_list,
                              job_all_model_COMOUT_file_exist,
                              job_model_COMOUT_files_list,
                              job_model_DATA_files_list) = (
-                                 m_util.snowfall_check_model_input_output_files(
+                                 m_util.precip_check_model_input_output_files(
                                        job_env_dict
                                  )
                             )
-                            for job_model_input_file \
-                                    in job_model_input_files_list:
-                                njob_file = str(
-                                    job_model_input_files_list\
-                                    .index(job_model_input_file)
-                                + 1)
-                                job_env_dict['job_file'+njob_file] = (
-                                    job_model_input_file
-                                )
                             # Create job file
                             job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                     'job'+str(njob))
@@ -528,7 +494,7 @@ if JOB_GROUP == 'assemble_data':
                      job_all_obs_COMOUT_file_exist,
                      job_obs_COMOUT_files_list,
                      job_obs_DATA_files_list) = (
-                        m_util.snowfall_check_obs_input_output_files(
+                        m_util.precip_check_obs_input_output_files(
                             job_env_dict
                         )
                     )
@@ -573,8 +539,10 @@ if JOB_GROUP == 'assemble_data':
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'generate_stats':
     for VHOUR in VHOUR_LIST:
-        accum_list = ['06']
-        if int(VHOUR) == 00 or int(VHOUR) == 12:
+        accum_list = ['01']
+        if int(VHOUR) % 3 == 0:
+            accum_list.append('03')
+        if int(VHOUR) == 12:
             accum_list.append('24')
         # Loop through and write job script for dates
         for accum in accum_list:
@@ -613,10 +581,6 @@ elif JOB_GROUP == 'generate_stats':
                         job_env_dict[env_var] = (JOB_GROUP_accum_jobs_dict\
                                                  [accum_job]['env'][env_var])
                     job_env_dict['OBS'] = job_env_dict['obs'].upper()
-                    if job_env_dict['OBS'] == job_env_dict['grid']:
-                        job_env_dict['grid'] = 'OBS'
-                    if job_env_dict['snow_var'] not in MODEL_SNOWFALL_VARS:
-                        continue
                     for fhr in fhrs:
                         init_dt = date_dt - datetime.timedelta(hours=fhr)
                         if f"{init_dt:%H}" in CYC_LIST:
@@ -626,20 +590,21 @@ elif JOB_GROUP == 'generate_stats':
                                                                 '15','21'] \
                                     and fhr > 21:
                                 continue
-                            njob+=1 
+                            njob+=1
                             job_env_dict['job_num'] = str(njob)
                             job_env_dict['job_num_work_dir'] = os.path.join(
                                DATA, f"{VERIF_CASE}", 'METplus_output',
                                'job_work_dir', JOB_GROUP,
                                f"job{job_env_dict['job_num']}"
                             )
+                                                       
                             # Check for expected job input and output files
                             (job_all_obs_input_file_exist,
                              job_obs_input_files_list,
                              job_all_obs_COMOUT_file_exist,
                              job_obs_COMOUT_files_list,
                              job_obs_DATA_files_list) = (
-                                 m_util.snowfall_check_obs_input_output_files(
+                                 m_util.precip_check_obs_input_output_files(
                                        job_env_dict
                                  )
                             )
@@ -648,14 +613,10 @@ elif JOB_GROUP == 'generate_stats':
                              job_all_model_COMOUT_file_exist,
                              job_model_COMOUT_files_list,
                              job_model_DATA_files_list) = (
-                                 m_util.snowfall_check_model_input_output_files(
+                                 m_util.precip_check_model_input_output_files(
                                        job_env_dict
                                  )
                             )
-                            if job_env_dict['snow_var'] == 'WEASD':
-                                job_env_dict['convert_m'] = str(0.001 * 10)
-                            else:
-                                job_env_dict['convert_m'] = str(1)
                             # Create job file
                             job_file = os.path.join(JOB_GROUP_jobs_dir,
                                                     'job'+str(njob))
@@ -666,7 +627,7 @@ elif JOB_GROUP == 'generate_stats':
                             job.write('\n')
                             # Create job working directory
                             job_env_dict['MET_TMP_DIR'] = os.path.join(
-                               job_env_dict['job_num_work_dir'], 'tmp'
+                                job_env_dict['job_num_work_dir'], 'tmp'
                             )
                             # Write environment variables
                             for name, value in job_env_dict.items():

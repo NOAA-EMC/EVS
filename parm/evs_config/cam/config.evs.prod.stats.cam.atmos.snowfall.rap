@@ -2,10 +2,9 @@
 
 # =============================================================================
 # 
-# NAME: config.evs.prod.stats.mesoscale.atmos.precip.rap
-# CONTRIBUTOR(S): mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# NAME: config.evs.prod.stats.cam.atmos.precip.rap
+# CONTRIBUTOR(S): marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS RAP Precip - Statistics
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_precip_stats.ecf
 # 
 # =============================================================================
 

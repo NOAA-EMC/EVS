@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
-Name: mesoscale_precip_get_data.py
-Contact(s): Mallory Row, Roshan Shrestha
+Name: cam_precip_get_data.py
+Contact(s): Marcel Caron
 Abstract: This gather model and observation data files
 '''
 
