@@ -127,30 +127,28 @@ suite evs_nco
         endfamily    # 00 prep
         family stats
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/stats'
-          family mesoscale
-            task jevs_stats_mesoscale_rap_precip_vhr_00
+          family cam
+            task jevs_stats_cam_rap_precip_vhr_00
               trigger :TIME >= 0010 and :TIME < 0610
               edit VHR '00'
-            task jevs_stats_mesoscale_rap_precip_vhr_01
+            task jevs_stats_cam_rap_precip_vhr_01
               trigger :TIME >= 0110 and :TIME < 0710
               edit VHR '01'
-            task jevs_stats_mesoscale_rap_precip_vhr_02
+            task jevs_stats_cam_rap_precip_vhr_02
               trigger :TIME >= 0210 and :TIME < 0810
               edit VHR '02'
-            task jevs_stats_mesoscale_rap_precip_vhr_03
+            task jevs_stats_cam_rap_precip_vhr_03
               trigger :TIME >= 0310 and :TIME < 0910
               edit VHR '03'
-            task jevs_stats_mesoscale_rap_precip_vhr_04
+            task jevs_stats_cam_rap_precip_vhr_04
               trigger :TIME >= 0410 and :TIME < 1010
               edit VHR '04'
-            task jevs_stats_mesoscale_rap_precip_vhr_05
+            task jevs_stats_cam_rap_precip_vhr_05
               trigger :TIME >= 0510 and :TIME < 1110
               edit VHR '05'
-            task jevs_stats_mesoscale_rap_snowfall_vhr_00
+            task jevs_stats_cam_rap_snowfall_vhr_00
               trigger :TIME >= 0000 and :TIME < 0600
               edit VHR '00'
-          endfamily
-          family cam
             task jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr_00
               trigger :TIME >= 0000 and :TIME < 0600
               edit VHR '00'
@@ -638,11 +636,6 @@ suite evs_nco
             task jevs_prep_global_ens_wave
               trigger :TIME >= 0900 and :TIME < 1500
           endfamily
-          family mesoscale
-            task jevs_prep_mesoscale_grid2obs
-              trigger :TIME >= 0700 and :TIME < 1300
-              edit VHR '07'
-          endfamily
           family cam
             task jevs_prep_cam_radar_vhr_06
               trigger :TIME >= 0605 and :TIME < 1205
@@ -797,33 +790,31 @@ suite evs_nco
             task jevs_stats_wafs_atmos
               trigger :TIME >= 0900 and :TIME < 1500
           endfamily
-          family mesoscale
-            task jevs_stats_mesoscale_rap_precip_vhr_06
+          family cam
+            task jevs_stats_cam_rap_precip_vhr_06
               trigger :TIME >= 0610 and :TIME < 1210
               edit VHR '06'
-            task jevs_stats_mesoscale_rap_precip_vhr_07
+            task jevs_stats_cam_rap_precip_vhr_07
               trigger :TIME >= 0710 and :TIME < 1310
               edit VHR '07'
-            task jevs_stats_mesoscale_rap_precip_vhr_08
+            task jevs_stats_cam_rap_precip_vhr_08
               trigger :TIME >= 0810 and :TIME < 1410
               edit VHR '08'
-            task jevs_stats_mesoscale_rap_precip_vhr_09
+            task jevs_stats_cam_rap_precip_vhr_09
               trigger :TIME >= 0910 and :TIME < 1510
               edit VHR '09'
-            task jevs_stats_mesoscale_rap_precip_vhr_10
+            task jevs_stats_cam_rap_precip_vhr_10
               trigger :TIME >= 1010 and :TIME < 1610
               edit VHR '10'
-            task jevs_stats_mesoscale_rap_precip_vhr_11
+            task jevs_stats_cam_rap_precip_vhr_11
               trigger :TIME >= 1100 and :TIME < 1700
               edit VHR '11'
-            task jevs_stats_mesoscale_rap_grid2obs
+            task jevs_stats_cam_rap_grid2obs
               trigger :TIME >= 0730 and :TIME < 1330
               edit VHR '08'
-            task jevs_stats_mesoscale_rap_snowfall_vhr_06
+            task jevs_stats_cam_rap_snowfall_vhr_06
               trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
-          endfamily
-          family cam
             task jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr_06
               trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
@@ -1449,34 +1440,32 @@ suite evs_nco
             task jevs_stats_subseasonal_gefs_grid2grid
               trigger :TIME >= 1650 and :TIME < 2250 and ../../prep/subseasonal/jevs_prep_subseasonal_gefs == complete and ../../prep/subseasonal/jevs_prep_subseasonal_obs == complete
           endfamily
-          family mesoscale
-            task jevs_stats_mesoscale_rap_precip_vhr_12
-              trigger :TIME >= 1220 and :TIME < 1810
-              edit VHR '12'
-            task jevs_stats_mesoscale_rap_precip_vhr_13
-              trigger :TIME >= 1310 and :TIME < 1910
-              edit VHR '13'
-            task jevs_stats_mesoscale_rap_precip_vhr_14
-              trigger :TIME >= 1410 and :TIME < 2010
-              edit VHR '14'
-            task jevs_stats_mesoscale_rap_precip_vhr_15
-              trigger :TIME >= 1510 and :TIME < 2110
-              edit VHR '15'
-            task jevs_stats_mesoscale_rap_precip_vhr_16
-              trigger :TIME >= 1610 and :TIME < 2210
-              edit VHR '16'
-            task jevs_stats_mesoscale_rap_precip_vhr_17
-              trigger :TIME >= 1710 and :TIME < 2310
-              edit VHR '17'
-            task jevs_stats_mesoscale_rap_snowfall_vhr_12
-              trigger :TIME >= 1220 and :TIME < 1815
-              edit VHR '12'
-          endfamily
           family global_det
             task jevs_stats_global_det_gfs_wave_grid2obs
               trigger :TIME >= 1325 and :TIME < 1925 and ../../prep/global_det/jevs_prep_global_det_wave == complete
           endfamily
           family cam
+            task jevs_stats_cam_rap_precip_vhr_12
+              trigger :TIME >= 1220 and :TIME < 1810
+              edit VHR '12'
+            task jevs_stats_cam_rap_precip_vhr_13
+              trigger :TIME >= 1310 and :TIME < 1910
+              edit VHR '13'
+            task jevs_stats_cam_rap_precip_vhr_14
+              trigger :TIME >= 1410 and :TIME < 2010
+              edit VHR '14'
+            task jevs_stats_cam_rap_precip_vhr_15
+              trigger :TIME >= 1510 and :TIME < 2110
+              edit VHR '15'
+            task jevs_stats_cam_rap_precip_vhr_16
+              trigger :TIME >= 1610 and :TIME < 2210
+              edit VHR '16'
+            task jevs_stats_cam_rap_precip_vhr_17
+              trigger :TIME >= 1710 and :TIME < 2310
+              edit VHR '17'
+            task jevs_stats_cam_rap_snowfall_vhr_12
+              trigger :TIME >= 1220 and :TIME < 1815
+              edit VHR '12'
             task jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr_12
               trigger :TIME >= 1220 and :TIME < 1815
               edit VHR '12'
@@ -2018,7 +2007,7 @@ suite evs_nco
               trigger :TIME >= 1300 and :TIME < 1900
               edit VHR '13'
             task jevs_plots_mesoscale_precip_last90days
-              trigger :TIME >= 1815 or :TIME < 0015 and ../../../../06/evs/stats/global_ens/jevs_stats_mesoscale_rap_precip == complete
+              trigger :TIME >= 1815 or :TIME < 0015 and ../../../../06/evs/stats/global_ens/jevs_stats_cam_rap_precip == complete
               edit VHR '13'
           endfamily
           family global_det
@@ -2157,29 +2146,6 @@ suite evs_nco
             task jevs_stats_rtofs_smos_grid2grid
               trigger (:TIME >= 2200 or :TIME < 0400) and ../../../../06/evs/prep/rtofs == complete
           endfamily
-          family mesoscale
-            task jevs_stats_mesoscale_rap_precip_vhr_18
-              trigger :TIME >= 1815 or :TIME < 0015
-              edit VHR '18'
-            task jevs_stats_mesoscale_rap_precip_vhr_19
-              trigger :TIME >= 1910 or :TIME < 0110
-              edit VHR '19'
-            task jevs_stats_mesoscale_rap_precip_vhr_20
-              trigger :TIME >= 2010 or :TIME < 0210
-              edit VHR '20'
-            task jevs_stats_mesoscale_rap_precip_vhr_21
-              trigger :TIME >= 2110 or :TIME < 0310
-              edit VHR '21'
-            task jevs_stats_mesoscale_rap_precip_vhr_22
-              trigger :TIME >= 2210 or :TIME < 0410
-              edit VHR '22'
-            task jevs_stats_mesoscale_rap_precip_vhr_23
-              trigger (:TIME >= 2310 or :TIME < 0510) and and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_06 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_07 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_08 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_09 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_10 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_11 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_12 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_13 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_14 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_15 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_16 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_17 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_18 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_19 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_20 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_21 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_mesoscale_rap_precip_vhr_22 == complete
-              edit VHR '23'
-            task jevs_stats_mesoscale_rap_snowfall_vhr_18
-              trigger :TIME >= 1815 or :TIME < 0015
-              edit VHR '18'
-          endfamily
           family global_det
             task jevs_stats_global_det_ukmet_atmos_grid2obs
               trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
@@ -2223,6 +2189,27 @@ suite evs_nco
               trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
           endfamily
           family cam
+            task jevs_stats_cam_rap_precip_vhr_18
+              trigger :TIME >= 1815 or :TIME < 0015
+              edit VHR '18'
+            task jevs_stats_cam_rap_precip_vhr_19
+              trigger :TIME >= 1910 or :TIME < 0110
+              edit VHR '19'
+            task jevs_stats_cam_rap_precip_vhr_20
+              trigger :TIME >= 2010 or :TIME < 0210
+              edit VHR '20'
+            task jevs_stats_cam_rap_precip_vhr_21
+              trigger :TIME >= 2110 or :TIME < 0310
+              edit VHR '21'
+            task jevs_stats_cam_rap_precip_vhr_22
+              trigger :TIME >= 2210 or :TIME < 0410
+              edit VHR '22'
+            task jevs_stats_cam_rap_precip_vhr_23
+              trigger (:TIME >= 2310 or :TIME < 0510) and and ../../../../06/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_06 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_07 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_08 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_09 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_10 == complete and ../../../../06/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_11 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_12 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_13 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_14 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_15 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_16 == complete and ../../../../12/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_17 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_18 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_19 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_20 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_21 == complete and ../../../../18/evs/stats/mesoscale/jevs_stats_cam_rap_precip_vhr_22 == complete
+              edit VHR '23'
+            task jevs_stats_cam_rap_snowfall_vhr_18
+              trigger :TIME >= 1815 or :TIME < 0015
+              edit VHR '18'
             task jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr_18
               trigger :TIME >= 1815 or :TIME < 0015
               edit VHR '18'
