@@ -47,7 +47,7 @@ export STEP=${STEP:-prep}
 export COMPONENT=${COMPONENT:-cam}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-precip}
-export MODELNAME=${MODELNAME:-hrrr}
+export MODELNAME=${MODELNAME:-cam}
 
 ####################################
 # Set EVS directories
@@ -71,12 +71,12 @@ if [ $VERIF_CASE = grid2obs ] ; then
    if [ "${RUN}" == "chem" ]; then
        export INITDATE=${INITDATE:-${PDYm3}}
    else
-      export VDATE=${VDATE:-$PDYm1}
+       export VDATE=${VDATE:-$PDYm1}
    fi
 
 elif [ $VERIF_CASE = precip ] ; then
    export INITDATE=${INITDATE:-$PDYm1}
- 
+
 elif [ $VERIF_CASE = radar ] ; then
    export INITDATE=${INITDATE:-$PDYm1}
  
@@ -140,7 +140,11 @@ else
     if [ $VERIF_CASE = severe ] ; then
        export COMOUTlsr=${COMOUT}/${RUN}.${REP_DATE}/spc_lsr
        export COMOUTotlk=${COMOUT}/${RUN}.${OTLK_DATE}/spc_otlk
+    elif [[ "$VERIF_CASE" == "precip" && "$STEP" == "prep" && "$MODELNAME" != "cam" ]]; then
+        export COMOUTsmall=${COMOUT}/${RUN}.${INITDATE}
+        [[ ! -d $COMOUTsmall ]] && mkdir -p $COMOUTsmall
     fi
+
 fi
 
 
