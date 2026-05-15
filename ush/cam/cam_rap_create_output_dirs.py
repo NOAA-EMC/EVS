@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: mesoscale_create_output_dirs.py
+# NAME: cam_rap_create_output_dirs.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Define working/ output directories and create them if they don't
@@ -17,11 +17,6 @@ import os
 import re
 from datetime import datetime, timedelta as td
 import mesoscale_util as cutil
-if os.environ['STEP'] == 'plots':
-    from mesoscale_plots_grid2obs_graphx_defs import graphics as graphics_g2o
-    from mesoscale_plots_precip_graphx_defs import graphics as graphics_pcp
-    from mesoscale_plots_headline_graphx_defs import graphics as graphics_hdl
-    from mesoscale_plots_snowfall_graphx_defs import graphics as graphics_sno
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
@@ -54,10 +49,6 @@ if VERIF_CASE == "precip":
         VERIF_TYPE = os.environ['VERIF_TYPE']
         OBSNAME = os.environ['OBSNAME']
         COMOUTsmall = os.environ['COMOUTsmall']
-    elif STEP == 'plots':
-        COMOUTplots = os.environ['COMOUTplots']
-        EVAL_PERIOD = os.environ['EVAL_PERIOD']
-        eval_period = EVAL_PERIOD
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
@@ -70,28 +61,8 @@ elif VERIF_CASE == "grid2obs":
         VERIF_TYPE = os.environ['VERIF_TYPE']
         OBSNAME = os.environ['OBSNAME']
         COMOUTsmall = os.environ['COMOUTsmall']
-    elif STEP == 'plots':
-        COMOUTplots = os.environ['COMOUTplots']
-        EVAL_PERIOD = os.environ['EVAL_PERIOD']
-        eval_period = EVAL_PERIOD
-elif VERIF_CASE == "headline":
-    if STEP == 'plots':
-        COMOUTplots = os.environ['COMOUTplots']
-        EVAL_PERIOD = os.environ['EVAL_PERIOD']
-        eval_period = EVAL_PERIOD
-elif VERIF_CASE == "snowfall":
-    if STEP == 'prep':
-        pass
-    elif STEP == 'stats':
-        pass
-    elif STEP == 'plots':
-        COMOUTplots = os.environ['COMOUTplots']
-        EVAL_PERIOD = os.environ['EVAL_PERIOD']
-        eval_period = EVAL_PERIOD
 if STEP == 'stats':
     job_type = os.environ['job_type']
-    RESTART_DIR = os.environ['RESTART_DIR']
-if STEP == 'plots':
     RESTART_DIR = os.environ['RESTART_DIR']
 
 
@@ -100,11 +71,6 @@ data_base_dir = os.path.join(DATA, VERIF_CASE, 'data')
 data_dir_list = [data_base_dir]
 if STEP == 'stats':
   completed_jobs_base_dir = os.path.join(DATA, VERIF_CASE, 'completed_jobs')
-  completed_jobs_list = [completed_jobs_base_dir]
-  completed_jobs_base_restart_dir = os.path.join(RESTART_DIR, 'completed_jobs')
-  completed_jobs_restart_list = [completed_jobs_base_restart_dir]
-if STEP == 'plots':
-  completed_jobs_base_dir = os.path.join(DATA, VERIF_CASE, 'completed_jobs', EVAL_PERIOD)
   completed_jobs_list = [completed_jobs_base_dir]
   completed_jobs_base_restart_dir = os.path.join(RESTART_DIR, 'completed_jobs')
   completed_jobs_restart_list = [completed_jobs_base_restart_dir]
@@ -153,8 +119,6 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather3'))
-if STEP == 'plots':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts'))
 for job_scripts_dir in job_scripts_dirs:
     if not os.path.exists(job_scripts_dir):
         print(f"Creating job script directory: {job_scripts_dir}")
@@ -395,145 +359,6 @@ elif STEP == 'stats':
     working_dir_list.append(os.path.join(
         DATA, VERIF_CASE, 'METplus_output', 'workdirs', job_type
     ))
-elif STEP == 'plots':
-    if VERIF_CASE == 'grid2obs':
-
-        working_output_base_dir = os.path.join(
-            DATA, VERIF_CASE
-        )
-        working_dir_list.append(working_output_base_dir)
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'data'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out', 'workdirs'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out', 'logs'
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUT, 
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUTplots,
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUTplots, VERIF_CASE
-        ))
-        for plot_group in ['cape', 'ceil_vis','sfc_upper']:
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'out', str(plot_group).lower()  
-                ))
-                COMOUT_dir_list.append(os.path.join(
-                    RESTART_DIR, str(plot_group).lower() 
-                ))
-    if VERIF_CASE == 'precip':
-        working_output_base_dir = os.path.join(
-            DATA, VERIF_CASE
-        )
-        working_dir_list.append(working_output_base_dir)
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'data'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out', 'workdirs'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out', 'logs'
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUT, 
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUTplots,
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUTplots, VERIF_CASE
-        ))
-        for plot_group in ['precip']:
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'out', str(plot_group).lower()  
-                ))
-                if not str(eval_period).lower() == 'na' :
-                    COMOUT_dir_list.append(os.path.join(
-                        RESTART_DIR, str(plot_group).lower() 
-                    ))
-                COMOUT_dir_list.append(os.path.join(
-                    RESTART_DIR, str(plot_group).lower(), 
-                    'na'
-                ))
-    elif VERIF_CASE == 'snowfall':
-        working_output_base_dir = os.path.join(
-            DATA, VERIF_CASE
-        )
-        working_dir_list.append(working_output_base_dir)
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'data'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out', 'workdirs'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out', 'logs'
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUT,
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUTplots,
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUTplots, VERIF_CASE
-        ))
-        for plot_group in ['snowfall']:
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'out', str(plot_group).lower() 
-                ))
-                COMOUT_dir_list.append(os.path.join(
-                    RESTART_DIR, str(plot_group).lower() 
-                ))
-    elif VERIF_CASE == 'headline':
-        working_output_base_dir = os.path.join(
-            DATA, VERIF_CASE
-        )
-        working_dir_list.append(working_output_base_dir)
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'data'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out', 'workdirs'
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out', 'logs'
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUT, 
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUTplots,
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUTplots, VERIF_CASE
-        ))
-        for plot_group in ['sfc_upper']:
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'out', str(plot_group).lower()  
-                ))
-                COMOUT_dir_list.append(os.path.join(
-                    RESTART_DIR, str(plot_group).lower() 
-                ))
 # Create working output and COMOUT directories
 for working_dir in working_dir_list:
     if not os.path.exists(working_dir):

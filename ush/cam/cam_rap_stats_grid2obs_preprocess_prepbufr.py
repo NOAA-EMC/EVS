@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 '''
-Name: mesoscale_stats_grid2obs_preprocess_prepbufr.py
+Name: cam_rap_stats_grid2obs_preprocess_prepbufr.py
 Contact(s): Marcel Caron (marcel.caron@noaa.gov)
 Abstract: Preprocess input prepbufr files and store the preprocessed file in 
           DATA. Preprocessing currently includes splitting each file into
           multiple files by subset (i.e. message type, e.g., ADPUPA), and
           concatenating the desired subsets to a new smaller file.
-Run By: scripts/stats/mesoscale/exevs_rap_grid2obs_stats.sh
+Run By: scripts/stats/cam/exevs_stats_rap_grid2obs.sh
 '''
 import os
 from datetime import datetime

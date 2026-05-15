@@ -451,7 +451,7 @@ elif STEP == 'stats':
                    job_cmd_list_iterative.append(
                        f'python '
                        + f'{USHevs}/{COMPONENT}/'
-                       + f'{COMPONENT}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
+                       + f'{COMPONENT}_{MODELNAME}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
                    )
                    if SENDCOM == 'YES':
                       job_cmd_list_iterative.append(

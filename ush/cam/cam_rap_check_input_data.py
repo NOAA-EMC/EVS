@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: mesoscale_check_input_data.py
+# NAME: cam_rap_check_input_data.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Check Availability of Input Data
 # DEPENDENCIES: os.path.join([
 #                   SCRIPTSevs,COMPONENT,STEP,
@@ -268,7 +267,7 @@ if proceed:
                 else:
                     print(f"ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
-                          + f" USHevs/mesoscale/mesoscale_util.py")
+                          + f" USHevs/cam/mesoscale_util.py")
                     sys.exit(1)
             fcst_names = np.unique(fcst_names)
             unk_names = np.unique(unk_names)
@@ -400,7 +399,7 @@ if proceed:
                 else:
                     print(f"ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
-                          + f" USHevs/mesoscale/mesoscale_util.py")
+                          + f" USHevs/cam/mesoscale_util.py")
                     sys.exit(1)
             anl_names = np.unique(anl_names)
             unk_names = np.unique(unk_names)

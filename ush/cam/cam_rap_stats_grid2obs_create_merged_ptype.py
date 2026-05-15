@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
-Program Name: mesoscale_stats_grid2obs_create_merged_ptype.py
-Contact(s): Marcel Caron, Mallory Row, Roshan Shrestha
+Program Name: cam_rap_stats_grid2obs_create_merged_ptype.py
+Contact(s): Marcel Caron
 Abstract: This creates a merged precipitation type file used for
           calculating MET MCTC line type.
           1-rain, 2-snow, 3-freezing rain, 4-ice pellets
@@ -32,7 +32,6 @@ MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
 VDATE = os.environ['VDATE']
 VHOUR= os.environ['VHOUR']
 fhr = os.environ['FHR']
-#fhr = os.environ['FHR_START']
 fhr = int(fhr)
 job_type = os.environ['job_type']
 njob = os.environ['njob']

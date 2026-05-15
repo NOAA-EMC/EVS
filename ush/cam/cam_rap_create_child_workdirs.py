@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: mesoscale_create_child_workdirs.py
+# NAME: cam_rap_create_child_workdirs.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Write output directories used by child processors (MPMD operations)
 #
@@ -36,16 +36,6 @@ elif STEP == 'stats':
     workdirs = os.path.join(
         outdir, 'workdirs', job_type
     )
-elif STEP == 'plots':
-    jobdir = os.path.join(
-        DATA, VERIF_CASE, STEP, 'plotting_job_scripts'
-    )
-    outdir = os.path.join(
-        DATA, VERIF_CASE, 'out'
-    )
-    workdirs = os.path.join(
-        outdir, 'workdirs'
-    )
 else:
     raise ValueError(f"Unrecognized STEP name: {STEP}")
 if not os.path.exists(outdir):
@@ -75,19 +65,6 @@ else:
               cutil.run_shell_command([
                   'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
               ]) 
-          elif STEP == "plots":
-            RESTART_DIR = os.environ['RESTART_DIR']
-            EVAL_PERIOD = os.environ['EVAL_PERIOD']
-            COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
-            completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_name + ".txt"
-            completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
-            if not os.path.exists(completed_jobs_file):
-              workdir = os.path.join(workdirs, job_name)
-              if not os.path.exists(workdir):
-                os.makedirs(workdir)
-              cutil.run_shell_command([
-                'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
-              ]) 
         if STEP == "prep":
             print(
                 "Done making working directories for child processes."
@@ -96,10 +73,6 @@ else:
             print(
                 "Done making working directories for child processes "
                 + f"({job_type} jobs)."
-            )
-        elif STEP == "plots":
-            print(
-                "Done making working directories for child processes."
             )
         os.chdir(wd)
 

@@ -2,11 +2,10 @@
  
 # =============================================================================
 #
-# NAME: mesoscale_stats_grid2obs_create_poe_job_scripts.sh
+# NAME: cam_rap_stats_grid2obs_create_poe_job_scripts.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS MESOSCALE Grid2Obs - Statistics POE job scripts
-# DEPENDENCIES: $SCRIPTSevs/mesoscale/stats/exevs_$MODELNAME_grid2obs_stats.sh
+# PURPOSE: Create EVS CAM RAP Grid2Obs - Statistics POE job scripts
+# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_stats_$MODELNAME_grid2obs.sh
 #
 # =============================================================================
 

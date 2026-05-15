@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: mesoscale_check_settings.py
+# NAME: cam_rap_check_settings.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Check User's Settings
@@ -34,9 +34,9 @@ config = os.environ['config']
 evs_run_mode = os.environ['evs_run_mode']
 
 # Set up a dictionary of variables to check for existence in the environment
-evs_mesoscale_settings_dict = {}
+evs_cam_rap_settings_dict = {}
 if evs_run_mode == 'production':
-    evs_mesoscale_settings_dict['evs'] = [
+    evs_cam_rap_settings_dict['evs'] = [
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'nproc', 'NET', 
         'HOMEevs', 'config', 'evs_ver', 'rap_ver', 'obsproc_ver', 'pid', 'DATA',
         'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE',
@@ -45,29 +45,29 @@ if evs_run_mode == 'production':
         'FIXevs', 'evs_run_mode'
     ]
 else:
-    evs_mesoscale_settings_dict['evs'] = [
+    evs_cam_rap_settings_dict['evs'] = [
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 
         'nproc', 'NET', 'STEP', 
         'COMPONENT', 'RUN', 'VERIF_CASE', 'HOMEevs', 
         'config', 'evs_ver', 'rap_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 'EVSIN',
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs',  'evs_run_mode'
     ]
-evs_mesoscale_settings_dict['shared'] = []
-evs_mesoscale_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
-evs_mesoscale_settings_dict['RUN_GRID2OBS_PREP'] = [
+evs_cam_rap_settings_dict['shared'] = []
+evs_cam_rap_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
+evs_cam_rap_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT',
         'LOG_MET_OUTPUT_TO_METPLUS','NEST','TEMP_DIR','GRID_DIR','URL_HEAD',
         ]
-evs_mesoscale_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR', 'bufr_ROOT']
-evs_mesoscale_settings_dict['RUN_GRID2OBS_PLOTS'] = [
+evs_cam_rap_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR', 'bufr_ROOT']
+evs_cam_rap_settings_dict['RUN_GRID2OBS_PLOTS'] = [
         'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
         'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE',
         'COMOUTplots','RESTART_DIR'
         ]
-evs_mesoscale_settings_dict['RUN_PRECIP_PREP'] = [
+evs_cam_rap_settings_dict['RUN_PRECIP_PREP'] = [
         'VERIF_TYPE', 'VHOUR_LIST', 'COMINobs', 'OBSNAME', 'OBS_ACC', 'ACC'
         ]
-evs_mesoscale_settings_dict['RUN_PRECIP_STATS'] = [
+evs_cam_rap_settings_dict['RUN_PRECIP_STATS'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT','MET_CONFIG_OVERRIDES', 
         'LOG_MET_OUTPUT_TO_METPLUS',
         'VHOUR','FHR_END_SHORT','FHR_INCR_SHORT','FHR_END_FULL',
@@ -77,13 +77,13 @@ evs_mesoscale_settings_dict['RUN_PRECIP_STATS'] = [
         'OUTPUT_FLAG_CATEG','NBRHD_WIDTHS','GRID','MODEL_INPUT_TEMPLATE',
         'MASK_POLY_LIST'
         ]
-evs_mesoscale_settings_dict['RUN_PRECIP_PLOTS'] = ['COMOUTplots','RESTART_DIR']
-evs_mesoscale_settings_dict['RUN_SNOWFALL_PREP'] = []
-evs_mesoscale_settings_dict['RUN_SNOWFALL_STATS'] = []
-evs_mesoscale_settings_dict['RUN_SNOWFALL_PLOTS'] = ['COMOUTplots','RESTART_DIR']
-evs_mesoscale_settings_dict['RUN_HEADLINE_PREP'] = []
-evs_mesoscale_settings_dict['RUN_HEADLINE_STATS'] = []
-evs_mesoscale_settings_dict['RUN_HEADLINE_PLOTS'] = [
+evs_cam_rap_settings_dict['RUN_PRECIP_PLOTS'] = ['COMOUTplots','RESTART_DIR']
+evs_cam_rap_settings_dict['RUN_SNOWFALL_PREP'] = []
+evs_cam_rap_settings_dict['RUN_SNOWFALL_STATS'] = []
+evs_cam_rap_settings_dict['RUN_SNOWFALL_PLOTS'] = ['COMOUTplots','RESTART_DIR']
+evs_cam_rap_settings_dict['RUN_HEADLINE_PREP'] = []
+evs_cam_rap_settings_dict['RUN_HEADLINE_STATS'] = []
+evs_cam_rap_settings_dict['RUN_HEADLINE_PLOTS'] = [
         'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
         'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE',
         'COMOUTplots','RESTART_DIR'
@@ -94,7 +94,7 @@ env_group_list = [
     'evs', 'shared', 'modules', 'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
 ]
 for env_group in env_group_list:
-    env_var_list = evs_mesoscale_settings_dict[env_group]
+    env_var_list = evs_cam_rap_settings_dict[env_group]
     for env_var in env_var_list:
         if not env_var in os.environ:
             if env_group == 'modules':
@@ -233,8 +233,6 @@ if STEP == 'stats':
     env_dir_list.append('COMINfcst')
     if VERIF_CASE == 'precip':
         env_file_list.append('MASK_POLY_LIST')
-if STEP == 'plots':
-    env_dir_list.append('STAT_OUTPUT_BASE_DIR')
 for env_dir in env_dir_list:
     if 'LIST' in env_dir.upper():
         for list_item in re.split(r'[,\s]+', os.environ[env_dir]):
