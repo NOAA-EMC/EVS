@@ -51,7 +51,6 @@ export href_ver=v3.1
 export hrrr_ver=v4.1
 export naefs_ver=v7.0
 export nam_ver=v4.2
-export nfcens_ver=v1.3
 export obsproc_ver=v1.2
 export rap_ver=v5.1
 export rtma_ver=v2.10
@@ -61,4 +60,3 @@ export st4_ver=v4.1
 export ukmet_ver=v2.2
 export urma_ver=v2.10
 export wafs_ver=v7.0
-
