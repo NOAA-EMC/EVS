@@ -41,7 +41,7 @@ if evs_run_mode == 'production':
         'HOMEevs', 'config', 'evs_ver', 'rap_ver', 'obsproc_ver', 'pid', 'DATA',
         'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE',
         'HOMEevs', 'config', 'evs_ver', 'rap_ver', 'obsproc_ver', 'pid', 'DATA',
-        'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 'EVSIN',
+        'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs',
         'FIXevs', 'evs_run_mode'
     ]
 else:
@@ -49,11 +49,11 @@ else:
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 
         'nproc', 'NET', 'STEP', 
         'COMPONENT', 'RUN', 'VERIF_CASE', 'HOMEevs', 
-        'config', 'evs_ver', 'rap_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 'EVSIN',
+        'config', 'evs_ver', 'rap_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT',
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs',  'evs_run_mode'
     ]
 evs_cam_rap_settings_dict['shared'] = []
-evs_cam_rap_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
+evs_cam_rap_settings_dict['modules'] = []
 evs_cam_rap_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT',
         'LOG_MET_OUTPUT_TO_METPLUS','NEST','TEMP_DIR','GRID_DIR','URL_HEAD',
@@ -216,19 +216,9 @@ if cwd != DATA:
 env_dir_list = ['DATA']
 env_file_list = []
 if STEP == 'prep':
-    env_dir_list.append('MET_PLUS_PATH')
-    env_dir_list.append('MET_PATH')
-    env_dir_list.append('MET_CONFIG')
     if VERIF_CASE == 'precip':
         env_dir_list.append('COMINobs')
-    if VERIF_CASE == 'grid2obs':
-        env_dir_list.append('MET_PLUS_PATH')
-        env_dir_list.append('MET_PATH')
-        env_dir_list.append('MET_CONFIG')
 if STEP == 'stats':
-    env_dir_list.append('MET_PLUS_PATH')
-    env_dir_list.append('MET_PATH')
-    env_dir_list.append('MET_CONFIG')
     env_dir_list.append('COMINobs')
     env_dir_list.append('COMINfcst')
     if VERIF_CASE == 'precip':

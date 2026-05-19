@@ -771,7 +771,7 @@ def initalize_job_env_dict():
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
         'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'evs_run_mode',
-        'COMROOT', 'COMIN', 'COMOUT', 'COMOUTsmall', 'COMOUTfinal', 'EVSIN',
+        'COMROOT', 'COMIN', 'COMOUT', 'COMOUTsmall', 'COMOUTfinal',
         'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS', 
         'MET_ROOT',
         'MET_TMP_DIR', 'MODELNAME', 'JOB_GROUP'
