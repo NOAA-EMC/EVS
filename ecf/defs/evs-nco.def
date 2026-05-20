@@ -1000,10 +1000,6 @@ suite evs_nco
             task jevs_prep_subseasonal_cfs
               trigger :TIME >= 1430 and :TIME < 2000
           endfamily
-          family nfcens
-            task jevs_prep_nfcens_wave_grid2obs
-              trigger :TIME >= 1430 and :TIME < 2000
-          endfamily
           family global_det
             task jevs_prep_global_det_wave
               trigger :TIME >= 1315 and :TIME < 1915
@@ -1064,10 +1060,6 @@ suite evs_nco
         endfamily   # 12 prep
         family stats
           edit ECF_FILES '%PACKAGEHOME%/ecf/scripts/stats'
-          family nfcens
-            task jevs_stats_nfcens_wave_grid2obs
-              trigger :TIME >= 1430 and :TIME < 2030 and ../../prep/nfcens == complete
-          endfamily
           family subseasonal
             task jevs_stats_subseasonal_cfs_grid2obs
               trigger :TIME >= 1530 and :TIME < 2130 and ../../prep/subseasonal/jevs_prep_subseasonal_cfs == complete and ../../prep/subseasonal/jevs_prep_subseasonal_obs == complete
@@ -1517,10 +1509,6 @@ suite evs_nco
               trigger :TIME >= 1415 and :TIME < 2015 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_cmce_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_ecme_atmos_grid2obs == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2obs == complete
             task jevs_plots_global_ens_atmos_gefs_grid2grid_last90days
               trigger :TIME >= 1450 and :TIME < 2000 and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_cmce_atmos_grid2grid == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_ecme_atmos_grid2grid == complete and ../../../../06/evs/stats/global_ens/jevs_stats_global_ens_gefs_atmos_grid2grid == complete
-          endfamily
-          family nfcens
-	    task jevs_plots_nfcens_wave_grid2obs_last90days
-	      trigger :TIME >= 1515 and :TIME < 2100 and ../../stats/nfcens == complete
           endfamily
           family mesoscale
             task jevs_plots_mesoscale_snowfall_last90days 
