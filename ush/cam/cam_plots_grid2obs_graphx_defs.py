@@ -80,7 +80,7 @@ graphics = {
                 },
             },
             'raob':{
-                'domain_group1, fhr_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                'domain_group1, fhr_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -154,7 +154,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                'domain_group1, fhr_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -228,7 +228,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, fhr_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group2, fhr_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -415,7 +415,7 @@ graphics = {
                         }
                     }
                 },
-                'domain_group2, fhr_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                'domain_group2, fhr_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -563,81 +563,7 @@ graphics = {
                         }
                     }
                 },
-                'domain_group3, fhr_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
-                    'stat_by_level':{
-                        'DATE_TYPE':'INIT',
-                        'VALID_BEG':'',
-                        'VALID_END':'',
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LISTs':['Hawaii'],
-                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
-                        'FCST_VALID_HOURS':[''],
-                        'FCST_INIT_HOURS':['0','12'],
-                        'VARIABLES':{
-                            'sl1l2':{
-                                'HGT':{
-                                    'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','12','24','36','48'],
-                                    'FCST_LEVELs':['all','ltrop','utrop'],
-                                    'OBS_LEVELs':['all','ltrop','utrop'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'TMP':{
-                                    'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','12','24','36','48'],
-                                    'FCST_LEVELs':['all','ltrop','utrop'],
-                                    'OBS_LEVELs':['all','ltrop','utrop'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'UGRD':{
-                                    'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','12','24','36','48'],
-                                    'FCST_LEVELs':['all','ltrop','utrop'],
-                                    'OBS_LEVELs':['all','ltrop','utrop'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'VGRD':{
-                                    'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','12','24','36','48'],
-                                    'FCST_LEVELs':['all','ltrop','utrop'],
-                                    'OBS_LEVELs':['all','ltrop','utrop'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            },
-                            'vl1l2':{
-                                'UGRD_VGRD':{
-                                    'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0','12','24','36','48'],
-                                    'FCST_LEVELs':['all','ltrop','utrop'],
-                                    'OBS_LEVELs':['all','ltrop','utrop'],
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''], 
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                }
-                            },
-                        }
-                    },
-                },
-                'domain_group3, fhr_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                'domain_group3, fhr_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -652,6 +578,80 @@ graphics = {
                             'sl1l2':{
                                 'HGT':{
                                     'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TMP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'UGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'vl1l2':{
+                                'UGRD_VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','12','24','36','48'],
+                                    'FCST_LEVELs':['all','ltrop','utrop'],
+                                    'OBS_LEVELs':['all','ltrop','utrop'],
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''], 
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                }
+                            },
+                        }
+                    },
+                },
+                'domain_group3, fhr_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LISTs':['Hawaii'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HGT':{
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['60'],
                                     'FCST_LEVELs':['all','ltrop','utrop'],
                                     'OBS_LEVELs':['all','ltrop','utrop'],
@@ -711,7 +711,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group4, fhr_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group4, fhr_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -787,7 +787,7 @@ graphics = {
                         }
                     }
                 },
-                'domain_group4, fhr_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                'domain_group4, fhr_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -863,7 +863,7 @@ graphics = {
                         }
                     }
                 },
-                'domain_group5, fhr_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group5, fhr_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'time_series':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1087,7 +1087,7 @@ graphics = {
                         }
                     }
                 },
-                'domain_group5, fhr_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                'domain_group5, fhr_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'time_series':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1386,7 +1386,7 @@ graphics = {
                 }
             },
             'metar':{
-                'domain_group1, fhr_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group1, fhr_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1738,7 +1738,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                'domain_group1, fhr_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1858,7 +1858,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group1, fhr_group3, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1934,7 +1934,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, fhr_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group2, fhr_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2242,7 +2242,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, fhr_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                'domain_group2, fhr_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2340,7 +2340,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, fhr_group3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group2, fhr_group3, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2394,7 +2394,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group3, fhr_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group3, fhr_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2500,7 +2500,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group3, fhr_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
+                'domain_group3, fhr_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2554,7 +2554,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group3, fhr_group3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group3, fhr_group3, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
