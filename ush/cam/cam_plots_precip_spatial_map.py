@@ -120,7 +120,6 @@ class PrecipSpatialMap:
             self.logger.info(f"Reading in {model_num_name} files from {model_num_input_dir}")
             model_num_data_dir = os.path.join(
                 model_num_input_dir,
-                valid_date_dt.strftime('atmos.%Y%m%d'),
             )
             make_plot = False
             if model_num == 'obs':
@@ -153,6 +152,7 @@ class PrecipSpatialMap:
             if model_num == 'obs':
                 model_num_files = glob.glob(os.path.join(
                     model_num_data_dir,
+                    valid_date_dt.strftime('atmos.%Y%m%d'),
                     '*',
                     'precip',
                     'spatial_maps',
@@ -176,9 +176,10 @@ class PrecipSpatialMap:
             else:
                 model_num_file = os.path.join(
                     model_num_data_dir,
+                    init_date_dt.strftime('atmos.%Y%m%d'),
                     model_num,
                     init_date_dt.strftime(
-                       f'{model_num_name}.init%Y%m%d.t%Hz.'
+                       f'{model_num_name}.t%Hz.'
                        + f'f{self.date_info_dict["forecast_hour"].zfill(3)}.'
                        + f'a24h.'
                        + f'{stats_region_dict[self.plot_info_dict["vx_mask"]]}'
