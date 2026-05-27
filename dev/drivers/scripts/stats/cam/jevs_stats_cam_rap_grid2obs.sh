@@ -59,7 +59,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
   export vhr=${vhr:-${vhr}}
-  export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
+  export MAILTO="marcel.caron@noaa.gov,andrew.benjamin@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_STATS_CAM

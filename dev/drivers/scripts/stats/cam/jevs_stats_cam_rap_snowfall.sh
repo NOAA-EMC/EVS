@@ -38,7 +38,7 @@ export USE_CFP=YES
 export nproc=128  
 export evs_run_mode="production"
 
-export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
+export MAILTO="marcel.caron@noaa.gov,andrew.benjamin@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
