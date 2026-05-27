@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: mesoscale_production_restart.py
+# NAME: cam_rap_production_restart.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Check the appropriate restart directory for restart files and copy
 #          the available files to the working directory
