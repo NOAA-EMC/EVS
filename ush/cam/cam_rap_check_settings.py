@@ -3,7 +3,6 @@
 #
 # NAME: cam_rap_check_settings.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-#                 Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Check User's Settings
 # DEPENDENCIES: os.path.join([
 #                   SCRIPTSevs,COMPONENT,STEP,

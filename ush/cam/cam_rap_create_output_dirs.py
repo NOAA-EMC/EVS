@@ -3,7 +3,6 @@
 #
 # NAME: cam_rap_create_output_dirs.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-#                 Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Define working/ output directories and create them if they don't
 #          exist.
 # DEPENDENCIES: os.path.join([
