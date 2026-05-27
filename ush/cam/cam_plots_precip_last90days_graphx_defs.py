@@ -23,7 +23,7 @@ graphics = {
     'cam':{
         'precip':{
             'ccpa':{
-                'domain_group1, fhr_group1, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group1, fhr_group1, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -196,7 +196,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group2, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group1, fhr_group2, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -330,7 +330,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group1, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group1, fhr_group1, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -425,7 +425,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group2, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group1, fhr_group2, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -520,7 +520,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, fhr_group1, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group2, fhr_group1, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -667,7 +667,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, fhr_group2, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group2, fhr_group2, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -775,7 +775,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, fhr_group1, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group2, fhr_group1, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -844,7 +844,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group2, fhr_group2, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group2, fhr_group2, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -913,7 +913,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group3, fhr_group1, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group3, fhr_group1, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1060,7 +1060,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group3, fhr_group2, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group3, fhr_group2, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1168,7 +1168,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group3, fhr_group1, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group3, fhr_group1, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1237,7 +1237,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group3, fhr_group2, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group3, fhr_group2, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1306,7 +1306,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group4, fhr_group1, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group4, fhr_group1, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1453,7 +1453,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group4, fhr_group2, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group4, fhr_group2, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1561,7 +1561,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group4, fhr_group1, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group4, fhr_group1, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1630,7 +1630,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group4, fhr_group2, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group4, fhr_group2, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1699,7 +1699,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group5, fhr_group1, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group5, fhr_group1, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1846,7 +1846,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group5, fhr_group2, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group5, fhr_group2, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -1954,7 +1954,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group5, fhr_group1, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group5, fhr_group1, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2023,7 +2023,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group5, fhr_group2, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group5, fhr_group2, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2094,7 +2094,7 @@ graphics = {
                 }
             },
             'mrms':{
-                'domain_group1, fhr_group1, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group1, fhr_group1, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2267,7 +2267,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group2, init_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group1, fhr_group2, init_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2401,7 +2401,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group1, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
+                'domain_group1, fhr_group1, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -2496,7 +2496,7 @@ graphics = {
                         }
                     },
                 },
-                'domain_group1, fhr_group2, init_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
+                'domain_group1, fhr_group2, init_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
