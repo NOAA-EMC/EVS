@@ -118,7 +118,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
             frange_save_phrase = '-'.join([str(f).zfill(3) for f in flead])
         else:
-            frange_phrase = f's {flead[0]}'+u'u\u2013'+f'{flead[-1]}'
+            frange_phrase = f's {flead[0]}\u2013{flead[-1]}'
             frange_save_phrase = f'{flead[0]:03d}-F{flead[-1]:03d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
@@ -280,6 +280,16 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
     group_by = ['MODEL','PLEV']
+    df['EQUALIZE_LEAD_HOURS'] = df['LEAD_HOURS']
+    df['EQUALIZE_VALID'] = df['VALID']
+    if any(model_queries):
+        for m, model in enumerate(model_list):
+            if 'shift' in model_queries[m]:
+                shift_hours = int(model_queries[m]['shift'][0])
+                model_mask = df['MODEL'] == model
+                df.loc[model_mask, 'EQUALIZE_LEAD_HOURS'] = (
+                    df.loc[model_mask, 'LEAD_HOURS'] + shift_hours
+                )
     if sample_equalization:
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:

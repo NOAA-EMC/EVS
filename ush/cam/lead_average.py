@@ -393,6 +393,16 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
     group_by = ['MODEL', 'LEAD_HOURS']
+    df['EQUALIZE_LEAD_HOURS'] = df['LEAD_HOURS']
+    df['EQUALIZE_VALID'] = df['VALID']
+    if any(model_queries):
+        for m, model in enumerate(model_list):
+            if 'shift' in model_queries[m]:
+                shift_hours = int(model_queries[m]['shift'][0])
+                model_mask = df['MODEL'] == model
+                df.loc[model_mask, 'EQUALIZE_LEAD_HOURS'] = (
+                    df.loc[model_mask, 'LEAD_HOURS'] + shift_hours
+                )
     if sample_equalization:
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:
