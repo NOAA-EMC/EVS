@@ -8,7 +8,7 @@ Run By: scripts/stats/cam/exevs_stats_cam_rap_precip.sh
 
 import os
 import glob
-import mesoscale_util as m_util
+import rap_util as m_util
 
 print("BEGIN: "+os.path.basename(__file__))
 

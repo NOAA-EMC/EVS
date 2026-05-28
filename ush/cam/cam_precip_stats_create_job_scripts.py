@@ -12,7 +12,7 @@ import sys
 import os
 import glob
 import datetime
-import mesoscale_util as m_util
+import rap_util as m_util
 
 print("BEGIN: "+os.path.basename(__file__))
 

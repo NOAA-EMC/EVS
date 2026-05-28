@@ -10,7 +10,7 @@ Run By: scripts/stats/cam/exevs_stats_rap_grid2obs.sh
 '''
 import os
 from datetime import datetime
-import mesoscale_util as cutil
+import rap_util as cutil
 
 print("BEGIN: "+os.path.basename(__file__))
 

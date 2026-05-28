@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: mesoscale_util.py
+# NAME: rap_util.py
 # CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB

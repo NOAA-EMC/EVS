@@ -15,7 +15,7 @@ import glob
 import re
 from datetime import datetime
 import numpy as np
-import mesoscale_util as cutil
+import rap_util as cutil
 from cam_rap_stats_grid2obs_var_defs import generate_stats_jobs_dict as var_defs
 
 print(f"BEGIN: {os.path.basename(__file__)}")
@@ -218,7 +218,7 @@ if job_type == 'reformat':
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
         'bash_value': (
-            '$(python -c \"import mesoscale_util; print(mesoscale_util.get_fhr_start('
+            '$(python -c \"import rap_util; print(rap_util.get_fhr_start('
             + '\'${VHOUR}\',0,\'${FHR_INCR}\',\'${MIN_IHOUR}\'))\")'
         ),
         'bash_conditional': '',
@@ -314,7 +314,7 @@ elif job_type == 'generate':
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
         'bash_value': (
-            '$(python -c \"import mesoscale_util; print(mesoscale_util.get_fhr_start('
+            '$(python -c \"import rap_util; print(rap_util.get_fhr_start('
             + '\'${VHOUR}\',0,\'${FHR_INCR}\',\'${MIN_IHOUR}\'))\")'
         ),
         'bash_conditional': '',
@@ -347,7 +347,7 @@ elif STEP == 'stats':
         if SENDCOM == 'YES':
           job_cmd_list_iterative.append(
             f'python -c '
-            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+            + '\"import rap_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
             + f'njob=\\\"{njob}\\\", '
             + 'verif_case=\\\"${VERIF_CASE}\\\", '
@@ -361,7 +361,7 @@ elif STEP == 'stats':
         completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
         job_cmd_list_iterative.append(
            f"if [ $FHR_GROUP = FULL ]; then python -c "
-           + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
+           + f"'import rap_util; rap_util.mark_job_completed("
            + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
            + f"\"job{njob}\", job_type=\"{job_type}\")'; fi"
         )
@@ -384,7 +384,7 @@ elif STEP == 'stats':
             if SENDCOM == 'YES':
               job_cmd_list_iterative.append(
                f'python -c '
-               + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+               + '\"import rap_util as cutil; cutil.copy_data_to_restart('
                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                + f'njob=\\\"{njob}\\\", '
                + 'verif_case=\\\"${VERIF_CASE}\\\", '
@@ -403,7 +403,7 @@ elif STEP == 'stats':
               completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
               job_cmd_list_iterative.append(
                f"if [ $FHR_GROUP == FULL ]; then python -c "
-               + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
+               + f"'import rap_util; rap_util.mark_job_completed("
                + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
                + f"\"job{njob}\", job_type=\"{job_type}\")'; fi"
               )
@@ -427,7 +427,7 @@ elif STEP == 'stats':
                    if SENDCOM == 'YES':
                     job_cmd_list_iterative.append(
                        f'python -c '
-                       + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+                       + '\"import rap_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                        + f'njob=\\\"{njob}\\\", '
                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
@@ -450,7 +450,7 @@ elif STEP == 'stats':
                    if SENDCOM == 'YES':
                       job_cmd_list_iterative.append(
                        f'python -c '
-                       + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+                       + '\"import rap_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                        + f'njob=\\\"{njob}\\\", '
                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
@@ -474,7 +474,7 @@ elif STEP == 'stats':
                    if SENDCOM == 'YES':
                      job_cmd_list_iterative.append(
                        f'python -c '
-                       + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+                       + '\"import rap_util as cutil; cutil.copy_data_to_restart('
                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                        + f'njob=\\\"{njob}\\\", '
                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
@@ -493,7 +493,7 @@ elif STEP == 'stats':
                      completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                      job_cmd_list_iterative.append(
                        f"if [ $FHR == $FHR_END ]; then python -c "
-                       + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
+                       + f"'import rap_util; rap_util.mark_job_completed("
                        + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'; fi"
                      )
@@ -520,7 +520,7 @@ elif STEP == 'stats':
                      if SENDCOM == 'YES':
                        job_cmd_list_iterative.append(
                          f'python -c '
-                         + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+                         + '\"import rap_util as cutil; cutil.copy_data_to_restart('
                          + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
                          + f'njob=\\\"{njob}\\\", '
                          + 'verif_case=\\\"${VERIF_CASE}\\\", '
@@ -539,7 +539,7 @@ elif STEP == 'stats':
                      completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
                      job_cmd_list_iterative.append(
                        f"if [ $FHR_GROUP = FULL ]; then python -c "
-                       + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
+                       + f"'import rap_util; rap_util.mark_job_completed("
                        + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
                        + f"\"job{njob}\", job_type=\"{job_type}\")'; fi"
                      )
@@ -562,7 +562,7 @@ elif STEP == 'stats':
         if SENDCOM == 'YES':
           job_cmd_list.append(
             f'python -c '
-            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+            + '\"import rap_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
             + f'njob=\\\"{njob}\\\", '
             + 'verif_case=\\\"${VERIF_CASE}\\\", '
@@ -579,7 +579,7 @@ elif STEP == 'stats':
         completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
         job_cmd_list_iterative.append(
             "python -c "
-            + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
+            + f"'import rap_util; rap_util.mark_job_completed("
             + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
             + f"\"job{njob}\", job_type=\"{job_type}\")'"
         )
@@ -602,7 +602,7 @@ elif STEP == 'stats':
         if SENDCOM == 'YES':
           job_cmd_list_iterative.append(
             f'python -c '
-            + '\"import mesoscale_util as cutil; cutil.copy_data_to_restart('
+            + '\"import rap_util as cutil; cutil.copy_data_to_restart('
             + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
             + f'njob=\\\"{njob}\\\", '
             + 'verif_case=\\\"${VERIF_CASE}\\\", '
@@ -619,7 +619,7 @@ elif STEP == 'stats':
         completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
         job_cmd_list_iterative.append(
             "python -c "
-            + f"'import mesoscale_util; mesoscale_util.mark_job_completed("
+            + f"'import rap_util; rap_util.mark_job_completed("
             + f"\"{os.path.join(COMPLETED_JOBS_DIR, completed_jobs_file_full)}\", "
             + f"\"job{njob}\", job_type=\"{job_type}\")'"
         )

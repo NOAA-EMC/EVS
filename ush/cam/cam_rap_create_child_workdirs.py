@@ -8,7 +8,7 @@
 # =============================================================================
 
 import os
-import mesoscale_util as cutil
+import rap_util as cutil
 
 DATA = os.environ['DATA']
 VERIF_CASE = os.environ['VERIF_CASE']

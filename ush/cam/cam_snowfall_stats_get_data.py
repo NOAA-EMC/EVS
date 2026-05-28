@@ -8,7 +8,7 @@ Abstract: This gather model and observation data files
 import os
 import datetime
 import shutil
-import mesoscale_util as m_util
+import rap_util as m_util
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 

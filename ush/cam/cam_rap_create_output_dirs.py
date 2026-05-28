@@ -15,7 +15,7 @@
 import os
 import re
 from datetime import datetime, timedelta as td
-import mesoscale_util as cutil
+import rap_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 

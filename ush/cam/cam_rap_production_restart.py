@@ -10,7 +10,7 @@
 
 import os
 import glob
-import mesoscale_util as cutil
+import rap_util as cutil
 
 print("BEGIN: "+os.path.basename(__file__))
 
