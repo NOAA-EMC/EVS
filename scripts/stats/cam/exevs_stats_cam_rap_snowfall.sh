@@ -3,7 +3,7 @@
 # Name of Script: exevs_stats_cam_rap_snowfall.sh 
 # Purpose of Script: This script generates snowfall
 #                    verification statistics using METplus for the
-#                    atmospheric component of RAP models
+#                    atmospheric component of RAP model
 # Log history:
 ###############################################################################
 

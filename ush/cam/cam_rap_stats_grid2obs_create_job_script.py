@@ -2,10 +2,10 @@
  
 # =============================================================================
 #
-# NAME: cam_rap_stats_grid2obs_create_job_script.sh
+# NAME: cam_rap_stats_grid2obs_create_job_script.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Create EVS CAM Grid2Obs - Statistics job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_grid2obs_stats.sh
+# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_grid2obs_stats.py
 #
 # =============================================================================
 
