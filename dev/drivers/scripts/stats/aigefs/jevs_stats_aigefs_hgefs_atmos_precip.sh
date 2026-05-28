@@ -1,4 +1,4 @@
-#PBS -N evs_stats_aigefs_hgefs_atmos_precip
+#PBS -N jevs_stats_aigefs_hgefs_atmos_precip
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
