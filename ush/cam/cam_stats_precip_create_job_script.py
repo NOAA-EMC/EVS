@@ -60,7 +60,6 @@ if job_type == 'reformat':
     FHR_END_FULL = os.environ['FHR_END_FULL']
     FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
     MIN_IHOUR = os.environ['MIN_IHOUR']
-    COMINfcst = os.environ['COMINfcst']
     OBS_LEV = os.environ['OBS_LEV']
     MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
     njob = os.environ['njob']
@@ -185,10 +184,7 @@ if job_type == 'reformat':
     job_env_vars_dict['FHR_END_FULL'] = FHR_END_FULL
     job_env_vars_dict['FHR_INCR_FULL'] = FHR_INCR_FULL
     job_env_vars_dict['MIN_IHOUR'] = MIN_IHOUR
-    job_env_vars_dict['COMINfcst'] = COMINfcst
     job_env_vars_dict['OBS_LEV'] = OBS_LEV
-    job_env_vars_dict['MODEL_INPUT_TEMPLATE'] = MODEL_INPUT_TEMPLATE
-    job_env_vars_dict['BUCKET_INTERVAL'] = BUCKET_INTERVAL
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
@@ -215,12 +211,8 @@ elif job_type == 'gather':
     job_env_vars_dict['NEST'] = NEST
 if VERIF_CASE == 'precip': 
     if job_type == 'reformat':
-        job_env_vars_dict['MODEL_ACC'] = MODEL_ACC
         job_env_vars_dict['OBS_ACC'] = OBS_ACC
         job_env_vars_dict['ACC'] = ACC
-        job_env_vars_dict['MODEL_PCP_COMBINE_METHOD'] = MODEL_PCP_COMBINE_METHOD
-        job_env_vars_dict['MODEL_PCP_COMBINE_COMMAND'] = MODEL_PCP_COMBINE_COMMAND
-        job_env_vars_dict['USE_ZERO_ACCUM'] = USE_ZERO_ACCUM
         job_dependent_vars['FHR_START'] = {
             'exec_value': '',
             'bash_value': (
@@ -278,7 +270,7 @@ if VERIF_CASE == 'precip':
                     job_cmd_list_iterative.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
-                        + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
+                        + f'PCPCombine_obs{OBSNAME.upper()}.conf'
                     )
                     job_cmd_list_iterative.append(
                         f'python -c '

@@ -53,15 +53,35 @@ suite evs_nco
             task jevs_prep_cam_radar_vhr_05
               trigger :TIME >= 0505 and :TIME < 1105
               edit VHR '05'
+            task jevs_prep_cam_precip_vhr_00
+              trigger :TIME >= 0030 and :TIME < 0630
+              edit VHR '00'
             task jevs_prep_cam_hrrr_precip_vhr_00
               trigger :TIME >= 0030 and :TIME < 0630
               edit VHR '00'
             task jevs_prep_cam_rrfs_precip_vhr_00
               trigger :TIME >= 0030 and :TIME < 0630 and jevs_prep_cam_hrrr_precip_vhr_00 == complete
               edit VHR '00'
-            task jevs_prep_cam_rrfsmem_precip_vhr_00
+            task jevs_prep_cam_rrfsmem_precip_vhr_00_mem_1
               trigger :TIME >= 0030 and :TIME < 0630 and jevs_prep_cam_rrfs_precip_vhr_00 == complete
               edit VHR '00'
+              edit MEM '1'
+            task jevs_prep_cam_rrfsmem_precip_vhr_00_mem_2
+              trigger :TIME >= 0030 and :TIME < 0630 and jevs_prep_cam_rrfsmem_precip_vhr_00_mem_1 == complete
+              edit VHR '00'
+              edit MEM '2'
+            task jevs_prep_cam_rrfsmem_precip_vhr_00_mem_3
+              trigger :TIME >= 0030 and :TIME < 0630 and jevs_prep_cam_rrfsmem_precip_vhr_00_mem_2 == complete
+              edit VHR '00'
+              edit MEM '3'
+            task jevs_prep_cam_rrfsmem_precip_vhr_00_mem_4
+              trigger :TIME >= 0030 and :TIME < 0630 and jevs_prep_cam_rrfsmem_precip_vhr_00_mem_3 == complete
+              edit VHR '00'
+              edit MEM '4'
+            task jevs_prep_cam_rrfsmem_precip_vhr_00_mem_5
+              trigger :TIME >= 0030 and :TIME < 0630 and jevs_prep_cam_rrfsmem_precip_vhr_00_mem_4 == complete
+              edit VHR '00'
+              edit MEM '5'
             task jevs_prep_cam_hrrr_severe_vhr_00
               trigger :TIME >= 0000 and :TIME < 0600
               edit VHR '00'
@@ -642,15 +662,35 @@ suite evs_nco
             task jevs_prep_cam_radar_vhr_11
               trigger :TIME >= 1105 and :TIME < 1705
               edit VHR '11'
+            task jevs_prep_cam_precip_vhr_06
+              trigger :TIME >= 0630 and :TIME < 1230
+              edit VHR '06'
             task jevs_prep_cam_hrrr_precip_vhr_06
               trigger :TIME >= 0630 and :TIME < 1230
               edit VHR '06'
             task jevs_prep_cam_rrfs_precip_vhr_06
               trigger :TIME >= 0630 and :TIME < 1230 and jevs_prep_cam_hrrr_precip_vhr_06 == complete
               edit VHR '06'
-            task jevs_prep_cam_rrfsmem_precip_vhr_06
+            task jevs_prep_cam_rrfsmem_precip_vhr_06_mem_1
               trigger :TIME >= 0630 and :TIME < 1230 and jevs_prep_cam_rrfs_precip_vhr_06 == complete
               edit VHR '06'
+              edit MEM '1'
+            task jevs_prep_cam_rrfsmem_precip_vhr_06_mem_2
+              trigger :TIME >= 0630 and :TIME < 1230 and jevs_prep_cam_rrfsmem_precip_vhr_06_mem_1 == complete
+              edit VHR '06'
+              edit MEM '2'
+            task jevs_prep_cam_rrfsmem_precip_vhr_06_mem_3
+              trigger :TIME >= 0630 and :TIME < 1230 and jevs_prep_cam_rrfsmem_precip_vhr_06_mem_2 == complete
+              edit VHR '06'
+              edit MEM '3'
+            task jevs_prep_cam_rrfsmem_precip_vhr_06_mem_4
+              trigger :TIME >= 0630 and :TIME < 1230 and jevs_prep_cam_rrfsmem_precip_vhr_06_mem_3 == complete
+              edit VHR '06'
+              edit MEM '4'
+            task jevs_prep_cam_rrfsmem_precip_vhr_06_mem_5
+              trigger :TIME >= 0630 and :TIME < 1230 and jevs_prep_cam_rrfsmem_precip_vhr_06_mem_4 == complete
+              edit VHR '06'
+              edit MEM '5'
             task jevs_prep_cam_hrrr_severe_vhr_06
               trigger :TIME >= 0600 and :TIME < 1200
               edit VHR '06'
@@ -1333,15 +1373,35 @@ suite evs_nco
             task jevs_prep_cam_radar_vhr_17
               trigger :TIME >= 1705 and :TIME < 2305
               edit VHR '17'
+            task jevs_prep_cam_precip_vhr_12
+              trigger :TIME >= 1230 and :TIME < 1830 
+              edit VHR '12'
             task jevs_prep_cam_hrrr_precip_vhr_12
               trigger :TIME >= 1230 and :TIME < 1830 
               edit VHR '12'
             task jevs_prep_cam_rrfs_precip_vhr_12
               trigger :TIME >= 1230 and :TIME < 1830 and jevs_prep_cam_hrrr_precip_vhr_12 == complete
               edit VHR '12'
-            task jevs_prep_cam_rrfsmem_precip_vhr_12
+            task jevs_prep_cam_rrfsmem_precip_vhr_12_mem_1
               trigger :TIME >= 1230 and :TIME < 1830 and jevs_prep_cam_rrfs_precip_vhr_12 == complete
               edit VHR '12'
+              edit MEM '1'
+            task jevs_prep_cam_rrfsmem_precip_vhr_12_mem_2
+              trigger :TIME >= 1230 and :TIME < 1830 and jevs_prep_cam_rrfsmem_precip_vhr_12_mem_1 == complete
+              edit VHR '12'
+              edit MEM '2'
+            task jevs_prep_cam_rrfsmem_precip_vhr_12_mem_3
+              trigger :TIME >= 1230 and :TIME < 1830 and jevs_prep_cam_rrfsmem_precip_vhr_12_mem_2 == complete
+              edit VHR '12'
+              edit MEM '3'
+            task jevs_prep_cam_rrfsmem_precip_vhr_12_mem_4
+              trigger :TIME >= 1230 and :TIME < 1830 and jevs_prep_cam_rrfsmem_precip_vhr_12_mem_3 == complete
+              edit VHR '12'
+              edit MEM '4'
+            task jevs_prep_cam_rrfsmem_precip_vhr_12_mem_5
+              trigger :TIME >= 1230 and :TIME < 1830 and jevs_prep_cam_rrfsmem_precip_vhr_12_mem_4 == complete
+              edit VHR '12'
+              edit MEM '5'
             task jevs_prep_cam_hrrr_severe_vhr_12
               trigger :TIME >= 1200 and :TIME < 1800
               edit VHR '12'
@@ -2019,15 +2079,35 @@ suite evs_nco
             task jevs_prep_cam_radar_vhr_23
               trigger :TIME >= 2305 or :TIME < 0505
               edit VHR '23'
+            task jevs_prep_cam_precip_vhr_18
+              trigger (:TIME >= 1830 or :TIME < 0030)
+              edit VHR '18'
             task jevs_prep_cam_hrrr_precip_vhr_18
               trigger (:TIME >= 1830 or :TIME < 0030)
               edit VHR '18'
             task jevs_prep_cam_rrfs_precip_vhr_18
               trigger (:TIME >= 1830 or :TIME < 0030) and jevs_prep_cam_hrrr_precip_vhr_18 == complete
               edit VHR '18'
-            task jevs_prep_cam_rrfsmem_precip_vhr_18
+            task jevs_prep_cam_rrfsmem_precip_vhr_18_mem_1
               trigger (:TIME >= 1830 or :TIME < 0030) and jevs_prep_cam_rrfs_precip_vhr_18 == complete
               edit VHR '18'
+              edit MEM '1'
+            task jevs_prep_cam_rrfsmem_precip_vhr_18_mem_2
+              trigger (:TIME >= 1830 or :TIME < 0030) and jevs_prep_cam_rrfsmem_precip_vhr_18_mem_1 == complete
+              edit VHR '18'
+              edit MEM '2'
+            task jevs_prep_cam_rrfsmem_precip_vhr_18_mem_3
+              trigger (:TIME >= 1830 or :TIME < 0030) and jevs_prep_cam_rrfsmem_precip_vhr_18_mem_2 == complete
+              edit VHR '18'
+              edit MEM '3'
+            task jevs_prep_cam_rrfsmem_precip_vhr_18_mem_4
+              trigger (:TIME >= 1830 or :TIME < 0030) and jevs_prep_cam_rrfsmem_precip_vhr_18_mem_3 == complete
+              edit VHR '18'
+              edit MEM '4'
+            task jevs_prep_cam_rrfsmem_precip_vhr_18_mem_5
+              trigger (:TIME >= 1830 or :TIME < 0030) and jevs_prep_cam_rrfsmem_precip_vhr_18_mem_4 == complete
+              edit VHR '18'
+              edit MEM '5'
             task jevs_prep_cam_hrrr_severe_vhr_18
               trigger :TIME >= 1815 or :TIME < 0015
               edit VHR '18'
@@ -2102,45 +2182,45 @@ suite evs_nco
           endfamily
           family global_det
             task jevs_stats_global_det_ukmet_atmos_grid2obs
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_ukmet_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_metfra_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_jma_atmos_grid2obs
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_jma_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_gfs_atmos_grid2obs
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_gfs_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_aigfs_atmos_grid2obs
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_aigfs_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_gfs_atmos_wmo_daily
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_fnmoc_atmos_grid2obs
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_fnmoc_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_ecmwf_atmos_grid2obs
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_ecmwf_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_dwd_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_cmc_regional_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_cmc_atmos_grid2obs
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_cmc_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_cfs_atmos_grid2obs
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
             task jevs_stats_global_det_cfs_atmos_grid2grid
-              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_global_det_atmos_prep == complete
+              trigger (:TIME >= 1855 or :TIME < 0055) and ../../prep/global_det/jevs_prep_global_det_atmos == complete
           endfamily
           family cam
             task jevs_stats_cam_rrfs_firewxnest_grid2obs_vhr_18
