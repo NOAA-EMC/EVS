@@ -3,7 +3,7 @@
 #
 # NAME: rap_util.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Various Utilities for EVS MESOSCALE Verification
+# PURPOSE: Various Utilities for EVS RAP Verification
 # 
 # =============================================================================
 
