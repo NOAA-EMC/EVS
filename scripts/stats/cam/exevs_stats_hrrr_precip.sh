@@ -394,17 +394,6 @@ if [ $SENDCOM = YES ]; then
             fi
         done
     done
-    mkdir -p $COMOUTsmall/spatial_maps
-    for FILEn in $MET_PLUS_OUT/*/pcp_combine/*a24h*; do
-        if [ -f "$FILEn" ]; then
-            cp -vr $FILEn $COMOUTsmall/spatial_maps/.
-        fi
-    done
-    for FILEn in $MET_PLUS_OUT/*/pcp_combine/*/*a24h*; do
-        if [ -f "$FILEn" ]; then
-            cp -vr $FILEn $COMOUTsmall/spatial_maps/.
-        fi
-    done
 fi
 
 # Final Stats Job

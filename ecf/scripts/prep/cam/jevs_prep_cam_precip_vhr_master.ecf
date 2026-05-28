@@ -1,10 +1,10 @@
-#PBS -N evs_prep_cam_rrfsmem_precip_vhr_%VHR%
+#PBS -N evs_prep_cam_precip_vhr_%VHR%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:15:00
-#PBS -l place=shared,select=1:ncpus=3:ompthreads=1:mem=110GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter,select=1:ncpus=3:ompthreads=1:mem=75GB
 #PBS -l debug=true
 
 export model=evs
@@ -48,17 +48,12 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-if [ -n "%MEM:%" ]; then
-  export mem=${mem:-%MEM:%}
-else
-  export mem=1
-fi
 export USE_CFP=YES
 export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="precip"
-export MODELNAME="rrfsmem${mem}"
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.rrfsmem
+export MODELNAME="cam"
+export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
 
 ############################################################
 # Execute j-job

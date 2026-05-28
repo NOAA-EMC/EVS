@@ -32,19 +32,31 @@ import cam_util as cutil
 DATA = os.environ['DATA']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
+MODELNAME = os.environ['MODELNAME']
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
 if STEP == 'prep':
-    jobdir = os.path.join(
-        DATA, VERIF_CASE, STEP, 'prep_job_scripts'
-    )
-    outdir = os.path.join(
-        DATA, VERIF_CASE, 'data'
-    )
-    workdirs = os.path.join(
-        outdir, 'workdirs'
-    )
+    if VERIF_CASE == "precip" and MODELNAME != "cam":
+        jobdir = os.path.join(
+            DATA, VERIF_CASE, 'METplus_job_scripts'
+        )
+        outdir = os.path.join(
+            DATA, VERIF_CASE, 'METplus_output'
+        )
+        workdirs = os.path.join(
+            outdir, 'workdirs'
+        )
+    else:
+        jobdir = os.path.join(
+            DATA, VERIF_CASE, STEP, 'prep_job_scripts'
+        )
+        outdir = os.path.join(
+            DATA, VERIF_CASE, 'data'
+        )
+        workdirs = os.path.join(
+            outdir, 'workdirs'
+        )
 elif STEP == 'stats':
     jobdir = os.path.join(
         DATA, VERIF_CASE, 'METplus_job_scripts', job_type
