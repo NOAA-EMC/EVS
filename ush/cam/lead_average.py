@@ -1601,14 +1601,6 @@ def main():
         parsed_model = urlparse(model)
         models.append(parsed_model.path)
         model_queries.append(parse_qs(parsed_model.query))
-    for m, d in enumerate(model_queries):
-        if 'shift' in d:
-            logger.debug(
-                    f"A 'shift' query was included with the {models[m]} model. "
-                    "Consider instead setting 'delete_intermed_data' to True "
-                    "in settings.py, which allows mismatched comparisons "
-                    "between models that share no common lead hours."
-                )
 
     date_range = (
         datetime.strptime(date_beg, '%Y%m%d'), 
