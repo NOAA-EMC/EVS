@@ -2200,9 +2200,7 @@ def equalize_samples(logger, df, group_by):
         # Get all the indices for rows in each group that match the merged df
         for dfs_i in dfs:
             for idx, row in dfs_i.iterrows():
-                if (
-                        row.to_numpy()[1:].tolist() 
-                        in match_these.to_numpy()[:,1:].tolist()):
+                if row.to_numpy().tolist() in match_these.to_numpy().tolist():
                     indexes.append(idx)
     # Select the matched rows by index among the rows in the original DataFrame
     df_equalized = df.loc[indexes]
