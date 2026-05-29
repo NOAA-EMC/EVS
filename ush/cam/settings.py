@@ -689,14 +689,18 @@ class Reference():
                                     'SOILW': ('Volumetric Soil Moisture'
                                               + ' Content'),
                                     'WEASD': 'Accum. Snow Depth Water Equiv.',
+                                    'WEASD_A06': ('6-hour Accum. Snow Depth'
+                                                + ' Water Equiv.'),
                                     'WEASD_06': ('6-hour Accum. Snow Depth'
                                                 + ' Water Equiv.'),
                                     'WEASD_24': ('24-hour Accum. Snow Depth'
                                                 + ' Water Equiv.'),
                                     'SNOD': 'Accum. Snow Depth',
+                                    'SNOD_A06': ('6-hour Accum. Snow Depth'),
                                     'SNOD_06': ('6-hour Accum. Snow Depth'),
                                     'SNOD_24': ('24-hour Accum. Snow Depth'),
                                     'ASNOW': 'Accumulated Snowfall',
+                                    'ASNOW_A06': ('6-hour Accumulated Snowfall'),
                                     'ASNOW_06': ('6-hour Accumulated Snowfall'),
                                     'ASNOW_24': ('24-hour Accumulated Snowfall'),
                                     'APCP': ('Accumulated'
