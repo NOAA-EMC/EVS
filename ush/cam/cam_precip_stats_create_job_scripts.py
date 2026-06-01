@@ -82,7 +82,7 @@ assemble_data_model_jobs_dict = {
                                           )]},
         '24hrAccum_PUERTO_RICO': {'env': {'area': 'puerto_rico'},
                                           'commands': [m_util.metplus_command(
-                                                           'PCPCombine_''fcstRAP_APCP.conf'
+                                                           'PCPCombine_fcstRAP_APCP.conf'
                                                        )]},
     },
     'accum03hr': {
