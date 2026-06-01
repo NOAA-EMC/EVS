@@ -22,7 +22,7 @@ graphics = {
     'cam':{
         'grid2obs':{
             'ptype':{
-                'domain_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'performance_diagram':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -50,7 +50,7 @@ graphics = {
                         }
                     }
                 },
-                'domain_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
+                'domain_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'performance_diagram':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',

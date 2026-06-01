@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: cam_snowfall_stats_get_data.py
-Contact(s): Marcel Caron, Mallory Row
+Contact(s): Marcel Caron
 Abstract: This gather model and observation data files
 '''
 

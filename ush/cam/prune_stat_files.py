@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 prune_stat_files.py
-CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov; Mallory Row
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
 ----------------------
 Prunes MET .stat files for specific plotting jobs in the cam component.
 
