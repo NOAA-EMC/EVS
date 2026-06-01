@@ -1206,6 +1206,8 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         var_savename = 'ASNOW'
     elif any(field in var_savename.upper() for field in ['SNOD']):
         var_savename = 'SNOD'
+    elif any(field in var_savename.upper() for field in ['WEASD']):
+        var_savename = 'WEASD'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:

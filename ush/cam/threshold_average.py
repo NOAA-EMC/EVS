@@ -870,6 +870,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         var_savename = 'ASNOW'
     elif any(field in var_savename.upper() for field in ['SNOD']):
         var_savename = 'SNOD'
+    elif any(field in var_savename.upper() for field in ['WEASD']):
+        var_savename = 'WEASD'
     elif 'PROB_MXUPHL25_A24_GEHWT' in var_savename.upper():
         var_savename = 'MXUPHL25'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
