@@ -325,19 +325,6 @@ graphics = {
                                     'INTERP_PNTSs':[''],
                                 },
                             },
-                            'ctc':{
-                                'HPBL':{
-                                    'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60'],
-                                    'FCST_LEVELs':['PBL'],
-                                    'OBS_LEVELs':['L0'],
-                                    'FCST_THRESHs':['<=500','>=2000'],
-                                    'OBS_THRESHs':['<=500','>=2000'],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
                         }
                     },
                     'threshold_average':{
@@ -997,19 +984,6 @@ graphics = {
                                     'INTERP_PNTSs':[''],
                                 },
                             },
-                            'ctc':{
-                                'HPBL':{
-                                    'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60'],
-                                    'FCST_LEVELs':['PBL'],
-                                    'OBS_LEVELs':['L0'],
-                                    'FCST_THRESHs':['<=500','>=2000'],
-                                    'OBS_THRESHs':['<=500','>=2000'],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
                         }
                     },
                     'threshold_average':{
