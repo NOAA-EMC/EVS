@@ -23,7 +23,7 @@ export ACCUM06_FHR_END=51
 export ACCUM06_FHR_INCR=3
 export ACCUM24_FHR_START=27
 export ACCUM24_FHR_END=51
-export ACCUM24_FHR_INCR=24
+export ACCUM24_FHR_INCR=6
 
 # Additional Verification Settings
 export ACCUM06_THRESH="ge0.0254,ge0.0508,ge0.1016,ge0.2032"
