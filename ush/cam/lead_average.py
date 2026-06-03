@@ -392,7 +392,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-    group_by = ['MODEL', 'LEAD_HOURS']
+    group_by = ['MODEL', 'EQUALIZE_LEAD_HOURS']
     df['EQUALIZE_LEAD_HOURS'] = df['LEAD_HOURS']
     df['EQUALIZE_VALID'] = df['VALID']
     if any(model_queries):
@@ -424,9 +424,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         pd.MultiIndex.from_product(
             [
                 np.unique(df_aggregated.index.get_level_values('MODEL')), 
-                np.unique(df_aggregated.index.get_level_values('LEAD_HOURS'))
+                np.unique(df_aggregated.index.get_level_values('EQUALIZE_LEAD_HOURS'))
             ], 
-            names=['MODEL','LEAD_HOURS']
+            names=['MODEL','EQUALIZE_LEAD_HOURS']
         ), 
         fill_value=np.nan
     )
@@ -435,14 +435,14 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated[df_agg_no_nan_rows].iloc[
             df_aggregated[df_agg_no_nan_rows]
             .index.get_level_values('MODEL') == model
-        ].index.get_level_values('LEAD_HOURS').max() for model in model_list
+        ].index.get_level_values('EQUALIZE_LEAD_HOURS').max() for model in model_list
     ]
     remove_rows_by_lead = []
     for m, model in enumerate(model_list):
         df_model_group = df_aggregated.iloc[
             df_aggregated.index.get_level_values('MODEL') == model
         ]
-        rows_with_nans = df_model_group.index.get_level_values('LEAD_HOURS')[
+        rows_with_nans = df_model_group.index.get_level_values('EQUALIZE_LEAD_HOURS')[
             df_model_group.isna().any(axis=1)
         ]
         remove_rows_by_lead_m = [
@@ -551,35 +551,35 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     ]
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
-        index='LEAD_HOURS'
+        index='EQUALIZE_LEAD_HOURS'
     )
     if sample_equalization:
         pivot_counts = pd.pivot_table(
             df_aggregated, values='COUNTS', columns='MODEL',
-            index='LEAD_HOURS'
+            index='EQUALIZE_LEAD_HOURS'
         )
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
-            index='LEAD_HOURS'
+            index='EQUALIZE_LEAD_HOURS'
         )
     if confidence_intervals:
         pivot_ci_lower1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BLERR',
-            columns='MODEL', index='LEAD_HOURS'
+            columns='MODEL', index='EQUALIZE_LEAD_HOURS'
         )
         pivot_ci_upper1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BUERR',
-            columns='MODEL', index='LEAD_HOURS'
+            columns='MODEL', index='EQUALIZE_LEAD_HOURS'
         )
         if metric2_name is not None:
             pivot_ci_lower2 = pd.pivot_table(
                 df_aggregated, values=str(metric2_name).upper()+'_BLERR',
-                columns='MODEL', index='LEAD_HOURS'
+                columns='MODEL', index='EQUALIZE_LEAD_HOURS'
             )
             pivot_ci_upper2 = pd.pivot_table(
                 df_aggregated, values=str(metric2_name).upper()+'_BUERR',
-                columns='MODEL', index='LEAD_HOURS'
+                columns='MODEL', index='EQUALIZE_LEAD_HOURS'
             )
     # Reindex pivot table with full list of lead hours, introducing NaNs 
     x_vals_pre = pivot_metric1.index.tolist()
