@@ -388,6 +388,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
+    
+    if str(line_type).upper() in ['CTC','NBRCTC']:
+        df['EVENTS'] = np.array(df['FY_OY'].values+df['FN_OY'].values>0).astype(int)    
+
     group_by = ['MODEL','FCST_THRESH_VALUE']
     df['EQUALIZE_LEAD_HOURS'] = df['LEAD_HOURS']
     df['EQUALIZE_VALID'] = df['VALID']
@@ -496,10 +500,16 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         index='FCST_THRESH_VALUE'
     )
     if sample_equalization:
-        pivot_counts = pd.pivot_table(
-            df_aggregated, values='COUNTS', columns='MODEL',
-            index='FCST_THRESH_VALUE'
-        )
+        if str(line_type).upper() in ['MCTC']:
+            pivot_counts = pd.pivot_table(
+                df_aggregated, values='COUNTS', columns='MODEL',
+                index='FCST_THRESH_VALUE'
+            )
+        else:
+            pivot_counts = pd.pivot_table(
+                df_aggregated, values='EVENTS', columns='MODEL',
+                index='FCST_THRESH_VALUE'
+            )
     pivot_metric1 = pivot_metric1.dropna() 
     pivot_metric2 = pivot_metric2.dropna() 
     pivot_metric3 = pivot_metric3.dropna() 
@@ -507,7 +517,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         np.concatenate([
             pivot_metric1.index, 
             pivot_metric2.index, 
-            pivot_metric3.index
+            pivot_metric3.index,
+            pivot_counts.index
         ])
     )
     all_model_col = np.unique(
@@ -845,6 +856,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     
     if sample_equalization:
         counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
+        counts = [counts[i] for i in thresh_argsort]
         counts = [
             str(int(count)) if not isinstance(count,str) else count 
             for count in counts
@@ -1043,7 +1055,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    date_start_string = date_range[0].strftime('%d %b %Y')
+    if not df.empty and date_type in df.columns and not df[date_type].isna().all():
+        date_start_string = df[date_type].min().strftime('%d %b %Y')
+    else:
+        date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
         if str(level).upper() == 'CEILING':
