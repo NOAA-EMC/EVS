@@ -73,13 +73,6 @@ if job_type == 'reformat':
     if NEST == 'spc_otlk':
         EVSINspcotlk = os.environ['EVSINspcotlk']
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
-    if NEST == 'firewx':
-        GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
-        fcst_avail = cutil.get_fcst_avail(
-            VERIF_CASE=VERIF_CASE, job_type=job_type, COMINfcst=COMINfcst, 
-            MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE, DATA=DATA,
-            VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
-            VHOUR=VHOUR, FHR=FHR, ACC=None, FCST_VAR_NAME=None)
     OBSNAME = os.environ['OBSNAME']
     obs_avail = cutil.get_obs_avail(
         os.path.join(DATA, VERIF_CASE, 'data', VERIF_TYPE, 'prepbufr'), 
@@ -101,14 +94,24 @@ elif job_type == 'generate':
     MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
     if NEST not in ['firewx', 'spc_otlk']:
         MASK_POLY_LIST = os.environ['MASK_POLY_LIST']
+    elif NEST == 'firewx':
+        NEST_INPUT_TEMPLATE = os.environ['NEST_INPUT_TEMPLATE']
+        GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
+        COMINrrfs = os.environ['COMINrrfs']
+        firewx_avail = cutil.get_fcst_avail(
+            VERIF_CASE=VERIF_CASE, job_type=job_type, COMINfcst=COMINrrfs,
+            MODEL_INPUT_TEMPLATE=NEST_INPUT_TEMPLATE, DATA=DATA,
+            VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
+            VHOUR=VHOUR, FHR=FHR, ACC=None, FCST_VAR_NAME=None)
+        print(f"firewx_avail: {firewx_avail}")
+    elif NEST == 'spc_otlk':
+        EVSINspcotlk = os.environ['EVSINspcotlk']
     njob = os.environ['njob']
     MET_PLUS_OUT = os.path.join(
         os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
     )
     GRID = os.environ['GRID']
     USHevs = os.environ['USHevs']
-    if NEST == 'spc_otlk':
-        EVSINspcotlk = os.environ['EVSINspcotlk']
 
     OBSNAME = os.environ['OBSNAME']
     fcst_avail = cutil.get_fcst_avail(
@@ -247,8 +250,6 @@ if job_type == 'reformat':
         job_env_vars_dict['metplus_launcher'] = metplus_launcher
         job_env_vars_dict['EVSINspcotlk'] = EVSINspcotlk
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
-    if NEST == 'firewx':
-        job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
         'bash_value': (
@@ -296,9 +297,12 @@ elif job_type == 'generate':
     job_env_vars_dict['OUTPUT_FLAG_VCNT'] = OUTPUT_FLAG_VCNT
     job_env_vars_dict['OUTPUT_FLAG_MCTC'] = OUTPUT_FLAG_MCTC
     if NEST == 'firewx':
+        job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
+        job_env_vars_dict['NEST_INPUT_TEMPLATE'] = NEST_INPUT_TEMPLATE
+        job_env_vars_dict['COMINrrfs'] = COMINrrfs
         job_env_vars_dict['MASK_POLY_LIST'] = ( 
-                    f'{DATA}/{VERIF_CASE}/METplus_output/{VERIF_TYPE}'
-                    + f'/genvxmask/{NEST}.'
+                    f'{DATA}/{VERIF_CASE}/METplus_output/workdirs/{job_type}'
+                    + f'/job{njob}/{VERIF_TYPE}/genvxmask/{NEST}.'
                     + '${VDATE}'+ f'/{NEST}_t{VHOUR}z_f{FHR}.nc'
         )
     elif NEST == 'spc_otlk':
@@ -331,36 +335,6 @@ if STEP == 'prep':
     pass
 elif STEP == 'stats':
     if job_type == 'reformat':
-        if NEST == 'firewx':
-            if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                if obs_avail and fcst_avail:
-                    job_cmd_list_iterative.append(
-                        f'{metplus_launcher} -c {machine_conf} '
-                        + f'-c {MET_PLUS_CONF}/'
-                        + f'GenVxMask_{str(NEST).upper()}.conf'
-                    )
-                    job_cmd_list_iterative.append(
-                        f'python -c '
-                        + '\"import cam_util as cutil; cutil.copy_data_to_restart('
-                        + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                        + f'njob=\\\"{njob}\\\", '
-                        + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                        + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                        + 'vx_mask=\\\"${NEST}\\\", '
-                        + 'met_tool=\\\"genvxmask\\\", '
-                        + 'vdate=\\\"${VDATE}\\\", '
-                        + 'vhour=\\\"${VHOUR}\\\", '
-                        + 'fhr_start=\\\"${FHR_START}\\\", '
-                        + 'fhr_end=\\\"${FHR_END}\\\", '
-                        + 'fhr_incr=\\\"${FHR_INCR}\\\"'
-                        + ')\"'
-                    )
-                    job_cmd_list.append(
-                        "python -c "
-                        + f"'import cam_util; cam_util.mark_job_completed("
-                        + f"\"{RESTART_DIR}\", \"{DATA}\", \"{VERIF_CASE}\", \"{COMPLETED_JOBS_DIR}\", "
-                        + f"\"job{njob}\", job_type=\"{job_type}\")'"
-                    )
         if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
             if obs_avail:
                 job_cmd_list_iterative.append(
@@ -391,7 +365,34 @@ elif STEP == 'stats':
         if FCST_VAR2_NAME:
             if NEST == 'firewx':
                 if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                    if obs_avail and fcst_avail:
+                    print(f"obs_avail: {obs_avail}\nfcst_avail: {fcst_avail}\nfirewx_avail: {firewx_avail}")
+                    if obs_avail and fcst_avail and firewx_avail:
+                        print("GOING IN!")
+                        job_cmd_list_iterative.append(
+                            f'{metplus_launcher} -c {machine_conf} '
+                            + f'-c {MET_PLUS_CONF}/'
+                            + f'GenVxMask_{str(NEST).upper()}.conf'
+                        )
+                        job_cmd_list_iterative.append(
+                            f'python -c '
+                            + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                            + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                            + f'njob=\\\"{njob}\\\", '
+                            + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                            + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                            + 'vx_mask=\\\"${NEST}\\\", '
+                            + 'met_tool=\\\"genvxmask\\\", '
+                            + 'vdate=\\\"${VDATE}\\\", '
+                            + 'vhour=\\\"${VHOUR}\\\", '
+                            + 'fhr=\\\"${FHR}\\\", '
+                            + ')\"'
+                        )
+                        job_cmd_list.append(
+                            "python -c "
+                            + f"'import cam_util; cam_util.mark_job_completed("
+                            + f"\"{RESTART_DIR}\", \"{DATA}\", \"{VERIF_CASE}\", \"{COMPLETED_JOBS_DIR}\", "
+                            + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                        )
                         job_cmd_list.append(
                             f'{metplus_launcher} -c {machine_conf} '
                             + f'-c {MET_PLUS_CONF}/'
@@ -520,7 +521,34 @@ elif STEP == 'stats':
             if NEST == 'firewx':
                 if VAR_NAME == 'PTYPE':
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                        if obs_avail and fcst_avail:
+                        print(f"obs_avail: {obs_avail}\nfcst_avail: {fcst_avail}\nfirewx_avail: {firewx_avail}")
+                        if obs_avail and fcst_avail and firewx_avail:
+                            print("GOING IN! (2)")
+                            job_cmd_list_iterative.append(
+                                f'{metplus_launcher} -c {machine_conf} '
+                                + f'-c {MET_PLUS_CONF}/'
+                                + f'GenVxMask_{str(NEST).upper()}.conf'
+                            )
+                            job_cmd_list_iterative.append(
+                                f'python -c '
+                                + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                                + f'njob=\\\"{njob}\\\", '
+                                + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                                + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                                + 'vx_mask=\\\"${NEST}\\\", '
+                                + 'met_tool=\\\"genvxmask\\\", '
+                                + 'vdate=\\\"${VDATE}\\\", '
+                                + 'vhour=\\\"${VHOUR}\\\", '
+                                + 'fhr=\\\"${FHR}\\\", '
+                                + ')\"'
+                            )
+                            job_cmd_list.append(
+                                "python -c "
+                                + f"'import cam_util; cam_util.mark_job_completed("
+                                + f"\"{RESTART_DIR}\", \"{DATA}\", \"{VERIF_CASE}\", \"{COMPLETED_JOBS_DIR}\", "
+                                + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                            )
                             job_cmd_list.append(
                                 f'{metplus_launcher} -c {machine_conf} '
                                 + f'-c {MET_PLUS_CONF}/'
@@ -592,7 +620,34 @@ elif STEP == 'stats':
                             )
                 else:
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                        if obs_avail and fcst_avail:
+                        print(f"obs_avail: {obs_avail}\nfcst_avail: {fcst_avail}\nfirewx_avail: {firewx_avail}")
+                        if obs_avail and fcst_avail and firewx_avail:
+                            print("GOING IN! (2.5)")
+                            job_cmd_list_iterative.append(
+                                f'{metplus_launcher} -c {machine_conf} '
+                                + f'-c {MET_PLUS_CONF}/'
+                                + f'GenVxMask_{str(NEST).upper()}.conf'
+                            )
+                            job_cmd_list_iterative.append(
+                                f'python -c '
+                                + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                                + f'njob=\\\"{njob}\\\", '
+                                + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                                + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                                + 'vx_mask=\\\"${NEST}\\\", '
+                                + 'met_tool=\\\"genvxmask\\\", '
+                                + 'vdate=\\\"${VDATE}\\\", '
+                                + 'vhour=\\\"${VHOUR}\\\", '
+                                + 'fhr=\\\"${FHR}\\\", '
+                                + ')\"'
+                            )
+                            job_cmd_list.append(
+                                "python -c "
+                                + f"'import cam_util; cam_util.mark_job_completed("
+                                + f"\"{RESTART_DIR}\", \"{DATA}\", \"{VERIF_CASE}\", \"{COMPLETED_JOBS_DIR}\", "
+                                + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                            )
                             job_cmd_list.append(
                                 f'{metplus_launcher} -c {machine_conf} '
                                 + f'-c {MET_PLUS_CONF}/'
