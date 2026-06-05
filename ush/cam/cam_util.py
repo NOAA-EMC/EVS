@@ -628,13 +628,17 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
         if verif_case == "snowfall":
             check_if_none = [
                 data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
-                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name, acc
+                vdate, vhour, model, var_name, acc
             ]
             if any([var is None for var in check_if_none]):
                 e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
-            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+            if fhr is None:
+                fhr_list = np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr))
+            else:
+                fhr_list = [int(fhr)]
+            for fhr in fhr_list:
                 vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
                 idt = vdt - td(hours=int(fhr))
                 idate = idt.strftime('%Y%m%d')
@@ -1374,7 +1378,7 @@ def _get_init_and_lead(VDATE, VHOUR, FHR):
     """
     fhr_int = _as_int(FHR, "FHR")
     valid = datetime.strptime(f"{VDATE}{int(VHOUR):02d}", "%Y%m%d%H")
-    init = valid - timedelta(hours=fhr_int)
+    init = valid - td(hours=fhr_int)
     lead = fhr_int * 3600
     return init, lead
 
