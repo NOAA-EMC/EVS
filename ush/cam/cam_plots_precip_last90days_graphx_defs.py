@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-cam_plots_precip_last31days_graphx_defs.py
+cam_plots_precip_last90days_graphx_defs.py
 CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 ----------------------
-Graphics definitions for the CAM Precip Plots jobs (last 31 days), used by the
+Graphics definitions for the CAM Precip Plots jobs (last 90 days), used by the
 cam component for precipitation plotting and job configuration.
 
 Environment Variables (Inputs):
     EVAL_PERIOD (used within graphics definitions)
 
 Outputs:
-    - Provides the 'graphics' dictionary for CAM Precip plotting jobs (last 31 days).
+    - Provides the 'graphics' dictionary for CAM Precip plotting jobs (last 90 days).
 
 This module is intended to be imported and used as part of the cam component's
-plotting and job generation workflow for precipitation plots (last 31 days).
+plotting and job generation workflow for precipitation plots (last 90 days).
 """
 
 import os
