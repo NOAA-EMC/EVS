@@ -42,6 +42,9 @@ i=1
    elif [ $k -eq 1 ]; then
       fhr=$fhr_beg2
       fhr_end=$fhr_end2
+   elif [ $k -eq 2 ]; then
+      fhr=$fhr_beg3
+      fhr_end=$fhr_end3
    fi
    export fhr
    export fhr_end
