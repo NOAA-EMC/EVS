@@ -1367,7 +1367,6 @@ def _as_int(value, name):
     except (TypeError, ValueError):
         raise ValueError(f"{name} must be convertible to int. Got: {value!r}")
 
-
 def _get_init_and_lead(VDATE, VHOUR, FHR):
     """
     Return init datetime and lead seconds from valid date/hour and forecast hour.
@@ -1381,7 +1380,6 @@ def _get_init_and_lead(VDATE, VHOUR, FHR):
     init = valid - td(hours=fhr_int)
     lead = fhr_int * 3600
     return init, lead
-
 
 def _substitute_fcst_template(MODEL_INPUT_TEMPLATE, VDATE, VHOUR, FHR, ACC=None):
     """
@@ -1409,7 +1407,7 @@ def _substitute_fcst_template(MODEL_INPUT_TEMPLATE, VDATE, VHOUR, FHR, ACC=None)
             **kwargs
         )
 
-    # Fallback, in case string_template_substitution is not importable.
+    # in case string_template_substitution is not importable ...
     out = MODEL_INPUT_TEMPLATE
     out = out.replace("{init?fmt=%Y%m%d}", init.strftime("%Y%m%d"))
     out = out.replace("{init?fmt=%2H}", init.strftime("%H"))
@@ -1421,31 +1419,15 @@ def _substitute_fcst_template(MODEL_INPUT_TEMPLATE, VDATE, VHOUR, FHR, ACC=None)
 
     return out
 
-
-def get_cam_fcst_file_path(
-    VERIF_CASE,
-    job_type,
-    COMINfcst=None,
-    MODEL_INPUT_TEMPLATE=None,
-    DATA=None,
-    VERIF_TYPE=None,
-    MODELNAME=None,
-    NEST=None,
-    VDATE=None,
-    VHOUR=None,
-    FHR=None,
-    ACC=None,
-    FCST_VAR_NAME=None,
-):
+def get_cam_fcst_file_path(VERIF_CASE,job_type,COMINfcst=None,
+                           MODEL_INPUT_TEMPLATE=None,DATA=None,
+                           VERIF_TYPE=None,MODELNAME=None,NEST=None,
+                           VDATE=None,VHOUR=None,FHR=None,ACC=None,
+                           FCST_VAR_NAME=None):
     """
     Build the forecast/input file path needed for a CAM METplus job card.
 
-    job_type should be something like:
-      reformat
-      generate
-
-    Returns:
-      full file path as string
+    Returns: full file path as string
     """
 
     verif_case = VERIF_CASE.lower()
@@ -1473,8 +1455,6 @@ def get_cam_fcst_file_path(
             f"t{init:%H}z.f{fhr_int:03d}.a{acc_int:02d}h.{NEST}.nc"
         )
 
-    # Default behavior for grid2obs, precip, and snowfall reformat:
-    # check COMINfcst/MODEL_INPUT_TEMPLATE.
     if COMINfcst is None or MODEL_INPUT_TEMPLATE is None:
         raise ValueError(
             f"{VERIF_CASE} {job_type} requires COMINfcst and "
@@ -1491,32 +1471,14 @@ def get_cam_fcst_file_path(
 
     return os.path.join(COMINfcst, rel_path)
 
-
 def get_fcst_avail(**kwargs):
     """
     Return True if required CAM forecast/input file exists, else False.
 
-    Example:
-      fcst_is_avail = cutil.cam_fcst_file_available(
-          VERIF_CASE=VERIF_CASE,
-          job_type="generate",
-          COMINfcst=COMINfcst,
-          MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE,
-          DATA=DATA,
-          VERIF_TYPE=VERIF_TYPE,
-          MODELNAME=MODELNAME,
-          NEST=NEST,
-          VDATE=VDATE,
-          VHOUR=VHOUR,
-          FHR=FHR,
-          ACC=ACC,
-          FCST_VAR_NAME=FCST_VAR_NAME,
-      )
     """
     fcst_file = get_cam_fcst_file_path(**kwargs)
 
     if os.path.exists(fcst_file):
         return True
 
-    print(f"WARNING: Required forecast/input file not found: {fcst_file}")
     return False
