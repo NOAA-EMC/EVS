@@ -282,6 +282,11 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
     
+    if str(line_type).upper() in ['CTC','NBRCTC']:
+        df['EVENTS'] = np.array(df['FY_OY'].values+df['FN_OY'].values>0).astype(int)
+    elif str(line_type).upper() in ['NBRCNT']: 
+        df['EVENTS'] = np.array(df['O_RATE'].values*df['TOTAL'].values>0).astype(int)
+
     group_by = ['MODEL','FCST_THRESH_VALUE']
     if sample_equalization:
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
@@ -300,6 +305,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated = df_groups.mean()
     if sample_equalization:
         df_aggregated['COUNTS']=df_groups.size()
+    if str(line_type).upper() in ['NBRCNT']:
+        df_aggregated['EVENTS'] = np.array(df_aggregated['EVENTS']*df_aggregated['COUNTS']).astype(int)
     # Remove data if they exist for some but not all models at some value of 
     # the indep. variable. Otherwise plot_util.calculate_stat will throw an 
     # error
@@ -404,10 +411,16 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     )
     if sample_equalization:
         pivot_counts = pd.pivot_table(
-            df_aggregated, values='COUNTS', columns='MODEL',
+            df_aggregated, values='EVENTS', columns='MODEL',
             index='FCST_THRESH_VALUE'
         )
     pivot_metric = pivot_metric.dropna()
+    if sample_equalization:
+        for thresh_idx in np.unique(pivot_counts.index):
+            if thresh_idx not in pivot_metric.index:
+                pivot_counts.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
+                )
     if confidence_intervals:
         pivot_ci_lower = pd.pivot_table(
             df_aggregated, values=str(metric_name).upper()+'_BLERR', 
@@ -717,7 +730,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         )
     ]
     yticks=np.divide(yticks,y_precision_scale)
-    ytick_labels = [f'{ytick}' for ytick in yticks]
+    ytick_labels = [f'{ytick:.10g}' for ytick in yticks]
     show_ytick_every = len(yticks)//10+1
     ytick_labels_with_blanks = ['' for item in ytick_labels]
     for i, item in enumerate(ytick_labels[::int(show_ytick_every)]):
@@ -771,6 +784,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
 
     if sample_equalization:
         counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
+        counts = [counts[i] for i in x_vals_argsort]
         for count, xval in zip(counts, x_vals.tolist()):
             if not isinstance(count, str):
                 count = str(int(count))
@@ -811,6 +825,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
+    if not df.empty and date_type in df.columns and not df[date_type].isna().all():
+        date_start_string = df[date_type].min().strftime('%d %b %Y')
+    else:
+        date_start_string = date_range[0].strftime('%d %b %Y')
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     metric_string = metric_long_name
