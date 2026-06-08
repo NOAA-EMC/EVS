@@ -57,11 +57,10 @@ if job_type == 'reformat':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
     VHOUR = os.environ['VHOUR']
-    FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
-    FHR_END_SHORT = os.environ['FHR_END_SHORT']
-    FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
-    FHR_END_FULL = os.environ['FHR_END_FULL']
-    FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
+    FHR = os.environ['FHR']
+    FHR_GROUP = os.environ['FHR_GROUP']
+    FHR_END = os.environ['FHR_END']
+    FHR_INCR = os.environ['FHR_INCR']
     MIN_IHOUR = os.environ['MIN_IHOUR']
     COMINfcst = os.environ['COMINfcst']
     MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
@@ -79,6 +78,8 @@ elif job_type == 'generate':
     FHR_END = os.environ['FHR_END']
     FHR_INCR = os.environ['FHR_INCR']
     MIN_IHOUR = os.environ['MIN_IHOUR']
+    COMINfcst = os.environ['COMINfcst']
+    MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
     COMINobs = os.environ['COMINobs']
     MASK_POLY_LIST = os.environ['MASK_POLY_LIST']
     OBSNAME = os.environ['OBSNAME']
@@ -156,6 +157,11 @@ if job_type in ['generate', 'reformat']:
                 OBS_VAR_LEVELS = var_def['var1_obs_levels']
                 OBS_VAR_THRESHOLDS = var_def['var1_obs_thresholds']
                 OBS_VAR_OPTIONS = var_def['var1_obs_options']
+                fcst_avail = cutil.get_fcst_avail(
+                    VERIF_CASE=VERIF_CASE, job_type=job_type, COMINfcst=COMINfcst, 
+                    MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE, DATA=DATA,
+                    VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
+                    VHOUR=VHOUR, FHR=FHR, ACC=ACC, FCST_VAR_NAME=FCST_VAR_NAME)
                 if job_type == 'reformat':
                     MODEL_PCP_COMBINE_COMMAND = MODEL_PCP_COMBINE_COMMAND.replace(
                         '{FCST_VAR_NAME}', FCST_VAR_NAME
@@ -228,11 +234,10 @@ if job_type == 'reformat':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
-    job_env_vars_dict['FHR_GROUP_LIST'] = FHR_GROUP_LIST
-    job_env_vars_dict['FHR_END_SHORT'] = FHR_END_SHORT
-    job_env_vars_dict['FHR_INCR_SHORT'] = FHR_INCR_SHORT
-    job_env_vars_dict['FHR_END_FULL'] = FHR_END_FULL
-    job_env_vars_dict['FHR_INCR_FULL'] = FHR_INCR_FULL
+    job_env_vars_dict['FHR'] = FHR
+    job_env_vars_dict['FHR_GROUP'] = FHR_GROUP
+    job_env_vars_dict['FHR_END'] = FHR_END
+    job_env_vars_dict['FHR_INCR'] = FHR_INCR
     job_env_vars_dict['MIN_IHOUR'] = MIN_IHOUR
     job_env_vars_dict['COMINfcst'] = COMINfcst
     job_env_vars_dict['FCST_VAR_NAME'] = FCST_VAR_NAME
@@ -246,10 +251,6 @@ if job_type == 'reformat':
     job_env_vars_dict['MODEL_INPUT_TEMPLATE'] = MODEL_INPUT_TEMPLATE
     job_env_vars_dict['BUCKET_INTERVAL'] = BUCKET_INTERVAL
     job_env_vars_dict['VAR_NAME'] = VAR_NAME
-    job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
-        'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
-        'exports': ['FHR_END','FHR_INCR']
-    }
 elif job_type == 'generate':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['NEST'] = NEST
@@ -313,7 +314,7 @@ if VERIF_CASE == 'snowfall':
     elif STEP == 'stats':
         if job_type == 'reformat':
             if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                if OBS_ACC is not None:
+                if OBS_ACC is not None and fcst_avail:
                     job_cmd_list_iterative.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
@@ -330,9 +331,7 @@ if VERIF_CASE == 'snowfall':
                         + 'met_tool=\\\"pcp_combine\\\", '
                         + 'vdate=\\\"${VDATE}\\\", '
                         + 'vhour=\\\"${VHOUR}\\\", '
-                        + 'fhr_start=\\\"${FHR_START}\\\", '
-                        + 'fhr_end=\\\"${FHR_END}\\\", '
-                        + 'fhr_incr=\\\"${FHR_INCR}\\\", '
+                        + 'fhr=\\\"${FHR}\\\", '
                         + 'model=\\\"${MODELNAME}\\\", '
                         + 'var_name=\\\"${VAR_NAME}\\\", '
                         + 'acc=\\\"${ACC}\\\"'
@@ -346,7 +345,7 @@ if VERIF_CASE == 'snowfall':
                     )
         if job_type == 'generate':
             if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                if OBS_ACC is not None:
+                if OBS_ACC is not None and fcst_avail:
                     job_cmd_list.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
