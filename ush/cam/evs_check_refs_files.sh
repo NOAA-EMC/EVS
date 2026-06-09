@@ -155,7 +155,7 @@ if [ $VERIF_CASE = precip ] ; then
    accum=01
    missing=0
    for vhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ; do
-      mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
+      mrms=$DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
       if [ ! -s $mrms ] ; then
          missing=$((missing+1))
          echo "WARNING: $mrms is missing"
@@ -170,7 +170,7 @@ if [ $VERIF_CASE = precip ] ; then
       if [ "$SENDMAIL" = "YES" ] ; then
           export subject="MRMS_01h Data Missing for EVS ${COMPONENT}"
           echo "WARNING:  No MRMS_01h data available for ${vday}" > mailmsg
-          echo "All of $DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
+          echo "All of $DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
       fi
@@ -180,7 +180,7 @@ if [ $VERIF_CASE = precip ] ; then
    accum=03
    missing=0
    for vhr in 00 03 06 09 12 15 18 21 ; do
-      mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
+      mrms=$DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
       if [ ! -s $mrms ] ; then
          missing=$((missing+1))
          echo "WARNING: $mrms is missing"
@@ -195,7 +195,7 @@ if [ $VERIF_CASE = precip ] ; then
       if [ "$SENDMAIL" = "YES" ] ; then
           export subject="MRMS_03h Data Missing for EVS ${COMPONENT}"
           echo "WARNING:  No MRMS_03h data available for ${vday}" > mailmsg
-          echo "All of $DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
+          echo "All of $DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
       fi
@@ -205,7 +205,7 @@ if [ $VERIF_CASE = precip ] ; then
    accum=24
    missing=0
    for vhr in 00 06 12 18 ; do
-      mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
+      mrms=$DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
       if [ ! -s $mrms ] ; then
          missing=$((missing+1))
          echo "WARNING: $mrms is missing"
@@ -220,7 +220,7 @@ if [ $VERIF_CASE = precip ] ; then
       if [ "$SENDMAIL" = "YES" ] ; then
           export subject="MRMS_24h Data Missing for EVS ${COMPONENT}"
           echo "WARNING:  No MRMS_24h data available for ${vday}" > mailmsg
-          echo "All of $DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
+          echo "All of $DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-vhr0000.grib2.gz are missing" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
       fi

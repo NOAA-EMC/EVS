@@ -94,7 +94,7 @@ elif [ ${MODELNAME} = hrrr ]; then
 elif [ ${MODELNAME} = rrfs ]; then
 
    fhr_min=0
-   fhr_max=60
+   fhr_max=84
    fhr_inc=1
 
    export MODEL_INPUT_DIR=${COMINrrfs}

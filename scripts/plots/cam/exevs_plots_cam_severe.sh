@@ -78,9 +78,9 @@ mkdir -p ${RESTART_DIR}/${VERIF_CASE}/${EVAL_PERIOD}
 mkdir -p ${DATA}/out/logs # main log output dir
 
 
-model_list="hrrr rrfs rrfsmem1 rrfsmem2 rrfsmem3 rrfsmem4 rrfsmem5"
+og_model_list="hrrr rrfs rrfsmem1 rrfsmem2 rrfsmem3 rrfsmem4 rrfsmem5"
 
-for model in ${model_list}; do
+for model in ${og_model_list}; do
    n=0
    while [ $n -le $pastdays ]; do
       hrs=$((n*24))
@@ -147,21 +147,35 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
       for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
 	
          if [ "$FCST_INIT_HOUR" = "0,6,12,18" ]; then
-          # export FCST_LEADs="24,30,36,42,48,54,60"
-            export FCST_LEADs="24,36,48,60"
+            export FCST_LEADs="24,36,48,60,72,84"
          elif [ "$FCST_INIT_HOUR" = "0" ]; then
-            export FCST_LEADs="36 60"
+            export FCST_LEADs="36 60 84"
          elif [ "$FCST_INIT_HOUR" = "6" ]; then
-            export FCST_LEADs="30 54"
+            export FCST_LEADs="30 54 78"
          elif [ "$FCST_INIT_HOUR" = "12" ]; then
-            export FCST_LEADs="24 48"
+            export FCST_LEADs="24 48 72"
          elif [ "$FCST_INIT_HOUR" = "18" ]; then
-            export FCST_LEADs="42"
+            export FCST_LEADs="42 66"
          fi
 
          # Loop over forecast initializations
          for FCST_LEAD in ${FCST_LEADs}; do
-	
+            
+            model_list="${og_model_list}"
+            if [ "$FCST_LEAD" -gt 60 ]; then
+               model_list=${model_list/hrrr /}
+               model_list=${model_list/ rrfsmem1/}
+               model_list=${model_list/ rrfsmem2/}
+               model_list=${model_list/ rrfsmem3/}
+               model_list=${model_list/ rrfsmem4/}
+               model_list=${model_list/ rrfsmem5/}
+
+            elif [ "$FCST_LEAD" -gt 48 ]; then
+               model_list=${model_list/hrrr /}
+            fi
+
+            echo "Using models in (${model_list}) for FCST_LEAD=$FCST_LEAD."
+
             echo "${USHevs}/${COMPONENT}/evs_cam_plots_severe.sh $PLOT_TYPE $DOMAIN $LINE_TYPE $FCST_INIT_HOUR $FCST_LEAD $njob" >> $DATA/poescript
             mkdir -p ${DATA}/out/workdirs/job${njob}/logs
             mkdir -p ${DATA}/out/workdirs/job${njob}/${COMPLETED_JOBS_DIR}

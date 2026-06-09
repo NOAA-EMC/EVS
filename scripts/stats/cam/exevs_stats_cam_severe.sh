@@ -79,7 +79,7 @@ elif [ ${MODELNAME} = hrrr ]; then
 
 elif [ ${MODELNAME} = rrfs ]; then
    fhr_min=24
-   fhr_max=60
+   fhr_max=84
    fhr_inc=6
 
 elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then

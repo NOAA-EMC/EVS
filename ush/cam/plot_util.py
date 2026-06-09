@@ -2149,14 +2149,28 @@ def get_ci_file(stat, input_filename, fcst_lead, output_base_dir, ci_method):
    return CI_file          
 
 def equalize_samples(logger, df, group_by):
+
+    # Use adjusted/display columns for equalization if they exist.
+    # Otherwise fall back to the normal columns.
+    if 'EQUALIZE_LEAD_HOURS' not in df:
+        df['EQUALIZE_LEAD_HOURS'] = df['LEAD_HOURS']
+
+    if 'EQUALIZE_VALID' not in df:
+        df['EQUALIZE_VALID'] = df['VALID']
+
+
     # columns that will be used to drop duplicate rows across model groups
     cols_to_check = [
         key for key in [
-            'LEAD_HOURS', 'VALID', 'INIT', 'FCST_THRESH_SYMBOL', 
+            'EQUALIZE_LEAD_HOURS', 'EQUALIZE_VALID', 'FCST_THRESH_SYMBOL', 
             'FCST_THRESH_VALUE', 'OBS_LEV']
         if key in df.keys()
     ]
-    df_groups = df.groupby(group_by)
+    equalize_group_by = [
+        'EQUALIZE_LEAD_HOURS' if g == 'LEAD_HOURS' and 'EQUALIZE_LEAD_HOURS' in df 
+        else g for g in group_by
+    ]
+    df_groups = df.groupby(equalize_group_by)
     indexes = []
     # List all of the independent variables that are found in the data
     unique_indep_vars = np.unique(np.array(list(df_groups.groups.keys())).T[1])
@@ -2186,21 +2200,27 @@ def equalize_samples(logger, df, group_by):
         # Get all the indices for rows in each group that match the merged df
         for dfs_i in dfs:
             for idx, row in dfs_i.iterrows():
-                if (
-                        row.to_numpy()[1:].tolist() 
-                        in match_these.to_numpy()[:,1:].tolist()):
+                if row.to_numpy().tolist() in match_these.to_numpy().tolist():
                     indexes.append(idx)
     # Select the matched rows by index among the rows in the original DataFrame
     df_equalized = df.loc[indexes]
+
     # Remove duplicates again, this time among both the columns 
     # in cols_to_check and the 'MODEL' column, which avoids, say, models with
     # repeated data from multiple entities
+    original_cols_to_check = [
+        key for key in [
+            'LEAD_HOURS', 'VALID', 'FCST_THRESH_SYMBOL', 'FCST_THRESH_VALUE', 
+            'OBS_LEV'
+        ]
+        if key in df.keys()
+    ]
     df_equalized = df_equalized.loc[
-        df_equalized[cols_to_check+['MODEL']].drop_duplicates().index
+        df_equalized[original_cols_to_check+['MODEL']].drop_duplicates().index
     ]
     # Remove duplicates again, this time among both the columns 
     # Regroup the data and move forward with these groups!
-    df_equalized_groups = df_equalized.groupby(group_by)
+    df_equalized_groups = df_equalized.groupby(equalize_group_by)
     # Check that groups are indeed equally sized for each independent variable
     df_groups_sizes = df_equalized_groups.size()
     if df_groups_sizes.size > 0:

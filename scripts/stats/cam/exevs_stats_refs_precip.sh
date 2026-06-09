@@ -36,7 +36,7 @@ export verify='precip'
 export COMREFS=$COMINrefs
 export COMCCPA=$COMINccpa
 export COMSNOW=$DCOMINnohrsc
-export COMMRMS=$DCOMINmrms
+export COMMRMS=$DCOMINmrms/alaska/MultiSensorQPE
 
 export PRECIP_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/precip
 export SNOWFALL_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/snowfall

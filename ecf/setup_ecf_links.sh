@@ -73,13 +73,10 @@ cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_stats_cam_rrfs_snowfall_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_stats_cam_rrfsmem_snowfall_vhr" "$cyc"
-# MESOSCALE files
-cd $ECF_DIR/scripts/stats/mesoscale
-echo "Linking MESOSCALE stats ..."
 cyc=$(seq 0 23)
-link_master_to_cyc "jevs_stats_mesoscale_rap_precip_vhr" "$cyc"
+link_master_to_cyc "jevs_stats_cam_rap_precip_vhr" "$cyc"
 cyc=$(seq 0 6 23)
-link_master_to_cyc "jevs_stats_mesoscale_rap_snowfall_vhr" "$cyc"
+link_master_to_cyc "jevs_stats_cam_rap_snowfall_vhr" "$cyc"
 
 # AQM files
 cd $ECF_DIR/scripts/stats/aqm
