@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 prune_stat_files.py
-CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov; Mallory Row
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
 ----------------------
 Prunes MET .stat files for specific plotting jobs in the cam component.
 
@@ -78,7 +78,7 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
          met_stat_files = expand_met_stat_files(
             met_stat_files, data_dir, output_base_template, RUN_case, RUN_type, 
             line_type, vx_mask, var_name, model, eval_period, valid
-         ) 
+         )
       pruned_data_dir = os.path.join(
          prune_dir, line_type+'_'+var_name+'_'+vx_mask+'_'+eval_period, tmp_dir
       )
@@ -123,7 +123,5 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
          with open(pruned_met_stat_file, 'w') as pmsf:
             pmsf.write(met_header_cols+all_grep_output)
       except OSError:
-         #print(met_header_cols)
-         #print(all_grep_output)
          raise
    print("END: "+os.path.basename(__file__))

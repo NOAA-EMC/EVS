@@ -81,24 +81,32 @@ export GAUSS_RAD=120
 ############################################################
 # Check for SPC report file to process or exit gracefully
 ############################################################
+spc_reports_file=$DCOMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv
 
-if [ -s $DCOMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv ]; then
+if [ -s $spc_reports_file ]; then
 
-   mkdir -p $COMOUTlsr
+   nlines=$(wc -l < $spc_reports_file)
 
-   # Run METplus
-   ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/Point2Grid_obsSPC_PracticallyPerfect.conf
-   export err=$?; err_chk
-
-
-   # Copy output to $COMOUT
-   if [ $SENDCOM = YES ]; then
+   if [ "$nlines" -gt 3 ]; then
       mkdir -p $COMOUTlsr
-      for FILE in $DATA/point2grid/*; do
-         if [ -s "$FILE" ]; then
-            cp -v $FILE $COMOUTlsr
-         fi
-      done
+
+      # Run METplus
+      ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/Point2Grid_obsSPC_PracticallyPerfect.conf
+      export err=$?; err_chk
+
+
+      # Copy output to $COMOUT
+      if [ $SENDCOM = YES ]; then
+         mkdir -p $COMOUTlsr
+         for FILE in $DATA/point2grid/*; do
+            if [ -s "$FILE" ]; then
+               cp -v $FILE $COMOUTlsr
+            fi
+         done
+      fi
+
+   else
+      echo "No reports in $spc_reports_file"
    fi
 
 else

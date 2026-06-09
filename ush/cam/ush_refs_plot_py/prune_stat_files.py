@@ -2,7 +2,7 @@
 
 '''
 Program Name: prune_stat_files.py
-Contact(s): Marcel Caron, Mallory Row
+Contact(s): Marcel Caron
 Abstract: This script is run by all scripts in EMC_verif-global/scripts/.
           This prunes the MET .stat files for the
           specific plotting job to help decrease

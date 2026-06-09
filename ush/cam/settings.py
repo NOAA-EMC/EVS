@@ -386,6 +386,10 @@ class ModelSpecs():
                 'settings_key':'RAP', 
                 'plot_name':'RAP'
             },
+            'rap': {
+                'settings_key':'RAP',
+                'plot_name':'RAP',
+            },
             'rrfs': {
                 'settings_key':'RRFS', 
                 'plot_name':'RRFS'
@@ -506,6 +510,9 @@ class ModelSpecs():
             'HREFX_MEAN': {'color': '#000000',
                      'marker': 'P', 'markersize': 11,
                      'linestyle': 'dashed', 'linewidth': 1.8},
+            'RAP': {'color': '#8400c8',
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HRRR': {'color': '#fb2020',
                      'marker': 'o', 'markersize': 10,
                      'linestyle': 'solid', 'linewidth': 1.8},
@@ -682,14 +689,18 @@ class Reference():
                                     'SOILW': ('Volumetric Soil Moisture'
                                               + ' Content'),
                                     'WEASD': 'Accum. Snow Depth Water Equiv.',
+                                    'WEASD_A06': ('6-hour Accum. Snow Depth'
+                                                + ' Water Equiv.'),
                                     'WEASD_06': ('6-hour Accum. Snow Depth'
                                                 + ' Water Equiv.'),
                                     'WEASD_24': ('24-hour Accum. Snow Depth'
                                                 + ' Water Equiv.'),
                                     'SNOD': 'Accum. Snow Depth',
+                                    'SNOD_A06': ('6-hour Accum. Snow Depth'),
                                     'SNOD_06': ('6-hour Accum. Snow Depth'),
                                     'SNOD_24': ('24-hour Accum. Snow Depth'),
                                     'ASNOW': 'Accumulated Snowfall',
+                                    'ASNOW_A06': ('6-hour Accumulated Snowfall'),
                                     'ASNOW_06': ('6-hour Accumulated Snowfall'),
                                     'ASNOW_24': ('24-hour Accumulated Snowfall'),
                                     'APCP': ('Accumulated'
@@ -3601,7 +3612,7 @@ class Reference():
                         'CONUS_South', 'Alaska', 
                     ],
                     'var_dict': {
-                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06'],
+                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06', 'WEASD_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3616,7 +3627,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24'],
+                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24', 'WEASD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3631,7 +3642,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06'],
+                        'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06', 'SNOD_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3646,7 +3657,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24'],
+                        'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24', 'SNOD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3704,7 +3715,7 @@ class Reference():
                         'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
-                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06'],
+                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06', 'WEASD_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3719,7 +3730,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24'],
+                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24', 'WEASD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3734,7 +3745,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06'],
+                        'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06', 'SNOD_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3749,7 +3760,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24'],
+                        'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24', 'SNOD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'

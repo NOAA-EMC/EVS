@@ -71,7 +71,7 @@ if [ $VERIF_CASE = grid2obs ] ; then
    if [ "${RUN}" == "chem" ]; then
        export INITDATE=${INITDATE:-${PDYm3}}
    else
-       export VDATE=${VDATE:-$PDYm1}
+       export INITDATE=${INITDATE:-$PDYm1}
    fi
 
 elif [ $VERIF_CASE = precip ] ; then
