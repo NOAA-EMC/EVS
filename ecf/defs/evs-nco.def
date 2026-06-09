@@ -2043,13 +2043,13 @@ suite evs_nco
             task jevs_plots_global_det_atmos_grid2grid_precip_last90days
               trigger (:TIME >= 2015 or :TIME < 0215) and ../../stats/global_det/jevs_stats_global_det_cmc_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_cmc_regional_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_dwd_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_ecmwf_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_gfs_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_jma_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_metfra_atmos_grid2grid == complete
             task jevs_plots_global_det_atmos_ai_grid2obs_sfc_last90days
-              trigger (:TIME >= 2015 or :TIME < 0215) and ../../stats/global_det/jevs_stats_global_det_gfs_atmos_grid2obs == complete and ../../stats/global_det/jevs_stats_global_det_aigfs_atmos_grid2obs == complete
+              trigger (:TIME >= 2130 or :TIME < 0215) and ../../stats/global_det/jevs_stats_global_det_gfs_atmos_grid2obs == complete and ../../stats/global_det/jevs_stats_global_det_aigfs_atmos_grid2obs == complete
             task jevs_plots_global_det_atmos_ai_grid2grid_pres_levs_last90days
-              trigger (:TIME >= 2015 or :TIME < 0215) and ../../stats/global_det/jevs_stats_global_det_ecmwf_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_gfs_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_aigfs_atmos_grid2grid == complete
+              trigger (:TIME >= 2045 or :TIME < 0215) and ../../stats/global_det/jevs_stats_global_det_ecmwf_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_gfs_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_aigfs_atmos_grid2grid == complete
             task jevs_plots_global_det_atmos_ai_grid2obs_pres_levs_last90days
-              trigger (:TIME >= 2015 or :TIME < 0215) and ../../stats/global_det/jevs_stats_global_det_ecmwf_atmos_grid2obs == complete and ../../stats/global_det/jevs_stats_global_det_gfs_atmos_grid2obs == complete and ../../stats/global_det/jevs_stats_global_det_aigfs_atmos_grid2obs == complete
+              trigger (:TIME >= 2100 or :TIME < 0215) and ../../stats/global_det/jevs_stats_global_det_ecmwf_atmos_grid2obs == complete and ../../stats/global_det/jevs_stats_global_det_gfs_atmos_grid2obs == complete and ../../stats/global_det/jevs_stats_global_det_aigfs_atmos_grid2obs == complete
             task jevs_plots_global_det_atmos_ai_grid2grid_precip_last90days
-              trigger (:TIME >= 2015 or :TIME < 0215) and ../../stats/global_det/jevs_stats_global_det_ecmwf_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_gfs_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_aigfs_atmos_grid2grid == complete
+              trigger (:TIME >= 2030 or :TIME < 0215) and ../../stats/global_det/jevs_stats_global_det_ecmwf_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_gfs_atmos_grid2grid == complete and ../../stats/global_det/jevs_stats_global_det_aigfs_atmos_grid2grid == complete
           endfamily
           family cam
             task jevs_plots_cam_precip_last90days
