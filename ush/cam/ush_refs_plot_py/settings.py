@@ -103,71 +103,33 @@ class Presets():
         the online documentation to learn how to use these libraries.
         '''
         self.date_presets = {
-            'last31days': {
-                'valid_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
             'last90days': {
-                'valid_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
+                'valid_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
+                ).strftime('%Y%m%d'),
+                'valid_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d'),
+                'init_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
+                    ).strftime('%Y%m%d'),
+                'init_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d')
             },
-            'PAST30DAYS': {
-                'valid_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
-            'PAST7DAYS': {
-                'valid_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
-            'PAST3DAYS': {
-                'valid_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
-            '2020': {
-                'valid_beg': '20200101',
-                'valid_end': '20201231',
-                'init_beg': '20200101',
-                'init_end': '20201231'
-            },
-            '2021': {
-                'valid_beg': '20210101',
-                'valid_end': '20211231',
-                'init_beg': '20210101',
-                'init_end': '20211231'
-            },
-            'DJF': {
-                'valid_beg': (datetime.now()-td(days=365)).strftime('%Y1201'),
-                'valid_end': datetime.now().strftime('%Y0228'),
-                'init_beg': (datetime.now()-td(days=365)).strftime('%Y1201'),
-                'init_end': datetime.now().strftime('%Y0228')
-            },
-            'MAM': {
-                'valid_beg': datetime.now().strftime('%Y0301'),
-                'valid_end': datetime.now().strftime('%Y0531'),
-                'init_beg': datetime.now().strftime('%Y0301'),
-                'init_end': datetime.now().strftime('%Y0531')
-            },
-            'JJA': {
-                'valid_beg': datetime.now().strftime('%Y0601'),
-                'valid_end': datetime.now().strftime('%Y0831'),
-                'init_beg': datetime.now().strftime('%Y0601'),
-                'init_end': datetime.now().strftime('%Y0831')
-            },
-            'SON': {
-                'valid_beg': datetime.now().strftime('%Y0901'),
-                'valid_end': datetime.now().strftime('%Y1130'),
-                'init_beg': datetime.now().strftime('%Y0901'),
-                'init_end': datetime.now().strftime('%Y1130')
+            'last31days': {
+                'valid_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
+                ).strftime('%Y%m%d'),
+                'valid_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d'),
+                'init_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
+                    ).strftime('%Y%m%d'),
+                'init_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d')
             }
         }
             
