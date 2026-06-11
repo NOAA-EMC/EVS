@@ -872,25 +872,29 @@ def calculate_stat(logger, model_data, stat):
         elif stat == 'baser':
             stat_plot_name = 'Base Rate'
         if line_type == 'CTC':
-            stat_values = (fy_oy + fn_oy)/total
+            n = fy_oy + fy_on + fn_oy + fn_on
+            stat_values = (fy_oy + fn_oy)/n
     elif stat == 'frate':
         stat_plot_name = 'Forecast Rate'
         if line_type == 'CTC':
-            stat_values = (fy_oy + fy_on)/total
+            n = fy_oy + fy_on + fn_oy + fn_on
+            stat_values = (fy_oy + fy_on)/n
     elif stat == 'orate_frate' or stat == 'baser_frate':
         if stat == 'orate_frate':
             stat_plot_name = 'Observation and Forecast Rates'
         elif stat == 'baser_frate':
             stat_plot_name = 'Base and Forecast Rates'
         if line_type == 'CTC':
-            stat_values_fbar = (fy_oy + fy_on)/total
-            stat_values_obar = (fy_oy + fn_oy)/total
+            n = fy_oy + fy_on + fn_oy + fn_on
+            stat_values_fbar = (fy_oy + fy_on)/n
+            stat_values_obar = (fy_oy + fn_oy)/n
             stat_values = pd.concat([stat_values_fbar, stat_values_obar],
                                     axis=1)
     elif stat == 'accuracy':
         stat_plot_name = 'Accuracy'
         if line_type == 'CTC':
-            stat_values = (fy_oy + fn_on)/total
+            n = fy_oy + fy_on + fn_oy + fn_on
+            stat_values = (fy_oy + fn_on)/n
     elif stat == 'fbias':
         stat_plot_name = 'Frequency Bias'
         if line_type == 'CTC':
@@ -930,7 +934,8 @@ def calculate_stat(logger, model_data, stat):
         elif stat == 'ets':
             stat_plot_name = 'Equitable Threat Score'
         if line_type == 'CTC':
-            C = ((fy_oy + fy_on)*(fy_oy + fn_oy))/total
+            n = fy_oy + fy_on + fn_oy + fn_on
+            C = ((fy_oy + fy_on)*(fy_oy + fn_oy))/n
             stat_values = (fy_oy - C)/(fy_oy + fy_on+ fn_oy - C)
     elif stat == 'hk' or stat == 'tss' or stat == 'pss':
         if stat == 'hk':
@@ -946,10 +951,11 @@ def calculate_stat(logger, model_data, stat):
     elif stat == 'hss':
         stat_plot_name = 'Heidke Skill Score'
         if line_type == 'CTC':
+            n = fy_oy + fy_on + fn_oy + fn_on
             Ca = (fy_oy+fy_on)*(fy_oy+fn_oy)
             Cb = (fn_oy+fn_on)*(fy_on+fn_on)
-            C = (Ca + Cb)/total
-            stat_values = (fy_oy + fn_on - C)/(total - C)
+            C = (Ca + Cb)/n
+            stat_values = (fy_oy + fn_on - C)/(n - C)
     else:
         logger.error(stat+" is not a valid option")
         exit(1)

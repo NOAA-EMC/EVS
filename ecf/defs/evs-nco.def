@@ -803,55 +803,55 @@ suite evs_nco
               trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '06'
             task jevs_stats_cam_refs_radar_vhr_07
-              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_07 == complete
               edit VHR '07'
             task jevs_stats_cam_refs_radar_vhr_08
-              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_08 == complete
               edit VHR '08'
             task jevs_stats_cam_refs_radar_vhr_09
-              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_09 == complete
               edit VHR '09'
             task jevs_stats_cam_refs_radar_vhr_10
-              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_10 == complete
               edit VHR '10'
             task jevs_stats_cam_refs_radar_vhr_11
-              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_11 == complete
               edit VHR '11'
             task jevs_stats_cam_hrrr_radar_vhr_06
               trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '06'
             task jevs_stats_cam_hrrr_radar_vhr_07
-              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_07 == complete
               edit VHR '07'
             task jevs_stats_cam_hrrr_radar_vhr_08
-              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_08 == complete
               edit VHR '08'
             task jevs_stats_cam_hrrr_radar_vhr_09
-              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_09 == complete
               edit VHR '09'
             task jevs_stats_cam_hrrr_radar_vhr_10
-              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_10 == complete
               edit VHR '10'
             task jevs_stats_cam_hrrr_radar_vhr_11
-              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_11 == complete
               edit VHR '11'
             task jevs_stats_cam_rrfs_radar_vhr_06
               trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
               edit VHR '06'
             task jevs_stats_cam_rrfs_radar_vhr_07
-              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_07 == complete
               edit VHR '07'
             task jevs_stats_cam_rrfs_radar_vhr_08
-              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_08 == complete
               edit VHR '08'
             task jevs_stats_cam_rrfs_radar_vhr_09
-              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_09 == complete
               edit VHR '09'
             task jevs_stats_cam_rrfs_radar_vhr_10
-              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_10 == complete
               edit VHR '10'
             task jevs_stats_cam_rrfs_radar_vhr_11
-              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_11 == complete
               edit VHR '11'
             task jevs_stats_cam_rrfsmem_radar_vhr_06_mem_1
               trigger :TIME >= 0640 and :TIME < 1240 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
@@ -874,103 +874,103 @@ suite evs_nco
               edit VHR '06'
               edit MEM '5'
             task jevs_stats_cam_rrfsmem_radar_vhr_07_mem_1
-              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_07 == complete
               edit VHR '07'
               edit MEM '1'
             task jevs_stats_cam_rrfsmem_radar_vhr_07_mem_2
-              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_07 == complete
               edit VHR '07'
               edit MEM '2'
             task jevs_stats_cam_rrfsmem_radar_vhr_07_mem_3
-              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_07 == complete
               edit VHR '07'
               edit MEM '3'
             task jevs_stats_cam_rrfsmem_radar_vhr_07_mem_4
-              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_07 == complete
               edit VHR '07'
               edit MEM '4'
             task jevs_stats_cam_rrfsmem_radar_vhr_07_mem_5
-              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0740 and :TIME < 1340 and ../../prep/cam/jevs_prep_cam_radar_vhr_07 == complete
               edit VHR '07'
               edit MEM '5'
             task jevs_stats_cam_rrfsmem_radar_vhr_08_mem_1
-              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_08 == complete
               edit VHR '08'
               edit MEM '1'
             task jevs_stats_cam_rrfsmem_radar_vhr_08_mem_2
-              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_08 == complete
               edit VHR '08'
               edit MEM '2'
             task jevs_stats_cam_rrfsmem_radar_vhr_08_mem_3
-              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_08 == complete
               edit VHR '08'
               edit MEM '3'
             task jevs_stats_cam_rrfsmem_radar_vhr_08_mem_4
-              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_08 == complete
               edit VHR '08'
               edit MEM '4'
             task jevs_stats_cam_rrfsmem_radar_vhr_08_mem_5
-              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0840 and :TIME < 1440 and ../../prep/cam/jevs_prep_cam_radar_vhr_08 == complete
               edit VHR '08'
               edit MEM '5'
             task jevs_stats_cam_rrfsmem_radar_vhr_09_mem_1
-              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_09 == complete
               edit VHR '09'
               edit MEM '1'
             task jevs_stats_cam_rrfsmem_radar_vhr_09_mem_2
-              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_09 == complete
               edit VHR '09'
               edit MEM '2'
             task jevs_stats_cam_rrfsmem_radar_vhr_09_mem_3
-              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_09 == complete
               edit VHR '09'
               edit MEM '3'
             task jevs_stats_cam_rrfsmem_radar_vhr_09_mem_4
-              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_09 == complete
               edit VHR '09'
               edit MEM '4'
             task jevs_stats_cam_rrfsmem_radar_vhr_09_mem_5
-              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 0940 and :TIME < 1540 and ../../prep/cam/jevs_prep_cam_radar_vhr_09 == complete
               edit VHR '09'
               edit MEM '5'
             task jevs_stats_cam_rrfsmem_radar_vhr_10_mem_1
-              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_10 == complete
               edit VHR '10'
               edit MEM '1'
             task jevs_stats_cam_rrfsmem_radar_vhr_10_mem_2
-              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_10 == complete
               edit VHR '10'
               edit MEM '2'
             task jevs_stats_cam_rrfsmem_radar_vhr_10_mem_3
-              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_10 == complete
               edit VHR '10'
               edit MEM '3'
             task jevs_stats_cam_rrfsmem_radar_vhr_10_mem_4
-              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_10 == complete
               edit VHR '10'
               edit MEM '4'
             task jevs_stats_cam_rrfsmem_radar_vhr_10_mem_5
-              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1040 and :TIME < 1640 and ../../prep/cam/jevs_prep_cam_radar_vhr_10 == complete
               edit VHR '10'
               edit MEM '5'
             task jevs_stats_cam_rrfsmem_radar_vhr_11_mem_1
-              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_11 == complete
               edit VHR '11'
               edit MEM '1'
             task jevs_stats_cam_rrfsmem_radar_vhr_11_mem_2
-              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_11 == complete
               edit VHR '11'
               edit MEM '2'
             task jevs_stats_cam_rrfsmem_radar_vhr_11_mem_3
-              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_11 == complete
               edit VHR '11'
               edit MEM '3'
             task jevs_stats_cam_rrfsmem_radar_vhr_11_mem_4
-              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_11 == complete
               edit VHR '11'
               edit MEM '4'
             task jevs_stats_cam_rrfsmem_radar_vhr_11_mem_5
-              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_06 == complete
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../prep/cam/jevs_prep_cam_radar_vhr_11 == complete
               edit VHR '11'
               edit MEM '5'
             task jevs_stats_cam_hrrr_snowfall_vhr_06
