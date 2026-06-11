@@ -17,7 +17,6 @@ export SENDECF=YES
 export SENDCOM=YES
 export KEEPDATA=NO
 export SENDDBN=NO
-export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_prep_cam_rrfsmem_precip}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
@@ -35,7 +34,6 @@ export MODELNAME="rrfsmem${mem}"
 
 # EVS Settings
 export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.rrfsmem
 
 # Load Modules

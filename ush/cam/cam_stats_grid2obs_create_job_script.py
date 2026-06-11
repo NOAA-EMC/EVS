@@ -103,7 +103,6 @@ elif job_type == 'generate':
             MODEL_INPUT_TEMPLATE=NEST_INPUT_TEMPLATE, DATA=DATA,
             VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
             VHOUR=VHOUR, FHR=FHR, ACC=None, FCST_VAR_NAME=None)
-        print(f"firewx_avail: {firewx_avail}")
     elif NEST == 'spc_otlk':
         EVSINspcotlk = os.environ['EVSINspcotlk']
     njob = os.environ['njob']
@@ -365,9 +364,7 @@ elif STEP == 'stats':
         if FCST_VAR2_NAME:
             if NEST == 'firewx':
                 if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                    print(f"obs_avail: {obs_avail}\nfcst_avail: {fcst_avail}\nfirewx_avail: {firewx_avail}")
                     if obs_avail and fcst_avail and firewx_avail:
-                        print("GOING IN!")
                         job_cmd_list_iterative.append(
                             f'{metplus_launcher} -c {machine_conf} '
                             + f'-c {MET_PLUS_CONF}/'
@@ -521,9 +518,7 @@ elif STEP == 'stats':
             if NEST == 'firewx':
                 if VAR_NAME == 'PTYPE':
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                        print(f"obs_avail: {obs_avail}\nfcst_avail: {fcst_avail}\nfirewx_avail: {firewx_avail}")
                         if obs_avail and fcst_avail and firewx_avail:
-                            print("GOING IN! (2)")
                             job_cmd_list_iterative.append(
                                 f'{metplus_launcher} -c {machine_conf} '
                                 + f'-c {MET_PLUS_CONF}/'
@@ -620,9 +615,7 @@ elif STEP == 'stats':
                             )
                 else:
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                        print(f"obs_avail: {obs_avail}\nfcst_avail: {fcst_avail}\nfirewx_avail: {firewx_avail}")
                         if obs_avail and fcst_avail and firewx_avail:
-                            print("GOING IN! (2.5)")
                             job_cmd_list_iterative.append(
                                 f'{metplus_launcher} -c {machine_conf} '
                                 + f'-c {MET_PLUS_CONF}/'

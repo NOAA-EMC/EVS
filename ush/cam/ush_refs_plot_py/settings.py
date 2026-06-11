@@ -25,7 +25,6 @@ class Toggle():
             'bs_min_samp': 30, # Minimum number of samples allowed for boostrapping to performed (if there are fewer samples, no confidence intervals)
             'display_averages': False, # display mean statistic for each model, averaged across the dimension of the independent variable
             'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
-            #'sample_equalization': False, # just for SREF-GEFS comparison! 
             'keep_shared_events_only': False, # functional for time_series only.
             'clear_prune_directory': False, # remove the intermediate directory created to store pruned data files temporarily
             'plot_logo_left': True,
@@ -33,7 +32,6 @@ class Toggle():
             'zoom_logo_left': 1.0, 
             'zoom_logo_right': 1.0,
             'delete_intermed_data': True 
-            #'delete_intermed_data': False # Just for SREF/GEFS comparison since they have different lead times. whether or not to delete DataFrame rows if, for any model, rows include NaN (currently only used in lead_average.py)
         }
 
 class Templates():
@@ -103,71 +101,33 @@ class Presets():
         the online documentation to learn how to use these libraries.
         '''
         self.date_presets = {
-            'last31days': {
-                'valid_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
             'last90days': {
-                'valid_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
+                'valid_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
+                ).strftime('%Y%m%d'),
+                'valid_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d'),
+                'init_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
+                    ).strftime('%Y%m%d'),
+                'init_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d')
             },
-            'PAST30DAYS': {
-                'valid_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
-            'PAST7DAYS': {
-                'valid_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
-            'PAST3DAYS': {
-                'valid_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
-            '2020': {
-                'valid_beg': '20200101',
-                'valid_end': '20201231',
-                'init_beg': '20200101',
-                'init_end': '20201231'
-            },
-            '2021': {
-                'valid_beg': '20210101',
-                'valid_end': '20211231',
-                'init_beg': '20210101',
-                'init_end': '20211231'
-            },
-            'DJF': {
-                'valid_beg': (datetime.now()-td(days=365)).strftime('%Y1201'),
-                'valid_end': datetime.now().strftime('%Y0228'),
-                'init_beg': (datetime.now()-td(days=365)).strftime('%Y1201'),
-                'init_end': datetime.now().strftime('%Y0228')
-            },
-            'MAM': {
-                'valid_beg': datetime.now().strftime('%Y0301'),
-                'valid_end': datetime.now().strftime('%Y0531'),
-                'init_beg': datetime.now().strftime('%Y0301'),
-                'init_end': datetime.now().strftime('%Y0531')
-            },
-            'JJA': {
-                'valid_beg': datetime.now().strftime('%Y0601'),
-                'valid_end': datetime.now().strftime('%Y0831'),
-                'init_beg': datetime.now().strftime('%Y0601'),
-                'init_end': datetime.now().strftime('%Y0831')
-            },
-            'SON': {
-                'valid_beg': datetime.now().strftime('%Y0901'),
-                'valid_end': datetime.now().strftime('%Y1130'),
-                'init_beg': datetime.now().strftime('%Y0901'),
-                'init_end': datetime.now().strftime('%Y1130')
+            'last31days': {
+                'valid_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
+                ).strftime('%Y%m%d'),
+                'valid_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d'),
+                'init_beg': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
+                    ).strftime('%Y%m%d'),
+                'init_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
+                ).strftime('%Y%m%d')
             }
         }
             
@@ -184,74 +144,6 @@ class ModelSpecs():
         be defined here as aliases of the same model settings, if desired.
         '''
         self.model_alias = {
-            'ARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'ARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'FV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'NMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'AKARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'AKARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'AKFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'AKNEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'AKNMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'CONUSARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'CONUSARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'CONUSFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'CONUSNEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'CONUSNMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'hireswarw': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'hireswarwmem2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'hireswfv3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
             'REFS_MEAN':{
                 'settings_key':'REFS_MEAN', 
                 'plot_name':'REFS Mean'
@@ -372,174 +264,10 @@ class ModelSpecs():
                 'settings_key':'REFSX_MEAN', 
                 'plot_name':'REFS-X Mean'
             },
-            'NARRE_MEAN':{
-                'settings_key':'NARRE_MEAN', 
-                'plot_name':'NARRE Mean'
-            },
-            'HIARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'HIARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'HIFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'HINMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'HAWAIINEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'PRARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'PRARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'PRFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'PRNMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'PRICONEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'FV3LAMDA': {
-                'settings_key':'LAMDA', 
-                'plot_name':'FV3LAM-DA'
-            },
-            'FV3LAMDAX': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAMDAXAK': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAMDAXHI': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAMDAXNA': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAMDAXPR': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAM': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMAK': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMHI': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMNA': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMPR': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMX': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'FV3LAMXAK': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'FV3LAMXHI': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'FV3LAMXNA': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'FV3LAMXPR': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'NAM_NEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'NAM_FIREWXNEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Fire Wx Nest'
-            },
-            'namnest': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'HRRRAK': {
-                'settings_key':'HRRR', 
-                'plot_name':'HRRR'
-            },
             'hrrr': {
                 'settings_key':'HRRR', 
                 'plot_name':'HRRR'
             },
-            'NAMNA': {
-                'settings_key':'NAM', 
-                'plot_name':'NAM'
-            },
-            'RAPAK': {
-                'settings_key':'RAP', 
-                'plot_name':'RAP'
-            },
-            'RAPNA': {
-                'settings_key':'RAP', 
-                'plot_name':'RAP'
-            },
-            'RRFS_A': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A'
-            },
-            'RRFS_A_AK': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Alaska'
-            },
-            'RRFS_A_PR': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Puerto Rico'
-            },
-            'RRFS_A_HI': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Hawaii'
-            },
-            'RRFS_A_CONUS': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A CONUS'
-            },
-            'RRFS_A_NACONUS': {
-                'settings_key':'RRFS_A_NA', 
-                'plot_name':'RRFS-A N. America'
-            },
-            'wafs': {
-                'settings_key':'WAFS', 
-                'plot_name':'WAFS'
-            }
         }
 
         '''
@@ -587,33 +315,6 @@ class ModelSpecs():
             'obs': {'color': '#aaaaaa',
                     'marker': 'None', 'markersize': 0,
                     'linestyle': 'solid', 'linewidth': 4.},
-            'LAM': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 12,
-                      'linestyle': 'solid', 'linewidth': 3.},
-            'LAMDA': {'color': '#8400c8',
-                      'marker': 'o', 'markersize': 12,
-                      'linestyle': 'solid', 'linewidth': 3.},
-            'LAMX': {'color': '#00dc00',
-                       'marker': 'P', 'markersize': 14,
-                       'linestyle': 'dashed', 'linewidth': 3.},
-            'LAMDAX': {'color': '#8400c8',
-                       'marker': 'P', 'markersize': 14,
-                       'linestyle': 'dashed', 'linewidth': 3.},
-            'HWRF': {'color': '#00dc00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'HMON': {'color': '#8400c8',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'HRW_ARW': {'color': '#00dc00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'HRW_ARW2': {'color': '#e69f00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'HRW_FV3': {'color': '#56b4e9',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
             'REFS_MEAN': {'color': '#000000',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
@@ -630,54 +331,6 @@ class ModelSpecs():
                      'marker': 'P', 'markersize': 14,
                      'linestyle': 'dashed', 'linewidth': 3.},
             'HRRR': {'color': '#fb2020',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'NAM': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'NAM_NEST': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'RRFS_A': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 12,
-                      'linestyle': 'solid', 'linewidth': 3.},
-            'RRFS_A_NA': {'color': '#00dc00',
-                      'marker': 'P', 'markersize': 14,
-                      'linestyle': 'dashed', 'linewidth': 3.},
-            'GFS': {'color': '#000000',
-                    'marker': 'o', 'markersize': 12,
-                    'linestyle': 'solid', 'linewidth': 5.},
-            'GFS_DASHED': {'color': '#000000',
-                           'marker': 'o', 'markersize': 12,
-                           'linestyle': 'dashed', 'linewidth': 5.},
-            'GEFS': {'color': '#000000',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
-            'CMCE': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
-            'ECME': {'color': '#fb2020',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
-            'SREF': {'color': '#fb2020',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
-            'NAEFS': {'color': '#7f00ff',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
-            'NARRE_MEAN': {'color': '#000000',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
-            'EC': {'color': '#fb2020',
-                   'marker': 'o', 'markersize': 12,
-                   'linestyle': 'solid', 'linewidth': 3.},
-            'CMC': {'color': '#1e3cff',
-                    'marker': 'o', 'markersize': 12,
-                    'linestyle': 'solid', 'linewidth': 3.},
-            'CTCX': {'color': '#56b4e9',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'OFCL': {'color': '#696969',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.}
         }    
