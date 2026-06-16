@@ -40,19 +40,19 @@ export SENDMAIL=YES
 
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
-export jobid=$job.${PBS_JOBID:-$$}
-
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 
-export vhr
+export vhr=${vhr:-00}
 echo $vhr
 export envir=prod
 
 export MODELNAME=urma
 export modsys=urma
 export mod_ver=${urma_ver}
+
+export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
+export jobid=$job.${PBS_JOBID:-$$}
 
 export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
 
