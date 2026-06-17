@@ -163,7 +163,6 @@ fi
 # Check for forecast files to process
 ###################################################################
 k=0
-min_file_req=6
 
 while [ $k -lt $nloop ]; do
 
@@ -269,25 +268,29 @@ i=1
    ###################################################################
    # Run METplus if all forecast files exist or exit gracefully
    ###################################################################
-
+    
+   if [ "$fhr_end" -gt 54 ]; then
+      export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6"
+      export nmem="6"
+      export min_file_req=6
+      export ens_thresh="1.0"
+   elif [ "$fhr_end" -gt 48 ]; then
+      export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13"
+      export nmem="12"
+      export min_file_req=12
+      export ens_thresh="1.0"
+   elif [ "$fhr_end" -gt 42 ]; then
+      export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13"
+      export nmem="13"
+      export min_file_req=12
+      export ens_thresh="0.92"
+   else
+      export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13, $mem14"
+      export nmem="14"
+      export min_file_req=12
+      export ens_thresh="0.85"
+   fi
    if [ $nfiles -ge $min_file_req ]; then
-      if [ "$nfiles" -eq "6" ]; then
-         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6"
-         export nmem="6"
-         export ens_thresh="1.0"
-      elif [ "$nfiles" -eq "12" ]; then
-         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13"
-         export nmem="12"
-         export ens_thresh="1.0"
-      elif [ "$nfiles" -eq "13" ]; then
-         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13"
-         export nmem="13"
-         export ens_thresh="0.92"
-      else
-         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10, $mem11, $mem12, $mem13, $mem14"
-         export nmem="14"
-         export ens_thresh="0.85"
-      fi
       echo "Found $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${INITDATE} cycle at F${fhr_end}"
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GenEnsProd_fcstREFS_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
