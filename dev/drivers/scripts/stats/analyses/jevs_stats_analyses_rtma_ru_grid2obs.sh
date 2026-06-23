@@ -54,7 +54,7 @@ export MODELNAME=rtma_ru
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export MAILTO="alicia.bentley@noaa.gov,andrew.benjamin@noaa.gov"
+export MAILTO=${MAILTO:-'mallory.row@noaa.gov,samira.ardani@noaa.gov'}
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_STATS_ANALYSES
