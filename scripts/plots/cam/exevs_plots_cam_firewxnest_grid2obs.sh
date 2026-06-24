@@ -264,7 +264,7 @@ do
         fi
 done
 
-for varb in PBL
+for varb in HPBL
 do
 	mkdir -p $COMOUTplots/$varb
 	export var=${varb}
