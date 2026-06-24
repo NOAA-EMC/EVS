@@ -21,9 +21,27 @@ fi
 
 echo "REQUESTED LIST OF VALID HOURS: $VHOUR_LIST"
 NEW_VHOUR_LIST=""
-if [ $vhr -ge 0 ] && [ $vhr -le 11 ]; then
+if [ $vhr -ge 0 ] && [ $vhr -le 2 ]; then
     for VHOUR in $VHOUR_LIST; do
-        if [ $VHOUR -ge 0 ] && [ $VHOUR -le 11 ]; then
+        if [ $VHOUR -ge 0 ] && [ $VHOUR -le 2 ]; then
+            NEW_VHOUR_LIST+="$VHOUR "
+        fi
+    done
+elif [ $vhr -ge 3 ] && [ $vhr -le 5 ]; then
+    for VHOUR in $VHOUR_LIST; do
+        if [ $VHOUR -ge 3 ] && [ $VHOUR -le 5 ]; then
+            NEW_VHOUR_LIST+="$VHOUR "
+        fi
+    done
+elif [ $vhr -ge 6 ] && [ $vhr -le 8 ]; then
+    for VHOUR in $VHOUR_LIST; do
+        if [ $VHOUR -ge 6 ] && [ $VHOUR -le 8 ]; then
+            NEW_VHOUR_LIST+="$VHOUR "
+        fi
+    done
+elif [ $vhr -ge 9 ] && [ $vhr -le 11 ]; then
+    for VHOUR in $VHOUR_LIST; do
+        if [ $VHOUR -ge 9 ] && [ $VHOUR -le 11 ]; then
             NEW_VHOUR_LIST+="$VHOUR "
         fi
     done
