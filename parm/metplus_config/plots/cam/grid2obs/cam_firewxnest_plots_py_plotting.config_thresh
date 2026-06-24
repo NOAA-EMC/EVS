@@ -74,7 +74,7 @@ set -x
 
 # Case type settings are used to check if settings are allowed. **
 export VERIF_CASE="grid2obs"
-export VERIF_TYPE="conus_sfc"
+export VERIF_TYPE="firewx"
 
 # Used to name the graphics ouput files. File names will start with the URL_HEADER, followed by plot 
 # details.  Leave blank ("") to include only plot details in the file names.
