@@ -83,6 +83,12 @@ for section_name in config.sections():
         if '"' in value:
             config[section_name][name] = value.replace('"', '')
 
+### Check machine
+ALLOWED_MACHINES = ["GAEAC6", "WCOSS2", "URSA"]
+machine = config["MACHINE"]["name"].upper()
+check_machine(machine)
+print(f"machine: {machine}")
+
 ### Create run directories (DATAROOT, /jobs, /logs)
 DATAROOT_dirs = [config["INPUT_OUTPUT"]["DATAROOT"]]
 DATAROOT_dirs.append(os.path.join(config["INPUT_OUTPUT"]["DATAROOT"], "jobs"))
@@ -92,6 +98,7 @@ for DATAROOT_dir in DATAROOT_dirs:
         print(f"Creating {DATAROOT_dir}")
         os.makedirs(DATAROOT_dir, exist_ok=True)
         print("")
+print(f"DATAROOT: {DATAROOT_dirs[0]}\n")
 
 ### Convert initdate strings into date objects
 start_initdate_str = config["DATES"]["start_initdate"]
@@ -122,14 +129,7 @@ if start_initdate > end_initdate:
     error_and_exit(
         "The start initdate cannot be after the end initdate for prep."
     )
-print(f"Successfully parsed initdates from config file:")
 print(f"Start initdate: {start_initdate} (Type: {type(start_initdate)})")
 print(f"End initdate:   {end_initdate} (Type: {type(end_initdate)})")
 print("")
-
-### Check machine
-ALLOWED_MACHINES = ["GAEAC6", "WCOSS2", "URSA"]
-machine = config["MACHINE"]["name"].upper()
-check_machine(machine)
-
 

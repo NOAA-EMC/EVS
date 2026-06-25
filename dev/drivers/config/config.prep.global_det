@@ -35,7 +35,7 @@ RUN_MAPSDA=NO
 # GENERAL SETTINGS APPLIED TO ALL USE CASES
 ####################################################
 [MACHINE]
-name=wcoss3
+name=wcoss2
 user=$USER
 queue_account=VERF-DEV
 
