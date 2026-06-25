@@ -23,7 +23,7 @@ set -x
 ############################################################
 
 export machine=${machine:-"WCOSS2"}
-export MODELS="hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3, href"
+export MODELS="hrrr, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5"
 export VERIF_TYPE="lsr"
 export DATE_TYPE="INIT"
 export eval_period=`echo ${EVAL_PERIOD} | tr '[:upper:]' '[:lower:]'`
@@ -48,6 +48,9 @@ export STAT_OUTPUT_BASE_TEMPLATE="{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL
 export OUTPUT_DIR=${DATA}/out/${VERIF_CASE}/${eval_period}
 export IMG_HEADER=${NET}.${COMPONENT}
 
+export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart"
+export COMPLETED_JOBS_DIR="completed_jobs_${LINE_TYPE}_${EVAL_PERIOD}"
+
 export LOG_LEVEL="DEBUG"
 
 export PYTHONDONTWRITEBYTECODE=1
@@ -62,19 +65,22 @@ export MET_VERSION="${MET_VERSION%.}"
 
 ############################################################
 # Symlink .stat files from COMIN
-# Mainly for HREF when product is included in model name 
+# Mainly for REFS when product is included in model name 
 ############################################################
 
 # Create working directories 
 mkdir -p ${PRUNE_DIR}
 mkdir -p ${STAT_OUTPUT_BASE_DIR}
 mkdir -p ${OUTPUT_DIR}
+mkdir -p ${RESTART_DIR}
+mkdir -p ${RESTART_DIR}/${COMPLETED_JOBS_DIR}
+mkdir -p ${RESTART_DIR}/${VERIF_CASE}/${EVAL_PERIOD}
 mkdir -p ${DATA}/out/logs # main log output dir
 
 
-model_list="hrrr namnest hireswarw hireswarwmem2 hireswfv3 href"
+og_model_list="hrrr rrfs rrfsmem1 rrfsmem2 rrfsmem3 rrfsmem4 rrfsmem5"
 
-for model in ${model_list}; do
+for model in ${og_model_list}; do
    n=0
    while [ $n -le $pastdays ]; do
       hrs=$((n*24))
@@ -85,7 +91,7 @@ for model in ${model_list}; do
       stat_file=evs.stats.${model}.${RUN}.${VERIF_CASE}.v${day}.stat
       dest=${STAT_OUTPUT_BASE_DIR}/${model}.${day}/${stat_file}
 
-      if [ "${model:0:4}" = "href" ]; then
+      if [ "${model:0:4}" = "refs" ]; then
 	 origin=${COMIN}/stats/${COMPONENT}/${model:0:4}.${day}/${stat_file}
       else
 	 origin=${COMIN}/stats/${COMPONENT}/${model}.${day}/${stat_file}
@@ -98,6 +104,14 @@ for model in ${model_list}; do
       n=$((n+1))
    done
 done
+
+
+############################################################
+# Check For Restart Files
+############################################################
+
+python ${USHevs}/cam/cam_production_restart.py
+export err=$?; err_chk
 
 
 ############################################################
@@ -133,23 +147,38 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
       for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
 	
          if [ "$FCST_INIT_HOUR" = "0,6,12,18" ]; then
-          # export FCST_LEADs="24,30,36,42,48,54,60"
-            export FCST_LEADs="24,36,48,60"
+            export FCST_LEADs="24,36,48,60,72,84"
          elif [ "$FCST_INIT_HOUR" = "0" ]; then
-            export FCST_LEADs="36 60"
+            export FCST_LEADs="36 60 84"
          elif [ "$FCST_INIT_HOUR" = "6" ]; then
-            export FCST_LEADs="30 54"
+            export FCST_LEADs="30 54 78"
          elif [ "$FCST_INIT_HOUR" = "12" ]; then
-            export FCST_LEADs="24 48"
+            export FCST_LEADs="24 48 72"
          elif [ "$FCST_INIT_HOUR" = "18" ]; then
-            export FCST_LEADs="42"
+            export FCST_LEADs="42 66"
          fi
 
          # Loop over forecast initializations
          for FCST_LEAD in ${FCST_LEADs}; do
-	
+            
+            model_list="${og_model_list}"
+            if [ "$FCST_LEAD" -gt 60 ]; then
+               model_list=${model_list/hrrr /}
+               model_list=${model_list/ rrfsmem1/}
+               model_list=${model_list/ rrfsmem2/}
+               model_list=${model_list/ rrfsmem3/}
+               model_list=${model_list/ rrfsmem4/}
+               model_list=${model_list/ rrfsmem5/}
+
+            elif [ "$FCST_LEAD" -gt 48 ]; then
+               model_list=${model_list/hrrr /}
+            fi
+
+            echo "Using models in (${model_list}) for FCST_LEAD=$FCST_LEAD."
+
             echo "${USHevs}/${COMPONENT}/evs_cam_plots_severe.sh $PLOT_TYPE $DOMAIN $LINE_TYPE $FCST_INIT_HOUR $FCST_LEAD $njob" >> $DATA/poescript
             mkdir -p ${DATA}/out/workdirs/job${njob}/logs
+            mkdir -p ${DATA}/out/workdirs/job${njob}/${COMPLETED_JOBS_DIR}
             njob=$((njob+1))
 
 
@@ -170,8 +199,6 @@ chmod 775 $DATA/poescript
 
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=${DATA}/poescript
-
-export USE_CFP=NO
 
 if [ "$USE_CFP" = "YES" ]; then
 

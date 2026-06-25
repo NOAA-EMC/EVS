@@ -129,34 +129,6 @@ class Presets():
         the online documentation to learn how to use these libraries.
         '''
         self.date_presets = {
-            'LAST90DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d')
-            },
-            'LAST31DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d')
-            },
             'last90days': {
                 'valid_beg': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=89)
@@ -185,48 +157,6 @@ class Presets():
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
                 ).strftime('%Y%m%d')
             },
-            'LAST30DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=30)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=0)
-                ).strftime('%Y%m%d')
-            },
-            'LAST7DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=7)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=7)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
-                ).strftime('%Y%m%d')
-            },
-            'LAST3DAYS': {
-                'valid_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=3)
-                ).strftime('%Y%m%d'),
-                'valid_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
-                ).strftime('%Y%m%d'),
-                'init_beg': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=3)
-                    ).strftime('%Y%m%d'),
-                'init_end': (
-                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
-                ).strftime('%Y%m%d')
-            },
             'PDYM1': {
                 'valid_beg': '',
                 'valid_end': (
@@ -236,24 +166,6 @@ class Presets():
                 'init_end': (
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
                     ).strftime('%Y%m%d'),
-            },
-            '2020': {
-                'valid_beg': '20200101',
-                'valid_end': '20201231',
-                'init_beg': '20200101',
-                'init_end': '20201231'
-            },
-            '2021': {
-                'valid_beg': '20210101',
-                'valid_end': '20211231',
-                'init_beg': '20210101',
-                'init_end': '20211231'
-            },
-            '2022': {
-                'valid_beg': '20220101',
-                'valid_end': '20221231',
-                'init_beg': '20220101',
-                'init_end': '20221231'
             },
         }
             
@@ -270,357 +182,41 @@ class ModelSpecs():
         be defined here as aliases of the same model settings, if desired.
         '''
         self.model_alias = {
-            'ARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'ARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'FV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'NMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'AKARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'AKARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'AKFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'AKNEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'AKNMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'CONUSARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'CONUSARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'CONUSFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'CONUSNEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'CONUSNMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'hireswarw': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'hireswarwmem2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'hireswfv3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'HREF_MEAN':{
-                'settings_key':'HREF_MEAN', 
-                'plot_name':'HREF Mean'
-            },
-            'HREF_AVRG':{
-                'settings_key':'HREF_AVRG', 
-                'plot_name':'HREF Average of MEAN and PMMN'
-            },
-            'HREF_LPMM':{
-                'settings_key':'HREF_LPMM', 
-                'plot_name':'HREF Local Probability-Matched Mean'
-            },
-            'HREF_PMMN':{
-                'settings_key':'HREF_PMMN', 
-                'plot_name':'HREF Probability-Matched Mean'
-            },
-            'HREF_PROB':{
-                'settings_key':'HREF_PROB', 
-                'plot_name':'HREF Probability'
-            },
-            'HREFX_MEAN':{
-                'settings_key':'HREFX_MEAN', 
-                'plot_name':'HREF-X Mean'
-            },
-            'CONUSHREF_MEAN':{
-                'settings_key':'HREF_MEAN', 
-                'plot_name':'HREF Mean'
-            },
-            'CONUSHREF_AVRG':{
-                'settings_key':'HREF_AVRG', 
-                'plot_name':'HREF Average of MEAN and PMMN'
-            },
-            'CONUSHREF_LPMM':{
-                'settings_key':'HREF_LPMM', 
-                'plot_name':'HREF Local Probability-Matched Mean'
-            },
-            'CONUSHREF_PMMN':{
-                'settings_key':'HREF_PMMN', 
-                'plot_name':'HREF Probability-Matched Mean'
-            },
-            'CONUSHREF_PROB':{
-                'settings_key':'HREF_PROB', 
-                'plot_name':'HREF Probability'
-            },
-            'CONUSHREFX_MEAN':{
-                'settings_key':'HREFX_MEAN', 
-                'plot_name':'HREF-X Mean'
-            },
-            'AKHREF_MEAN':{
-                'settings_key':'HREF_MEAN', 
-                'plot_name':'HREF Mean'
-            },
-            'AKHREF_AVRG':{
-                'settings_key':'HREF_AVRG', 
-                'plot_name':'HREF Average of MEAN and PMMN'
-            },
-            'AKHREF_LPMM':{
-                'settings_key':'HREF_LPMM', 
-                'plot_name':'HREF Local Probability-Matched Mean'
-            },
-            'AKHREF_PMMN':{
-                'settings_key':'HREF_PMMN', 
-                'plot_name':'HREF Probability-Matched Mean'
-            },
-            'AKHREF_PROB':{
-                'settings_key':'HREF_PROB', 
-                'plot_name':'HREF Probability'
-            },
-            'AKHREFX_MEAN':{
-                'settings_key':'HREFX_MEAN', 
-                'plot_name':'HREF-X Mean'
-            },
-            'PRHREF_MEAN':{
-                'settings_key':'HREF_MEAN', 
-                'plot_name':'HREF Mean'
-            },
-            'PRHREF_AVRG':{
-                'settings_key':'HREF_AVRG', 
-                'plot_name':'HREF Average of MEAN and PMMN'
-            },
-            'PRHREF_LPMM':{
-                'settings_key':'HREF_LPMM', 
-                'plot_name':'HREF Local Probability-Matched Mean'
-            },
-            'PRHREF_PMMN':{
-                'settings_key':'HREF_PMMN', 
-                'plot_name':'HREF Probability-Matched Mean'
-            },
-            'PRHREF_PROB':{
-                'settings_key':'HREF_PROB', 
-                'plot_name':'HREF Probability'
-            },
-            'PRHREFX_MEAN':{
-                'settings_key':'HREFX_MEAN', 
-                'plot_name':'HREF-X Mean'
-            },
-            'HIHREF_MEAN':{
-                'settings_key':'HREF_MEAN', 
-                'plot_name':'HREF Mean'
-            },
-            'HIHREF_AVRG':{
-                'settings_key':'HREF_AVRG', 
-                'plot_name':'HREF Average of MEAN and PMMN'
-            },
-            'HIHREF_LPMM':{
-                'settings_key':'HREF_LPMM', 
-                'plot_name':'HREF Local Probability-Matched Mean'
-            },
-            'HIHREF_PMMN':{
-                'settings_key':'HREF_PMMN', 
-                'plot_name':'HREF Probability-Matched Mean'
-            },
-            'HIHREF_PROB':{
-                'settings_key':'HREF_PROB', 
-                'plot_name':'HREF Probability'
-            },
-            'HIHREFX_MEAN':{
-                'settings_key':'HREFX_MEAN', 
-                'plot_name':'HREF-X Mean'
-            },
-            'NARRE_MEAN':{
-                'settings_key':'NARRE_MEAN', 
-                'plot_name':'NARRE Mean'
-            },
-            'HIARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'HIARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'HIFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'HINMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'HAWAIINEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'PRARW': {
-                'settings_key':'HRW_ARW', 
-                'plot_name':'HiResW ARW'
-            },
-            'PRARW2': {
-                'settings_key':'HRW_ARW2', 
-                'plot_name':'HiResW ARW2'
-            },
-            'PRFV3': {
-                'settings_key':'HRW_FV3', 
-                'plot_name':'HiResW FV3'
-            },
-            'PRNMMB': {
-                'settings_key':'HRW_NMMB', 
-                'plot_name':'HiResW NMMB'
-            },
-            'PRICONEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'FV3LAMDA': {
-                'settings_key':'LAMDA', 
-                'plot_name':'FV3LAM-DA'
-            },
-            'FV3LAMDAX': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAMDAXAK': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAMDAXHI': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAMDAXNA': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAMDAXPR': {
-                'settings_key':'LAMDAX', 
-                'plot_name':'FV3LAM-DAX'
-            },
-            'FV3LAM': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMAK': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMHI': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMNA': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMPR': {
-                'settings_key':'LAM', 
-                'plot_name':'FV3LAM'
-            },
-            'FV3LAMX': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'FV3LAMXAK': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'FV3LAMXHI': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'FV3LAMXNA': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'FV3LAMXPR': {
-                'settings_key':'LAMX', 
-                'plot_name':'FV3LAM-X'
-            },
-            'NAM_NEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'NAM_FIREWXNEST': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Fire Wx Nest'
-            },
-            'namnest': {
-                'settings_key':'NAM_NEST', 
-                'plot_name':'NAM Nest'
-            },
-            'HRRRAK': {
-                'settings_key':'HRRR', 
-                'plot_name':'HRRR'
-            },
             'hrrr': {
                 'settings_key':'HRRR', 
                 'plot_name':'HRRR'
             },
-            'NAMNA': {
-                'settings_key':'NAM', 
-                'plot_name':'NAM'
+            'rap': {
+                'settings_key':'RAP',
+                'plot_name':'RAP',
             },
-            'RAPAK': {
-                'settings_key':'RAP', 
-                'plot_name':'RAP'
+            'rrfs': {
+                'settings_key':'RRFS', 
+                'plot_name':'RRFS'
             },
-            'RAPNA': {
-                'settings_key':'RAP', 
-                'plot_name':'RAP'
+            'rrfs_firewxnest': {
+                'settings_key':'RRFS_FIREWXNEST', 
+                'plot_name':'RRFS FireWX Nest'
             },
-            'RRFS_A': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A'
+            'rrfsmem1': {
+                'settings_key':'RRFSMEM1', 
+                'plot_name':'REFS Mem. 1'
             },
-            'RRFS_A_AK': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Alaska'
+            'rrfsmem2': {
+                'settings_key':'RRFSMEM2', 
+                'plot_name':'REFS Mem. 2'
             },
-            'RRFS_A_PR': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Puerto Rico'
+            'rrfsmem3': {
+                'settings_key':'RRFSMEM3', 
+                'plot_name':'REFS Mem. 3'
             },
-            'RRFS_A_HI': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A Hawaii'
+            'rrfsmem4': {
+                'settings_key':'RRFSMEM4', 
+                'plot_name':'REFS Mem. 4'
             },
-            'RRFS_A_CONUS': {
-                'settings_key':'RRFS_A', 
-                'plot_name':'RRFS-A CONUS'
-            },
-            'RRFS_A_NACONUS': {
-                'settings_key':'RRFS_A_NA', 
-                'plot_name':'RRFS-A N. America'
+            'rrfsmem5': {
+                'settings_key':'RRFSMEM5', 
+                'plot_name':'REFS Mem. 5'
             },
             'mrms': {
                 'settings_key':'MRMS', 
@@ -629,10 +225,6 @@ class ModelSpecs():
             'ccpa': {
                 'settings_key':'CCPA', 
                 'plot_name':'CCPA'
-            },
-            'wafs': {
-                'settings_key':'WAFS', 
-                'plot_name':'WAFS'
             }
         }
 
@@ -681,87 +273,33 @@ class ModelSpecs():
             'obs': {'color': '#aaaaaa',
                     'marker': 'None', 'markersize': 0,
                     'linestyle': 'solid', 'linewidth': 1.8},
-            'LAM': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 10,
-                      'linestyle': 'solid', 'linewidth': 1.8},
-            'LAMDA': {'color': '#8400c8',
-                      'marker': 'o', 'markersize': 10,
-                      'linestyle': 'solid', 'linewidth': 1.8},
-            'LAMX': {'color': '#00dc00',
-                       'marker': 'P', 'markersize': 11,
-                       'linestyle': 'dashed', 'linewidth': 1.8},
-            'LAMDAX': {'color': '#8400c8',
-                       'marker': 'P', 'markersize': 11,
-                       'linestyle': 'dashed', 'linewidth': 1.8},
-            'HWRF': {'color': '#00dc00',
+            'RAP': {'color': '#8400c8',
                      'marker': 'o', 'markersize': 10,
                      'linestyle': 'solid', 'linewidth': 1.8},
-            'HMON': {'color': '#8400c8',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HRW_ARW': {'color': '#00dc00',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HRW_ARW2': {'color': '#e69f00',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HRW_FV3': {'color': '#56b4e9',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HREF_MEAN': {'color': '#000000',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HREF_AVRG': {'color': '#696969',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HREF_PMMN': {'color': '#8400c8',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HREF_LPMM': {'color': '#d269c1',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'HREFX_MEAN': {'color': '#000000',
-                     'marker': 'P', 'markersize': 11,
-                     'linestyle': 'dashed', 'linewidth': 1.8},
             'HRRR': {'color': '#fb2020',
                      'marker': 'o', 'markersize': 10,
                      'linestyle': 'solid', 'linewidth': 1.8},
-            'NAM': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'NAM_NEST': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'RRFS_A': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 10,
-                      'linestyle': 'solid', 'linewidth': 1.8},
-            'RRFS_A_NA': {'color': '#00dc00',
-                      'marker': 'P', 'markersize': 11,
-                      'linestyle': 'dashed', 'linewidth': 1.8},
-            'GFS': {'color': '#000000',
-                    'marker': 'o', 'markersize': 10,
-                    'linestyle': 'solid', 'linewidth': 2.},
-            'GFS_DASHED': {'color': '#000000',
-                           'marker': 'o', 'markersize': 10,
-                           'linestyle': 'dashed', 'linewidth': 2.},
-            'GEFS': {'color': '#000000',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 2.},
-            'NARRE_MEAN': {'color': '#000000',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 2.},
-            'EC': {'color': '#fb2020',
-                   'marker': 'o', 'markersize': 10,
-                   'linestyle': 'solid', 'linewidth': 1.8},
-            'CMC': {'color': '#1e3cff',
-                    'marker': 'o', 'markersize': 10,
-                    'linestyle': 'solid', 'linewidth': 1.8},
-            'CTCX': {'color': '#56b4e9',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8},
-            'OFCL': {'color': '#696969',
-                     'marker': 'o', 'markersize': 10,
-                     'linestyle': 'solid', 'linewidth': 1.8}
+            'RRFS': {'color': '#000000',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFS_FIREWXNEST': {'color': '#000000',
+                       'marker': '^', 'markersize': 11,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFSMEM1': {'color': '#1e3cff',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFSMEM2': {'color': '#00dc00',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFSMEM3': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFSMEM4': {'color': '#56b4e9',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
+            'RRFSMEM5': {'color': '#696969',
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8}
         }    
       
     def get_color_dict(self, name):
@@ -842,6 +380,8 @@ class Reference():
                                       'nohrsc': 'NOHRSC',
                                       'raob': 'RAOB',
                                       'metar': 'METAR',
+                                      'ptype': 'METAR',
+                                      'conus_sfc': 'METAR',
                                       'lsr': 'Local Storm Reports (LSR)',
         }
         self.variable_translator = {'TMP': 'Temperature',
@@ -880,19 +420,22 @@ class Reference():
                                     'TOZNE': 'Total Ozone',
                                     'OZCON1': 'OZCON1',
                                     'HPBL': 'Planetary Boundary Layer Height',
-                                    'PBL': 'Planetary Boundary Layer Height',
                                     'TSOIL': 'Soil Temperature',
                                     'SOILW': ('Volumetric Soil Moisture'
                                               + ' Content'),
                                     'WEASD': 'Accum. Snow Depth Water Equiv.',
+                                    'WEASD_A06': ('6-hour Accum. Snow Depth'
+                                                + ' Water Equiv.'),
                                     'WEASD_06': ('6-hour Accum. Snow Depth'
                                                 + ' Water Equiv.'),
                                     'WEASD_24': ('24-hour Accum. Snow Depth'
                                                 + ' Water Equiv.'),
                                     'SNOD': 'Accum. Snow Depth',
+                                    'SNOD_A06': ('6-hour Accum. Snow Depth'),
                                     'SNOD_06': ('6-hour Accum. Snow Depth'),
                                     'SNOD_24': ('24-hour Accum. Snow Depth'),
                                     'ASNOW': 'Accumulated Snowfall',
+                                    'ASNOW_A06': ('6-hour Accumulated Snowfall'),
                                     'ASNOW_06': ('6-hour Accumulated Snowfall'),
                                     'ASNOW_24': ('24-hour Accumulated Snowfall'),
                                     'APCP': ('Accumulated'
@@ -1475,478 +1018,6 @@ class Reference():
         in the MET .stat file.
         '''
         self.case_type = {
-            'grid2grid_anom': {
-                'SAL1L2': {
-                    'plot_stats_list': 'acc',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'],
-                    'var_dict': {
-                        'HGT': {'fcst_var_names': ['HGT'],
-                                'fcst_var_levels': [
-                                    'P1000', 'P700', 'P500', 'P250'
-                                ],
-                                'fcst_var_thresholds': '',
-                                'fcst_var_options': '',
-                                'obs_var_names': ['HGT'],
-                                'obs_var_levels': [
-                                    'P1000', 'P700', 'P500', 'P250'
-                                ],
-                                'obs_var_thresholds': '',
-                                'obs_var_options': '',
-                                'plot_group':'sfc_upper'},
-                        'HGT_WV1_0-20': {'fcst_var_names': ['HGT'],
-                                         'fcst_var_levels': [
-                                             'P1000', 'P700', 'P500', 'P250'
-                                         ],
-                                         'fcst_var_thresholds': '',
-                                         'fcst_var_options': '',
-                                         'obs_var_names': ['HGT'],
-                                         'obs_var_levels': [
-                                             'P1000', 'P700', 'P500', 'P250'
-                                         ],
-                                         'obs_var_thresholds': '',
-                                         'obs_var_options': '',
-                                         'plot_group':'sfc_upper'},
-                        'HGT_WV1_0-3': {'fcst_var_names': ['HGT'],
-                                        'fcst_var_levels': [
-                                            'P1000', 'P700', 'P500', 'P250'
-                                        ],
-                                        'fcst_var_thresholds': '',
-                                        'fcst_var_options': '',
-                                        'obs_var_names': ['HGT'],
-                                        'obs_var_levels': [
-                                            'P1000', 'P700', 'P500', 'P250'
-                                        ],
-                                        'obs_var_thresholds': '',
-                                        'obs_var_options': '',
-                                        'plot_group':'sfc_upper'},
-                        'HGT_WV1_4-9': {'fcst_var_names': ['HGT'],
-                                        'fcst_var_levels': [
-                                            'P1000', 'P700', 'P500', 'P250'
-                                        ],
-                                        'fcst_var_thresholds': '',
-                                        'fcst_var_options': '',
-                                        'obs_var_names': ['HGT'],
-                                        'obs_var_levels': [
-                                            'P1000', 'P700', 'P500', 'P250'
-                                        ],
-                                        'obs_var_thresholds': '',
-                                        'obs_var_options': '',
-                                        'plot_group':'sfc_upper'},
-                        'HGT_WV1_10-20': {'fcst_var_names': ['HGT'],
-                                          'fcst_var_levels': [
-                                              'P1000', 'P700', 'P500', 'P250'
-                                          ],
-                                          'fcst_var_thresholds': '',
-                                          'fcst_var_options': '',
-                                          'obs_var_names': ['HGT'],
-                                          'obs_var_levels': [
-                                              'P1000', 'P700', 'P500', 'P250'
-                                          ],
-                                          'obs_var_thresholds': '',
-                                          'obs_var_options': '',
-                                          'plot_group':'sfc_upper'},
-                        'TMP': {'fcst_var_names': ['TMP'],
-                                'fcst_var_levels': ['P850', 'P500', 'P250'],
-                                'fcst_var_thresholds': '',
-                                'fcst_var_options': '',
-                                'obs_var_names': ['TMP'],
-                                'obs_var_levels': ['P850', 'P500', 'P250'],
-                                'obs_var_thresholds': '',
-                                'obs_var_options': '',
-                                'plot_group':'sfc_upper'},
-                        'UGRD': {'fcst_var_names': ['UGRD'],
-                                 'fcst_var_levels': ['P850', 'P500', 'P250'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['UGRD'],
-                                 'obs_var_levels': ['P850', 'P500', 'P250'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'VGRD': {'fcst_var_names': ['VGRD'],
-                                 'fcst_var_levels': ['P850', 'P500', 'P250'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['VGRD'],
-                                 'obs_var_levels': ['P850', 'P500', 'P250'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'PRMSL': {'fcst_var_names': ['PRMSL'],
-                                  'fcst_var_levels': ['Z0'],
-                                  'fcst_var_thresholds': '',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['PRMSL'],
-                                  'obs_var_levels': ['Z0'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group':'sfc_upper'}
-                    }
-                },
-                'VAL1L2': {
-                    'plot_stats_list': 'acc',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'],
-                    'var_dict': {
-                        'UGRD_VGRD': {'fcst_var_names': ['UGRD_VGRD'],
-                                      'fcst_var_levels': [
-                                          'P850', 'P500', 'P250'
-                                      ],
-                                      'fcst_var_thresholds': '',
-                                      'fcst_var_options': '',
-                                      'obs_var_names': ['UGRD_VGRD'],
-                                      'obs_var_levels': [
-                                          'P850', 'P500', 'P250'
-                                      ],
-                                      'obs_var_thresholds': '',
-                                      'obs_var_options': '',
-                                      'plot_group':'sfc_upper'}
-                    }
-                }
-            },
-            'grid2grid_pres': {
-                'SL1L2': {
-                    'plot_stats_list': ('me, rmse, msess, rsd, rmse_md,'
-                                        + ' rmse_pv'),
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'],
-                    'var_dict': {
-                        'HGT': {'fcst_var_names': ['HGT'],
-                                'fcst_var_levels': [
-                                    'P1000', 'P850', 'P700', 'P500', 'P200', 
-                                    'P100', 'P50', 'P20', 'P10', 'P5', 'P1'
-                                ],
-                                'fcst_var_thresholds': '',
-                                'fcst_var_options': '',
-                                'obs_var_names': ['HGT'],
-                                'obs_var_levels': [
-                                    'P1000', 'P850', 'P700', 'P500', 'P200', 
-                                    'P100', 'P50', 'P20', 'P10', 'P5', 'P1'
-                                ],
-                                'obs_var_thresholds': '',
-                                'obs_var_options': '',
-                                'plot_group':'sfc_upper'},
-                        'TMP': {'fcst_var_names': ['TMP'],
-                                'fcst_var_levels': [
-                                    'P1000', 'P850', 'P700', 'P500', 'P200', 
-                                    'P100', 'P50', 'P20', 'P10', 'P5', 'P1'
-                                ],
-                                'fcst_var_thresholds': '',
-                                'fcst_var_options': '',
-                                'obs_var_names': ['TMP'],
-                                'obs_var_levels': [
-                                    'P1000', 'P850', 'P700', 'P500', 'P200', 
-                                    'P100', 'P50', 'P20', 'P10', 'P5', 'P1'
-                                ],
-                                'obs_var_thresholds': '',
-                                'obs_var_options': '',
-                                'plot_group':'sfc_upper'},
-                        'UGRD': {'fcst_var_names': ['UGRD'],
-                                 'fcst_var_levels': [
-                                     'P1000', 'P850', 'P700', 'P500', 'P200', 
-                                     'P100', 'P50', 'P20', 'P10', 'P5', 'P1'
-                                 ],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['UGRD'],
-                                 'obs_var_levels': [
-                                     'P1000', 'P850', 'P700', 'P500', 'P200', 
-                                     'P100', 'P50', 'P20', 'P10', 'P5', 'P1'
-                                 ],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'VGRD': {'fcst_var_names': ['VGRD'],
-                                 'fcst_var_levels': [
-                                     'P1000', 'P850', 'P700', 'P500', 'P200', 
-                                     'P100', 'P50', 'P20', 'P10', 'P5', 'P1'
-                                 ],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['VGRD'],
-                                 'obs_var_levels': [
-                                     'P1000', 'P850', 'P700', 'P500', 'P200', 
-                                     'P100', 'P50', 'P20', 'P10', 'P5', 'P1'
-                                 ],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'O3MR': {'fcst_var_names': ['O3MR'],
-                                 'fcst_var_levels': [
-                                     'P100', 'P70', 'P50', 'P30', 'P20', 
-                                     'P10', 'P5', 'P1'
-                                 ],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['O3MR'],
-                                 'obs_var_levels': [
-                                     'P100', 'P70', 'P50', 'P30', 'P20', 
-                                     'P10', 'P5', 'P1'
-                                 ],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'}
-                    }
-                },
-                'VL1L2': {
-                    'plot_stats_list': ('me, rmse, msess, rsd, rmse_md,'
-                                        + ' rmse_pv'),
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'],
-                    'var_dict': {
-                        'UGRD_VGRD': {'fcst_var_names': ['UGRD_VGRD'],
-                                      'fcst_var_levels': [
-                                          'P1000', 'P850', 'P700', 'P500', 
-                                          'P200', 'P100', 'P50', 'P20', 'P10', 
-                                          'P5', 'P1'
-                                      ],
-                                      'fcst_var_thresholds': '',
-                                      'fcst_var_options': '',
-                                      'obs_var_names': ['UGRD_VGRD'],
-                                      'obs_var_levels': [
-                                          'P1000', 'P850', 'P700', 'P500', 
-                                          'P200', 'P100', 'P50', 'P20', 'P10', 
-                                          'P5', 'P1'
-                                      ],
-                                      'obs_var_thresholds': '',
-                                      'obs_var_options': '',
-                                      'plot_group':'sfc_upper'}
-                    }
-                }
-            },
-            'grid2grid_sfc': {
-                'SL1L2': {
-                    'plot_stats_list': 'fbar',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : [
-                        'NHX', 'SHX', 'N60', 'S60', 'TRO', 'NPO', 'SPO', 
-                        'NAO', 'SAO', 'G130', 'CONUS'
-                    ],
-                    'var_dict': {
-                        'TMP2m': {'fcst_var_names': ['TMP'],
-                                  'fcst_var_levels': ['Z2'],
-                                  'fcst_var_thresholds': '',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['TMP'],
-                                  'obs_var_levels': ['Z2'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group':'sfc_upper'},
-                        'TMPsfc': {'fcst_var_names': ['TMP'],
-                                   'fcst_var_levels': ['Z0'],
-                                   'fcst_var_thresholds': '',
-                                   'fcst_var_options': '',
-                                   'obs_var_names': ['TMP'],
-                                   'obs_var_levels': ['Z0'],
-                                   'obs_var_thresholds': '',
-                                   'obs_var_options': '',
-                                   'plot_group':'sfc_upper'},
-                        'TMPtrops': {'fcst_var_names': ['TMP'],
-                                     'fcst_var_levels': ['L0'],
-                                     'fcst_var_thresholds': '',
-                                     'fcst_var_options': 'GRIB_lvl_typ = 7;',
-                                     'obs_var_names': ['TMP'],
-                                     'obs_var_levels': ['L0'],
-                                     'obs_var_thresholds': '',
-                                     'obs_var_options': 'GRIB_lvl_typ = 7;',
-                                     'plot_group':'sfc_upper'},
-                        'RH2m': {'fcst_var_names': ['RH'],
-                                 'fcst_var_levels': ['Z2'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['RH'],
-                                 'obs_var_levels': ['Z2'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'SPFH2m': {'fcst_var_names': ['SPFH'],
-                                   'fcst_var_levels': ['Z2'],
-                                   'fcst_var_thresholds': '',
-                                   'fcst_var_options': '',
-                                   'obs_var_names': ['SPFH'],
-                                   'obs_var_levels': ['Z2'],
-                                   'obs_var_thresholds': '',
-                                   'obs_var_options': '',
-                                   'plot_group':'sfc_upper'},
-                        'HPBL': {'fcst_var_names': ['HPBL'],
-                                 'fcst_var_levels': ['L0'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['HPBL'],
-                                 'obs_var_levels': ['L0'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'PRESsfc': {'fcst_var_names': ['PRES'],
-                                    'fcst_var_levels': ['Z0'],
-                                    'fcst_var_thresholds': '',
-                                    'fcst_var_options': '',
-                                    'obs_var_names': ['PRES'],
-                                    'obs_var_levels': ['Z0'],
-                                    'obs_var_thresholds': '',
-                                    'obs_var_options': '',
-                                    'plot_group':'sfc_upper'},
-                        'PREStrops': {'fcst_var_names': ['PRES'],
-                                      'fcst_var_levels': ['L0'],
-                                      'fcst_var_thresholds': '',
-                                      'fcst_var_options': 'GRIB_lvl_typ = 7;',
-                                      'obs_var_names': ['PRES'],
-                                      'obs_var_levels': ['L0'],
-                                      'obs_var_thresholds': '',
-                                      'obs_var_options': 'GRIB_lvl_typ = 7;',
-                                      'plot_group':'sfc_upper'},
-                        'PRMSL': {'fcst_var_names': ['PRMSL'],
-                                  'fcst_var_levels': ['Z0'],
-                                  'fcst_var_thresholds': '',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['PRMSL'],
-                                  'obs_var_levels': ['Z0'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group':'sfc_upper'},
-                        'UGRD10m': {'fcst_var_names': ['UGRD'],
-                                    'fcst_var_levels': ['Z10'],
-                                    'fcst_var_thresholds': '',
-                                    'fcst_var_options': '',
-                                    'obs_var_names': ['UGRD'],
-                                    'obs_var_levels': ['Z10'],
-                                    'obs_var_thresholds': '',
-                                    'obs_var_options': '',
-                                    'plot_group':'sfc_upper'},
-                        'VGRD10m': {'fcst_var_names': ['VGRD'],
-                                    'fcst_var_levels': ['Z10'],
-                                    'fcst_var_thresholds': '',
-                                    'fcst_var_options': '',
-                                    'obs_var_names': ['VGRD'],
-                                    'obs_var_levels': ['Z10'],
-                                    'obs_var_thresholds': '',
-                                    'obs_var_options': '',
-                                    'plot_group':'sfc_upper'},
-                        'TSOILtop': {'fcst_var_names': ['TSOIL'],
-                                     'fcst_var_levels': ['Z10-0'],
-                                     'fcst_var_thresholds': '',
-                                     'fcst_var_options': '',
-                                     'obs_var_names': ['TSOIL'],
-                                     'obs_var_levels': ['Z10-0'],
-                                     'obs_var_thresholds': '',
-                                     'obs_var_options': '',
-                                     'plot_group':'sfc_upper'},
-                        'SOILWtop': {'fcst_var_names': ['SOILW'],
-                                     'fcst_var_levels': ['Z10-0'],
-                                     'fcst_var_thresholds': '',
-                                     'fcst_var_options': '',
-                                     'obs_var_names': ['SOILW'],
-                                     'obs_var_levels': ['Z10-0'],
-                                     'obs_var_thresholds': '',
-                                     'obs_var_options': '',
-                                     'plot_group':'sfc_upper'},
-                        'WEASD': {'fcst_var_names': ['WEASD'],
-                                  'fcst_var_levels': ['Z0'],
-                                  'fcst_var_thresholds': '',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['WEASD'],
-                                  'obs_var_levels': ['Z0'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group':'precip'},
-                        'CAPE': {'fcst_var_names': ['CAPE'],
-                                 'fcst_var_levels': ['Z0'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['CAPE'],
-                                 'obs_var_levels': ['Z0'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'cape'},
-                        'PWAT': {'fcst_var_names': ['PWAT'],
-                                 'fcst_var_levels': ['L0'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['PWAT'],
-                                 'obs_var_levels': ['L0'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'CWAT': {'fcst_var_names': ['CWAT'],
-                                 'fcst_var_levels': ['L0'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['CWAT'],
-                                 'obs_var_levels': ['L0'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'HGTtrops': {'fcst_var_names': ['HGT'],
-                                     'fcst_var_levels': ['L0'],
-                                     'fcst_var_thresholds': '',
-                                     'fcst_var_options': 'GRIB_lvl_typ = 7;',
-                                     'obs_var_names': ['HGT'],
-                                     'obs_var_levels': ['L0'],
-                                     'obs_var_thresholds': '',
-                                     'obs_var_options': 'GRIB_lvl_typ = 7;',
-                                     'plot_group':'sfc_upper'},
-                        'TOZNEclm': {'fcst_var_names': ['TOZNE'],
-                                     'fcst_var_levels': ['L0'],
-                                     'fcst_var_thresholds': '',
-                                     'fcst_var_options': '',
-                                     'obs_var_names': ['TOZNE'],
-                                     'obs_var_levels': ['L0'],
-                                     'obs_var_thresholds': '',
-                                     'obs_var_options': '',
-                                     'plot_group':'sfc_upper'}
-                    }
-                }
-            },
-            'grid2grid_mrms':{
-                'CTC': {
-                    'plot_stats_list': ('fss, csi, fbias, pod, faratio,'
-                                        + ' sratio'),
-                    'interp': 'NEAREST, NBRHD_CIRCLE, BILIN',
-                    'vx_mask_list' : [
-                        'CONUS', 'G130', 'APL', 'GAC', 'GRB', 'LMV', 'MDW', 'NEC', 
-                        'NMT', 'NPL', 'NWC', 'SEC', 'SMT', 'SPL', 'SWC', 
-                        'SWD', 'DAY1_1200_TSTM', 'DAY2_1730_TSTM'
-                    ],
-                    'var_dict': {
-                        'REFC': {'fcst_var_names': ['REFC'],
-                                 'fcst_var_levels': ['L0'],
-                                 'fcst_var_thresholds': ('>=20, >=30, >=40,'
-                                                         + ' >=50'),
-                                 'fcst_var_options': '',
-                                 'obs_var_names': [
-                                     'MergedReflectivityQCComposite'
-                                 ],
-                                 'obs_var_levels': ['Z500'],
-                                 'obs_var_thresholds': ('>=20, >=30, >=40,'
-                                                        + ' >=50'),
-                                 'obs_var_options': '',
-                                 'plot_group':'radar'},
-                        'RETOP': {'fcst_var_names': ['RETOP'],
-                                 'fcst_var_levels': ['L0','Z1000'],
-                                 'fcst_var_thresholds': ('>=20, >=30, >=40,'
-                                                         + ' >=50'),
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['EchoTop18'],
-                                 'obs_var_levels': ['L0','Z500'],
-                                 'obs_var_thresholds': ('>=20, >=30, >=40,'
-                                                        + ' >=50'),
-                                 'obs_var_options': '',
-                                 'plot_group':'radar'},
-                        'REFD': {'fcst_var_names': ['REFD'],
-                                 'fcst_var_levels': ['L0','Z1000'],
-                                 'fcst_var_thresholds': ('>=20, >=30, >=40,'
-                                                         + ' >=50'),
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['SeamlessHSR'],
-                                 'obs_var_levels': ['L0','Z500'],
-                                 'obs_var_thresholds': ('>=20, >=30, >=40,'
-                                                        + ' >=50'),
-                                 'obs_var_options': '',
-                                 'plot_group':'radar'}
-                    }
-                }
-            },
             'radar_mrms':{
                 'CTC': {
                     'plot_stats_list': ('csi, fbias, pod, faratio,'
@@ -2165,117 +1236,6 @@ class Reference():
                     }
                 }
             },
-            'grid2obs_upper_air': {
-                'SL1L2': {
-                    'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
-                                        + ' obar'),
-                    'interp': 'NEAREST, BILIN',
-                    'vx_mask_list' : [
-                        'CONUS', 'G130', 'NH', 'SH', 'TRO', 'G236', 'POLAR', 'ARCTIC', 
-                        'NAK', 'SAK'
-                    ],
-                    'var_dict': {
-                        'TMP': {'fcst_var_names': ['TMP'],
-                                'fcst_var_levels': ['P1000', 'P925', 'P850',
-                                                    'P700', 'P500', 'P400',
-                                                    'P300', 'P250', 'P200',
-                                                    'P150', 'P100', 'P50',
-                                                    'P10', 'P5', 'P1'],
-                                'fcst_var_thresholds': '',
-                                'fcst_var_options': '',
-                                'obs_var_names': ['TMP'],
-                                'obs_var_levels': ['P1000', 'P925', 'P850',
-                                                   'P700', 'P500', 'P400',
-                                                   'P300', 'P250', 'P200',
-                                                   'P150', 'P100', 'P50',
-                                                   'P10', 'P5', 'P1'],
-                                'obs_var_thresholds': '',
-                                'obs_var_options': '',
-                                'plot_group':'sfc_upper'},
-                        'RH': {'fcst_var_names': ['RH'],
-                               'fcst_var_levels': ['P1000', 'P925', 'P850',
-                                                   'P700', 'P500', 'P400',
-                                                   'P300', 'P250', 'P200',
-                                                   'P150', 'P100', 'P50',
-                                                   'P10', 'P5', 'P1'],
-                               'fcst_var_thresholds': '',
-                               'fcst_var_options': '',
-                               'obs_var_names': ['RH'],
-                               'obs_var_levels': ['P1000', 'P925', 'P850',
-                                                  'P700', 'P500', 'P400',
-                                                  'P300', 'P250', 'P200',
-                                                  'P150', 'P100', 'P50',
-                                                  'P10', 'P5', 'P1'],
-                               'obs_var_thresholds': '',
-                               'obs_var_options': '',
-                               'plot_group':'sfc_upper'},
-                        'SPFH': {'fcst_var_names': ['SPFH'],
-                                 'fcst_var_levels': ['P1000', 'P925', 'P850',
-                                                     'P700', 'P500', 'P400',
-                                                     'P300', 'P250', 'P200',
-                                                     'P150', 'P100', 'P50',
-                                                     'P10', 'P5', 'P1'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['SPFH'],
-                                 'obs_var_levels': ['P1000', 'P925', 'P850',
-                                                    'P700', 'P500', 'P400',
-                                                    'P300', 'P250', 'P200',
-                                                    'P150', 'P100', 'P50',
-                                                    'P10', 'P5', 'P1'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'HGT': {'fcst_var_names': ['HGT'],
-                                'fcst_var_levels': ['P1000', 'P925', 'P850',
-                                                    'P700', 'P500', 'P400',
-                                                    'P300', 'P250', 'P200',
-                                                    'P150', 'P100', 'P50',
-                                                    'P10', 'P5', 'P1'],
-                                'fcst_var_thresholds': '',
-                                'fcst_var_options': '',
-                                'obs_var_names': ['HGT','ZOB'],
-                                'obs_var_levels': ['P1000', 'P925', 'P850',
-                                                   'P700', 'P500', 'P400',
-                                                   'P300', 'P250', 'P200',
-                                                   'P150', 'P100', 'P50',
-                                                   'P10', 'P5', 'P1'],
-                                'obs_var_thresholds': '',
-                                'obs_var_options': '',
-                                'plot_group':'sfc_upper'},
-                    }
-                },
-                'VL1L2': {
-                    'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
-                                        + ' obar'),
-                    'interp': 'NEAREST, BILIN',
-                    'vx_mask_list' : [
-                        'CONUS', 'G130', 'NH', 'SH', 'TRO', 'G236', 'POLAR', 'ARCTIC', 
-                        'NAK', 'SAK'
-                    ],
-                    'var_dict': {
-                        'UGRD_VGRD': {'fcst_var_names': ['UGRD_VGRD'],
-                                      'fcst_var_levels': [
-                                          'P1000', 'P925', 'P850', 'P700', 
-                                          'P500', 'P400','P300', 'P250', 
-                                          'P200', 'P150', 'P100', 'P50', 
-                                          'P10', 'P5', 'P1'
-                                      ],
-                                      'fcst_var_thresholds': '',
-                                      'fcst_var_options': '',
-                                      'obs_var_names': ['UGRD_VGRD'],
-                                      'obs_var_levels': [
-                                          'P1000', 'P925', 'P850', 'P700', 
-                                          'P500', 'P400', 'P300', 'P250', 
-                                          'P200', 'P150', 'P100', 'P50', 
-                                          'P10', 'P5', 'P1'
-                                      ],
-                                      'obs_var_thresholds': '',
-                                      'obs_var_options': '',
-                                      'plot_group':'sfc_upper'}
-                    }
-                }
-            },
             'grid2obs_raob': {
                 'SL1L2': {
                     'plot_stats_list': ('bcrmse, me, fbar_obar, fbar,'
@@ -2453,7 +1413,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'cape'},
-                        'HPBL': {'fcst_var_names': ['HGT','HPBL'],
+                        'HPBL': {'fcst_var_names': ['HPBL'],
                                  'fcst_var_levels': ['L0','PBL'],
                                  'fcst_var_thresholds': '',
                                  'fcst_var_options': '',
@@ -2555,7 +1515,7 @@ class Reference():
                                                           + ' >=4000'),
                                     'obs_var_options': '',
                                     'plot_group':'cape'},
-                        'HPBL': {'fcst_var_names': ['HGT','HPBL'],
+                        'HPBL': {'fcst_var_names': ['HPBL'],
                                  'fcst_var_levels': ['L0','PBL'],
                                  'fcst_var_thresholds': '<=500, >=2000',
                                  'fcst_var_options': '',
@@ -2829,29 +1789,7 @@ class Reference():
                     }
                 },
             },
-            'grid2obs_ptype': {
-                'MCTC': {
-                    'plot_stats_list': ('csi, ets, fbias, pod,'
-                                        + ' faratio, sratio'),
-                    'interp': 'BILIN',
-                    'vx_mask_list' : [
-                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
-                        'Alaska',
-                    ],
-                    'var_dict': {
-                        'PTYPE': {'fcst_var_names': ['PTYPE'],
-                                 'fcst_var_levels': ['Z0'],
-                                 'fcst_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['PTYPE','PRWE'],
-                                 'obs_var_levels': ['Z0'],
-                                 'obs_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
-                                 'obs_var_options': '',
-                                 'plot_group':'precip'},
-                    }
-                },
-            },
-            'grid2obs_conus_sfc': {
+            'grid2obs_firewx': {
                 'SL1L2': {
                     'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
@@ -2945,15 +1883,6 @@ class Reference():
                                     'obs_var_options': '',
                                     'plot_group':'sfc_upper'},
                         'HPBL': {'fcst_var_names': ['HPBL'],
-                                 'fcst_var_levels': ['L0'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['HPBL'],
-                                 'obs_var_levels': ['L0'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'},
-                        'PBL': {'fcst_var_names': ['HGT'],
                                  'fcst_var_levels': ['L0'],
                                  'fcst_var_thresholds': '',
                                  'fcst_var_options': '',
@@ -3093,206 +2022,27 @@ class Reference():
                     }
                 }
             },
-            'grid2obs_aq': {
-                'CTC': {
-                    'plot_stats_list': ('csi, fbias, fss, pod,'
+            'grid2obs_ptype': {
+                'MCTC': {
+                    'plot_stats_list': ('csi, ets, fbias, pod,'
                                         + ' faratio, sratio'),
                     'interp': 'BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
-                        'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GAC', 'APL', 'NAK', 'SAK'
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'Alaska',
                     ],
                     'var_dict': {
-                        'OZCON1': {'fcst_var_names': ['OZCON1'],
-                                  'fcst_var_levels': ['A1'],
-                                  'fcst_var_thresholds': ('>50, >60, >65, >70,'
-                                                          + '>75, >85, >105,'
-                                                          + '>125, >150'),
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['COPO'],
-                                  'obs_var_levels': ['A1'],
-                                  'obs_var_thresholds': ('>50, >60, >65, >70,'
-                                                         + '>75, >85, >105,'
-                                                         + '>125, >150'),
-                                  'obs_var_options': '',
-                                  'plot_group':'aq'},
-                        'OZCON8': {'fcst_var_names': ['OZCON8'],
-                                  'fcst_var_levels': ['A8'],
-                                  'fcst_var_thresholds': ('>50, >60, >65, >70,'
-                                                          + '>75, >85, >105,'
-                                                          + '>125, >150'),
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['COPO'],
-                                  'obs_var_levels': ['A8'],
-                                  'obs_var_thresholds': ('>50, >60, >65, >70,'
-                                                         + '>75, >85, >105,'
-                                                         + '>125, >150'),
-                                  'obs_var_options': '',
-                                  'plot_group':'aq'},
-                    }
-                }
-            },
-            'grid2obs_polar_sfc': {
-                'SL1L2': {
-                    'plot_stats_list': 'me, rmse, fbar_obar',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : ['ARCTIC'],
-                    'var_dict': {
-                        'TMP2m': {'fcst_var_names': ['TMP'],
-                                  'fcst_var_levels': ['Z2'],
-                                  'fcst_var_thresholds': '',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['TMP'],
-                                  'obs_var_levels': ['Z2'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group':'sfc_upper'},
-                        'TMPsfc': {'fcst_var_names': ['TMP'],
-                                   'fcst_var_levels': ['Z0'],
-                                   'fcst_var_thresholds': '',
-                                   'fcst_var_options': '',
-                                   'obs_var_names': ['TMP'],
-                                   'obs_var_levels': ['Z0'],
-                                   'obs_var_thresholds': '',
-                                   'obs_var_options': '',
-                                   'plot_group':'sfc_upper'},
-                        'PRESsfc': {'fcst_var_names': ['PRES'],
-                                    'fcst_var_levels': ['Z0'],
-                                    'fcst_var_thresholds': '',
-                                    'fcst_var_options': '',
-                                    'obs_var_names': ['PRES'],
-                                    'obs_var_levels': ['Z0'],
-                                    'obs_var_thresholds': '',
-                                    'obs_var_options': '',
-                                    'plot_group':'sfc_upper'}
-                    }
-                }
-            },
-            'grid2grid_rtofs_sfc': {
-                'SL1L2': {
-                    'plot_stats_list': 'me, rmse, fbar_obar, estdev',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : [
-                        'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
-                        'North_Pacific','South_Pacific','Equatorial_Pacific','Indian',
-                        'Southern','Arctic','Mediterranean','Antarctic'
-                    ],
-                    'var_dict': {
-                        'SST': {'fcst_var_names': ['sst'],
-                                  'fcst_var_levels': ['0,*,*'],
-                                  'fcst_var_thresholds': '',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['analysed_sst'],
-                                  'obs_var_levels': ['0,*,*'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group':'rtofs_sfc'},
-                        'SSS': {'fcst_var_names': ['sss'],
-                                  'fcst_var_levels': ['0,*,*'],
-                                  'fcst_var_thresholds':'',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['sss'],
-                                  'obs_var_levels': ['0,0,*,*'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group': 'rtofs_sfc'},
-                        'SSH': {'fcst_var_names': ['ssh'],
-                                   'fcst_var_levels': ['0,*,*'],
-                                   'fcst_var_thresholds': '',
-                                   'fcst_var_options': '',
-                                   'obs_var_names': ['adt'],
-                                   'obs_var_levels': ['0,*,*'],
-                                   'obs_var_thresholds': '',
-                                   'obs_var_options': '',
-                                   'plot_group':'rtofs_sfc'},
-                        'SIC': {'fcst_var_names': ['ice_coverage'],
-                                    'fcst_var_levels': ['0,*,*'],
-                                    'fcst_var_thresholds': '',
-                                    'fcst_var_options': '',
-                                    'obs_var_names': ['ice_conc'],
-                                    'obs_var_levels': ['0,*,*'],
-                                    'obs_var_thresholds': '',
-                                    'obs_var_options': '',
-                                    'plot_group':'rtofs_sfc'}
+                        'PTYPE': {'fcst_var_names': ['PTYPE'],
+                                 'fcst_var_levels': ['Z0'],
+                                 'fcst_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['PTYPE','PRWE'],
+                                 'obs_var_levels': ['Z0'],
+                                 'obs_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
+                                 'obs_var_options': '',
+                                 'plot_group':'precip'},
                     }
                 },
-                'SAL1L2': {
-                    'plot_stats_list': 'acc',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : [
-                        'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
-                        'North_Pacific','South_Pacific','Equatorial_Pacific','Indian',
-                        'Southern','Arctic','Mediterranean'
-                    ],
-                    'var_dict': {
-                        'SST': {'fcst_var_names': ['sst'],
-                                  'fcst_var_levels': ['0,*,*'],
-                                  'fcst_var_thresholds': '',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['analysed_sst'],
-                                  'obs_var_levels': ['0,*,*'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group':'rtofs_sfc'},
-                        'SSS': {'fcst_var_names': ['sss'],
-                                  'fcst_var_levels': ['0,*,*'],
-                                  'fcst_var_thresholds':'',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['sss'],
-                                  'obs_var_levels': ['0,0,*,*'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group': 'rtofs_sfc'},
-                        'SSH': {'fcst_var_names': ['ssh'],
-                                   'fcst_var_levels': ['0,*,*'],
-                                   'fcst_var_thresholds': '',
-                                   'fcst_var_options': '',
-                                   'obs_var_names': ['adt'],
-                                   'obs_var_levels': ['0,*,*'],
-                                   'obs_var_thresholds': '',
-                                   'obs_var_options': '',
-                                   'plot_group':'rtofs_sfc'},
-                        'SIC': {'fcst_var_names': ['ice_coverage'],
-                                    'fcst_var_levels': ['0,*,*'],
-                                    'fcst_var_thresholds': '',
-                                    'fcst_var_options': '',
-                                    'obs_var_names': ['ice_conc'],
-                                    'obs_var_levels': ['0,*,*'],
-                                    'obs_var_thresholds': '',
-                                    'obs_var_options': '',
-                                    'plot_group':'rtofs_sfc'}
-                    }
-                },
-                'CTC': {
-                    'plot_stats_list': 'sratio, pod, csi, hss',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : [
-                        'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
-                        'North_Pacific','South_Pacific','Equatorial_Pacific','Indian',
-                        'Southern','Arctic','Mediterranean','Antarctic'
-                    ],
-                    'var_dict': {
-                        'SST': {'fcst_var_names': ['sst'],
-                                  'fcst_var_levels': ['0,*,*'],
-                                  'fcst_var_thresholds': '>=0, >=26.5',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['analysed_sst'],
-                                  'obs_var_levels': ['0,*,*'],
-                                  'obs_var_thresholds': '>=0, >=26.5',
-                                  'obs_var_options': '',
-                                  'plot_group':'rtofs_sfc'},
-                        'SIC': {'fcst_var_names': ['ice_coverage'],
-                                    'fcst_var_levels': ['0,*,*'],
-                                    'fcst_var_thresholds': '>=15, >=40, >=80',
-                                    'fcst_var_options': '',
-                                    'obs_var_names': ['ice_conc'],
-                                    'obs_var_levels': ['0,*,*'],
-                                    'obs_var_thresholds': '>=15, >=40, >=80',
-                                    'obs_var_options': '',
-                                    'plot_group':'rtofs_sfc'}
-                    }
-                }
             },
             'precip_ccpa': {
                 'SL1L2': {
@@ -3804,7 +2554,7 @@ class Reference():
                         'CONUS_South', 'Alaska', 
                     ],
                     'var_dict': {
-                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06'],
+                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06', 'WEASD_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3819,7 +2569,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24'],
+                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24', 'WEASD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3834,7 +2584,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06'],
+                        'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06', 'SNOD_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3849,7 +2599,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24'],
+                        'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24', 'SNOD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3907,7 +2657,7 @@ class Reference():
                         'LMV', 'GAC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
-                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06'],
+                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06', 'WEASD_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3922,7 +2672,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24'],
+                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24', 'WEASD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3937,7 +2687,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06'],
+                        'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06', 'SNOD_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3952,7 +2702,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24'],
+                        'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24', 'SNOD_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -3997,87 +2747,6 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'}
-                    }
-                }
-            },
-            'satellite_ghrsst_ncei_avhrr_anl': {
-                'SL1L2': {
-                    'plot_stats_list': 'me, rmse',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : [
-                        'NH', 'SH', 'POLAR', 'ARCTIC', 'SEA_ICE', 
-                        'SEA_ICE_FREE', 'SEA_ICE_POLAR', 'SEA_ICE_FREE_POLAR'
-                    ],
-                    'var_dict': {
-                        'SST': {'fcst_var_names': ['TMP_Z0_mean'],
-                                'fcst_var_levels': ['Z0'],
-                                'fcst_var_thresholds': '',
-                                'fcst_var_options': '',
-                                'obs_var_names': ['analysed_sst'],
-                                'obs_var_levels': ['Z0'],
-                                'obs_var_thresholds': '',
-                                'obs_var_options': '',
-                                'plot_group':'sfc_upper'},
-                        'ICEC': {'fcst_var_names': ['ICEC_Z0_mean'],
-                                 'fcst_var_levels': ['Z0'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options':  '',
-                                 'obs_var_names': ['sea_ice_fraction'],
-                                 'obs_var_levels': ['Z0'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'}
-                    }
-                }
-            },
-            'satellite_ghrsst_ospo_geopolar_anl': {
-                'SL1L2': {
-                    'plot_stats_list': 'me, rmse',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : [
-                        'NH', 'SH', 'POLAR', 'ARCTIC', 'SEA_ICE', 
-                        'SEA_ICE_FREE', 'SEA_ICE_POLAR', 'SEA_ICE_FREE_POLAR'
-                    ],
-                    'var_dict': {
-                        'SST': {'fcst_var_names': ['TMP_Z0_mean'],
-                                'fcst_var_levels': ['Z0'],
-                                'fcst_var_thresholds': '',
-                                'fcst_var_options': '',
-                                'obs_var_names': ['analysed_sst'],
-                                'obs_var_levels': ['Z0'],
-                                'obs_var_thresholds': '',
-                                'obs_var_options': '',
-                                'plot_group':'sfc_upper'},
-                        'ICEC': {'fcst_var_names': ['ICEC_Z0_mean'],
-                                 'fcst_var_levels': ['Z0'],
-                                 'fcst_var_thresholds': '',
-                                 'fcst_var_options': '',
-                                 'obs_var_names': ['sea_ice_fraction'],
-                                 'obs_var_levels': ['Z0'],
-                                 'obs_var_thresholds': '',
-                                 'obs_var_options': '',
-                                 'plot_group':'sfc_upper'}
-                    }
-                }
-            },
-            'aviation_analysis': {
-                'CTC': {
-                    'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
-                                        + ' obar, pod, farate, faratio, sratio'),
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : [
-                        'AR2','ASIA','AUNZ','EAST','NAMR','NHM','NPCF','SHM','TRP'
-                    ],
-                    'var_dict': {
-                        'ICESEV': {'fcst_var_names': ['ICESEV'],
-                                  'fcst_var_levels': ['P812','P696.8','P595.2','P506','P392.7'],
-                                  'fcst_var_thresholds': '>=1, >=2, >=3, >=4',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['ICESEV'],
-                                  'obs_var_levels': ['P800','P700','P600','P500','P400'],
-                                  'obs_var_thresholds': '>=1, >=2, >=3, >=4',
-                                  'obs_var_options': '',
-                                  'plot_group':'aviation'},
                     }
                 }
             },

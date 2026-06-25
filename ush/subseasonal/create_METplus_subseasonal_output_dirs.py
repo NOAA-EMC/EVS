@@ -52,7 +52,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     for VCS_type in VCS_type_list:
         if VCS_type == 'prepbufr':
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
+            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_gdas'))
 
 # Create data directories
 for data_dir in data_dir_list:

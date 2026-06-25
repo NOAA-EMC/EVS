@@ -394,17 +394,6 @@ if [ $SENDCOM = YES ]; then
             fi
         done
     done
-    mkdir -p $COMOUTsmall/spatial_maps
-    for FILEn in $MET_PLUS_OUT/*/pcp_combine/*a24h*; do
-        if [ -f "$FILEn" ]; then
-            cp -vr $FILEn $COMOUTsmall/spatial_maps/.
-        fi
-    done
-    for FILEn in $MET_PLUS_OUT/*/pcp_combine/*/*a24h*; do
-        if [ -f "$FILEn" ]; then
-            cp -vr $FILEn $COMOUTsmall/spatial_maps/.
-        fi
-    done
 fi
 
 # Final Stats Job
@@ -432,7 +421,7 @@ if [ "$vhr" -ge "$last_cyc" ]; then
         python $USHevs/cam/cam_create_child_workdirs.py
         export err=$?; err_chk
 
-        # Run All NAM Nest precip/stats Gather 3 Jobs
+        # Run All HRRR precip/stats Gather 3 Jobs
         chmod u+x ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/*
         ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/METplus_job_scripts/${job_type}/job* 2>/dev/null |wc -l)
         nc=1

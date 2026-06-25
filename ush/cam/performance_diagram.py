@@ -23,6 +23,7 @@ import logging
 import shutil
 from functools import reduce
 from datetime import datetime, timedelta as td
+from urllib.parse import urlparse, parse_qs
 
 # Third-party imports
 import numpy as np
@@ -68,24 +69,25 @@ def get_bias_label_position(bias_value, radius):
     return (x, y)
 
 def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger, 
-                      date_range: tuple, model_list: list, num: int = 0, 
-                      level: str = '500', flead='all', thresh: list = ['<20'], 
-                      metric1_name: str = 'SRATIO', metric2_name: str = 'POD', 
-                      metric3_name: str = 'CSI', date_type: str = 'VALID', 
-                      date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
-                      line_type: str = 'CTC', save_dir: str = '.', 
-                      restart_dir: str = '.', dpi: int = 100, 
-                      confidence_intervals: bool = False, interp_pts: list = [],
-                      bs_nrep: int = 5000, 
-                      bs_method: str = 'MATCHED_PAIRS', ci_lev: float = .95, 
-                      bs_min_samp: int = 30, eval_period: str = 'TEST', 
-                      display_averages: bool = True, save_header: str = '', 
-                      plot_group: str = 'sfc_upper',
-                      sample_equalization: bool = True,
-                      plot_logo_left: bool = False,
-                      plot_logo_right: bool = False, path_logo_left: str = '.',
-                      path_logo_right: str = '.', zoom_logo_left: float = 1.,
-                      zoom_logo_right: float = 1.):
+                             date_range: tuple, model_list: list, 
+                             model_queries: list = [{}], num: int = 0, 
+                             level: str = '500', flead='all', thresh: list = ['<20'], 
+                             metric1_name: str = 'SRATIO', metric2_name: str = 'POD', 
+                             metric3_name: str = 'CSI', date_type: str = 'VALID', 
+                             date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
+                             line_type: str = 'CTC', save_dir: str = '.', 
+                             restart_dir: str = '.', dpi: int = 100, 
+                             confidence_intervals: bool = False, interp_pts: list = [],
+                             bs_nrep: int = 5000, 
+                             bs_method: str = 'MATCHED_PAIRS', ci_lev: float = .95, 
+                             bs_min_samp: int = 30, eval_period: str = 'TEST', 
+                             display_averages: bool = True, save_header: str = '', 
+                             plot_group: str = 'sfc_upper',
+                             sample_equalization: bool = True,
+                             plot_logo_left: bool = False,
+                             plot_logo_right: bool = False, path_logo_left: str = '.',
+                             path_logo_right: str = '.', zoom_logo_left: float = 1.,
+                             zoom_logo_right: float = 1.):
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
@@ -138,22 +140,71 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
             frange_save_phrase = '-'.join([str(f).zfill(3) for f in flead])
         else:
-            frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
+            frange_phrase = f's {flead[0]}\u2013{flead[-1]}'
             frange_save_phrase = f'{flead[0]:03d}-F{flead[-1]:03d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
-        df = df[df['LEAD_HOURS'].isin(flead)]
+        if any(model_queries):
+            df_list = []
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = [
+                        int(f)-int(model_queries[m]['shift'][0]) for f in flead
+                    ]
+                else:
+                    flead_shift = flead
+                df_tmp = df[
+                    (df['LEAD_HOURS'].isin(flead_shift))
+                    & (df['MODEL'] == model)
+                ]
+                df_list.append(df_tmp)
+            df = pd.concat(df_list) if df_list else df.iloc[0:0]
+        else:
+            df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
         frange_string = (f'Forecast Hours {flead[0]:02d}'+u'\u2013'
                          + f'{flead[1]:02d}')
         frange_save_string = f'F{flead[0]:03d}-F{flead[1]:03d}'
-        df = df[
-            (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
-        ]
-    elif isinstance(flead, np.int):
+        if any(model_queries):
+            df_list = []
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = [
+                        int(f) - int(model_queries[m]['shift'][0]) for f in flead
+                    ]
+                else:
+                    flead_shift = flead
+                df_tmp = df[
+                    (df['LEAD_HOURS'] >= flead_shift[0])
+                    & (df['LEAD_HOURS'] <= flead_shift[1])
+                    & (df['MODEL'] == model)
+                ]
+                df_list.append(df_tmp)
+            df = pd.concat(df_list) if df_list else df.iloc[0:0]
+        else:
+            df = df[
+                (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
+            ]
+    elif isinstance(flead, (int, np.integer)):
         frange_string = f'Forecast Hour {flead:02d}'
         frange_save_string = f'F{flead:03d}'
-        df = df[df['LEAD_HOURS'] == flead]
+        if any(model_queries):
+            df_list = []
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = (
+                        int(flead) - int(model_queries[m]['shift'][0])
+                    )
+                else:
+                    flead_shift = flead
+                df_tmp = df[
+                    (df['LEAD_HOURS'] == flead_shift)
+                    & (df['MODEL'] == model)
+                ]
+                df_list.append(df_tmp)
+            df = pd.concat(df_list) if df_list else df.iloc[0:0]
+        else:
+            df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"FATAL ERROR: Invalid forecast lead: \'{flead}\'"
         e2 = f"Please check settings for forecast leads."
@@ -320,6 +371,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         str(m)
         for (m, keep) in zip(model_list, cols_to_keep) if keep
     ]
+    model_queries = [
+        m for (m, keep) in zip(model_queries, cols_to_keep) if keep
+    ]
     if not all(cols_to_keep):
         if not any(
                 group_name in str(models_removed_string) 
@@ -334,7 +388,21 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
+    
+    if str(line_type).upper() in ['CTC','NBRCTC']:
+        df['EVENTS'] = np.array(df['FY_OY'].values+df['FN_OY'].values>0).astype(int)    
+
     group_by = ['MODEL','FCST_THRESH_VALUE']
+    df['EQUALIZE_LEAD_HOURS'] = df['LEAD_HOURS']
+    df['EQUALIZE_VALID'] = df['VALID']
+    if any(model_queries):
+        for m, model in enumerate(model_list):
+            if 'shift' in model_queries[m]:
+                shift_hours = int(model_queries[m]['shift'][0])
+                model_mask = df['MODEL'] == model
+                df.loc[model_mask, 'EQUALIZE_LEAD_HOURS'] = (
+                    df.loc[model_mask, 'LEAD_HOURS'] + shift_hours
+                )
     if sample_equalization:
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:
@@ -432,10 +500,16 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         index='FCST_THRESH_VALUE'
     )
     if sample_equalization:
-        pivot_counts = pd.pivot_table(
-            df_aggregated, values='COUNTS', columns='MODEL',
-            index='FCST_THRESH_VALUE'
-        )
+        if str(line_type).upper() in ['MCTC']:
+            pivot_counts = pd.pivot_table(
+                df_aggregated, values='COUNTS', columns='MODEL',
+                index='FCST_THRESH_VALUE'
+            )
+        else:
+            pivot_counts = pd.pivot_table(
+                df_aggregated, values='EVENTS', columns='MODEL',
+                index='FCST_THRESH_VALUE'
+            )
     pivot_metric1 = pivot_metric1.dropna() 
     pivot_metric2 = pivot_metric2.dropna() 
     pivot_metric3 = pivot_metric3.dropna() 
@@ -443,7 +517,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         np.concatenate([
             pivot_metric1.index, 
             pivot_metric2.index, 
-            pivot_metric3.index
+            pivot_metric3.index,
+            pivot_counts.index
         ])
     )
     all_model_col = np.unique(
@@ -559,6 +634,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     model_list = [
         str(m)
         for (m, keep) in zip(model_list, cols_to_keep) if keep
+    ]
+    model_queries = [
+        m for (m, keep) in zip(model_queries, cols_to_keep) if keep
     ]
     if not all(cols_to_keep):
         logger.warning(
@@ -707,12 +785,12 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     unit_convert = False
     if units in reference.unit_conversions:
         unit_convert = True
+        if str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+            unit_convert = False
         if str(var_long_name_key).upper() == 'HGT':
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                 if units in ['m', 'gpm']:
                     units = 'gpm'
-            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
-                unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
         elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
@@ -778,6 +856,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     
     if sample_equalization:
         counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
+        counts = [counts[i] for i in thresh_argsort]
         counts = [
             str(int(count)) if not isinstance(count,str) else count 
             for count in counts
@@ -795,6 +874,21 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if 'shift' in model_queries[m]:
+            shift_hours = int(model_queries[m]['shift'][0])
+            if str(date_type).upper() == 'INIT':
+                date_hours_shift = [
+                    f'{(int(date_hour) + shift_hours) % 24:02d}'
+                    for date_hour in date_hours
+                ]
+                date_hours_shift_string = plot_util.get_name_for_listed_items(
+                        date_hours_shift, ', ', '', 'Z', '&', ''
+                    )
+                model_plot_name += f' ({date_hours_shift_string})'
+            else:
+                if shift_hours >= 0:
+                    model_plot_name += '+'
+                model_plot_name += f'{shift_hours}H'
         if str(model_list[m]) not in pivot_metric1:
             continue
         x_vals = [
@@ -943,6 +1037,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         var_savename = 'ASNOW'
     elif any(field in var_savename.upper() for field in ['SNOD']):
         var_savename = 'SNOD'
+    elif any(field in var_savename.upper() for field in ['WEASD']):
+        var_savename = 'WEASD'
     elif 'PROB_MXUPHL25_A24_GEHWT' in var_savename.upper():
         var_savename = 'MXUPHL25'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
@@ -959,7 +1055,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    date_start_string = date_range[0].strftime('%d %b %Y')
+    if not df.empty and date_type in df.columns and not df[date_type].isna().all():
+        date_start_string = df[date_type].min().strftime('%d %b %Y')
+    else:
+        date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
         if str(level).upper() == 'CEILING':
@@ -1278,6 +1377,13 @@ def main():
         )
     logger.debug('========================================')
 
+    models = []
+    model_queries = []
+    for model in MODELS:
+        parsed_model = urlparse(model)
+        models.append(parsed_model.path)
+        model_queries.append(parse_qs(parsed_model.query))
+
     metrics = METRICS
     date_range = (
         datetime.strptime(date_beg, '%Y%m%d'), 
@@ -1400,8 +1506,8 @@ def main():
                     logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
                     VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
                     date_hours, FLEADS, requested_var, fcst_var_names, 
-                    obs_var_names, MODELS, domain, INTERP, INTERP_PNTS, MET_VERSION, 
-                    clear_prune_dir
+                    obs_var_names, models, model_queries, domain, INTERP, 
+                    INTERP_PNTS, MET_VERSION, clear_prune_dir
                 )
                 if df is None:
                     continue
@@ -1417,7 +1523,8 @@ def main():
                         continue
                 df_metric = df
                 plot_performance_diagram(
-                    df_metric, logger, date_range, MODELS, num=num, 
+                    df_metric, logger, date_range, models, 
+                    model_queries=model_queries, num=num, 
                     flead=FLEADS, level=fcst_level, thresh=fcst_thresh, 
                     metric1_name=metrics[0], metric2_name=metrics[1],
                     metric3_name=metrics[2], date_type=DATE_TYPE,  
