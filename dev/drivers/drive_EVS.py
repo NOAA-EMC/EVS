@@ -131,10 +131,49 @@ if (config.get("RUN", "RUN_PREP_GLOBAL_DET", fallback="NO") == "YES" or
 	    )
 	if start_initdate > end_initdate:
 	    error_and_exit(
-	        "The start initdate cannot be after the end initdate for prep."
+	        "The start initdate cannot be after the end initdate for PREP."
 	    )
 	print(f"Start initdate: {start_initdate} (Type: {type(start_initdate)})")
 	print(f"End initdate:   {end_initdate} (Type: {type(end_initdate)})")
 	print("")
 else:
-    print("No PREP option is set to YES in config file. Skipping inidate parsing.")
+    print("No PREP option is set to YES in config file. Skipping initdate parsing.\n")
+
+### Check for STATS or PLOTS steps to run in config file (if any)
+if (config.get("RUN", "RUN_STATS_GLOBAL_DET", fallback="NO") == "YES" or
+    config.get("RUN", "RUN_STATS_AIGEFS", fallback="NO") == "YES"):
+
+        ### Convert vdate strings into date objects
+        start_vdate_str = config["DATES"]["start_vdate"]
+        end_vdate_str = config["DATES"]["end_vdate"]
+        start_vdate, end_vdate = None, None
+        try:
+            # Parse start_vdate from multiple date formats
+            for fmt in ('%Y-%m-%d', '%Y%m%d'):
+                try:
+                    start_vdate = datetime.strptime(start_vdate_str, fmt).date()
+                    break
+                except ValueError:
+                    pass
+            # Parse end_vdate from multiple date formats
+            for fmt in ('%Y-%m-%d', '%Y%m%d'):
+                try:
+                    end_vdate = datetime.strptime(end_vdate_str, fmt).date()
+                    break
+                except ValueError:
+                    pass
+            if start_vdate is None or end_vdate is None:
+                raise ValueError("Invalid vdate format in given config file")
+        except ValueError:
+            error_and_exit(
+                "Invalid vdate format. Please use yyyymmdd or yyyy-mm-dd."
+            )
+        if start_vdate > end_vdate:
+            error_and_exit(
+                "The start vdate cannot be after the end vdate for STATS/PLOTS."
+            )
+        print(f"Start vdate: {start_vdate} (Type: {type(start_vdate)})")
+        print(f"End vdate:   {end_vdate} (Type: {type(end_vdate)})")
+        print("")
+else:
+    print("No STATS/PLOTS option is set to YES in config file. Skipping vdate parsing.")
