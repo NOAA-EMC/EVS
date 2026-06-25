@@ -10,12 +10,13 @@ from datetime import datetime, timedelta
 #
 # Run this script: python drive_EVS.py [path to config file]
 # Example: python drive_EVS.py config/config.EVS
-#
 ###################################################################
 
 def error_and_exit(message):
     print(f"{message} EXITING!")
     sys.exit(1)
+
+#--------------------------------------
 
 def check_machine(config_machine):
     if not 'HOSTNAME' in list(os.environ.keys()):
@@ -52,6 +53,94 @@ def check_machine(config_machine):
             +f"but found hostname {hostname} matching {machine}.\n"
             +f"Please choose from allowed machines: {', '.join(ALLOWED_MACHINES)}."
         )
+
+#--------------------------------------
+
+def create_job_script(
+    step, user_config, machine_name, comp_name, dev_driver, date_start, date_end, jobfile, logfile
+):
+    for check_file in [jobfile, logfile]:
+        if os.path.exists(check_file):
+            try:
+                print(f"Removing existing file {check_file}")
+                os.remove(check_file)
+            except OSError as e:
+                error_and_exit(
+                    f"Could not removed existing log file {check_file}: {e}"
+                )
+    # --- Define Variables ---
+    reset_value_dict = {}
+    if "PREP" in step:
+        component_idx = (
+            user_config["INPUT_OUTPUT"]\
+            ["component_list"].split(" ").index(comp_name)
+        )
+        reset_value_dict["component_list"] = comp_name
+    # Set EVS home location
+    current_dir = os.getcwd()
+    home_EVS_path = os.path.abspath(
+        os.path.join(current_dir, os.pardir, os.pardir)
+    )
+    print(f"home_EVS_path: {home_EVS_path}")
+    # Set job specifics
+    jobname = jobfile.rpartition("/")[2].replace(".sh", "")
+    print(f"jobname: {jobname}")
+    job_jevs_script = os.path.join(
+        home_EVS_path, "dev/drivers/scripts", step.lower(), comp_name, f"{dev_driver}.sh"
+    )
+    print(f"job_jevs_script: {job_jevs_script}")
+
+    account = user_config["MACHINE"]["queue_account"]
+    if "jevs_prep_global_det_atmos" == dev_driver:
+        bin_bash = "/bin/bash/"
+        queue = "dev"
+        walltime = "00:45:00"
+        place = "place=shared"
+        nodes = "1"
+        nproc = "1"
+        memory = "125GB"
+
+    # Set machine specifics
+    account = user_config["MACHINE"]["queue_account"]
+    sh = open(jobfile, "w")
+    submission_command = None
+
+    # --- Write the machine-specific part ---
+    if machine_name == 'WCOSS2':
+        fix_files = (
+            "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
+        )
+        sh.write(f"#PBS -N {jobname}\n")
+        sh.write(f"#PBS -o {logfile}\n")
+        sh.write(f"#PBS -e {logfile}\n")
+        sh.write(f"#PBS -S {bin_bash}\n")
+        sh.write(f"#PBS -q {queue}\n")
+        sh.write(f"#PBS -A {account}\n")
+        sh.write(f"#PBS -l walltime={walltime}\n")
+        sh.write(f"#PBS -l {place},select={nodes}:ncpus={nproc}:mem={memory}\n")
+        sh.write("#PBS -l debug=true\n")
+        submission_command = f"qsub {jobfile}"
+
+    sh.write("\n")
+    sh.write("# Link in fix files\n")
+    sh.write(f"ln -sf {fix_files} {home_EVS_path}/fix\n")
+
+    sh.write("\n")
+    sh.write("# Add INITDATE from config file\n")
+    line=f"export INITDATE={date_start}"
+    clean_line = line.replace("-", "")
+    sh.write(f"{clean_line}\n")
+
+    # Read the contents of the source file
+    with open(job_jevs_script, "r") as source_file:
+        source_contents = source_file.read()
+
+    # Write (or append) those contents into your target file
+    sh.write("\n# --- Appended Content Start ---\n")
+    sh.write(source_contents)
+    sh.write("\n# --- Appended Content End ---\n")
+
+    sh.close()
 
 ###############################################################
 
@@ -153,11 +242,11 @@ for step_switch, step_switch_value in config["RUN"].items():
         						os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
         						f"submit_{comp_switch}_{start_initdate:%Y%m%d}_to_{end_initdate:%Y%m%d}.sh"
                 				)
-        					print(f"job_script: {job_script}")
+        					#print(f"job_script: {job_script}")
         					log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
-        					print(f"log_script: {log_script}")
+        					#print(f"log_script: {log_script}")
         					create_job_script(
-        						step_switch.replace("RUN_", ""), config, machine, component,
+        						step_switch.replace("RUN_", ""), config, machine, component, comp_switch,
         						start_initdate, end_initdate, job_script, log_script
         					)
 
