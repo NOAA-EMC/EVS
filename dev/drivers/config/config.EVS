@@ -1,20 +1,22 @@
-# Configuration file for EVS global_det component
+# Configuration file for EVS (all steps and components)
 
 [RUN]
-####################################################
-# WHAT EVS COMPONENTS AND STEPS TO RUN
-####################################################
-## PREP PRODUCES PREPARED FORECAST, ANALYSIS, and OBSERVATION FILES 
-## STATS PRODUCES .STAT FILES FOR PARTIAL SUMS OR CONTINGENCY TABLE COUNTS
-## PLOTS PRODUCES PLOTS OF STATISTICS FROM .STAT FILES
+##############################################################
+# WHICH EVS STEPS (PREP, STATS, PLOTS) and COMPONENTS TO RUN
+##############################################################
+## PREP  = PRODUCES PREPARED FORECAST, ANALYSIS, and OBSERVATION FILES 
+## STATS = PRODUCES .STAT FILES FROM PREPARED FILES
+## PLOTS = PRODUCES PLOTS OF STATISTICS FROM .STAT FILES
 ## SET TO YES or NO
 ##
-## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
+## EDIT SECTIONS BELOW (WHICH EVS STEPS AND COMPONENTS TO RUN)
 RUN_PREP_AIGEFS=NO
 RUN_PREP_GLOBAL_DET=YES
 
+RUN_STATS_AIGEFS=NO
 RUN_STATS_GLOBAL_DET=NO
 
+RUN_PLOTS_AIGEFS=NO
 RUN_PLOTS_GLOBAL_DET=NO
 
 ####################################################
