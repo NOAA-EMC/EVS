@@ -22,7 +22,7 @@ user=$USER
 queue_account=VERF-DEV
 
 [INPUT_OUTPUT]
-#step_list:              steps to run (PREP, STATS, PLOTS)
+#component_list:         component to run (e.g., global_det)
 #DATAROOT:               base output directory
 component_list=global_det
 DATAROOT=/lfs/h2/emc/vpppg/noscrub/alicia.bentley/test

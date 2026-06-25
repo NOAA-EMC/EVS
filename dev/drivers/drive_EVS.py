@@ -149,6 +149,17 @@ for step_switch, step_switch_value in config["RUN"].items():
         						f"--- Generating scripts for {comp_switch}, initdates "
         						+f"{start_initdate:%Y%m%d} to {end_initdate:%Y%m%d} ---"
         					)
+        					job_script = os.path.join(
+        						os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
+        						f"submit_{comp_switch}_{start_initdate:%Y%m%d}_to_{end_initdate:%Y%m%d}.sh"
+                				)
+        					print(f"job_script: {job_script}")
+        					log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
+        					print(f"log_script: {log_script}")
+        					create_job_script(
+        						step_switch.replace("RUN_", ""), config, machine, component,
+        						start_initdate, end_initdate, job_script, log_script
+        					)
 
         if ("STATS" in step_switch or "PLOTS" in step_switch):
                 ### Convert vdate strings into date objects
