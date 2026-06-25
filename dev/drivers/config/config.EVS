@@ -29,23 +29,12 @@ DATAROOT=/lfs/h2/emc/vpppg/noscrub/alicia.bentley/test
 [DATES]
 #start_initdate:          PREP step start date (initdate), format YYYYMMDD
 #end_initdate:            PREP step end date (initdate), format YYYYMMDD
-#start_vdate:          STATS/PLOTS step start date (vdate), format YYYYMMDD
-#end_vdate:            STATS/PLOTS step end date (vdate), format YYYYMMDD
+#start_vdate:          	  STATS/PLOTS step start date (vdate), format YYYYMMDD
+#end_vdate:               STATS/PLOTS step end date (vdate), format YYYYMMDD
 start_initdate=20260622
 end_initdate=20260623
 start_vdate=20260601
 end_vdate=20260602
-
-[WEB]
-#SEND2WEB:    whether or not to send maps to webhost
-#webhost:     webhost(rzdm) computer
-#webhostid:   webhost(rzdm) user name
-#webdir:      directory where to send maps on webhost
-SEND2WEB=NO
-webhost=emcrzdm.ncep.noaa.gov
-webhostid=abentley
-webdir=/home/people/emc/www/htdocs/users/verification/global/gfs/alicia
-img_quality=low
 
 ####################################################
 # INDIVIDUAL JOB SETTINGS (BY COMPONENT)
