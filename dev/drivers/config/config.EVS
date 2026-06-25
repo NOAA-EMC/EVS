@@ -1,9 +1,9 @@
 # Configuration file for EVS (all steps and components)
 
+####################################################
+# WHICH EVS STEPS AND COMPONENTS TO RUN
+####################################################
 [RUN]
-##############################################################
-# WHICH EVS STEPS (PREP, STATS, PLOTS) and COMPONENTS TO RUN
-##############################################################
 ## PREP  = PRODUCES PREPARED FORECAST, ANALYSIS, and OBSERVATION FILES 
 ## STATS = PRODUCES .STAT FILES FROM PREPARED FILES
 ## PLOTS = PRODUCES PLOTS OF STATISTICS FROM .STAT FILES
@@ -48,7 +48,7 @@ webdir=/home/people/emc/www/htdocs/users/verification/global/gfs/alicia
 img_quality=low
 
 ####################################################
-# INDIVIDUAL JOB SETTINGS
+# INDIVIDUAL JOB SETTINGS (BY COMPONENT)
 ####################################################
 [GLOBAL_DET]
 # PREP
