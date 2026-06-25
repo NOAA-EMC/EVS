@@ -1,0 +1,161 @@
+#!/bin/bash
+
+set -x
+
+export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_firewxnest.prod
+source $config
+
+mkdir -p $DATA/logs
+mkdir -p $DATA/stat
+mkdir -p $DATA/statanalysis
+
+export machine=${machine:-"WCOSS2"}
+export OBSDIR=OBS
+mkdir -p $DATA/$OBSDIR
+export modsys=rrfs
+export regionnest=firewx
+export outtyp="2dfld.1p5km"
+
+model1=`echo $MODELNAME | tr a-z A-Z`
+export model1
+
+export grid=G221
+export fcstmax=$g2os_sfc_fhr_max
+
+fhr=0
+shr=0
+fcstnum=0
+fcstmiss=0
+obfound=0
+while [ $shr -le $fcstmax ]
+do
+     fhr=0$shr
+     if [ $shr -lt 10 ]
+     then
+       fhr=00$shr
+     elif [ $shr -ge 100 ]
+     then
+       fhr=$shr
+     fi
+     export fhr
+
+     export datehr=${VDATE}${vhr}
+     adate=`$NDATE -$fhr $datehr`
+     aday=`echo $adate |cut -c1-8`
+     acyc=`echo $adate |cut -c9-10`
+     if [ $acyc = 00 -o $acyc = 06 -o $acyc = 12 -o $acyc = 18 ]; then
+     if [ -e $COMINrrfs/firewx.${aday}/${acyc}/rrfs.t${acyc}z.${outtyp}.f${fhr}.${regionnest}.grib2 ]
+     then
+       echo $fhr >> $DATA/fcstlist
+       let "fcstnum=fcstnum+1"
+     else
+       echo $fhr >> $DATA/fcstmiss
+       let "fcstmiss=fcstmiss+1"
+       echo "WARNING: File $COMINrrfs/firewx.${aday}/${acyc}/rrfs.t${acyc}z.${outtyp}.f${fhr}.${regionnest}.grib2 is missing."
+     fi
+     fi
+     let "shr=shr+1"
+done
+
+if [ $fcstnum -gt 0 ]; then
+ export fcsthours=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist`
+ echo $fcsthours, $fcstnum
+fi
+
+if [ $fcstmiss -gt 0 ]; then
+ export fcstmissing=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstmiss`
+ echo "WARNING: Missing forecast hours $fcstmissing"
+fi
+
+
+# do a search on the obs file needed
+
+if [ $vhr = 00 -o $vhr = 06 -o $vhr = 12 -o $vhr = 18 ]
+then
+ tmnum=00
+elif [ $vhr = 01 -o $vhr = 07 -o $vhr = 13 -o $vhr = 19 ]
+then
+ tmnum=00
+elif [ $vhr = 02 -o $vhr = 08 -o $vhr = 14 -o $vhr = 20 ]
+then
+ tmnum=00
+elif [ $vhr = 03 -o $vhr = 09 -o $vhr = 15 -o $vhr = 21 ]
+then
+ tmnum=00
+elif [ $vhr = 04 -o $vhr = 10 -o $vhr = 16 -o $vhr = 22 ]
+then
+ tmnum=00
+elif [ $vhr = 05 -o $vhr = 11 -o $vhr = 17 -o $vhr = 23 ]
+then
+ tmnum=00
+fi
+
+obdate=$datehr
+obday=`echo $obdate |cut -c1-8`
+obhr=`echo $obdate |cut -c9-10`
+obcyc=${obhr}
+
+
+if [ -e $COMINobsproc/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum} ]
+then
+ obfound=1
+ mkdir -p $DATA/$OBSDIR/rrfs.${obday}
+  cp -v $COMINobsproc/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum}
+  split_by_subset $DATA/$OBSDIR/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum}
+  for subset in ADPUPA ADPSFC MSONET SFCSHP; do
+    if [ -e $subset ]; then
+     cat $subset >> prepbufr.tmp
+    fi
+  done
+  if [ -e prepbufr.tmp ]; then
+   mv prepbufr.tmp $DATA/$OBSDIR/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum}
+  else
+   obfound=0
+  fi
+else
+  echo "WARNING: File $COMINobsproc/rrfs.${obday}/rrfs.t${obcyc}z.prepbufr.tm${tmnum} is missing."
+fi
+
+echo $obfound
+
+if [ $obfound = 1 -a $fcstnum -gt 0 ]
+then
+
+  run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstRRFS_FIREWXNEST_obsPREPBUFR.conf $PARMevs/metplus_config/machine.conf
+  export err=$?; err_chk
+
+  mkdir -p $COMOUTsmall
+  if [ $SENDCOM = "YES" ]; then
+   stat_dir=$DATA/point_stat/$MODELNAME
+   stat_files=("$stat_dir"/*)
+   for stat_file in "${stat_files[@]}"; do
+    if [ -s $stat_file ]; then
+     cp -v $stat_file $COMOUTsmall
+    fi
+   done
+  fi
+
+  if [ $vhr = 23 ]
+  then
+       mkdir -p $COMOUTfinal
+       cd $DATA/statanalysis
+       run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstRRFS_FIREWXNEST_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       export err=$?; err_chk
+
+       run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstRRFS_FIREWXNEST_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       export err=$?; err_chk
+
+       cat *ADPUPA >> evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat
+       if [ $SENDCOM = "YES" ]; then
+        if [ -s evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
+         cp -v evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
+	fi
+       fi
+  fi
+
+else
+
+  echo "NO OBS OR MODEL DATA, METplus will not run"
+  echo "NUMFCST, NUMOBS", $fcstnum, $obfound
+
+fi

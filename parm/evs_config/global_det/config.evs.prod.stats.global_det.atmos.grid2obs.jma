@@ -48,8 +48,8 @@ export end_date=$VDATE
 if [ $RUN_GRID2OBS_STATS = YES ]; then
     #g2os_type_list: list type of verifications to run for grid-to-obs: pres_levs, ptype, sfc
     #    pres_levs:  compare variables on pressure levels to GDAS prepbufr obs
-    #    ptype:      compare precip-type variables to NAM/RAP prepbufr obs
-    #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
+    #    ptype:      compare precip-type variables to RRFS prepbufr obs
+    #    sfc:        compare surface variables to GDAS and RRFS prepbufr obs
     #g2os_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
     #g2os_*_valid_hr_list: list of valid hours to be included in verification: HH
     #For defining forecast hours:

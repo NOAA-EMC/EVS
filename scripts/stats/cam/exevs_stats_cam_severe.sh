@@ -3,7 +3,7 @@
 # Name of Script: exevs_stats_cam_severe.sh
 # Contact(s):     Marcel G. Caron (marcel.caron@noaa.gov)
 # Purpose of Script: This script runs METplus to generate severe 
-#                    verification statistics for HREF and deterministic CAMs.
+#                    verification statistics for REFS and deterministic CAMs.
 ###############################################################################
 
 
@@ -67,28 +67,35 @@ fi
 # Set some model-specific variables
 ####################################################################
 
-if [ ${MODELNAME} = hireswarw ] || [ ${MODELNAME} = hireswarwmem2 ] || [ ${MODELNAME} = href ]; then
-   fhr_min=24
-   fhr_max=48
-   fhr_inc=12
-
-elif [ ${MODELNAME} = hireswfv3 ]; then
+if [ ${MODELNAME} = refs ]; then
    fhr_min=24
    fhr_max=60
-   fhr_inc=12
+   fhr_inc=6
 
 elif [ ${MODELNAME} = hrrr ]; then
    fhr_min=24
    fhr_max=48
    fhr_inc=6
 
-elif [ ${MODELNAME} = namnest ] || [ ${MODELNAME} = rrfs ] || [ ${MODELNAME} = refs ]; then
+elif [ ${MODELNAME} = rrfs ]; then
+   fhr_min=24
+   fhr_max=84
+   fhr_inc=6
+
+elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
    fhr_min=24
    fhr_max=60
    fhr_inc=6
 
 fi
 
+if [ ${MODELNAME} = rrfs ]; then
+    mod="rrfs.m000ctl"
+elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
+    mod="${MODELNAME}.m000${mem}"
+else
+    mod="${MODELNAME}"
+fi
 
 ###################################################################
 # Check for forecast files to process
@@ -110,8 +117,8 @@ while [ $fhr -le $fhr_max ]; do
    export IDATE=`$NDATE -$fhr ${VDATE}12 | cut -c 1-8`
    export INIT_HR=`$NDATE -$fhr ${VDATE}12 | cut -c 9-10`
 
-   export fcst_file=${RUN}.${IDATE}/${modsys}/${MODELNAME}.t${INIT_HR}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr}.nc
-   export MODEL_INPUT_TEMPLATE=${RUN}.{init?fmt=%Y%m%d}/${modsys}/${MODELNAME}.t{init?fmt=%2H}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f{lead?fmt=%2H}.nc
+   export fcst_file=${RUN}.${IDATE}/${modsys}/${mod}.t${INIT_HR}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr}.nc
+   export MODEL_INPUT_TEMPLATE=${RUN}.{init?fmt=%Y%m%d}/${modsys}/${mod}.t{init?fmt=%2H}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f{lead?fmt=%2H}.nc
 
    if [ -s $EVSINfcst/${fcst_file} ]; then
       echo $fhr >> $DATA/fcst_list

@@ -5,7 +5,7 @@
 #PBS -q dev
 #PBS -A EVS-DEV
 #PBS -l walltime=07:50:00
-#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=300GB
+#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=350GB
 #PBS -l debug=true
 
 set -x
@@ -16,8 +16,7 @@ export machine=WCOSS2
 export SENDECF=YES
 export SENDCOM=YES
 export KEEPDATA=NO
-export SENDDBN=YES
-export SENDDBN_NTC=
+export SENDDBN=NO
 export job=${PBS_JOBNAME:-jevs_plots_cam_grid2obs_last90days}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)

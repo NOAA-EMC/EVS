@@ -877,19 +877,19 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
         for VERIF_CASE_STEP_type_valid_time \
                 in VERIF_CASE_STEP_type_valid_time_list:
             if VERIF_CASE_STEP_type == 'prepbufr':
-                # NAM prepbufr
-                nam_prod_file_format = os.path.join(
-                    COMIN+'.{valid?fmt=%Y%m%d}', 'prepbufr_nam',
-                    'prepbufr.nam.{valid?fmt=%Y%m%d%H}'
+                # GDAS prepbufr
+                gdas_prod_file_format = os.path.join(
+                    COMIN+'.{valid?fmt=%Y%m%d}', 'prepbufr_gdas',
+                    'prepbufr.gdas.{valid?fmt=%Y%m%d%H}'
                 )
-                VERIF_CASE_STEP_nam_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'prepbufr_nam'
+                VERIF_CASE_STEP_gdas_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'prepbufr_gdas'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_nam_dir):
-                    os.makedirs(VERIF_CASE_STEP_nam_dir)
-                nam_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_nam_dir,
-                    'prepbufr.nam.{valid?fmt=%Y%m%d%H}'
+                if not os.path.exists(VERIF_CASE_STEP_gdas_dir):
+                    os.makedirs(VERIF_CASE_STEP_gdas_dir)
+                gdas_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_gdas_dir,
+                    'prepbufr.gdas.{valid?fmt=%Y%m%d%H}'
                 )
                 # Weeks 3-4 obs span covers weekly and Days 6-10 so only
                 # need to loop once to retrieve data
@@ -898,8 +898,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     sub_util.get_truth_file(
                         (VERIF_CASE_STEP_type_valid_time
                         -datetime.timedelta(hours=12*nf)),
-                        nam_prod_file_format,
-                        nam_dest_file_format
+                        gdas_prod_file_format,
+                        gdas_dest_file_format
                     )
                     nf+=1
 

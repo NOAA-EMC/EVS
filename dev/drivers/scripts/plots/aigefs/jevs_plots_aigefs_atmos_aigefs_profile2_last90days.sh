@@ -2,7 +2,7 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A VERF-DEV
+#PBS -A EVS-DEV
 #PBS -l walltime=00:25:00
 #PBS -l place=vscatter:exclhost,select=6:ncpus=16:mpiprocs=16:mem=80GB:prepost=true
 #PBS -l debug=true

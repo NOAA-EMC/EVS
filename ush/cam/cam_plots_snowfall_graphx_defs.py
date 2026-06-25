@@ -22,7 +22,7 @@ graphics = {
     'cam':{
         'snowfall':{
             'nohrsc':{
-                'fcst_group1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr':{
+                'fhr_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -130,7 +130,7 @@ graphics = {
                         }
                     },
                 },
-                'fcst_group2, namnest, hireswfv3':{
+                'fhr_group2, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -238,7 +238,115 @@ graphics = {
                         }
                     },
                 },
-                'init_group1, fcst_group1, var_group1, namnest, hrrr':{
+                'fhr_group3, rrfs':{
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
+                        'VARIABLES':{
+                            'ctc':{
+                                'WEASD_06':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fbias','ets'],
+                                    'FCST_LEADS':['54,60,66,72','66,72,78,84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A06',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'WEASD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fbias','ets'],
+                                    'FCST_LEADS':['72','84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'nbrcnt':{
+                                'WEASD_06':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fss'],
+                                    'FCST_LEADS':['54,60,66,72','66,72,78,84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A06',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NBRHD_SQUARE',
+                                    'INTERP_PNTSs':['1'],
+                                },
+                                'WEASD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fss'],
+                                    'FCST_LEADS':['72','84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NBRHD_SQUARE',
+                                    'INTERP_PNTSs':['1'],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
+                        'VARIABLES':{
+                            'ctc':{
+                                'WEASD_06':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['54,60,66,72','66,72,78,84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A06',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'WEASD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['72','84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'init_group1, fhr_group1, var_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -346,7 +454,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group1, fcst_group1, var_group2, hrrr':{
+                'init_group1, fhr_group1, var_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -454,7 +562,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group1, fcst_group2, var_group1, namnest':{
+                'init_group1, fhr_group2, var_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -562,7 +670,115 @@ graphics = {
                         }
                     },
                 },
-                'init_group2, fcst_group1, var_group1, namnest, hrrr':{
+                'init_group1, fhr_group2, var_group1, rrfs':{
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SNOD_06':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fbias','ets'],
+                                    'FCST_LEADS':['54,60,66,72','66,72,78,84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A06',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'SNOD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fbias','ets'],
+                                    'FCST_LEADS':['72','84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'nbrcnt':{
+                                'SNOD_06':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fss'],
+                                    'FCST_LEADS':['54,60,66,72','66,72,78,84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A06',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NBRHD_SQUARE',
+                                    'INTERP_PNTSs':['1'],
+                                },
+                                'SNOD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['fss'],
+                                    'FCST_LEADS':['72','84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NBRHD_SQUARE',
+                                    'INTERP_PNTSs':['1'],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SNOD_06':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['54,60,66,72','66,72,78,84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A06',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'SNOD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['0','12'],
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['72','84'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'init_group2, fhr_group1, var_group1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -670,7 +886,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group2, fcst_group1, var_group2, hrrr':{
+                'init_group2, fhr_group1, var_group2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -739,7 +955,7 @@ graphics = {
                         }
                     },
                 },
-                'init_group2, fcst_group2, var_group1, namnest':{
+                'init_group2, fhr_group2, var_group1, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5':{
                     'threshold_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -835,6 +1051,114 @@ graphics = {
                                     'FCST_INIT_HOURS':['6','18'],
                                     'STATSs':['sratio,pod,csi'],
                                     'FCST_LEADS':['54'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'init_group2, fhr_group3, var_group1, rrfs':{
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
+                        'VARIABLES':{
+                            'ctc':{
+                                'WEASD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['6','18'],
+                                    'STATSs':['fbias','ets'],
+                                    'FCST_LEADS':['66','78'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'SNOD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['6','18'],
+                                    'STATSs':['fbias','ets'],
+                                    'FCST_LEADS':['66','78'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'nbrcnt':{
+                                'WEASD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['6','18'],
+                                    'STATSs':['fss'],
+                                    'FCST_LEADS':['66','78'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NBRHD_SQUARE',
+                                    'INTERP_PNTSs':['1'],
+                                },
+                                'SNOD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['6','18'],
+                                    'STATSs':['fss'],
+                                    'FCST_LEADS':['66','78'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NBRHD_SQUARE',
+                                    'INTERP_PNTSs':['1'],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South',
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
+                        'VARIABLES':{
+                            'ctc':{
+                                'WEASD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['6','18'],
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['66','78'],
+                                    'FCST_LEVEL':'Z0',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'OBS_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'SNOD_24':{
+                                    'FCST_VALID_HOURS':[''],
+                                    'FCST_INIT_HOURS':['6','18'],
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['66','78'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'A24',
                                     'FCST_THRESHs':['>=0.0254,>=0.0508,>=0.1016,>=0.2032,>=0.3048'],

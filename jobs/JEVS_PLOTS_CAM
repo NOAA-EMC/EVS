@@ -68,9 +68,14 @@ export cycle=${cycle:-t${vhr}z}
 setpdy.sh 31
 . ./PDY
 
-if [ $MODELNAME = href ] ; then
+if [ $MODELNAME = refs ] ; then
    export VDATE=${VDATE:-$PDYm2}
    export INITDATE=${INITDATE:-$PDYm2}
+   export eval_period=${EVAL_PERIOD:-last90days}
+elif [[ "$MODELNAME" == "rrfs" && "$RUN" == chem* ]]; then
+    export VDATE_END=${VDATE_END:-${PDYm4}}
+    export NDAYS=${NDAYS:-31}
+    export VDATE_START=${VDATE_START:-$(finddate.sh ${VDATE_END} d-$((${NDAYS}-1)))}
 else
    if [ $VERIF_CASE = severe ] ; then
       export VDATE=${VDATE:-$PDYm7}
@@ -90,36 +95,55 @@ fi
 ####################################
 export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
-if  [ $MODELNAME = href ] ; then
+if [ $MODELNAME = refs ] ; then
   export EVSINapcp24mean=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}/stats/$COMPONENT/${RUN}.${VDATE}/$MODELNAME/precip/precip_mean24
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
   export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
   export DATA_IN=${DATA_IN:-$DATAROOT}
-  export ush_dir=$USHevs/cam/ush_href_plot_py
+  export ush_dir=$USHevs/cam/ush_refs_plot_py
 else
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
-  if [ $VERIF_CASE = headline ] ; then
-    export COMOUTplots=${COMOUTplots:-$COMOUT/headline.$VDATE}
+  if [[ "$MODELNAME" == "rrfs" && "$RUN" == chem* ]]; then
+    export EVSINrrfs=${EVSINrrfs:-${COMIN}/stats/${COMPONENT}}
+    export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE_END})}
   else
-    export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
+    export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
+    if [ $VERIF_CASE = headline ] ; then
+      export COMOUTplots=${COMOUTplots:-$COMOUT/headline.$VDATE}
+    else
+      export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
+    fi
+    export EVSINrrfs=${EVSINrrfs:-$COMIN/stats/$COMPONENT/rrfs_$MODELNAME}
+    echo $COMPATH
+    [[ ! -d $COMOUTplots ]] && mkdir -p $COMOUTplots
   fi
-  export EVSINnam=${EVSINnam:-$COMIN/stats/$COMPONENT/$MODELNAME}
-  echo $COMPATH
-  [[ ! -d $COMOUTplots ]] && mkdir -p $COMOUTplots
 fi
 
 [[ ! -d $COMOUT ]] && mkdir -p $COMOUT
 
 echo $COMPATH
 
+if [[ "$MODELNAME" == "rrfs" && "$RUN" == chem* ]]; then
+  export machine=${machine:-WCOSS2}
+  export USE_CFP=${USE_CFP:-YES}
+  export nproc=${nproc:-128}
+  export evs_run_mode=${evs_run_mode:-production}
+  export DATA_TYPE=${DATA_TYPE:-hourly}
+  export restart_mode=${restart_mode:-YES}
+  export fig_name_label=${fig_name_label:-last${NDAYS}days}
+  export plot_diff_fig=${plot_diff_fig:-NO}
+  export config=${config:-${PARMevs}/evs_config/${COMPONENT}/config.${NET}.${envir}.${STEP}.${COMPONENT}.${MODELNAME}.${RUN}.${VERIF_CASE}.${DATA_TYPE}}
+fi
+
 
 #######################################################################
 # Execute the script.
 #######################################################################
 
-if [ $MODELNAME = nam_firewxnest ]; then
+if [ $MODELNAME = firewxnest ]; then
  $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}.sh
+elif [[ "$MODELNAME" == "rrfs" && "$RUN" == chem* ]]; then
+ $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${COMPONENT}_${MODELNAME}_${RUN}_${VERIF_CASE}.sh
 else
  $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${STEP}_${MODELNAME}_${VERIF_CASE}.sh
 fi

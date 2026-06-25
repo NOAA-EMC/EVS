@@ -63,7 +63,7 @@ assemble_data_obs_jobs_dict = {
 }
 assemble_data_model_jobs_dict = {
     'prepbufr': {
-        'TempAnom2m': {'env': {'prepbufr': 'nam',
+        'TempAnom2m': {'env': {'prepbufr': 'gdas',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'TMP_Z2_ENS_MEAN',
