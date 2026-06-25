@@ -17,7 +17,6 @@ export SENDECF=YES
 export SENDCOM=YES
 export KEEPDATA=NO
 export SENDDBN=NO
-export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_stats_cam_hrrr_snowfall}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)

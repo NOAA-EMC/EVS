@@ -54,6 +54,7 @@ elif [ $DOMAIN = alaska ]; then
 
    export MASK_POLY_LIST=$FIXevs/masks/Alaska_${VERIF_GRID}.nc
 
+
 fi
 
 
@@ -61,34 +62,8 @@ fi
 # Set some model-specific variables
 ###################################################################
 
-if [ ${MODELNAME} = hireswarw ]; then
 
-   fhr_min=1
-   fhr_max=48
-   fhr_inc=1
-   
-   export MODEL_INPUT_DIR=${COMINhiresw}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.${DOM}.grib2
-
-elif [ ${MODELNAME} = hireswarwmem2 ]; then
-
-   fhr_min=1
-   fhr_max=48
-   fhr_inc=1
-
-   export MODEL_INPUT_DIR=${COMINhiresw}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.${DOM}mem2.grib2
-
-elif [ ${MODELNAME} = hireswfv3 ]; then
-
-   fhr_min=1
-   fhr_max=60
-   fhr_inc=1
-
-   export MODEL_INPUT_DIR=${COMINhiresw}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.${DOM}.grib2
-
-elif [ ${MODELNAME} = href ]; then
+if [ ${MODELNAME} = refs ]; then
 
    if [ $PROD = pmmn ]; then
       export ENSPROD=pmmn
@@ -97,11 +72,11 @@ elif [ ${MODELNAME} = href ]; then
    fi
 
    fhr_min=1
-   fhr_max=48
+   fhr_max=60
    fhr_inc=1
 
-   export MODEL_INPUT_DIR=${COMINhref}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/ensprod/${modsys}.t{init?fmt=%2H}z.${DOM}.${ENSPROD}.f{lead?fmt=%2H}.grib2
+   export MODEL_INPUT_DIR=${COMINrefs}
+   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/ensprod/${modsys}.t{init?fmt=%2H}z.${ENSPROD}.f{lead?fmt=%2H}.${DOM}.grib2
 
 elif [ ${MODELNAME} = hrrr ]; then
 
@@ -116,14 +91,23 @@ elif [ ${MODELNAME} = hrrr ]; then
       export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${DOMAIN}/${modsys}.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2
    fi
 
-elif [ ${MODELNAME} = namnest ]; then
+elif [ ${MODELNAME} = rrfs ]; then
+
+   fhr_min=0
+   fhr_max=84
+   fhr_inc=1
+
+   export MODEL_INPUT_DIR=${COMINrrfs}
+   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/{init?fmt=%H}/${modsys}.t{init?fmt=%2H}z.2dfld.3km.f{lead?fmt=%3H}.${DOM}.grib2
+
+elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
 
    fhr_min=0
    fhr_max=60
    fhr_inc=1
 
-   export MODEL_INPUT_DIR=${COMINnam}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.${DOMAIN}nest.hiresf{lead?fmt=%2H}.tm00.grib2
+   export MODEL_INPUT_DIR=${COMINrrfs}
+   export MODEL_INPUT_TEMPLATE=${modsys}ens.{init?fmt=%Y%m%d}/{init?fmt=%H}/m00${mem}/${modsys}.t{init?fmt=%2H}z.m00${mem}.2dfld.3km.f{lead?fmt=%3H}.${DOM}.grib2
 
 fi
 
@@ -147,35 +131,7 @@ while [ $fhr -le $fhr_max ]; do
    export INIT_HR=`$NDATE -$fhr ${VDATE}${vhr} | cut -c 9-10`
 
    # Define forecast filename for each model 
-   if [ ${MODELNAME} = hireswarw ]; then
-      if [ $DOMAIN = alaska ]; then
-         ihr_avail="06 18"
-      else
-         ihr_avail="00 12"
-      fi
-      export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.arw_5km.f$(printf "%02d" $fhr).${DOM}.grib2
-   elif [ ${MODELNAME} = hireswarwmem2 ]; then
-      if [ $DOMAIN = alaska ]; then
-         ihr_avail="06 18"
-      else
-         ihr_avail="00 12"
-      fi
-      export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.arw_5km.f$(printf "%02d" $fhr).${DOM}mem2.grib2
-   elif [ ${MODELNAME} = hireswfv3 ]; then
-      if [ $DOMAIN = alaska ]; then
-         ihr_avail="06 18"
-      else
-         ihr_avail="00 12"
-      fi
-      export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.fv3_5km.f$(printf "%02d" $fhr).${DOM}.grib2
-   elif [ ${MODELNAME} = href ]; then
-      if [ $DOMAIN = alaska ]; then
-         ihr_avail="06 18"
-      else
-         ihr_avail="00 12"
-      fi
-      export fcst_file=${modsys}.${IDATE}/ensprod/${modsys}.t${INIT_HR}z.${DOM}.${ENSPROD}.f$(printf "%02d" $fhr).grib2
-   elif [ ${MODELNAME} = hrrr ]; then
+   if [ ${MODELNAME} = hrrr ]; then
       if [ $fhr -le 18 ]; then
          if [ $DOMAIN = alaska ]; then
             ihr_avail="00 03 06 09 12 15 18 21"
@@ -190,9 +146,22 @@ while [ $fhr -le $fhr_max ]; do
       elif [ $DOMAIN = conus ]; then
          export fcst_file=${modsys}.${IDATE}/${DOMAIN}/${modsys}.t${INIT_HR}z.wrfprsf$(printf "%02d" $fhr).grib2
       fi
-   elif [ ${MODELNAME} = namnest ]; then
+   elif [ ${MODELNAME} = rrfs ]; then
+      if [ $fhr -le 18 ]; then
+         ihr_avail="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+      else
+         ihr_avail="00 06 12 18"
+      fi
+      export fcst_file=${modsys}.${IDATE}/${INIT_HR}/${modsys}.t${INIT_HR}z.2dfld.3km.f$(printf "%03d" $fhr).${DOM}.grib2
+   
+   elif [ ${MODELNAME} = refs ]; then
       ihr_avail="00 06 12 18"
-      export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.${DOMAIN}nest.hiresf$(printf "%02d" $fhr).tm00.grib2
+      export fcst_file=${modsys}.${IDATE}/${INIT_HR}/ensprod/${modsys}.t${INIT_HR}z.${ENSPROD}.f$(printf "%02d" $fhr).${DOM}.grib2
+   
+   elif [[ "${MODELNAME}" = *"rrfsmem"* ]]; then
+      ihr_avail="00 06 12 18"
+      export fcst_file=${modsys}ens.${IDATE}/${INIT_HR}/m00${mem}/${modsys}.t${INIT_HR}z.m00${mem}.2dfld.3km.f$(printf "%03d" $fhr).${DOM}.grib2
+   
    fi
 
    if echo "$ihr_avail" | grep -qw "$INIT_HR"; then
@@ -256,7 +225,7 @@ if [ $nfcst -ge 1 ] && [ "$obs_found" = 1 ]; then
 
    if [ $PROD = det ] || [ $PROD = pmmn ]; then
 
-      if [ $MODELNAME = href ]; then
+      if [ $MODELNAME = refs ]; then
          export MODEL=${MODELNAME}_pmmn
       else
          export MODEL=${MODELNAME}
@@ -269,21 +238,21 @@ if [ $nfcst -ge 1 ] && [ "$obs_found" = 1 ]; then
 
       export MODEL=${MODELNAME}
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/EnsembleStat_fcstHREF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/EnsembleStat_fcstREFS_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = ppf ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPPF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstREFSPPF_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = prob ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPROB_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstREFSPROB_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    fi

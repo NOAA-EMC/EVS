@@ -57,7 +57,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 ################################################
 generate_stats_jobs_dict = {
     'prepbufr': {
-        'WeeklyAvg_TempAnom2m': {'env': {'prepbufr': 'nam',
+        'WeeklyAvg_TempAnom2m': {'env': {'prepbufr': 'gdas',
                                          'obs_window': '900',
                                          'msg_type': 'ADPSFC',
                                          'var1_fcst_name': 'TMP',
@@ -111,7 +111,7 @@ generate_stats_jobs_dict = {
                                                  +'WeeklyMPRtoSL1L2.conf'
                                              ),
                                              'fi']},
-        'Days6_10Avg_TempAnom2m': {'env': {'prepbufr': 'nam',
+        'Days6_10Avg_TempAnom2m': {'env': {'prepbufr': 'gdas',
                                            'obs_window': '900',
                                            'msg_type': 'ADPSFC',
                                            'var1_fcst_name': 'TMP',
@@ -165,7 +165,7 @@ generate_stats_jobs_dict = {
                                                    +'Days6_10MPRtoSL1L2.conf'
                                                ),
                                                'fi']},
-        'Weeks3_4Avg_TempAnom2m': {'env': {'prepbufr': 'nam',
+        'Weeks3_4Avg_TempAnom2m': {'env': {'prepbufr': 'gdas',
                                            'obs_window': '900',
                                            'msg_type': 'ADPSFC',
                                            'var1_fcst_name': 'TMP',
@@ -219,7 +219,7 @@ generate_stats_jobs_dict = {
                                                    +'Weeks3_4MPRtoSL1L2.conf'
                                                ),
                                                'fi']},
-        'WeeklyAvg_Temp2m': {'env': {'prepbufr': 'nam',
+        'WeeklyAvg_Temp2m': {'env': {'prepbufr': 'gdas',
                                      'obs_window': '900',
                                      'msg_type': 'ADPSFC',
                                      'var1_fcst_name': 'TMP',
@@ -280,7 +280,7 @@ generate_stats_jobs_dict = {
                                              +'WeeklyMPRtoSAL1L2.conf'
                                          ),
                                          'fi']},
-        'Days6_10Avg_Temp2m': {'env': {'prepbufr': 'nam',
+        'Days6_10Avg_Temp2m': {'env': {'prepbufr': 'gdas',
                                        'obs_window': '900',
                                        'msg_type': 'ADPSFC',
                                        'var1_fcst_name': 'TMP',
@@ -341,7 +341,7 @@ generate_stats_jobs_dict = {
                                                +'Days6_10MPRtoSAL1L2.conf'
                                            ),
                                            'fi']},
-        'Weeks3_4Avg_Temp2m': {'env': {'prepbufr': 'nam',
+        'Weeks3_4Avg_Temp2m': {'env': {'prepbufr': 'gdas',
                                        'obs_window': '900',
                                        'msg_type': 'ADPSFC',
                                        'var1_fcst_name': 'TMP',

@@ -120,9 +120,9 @@ subseasonal_obs_dict = {
                                                        '{init?fmt=%Y%m%d}.nc'),
                       'vhours': ['00']},
 
-    'nam': {'arch_file_format': os.path.join(COMOUT_INITDATE,
-                                             'prepbufr_nam',
-                                             'prepbufr.nam.'
+    'gdas': {'arch_file_format': os.path.join(COMOUT_INITDATE,
+                                             'prepbufr_gdas',
+                                             'prepbufr.gdas.'
                                              +'{init?fmt=%Y%m%d%H}'),
                       'vhours': ['00', '12']},
     'ccpa': {'prod_file_format': os.path.join(COMINccpa, 'ccpa.'
@@ -159,19 +159,16 @@ for OBS in OBSNAME:
                 DATA, 'mail_missing_'+OBS+'_valid'
                 +CDATEm1_dt.strftime('%Y%m%d%H')+'.sh'
             )
-        if OBS == 'nam':
-            offset_hr = str(int(CDATE_dt.strftime('%H'))%6
-            ).zfill(2)
-            offset_CDATE_dt = (
-                CDATE_dt + datetime.timedelta(hours=int(offset_hr))
-            )
-            prod_file_format = os.path.join(COMINobsproc, 'nam.'
+        if OBS == 'gdas':
+            prod_file_format = os.path.join(COMINobsproc, 'gdas.'
                                             +'{init?fmt=%Y%m%d}',
-                                            'nam.t{init?fmt=%2H}z.'
-                                            +'prepbufr.tm'+offset_hr)
+                                            '{init?fmt=%H}',
+                                            'atmos', 'gdas.t'
+                                            +'{init?fmt=%H}'
+                                            +'z.prepbufr')
             prod_file = sub_util.format_filler(
-                prod_file_format, offset_CDATE_dt, 
-                offset_CDATE_dt, 'anl', {}
+                prod_file_format, CDATE_dt, 
+                CDATE_dt, 'anl', {}
             )
             arch_file = sub_util.format_filler(
                 obs_dict['arch_file_format'], CDATE_dt, CDATE_dt,

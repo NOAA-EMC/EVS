@@ -156,7 +156,7 @@ def log_missing_file_obs(log_missing_file, missing_file, obs, valid_dt):
     if not os.path.exists(log_missing_file):
         with open(log_missing_file, "w") as lmf:
             lmf.write("#!/bin/bash\n")
-            if obs == 'nam':
+            if obs == 'gdas':
                 lmf.write(f'export subject="{obs.upper()} prepbufr Data '
                           +'Missing for '
                           +'EVS subseasonal"\n')
@@ -859,7 +859,7 @@ def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
 
 def prep_prod_prepbufr_file(source_file, dest_file, date_dt,
                             log_missing_file):
-    """! Do prep work for obsproc prepbufr nam files
+    """! Do prep work for obsproc prepbufr gdas files
 
          Args:
              source_file      - source file (string)
@@ -886,7 +886,7 @@ def prep_prod_prepbufr_file(source_file, dest_file, date_dt,
             run_shell_command([SPLIT_BY_SUBSET, prepped_file])
     else:
         log_missing_file_obs(log_missing_file, source_file,
-                             f"Prepbufr NAM",
+                             f"Prepbufr GDAS",
                              date_dt)
     if check_file_exists_size(split_file):
         copy_file(split_file, dest_file)
@@ -3537,8 +3537,8 @@ def check_weekly_truth_files(job_dict):
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'prepbufr':
                 prepbufr_file_format = os.path.join(
-                    verif_case_dir, 'data', 'prepbufr_nam',
-                    'prepbufr.nam.'
+                    verif_case_dir, 'data', 'prepbufr_gdas',
+                    'prepbufr.gdas.'
                     +'{valid?fmt=%Y%m%d%H}'
                 )
                 nf = 0
@@ -3555,14 +3555,14 @@ def check_weekly_truth_files(job_dict):
                     job_dict['job_num_work_dir'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_nam_valid'
+                    +job_dict['VERIF_TYPE']+'_gdas_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 pb2nc_COMOUT_output_file_format = os.path.join(
                     job_dict['COMOUT'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_nam_valid'
+                    +job_dict['VERIF_TYPE']+'_gdas_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 nf = 0
@@ -3707,8 +3707,8 @@ def check_days6_10_truth_files(job_dict):
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'prepbufr':
                 prepbufr_file_format = os.path.join(
-                    verif_case_dir, 'data', 'prepbufr_nam',
-                    'prepbufr.nam.'
+                    verif_case_dir, 'data', 'prepbufr_gdas',
+                    'prepbufr.gdas.'
                     +'{valid?fmt=%Y%m%d%H}'
                 )
                 nf = 0
@@ -3725,14 +3725,14 @@ def check_days6_10_truth_files(job_dict):
                     job_dict['job_num_work_dir'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_nam_valid'
+                    +job_dict['VERIF_TYPE']+'_gdas_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 pb2nc_COMOUT_output_file_format = os.path.join(
                     job_dict['COMOUT'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_nam_valid'
+                    +job_dict['VERIF_TYPE']+'_gdas_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 nf = 0
