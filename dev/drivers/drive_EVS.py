@@ -94,11 +94,11 @@ def create_job_script(
     if "jevs_prep_global_det_atmos" == dev_driver:
         bin_bash = "/bin/bash/"
         queue = "dev"
-        walltime = "00:45:00"
+        walltime = "00:15:00"
         place = "place=shared"
         nodes = "1"
         nproc = "1"
-        memory = "125GB"
+        memory = "20GB"
 
     # Set machine specifics
     account = user_config["MACHINE"]["queue_account"]
