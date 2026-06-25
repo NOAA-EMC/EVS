@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 ###################################################################
 # THERE IS NO NEED FOR USERS TO MODIFY THIS SCRIPT.
 #
-# Run this script: python drive_EVS_prep.py [path to config file]
-# Example: python drive_EVS_prep.py config/config.prep.global_det
+# Run this script: python drive_EVS.py [path to config file]
+# Example: python drive_EVS.py config/config.EVS
 #
 ###################################################################
 
@@ -100,80 +100,87 @@ for DATAROOT_dir in DATAROOT_dirs:
         print("")
 print(f"DATAROOT: {DATAROOT_dirs[0]}\n")
 
-### Check for PREP steps to run in config file (if any)
-if (config.get("RUN", "RUN_PREP_GLOBAL_DET", fallback="NO") == "YES" or 
-    config.get("RUN", "RUN_PREP_AIGEFS", fallback="NO") == "YES"):
+### Run jobs
+component_list = config["INPUT_OUTPUT"]["component_list"].split(" ")
+print(f"component_list: {component_list}\n")
+# Submit PREP, STATS, or PLOTS jobs
+for step_switch, step_switch_value in config["RUN"].items():
+    if step_switch_value == "YES":
+        if "PREP" in step_switch:
+        	### Convert initdate strings into date objects
+        	start_initdate_str = config["DATES"]["start_initdate"]
+        	end_initdate_str = config["DATES"]["end_initdate"]
+        	start_initdate, end_initdate = None, None
+        	try:
+            		# Parse start_initdate from multiple date formats
+            		for fmt in ('%Y-%m-%d', '%Y%m%d'):
+                		try:
+                    			start_initdate = datetime.strptime(start_initdate_str, fmt).date()
+                    			break
+                		except ValueError:
+                    			pass
+            		# Parse end_initdate from multiple date formats
+            		for fmt in ('%Y-%m-%d', '%Y%m%d'):
+                		try:
+                    			end_initdate = datetime.strptime(end_initdate_str, fmt).date()
+                    			break
+                		except ValueError:
+                    			pass
+            		if start_initdate is None or end_initdate is None:
+                		raise ValueError("Invalid initdate format in given config file")
+        	except ValueError:
+            		error_and_exit(
+                		"Invalid initdate format. Please use yyyymmdd or yyyy-mm-dd."
+            		)
+        	if start_initdate > end_initdate:
+            		error_and_exit(
+                		"The start initdate cannot be after the end initdate for PREP."
+            		)
+        	print(f"Start initdate: {start_initdate} (Type: {type(start_initdate)})")
+        	print(f"End initdate:   {end_initdate} (Type: {type(end_initdate)})")
+        	print("")
 
-	### Convert initdate strings into date objects
-	start_initdate_str = config["DATES"]["start_initdate"]
-	end_initdate_str = config["DATES"]["end_initdate"]
-	start_initdate, end_initdate = None, None
-	try:
-	    # Parse start_initdate from multiple date formats
-	    for fmt in ('%Y-%m-%d', '%Y%m%d'):
-	        try:
-	            start_initdate = datetime.strptime(start_initdate_str, fmt).date()
-	            break
-	        except ValueError:
-	            pass
-	    # Parse end_initdate from multiple date formats
-	    for fmt in ('%Y-%m-%d', '%Y%m%d'):
-	        try:
-	            end_initdate = datetime.strptime(end_initdate_str, fmt).date()
-	            break
-	        except ValueError:
-	            pass
-	    if start_initdate is None or end_initdate is None:
-	        raise ValueError("Invalid initdate format in given config file")
-	except ValueError:
-	    error_and_exit(
-	        "Invalid initdate format. Please use yyyymmdd or yyyy-mm-dd."
-	    )
-	if start_initdate > end_initdate:
-	    error_and_exit(
-	        "The start initdate cannot be after the end initdate for PREP."
-	    )
-	print(f"Start initdate: {start_initdate} (Type: {type(start_initdate)})")
-	print(f"End initdate:   {end_initdate} (Type: {type(end_initdate)})")
-	print("")
-else:
-    print("No PREP option is set to YES in config file. Skipping initdate parsing.\n")
+        	for component in component_list:
+        		component_caps=component.upper()
+        		for comp_switch, comp_switch_value in config[component_caps].items():
+        			if comp_switch_value == "YES":
+        				if "prep" in comp_switch:
+        					print(
+        						f"--- Generating scripts for {comp_switch}, initdates "
+        						+f"{start_initdate:%Y%m%d} to {end_initdate:%Y%m%d} ---"
+        					)
 
-### Check for STATS or PLOTS steps to run in config file (if any)
-if (config.get("RUN", "RUN_STATS_GLOBAL_DET", fallback="NO") == "YES" or
-    config.get("RUN", "RUN_STATS_AIGEFS", fallback="NO") == "YES"):
-
-        ### Convert vdate strings into date objects
-        start_vdate_str = config["DATES"]["start_vdate"]
-        end_vdate_str = config["DATES"]["end_vdate"]
-        start_vdate, end_vdate = None, None
-        try:
-            # Parse start_vdate from multiple date formats
-            for fmt in ('%Y-%m-%d', '%Y%m%d'):
+        if ("STATS" in step_switch or "PLOTS" in step_switch):
+                ### Convert vdate strings into date objects
+                start_vdate_str = config["DATES"]["start_vdate"]
+                end_vdate_str = config["DATES"]["end_vdate"]
+                start_vdate, end_vdate = None, None
                 try:
-                    start_vdate = datetime.strptime(start_vdate_str, fmt).date()
-                    break
+                        # Parse start_vdate from multiple date formats
+                        for fmt in ('%Y-%m-%d', '%Y%m%d'):
+                                try:
+                                        start_vdate = datetime.strptime(start_vdate_str, fmt).date()
+                                        break
+                                except ValueError:
+                                        pass
+                        # Parse end_vdate from multiple date formats
+                        for fmt in ('%Y-%m-%d', '%Y%m%d'):
+                                try:
+                                        end_vdate = datetime.strptime(end_vdate_str, fmt).date()
+                                        break
+                                except ValueError:
+                                        pass
+                        if start_vdate is None or end_vdate is None:
+                                raise ValueError("Invalid vdate format in given config file")
                 except ValueError:
-                    pass
-            # Parse end_vdate from multiple date formats
-            for fmt in ('%Y-%m-%d', '%Y%m%d'):
-                try:
-                    end_vdate = datetime.strptime(end_vdate_str, fmt).date()
-                    break
-                except ValueError:
-                    pass
-            if start_vdate is None or end_vdate is None:
-                raise ValueError("Invalid vdate format in given config file")
-        except ValueError:
-            error_and_exit(
-                "Invalid vdate format. Please use yyyymmdd or yyyy-mm-dd."
-            )
-        if start_vdate > end_vdate:
-            error_and_exit(
-                "The start vdate cannot be after the end vdate for STATS/PLOTS."
-            )
-        print(f"Start vdate: {start_vdate} (Type: {type(start_vdate)})")
-        print(f"End vdate:   {end_vdate} (Type: {type(end_vdate)})")
-        print("")
-else:
-    print("No STATS/PLOTS option is set to YES in config file. Skipping vdate parsing.")
+                        error_and_exit(
+                                "Invalid vdate format. Please use yyyymmdd or yyyy-mm-dd."
+                        )
+                if start_vdate > end_vdate:
+                        error_and_exit(
+                                "The start vdate cannot be after the end vdate for STATS or PLOTS."
+                        )
+                print(f"Start vdate: {start_vdate} (Type: {type(start_vdate)})")
+                print(f"End vdate:   {end_vdate} (Type: {type(end_vdate)})")
+                print("")
+

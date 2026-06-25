@@ -1,7 +1,7 @@
 # Configuration file for EVS (all steps and components)
 
 ####################################################
-# WHICH EVS STEPS AND COMPONENTS TO RUN
+# WHICH EVS STEPS TO RUN (PREP, STATS, PLOTS)
 ####################################################
 [RUN]
 ## PREP  = PRODUCES PREPARED FORECAST, ANALYSIS, and OBSERVATION FILES 
@@ -9,9 +9,9 @@
 ## PLOTS = PRODUCES PLOTS OF STATISTICS FROM .STAT FILES
 ##
 ## EDIT SECTIONS BELOW (SET TO YES OR NO)
-RUN_PREP_GLOBAL_DET=NO
-RUN_STATS_GLOBAL_DET=YES
-RUN_PLOTS_GLOBAL_DET=NO
+RUN_PREP=YES
+RUN_STATS=NO
+RUN_PLOTS=NO
 
 ####################################################
 # GENERAL SETTINGS APPLIED TO ALL USE CASES
@@ -22,7 +22,9 @@ user=$USER
 queue_account=VERF-DEV
 
 [INPUT_OUTPUT]
+#step_list:              steps to run (PREP, STATS, PLOTS)
 #DATAROOT:               base output directory
+component_list=global_det
 DATAROOT=/lfs/h2/emc/vpppg/noscrub/alicia.bentley/test
 
 [DATES]
