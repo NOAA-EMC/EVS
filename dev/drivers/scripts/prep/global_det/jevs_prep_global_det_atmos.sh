@@ -1,5 +1,4 @@
 export model=evs
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export SENDCOM=YES
 export SENDMAIL=NO
