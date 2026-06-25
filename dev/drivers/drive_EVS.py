@@ -78,21 +78,21 @@ def create_job_script(
         reset_value_dict["component_list"] = comp_name
     # Set EVS home location
     current_dir = os.getcwd()
-    home_EVS_path = os.path.abspath(
+    HOMEevs = os.path.abspath(
         os.path.join(current_dir, os.pardir, os.pardir)
     )
-    print(f"home_EVS_path: {home_EVS_path}")
+    print(f"HOMEevs: {HOMEevs}")
     # Set job specifics
     jobname = jobfile.rpartition("/")[2].replace(".sh", "")
     print(f"jobname: {jobname}")
     job_jevs_script = os.path.join(
-        home_EVS_path, "dev/drivers/scripts", step.lower(), comp_name, f"{dev_driver}.sh"
+        HOMEevs, "dev/drivers/scripts", step.lower(), comp_name, f"{dev_driver}.sh"
     )
     print(f"job_jevs_script: {job_jevs_script}")
 
     account = user_config["MACHINE"]["queue_account"]
     if "jevs_prep_global_det_atmos" == dev_driver:
-        bin_bash = "/bin/bash/"
+        bin_bash = "/bin/bash"
         queue = "dev"
         walltime = "00:15:00"
         place = "place=shared"
@@ -123,13 +123,18 @@ def create_job_script(
 
     sh.write("\n")
     sh.write("# Link in fix files\n")
-    sh.write(f"ln -sf {fix_files} {home_EVS_path}/fix\n")
+    sh.write(f"rm -rf {HOMEevs}/fix\n")
+    sh.write(f"ln -sf {fix_files} {HOMEevs}/fix\n")
 
     sh.write("\n")
     sh.write("# Add INITDATE from config file\n")
     line=f"export INITDATE={date_start}"
     clean_line = line.replace("-", "")
     sh.write(f"{clean_line}\n")
+
+    sh.write("\n")
+    sh.write("# Add HOMEevs\n")
+    sh.write(f"export HOMEevs={HOMEevs}\n")
 
     # Read the contents of the source file
     with open(job_jevs_script, "r") as source_file:
