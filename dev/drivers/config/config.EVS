@@ -10,13 +10,8 @@
 ## SET TO YES or NO
 ##
 ## EDIT SECTIONS BELOW (WHICH EVS STEPS AND COMPONENTS TO RUN)
-RUN_PREP_AIGEFS=NO
 RUN_PREP_GLOBAL_DET=YES
-
-RUN_STATS_AIGEFS=NO
 RUN_STATS_GLOBAL_DET=NO
-
-RUN_PLOTS_AIGEFS=NO
 RUN_PLOTS_GLOBAL_DET=NO
 
 ####################################################
@@ -28,191 +23,81 @@ user=$USER
 queue_account=VERF-DEV
 
 [INPUT_OUTPUT]
-#model_list:             model names
-#model_dir_list:         directory path to model forecast and analysis files
-#model_stat_dir_list:    directory path to model .stat files
-#model_file_format_list: file format of model files
-#tar_archive_dir:        archive directory for tar files
-#model_hpss_dir_list:    HPSS directory of data
-#model_data_run_hpss:    get files from HPSS (YES) if not online
-#hpss_walltime:          how long to run HPSS job to get data in minutes
 #DATAROOT:               base output directory
-#SENDARCH:               copy stat files to model_stat_dir directories
-#KEEPDATA:               keep run's run directory after job completion
-model_list=gfs retrov17_01_realtime
-model_dir_list=/lfs/h2/emc/vpppg/noscrub/mallory.row/verification/global/archive/model_data /lfs/h2/emc/vpppg/noscrub/mallory.row/verification/global/archive/model_data
-model_stat_dir_list=/lfs/h2/emc/vpppg/noscrub/mallory.row/verification/global/archive /lfs/h2/emc/vpppg/noscrub/mallory.row/verification/global/archive
-model_file_format_list=pgbf{lead?fmt=%2H}.gfs.{init?fmt=%Y%m%d%H}.grib2 pgbf{lead?fmt=%2H}.gfs.{init?fmt=%Y%m%d%H}.grib2
-tar_archive_dir=/lfs/h2/emc/vpppg/noscrub/mallory.row/verification/global/cleanup_plots/test_tar_plot_files
-model_data_run_hpss=NO
-model_hpss_dir_list=/NCEPPROD/hpssprod/runhistory /null/path
-hpss_walltime=10
 DATAROOT=/lfs/h2/emc/vpppg/noscrub/alicia.bentley/test
-SENDARCH=YES
-KEEPDATA=YES
 
 [DATES]
-#start_initdate:          prep step start date (initdate), format YYYYMMDD
-#end_initdate:            prep step end date (initdate), format YYYYMMDD
-#spinup_pieriod_start: spinup period start, format YYYYMMDDHH, if none use NA
-#spinup_period_end:   spinup period end, format YYYYMMDDHH, if none use NA
-#make_met_data_by:    how to treat dates, VALID or INIT
-#plot_by:             how to plot data, VALID or INIT
+#start_initdate:          PREP step start date (initdate), format YYYYMMDD
+#end_initdate:            PREP step end date (initdate), format YYYYMMDD
+#start_vdate:          STATS/PLOTS step start date (vdate), format YYYYMMDD
+#end_vdate:            STATS/PLOTS step end date (vdate), format YYYYMMDD
 start_initdate=20260622
 end_initdate=20260623
-spinup_period_start=NA
-spinup_period_end=NA
-make_met_data_by=VALID
-plot_by=VALID
+start_vdate=20260601
+end_vdate=20260602
 
 [WEB]
 #SEND2WEB:    whether or not to send maps to webhost
 #webhost:     webhost(rzdm) computer
 #webhostid:   webhost(rzdm) user name
 #webdir:      directory where to send maps on webhost
-#img_quality: image quality/resolution: low, medium, high
-#             low, use if you are just viewing the images (internal use)
-#             medium, use for internal use with collegues (internal use)
-#             high, use for journals or professional presentations (external use)
-SEND2WEB=YES
+SEND2WEB=NO
 webhost=emcrzdm.ncep.noaa.gov
-webhostid=mrow
-webdir=/home/people/emc/www/htdocs/gmb/mpr/retrov17_01_realtime
+webhostid=abentley
+webdir=/home/people/emc/www/htdocs/users/verification/global/gfs/alicia
 img_quality=low
 
 ####################################################
-# INDIVIDUAL USE CASE SETTINGS
+# INDIVIDUAL JOB SETTINGS
 ####################################################
-[GRID2GRID_STEP2]
-#g2g2_model_plot_name_list: list of models reference name on plots
-#g2g2_type_list: list type of verifications to run for grid-to-grid: anom, pres, sfc
-#### For each type the following can be set, where [type] is anom, pres, or sfc
-#####    g2g2_[type]_truth_name_list: list of analysis type used for model in step 1
-#####    g2g2_[type]_gather_by_list:  list of how model data was gathered in step 1
-#####    g2g2_[type]_fyc_list:        all forecst cycles to be included in verification: HH
-#####    g2g2_[type]_vhr_list:        all valid hours to be included in verification: HH
-#####    g2g2_[type]_fhr_min:         forecast hour to start verification HH[H]
-#####    g2g2_[type]_fhr_max:         forecast hour to end verification HH[H]
-#####    g2g2_[type]_event_eq:        do event equalization (True) or not (False)
-#####    g2g2_[type]_grid:            NCEP grid verification was done on
-#g2g2_make_scorecard: create scorecard (YES) or not (NO)
-g2g2_model_plot_name_list=gfs retrov17_01_realtime
-g2g2_type_list=anom pres sfc
-g2g2_anom_truth_name_list=self_anl self_anl
-g2g2_anom_gather_by_list=VALID VALID
-g2g2_anom_fcyc_list=00
-g2g2_anom_vhr_list=00 06 12 18
-g2g2_anom_fhr_min=00
-g2g2_anom_fhr_max=240
-g2g2_anom_event_eq=False
-g2g2_anom_grid=G002
-g2g2_pres_truth_name_list=self_anl self_anl
-g2g2_pres_gather_by_list=VALID VALID
-g2g2_pres_fcyc_list=00
-g2g2_pres_vhr_list=00 06 12 18
-g2g2_pres_fhr_min=00
-g2g2_pres_fhr_max=240
-g2g2_pres_event_eq=False
-g2g2_pres_grid=G002
-g2g2_sfc_truth_name_list=self_f00 self_f00
-g2g2_sfc_gather_by_list=VALID VALID
-g2g2_sfc_fcyc_list=00
-g2g2_sfc_vhr_list=00 06 12 18
-g2g2_sfc_fhr_min=00
-g2g2_sfc_fhr_max=240
-g2g2_sfc_event_eq=False
-g2g2_sfc_grid=G002
-g2g2_make_scorecard=YES
-g2g2_scorecard_ci_method=EMC
-g2g2_scorecard_average_method=MEAN
+[GLOBAL_DET]
+# PREP
+jevs_prep_global_det_atmos=YES
+jevs_prep_global_det_wave=NO
+# STATS
+jevs_stats_global_det_aigfs_atmos_grid2grid=NO
+jevs_stats_global_det_aigfs_atmos_grid2obs=NO
+jevs_stats_global_det_cfs_atmos_grid2grid=NO
+jevs_stats_global_det_cfs_atmos_grid2obs=NO
+jevs_stats_global_det_cmc_atmos_grid2grid=NO
+jevs_stats_global_det_cmc_atmos_grid2obs=NO
+jevs_stats_global_det_cmc_regional_atmos_grid2grid=NO
+jevs_stats_global_det_dwd_atmos_grid2grid=NO
+jevs_stats_global_det_ecmwf_atmos_grid2grid=NO
+jevs_stats_global_det_ecmwf_atmos_grid2obs=NO
+jevs_stats_global_det_fnmoc_atmos_grid2grid=NO
+jevs_stats_global_det_fnmoc_atmos_grid2obs=NO
+jevs_stats_global_det_gfs_atmos_grid2grid=NO
+jevs_stats_global_det_gfs_atmos_grid2obs=NO
+jevs_stats_global_det_gfs_wave_grid2obs=NO
+jevs_stats_global_det_jma_atmos_grid2grid=NO
+jevs_stats_global_det_jma_atmos_grid2obs=NO
+jevs_stats_global_det_metfra_atmos_grid2grid=NO
+jevs_stats_global_det_ukmet_atmos_grid2grid=NO
+jevs_stats_global_det_ukmet_atmos_grid2obs=NO
+# PLOTS
+jevs_plots_global_det_atmos_ai_grid2grid_precip_last90days=NO
+jevs_plots_global_det_atmos_ai_grid2grid_pres_levs_last90days=NO
+jevs_plots_global_det_atmos_ai_grid2obs_pres_levs_last90days=NO
+jevs_plots_global_det_atmos_ai_grid2obs_sfc_last90days=NO
+jevs_plots_global_det_atmos_grid2grid_means_last31days=NO
+jevs_plots_global_det_atmos_grid2grid_means_last90days=NO
+jevs_plots_global_det_atmos_grid2grid_precip_last31days=NO
+jevs_plots_global_det_atmos_grid2grid_precip_last90days=NO
+jevs_plots_global_det_atmos_grid2grid_pres_levs_last31days=NO
+jevs_plots_global_det_atmos_grid2grid_pres_levs_last90days=NO
+jevs_plots_global_det_atmos_grid2grid_sea_ice_last31days=NO
+jevs_plots_global_det_atmos_grid2grid_sea_ice_last90days=NO
+jevs_plots_global_det_atmos_grid2grid_snow_last31days=NO
+jevs_plots_global_det_atmos_grid2grid_snow_last90days=NO
+jevs_plots_global_det_atmos_grid2grid_sst_last31days=NO
+jevs_plots_global_det_atmos_grid2grid_sst_last90days=NO
+jevs_plots_global_det_atmos_grid2obs_pres_levs_last31days=NO
+jevs_plots_global_det_atmos_grid2obs_pres_levs_last90days=NO
+jevs_plots_global_det_atmos_grid2obs_ptype_last31days=NO
+jevs_plots_global_det_atmos_grid2obs_ptype_last90days=NO
+jevs_plots_global_det_atmos_grid2obs_sfc_last31days=NO
+jevs_plots_global_det_atmos_grid2obs_sfc_last90days=NO
+jevs_plots_global_det_wave_grid2obs_last31days=NO
+jevs_plots_global_det_wave_grid2obs_last90days=NO
 
-[GRID2OBS_STEP2]
-#g2o2_model_plot_name_list: list of models reference name on plots
-#g2o2_type_list: list type of verifications to run for grid-to-obs: upper_air, conus_sfc, polar_sfc
-#### For each type the followings can be set, where [type] is upper_air, conus_sfc, or polar_sfc
-#####    g2o2_[type]_msg_type_list:    observation message type(s) to be used
-#####                                  upper_air, conus_sfc: any prepbufr
-#####                                  polar_sfc: IABP
-#####    g2o2_[type]_gather_by_list:   list of how model data was gathered in step 1
-#####    g2o2_[type]_fyc_list:         all forecst cycles to be included in verification: HH
-#####    g2o2_[type]_vhr_list:         all valid hours to be included in verification: HH
-#####    g2o2_[type]_fhr_min:          forecast hour to start verification HH[H]
-#####    g2o2_[type]_fhr_max:          forecast hour to end verification HH[H]
-#####    g2o2_[type]_event_eq:         do event equalization (True) or not (False)
-#####    g2o2_[type]_grid:             NCEP grid verification was done on
-g2o2_model_plot_name_list=gfsv16 gfsv17
-g2o2_type_list=upper_air conus_sfc
-g2o2_upper_air_msg_type_list=ADPUPA
-g2o2_upper_air_gather_by_list=VALID VALID
-g2o2_upper_air_fcyc_list=00
-g2o2_upper_air_vhr_list=00 06 12 18
-g2o2_upper_air_fhr_min=00
-g2o2_upper_air_fhr_max=168
-g2o2_upper_air_event_eq=True
-g2o2_upper_air_grid=G003
-g2o2_conus_sfc_msg_type_list=ONLYSF ADPUPA
-g2o2_conus_sfc_gather_by_list=VALID VALID
-g2o2_conus_sfc_fcyc_list=00
-g2o2_conus_sfc_vhr_list=00 06 12 18
-g2o2_conus_sfc_fhr_min=00
-g2o2_conus_sfc_fhr_max=168
-g2o2_conus_sfc_event_eq=True
-g2o2_conus_sfc_grid=G104
-g2o2_polar_sfc_msg_type_list=IABP
-g2o2_polar_sfc_gather_by_list=VALID VALID
-g2o2_polar_sfc_fcyc_list=00
-g2o2_polar_sfc_vhr_list=00 06 12 18
-g2o2_polar_sfc_fhr_min=00
-g2o2_polar_sfc_fhr_max=168
-g2o2_polar_sfc_event_eq=True
-g2o2_polar_sfc_grid=G223
-
-[PRECIP_STEP2]
-#precip2_model_plot_name_list: list of models reference name on plots
-#precip2_type_list: precip observation type/name and accumulation length: ccpa_accum24hr
-#### For each type the followings can be set, where [type] is ccpa_accum24hr
-#####    precip2_[type]_gather_by_list: list of how model data was gathered in step 1
-#####    precip2_[type]_fcyc_list:      all forecst cycles to be included in verification: HH
-#####    precip2_[type]_fhr_min:        forecast hour to start verification HH[H]
-#####    precip2_[type]_fhr_max:        forecast hour to end verification HH[H]
-#####    precip2_[type]_event_eq:       do event equalization (True) or not (False)
-#####    precip2_[type]_grid:           NCEP grid verification was done on
-precip2_model_plot_name_list=gfsv16 gfsv17
-precip2_type_list=ccpa_accum24hr
-precip2_ccpa_accum24hr_truth_name_list=ccpa_accum24hr ccpa_accum24hr
-precip2_ccpa_accum24hr_gather_by_list=VALID VALID
-precip2_ccpa_accum24hr_fcyc_list=12
-precip2_ccpa_accum24hr_fhr_min=24
-precip2_ccpa_accum24hr_fhr_max=240
-precip2_ccpa_accum24hr_event_eq=False
-precip2_ccpa_accum24hr_grid=G211
-
-[SATELLITE_STEP2]
-#sat2_model_plot_name_list: list of models reference name on plots
-#sat2_type_list: list of satellite/satellite analysis to run for: ghrsst_ncei_avhrr_anl, ghrsst_ospo_geopolar_anl
-#### For each type the followings can be set, where [type] is ghrsst_ncei_avhrr_anl or ghrsst_ospo_geopolar_anl
-#####    sat2_[type]_gather_by_list:       list of how model data was gathered in step 1
-#####    sat2_[type]_fyc_list:             all forecst cycles to be included in verification: HH
-#####    sat2_[type]_fhr_min:              forecast hour to start verification HH[H]
-#####    sat2_[type]_fhr_max:              forecast hour to end verification HH[H]
-#####    sat2_[type]_sea_ice_thresh:       threshold for sea ice, anything >= considered ice, anything below no ice
-#####    sat2_[type]_event_eq:             do event equalization (True) or not (False)
-#####    sat2_[type]_grid:                 NCEP grid verification was done on
-sat2_model_plot_name_list=gfs ecm
-sat2_type_list=ghrsst_ospo_geopolar_anl
-sat2_ghrsst_ncei_avhrr_anl_gather_by_list=VALID VALID
-sat2_ghrsst_ncei_avhrr_anl_truth_name_list=ghrsst_ncei_avhrr_anl ghrsst_ncei_avhrr_anl
-sat2_ghrsst_ncei_avhrr_anl_fcyc_list=00
-sat2_ghrsst_ncei_avhrr_anl_fhr_min=00
-sat2_ghrsst_ncei_avhrr_anl_fhr_max=120
-sat2_ghrsst_ncei_avhrr_anl_sea_ice_thresh=0.15
-sat2_ghrsst_ncei_avhrr_anl_event_eq=True
-sat2_ghrsst_ncei_avhrr_anl_grid=G219
-sat2_ghrsst_ospo_geopolar_anl_gather_by_list=VALID VALID
-sat2_ghrsst_ospo_geopolar_anl_truth_name_list=ghrsst_ospo_geopolar_anl ghrsst_ncei_avhrr_anl
-sat2_ghrsst_ospo_geopolar_anl_fcyc_list=00
-sat2_ghrsst_ospo_geopolar_anl_fhr_min=00
-sat2_ghrsst_ospo_geopolar_anl_fhr_max=120
-sat2_ghrsst_ospo_geopolar_anl_sea_ice_thresh=0.15
-sat2_ghrsst_ospo_geopolar_anl_event_eq=False
-sat2_ghrsst_ospo_geopolar_anl_grid=G219
