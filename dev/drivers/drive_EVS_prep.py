@@ -5,13 +5,13 @@ import re
 import configparser
 from datetime import datetime, timedelta
 
-###############################################################
+###################################################################
 # THERE IS NO NEED FOR USERS TO MODIFY THIS SCRIPT.
 #
-# Run this script: python drive_EVS.py [path to config file]
-# Example: python drive_EVS.py config/config.global_det
+# Run this script: python drive_EVS_prep.py [path to config file]
+# Example: python drive_EVS_prep.py config/config.prep.global_det
 #
-###############################################################
+###################################################################
 
 def error_and_exit(message):
     print(f"{message} EXITING!")
