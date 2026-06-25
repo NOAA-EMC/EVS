@@ -62,82 +62,87 @@ fi
 # Run python scripts for the specified plot type 
 ###################################################################
 
-if [ $PLOT_TYPE = performance_diagram ]; then
+if [[ -f "${RESTART_DIR}/${COMPLETED_JOBS_DIR}/${job_name}" ]]; then
+   echo "NOTE: Jobs were restarted and job${njob} has already completed. Continuing."
 
-   export STATS="sratio,pod,csi"
-   python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-   export err=$?; err_chk
+else
+    if [ $PLOT_TYPE = performance_diagram ]; then
 
-elif [ $PLOT_TYPE = threshold_average ]; then
+       export STATS="sratio,pod,csi"
+       python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+       export err=$?; err_chk
 
-   if [ $LINE_TYPE = nbrcnt ]; then
+    elif [ $PLOT_TYPE = threshold_average ]; then
 
-      export STATS="fss"
-      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-      export err=$?; err_chk
+       if [ $LINE_TYPE = nbrcnt ]; then
 
-   elif [ $LINE_TYPE = nbrctc ]; then
+          export STATS="fss"
+          python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+          export err=$?; err_chk
 
-      export STATS="csi"
-      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-      export err=$?; err_chk
+       elif [ $LINE_TYPE = nbrctc ]; then
 
-      export STATS="fbias"
-      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-      export err=$?; err_chk
+          export STATS="csi"
+          python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+          export err=$?; err_chk
 
-   elif [ $LINE_TYPE = pstd ]; then
+          export STATS="fbias"
+          python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+          export err=$?; err_chk
 
-      export STATS="bss_smpl"
-      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-      export err=$?; err_chk
+       elif [ $LINE_TYPE = pstd ]; then
 
-      export STATS="bs"
-      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-      export err=$?; err_chk
+          export STATS="bss_smpl"
+          python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+          export err=$?; err_chk
 
-   fi
+          export STATS="bs"
+          python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+          export err=$?; err_chk
 
-elif [ $PLOT_TYPE = lead_average ]; then
+       fi
 
-   if [ $LINE_TYPE = pstd ]; then
+    elif [ $PLOT_TYPE = lead_average ]; then
 
-      export STATS="bss_smpl"
-      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-      export err=$?; err_chk
+       if [ $LINE_TYPE = pstd ]; then
 
-      export STATS="bs"
-      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-      export err=$?; err_chk
+          export STATS="bss_smpl"
+          python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+          export err=$?; err_chk
 
-   else
+          export STATS="bs"
+          python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+          export err=$?; err_chk
 
-      for FCST_THRESH in ${FCST_THRESHs}; do
+       else
 
-         OBS_THRESH=${FCST_THRESH}
+          for FCST_THRESH in ${FCST_THRESHs}; do
 
-         if [ $LINE_TYPE = nbrcnt ]; then
+             OBS_THRESH=${FCST_THRESH}
 
-            export STATS="fss"
-            python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-            export err=$?; err_chk
+             if [ $LINE_TYPE = nbrcnt ]; then
 
-         elif [ $LINE_TYPE = nbrctc ]; then
+                export STATS="fss"
+                python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+                export err=$?; err_chk
 
-            export STATS="csi"
-            python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-            export err=$?; err_chk
+             elif [ $LINE_TYPE = nbrctc ]; then
 
-            export STATS="fbias"
-            python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-            export err=$?; err_chk
-         fi
+                export STATS="csi"
+                python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+                export err=$?; err_chk
 
-      done
-   
-   fi
+                export STATS="fbias"
+                python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+                export err=$?; err_chk
+             fi
+
+          done
+       
+       fi
+
+    fi
+    python -c "import sys; sys.path.insert(0, '${USHevs}/${COMPONENT}'); import cam_util; cam_util.mark_job_completed('${RESTART_DIR}', '${DATA}', '${VERIF_CASE}', '${COMPLETED_JOBS_DIR}', '${job_name}')"
 
 fi
-
-
 exit

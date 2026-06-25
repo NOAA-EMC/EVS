@@ -1316,7 +1316,7 @@ def prep_prod_prepbufr_file(source_file, dest_file, date_dt, prepbufr_type,
                                 +dest_file.rpartition('/')[2])
     if prepbufr_type == 'gdas':
         split_file = os.path.join(os.getcwd(), 'ADPUPA')
-    elif prepbufr_type == 'nam':
+    elif prepbufr_type == 'rrfs':
         split_file = os.path.join(os.getcwd(), 'ADPSFC')
     # Prep file
     if check_file_exists_size(source_file):

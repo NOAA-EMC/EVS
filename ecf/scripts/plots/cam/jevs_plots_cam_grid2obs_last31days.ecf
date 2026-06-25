@@ -58,7 +58,6 @@ export RUN="atmos"
 export VERIF_CASE="grid2obs"
 export MODELNAME=${COMPONENT}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
-export EVSINnam=${COMevs}/stats/$COMPONENT/$MODELNAME
 export EVAL_PERIOD="last31days"
 
 ############################################################

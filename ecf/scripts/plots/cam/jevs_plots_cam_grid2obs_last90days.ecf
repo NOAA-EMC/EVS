@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=07:50:00
-#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=300GB
+#PBS -l place=vscatter:exclhost,select=12:ncpus=128:mem=350GB
 #PBS -l debug=true
 
 export model=evs 
@@ -58,7 +58,6 @@ export RUN="atmos"
 export VERIF_CASE="grid2obs"
 export MODELNAME=${COMPONENT}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
-export EVSINnam=${COMevs}/stats/$COMPONENT/$MODELNAME
 export EVAL_PERIOD="last90days"
 
 ############################################################
