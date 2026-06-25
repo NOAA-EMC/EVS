@@ -93,7 +93,7 @@ for DATAROOT_dir in DATAROOT_dirs:
         os.makedirs(DATAROOT_dir, exist_ok=True)
         print("")
 
-### Convert date strings into date objects
+### Convert initdate strings into date objects
 start_initdate_str = config["DATES"]["start_initdate"]
 end_initdate_str = config["DATES"]["end_initdate"]
 start_initdate, end_initdate = None, None
