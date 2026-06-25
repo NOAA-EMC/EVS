@@ -100,36 +100,41 @@ for DATAROOT_dir in DATAROOT_dirs:
         print("")
 print(f"DATAROOT: {DATAROOT_dirs[0]}\n")
 
-### Convert initdate strings into date objects
-start_initdate_str = config["DATES"]["start_initdate"]
-end_initdate_str = config["DATES"]["end_initdate"]
-start_initdate, end_initdate = None, None
-try:
-    # Parse start_initdate from multiple date formats
-    for fmt in ('%Y-%m-%d', '%Y%m%d'):
-        try:
-            start_initdate = datetime.strptime(start_initdate_str, fmt).date()
-            break
-        except ValueError:
-            pass
-    # Parse end_initdate from multiple date formats
-    for fmt in ('%Y-%m-%d', '%Y%m%d'):
-        try:
-            end_initdate = datetime.strptime(end_initdate_str, fmt).date()
-            break
-        except ValueError:
-            pass
-    if start_initdate is None or end_initdate is None:
-        raise ValueError("Invalid initdate format in given config file")
-except ValueError:
-    error_and_exit(
-        "Invalid initdate format. Please use yyyymmdd or yyyy-mm-dd."
-    )
-if start_initdate > end_initdate:
-    error_and_exit(
-        "The start initdate cannot be after the end initdate for prep."
-    )
-print(f"Start initdate: {start_initdate} (Type: {type(start_initdate)})")
-print(f"End initdate:   {end_initdate} (Type: {type(end_initdate)})")
-print("")
+### Check for PREP steps to run in config file (if any)
+if (config.get("RUN", "RUN_PREP_GLOBAL_DET", fallback="NO") == "YES" or 
+    config.get("RUN", "RUN_PREP_AIGEFS", fallback="NO") == "YES"):
 
+	### Convert initdate strings into date objects
+	start_initdate_str = config["DATES"]["start_initdate"]
+	end_initdate_str = config["DATES"]["end_initdate"]
+	start_initdate, end_initdate = None, None
+	try:
+	    # Parse start_initdate from multiple date formats
+	    for fmt in ('%Y-%m-%d', '%Y%m%d'):
+	        try:
+	            start_initdate = datetime.strptime(start_initdate_str, fmt).date()
+	            break
+	        except ValueError:
+	            pass
+	    # Parse end_initdate from multiple date formats
+	    for fmt in ('%Y-%m-%d', '%Y%m%d'):
+	        try:
+	            end_initdate = datetime.strptime(end_initdate_str, fmt).date()
+	            break
+	        except ValueError:
+	            pass
+	    if start_initdate is None or end_initdate is None:
+	        raise ValueError("Invalid initdate format in given config file")
+	except ValueError:
+	    error_and_exit(
+	        "Invalid initdate format. Please use yyyymmdd or yyyy-mm-dd."
+	    )
+	if start_initdate > end_initdate:
+	    error_and_exit(
+	        "The start initdate cannot be after the end initdate for prep."
+	    )
+	print(f"Start initdate: {start_initdate} (Type: {type(start_initdate)})")
+	print(f"End initdate:   {end_initdate} (Type: {type(end_initdate)})")
+	print("")
+else:
+    print("No PREP option is set to YES in config file. Skipping inidate parsing.")
