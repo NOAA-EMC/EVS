@@ -2036,12 +2036,14 @@ def calculate_stat(logger, model_data, stat, conversion):
          stat_values = fdir
    elif stat == 'orate' or stat == 'baser':
       if line_type in ['MCTC', 'CTC', 'NBRCTC']:
-         stat_values = (fy_oy + fn_oy)/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         stat_values = (fy_oy + fn_oy)/n
       elif line_type == 'NBRCNT':
          stat_values = orate
    elif stat == 'frate':
       if line_type in ['MCTC', 'CTC', 'NBRCTC']:
-         stat_values = (fy_oy + fy_on)/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         stat_values = (fy_oy + fy_on)/n
       elif line_type == 'NBRCNT':
          stat_values = frate
    elif stat == 'fss':
@@ -2055,14 +2057,16 @@ def calculate_stat(logger, model_data, stat, conversion):
          stat_values = ufss
    elif stat == 'orate_frate' or stat == 'baser_frate':
       if line_type in ['MCTC', 'CTC', 'NBRCTC']:
-         stat_values_fbar = (fy_oy + fy_on)/total
-         stat_values_obar = (fy_oy + fn_oy)/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         stat_values_fbar = (fy_oy + fy_on)/n
+         stat_values_obar = (fy_oy + fn_oy)/n
          stat_values = pd.concat(
             [stat_values_fbar, stat_values_obar], axis=1
          )
    elif stat == 'accuracy':
       if line_type in ['MCTC', 'CTC', 'NBRCTC']:
-         stat_values = (fy_oy + fn_on)/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         stat_values = (fy_oy + fn_on)/n
    elif stat == 'fbias':
       if line_type in ['MCTC', 'CTC', 'NBRCTC']:
          stat_values = (fy_oy + fy_on)/(fy_oy + fn_oy)
@@ -2086,7 +2090,8 @@ def calculate_stat(logger, model_data, stat, conversion):
          stat_values = fy_oy/(fy_oy + fy_on + fn_oy)
    elif stat == 'gss' or stat == 'ets':
       if line_type in ['MCTC', 'CTC', 'NBRCTC']:
-         C = ((fy_oy + fy_on)*(fy_oy + fn_oy))/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         C = ((fy_oy + fy_on)*(fy_oy + fn_oy))/n
          stat_values = (fy_oy - C)/(fy_oy + fy_on + fn_oy - C)
    elif stat == 'hk' or stat == 'tss' or stat == 'pss':
       if line_type in ['MCTC', 'CTC', 'NBRCTC']:
@@ -2095,10 +2100,11 @@ def calculate_stat(logger, model_data, stat, conversion):
          )
    elif stat == 'hss':
       if line_type in ['MCTC', 'CTC', 'NBRCTC']:
+         n = fy_oy + fy_on + fn_oy + fn_on
          Ca = (fy_oy+fy_on)*(fy_oy+fn_oy)
          Cb = (fn_oy+fn_on)*(fy_on+fn_on)
-         C = (Ca + Cb)/total
-         stat_values = (fy_oy + fn_on - C)/(total - C)
+         C = (Ca + Cb)/n
+         stat_values = (fy_oy + fn_on - C)/(n - C)
    else:
       logger.error("FATAL ERROR: "+stat+" is not a valid option")
       exit(1)
@@ -2149,14 +2155,28 @@ def get_ci_file(stat, input_filename, fcst_lead, output_base_dir, ci_method):
    return CI_file          
 
 def equalize_samples(logger, df, group_by):
+
+    # Use adjusted/display columns for equalization if they exist.
+    # Otherwise fall back to the normal columns.
+    if 'EQUALIZE_LEAD_HOURS' not in df:
+        df['EQUALIZE_LEAD_HOURS'] = df['LEAD_HOURS']
+
+    if 'EQUALIZE_VALID' not in df:
+        df['EQUALIZE_VALID'] = df['VALID']
+
+
     # columns that will be used to drop duplicate rows across model groups
     cols_to_check = [
         key for key in [
-            'LEAD_HOURS', 'VALID', 'INIT', 'FCST_THRESH_SYMBOL', 
+            'EQUALIZE_LEAD_HOURS', 'EQUALIZE_VALID', 'FCST_THRESH_SYMBOL', 
             'FCST_THRESH_VALUE', 'OBS_LEV']
         if key in df.keys()
     ]
-    df_groups = df.groupby(group_by)
+    equalize_group_by = [
+        'EQUALIZE_LEAD_HOURS' if g == 'LEAD_HOURS' and 'EQUALIZE_LEAD_HOURS' in df 
+        else g for g in group_by
+    ]
+    df_groups = df.groupby(equalize_group_by)
     indexes = []
     # List all of the independent variables that are found in the data
     unique_indep_vars = np.unique(np.array(list(df_groups.groups.keys())).T[1])
@@ -2186,21 +2206,27 @@ def equalize_samples(logger, df, group_by):
         # Get all the indices for rows in each group that match the merged df
         for dfs_i in dfs:
             for idx, row in dfs_i.iterrows():
-                if (
-                        row.to_numpy()[1:].tolist() 
-                        in match_these.to_numpy()[:,1:].tolist()):
+                if row.to_numpy().tolist() in match_these.to_numpy().tolist():
                     indexes.append(idx)
     # Select the matched rows by index among the rows in the original DataFrame
     df_equalized = df.loc[indexes]
+
     # Remove duplicates again, this time among both the columns 
     # in cols_to_check and the 'MODEL' column, which avoids, say, models with
     # repeated data from multiple entities
+    original_cols_to_check = [
+        key for key in [
+            'LEAD_HOURS', 'VALID', 'FCST_THRESH_SYMBOL', 'FCST_THRESH_VALUE', 
+            'OBS_LEV'
+        ]
+        if key in df.keys()
+    ]
     df_equalized = df_equalized.loc[
-        df_equalized[cols_to_check+['MODEL']].drop_duplicates().index
+        df_equalized[original_cols_to_check+['MODEL']].drop_duplicates().index
     ]
     # Remove duplicates again, this time among both the columns 
     # Regroup the data and move forward with these groups!
-    df_equalized_groups = df_equalized.groupby(group_by)
+    df_equalized_groups = df_equalized.groupby(equalize_group_by)
     # Check that groups are indeed equally sized for each independent variable
     df_groups_sizes = df_equalized_groups.size()
     if df_groups_sizes.size > 0:

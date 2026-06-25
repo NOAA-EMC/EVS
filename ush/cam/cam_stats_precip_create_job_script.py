@@ -60,7 +60,6 @@ if job_type == 'reformat':
     FHR_END_FULL = os.environ['FHR_END_FULL']
     FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
     MIN_IHOUR = os.environ['MIN_IHOUR']
-    COMINfcst = os.environ['COMINfcst']
     OBS_LEV = os.environ['OBS_LEV']
     MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
     njob = os.environ['njob']
@@ -127,6 +126,7 @@ if VERIF_CASE == 'precip':
             )
         MODEL_PCP_COMBINE_METHOD = os.environ['MODEL_PCP_COMBINE_METHOD']
         MODEL_PCP_COMBINE_COMMAND = os.environ['MODEL_PCP_COMBINE_COMMAND']
+        USE_ZERO_ACCUM = os.environ['USE_ZERO_ACCUM']
     elif job_type == 'generate':
         MODEL_ACC = os.environ['MODEL_ACC']
         OBS_ACC = os.environ['OBS_ACC']
@@ -139,6 +139,11 @@ if VERIF_CASE == 'precip':
         COMPONENT = os.environ['COMPONENT']
         OBSNAME = os.environ['OBSNAME']
         COMINobs = os.environ['COMINobs']
+        fcst_avail = cutil.get_fcst_avail(
+            VERIF_CASE=VERIF_CASE, job_type=job_type, COMINfcst=COMINfcst, 
+            MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE, DATA=DATA,
+            VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
+            VHOUR=VHOUR, FHR=FHR, ACC=ACC, FCST_VAR_NAME=None)
         if OBS_ACC == 'VARIABLE': 
             OBS_ACC = cutil.get_obs_accums(
                 COMINobs, 
@@ -184,10 +189,7 @@ if job_type == 'reformat':
     job_env_vars_dict['FHR_END_FULL'] = FHR_END_FULL
     job_env_vars_dict['FHR_INCR_FULL'] = FHR_INCR_FULL
     job_env_vars_dict['MIN_IHOUR'] = MIN_IHOUR
-    job_env_vars_dict['COMINfcst'] = COMINfcst
     job_env_vars_dict['OBS_LEV'] = OBS_LEV
-    job_env_vars_dict['MODEL_INPUT_TEMPLATE'] = MODEL_INPUT_TEMPLATE
-    job_env_vars_dict['BUCKET_INTERVAL'] = BUCKET_INTERVAL
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
@@ -214,11 +216,8 @@ elif job_type == 'gather':
     job_env_vars_dict['NEST'] = NEST
 if VERIF_CASE == 'precip': 
     if job_type == 'reformat':
-        job_env_vars_dict['MODEL_ACC'] = MODEL_ACC
         job_env_vars_dict['OBS_ACC'] = OBS_ACC
         job_env_vars_dict['ACC'] = ACC
-        job_env_vars_dict['MODEL_PCP_COMBINE_METHOD'] = MODEL_PCP_COMBINE_METHOD
-        job_env_vars_dict['MODEL_PCP_COMBINE_COMMAND'] = MODEL_PCP_COMBINE_COMMAND
         job_dependent_vars['FHR_START'] = {
             'exec_value': '',
             'bash_value': (
@@ -276,7 +275,7 @@ if VERIF_CASE == 'precip':
                     job_cmd_list_iterative.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'
-                        + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
+                        + f'PCPCombine_obs{OBSNAME.upper()}.conf'
                     )
                     job_cmd_list_iterative.append(
                         f'python -c '
@@ -304,7 +303,7 @@ if VERIF_CASE == 'precip':
                     )
         if job_type == 'generate':
             if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
-                if OBS_ACC is not None:
+                if OBS_ACC is not None and fcst_avail:
                     job_cmd_list.append(
                         f'{metplus_launcher} -c {machine_conf} '
                         + f'-c {MET_PLUS_CONF}/'

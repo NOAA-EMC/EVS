@@ -56,7 +56,7 @@ else
 fi
 
 # Build
-for code in ecm_gfs_look_alike_new jma_merge pcpconform sref_precip evs_g2g_adjustCMC; do
+for code in ecm_gfs_look_alike_new jma_merge pcpconform evs_g2g_adjustCMC; do
 
   cd "${pkg_root}/sorc/${code}.fd"
   if [ ${BUILD_CLEAN} = "YES" ]; then

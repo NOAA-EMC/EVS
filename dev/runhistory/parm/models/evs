@@ -2,12 +2,12 @@ whichpdys       PDYm8
 runjobs         jrunhistory_daily
 storetypes      perm
 dir             $(compath.py evs/evs_ver)
-files           ./stats/{aigefs,analyses,aqm,cam,global_chem,global_det,global_ens,mesoscale,rtofs,subseasonal,wafs}/*.%thepdy%/evs.stats.*.v%thepdy%.stat
+files           ./stats/{aigefs,analyses,aqm,cam,global_chem,global_det,global_ens,rtofs,subseasonal,wafs}/*.%thepdy%/evs.stats.*.v%thepdy%.stat
 tarmod          .stats
 dotransfer
 #
 whichpdys       PDYm5
 storetypes      5yr
-files           ./plots/{aqm,cam,global_chem,global_det,mesoscale,rtofs}/headline.%thepdy%/evs.plots.*headline.v%thepdy%.tar
+files           ./plots/{aqm,cam,global_chem,global_det,rtofs}/headline.%thepdy%/evs.plots.*headline.v%thepdy%.tar
 tarmod          .plots
 dotransfer

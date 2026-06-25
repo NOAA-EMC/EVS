@@ -24,6 +24,7 @@ import logging
 import shutil
 from functools import reduce
 from datetime import datetime, timedelta as td
+from urllib.parse import urlparse, parse_qs
 
 # Third-party imports
 import numpy as np
@@ -61,7 +62,8 @@ reference = Reference()
 
 
 def plot_lead_average(df: pd.DataFrame, logger: logging.Logger, 
-                      date_range: tuple, model_list: list, num: int = 0, 
+                      date_range: tuple, model_list: list, 
+                      model_queries: list = [{}], num: int = 0, 
                       level: str = 'P500', flead='all', 
                       fcst_thresh: list = ['<20'], obs_thresh: list = [''],
                       metric1_name: str = 'BCRMSE', metric2_name: str = 'ME', 
@@ -109,6 +111,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
+
     # filter by forecast lead times
     if isinstance(flead, list):
         if len(flead) <= 3:
@@ -118,13 +121,62 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'u\u2013'+f'{flead[-1]}'
-        df = df[df['LEAD_HOURS'].isin(flead)]
+        if any(model_queries):
+            df_list = []
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = [
+                        int(f)-int(model_queries[m]['shift'][0]) for f in flead
+                    ]
+                else:
+                    flead_shift = flead
+                df_tmp = df[
+                    (df['LEAD_HOURS'].isin(flead_shift))
+                    & (df['MODEL'] == model)
+                ]
+                df_list.append(df_tmp)
+            df = pd.concat(df_list) if df_list else df.iloc[0:0]
+        else:
+            df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
-        df = df[
-            (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
-        ]
-    elif isinstance(flead, np.int):
-        df = df[df['LEAD_HOURS'] == flead]
+        if any(model_queries):
+            df_list = []
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = [
+                        int(f) - int(model_queries[m]['shift'][0]) for f in flead
+                    ]
+                else:
+                    flead_shift = flead
+                df_tmp = df[
+                    (df['LEAD_HOURS'] >= flead_shift[0])
+                    & (df['LEAD_HOURS'] <= flead_shift[1])
+                    & (df['MODEL'] == model)
+                ]
+                df_list.append(df_tmp)
+            df = pd.concat(df_list) if df_list else df.iloc[0:0]
+        else:
+            df = df[
+                (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
+            ]
+    elif isinstance(flead, (int, np.integer)):
+        if any(model_queries):
+            df_list = []
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = (
+                        int(flead) - int(model_queries[m]['shift'][0])
+                    )
+                else:
+                    flead_shift = flead
+                df_tmp = df[
+                    (df['LEAD_HOURS'] == flead_shift)
+                    & (df['MODEL'] == model)
+                ]
+                df_list.append(df_tmp)
+            df = pd.concat(df_list) if df_list else df.iloc[0:0]
+        else:
+            df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"FATAL ERROR: Invalid forecast lead: \'{flead}\'"
         e2 = f"Please check settings for forecast leads."
@@ -323,6 +375,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         str(m)
         for (m, keep) in zip(model_list, cols_to_keep) if keep
     ]
+    model_queries = [
+        m for (m, keep) in zip(model_queries, cols_to_keep) if keep
+    ]
     if not all(cols_to_keep):
         if not any(
                 group_name in str(models_removed_string) 
@@ -337,7 +392,17 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-    group_by = ['MODEL', 'LEAD_HOURS']
+    group_by = ['MODEL', 'EQUALIZE_LEAD_HOURS']
+    df['EQUALIZE_LEAD_HOURS'] = df['LEAD_HOURS']
+    df['EQUALIZE_VALID'] = df['VALID']
+    if any(model_queries):
+        for m, model in enumerate(model_list):
+            if 'shift' in model_queries[m]:
+                shift_hours = int(model_queries[m]['shift'][0])
+                model_mask = df['MODEL'] == model
+                df.loc[model_mask, 'EQUALIZE_LEAD_HOURS'] = (
+                    df.loc[model_mask, 'LEAD_HOURS'] + shift_hours
+                )
     if sample_equalization:
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:
@@ -359,9 +424,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         pd.MultiIndex.from_product(
             [
                 np.unique(df_aggregated.index.get_level_values('MODEL')), 
-                np.unique(df_aggregated.index.get_level_values('LEAD_HOURS'))
+                np.unique(df_aggregated.index.get_level_values('EQUALIZE_LEAD_HOURS'))
             ], 
-            names=['MODEL','LEAD_HOURS']
+            names=['MODEL','EQUALIZE_LEAD_HOURS']
         ), 
         fill_value=np.nan
     )
@@ -370,14 +435,14 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated[df_agg_no_nan_rows].iloc[
             df_aggregated[df_agg_no_nan_rows]
             .index.get_level_values('MODEL') == model
-        ].index.get_level_values('LEAD_HOURS').max() for model in model_list
+        ].index.get_level_values('EQUALIZE_LEAD_HOURS').max() for model in model_list
     ]
     remove_rows_by_lead = []
     for m, model in enumerate(model_list):
         df_model_group = df_aggregated.iloc[
             df_aggregated.index.get_level_values('MODEL') == model
         ]
-        rows_with_nans = df_model_group.index.get_level_values('LEAD_HOURS')[
+        rows_with_nans = df_model_group.index.get_level_values('EQUALIZE_LEAD_HOURS')[
             df_model_group.isna().any(axis=1)
         ]
         remove_rows_by_lead_m = [
@@ -408,12 +473,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     if units in reference.unit_conversions:
         unit_convert = True
         var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
         if str(var_long_name_key).upper() == 'HGT':
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                 if units in ['m', 'gpm']:
                     units = 'gpm'
-            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
-                unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
         elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
@@ -486,35 +551,35 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     ]
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
-        index='LEAD_HOURS'
+        index='EQUALIZE_LEAD_HOURS'
     )
     if sample_equalization:
         pivot_counts = pd.pivot_table(
             df_aggregated, values='COUNTS', columns='MODEL',
-            index='LEAD_HOURS'
+            index='EQUALIZE_LEAD_HOURS'
         )
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
-            index='LEAD_HOURS'
+            index='EQUALIZE_LEAD_HOURS'
         )
     if confidence_intervals:
         pivot_ci_lower1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BLERR',
-            columns='MODEL', index='LEAD_HOURS'
+            columns='MODEL', index='EQUALIZE_LEAD_HOURS'
         )
         pivot_ci_upper1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BUERR',
-            columns='MODEL', index='LEAD_HOURS'
+            columns='MODEL', index='EQUALIZE_LEAD_HOURS'
         )
         if metric2_name is not None:
             pivot_ci_lower2 = pd.pivot_table(
                 df_aggregated, values=str(metric2_name).upper()+'_BLERR',
-                columns='MODEL', index='LEAD_HOURS'
+                columns='MODEL', index='EQUALIZE_LEAD_HOURS'
             )
             pivot_ci_upper2 = pd.pivot_table(
                 df_aggregated, values=str(metric2_name).upper()+'_BUERR',
-                columns='MODEL', index='LEAD_HOURS'
+                columns='MODEL', index='EQUALIZE_LEAD_HOURS'
             )
     # Reindex pivot table with full list of lead hours, introducing NaNs 
     x_vals_pre = pivot_metric1.index.tolist()
@@ -744,6 +809,21 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if 'shift' in model_queries[m]:
+            shift_hours = int(model_queries[m]['shift'][0])
+            if str(date_type).upper() == 'INIT':
+                date_hours_shift = [
+                    f'{(int(date_hour) + shift_hours) % 24:02d}'
+                    for date_hour in date_hours
+                ]
+                date_hours_shift_string = plot_util.get_name_for_listed_items(
+                        date_hours_shift, ', ', '', 'Z', '&', ''
+                    )
+                model_plot_name += f' ({date_hours_shift_string})'
+            else:
+                if shift_hours >= 0:
+                    model_plot_name += '+'
+                model_plot_name += f'{shift_hours}H'
         if str(model_list[m]) not in pivot_metric1:
             continue
         y_vals_metric1 = pivot_metric1[str(model_list[m])].values
@@ -1136,6 +1216,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         var_savename = 'ASNOW'
     elif any(field in var_savename.upper() for field in ['SNOD']):
         var_savename = 'SNOD'
+    elif any(field in var_savename.upper() for field in ['WEASD']):
+        var_savename = 'WEASD'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
@@ -1515,6 +1597,13 @@ def main():
         )
     logger.debug('========================================')
 
+    models = []
+    model_queries = []
+    for model in MODELS:
+        parsed_model = urlparse(model)
+        models.append(parsed_model.path)
+        model_queries.append(parse_qs(parsed_model.query))
+
     date_range = (
         datetime.strptime(date_beg, '%Y%m%d'), 
         datetime.strptime(date_end, '%Y%m%d')+td(days=1)-td(milliseconds=1)
@@ -1656,13 +1745,15 @@ def main():
                     logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
                     VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
                     date_hours, FLEADS, requested_var, fcst_var_names, obs_var_names, 
-                    MODELS, domain, INTERP, INTERP_PNTS, MET_VERSION, clear_prune_dir
+                    models, model_queries, domain, INTERP, INTERP_PNTS, MET_VERSION, 
+                    clear_prune_dir
                 )
                 if df is None:
                     continue
                 df_metric = df
                 plot_lead_average(
-                    df_metric, logger, date_range, MODELS, num=num, 
+                    df_metric, logger, date_range, models, 
+                    model_queries = model_queries, num=num, 
                     flead=FLEADS, level=fcst_level, fcst_thresh=fcst_thresh, 
                     obs_thresh=obs_thresh,
                     metric1_name=metrics[0], metric2_name=metrics[1], 

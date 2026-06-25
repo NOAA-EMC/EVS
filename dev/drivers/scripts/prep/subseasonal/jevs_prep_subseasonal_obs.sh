@@ -46,7 +46,7 @@ export NET=evs
 export STEP=prep
 export COMPONENT=subseasonal
 export RUN=atmos
-export OBSNAME="gfs ecmwf osi ghrsst umd nam ccpa"
+export OBSNAME="gfs ecmwf osi ghrsst umd gdas ccpa"
 export PREP_TYPE=obs
 
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT/$RUN
