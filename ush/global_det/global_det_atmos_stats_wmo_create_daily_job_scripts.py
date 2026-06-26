@@ -58,20 +58,20 @@ dont_write_env_var_list = [
 
 # Set file formats
 anl_file_format = os.path.join(
-    COMINgfs, MODELNAME+'.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'atmos',
-    MODELNAME+'.t{valid?fmt=%2H}z.pgrb2.0p25.anl'
+    COMINgfs, MODELNAME+'.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}',
+    'products/atmos/grib2/0p25', MODELNAME+'.t{valid?fmt=%2H}z.pres_a.0p25.analysis.grib2'
 )
 fhr_0p25_file_format = os.path.join(
-    COMINgfs, MODELNAME+'.{init?fmt=%Y%m%d}', '{init?fmt=%2H}', 'atmos',
-    MODELNAME+'.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}'
+    COMINgfs, MODELNAME+'.{init?fmt=%Y%m%d}', '{init?fmt=%2H}',
+    'products/atmos/grib2/0p25', MODELNAME+'.t{init?fmt=%2H}z.pres_a.f{lead?fmt=%3H}.grib2'
 )
 gaussian_file_format = os.path.join(
     COMIN, 'prep', COMPONENT, RUN+'.{init?fmt=%Y%m%d}', MODELNAME,
     MODELNAME+'.wmo.t{init?fmt=%2H}z.f{lead?fmt=%3H}'
 )
 cnvstat_file_format = os.path.join(
-     COMINgfs, 'gdas.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'atmos',
-     'gdas.t{valid?fmt=%2H}z.cnvstat'
+     COMINgfs, 'gdas.{valid?fmt=%Y%m%d}', '{valid?fmt=%2H}', 'analysis/atmos',
+     'gdas.t{valid?fmt=%2H}z.cnvstat.tar'
 )
 cnvstat_txt_file_format = os.path.join(
     '{output_dir?fmt=str}', RUN+'.{valid?fmt=%Y%m%d}', MODELNAME, VERIF_CASE,
