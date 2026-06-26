@@ -1,7 +1,21 @@
+#PBS -N jevs_prep_global_det_atmos_00
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q dev
+#PBS -A VERF-DEV
+#PBS -l walltime=00:45:00
+#PBS -l place=shared,select=1:ncpus=1:mem=125GB
+#PBS -l debug=true
+
+set -x 
+
+cd $PBS_O_WORKDIR
+
 export model=evs
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export SENDCOM=YES
-export SENDMAIL=NO
+export SENDMAIL=YES
 export KEEPDATA=NO
 export job=${PBS_JOBNAME:-jevs_prep_global_det_atmos}
 export jobid=$job.${PBS_JOBID:-$$}
