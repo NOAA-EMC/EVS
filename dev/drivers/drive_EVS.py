@@ -62,23 +62,21 @@ def create_job_script(
     for check_file in [jobfile, logfile]:
         if os.path.exists(check_file):
             try:
-                print(f"Removing existing file {check_file}")
+                print(f"Removing existing job or log file: {check_file}")
                 os.remove(check_file)
             except OSError as e:
                 error_and_exit(
-                    f"Could not removed existing log file {check_file}: {e}"
+                    f"Could not removed existing job or log file: {check_file}: {e}"
                 )
     # --- Define Variables ---
     reset_value_dict = {}
     if "PREP" in step:
         component_idx = (
-            user_config["INPUT_OUTPUT"]\
-            ["component_list"].split(" ").index(comp_name)
+            user_config["RUN"]["component_list"].split(" ").index(comp_name)
         )
         reset_value_dict["component_list"] = comp_name
     # Set variables from config file
     model = [config["INPUT_OUTPUT"]["model"]][0]
-    evs_ver_2d = [config["INPUT_OUTPUT"]["evs_ver_2d"]][0]
     SENDCOM = [config["INPUT_OUTPUT"]["SENDCOM"]][0]
     SENDMAIL = [config["INPUT_OUTPUT"]["SENDMAIL"]][0]
     KEEPDATA = [config["INPUT_OUTPUT"]["KEEPDATA"]][0]
@@ -93,10 +91,10 @@ def create_job_script(
     # Set job specifics
     jobname = jobfile.rpartition("/")[2].replace(".sh", "")
     print(f"jobname: {jobname}")
-    job_jevs_script = os.path.join(
-        HOMEevs, f"dev/drivers/scripts", step.lower(), component, f"{dev_driver}.sh"
-    )
-    print(f"job_jevs_script: {job_jevs_script}")
+    if "atmos" in dev_driver:
+        run = "atmos"
+    elif "wave" in dev_driver:
+        run = "wave"
 
     account = user_config["MACHINE"]["queue_account"]
     if "jevs_prep_global_det_atmos" == dev_driver:
@@ -108,6 +106,7 @@ def create_job_script(
         nproc = "1"
         memory = "125GB"
         vhr="00"
+        jjob="JEVS_PREP_GLOBAL_DET"
 
     # Set machine specifics
     account = user_config["MACHINE"]["queue_account"]
@@ -136,25 +135,25 @@ def create_job_script(
     sh.write(f"set -x\n")
 
     sh.write("\n")
-    sh.write("# Link in fix files\n")
-    sh.write(f"rm -rf {HOMEevs}/fix\n")
-    sh.write(f"ln -sf {fix_files} {HOMEevs}/fix\n")
+    sh.write(f"if [ -d {HOMEevs}/fix ] || [ -L {HOMEevs}/fix ]; then\n")
+    sh.write(f"	rm -rf {HOMEevs}/fix\n")
+    sh.write(f"	ln -sf {fix_files} {HOMEevs}/fix\n")
+    sh.write(f"else\n")
+    sh.write(f"	ln -sf {fix_files} {HOMEevs}/fix\n")
+    sh.write(f"fi\n")
 
     sh.write("\n")
     sh.write(f"export model={model}\n")
     sh.write(f"export HOMEevs={HOMEevs}\n")
 
     sh.write("\n")
-    sh.write(f"export SENDCOM={SENDCOM}\n")
-    sh.write(f"export SENDMAIL={SENDMAIL}\n")
-    sh.write(f"export KEEPDATA={KEEPDATA}\n")
-    # NOTE: Add vhr, job, jobid and SITE and module load prod_envir and module reset and source module files in a WCOSS2 section at the bottom
-
-    sh.write("\n")
     sh.write(f"source {HOMEevs}/versions/run.ver\n")
     sh.write("evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)\n")
 
     sh.write("\n")
+    sh.write(f"export KEEPDATA={KEEPDATA}\n")
+    sh.write(f"export SENDCOM={SENDCOM}\n")
+    sh.write(f"export SENDMAIL={SENDMAIL}\n")
     sh.write(f"export MAILTO={MAILTO}\n")
 
     sh.write("\n")
@@ -162,30 +161,43 @@ def create_job_script(
     sh.write(f"export NET={model}\n")
     sh.write(f"export STEP={step.lower()}\n")
     sh.write(f"export COMPONENT={component}\n")
-    sh.write("# Define RUN using job name before completing this effort\n")
-    sh.write(f"export RUN=RUN\n")
+    sh.write(f"export RUN={run}\n")
 
     sh.write("\n")
     sh.write(f"export DATAROOT={DATAROOT}\n")
     sh.write(f"export TMPDIR={DATAROOT}\n")
-    sh.write(f"export COMIN={COMIN_ROOT}/{model}/{evs_ver_2d}\n")
-    sh.write("# Define RUN using job name before completing this effort\n")
-    sh.write(f"export COMOUT={COMOUT_ROOT}/{model}/{evs_ver_2d}/{step.lower()}/{component}/RUN\n")
+    sh.write(f"export COMIN={COMIN_ROOT}/{model}/$evs_ver_2d\n")
+    sh.write(f"export COMOUT={COMOUT_ROOT}/{model}/$evs_ver_2d/{step.lower()}/{component}/{run}\n")
 
-    sh.write("\n")
-    sh.write(f"export MODELNAME={modelname}\n")
-    sh.write(f"export OBSNAME={obsname}\n")
+    if component == 'global_det' and step.lower() == 'prep' and run == 'atmos':
+        sh.write("\n")
+        sh.write(f'export MODELNAME="{modelname}"\n')
+        sh.write(f'export OBSNAME="{obsname}"\n')
+    else:
+        pass
 
     sh.write("\n")
     line=f"export INITDATE={evsdate}"
     clean_line = line.replace("-", "")
     sh.write(f"{clean_line}\n")
 
-    #Note to self, this is where another WCOSS2 section will go for missing pieces
+    # ------------------------------------------------------------------------
+    # Final machine-specific information
+    # ------------------------------------------------------------------------
+    if machine_name == 'WCOSS2':
+        sh.write(f"export job=${{PBS_JOBNAME:-{dev_driver}}}\n")
+        sh.write("export jobid=$job.${PBS_JOBID:-$$}\n")
+        sh.write("export SITE=$(cat /etc/cluster_name)\n")
+        sh.write(f"export vhr={vhr}\n")
+        sh.write("\n")
+        sh.write(f"module reset\n")
+        sh.write("module load prod_envir/${prod_envir_ver}\n")
+        sh.write(f"source {HOMEevs}/dev/modulefiles/{component}/{component}_{step.lower()}.sh\n")
+        sh.write(f"module list\n")
 
     sh.write("\n")
     sh.write(f"# CALL executable job script here\n")
-    sh.write(f"{HOMEevs}/jobs/jjob_should_go_here\n")
+    sh.write(f"{HOMEevs}/jobs/{jjob}\n")
 
     sh.write("\n")
     sh.write(f"######################################################################\n")
@@ -245,13 +257,11 @@ DATAROOT_dirs.append(os.path.join(config["INPUT_OUTPUT"]["DATAROOT"], "jobs"))
 DATAROOT_dirs.append(os.path.join(config["INPUT_OUTPUT"]["DATAROOT"], "logs"))
 for DATAROOT_dir in DATAROOT_dirs:
     if not os.path.exists(DATAROOT_dir):
-        print("")
         print(f"Creating {DATAROOT_dir}")
         os.makedirs(DATAROOT_dir, exist_ok=True)
 
 ### Run jobs
-component_list = config["INPUT_OUTPUT"]["component_list"].split(" ")
-print("")
+component_list = config["RUN"]["component_list"].split(" ")
 print(f"component_list: {component_list}\n")
 # Submit PREP, STATS, or PLOTS jobs
 for step_switch, step_switch_value in config["RUN"].items():
@@ -274,8 +284,6 @@ for step_switch, step_switch_value in config["RUN"].items():
             		error_and_exit(
                 		"Invalid initdate format. Please use yyyymmdd or yyyy-mm-dd."
             		)
-        	print(f"EVS initdate for {step_switch}: {initdate} (Type: {type(initdate)})")
-        	print("")
 
         	for component in component_list:
         		component_caps=component.upper()
@@ -283,7 +291,7 @@ for step_switch, step_switch_value in config["RUN"].items():
         			if comp_switch_value == "YES":
         				if "prep" in comp_switch:
         					print(
-        						f"--- Generating scripts for {comp_switch}, initdate {initdate:%Y%m%d} ---"
+        						f"--- Generating submission script for {comp_switch}, initdate {initdate:%Y%m%d} ---"
         					)
         					job_script = os.path.join(
         						os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
