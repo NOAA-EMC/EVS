@@ -76,17 +76,25 @@ def create_job_script(
             ["component_list"].split(" ").index(comp_name)
         )
         reset_value_dict["component_list"] = comp_name
-    # Set EVS home location
-    current_dir = os.getcwd()
-    HOMEevs = os.path.abspath(
-        os.path.join(current_dir, os.pardir, os.pardir)
-    )
+    # Set variables from config file
+    model = [config["INPUT_OUTPUT"]["model"]][0]
+    evs_ver_2d = [config["INPUT_OUTPUT"]["evs_ver_2d"]][0]
+    SENDCOM = [config["INPUT_OUTPUT"]["SENDCOM"]][0]
+    SENDMAIL = [config["INPUT_OUTPUT"]["SENDMAIL"]][0]
+    KEEPDATA = [config["INPUT_OUTPUT"]["KEEPDATA"]][0]
+    MAILTO = [config["INPUT_OUTPUT"]["MAILTO"]][0]
+    HOMEevs = [config["INPUT_OUTPUT"]["HOMEevs"]][0]
+    DATAROOT = [config["INPUT_OUTPUT"]["DATAROOT"]][0]
+    TMPDIR = [config["INPUT_OUTPUT"]["DATAROOT"]][0]
+    COMIN_ROOT = [config["INPUT_OUTPUT"]["COMIN_ROOT"]][0]
+    COMOUT_ROOT = [config["INPUT_OUTPUT"]["COMOUT_ROOT"]][0]
     print(f"HOMEevs: {HOMEevs}")
+    print(f"DATAROOT: {DATAROOT}")
     # Set job specifics
     jobname = jobfile.rpartition("/")[2].replace(".sh", "")
     print(f"jobname: {jobname}")
     job_jevs_script = os.path.join(
-        HOMEevs, "dev/drivers/scripts", step.lower(), comp_name, f"{dev_driver}.sh"
+        HOMEevs, f"dev/drivers/scripts", step.lower(), component, f"{dev_driver}.sh"
     )
     print(f"job_jevs_script: {job_jevs_script}")
 
@@ -99,6 +107,7 @@ def create_job_script(
         nodes = "1"
         nproc = "1"
         memory = "125GB"
+        vhr="00"
 
     # Set machine specifics
     account = user_config["MACHINE"]["queue_account"]
@@ -120,6 +129,11 @@ def create_job_script(
         sh.write(f"#PBS -l {place},select={nodes}:ncpus={nproc}:mem={memory}\n")
         sh.write("#PBS -l debug=true\n")
         submission_command = f"qsub {jobfile}"
+        modelname = "cfs cmc cmc_regional dwd fnmoc gfs aigfs jma metfra ukmet ecmwf"
+        obsname = "osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_rrfs"
+
+    sh.write("\n")
+    sh.write(f"set -x\n")
 
     sh.write("\n")
     sh.write("# Link in fix files\n")
@@ -127,23 +141,65 @@ def create_job_script(
     sh.write(f"ln -sf {fix_files} {HOMEevs}/fix\n")
 
     sh.write("\n")
-    sh.write("# Add INITDATE from config file\n")
+    sh.write(f"export model={model}\n")
+    sh.write(f"export HOMEevs={HOMEevs}\n")
+
+    sh.write("\n")
+    sh.write(f"export SENDCOM={SENDCOM}\n")
+    sh.write(f"export SENDMAIL={SENDMAIL}\n")
+    sh.write(f"export KEEPDATA={KEEPDATA}\n")
+    # NOTE: Add vhr, job, jobid and SITE and module load prod_envir and module reset and source module files in a WCOSS2 section at the bottom
+
+    sh.write("\n")
+    sh.write(f"source {HOMEevs}/versions/run.ver\n")
+    sh.write("evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)\n")
+
+    sh.write("\n")
+    sh.write(f"export MAILTO={MAILTO}\n")
+
+    sh.write("\n")
+    sh.write(f"export envir=prod\n")
+    sh.write(f"export NET={model}\n")
+    sh.write(f"export STEP={step.lower()}\n")
+    sh.write(f"export COMPONENT={component}\n")
+    sh.write("# Define RUN using job name before completing this effort\n")
+    sh.write(f"export RUN=RUN\n")
+
+    sh.write("\n")
+    sh.write(f"export DATAROOT={DATAROOT}\n")
+    sh.write(f"export TMPDIR={DATAROOT}\n")
+    sh.write(f"export COMIN={COMIN_ROOT}/{model}/{evs_ver_2d}\n")
+    sh.write("# Define RUN using job name before completing this effort\n")
+    sh.write(f"export COMOUT={COMOUT_ROOT}/{model}/{evs_ver_2d}/{step.lower()}/{component}/RUN\n")
+
+    sh.write("\n")
+    sh.write(f"export MODELNAME={modelname}\n")
+    sh.write(f"export OBSNAME={obsname}\n")
+
+    sh.write("\n")
     line=f"export INITDATE={evsdate}"
     clean_line = line.replace("-", "")
     sh.write(f"{clean_line}\n")
 
+    #Note to self, this is where another WCOSS2 section will go for missing pieces
+
     sh.write("\n")
-    sh.write("# Add HOMEevs\n")
-    sh.write(f"export HOMEevs={HOMEevs}\n")
+    sh.write(f"# CALL executable job script here\n")
+    sh.write(f"{HOMEevs}/jobs/jjob_should_go_here\n")
+
+    sh.write("\n")
+    sh.write(f"######################################################################\n")
+    sh.write(f"######################################################################\n")
+    sh.write(f"######################################################################\n")
 
     # Read the contents of the source file
-    with open(job_jevs_script, "r") as source_file:
-        source_contents = source_file.read()
+    #with open(job_jevs_script, "r") as source_file:
+    #    source_contents = source_file.read()
 
     # Write (or append) those contents into your target file
-    sh.write("\n# --- Appended Content Start ---\n")
-    sh.write(source_contents)
-    sh.write("\n# --- Appended Content End ---\n")
+    #sh.write("\n# --- Appended Content Start ---\n")
+    #sh.write(source_contents)
+    #sh.write("\n# --- Appended Content End ---\n")
 
     sh.close()
 
@@ -189,13 +245,13 @@ DATAROOT_dirs.append(os.path.join(config["INPUT_OUTPUT"]["DATAROOT"], "jobs"))
 DATAROOT_dirs.append(os.path.join(config["INPUT_OUTPUT"]["DATAROOT"], "logs"))
 for DATAROOT_dir in DATAROOT_dirs:
     if not os.path.exists(DATAROOT_dir):
+        print("")
         print(f"Creating {DATAROOT_dir}")
         os.makedirs(DATAROOT_dir, exist_ok=True)
-        print("")
-print(f"DATAROOT: {DATAROOT_dirs[0]}\n")
 
 ### Run jobs
 component_list = config["INPUT_OUTPUT"]["component_list"].split(" ")
+print("")
 print(f"component_list: {component_list}\n")
 # Submit PREP, STATS, or PLOTS jobs
 for step_switch, step_switch_value in config["RUN"].items():

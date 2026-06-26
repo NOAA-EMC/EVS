@@ -22,10 +22,20 @@ user=$USER
 queue_account=VERF-DEV
 
 [INPUT_OUTPUT]
-#component_list:         component to run (e.g., global_det)
-#DATAROOT:               base output directory
+#component_list:         	EVS components to run (e.g., global_det)
+#DATAROOT:               	base output directory (/jobs, /logs)
 component_list=global_det
-DATAROOT=/lfs/h2/emc/vpppg/noscrub/alicia.bentley/test
+model=evs
+evs_ver_2d=2.0
+SENDCOM=YES
+SENDMAIL=NO
+KEEPDATA=NO
+MAILTO='alicia.bentley@noaa.gov'
+HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_drivers/EVS
+DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/prod/tmp
+TMPDIR=/lfs/h2/emc/stmp/$USER/evs_test/prod/tmp
+COMIN_ROOT=/lfs/h2/emc/vpppg/noscrub/$USER
+COMOUT_ROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 
 [DATES]
 #initdate:          	initdate for PREP step, format YYYYMMDD
