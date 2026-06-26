@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 # THERE IS NO NEED FOR USERS TO MODIFY THIS SCRIPT.
 #
 # Run this script: python drive_EVS.py [path to config file]
-# Example: python drive_EVS.py config/config.EVS
+# Example: python drive_EVS.py ../parm/config.EVS
 ###################################################################
 
 def error_and_exit(message):
