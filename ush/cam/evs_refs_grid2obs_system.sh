@@ -35,10 +35,10 @@ for dom in CONUS Alaska ; do
             export nmbrs=14
         elif [[ $fhr -le 48 ]]; then
             export nmbrs=13
-        elif [[ $fhr -le 51 ]]; then
+        elif [[ $fhr -le 54 ]]; then
             export nmbrs=12
         else
-            export nmbrs=6
+            export nmbrs=7
         fi
      	
 	 #**********************
@@ -202,10 +202,10 @@ for dom in CONUS Alaska ; do
             export nmbrs=14
         elif [[ $fhr -le 48 ]]; then
             export nmbrs=13
-        elif [[ $fhr -le 51 ]]; then
+        elif [[ $fhr -le 54 ]]; then
             export nmbrs=12
         else
-            export nmbrs=6
+            export nmbrs=7
         fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_system.sh
