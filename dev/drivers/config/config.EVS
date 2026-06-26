@@ -28,14 +28,10 @@ component_list=global_det
 DATAROOT=/lfs/h2/emc/vpppg/noscrub/alicia.bentley/test
 
 [DATES]
-#start_initdate:          PREP step start date (initdate), format YYYYMMDD
-#end_initdate:            PREP step end date (initdate), format YYYYMMDD
-#start_vdate:          	  STATS/PLOTS step start date (vdate), format YYYYMMDD
-#end_vdate:               STATS/PLOTS step end date (vdate), format YYYYMMDD
-start_initdate=20260622
-end_initdate=20260623
-start_vdate=20260601
-end_vdate=20260602
+#initdate:          	initdate for PREP step, format YYYYMMDD
+#vdate:        		vdate for STATS/PLOTS step, format YYYYMMDD
+initdate=20260623
+vdate=20260620
 
 ####################################################
 # INDIVIDUAL JOB SETTINGS (BY COMPONENT)

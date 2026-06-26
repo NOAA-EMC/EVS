@@ -57,7 +57,7 @@ def check_machine(config_machine):
 #--------------------------------------
 
 def create_job_script(
-    step, user_config, machine_name, comp_name, dev_driver, date_start, date_end, jobfile, logfile
+    step, user_config, machine_name, comp_name, dev_driver, evsdate, jobfile, logfile
 ):
     for check_file in [jobfile, logfile]:
         if os.path.exists(check_file):
@@ -128,7 +128,7 @@ def create_job_script(
 
     sh.write("\n")
     sh.write("# Add INITDATE from config file\n")
-    line=f"export INITDATE={date_start}"
+    line=f"export INITDATE={evsdate}"
     clean_line = line.replace("-", "")
     sh.write(f"{clean_line}\n")
 
@@ -202,36 +202,23 @@ for step_switch, step_switch_value in config["RUN"].items():
     if step_switch_value == "YES":
         if "PREP" in step_switch:
         	### Convert initdate strings into date objects
-        	start_initdate_str = config["DATES"]["start_initdate"]
-        	end_initdate_str = config["DATES"]["end_initdate"]
-        	start_initdate, end_initdate = None, None
+        	initdate_str = config["DATES"]["initdate"]
+        	initdate = None
         	try:
-            		# Parse start_initdate from multiple date formats
+            		# Parse initdate from multiple date formats
             		for fmt in ('%Y-%m-%d', '%Y%m%d'):
                 		try:
-                    			start_initdate = datetime.strptime(start_initdate_str, fmt).date()
+                    			initdate = datetime.strptime(initdate_str, fmt).date()
                     			break
                 		except ValueError:
                     			pass
-            		# Parse end_initdate from multiple date formats
-            		for fmt in ('%Y-%m-%d', '%Y%m%d'):
-                		try:
-                    			end_initdate = datetime.strptime(end_initdate_str, fmt).date()
-                    			break
-                		except ValueError:
-                    			pass
-            		if start_initdate is None or end_initdate is None:
+            		if initdate is None:
                 		raise ValueError("Invalid initdate format in given config file")
         	except ValueError:
             		error_and_exit(
                 		"Invalid initdate format. Please use yyyymmdd or yyyy-mm-dd."
             		)
-        	if start_initdate > end_initdate:
-            		error_and_exit(
-                		"The start initdate cannot be after the end initdate for PREP."
-            		)
-        	print(f"Start initdate: {start_initdate} (Type: {type(start_initdate)})")
-        	print(f"End initdate:   {end_initdate} (Type: {type(end_initdate)})")
+        	print(f"EVS initdate for {step_switch}: {initdate} (Type: {type(initdate)})")
         	print("")
 
         	for component in component_list:
@@ -240,52 +227,38 @@ for step_switch, step_switch_value in config["RUN"].items():
         			if comp_switch_value == "YES":
         				if "prep" in comp_switch:
         					print(
-        						f"--- Generating scripts for {comp_switch}, initdates "
-        						+f"{start_initdate:%Y%m%d} to {end_initdate:%Y%m%d} ---"
+        						f"--- Generating scripts for {comp_switch}, initdate {initdate:%Y%m%d} ---"
         					)
         					job_script = os.path.join(
         						os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
-        						f"submit_{comp_switch}_{start_initdate:%Y%m%d}_to_{end_initdate:%Y%m%d}.sh"
+        						f"submit_{comp_switch}_{initdate:%Y%m%d}.sh"
                 				)
         					#print(f"job_script: {job_script}")
         					log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
         					#print(f"log_script: {log_script}")
         					create_job_script(
-        						step_switch.replace("RUN_", ""), config, machine, component, comp_switch,
-        						start_initdate, end_initdate, job_script, log_script
+        						step_switch.replace("RUN_", ""), config, machine, component,
+        						comp_switch, initdate, job_script, log_script
         					)
 
         if ("STATS" in step_switch or "PLOTS" in step_switch):
                 ### Convert vdate strings into date objects
-                start_vdate_str = config["DATES"]["start_vdate"]
-                end_vdate_str = config["DATES"]["end_vdate"]
-                start_vdate, end_vdate = None, None
+                vdate_str = config["DATES"]["vdate"]
+                vdate = None
                 try:
-                        # Parse start_vdate from multiple date formats
+                        # Parse vdate from multiple date formats
                         for fmt in ('%Y-%m-%d', '%Y%m%d'):
                                 try:
-                                        start_vdate = datetime.strptime(start_vdate_str, fmt).date()
+                                        vdate = datetime.strptime(vdate_str, fmt).date()
                                         break
                                 except ValueError:
                                         pass
-                        # Parse end_vdate from multiple date formats
-                        for fmt in ('%Y-%m-%d', '%Y%m%d'):
-                                try:
-                                        end_vdate = datetime.strptime(end_vdate_str, fmt).date()
-                                        break
-                                except ValueError:
-                                        pass
-                        if start_vdate is None or end_vdate is None:
+                        if vdate is None:
                                 raise ValueError("Invalid vdate format in given config file")
                 except ValueError:
                         error_and_exit(
                                 "Invalid vdate format. Please use yyyymmdd or yyyy-mm-dd."
                         )
-                if start_vdate > end_vdate:
-                        error_and_exit(
-                                "The start vdate cannot be after the end vdate for STATS or PLOTS."
-                        )
-                print(f"Start vdate: {start_vdate} (Type: {type(start_vdate)})")
-                print(f"End vdate:   {end_vdate} (Type: {type(end_vdate)})")
+                print(f"EVS vdate for {step_switch}: {vdate} (Type: {type(vdate)})")
                 print("")
 
