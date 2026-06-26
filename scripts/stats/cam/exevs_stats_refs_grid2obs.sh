@@ -68,10 +68,11 @@ export COMOUTrestart=$COMOUTsmall/restart
 [[ ! -d $COMOUTrestart/product ]] &&  mkdir -p $COMOUTrestart/product
 
 #************************************************
-# Prepare REFS member files just for sfc fields
+# Prepare REFS member files for sfc and upper_air fields
 #************************************************
 if [ $prepare = yes ] ; then
   $USHevs/cam/evs_refs_prepare.sh sfc
+  $USHevs/cam/evs_refs_prepare.sh upper_air
 fi
 
 
