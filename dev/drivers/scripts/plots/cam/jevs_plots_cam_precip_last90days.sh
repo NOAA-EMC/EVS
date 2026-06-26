@@ -4,8 +4,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:20:00
-#PBS -l place=vscatter:exclhost,select=8:ncpus=128:mem=100GB
+#PBS -l walltime=02:40:00
+#PBS -l place=vscatter:exclhost,select=8:ncpus=128:mem=150GB
 #PBS -l debug=true
 
 set -x
@@ -17,7 +17,6 @@ export SENDECF=YES
 export SENDCOM=YES
 export KEEPDATA=NO
 export SENDDBN=NO
-export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_plots_cam_precip_last90days}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)

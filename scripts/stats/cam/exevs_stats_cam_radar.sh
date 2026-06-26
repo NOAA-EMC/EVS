@@ -41,12 +41,12 @@ njob=0
 # Create output directory for GridStat (and EnsembleStat) runs 
 mkdir -p $DATA/grid_stat
 
-if [ $MODELNAME = href ] || [ $MODELNAME = rrfs ]; then
+if [ $MODELNAME = refs ] || [ $MODELNAME = rrfs ]; then
    mkdir -p $DATA/ensemble_stat
 fi
 
 
-if [ $MODELNAME = href ]; then
+if [ $MODELNAME = refs ]; then
    PRODS="pmmn ppf prob ens"
    PRODS="pmmn ppf prob"
 else
@@ -125,7 +125,7 @@ shopt -u nullglob
 # Copy hourly output to $COMOUT
 ###################################################################
 
-if [ $MODELNAME = href ] || [ $MODELNAME = rrfs ]; then
+if [ $MODELNAME = refs ] || [ $MODELNAME = rrfs ]; then
    output_dirs="ensemble_stat grid_stat"
 else
    output_dirs="grid_stat"
@@ -152,14 +152,13 @@ if [ $vhr = 23 ]; then
 
    if [ "$(ls -A $COMOUTsmall)" ]; then
 
-      if [ $MODELNAME = href ]; then
+      if [ $MODELNAME = refs ]; then
 
-         HREF_MODS="href_pmmn href_prob href"
-         HREF_MODS="href_pmmn href_prob"
+         REFS_MODS="refs_pmmn refs_prob"
 
-         for HREF_MOD in ${HREF_MODS}; do
-       export HREF_MOD
-            run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstHREF_obsMRMS_gatherByDay.conf
+         for REFS_MOD in ${REFS_MODS}; do
+       export REFS_MOD
+            run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstREFS_obsMRMS_gatherByDay.conf
             export err=$?; err_chk
          done
 
