@@ -1,14 +1,13 @@
-# Configuration file for EVS (all steps and components)
+# Configuration file for EVS
 
 ####################################################
 # WHICH EVS STEPS AND COMPONENETS TO RUN
 ####################################################
 [RUN]
-## RUN_PREP  = PRODUCES PREPARED FORECAST, ANALYSIS, OBSERVATION FILES (YES/NO) 
-## RUN_STATS = PRODUCES .STAT FILES FROM PREPARED FILES (YES/NO)
-## RUN_PLOTS = PRODUCES PLOTS OF STATISTICS FROM .STAT FILES (YES/NO)
-## component_list = EVS COMPONENTS TO RUN (e.g., aigefs, global_det)
-## 
+#RUN_PREP = PRODUCES PREPARED FORECAST, ANALYSIS, OBSERVATION FILES (YES/NO) 
+#RUN_STATS = PRODUCES .STAT FILES FROM PREPARED FILES (YES/NO)
+#RUN_PLOTS = PRODUCES PLOTS OF STATISTICS FROM .STAT FILES (YES/NO)
+#component_list = SPECIFY COMPONENTS TO RUN (e.g., aigefs, global_det)
 RUN_PREP=YES
 RUN_STATS=NO
 RUN_PLOTS=NO
@@ -23,7 +22,15 @@ user=$USER
 queue_account=VERF-DEV
 
 [INPUT_OUTPUT]
-#DATAROOT:          	base output directory (/jobs, /logs)
+#model = NAME OF THIS PACKAGE (evs)
+#SENDCOM = SEND FILES FROM WORKING DIRECTORY TO COMOUT (YES/NO)
+#SENDMAIL = SEND EMAIL IF INPUT FILES ARE MISSING (YES/NO)
+#MAILTO = EMAIL ADDRESS FOR SENDMAIL
+#KEEPDATA = KEEP WORKING DIRECTORY (YES/NO)
+#HOMEevs = PATH TO YOUR /EVS REPOSITORY 
+#DATAROOT = BASE OUTPUT (/jobs, /logs) AND WORKING DIRECTORY
+#COMIN_ROOT = BASE PATH TO YOUR EVS INPUT DATA
+#COMOUT_ROOT = BASE PATH TO YOUR EVS OUTPUT DATA
 model=evs
 SENDCOM=YES
 SENDMAIL=NO
@@ -38,11 +45,11 @@ COMOUT_ROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 [DATES]
 #initdate:		initdate for PREP step, format YYYYMMDD
 #vdate:			vdate for STATS/PLOTS step, format YYYYMMDD
-initdate=20260623
+initdate=20260625
 vdate=20260620
 
 ####################################################
-# INDIVIDUAL JOB SETTINGS (BY COMPONENT)
+# INDIVIDUAL JOB SETTINGS (SEPARATED BY COMPONENT)
 ####################################################
 [GLOBAL_DET]
 # PREP
