@@ -663,8 +663,7 @@ if [ "$data" = "sfc" ] ; then
   echo "RH:2 m" >> $DATA/pat
   echo "CAPE" >> $DATA/pat
   echo "GUST" >> $DATA/pat
-  echo "HGT:planetary" >> $DATA/pat
-  echo "MSLET" >> $DATA/pat
+  echo "HPBL" >> $DATA/pat
 
   D2=`$NDATE -48 ${VDATE}00`
   VDATE_2=`echo ${D2} | cut -c 1-8`
@@ -680,7 +679,20 @@ if [ "$data" = "sfc" ] ; then
    [[ ! -d $COMOUTrestart/prepare/refs.$day/verf_g2g ]] && mkdir -p $COMOUTrestart/prepare/refs.$day/verf_g2g
 
    for cyc in 00 06 12 18 ; do 
+    DTL=`$NDATE -6 ${day}${cyc}`
+    day_tl=`echo ${DTL} | cut -c 1-8`
+    cyc_tl=`echo ${DTL} | cut -c 9-10`
+
+
     for domain in conus ak ; do
+     
+     if [ "$domain" = "ak" ]; then
+       dom="alaska"
+       dom2="ak."
+     else
+       dom="$domain"
+       dom2=""
+     fi
 
      >run_prepare.${day}.${cyc}.${domain}.sh
 
@@ -690,19 +702,47 @@ if [ "$data" = "sfc" ] ; then
       echo "set -x" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "work=$work" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "cd \$work">> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 ; do" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 66; do" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    typeset -Z2 hh" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    hh=\$fhr      " >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "      for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 ; do" >> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "        refs=$COMREFS/refs.${day}/${cyc}/verf_g2g/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        typeset -Z2 hh_tl" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        hh_tl=\$((fhr+6))" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        if [ \$mbr = 01 ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          refs=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.2dfld.3km.f0\${hh}.${domain}.grib2" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        elif [ \$mbr = 02 ] || [ \$mbr = 03 ] || [ \$mbr = 04 ] || [ \$mbr = 05 ] || [ \$mbr = 06 ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          typeset -Z2 member" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          member=\$((10#\$mbr-1))" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          refs=$COMINrrfs/rrfsens.${day}/${cyc}/m0\${member}/rrfs.t${cyc}z.m0\${member}.2dfld.3km.f0\${hh}.${domain}.grib2" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        elif [ \$mbr = 13 ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          refs=$COMINhrrr/hrrr.${day}/${dom}/hrrr.t${cyc}z.wrfsfcf\${hh}.${dom2}grib2" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        elif [ \$mbr = 07 ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          refs=$COMINrrfs/rrfs.${day_tl}/${cyc_tl}/rrfs.t${cyc_tl}z.2dfld.3km.f0\${hh_tl}.${domain}.grib2" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        elif [ \$mbr = 08 ] || [ \$mbr = 09 ] || [ \$mbr = 10 ] || [ \$mbr = 11 ] || [ \$mbr = 12 ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          typeset -Z2 member" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          member=\$((10#\$mbr-7))" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          refs=$COMINrrfs/rrfsens.${day_tl}/${cyc_tl}/m0\${member}/rrfs.t${cyc_tl}z.m0\${member}.2dfld.3km.f0\${hh_tl}.${domain}.grib2" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        elif [ \$mbr = 14 ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          refs=$COMINhrrr/hrrr.${day_tl}/${dom}/hrrr.t${cyc_tl}z.wrfsfcf\${hh_tl}.${dom2}grib2" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "        fi" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "        if [ -s \$refs ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          $WGRIB2 \$refs|grep --file=$DATA/pat|$WGRIB2 -i \$refs -grib  \$work/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          if [ \$mbr = 13 ] || [ \$mbr = 14 ] ; then" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "             $WGRIB2 \$refs|grep \":MSLMA:\"|$WGRIB2 -i \$refs -set_var MSLET -grib \$work/mslp.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          else" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "             $WGRIB2 \$refs|grep \":MSLET:\"|$WGRIB2 -i \$refs -grib \$work/mslp.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          fi" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          cat \$work/mslp.m\${mbr}.t${cyc}z.${domain}.f\${hh} >> \$work/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          if [ \$mbr = 01 ] || [ \$mbr = 02 ] || [ \$mbr = 03 ] || [ \$mbr = 04 ] || [ \$mbr = 05 ] || [ \$mbr = 06 ] || [ \$mbr = 13 ] ; then " >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "             tm=\$fhr" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          else" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "             tm=\$((fhr+6))" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "          fi" >> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "          string=\"TCDC:entire atmosphere (considered as a single layer):\${tm} hour fcst\" " >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          if [ \$mbr = 13 ] || [ \$mbr = 14 ] ; then " >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "             string=\"TCDC:entire atmosphere:\${tm} hour fcst\" " >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          else" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "             string=\"TCDC:entire atmosphere (considered as a single layer):\${tm} hour fcst\" " >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "          fi" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "	      $WGRIB2 \$refs|grep \"\$string\"|$WGRIB2 -i \$refs -grib  \$work/tcdc.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "	      cat \$work/tcdc.m\${mbr}.t${cyc}z.${domain}.f\${hh} >> \$work/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "        fi" >> run_prepare.${day}.${cyc}.${domain}.sh
@@ -738,3 +778,118 @@ if [ "$data" = "sfc" ] ; then
 
 fi
 
+#*************************************************************************
+# Prepare the REFS member files for upper-air fields.
+# Use symbolic links instead of copying/subsetting large pressure-level files.
+#************************************************************************
+if [ "$data" = "upper_air" ] ; then
+
+  [[ ! -d $COMOUTrestart/prepare ]] && mkdir -p $COMOUTrestart/prepare
+
+  cd $DATA/scripts
+
+  D3=`$NDATE -72 ${VDATE}00`
+  VDATE_3=`echo ${D3} | cut -c 1-8`
+  D2=`$NDATE -48 ${VDATE}00`
+  VDATE_2=`echo ${D2} | cut -c 1-8`
+  D1=`$NDATE -24 ${VDATE}00`
+  VDATE_1=`echo ${D1} | cut -c 1-8`
+
+  >prepare_poe_upper_air.sh
+
+  for day in $VDATE $VDATE_1 $VDATE_2 $VDATE_3; do
+   work=$DATA/refs.$day/upper_air
+   mkdir -p $work
+
+   for cyc in 00 06 12 18 ; do
+    DTL=`$NDATE -6 ${day}${cyc}`
+    day_tl=`echo ${DTL} | cut -c 1-8`
+    cyc_tl=`echo ${DTL} | cut -c 9-10`
+
+    for domain in conus ak hi pr ; do
+
+     if [ "$domain" = "conus" ]; then
+       res="3km"
+       dom1="conus"
+       dom2="conus"
+       dom3=""
+     elif [ "$domain" = "ak" ]; then
+       res="3km"
+       dom1="ak"
+       dom2="alaska"
+       dom3=".ak"
+     elif [ "$domain" = "hi" ]; then
+       res="2p5km"
+       dom1="hi"
+       dom2=""
+       dom3=""
+     elif [ "$domain" = "pr" ]; then
+       res="2p5km"
+       dom1="pr"
+       dom2=""
+       dom3=""
+     fi
+
+     >run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+
+     echo "#!/bin/ksh" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "set -x" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "work=$work" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "cd \$work" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 66 ; do" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "    typeset -Z2 hh" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "    hh=\$fhr" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "    typeset -Z2 hh_tl" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "    hh_tl=\$((fhr+6))" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "    for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 ; do" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "      if [ \$mbr = 01 ] ; then" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        refs=$COMINrrfs/rrfs.${day}/${cyc}/rrfs.t${cyc}z.prslev.${res}.f0\${hh}.${dom1}.grib2" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "      elif [ \$mbr = 02 ] || [ \$mbr = 03 ] || [ \$mbr = 04 ] || [ \$mbr = 05 ] || [ \$mbr = 06 ] ; then" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        typeset -Z3 member" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        member=\$((10#\$mbr-1))" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        refs=$COMINrrfs/rrfsens.${day}/${cyc}/m\${member}/rrfs.t${cyc}z.m\${member}.prslev.${res}.f0\${hh}.${dom1}.grib2" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "      elif [ \$mbr = 07 ] ; then" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        refs=$COMINrrfs/rrfs.${day_tl}/${cyc_tl}/rrfs.t${cyc_tl}z.prslev.${res}.f0\${hh_tl}.${dom1}.grib2" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "      elif [ \$mbr = 08 ] || [ \$mbr = 09 ] || [ \$mbr = 10 ] || [ \$mbr = 11 ] || [ \$mbr = 12 ] ; then" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        typeset -Z3 member" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        member=\$((10#\$mbr-7))" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        refs=$COMINrrfs/rrfsens.${day_tl}/${cyc_tl}/m\${member}/rrfs.t${cyc_tl}z.m\${member}.prslev.${res}.f0\${hh_tl}.${dom1}.grib2" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "      elif [ \$mbr = 13 ] ; then" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        refs=$COMINhrrr/hrrr.${day}/${dom2}/hrrr.t${cyc}z.wrfprsf\${hh}${dom3}.grib2" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "      elif [ \$mbr = 14 ] ; then" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        refs=$COMINhrrr/hrrr.${day_tl}/${dom2}/hrrr.t${cyc_tl}z.wrfprsf\${hh_tl}${dom3}.grib2" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "      fi" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "      if [ -s \$refs ] ; then" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "        ln -sf \$refs \$work/refs.m\${mbr}.t${cyc}z.${domain}.f\${hh}" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "      fi" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "    done" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "done" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     echo "if ls \$work/refs.m*.t${cyc}z.${domain}.f* >/dev/null 2>&1 ; then" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "  echo completed >\$work/run_prepare_upper_air.${day}.${cyc}.${domain}.completed" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "fi" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+
+     chmod +x run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "${DATA}/scripts/run_prepare_upper_air.${day}.${cyc}.${domain}.sh" >> prepare_poe_upper_air.sh
+
+    done
+   done
+  done
+
+  if [ -s ${DATA}/scripts/prepare_poe_upper_air.sh ] ; then
+    chmod +x ${DATA}/scripts/prepare_poe_upper_air.sh
+    mpiexec -n 24 -ppn 24 --cpu-bind core --depth=2 cfp ${DATA}/scripts/prepare_poe_upper_air.sh
+  fi
+
+fi
