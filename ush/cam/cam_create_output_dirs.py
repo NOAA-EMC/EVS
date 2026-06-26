@@ -54,6 +54,9 @@ MODELNAME = os.environ['MODELNAME']
 if STEP == 'prep':
     INITDATE = os.environ['INITDATE']
     vdate_dt = datetime.strptime(INITDATE, '%Y%m%d')
+    if VERIF_CASE == 'precip' and MODELNAME != 'cam':
+        RESTART_DIR = os.environ['RESTART_DIR']
+        COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
 elif STEP == 'stats':
     VDATE = os.environ['VDATE']
     vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
@@ -71,9 +74,12 @@ if VERIF_CASE == "precip":
         FHR_END_FULL = os.environ['FHR_END_FULL']
         FHR_END_SHORT = os.environ['FHR_END_SHORT']
         fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
-        start_date_dt = vdate_dt - td(hours=fhr_end_max)
         VERIF_TYPE = os.environ['VERIF_TYPE']
-        OBSNAME = os.environ['OBSNAME']
+        if MODELNAME == 'cam':
+            start_date_dt = vdate_dt - td(hours=fhr_end_max)
+            OBSNAME = os.environ['OBSNAME']
+        else:
+            start_date_dt = vdate_dt
     elif STEP == 'stats':
         FHR_END_FULL = os.environ['FHR_END_FULL']
         FHR_END_SHORT = os.environ['FHR_END_SHORT']
@@ -133,8 +139,8 @@ data_base_dir = os.path.join(DATA, VERIF_CASE, 'data')
 data_dir_list = [data_base_dir]
 if VERIF_CASE == 'precip':
     if STEP == 'prep':
-        data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
-        data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
+        if MODELNAME == 'cam':
+            data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
     elif STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
@@ -162,7 +168,12 @@ for data_dir in data_dir_list:
 # Create job script base directory
 job_scripts_dirs = []
 if STEP == 'prep':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'prep_job_scripts'))
+    if VERIF_CASE == 'precip' and MODELNAME != 'cam':
+        job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts'))
+        job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR))
+        job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR))
+    else:
+        job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'prep_job_scripts'))
 if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'reformat'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'generate'))
@@ -192,30 +203,60 @@ for job_scripts_dir in job_scripts_dirs:
 working_dir_list = []
 COMOUT_dir_list = []
 if STEP == 'prep':
-    working_output_base_dir = os.path.join(
-        DATA, VERIF_CASE
-    )
-    working_dir_list.append(working_output_base_dir)
-    if VERIF_CASE == 'grid2obs':
+    if VERIF_CASE == 'precip' and MODELNAME != 'cam':
+        working_output_base_dir = os.path.join(
+            DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
+        )
+        COMOUT_restart_base_dir = os.path.join(
+            RESTART_DIR, 'METplus_output', VERIF_TYPE
+        )
+        working_dir_list.append(working_output_base_dir)
+        COMOUT_dir_list.append(COMOUT_restart_base_dir)
         working_dir_list.append(os.path.join(
-            working_output_base_dir, 'data', 
-            NEST+'.'+vdate_dt.strftime('%Y%m%d')
+            working_output_base_dir, 'out', 'confs'
         ))
         working_dir_list.append(os.path.join(
-            working_output_base_dir, 'data', 
-            OBSNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            working_output_base_dir, 'out', 'logs'
         ))
         working_dir_list.append(os.path.join(
-            working_output_base_dir, 'data', 
-            OBSNAME+'.'+(vdate_dt-td(hours=1)).strftime('%Y%m%d')
+            working_output_base_dir, 'pcp_combine', 'tmp'
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT_restart_base_dir, 'pcp_combine', 
         ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
-            NEST+'.'+vdate_dt.strftime('%Y%m%d')
+            RUN+'.'+vdate_dt.strftime('%Y%m%d'),
+            MODELNAME
         ))
-    working_dir_list.append(os.path.join(
-        working_output_base_dir, 'data', 'workdirs'
-    ))
+        working_dir_list.append(os.path.join(
+            DATA, VERIF_CASE, 'METplus_output', 'workdirs'
+        ))
+    else:
+        working_output_base_dir = os.path.join(
+            DATA, VERIF_CASE
+        )
+        working_dir_list.append(working_output_base_dir)
+        if VERIF_CASE == 'grid2obs':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'data', 
+                NEST+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'data', 
+                OBSNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'data', 
+                OBSNAME+'.'+(vdate_dt-td(hours=1)).strftime('%Y%m%d')
+            ))
+            COMOUT_dir_list.append(os.path.join(
+                COMOUT, 
+                NEST+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data', 'workdirs'
+        ))
 elif STEP == 'stats':
     if VERIF_CASE == 'precip':
         if job_type == 'reformat':

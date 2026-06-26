@@ -50,7 +50,7 @@ fi
 export nproc=1
 export NET=evs
 export RUN=atmos
-export OBSNAME="gfs ecmwf osi ghrsst umd nam ccpa"
+export OBSNAME="gfs ecmwf osi ghrsst umd gdas ccpa"
 export PREP_TYPE=obs
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.${model}.${COMPONENT}.${PREP_TYPE}.${STEP}
 

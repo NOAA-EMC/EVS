@@ -120,7 +120,7 @@ elif [ "$NEST" = "firewx" ]; then
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
     export GRID_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc"
-    export NEST_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.firewxnest.hiresf{lead?fmt=%2H}.tm00.grib2"
+    export NEST_INPUT_TEMPLATE="firewx.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.1p5km.f{lead?fmt=%3H}.firewx.grib2"
     export MIN_IHOUR="00"
     export FHR_END_FULL="36"
     export FHR_INCR_FULL="06"

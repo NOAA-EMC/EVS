@@ -67,6 +67,10 @@ if STEP == 'prep':
                         INITDATEHOURm = INITDATEHOUR - td(hours=subtract_hours)
                         INITDATEm = INITDATEHOURm.strftime('%Y%m%d')
                         VHOURm = INITDATEHOURm.strftime('%H')
+                        # Don't copy files from other init dates
+                        if INITDATEm != INITDATE:
+                            subtract_hours += subtract_hours_inc
+                            continue
                         COMOUTobs = os.path.join(
                             DATA, VERIF_CASE, 'data', 'workdirs', f'job{njob}', 
                             'ccpa', f'{RUN}.{INITDATEm}', 'ccpa'
@@ -121,6 +125,10 @@ if STEP == 'prep':
                         VHOURm = INITDATEHOURm.strftime('%H')
                         VMINm = INITDATEHOURm.strftime('%M')
                         VSECm = INITDATEHOURm.strftime('%S')
+                        # Don't copy files from other init dates
+                        if INITDATEm != INITDATE:
+                            subtract_hours += subtract_hours_inc
+                            continue
                         COMOUTobs = os.path.join(
                             DATA, VERIF_CASE, 'data', 'workdirs', f'job{njob}', 
                             'mrms', f'{RUN}.{INITDATEm}', 'mrms'
