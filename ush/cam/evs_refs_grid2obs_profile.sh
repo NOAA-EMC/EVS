@@ -41,10 +41,10 @@ for dom in $domains ; do
             export nmbrs=14
         elif [[ $fhr -le 48 ]]; then
             export nmbrs=13
-        elif [[ $fhr -le 51 ]]; then
+        elif [[ $fhr -le 54 ]]; then
             export nmbrs=12
         else
-            export nmbrs=6
+            export nmbrs=7
         fi
      
      
@@ -63,7 +63,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}"
+      input_fcst="$COMINrrfs/rrfsens.${iday}/${ihr}/*/rrfs.t${ihr}z.m*.prslev.3km.f0${fhr}.conus.grib2"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G227.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then      
@@ -94,10 +94,10 @@ for dom in $domains ; do
        echo  "export MODEL=REFS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo  "export regrid=NONE " >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo  "export modelhead=refs" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-       echo  "export modelpath=$COMREFS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export modelpath=$WORK" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo  "export modelgrid=conus.f" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo  "export modeltail=''" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-       echo  "export extradir='verf_g2g/'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export extradir='upper_air/'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
  
        echo  "export verif_grid=''" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
@@ -177,10 +177,10 @@ for dom in $domains ; do
             export nmbrs=14
         elif [[ $fhr -le 48 ]]; then
             export nmbrs=13
-        elif [[ $fhr -le 51 ]]; then
+        elif [[ $fhr -le 54 ]]; then
             export nmbrs=12
         else
-            export nmbrs=6
+            export nmbrs=7
         fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -195,7 +195,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr}"
+      input_fcst="$WORK/refs.${iday}/upper_air/refs.*.t${ihr}z.ak.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G198.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -228,10 +228,10 @@ for dom in $domains ; do
         echo  "export MODEL=REFS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export regrid=NONE " >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export modelhead=refs" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "export modelpath=$COMREFS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export modelpath=$WORK" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export modelgrid=ak.f" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export modeltail=''" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "export extradir='verf_g2g/'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export extradir='upper_air/'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo  "export verif_grid=''" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export verif_poly='${maskpath}/Alaska_HREF.nc'"  >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -310,7 +310,7 @@ for dom in $domains ; do
         if [[ $fhr -le 54 ]]; then
             export nmbrs=12
         else
-            export nmbrs=6
+            export nmbrs=7
         fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -325,7 +325,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.hi.f${fhr}"
+      input_fcst="$WORK/refs.${iday}/upper_air/refs.*.t${ihr}z.hi.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G139.nc"
 
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -355,10 +355,10 @@ for dom in $domains ; do
         echo  "export MODEL=REFS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export regrid=NONE " >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export modelhead=refs" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "export modelpath=$COMREFS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export modelpath=$WORK" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export modelgrid=hi.f" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export modeltail=''" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "export extradir='verf_g2g/'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export extradir='upper_air/'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo  "export verif_grid=''" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export verif_poly='${maskpath}/Hawaii_HREF.nc'"  >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -436,7 +436,7 @@ for dom in $domains ; do
         if [[ $fhr -le 54 ]]; then
             export nmbrs=12
         else
-            export nmbrs=6
+            export nmbrs=7
         fi
 
          >run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -451,7 +451,7 @@ for dom in $domains ; do
        ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
        iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-       input_fcst="$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.pr.f${fhr}"
+       input_fcst="$WORK/refs.${iday}/upper_air/refs.*.t${ihr}z.pr.f${fhr}"
        input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G200.nc"
 
        if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -482,10 +482,10 @@ for dom in $domains ; do
         echo  "export MODEL=REFS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export regrid=NONE " >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export modelhead=refs" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "export modelpath=$COMREFS" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export modelpath=$WORK" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export modelgrid=pr.f" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export modeltail=''" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "export extradir='verf_g2g/'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export extradir='upper_air/'" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo  "export verif_grid=''" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export verif_poly='${maskpath}/PRico_HREF.nc'"  >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
