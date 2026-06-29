@@ -297,9 +297,9 @@ for step_switch, step_switch_value in config["RUN"].items():
         						os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
         						f"submit_{comp_switch}_{initdate:%Y%m%d}.sh"
                 				)
-        					#print(f"job_script: {job_script}")
+        					print(f"job_script: {job_script}")
         					log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
-        					#print(f"log_script: {log_script}")
+        					print(f"log_script: {log_script}")
         					create_job_script(
         						step_switch.replace("RUN_", ""), config, machine, component,
         						comp_switch, initdate, job_script, log_script
