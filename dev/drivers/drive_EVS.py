@@ -76,7 +76,6 @@ def create_job_script(
         )
         reset_value_dict["component_list"] = comp_name
     # Set variables from config file
-    model = [config["INPUT_OUTPUT"]["model"]][0]
     SENDCOM = [config["INPUT_OUTPUT"]["SENDCOM"]][0]
     SENDMAIL = [config["INPUT_OUTPUT"]["SENDMAIL"]][0]
     KEEPDATA = [config["INPUT_OUTPUT"]["KEEPDATA"]][0]
@@ -143,7 +142,7 @@ def create_job_script(
     sh.write(f"fi\n")
 
     sh.write("\n")
-    sh.write(f"export model={model}\n")
+    sh.write(f"export model=evs\n")
     sh.write(f"export HOMEevs={HOMEevs}\n")
 
     sh.write("\n")
@@ -158,7 +157,7 @@ def create_job_script(
 
     sh.write("\n")
     sh.write(f"export envir=prod\n")
-    sh.write(f"export NET={model}\n")
+    sh.write(f"export NET=evs\n")
     sh.write(f"export STEP={step.lower()}\n")
     sh.write(f"export COMPONENT={component}\n")
     sh.write(f"export RUN={run}\n")
@@ -166,11 +165,13 @@ def create_job_script(
     sh.write("\n")
     sh.write(f"export DATAROOT={DATAROOT}\n")
     sh.write(f"export TMPDIR={DATAROOT}\n")
-    sh.write(f"export COMIN={COMIN_ROOT}/{model}/$evs_ver_2d\n")
-    sh.write(f"export COMOUT={COMOUT_ROOT}/{model}/$evs_ver_2d/{step.lower()}/{component}/{run}\n")
+    sh.write(f"export COMIN={COMIN_ROOT}/$NET/$evs_ver_2d\n")
+    sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN\n")
 
     if component == 'global_det' and step.lower() == 'prep' and run == 'atmos':
         sh.write("\n")
+        modelname = "cfs cmc cmc_regional dwd fnmoc gfs aigfs jma metfra ukmet ecmwf"
+        obsname = "osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_rrfs"
         sh.write(f'export MODELNAME="{modelname}"\n')
         sh.write(f'export OBSNAME="{obsname}"\n')
     else:
