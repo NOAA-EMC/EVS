@@ -134,6 +134,13 @@ def create_job_script(
     sh.write(f"set -x\n")
 
     sh.write("\n")
+    sh.write(f"if [ ! -d {HOMEevs}/exec ]; then\n")
+    sh.write(f'	echo "The /exec directory does NOT exist. Building from /sorc now..."\n')
+    sh.write(f"	cd {HOMEevs}/sorc\n")
+    sh.write(f"	./build.sh\n")
+    sh.write(f"fi\n")
+
+    sh.write("\n")
     sh.write(f"if [ -d {HOMEevs}/fix ] || [ -L {HOMEevs}/fix ]; then\n")
     sh.write(f"	rm -rf {HOMEevs}/fix\n")
     sh.write(f"	ln -sf {fix_files} {HOMEevs}/fix\n")
