@@ -293,23 +293,22 @@ for step_switch, step_switch_value in config["RUN"].items():
             		)
 
         	for component in component_list:
-        		for comp_switch, comp_switch_value in config[component.upper()].items():
-        			if comp_switch_value == "YES":
-        				if "prep" in comp_switch:
-        					print(
-        						f"--- Generating submission script for {comp_switch}, initdate {initdate:%Y%m%d} ---"
-        					)
-        					job_script = os.path.join(
-        						os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
-        						f"submit_{comp_switch}_{initdate:%Y%m%d}.sh"
-                				)
-        					print(f"job_script: {job_script}")
-        					log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
-        					print(f"log_script: {log_script}")
-        					create_job_script(
-        						step_switch.replace("RUN_", ""), config, machine, component,
-        						comp_switch, initdate, job_script, log_script
-        					)
+        		for job_switch, job_switch_value in config[f'{step_switch.replace("RUN_", "")}_{component.upper()}'].items():
+        			if job_switch_value == "YES":
+        				print(
+        					f"--- Generating submission script for {job_switch}, initdate {initdate:%Y%m%d} ---"
+        				)
+        				job_script = os.path.join(
+        					os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
+        					f"submit_{job_switch}_{initdate:%Y%m%d}.sh"
+                			)
+        				print(f"job_script: {job_script}")
+        				log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
+        				print(f"log_script: {log_script}")
+        				create_job_script(
+        					step_switch.replace("RUN_", ""), config, machine, component,
+        					job_switch, initdate, job_script, log_script
+        				)
 
         if ("STATS" in step_switch or "PLOTS" in step_switch):
                 ### Convert vdate strings into date objects
