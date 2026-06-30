@@ -9,7 +9,7 @@
 #RUN_PLOTS = PRODUCES PLOTS OF STATISTICS FROM .STAT FILES (YES/NO)
 #component_list = SPECIFY COMPONENTS TO RUN (e.g., aigefs, global_det)
 RUN_PREP=YES
-RUN_STATS=NO
+RUN_STATS=YES
 RUN_PLOTS=NO
 component_list=global_det
 
@@ -38,24 +38,24 @@ MAILTO='alicia.bentley@noaa.gov'
 HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_drivers/EVS
 DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/prod/tmp
 TMPDIR=/lfs/h2/emc/stmp/$USER/evs_test/prod/tmp
-COMIN_ROOT=/lfs/h2/emc/vpppg/noscrub/$USER
+COMIN_ROOT=/lfs/h2/emc/vpppg/noscrub/emc.vpppg
 COMOUT_ROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 
 [DATES]
 #initdate:		initdate for PREP step, format YYYYMMDD
 #vdate:			vdate for STATS/PLOTS step, format YYYYMMDD
 initdate=20260629
-vdate=20260620
+vdate=20260628
 
 ####################################################
 # INDIVIDUAL JOB SETTINGS (SEPARATED BY COMPONENT)
 ####################################################
 [PREP_GLOBAL_DET]
 jevs_prep_global_det_atmos=YES
-jevs_prep_global_det_wave=NO
+jevs_prep_global_det_wave=YES
 
 [STATS_GLOBAL_DET]
-jevs_stats_global_det_aigfs_atmos_grid2grid=NO
+jevs_stats_global_det_aigfs_atmos_grid2grid=YES
 jevs_stats_global_det_aigfs_atmos_grid2obs=NO
 jevs_stats_global_det_cfs_atmos_grid2grid=NO
 jevs_stats_global_det_cfs_atmos_grid2obs=NO
