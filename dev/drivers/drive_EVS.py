@@ -117,18 +117,17 @@ def create_job_script(
         memory = "225GB"
         vhr="00"
 
-    # Set machine specifics
-    account = user_config["MACHINE"]["queue_account"]
-    sh = open(jobfile, "w")
-    submission_command = None
-
     # ------------------------------------------------------------------------
     # Machine-specific resource information
     # ------------------------------------------------------------------------
+    account = user_config["MACHINE"]["queue_account"]
+
     if machine_name == 'WCOSS2':
         fix_files = (
             "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
         )
+        sh = open(jobfile, "w")
+        submission_command = None
         bin_bash = "/bin/bash"
         queue = "dev"
         sh.write(f"#PBS -N {jobname}\n")
