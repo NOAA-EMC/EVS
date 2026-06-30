@@ -112,7 +112,7 @@ def create_job_script(
     submission_command = None
 
     # ------------------------------------------------------------------------
-    # Machine-specific information
+    # Machine-specific resource information
     # ------------------------------------------------------------------------
     if machine_name == 'WCOSS2':
         fix_files = (
@@ -128,8 +128,6 @@ def create_job_script(
         sh.write(f"#PBS -l {place},select={nodes}:ncpus={nproc}:mem={memory}\n")
         sh.write("#PBS -l debug=true\n")
         submission_command = f"qsub {jobfile}"
-        modelname = "cfs cmc cmc_regional dwd fnmoc gfs aigfs jma metfra ukmet ecmwf"
-        obsname = "osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_rrfs"
 
     # ------------------------------------------------------------------------
     # General information
