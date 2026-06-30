@@ -207,9 +207,9 @@ def create_job_script(
     sh.write(f"{HOMEevs}/jobs/JEVS_{step}_{component.upper()}\n")
 
     sh.write("\n")
-    sh.write(f"######################################################################\n")
-    sh.write(f"######################################################################\n")
-    sh.write(f"######################################################################\n")
+    sh.write(f"#################################################################\n")
+    sh.write(f"#################################################################\n")
+    sh.write(f"#################################################################\n")
 
     # Read the contents of the source file
     #with open(job_jevs_script, "r") as source_file:
@@ -293,8 +293,7 @@ for step_switch, step_switch_value in config["RUN"].items():
             		)
 
         	for component in component_list:
-        		component_caps=component.upper()
-        		for comp_switch, comp_switch_value in config[component_caps].items():
+        		for comp_switch, comp_switch_value in config[component.upper()].items():
         			if comp_switch_value == "YES":
         				if "prep" in comp_switch:
         					print(
