@@ -105,7 +105,6 @@ def create_job_script(
         nproc = "1"
         memory = "125GB"
         vhr="00"
-        jjob="JEVS_PREP_GLOBAL_DET"
 
     # Set machine specifics
     account = user_config["MACHINE"]["queue_account"]
@@ -205,7 +204,7 @@ def create_job_script(
 
     sh.write("\n")
     sh.write(f"# CALL executable job script here\n")
-    sh.write(f"{HOMEevs}/jobs/{jjob}\n")
+    sh.write(f"{HOMEevs}/jobs/JEVS_{step}_{component.upper()}\n")
 
     sh.write("\n")
     sh.write(f"######################################################################\n")

@@ -44,7 +44,7 @@ COMOUT_ROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 [DATES]
 #initdate:		initdate for PREP step, format YYYYMMDD
 #vdate:			vdate for STATS/PLOTS step, format YYYYMMDD
-initdate=20260627
+initdate=20260628
 vdate=20260620
 
 ####################################################
