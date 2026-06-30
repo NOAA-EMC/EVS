@@ -93,16 +93,28 @@ def create_job_script(
         run = "atmos"
     elif "wave" in dev_driver:
         run = "wave"
-
     account = user_config["MACHINE"]["queue_account"]
+
     if "jevs_prep_global_det_atmos" == dev_driver:
-        bin_bash = "/bin/bash"
-        queue = "dev"
         walltime = "00:45:00"
         place = "place=shared"
         nodes = "1"
         nproc = "1"
         memory = "125GB"
+        vhr="00"
+    elif "jevs_prep_global_det_wave" == dev_driver:
+        walltime = "00:10:00"
+        place = "place=shared"
+        nodes = "1"
+        nproc = "1"
+        memory = "15GB"
+        vhr="00"
+    elif "jevs_stats_global_det_aigfs_atmos_grid2grid" == dev_driver:
+        walltime = "01:10:00"
+        place = "place=vscatter:exclhost"
+        nodes = "1"
+        nproc = "128"
+        memory = "225GB"
         vhr="00"
 
     # Set machine specifics
@@ -117,6 +129,8 @@ def create_job_script(
         fix_files = (
             "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
         )
+        bin_bash = "/bin/bash"
+        queue = "dev"
         sh.write(f"#PBS -N {jobname}\n")
         sh.write(f"#PBS -o {logfile}\n")
         sh.write(f"#PBS -e {logfile}\n")
@@ -172,22 +186,44 @@ def create_job_script(
     sh.write(f"export DATAROOT={DATAROOT}\n")
     sh.write(f"export TMPDIR={DATAROOT}\n")
     sh.write(f"export COMIN={COMIN_ROOT}/$NET/$evs_ver_2d\n")
-    sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN\n")
-
-    sh.write("\n")
-    line=f"export INITDATE={evsdate}"
-    clean_line = line.replace("-", "")
-    sh.write(f"{clean_line}\n")
 
     # ------------------------------------------------------------------------
     # Job-specific information
     # ------------------------------------------------------------------------
-    if component == 'global_det' and step.lower() == 'prep' and run == 'atmos':
+    if "jevs_prep_global_det_atmos" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN\n")
         sh.write("\n")
         modelname = "cfs cmc cmc_regional dwd fnmoc gfs aigfs jma metfra ukmet ecmwf"
         obsname = "osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_rrfs"
         sh.write(f'export MODELNAME="{modelname}"\n')
         sh.write(f'export OBSNAME="{obsname}"\n')
+        line=f"export INITDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+    elif "jevs_prep_global_det_wave" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN\n")
+        sh.write("\n")
+        modelname = "gfs"
+        obsname = "prepbufr_gdas ndbc jason3"
+        sh.write(f'export MODELNAME="{modelname}"\n')
+        sh.write(f'export OBSNAME="{obsname}"\n')
+        line=f"export INITDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+    elif "jevs_stats_global_det_aigfs_atmos_grid2grid" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "aigfs"
+        verif_case = "grid2grid"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
     else:
         pass
 
@@ -266,65 +302,50 @@ for DATAROOT_dir in DATAROOT_dirs:
 
 ### Run jobs
 component_list = config["RUN"]["component_list"].split(" ")
-print(f"component_list: {component_list}\n")
+print(f"component_list: {component_list}")
 # Submit PREP, STATS, or PLOTS jobs
 for step_switch, step_switch_value in config["RUN"].items():
     if step_switch_value == "YES":
         if "PREP" in step_switch:
-            ### Convert initdate strings into date objects
-            initdate_str = config["DATES"]["initdate"]
-            initdate = None
-            try:
-                # Parse initdate from multiple date formats
-                for fmt in ('%Y-%m-%d', '%Y%m%d'):
-                    try:
-                        initdate = datetime.strptime(initdate_str, fmt).date()
-                        break
-                    except ValueError:
-                        pass
-                if initdate is None:
-                    raise ValueError("Invalid initdate format in given config file")
-            except ValueError:
-                error_and_exit(
-                    "Invalid initdate format. Please use yyyymmdd or yyyy-mm-dd."
-                )
+            evsdate_str = config["DATES"]["initdate"]
+        elif "STATS" in step_switch or "PLOTS" in step_switch:
+            evsdate_str = config["DATES"]["vdate"]
+        evsdate = None
+        try:
+            # Parse evsdate from multiple date formats
+            for fmt in ('%Y-%m-%d', '%Y%m%d'):
+                try:
+                    evsdate = datetime.strptime(evsdate_str, fmt).date()
+                    break
+                except ValueError:
+                    pass
+            if evsdate is None:
+                raise ValueError("Invalid initdate or vdate format. Please use yyyymmdd or yyyy-mm-dd in config file.")
+        except ValueError:
+            error_and_exit(
+                "Invalid initdate or vdate format. Please use yyyymmdd or yyyy-mm-dd in config file."
+            )
 
-            for component in component_list:
-                for job_switch, job_switch_value in config[f'{step_switch.replace("RUN_", "")}_{component.upper()}'].items():
-                    if job_switch_value == "YES":
+        for component in component_list:
+            for job_switch, job_switch_value in config[f'{step_switch.replace("RUN_", "")}_{component.upper()}'].items():
+                if job_switch_value == "YES":
+                    if step_switch.replace("RUN_", "") == "PREP":
                         print(
-                            f"--- Generating submission script for {job_switch}, initdate {initdate:%Y%m%d} ---"
+                            f"\n--- Generating submission script for {job_switch}, initdate {evsdate:%Y%m%d} ---"
                         )
-                        job_script = os.path.join(
-                            os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
-                            f"submit_{job_switch}_{initdate:%Y%m%d}.sh"
+                    else:
+                        print(
+                            f"\n--- Generating submission script for {job_switch}, vdate {evsdate:%Y%m%d} ---"
                         )
-                        print(f"job_script: {job_script}")
-                        log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
-                        print(f"log_script: {log_script}")
-                        create_job_script(
-                            step_switch.replace("RUN_", ""), config, machine, component,
-                            job_switch, initdate, job_script, log_script
-                        )
-
-        if ("STATS" in step_switch or "PLOTS" in step_switch):
-            ### Convert vdate strings into date objects
-            vdate_str = config["DATES"]["vdate"]
-            vdate = None
-            try:
-                # Parse vdate from multiple date formats
-                for fmt in ('%Y-%m-%d', '%Y%m%d'):
-                    try:
-                        vdate = datetime.strptime(vdate_str, fmt).date()
-                        break
-                    except ValueError:
-                         pass
-                if vdate is None:
-                    raise ValueError("Invalid vdate format in given config file")
-            except ValueError:
-                error_and_exit(
-                    "Invalid vdate format. Please use yyyymmdd or yyyy-mm-dd."
-                )
-            print(f"EVS vdate for {step_switch}: {vdate} (Type: {type(vdate)})")
-            print("")
+                    job_script = os.path.join(
+                        os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
+                        f"submit_{job_switch}_{evsdate:%Y%m%d}.sh"
+                    )
+                    print(f"job_script: {job_script}")
+                    log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
+                    print(f"log_script: {log_script}")
+                    create_job_script(
+                        step_switch.replace("RUN_", ""), config, machine, component,
+                        job_switch, evsdate, job_script, log_script
+                    )
 
