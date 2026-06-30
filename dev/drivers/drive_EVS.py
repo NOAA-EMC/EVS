@@ -62,7 +62,6 @@ def create_job_script(
     for check_file in [jobfile, logfile]:
         if os.path.exists(check_file):
             try:
-                print(f"Removing existing job or log file: {check_file}")
                 os.remove(check_file)
             except OSError as e:
                 error_and_exit(
@@ -143,10 +142,8 @@ def create_job_script(
     sh.write(f"fi\n")
 
     sh.write("\n")
-    sh.write(f"if [ -d {HOMEevs}/fix ] || [ -L {HOMEevs}/fix ]; then\n")
-    sh.write(f"	rm -rf {HOMEevs}/fix\n")
-    sh.write(f"	ln -sf {fix_files} {HOMEevs}/fix\n")
-    sh.write(f"else\n")
+    sh.write(f"if [ ! -d {HOMEevs}/fix ] || [ ! -L {HOMEevs}/fix ]; then\n")
+    sh.write(f'	echo "The /fix directory is NOT linked. Linking /fix now..."\n')
     sh.write(f"	ln -sf {fix_files} {HOMEevs}/fix\n")
     sh.write(f"fi\n")
 
