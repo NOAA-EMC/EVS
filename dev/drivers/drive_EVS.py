@@ -111,7 +111,9 @@ def create_job_script(
     sh = open(jobfile, "w")
     submission_command = None
 
-    # --- Write the machine-specific part ---
+    # ------------------------------------------------------------------------
+    # Machine-specific information
+    # ------------------------------------------------------------------------
     if machine_name == 'WCOSS2':
         fix_files = (
             "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
@@ -129,6 +131,9 @@ def create_job_script(
         modelname = "cfs cmc cmc_regional dwd fnmoc gfs aigfs jma metfra ukmet ecmwf"
         obsname = "osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_rrfs"
 
+    # ------------------------------------------------------------------------
+    # General information
+    # ------------------------------------------------------------------------
     sh.write("\n")
     sh.write(f"set -x\n")
 
@@ -174,6 +179,14 @@ def create_job_script(
     sh.write(f"export COMIN={COMIN_ROOT}/$NET/$evs_ver_2d\n")
     sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN\n")
 
+    sh.write("\n")
+    line=f"export INITDATE={evsdate}"
+    clean_line = line.replace("-", "")
+    sh.write(f"{clean_line}\n")
+
+    # ------------------------------------------------------------------------
+    # Job-specific information
+    # ------------------------------------------------------------------------
     if component == 'global_det' and step.lower() == 'prep' and run == 'atmos':
         sh.write("\n")
         modelname = "cfs cmc cmc_regional dwd fnmoc gfs aigfs jma metfra ukmet ecmwf"
@@ -182,11 +195,6 @@ def create_job_script(
         sh.write(f'export OBSNAME="{obsname}"\n')
     else:
         pass
-
-    sh.write("\n")
-    line=f"export INITDATE={evsdate}"
-    clean_line = line.replace("-", "")
-    sh.write(f"{clean_line}\n")
 
     # ------------------------------------------------------------------------
     # Final machine-specific information
@@ -202,23 +210,17 @@ def create_job_script(
         sh.write(f"source {HOMEevs}/dev/modulefiles/{component}/{component}_{step.lower()}.sh\n")
         sh.write(f"module list\n")
 
+    # ------------------------------------------------------------------------
+    # Final general information (submit j-job)
+    # ------------------------------------------------------------------------
     sh.write("\n")
     sh.write(f"# CALL executable job script here\n")
     sh.write(f"{HOMEevs}/jobs/JEVS_{step}_{component.upper()}\n")
 
     sh.write("\n")
-    sh.write(f"#################################################################\n")
-    sh.write(f"#################################################################\n")
-    sh.write(f"#################################################################\n")
-
-    # Read the contents of the source file
-    #with open(job_jevs_script, "r") as source_file:
-    #    source_contents = source_file.read()
-
-    # Write (or append) those contents into your target file
-    #sh.write("\n# --- Appended Content Start ---\n")
-    #sh.write(source_contents)
-    #sh.write("\n# --- Appended Content End ---\n")
+    sh.write(f"############################################\n")
+    sh.write(f"############################################\n")
+    sh.write(f"############################################\n")
 
     sh.close()
 
