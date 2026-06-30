@@ -271,60 +271,60 @@ print(f"component_list: {component_list}\n")
 for step_switch, step_switch_value in config["RUN"].items():
     if step_switch_value == "YES":
         if "PREP" in step_switch:
-        	### Convert initdate strings into date objects
-        	initdate_str = config["DATES"]["initdate"]
-        	initdate = None
-        	try:
-            		# Parse initdate from multiple date formats
-            		for fmt in ('%Y-%m-%d', '%Y%m%d'):
-                		try:
-                    			initdate = datetime.strptime(initdate_str, fmt).date()
-                    			break
-                		except ValueError:
-                    			pass
-            		if initdate is None:
-                		raise ValueError("Invalid initdate format in given config file")
-        	except ValueError:
-            		error_and_exit(
-                		"Invalid initdate format. Please use yyyymmdd or yyyy-mm-dd."
-            		)
+            ### Convert initdate strings into date objects
+            initdate_str = config["DATES"]["initdate"]
+            initdate = None
+            try:
+                # Parse initdate from multiple date formats
+                for fmt in ('%Y-%m-%d', '%Y%m%d'):
+                    try:
+                        initdate = datetime.strptime(initdate_str, fmt).date()
+                        break
+                    except ValueError:
+                        pass
+                if initdate is None:
+                    raise ValueError("Invalid initdate format in given config file")
+            except ValueError:
+                error_and_exit(
+                    "Invalid initdate format. Please use yyyymmdd or yyyy-mm-dd."
+                )
 
-        	for component in component_list:
-        		for job_switch, job_switch_value in config[f'{step_switch.replace("RUN_", "")}_{component.upper()}'].items():
-        			if job_switch_value == "YES":
-        				print(
-        					f"--- Generating submission script for {job_switch}, initdate {initdate:%Y%m%d} ---"
-        				)
-        				job_script = os.path.join(
-        					os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
-        					f"submit_{job_switch}_{initdate:%Y%m%d}.sh"
-                			)
-        				print(f"job_script: {job_script}")
-        				log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
-        				print(f"log_script: {log_script}")
-        				create_job_script(
-        					step_switch.replace("RUN_", ""), config, machine, component,
-        					job_switch, initdate, job_script, log_script
-        				)
+            for component in component_list:
+                for job_switch, job_switch_value in config[f'{step_switch.replace("RUN_", "")}_{component.upper()}'].items():
+                    if job_switch_value == "YES":
+                        print(
+                            f"--- Generating submission script for {job_switch}, initdate {initdate:%Y%m%d} ---"
+                        )
+                        job_script = os.path.join(
+                            os.path.join(config["INPUT_OUTPUT"]["DATAROOT"]), "jobs",
+                            f"submit_{job_switch}_{initdate:%Y%m%d}.sh"
+                        )
+                        print(f"job_script: {job_script}")
+                        log_script = job_script.replace("jobs", "logs").replace(".sh", ".log")
+                        print(f"log_script: {log_script}")
+                        create_job_script(
+                            step_switch.replace("RUN_", ""), config, machine, component,
+                            job_switch, initdate, job_script, log_script
+                        )
 
         if ("STATS" in step_switch or "PLOTS" in step_switch):
-                ### Convert vdate strings into date objects
-                vdate_str = config["DATES"]["vdate"]
-                vdate = None
-                try:
-                        # Parse vdate from multiple date formats
-                        for fmt in ('%Y-%m-%d', '%Y%m%d'):
-                                try:
-                                        vdate = datetime.strptime(vdate_str, fmt).date()
-                                        break
-                                except ValueError:
-                                        pass
-                        if vdate is None:
-                                raise ValueError("Invalid vdate format in given config file")
-                except ValueError:
-                        error_and_exit(
-                                "Invalid vdate format. Please use yyyymmdd or yyyy-mm-dd."
-                        )
-                print(f"EVS vdate for {step_switch}: {vdate} (Type: {type(vdate)})")
-                print("")
+            ### Convert vdate strings into date objects
+            vdate_str = config["DATES"]["vdate"]
+            vdate = None
+            try:
+                # Parse vdate from multiple date formats
+                for fmt in ('%Y-%m-%d', '%Y%m%d'):
+                    try:
+                        vdate = datetime.strptime(vdate_str, fmt).date()
+                        break
+                    except ValueError:
+                         pass
+                if vdate is None:
+                    raise ValueError("Invalid vdate format in given config file")
+            except ValueError:
+                error_and_exit(
+                    "Invalid vdate format. Please use yyyymmdd or yyyy-mm-dd."
+                )
+            print(f"EVS vdate for {step_switch}: {vdate} (Type: {type(vdate)})")
+            print("")
 
