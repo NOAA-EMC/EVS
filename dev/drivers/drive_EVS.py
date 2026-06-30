@@ -100,6 +100,7 @@ def create_job_script(
         place = "place=shared"
         nodes = "1"
         nproc = "1"
+        nodes_info = f"{nodes}:ncpus={nproc}"
         memory = "125GB"
         vhr="00"
     elif "jevs_prep_global_det_wave" == dev_driver:
@@ -107,6 +108,7 @@ def create_job_script(
         place = "place=shared"
         nodes = "1"
         nproc = "1"
+        nodes_info = f"{nodes}:ncpus={nproc}"
         memory = "15GB"
         vhr="00"
     elif "jevs_stats_global_det_aigfs_atmos_grid2grid" == dev_driver:
@@ -114,6 +116,7 @@ def create_job_script(
         place = "place=vscatter:exclhost"
         nodes = "1"
         nproc = "128"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
         memory = "225GB"
         vhr="00"
 
@@ -137,7 +140,7 @@ def create_job_script(
         sh.write(f"#PBS -q {queue}\n")
         sh.write(f"#PBS -A {account}\n")
         sh.write(f"#PBS -l walltime={walltime}\n")
-        sh.write(f"#PBS -l {place},select={nodes}:ncpus={nproc}:mem={memory}\n")
+        sh.write(f"#PBS -l {place},select={nodes_info}:mem={memory}\n")
         sh.write("#PBS -l debug=true\n")
         submission_command = f"qsub {jobfile}"
 
