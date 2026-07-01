@@ -1,7 +1,7 @@
 # Configuration file for EVS
 
 ####################################################
-# WHICH EVS STEPS AND COMPONENETS TO RUN
+# WHICH EVS STEPS AND COMPONENTS TO RUN
 ####################################################
 [RUN]
 #RUN_PREP = PRODUCES PREPARED FORECAST, ANALYSIS, OBSERVATION FILES (YES/NO) 
