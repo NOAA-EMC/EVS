@@ -119,6 +119,78 @@ def create_job_script(
         nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
         memory = "225GB"
         vhr="00"
+    elif "jevs_stats_global_det_aigfs_atmos_grid2obs" == dev_driver:
+        walltime = "01:45:00"
+        place = "place=vscatter:exclhost"
+        nodes = "1"
+        nproc = "128"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
+        memory = "300GB"
+        vhr="00"
+    elif "jevs_stats_global_det_cfs_atmos_grid2grid" == dev_driver:
+        walltime = "01:05:00"
+        place = "place=vscatter:shared"
+        nodes = "1"
+        nproc = "40"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
+        memory = "75GB"
+        vhr="00"
+    elif "jevs_stats_global_det_cfs_atmos_grid2obs" == dev_driver:
+        walltime = "01:00:00"
+        place = "place=vscatter:shared"
+        nodes = "1"
+        nproc = "28"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
+        memory = "50GB"
+        vhr="00"
+    elif "jevs_stats_global_det_cmc_atmos_grid2grid" == dev_driver:
+        walltime = "00:30:00"
+        place = "place=vscatter:shared"
+        nodes = "1"
+        nproc = "31"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
+        memory = "35GB" 
+        vhr="00"
+    elif "jevs_stats_global_det_cmc_atmos_grid2obs" == dev_driver:
+        walltime = "00:20:00"
+        place = "place=vscatter:shared"
+        nodes = "1"
+        nproc = "14"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
+        memory = "25GB"
+        vhr="00"
+    elif "jevs_stats_global_det_cmc_regional_atmos_grid2grid" == dev_driver:
+        walltime = "00:15:00"
+        place = "place=vscatter:shared"
+        nodes = "1"
+        nproc = "11"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
+        memory = "25GB" 
+        vhr="00"
+    elif "jevs_stats_global_det_dwd_atmos_grid2grid" == dev_driver:
+        walltime = "00:15:00"
+        place = "place=vscatter:shared"
+        nodes = "1"
+        nproc = "11"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
+        memory = "25GB"
+        vhr="00"
+    elif "jevs_stats_global_det_ecmwf_atmos_grid2grid" == dev_driver:
+        walltime = "00:30:00"
+        place = "place=vscatter:shared"
+        nodes = "1"
+        nproc = "53"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
+        memory = "60GB" 
+        vhr="00"
+    elif "jevs_stats_global_det_ecmwf_atmos_grid2obs" == dev_driver:
+        walltime = "00:25:00"
+        place = "place=vscatter:shared"
+        nodes = "1"
+        nproc = "14"
+        nodes_info = f"{nodes}:ncpus={nproc}:ompthreads=1"
+        memory = "25GB"
+        vhr="00"
 
     # ------------------------------------------------------------------------
     # Machine-specific resource information
@@ -226,6 +298,132 @@ def create_job_script(
         sh.write(f"{clean_line}\n")
         sh.write(f"export nproc={nproc}\n")
         sh.write(f"export USE_CFP=YES\n")
+    elif "jevs_stats_global_det_aigfs_atmos_grid2obs" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "aigfs"
+        verif_case = "grid2obs"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
+    elif "jevs_stats_global_det_cfs_atmos_grid2grid" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "cfs"
+        verif_case = "grid2grid"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
+    elif "jevs_stats_global_det_cfs_atmos_grid2obs" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "cfs"
+        verif_case = "grid2obs"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
+    elif "jevs_stats_global_det_cmc_atmos_grid2grid" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "cmc"
+        verif_case = "grid2grid"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
+    elif "jevs_stats_global_det_cmc_atmos_grid2obs" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "cmc"
+        verif_case = "grid2obs"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
+    elif "jevs_stats_global_det_cmc_regional_atmos_grid2grid" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "cmc_regional"
+        verif_case = "grid2grid"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
+    elif "jevs_stats_global_det_dwd_atmos_grid2grid" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "dwd"
+        verif_case = "grid2grid"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
+    elif "jevs_stats_global_det_ecmwf_atmos_grid2grid" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "ecmwf"
+        verif_case = "grid2grid"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
+    elif "jevs_stats_global_det_ecmwf_atmos_grid2obs" == dev_driver:
+        sh.write(f"export COMOUT={COMOUT_ROOT}/$NET/$evs_ver_2d/$STEP/$COMPONENT\n")
+        sh.write("\n")
+        modelname = "ecmwf"
+        verif_case = "grid2obs"
+        config_file=f"{HOMEevs}/parm/evs_config/{component}/config.evs.prod.$STEP.$COMPONENT.$RUN.$VERIF_CASE.$MODELNAME"
+        sh.write(f"export MODELNAME={modelname}\n")
+        sh.write(f"export VERIF_CASE={verif_case}\n")
+        sh.write(f"export config={config_file}\n")
+        line=f"export VDATE={evsdate}"
+        clean_line = line.replace("-", "")
+        sh.write(f"{clean_line}\n")
+        sh.write(f"export nproc={nproc}\n")
+        sh.write(f"export USE_CFP=YES\n")
     else:
         pass
 
@@ -233,6 +431,7 @@ def create_job_script(
     # Final machine-specific information
     # ------------------------------------------------------------------------
     if machine_name == 'WCOSS2':
+        sh.write(f"export machine={machine_name}\n")
         sh.write(f"export job=${{PBS_JOBNAME:-{dev_driver}}}\n")
         sh.write("export jobid=$job.${PBS_JOBID:-$$}\n")
         sh.write("export SITE=$(cat /etc/cluster_name)\n")
