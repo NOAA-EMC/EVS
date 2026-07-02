@@ -567,7 +567,7 @@ if [ "$data" = "mrms" ] ; then
  # Otherwise, copy the mrms files from the restart directory
  ############################################################	
  export accum
- if [ -s $DCOMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-??0000.grib2.gz ] ; then 
+ if [ -s $DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_??H_Pass2_00.00_${vday}-??0000.grib2.gz ] ; then 
     [[ ! -d $COMOUTrestart/prepare ]] && mkdir -p $COMOUTrestart/prepare
 
     for accum in 01 03 24 ; do
@@ -590,7 +590,7 @@ if [ "$data" = "mrms" ] ; then
 	  if [ ! -s $COMOUTrestart/prepare/mrms${accum}h.t${vhr}z.G*.nc ] ; then 
             export vbeg=$vday$vhr
             export vend=$vday$vhr
-            mrms03=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
+            mrms03=$DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
             if [ -s $mrms03 ] ; then 
                cp $mrms03 $mrmsdir/.
                gunzip MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
@@ -629,11 +629,11 @@ if [ "$data" = "mrms" ] ; then
       done
 
    else
-      echo "WARNING:  No MRMS data $DCOMINmrms/MultiSensor_QPE_*.grib2.gz available for EVS ${COMPONENT}"
+      echo "WARNING:  No MRMS data $DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_*.grib2.gz available for EVS ${COMPONENT}"
       if [ "$SENDMAIL" = "YES" ] ; then
          export subject="MRMS Data Missing for EVS ${COMPONENT}"
          echo "WARNING:  No MRMS data available for ${VDATE}" > mailmsg
-         echo Missing file is $DCOMINmrms/MultiSensor_QPE_*.grib2.gz  >> mailmsg
+         echo Missing file is $DCOMINmrms/alaska/MultiSensorQPE/MultiSensor_QPE_*.grib2.gz  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $MAILTO
       fi

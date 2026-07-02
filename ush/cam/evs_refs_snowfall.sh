@@ -76,7 +76,7 @@ for obsv in 6h 24h  ; do
 	    ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
 	    iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
 
-	    input_fcst=$COMINrefs/refs.${iday}/${ihr}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}
+	    input_fcst=$COMINrefs/refs.${iday}/${ihr}/preproc/prcip/prcip.t${ihr}z.conus.*.f${fhr}.grib2
         input_obsv=$COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_${obsv}_${VDATE}${vhr}_grid184.grb2
 
 	   if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
@@ -118,8 +118,8 @@ for obsv in 6h 24h  ; do
             echo  "export regrid=FCST" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
             echo  "export modelpath=$COMREFS" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
             echo  "export modelgrid=conus" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
-            echo  "export modeltail=''" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
-            echo  "export extradir='verf_g2g/'" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
+            echo  "export modeltail='.grib2'" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
+            echo  "export extradir='preproc/prcip/'" >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
 
             echo  "export verif_grid='' " >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
             echo  "export verif_poly='${maskpath}/Bukovsky_NOHRSC_CONUS.nc, ${maskpath}/Bukovsky_NOHRSC_CONUS_East.nc, ${maskpath}/Bukovsky_NOHRSC_CONUS_West.nc, ${maskpath}/Bukovsky_NOHRSC_CONUS_South.nc, ${maskpath}/Bukovsky_NOHRSC_CONUS_Central.nc' " >> run_refs_snow${obsv}.${fhr}.${vhr}.sh
