@@ -14,6 +14,9 @@ export machine=${machine:-"WCOSS2"}
 #*************************************
 #check input data are available:
 #*************************************
+export verif_precip=${verif_precip:-'yes'}
+export verif_snowfall=${verif_snowfall:-'yes'}
+    
 source $USHevs/cam/evs_check_refs_files.sh
 export err=$?; err_chk
 
@@ -23,8 +26,6 @@ mkdir -p $WORK/scripts
 export all_stats=$WORK/all_stats
 mkdir -p $all_stats
 
-export verif_precip=${verif_precip:-'yes'}
-export verif_snowfall=${verif_snowfall:-'yes'}
 if [ "$verif_precip" = "no" ] && [ "$verif_snowfall" = "no" ] ; then
     export gather='no'
     export prepare='no'
