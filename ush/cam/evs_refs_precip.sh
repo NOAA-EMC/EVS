@@ -154,7 +154,7 @@ for obsvtype in ccpa mrms ; do
             
 	      #Check if input fcst and input_obsv files are available 
 	      if [ $extra = "verf_g2g" ] ; then
-		 input_fcst=${modelpath}/refs.${iday}/${ihr}/verf_g2g/refs.m??.t${ihr}z.${domain}.f${fhr}
+		 input_fcst=${modelpath}/refs.${iday}/${ihr}/preproc/prcip/prcip.t${ihr}z.${domain}.m??.f${fhr}.grib2
 	      elif [ $extra = "ensprod" ] ; then
 		 input_fcst=${modelpath}/refs.${iday}/${ihr}/ensprod/refs.t${ihr}z.${prod}.f${fhr}.${domain}.grib2
               else
@@ -313,8 +313,8 @@ for obsvtype in ccpa mrms ; do
                   fi
                   if [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export modeltail=''" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export extradir='verf_g2g/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modeltail='.grib2'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export extradir='preproc/prcip/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
                      echo  "export modelhead=refs" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
@@ -333,8 +333,8 @@ for obsvtype in ccpa mrms ; do
                   fi
                   if [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export modeltail=''" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export extradir='verf_g2g/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modeltail='.grib2'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export extradir='preproc/prcip/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
                      echo  "export modelhead=refs" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
@@ -353,8 +353,8 @@ for obsvtype in ccpa mrms ; do
                   fi
                   if [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export modeltail=''" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export extradir='verf_g2g/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modeltail='.grib2'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export extradir='preproc/prcip/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
                      echo  "export modelhead=refs" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
@@ -372,8 +372,8 @@ for obsvtype in ccpa mrms ; do
                   fi
                   if [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export modeltail=''" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export extradir='verf_g2g/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modeltail='.grib2'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export extradir='preproc/prcip/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else
                      echo  "export modelhead=refs" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
@@ -391,8 +391,8 @@ for obsvtype in ccpa mrms ; do
                      echo  "export modelgrid=${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   elif [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export extradir='verf_g2g/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export modeltail=''" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export extradir='preproc/prcip/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modeltail='.grib2'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "export modelgrid=conus" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else  # mean pmmn avrg lpmm (only these 24hr mean need to derived)
                      echo  "export modelhead=refs${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
@@ -412,8 +412,8 @@ for obsvtype in ccpa mrms ; do
                      echo  "export modelgrid=${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   elif [ $prod = system ] ; then
                      echo  "export modelpath=$COMREFS" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export extradir='verf_g2g/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
-                     echo  "export modeltail=''" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export extradir='preproc/prcip/'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+                     echo  "export modeltail='.grib2'" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                      echo  "export modelgrid=ak" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                   else  # mean pmmn avrg lpmm (only these 24hr mean need to derived)
                      echo  "export modelhead=refs${prod}" >> run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
