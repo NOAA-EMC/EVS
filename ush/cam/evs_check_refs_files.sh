@@ -37,7 +37,7 @@ if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
 fi
 
 
-if [ $VERIF_CASE = precip ] ; then
+if [ $VERIF_CASE = precip ] && [ "$verif_precip" = "yes" ] ; then
    echo "Checking precip files...." 
 
    next=`$NDATE +24 ${vday}12 |cut -c 1-8`
