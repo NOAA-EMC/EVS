@@ -48,8 +48,8 @@ from check_variables import *
 # ================ GLOBALS AND CONSTANTS ================
 
 plotter = Plotter(
-    fig_size=(10., 8.), legend_font_size=10, fig_subplot_right=.77, 
-    fig_subplot_left=.23, fig_subplot_top=.87, fig_subplot_bottom=.23
+    fig_size=(10., 9.), legend_font_size=10, fig_subplot_right=.77, 
+    fig_subplot_left=.23, fig_subplot_top=.884, fig_subplot_bottom=.316
 )
 plotter.set_up_plots()
 toggle = Toggle()
@@ -1010,7 +1010,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     )
 
     fig.subplots_adjust(wspace=0, hspace=0)
-    cax = fig.add_axes([.775, .23, .01, .64])
+    cax = fig.add_axes([.775, .316, .01, .569])
     cbar_ticks = [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.]
     cb = plt.colorbar(
         csi_contour, orientation='vertical', cax=cax, ticks=cbar_ticks,
