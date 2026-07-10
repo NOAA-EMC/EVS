@@ -2,7 +2,7 @@
 '''
 Program Name: check_subseasonal_config_obs_prep.py
 Contact(s): Shannon Shields
-Abstract: This script is run by exevs_subseasonal_obs_prep.sh
+Abstract: This script is run by exevs_prep_subseasonal_obs.sh
           in scripts/prep/subseasonal.
           This does a check on the user's settings in
           the passed config file.

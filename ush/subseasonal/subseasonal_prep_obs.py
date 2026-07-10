@@ -2,7 +2,7 @@
 '''
 Name: subseasonal_prep_obs.py
 Contact(s): Shannon Shields
-Abstract: This script is run by exevs_subseasonal_obs_prep.sh
+Abstract: This script is run by exevs_prep_subseasonal_obs.sh
           in scripts/prep/subseasonal. This script retrieves
           obs data for subseasonal prep step.
 '''
@@ -25,7 +25,6 @@ COMINgfs = os.environ['COMINgfs']
 DCOMINecmwf = os.environ['DCOMINecmwf']
 DCOMINosi = os.environ['DCOMINosi']
 DCOMINghrsst = os.environ['DCOMINghrsst']
-DCOMINumd = os.environ['DCOMINumd']
 COMINobsproc = os.environ['COMINobsproc']
 COMINccpa = os.environ['COMINccpa']
 COMOUT = os.environ['COMOUT']
@@ -105,21 +104,6 @@ subseasonal_obs_dict = {
                                                              +'{init?fmt=%Y%m%d%H}'
                                                              +'.nc'),
                       'vhours': ['00']},
-    'umd': {'prod_file_format': os.path.join(DCOMINumd, 
-                                             '{init?fmt=%Y%m%d}',
-                                             'validation_data',
-                                             'landsfc',
-                                             'olr',
-                                             'olr-daily_'
-                                             +'v01r02-preliminary_'
-                                             +'{init?fmt=%Y}0101_'
-                                             +'latest.nc'),
-                      'arch_file_format': os.path.join(COMOUT_INITDATE,
-                                                       'umd',
-                                                       'umd.olr.'
-                                                       '{init?fmt=%Y%m%d}.nc'),
-                      'vhours': ['00']},
-
     'gdas': {'arch_file_format': os.path.join(COMOUT_INITDATE,
                                              'prepbufr_gdas',
                                              'prepbufr.gdas.'
@@ -318,19 +302,6 @@ for OBS in OBSNAME:
                                     sub_util.run_shell_command(
                                         ['chgrp', 'rstprod', arch_file]
                                     )
-                        else:
-                            sub_util.log_missing_file_obs(
-                                log_missing_file, prod_file, OBS,
-                                CDATE_dt
-                            )
-                elif OBS == 'umd':
-                    if SENDCOM == 'YES':
-                        if sub_util.check_file_exists_size(prod_file):
-                            if not \
-                                    sub_util.check_netcdf_file_corrupt(
-                                        prod_file
-                                    ):
-                                sub_util.copy_file(prod_file, arch_file)
                         else:
                             sub_util.log_missing_file_obs(
                                 log_missing_file, prod_file, OBS,
