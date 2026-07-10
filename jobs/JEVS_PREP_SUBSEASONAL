@@ -69,7 +69,6 @@ export COMINgfs=${COMINgfs:-$(compath.py ${envir}/com/gfs/${gfs_ver})}
 export DCOMINecmwf=${DCOMINecmwf:-$DCOMROOT}
 export DCOMINosi=${DCOMINosi:-$DCOMROOT}
 export DCOMINghrsst=${DCOMINghrsst:-$DCOMROOT}
-export DCOMINumd=${DCOMINumd:-$DCOMROOT}
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export COMINccpa=${COMINccpa:-$(compath.py ${envir}/com/ccpa/${ccpa_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
