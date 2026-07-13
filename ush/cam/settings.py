@@ -382,6 +382,7 @@ class Reference():
                                       'metar': 'METAR',
                                       'ptype': 'METAR',
                                       'conus_sfc': 'METAR',
+                                      'firewx': 'METAR/RAOB',
                                       'lsr': 'Local Storm Reports (LSR)',
         }
         self.variable_translator = {'TMP': 'Temperature',
@@ -2614,7 +2615,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'ASNOW_06': {'fcst_var_names': ['ASNOW', 'ASNOW_06'],
+                        'ASNOW_06': {'fcst_var_names': ['ASNOW', 'ASNOW_06', 'ASNOW_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -2629,7 +2630,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'ASNOW_24': {'fcst_var_names': ['ASNOW', 'ASNOW_24'],
+                        'ASNOW_24': {'fcst_var_names': ['ASNOW', 'ASNOW_24', 'ASNOW_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -2717,7 +2718,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'ASNOW_06': {'fcst_var_names': ['ASNOW', 'ASNOW_06'],
+                        'ASNOW_06': {'fcst_var_names': ['ASNOW', 'ASNOW_06', 'ASNOW_A06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
@@ -2732,7 +2733,7 @@ class Reference():
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'snowfall'},
-                        'ASNOW_24': {'fcst_var_names': ['ASNOW', 'ASNOW_24'],
+                        'ASNOW_24': {'fcst_var_names': ['ASNOW', 'ASNOW_24', 'ASNOW_A24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
                                                             + ' >=0.1016,'
