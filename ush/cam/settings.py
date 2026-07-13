@@ -382,6 +382,7 @@ class Reference():
                                       'metar': 'METAR',
                                       'ptype': 'METAR',
                                       'conus_sfc': 'METAR',
+                                      'firewx': 'METAR/RAOB',
                                       'lsr': 'Local Storm Reports (LSR)',
         }
         self.variable_translator = {'TMP': 'Temperature',
