@@ -1259,7 +1259,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = ''
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']:
+    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar', 'firewx']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
