@@ -967,7 +967,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     if JOB_GROUP == 'reformat_data':
                         if verif_type == 'pres_levs' \
                                 and verif_type_job in ['GeoHeightAnom',
-                                                       'WindShear']:
+                                                       'WindShear',
+                                                       'WindSpeed']:
                             check_truth_files = True
                         else:
                             check_truth_files = False
@@ -977,7 +978,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if verif_type == 'pres_levs' \
                                 and verif_type_job in [
                                     'DailyAvg_GeoHeightAnom',
-                                    'WindShear'
+                                    'WindShear',
+                                    'WindSpeed'
                                 ]:
                             check_truth_files = False
                         elif verif_type == 'means':
@@ -1079,7 +1081,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
                                 and verif_type_job in ['GeoHeight',
                                                        'Temp', 'UWind',
-                                                       'VWind', 'VectorWind'] \
+                                                       'VWind', 'VectorWind', 
+                                                       'WindSpeed'] \
                                 and job_env_dict['MODEL'] in ['jma',
                                                               'ukmet']:
                             model_fhr_lev_dict = {
