@@ -153,7 +153,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
         valid_config_var_values_dict[VCS_abbrev_type
                                      +'_truth_name_list'] = ['gfs_anl', 
                                                              'ecmwf_anl',
-                                                             'umd_anl',
                                                              'ghrsst_anl',
                                                              'osi_anl',
                                                              'ccpa']
