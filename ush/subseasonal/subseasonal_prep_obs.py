@@ -44,15 +44,16 @@ if not os.path.exists(COMOUT_INITDATE):
 
 ###### OBS
 # Get operational observation data
-# Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
+# Northern & Southern Hemisphere 10 km OSI-SAF AMSR2 analysis - osi_saf
 # Group for High Resolution Sea Surface Temperature (GHRSST) Level 4 SST analysis for Office of Satellite and Product Operations (OSPO) - ghrsst_ospo
 # NCEP's Climatology-Calibrated Precipitation Analysis - ccpa
 subseasonal_obs_dict = {
     'gfs': {'prod_file_format': os.path.join(COMINgfs, 'gfs.'
                                              +'{init?fmt=%Y%m%d}',
-                                             '{init?fmt=%2H}',
-                                             'atmos', 'gfs.t{init?fmt=%2H}z'
-                                             +'.pgrb2.1p00.anl'),
+                                             '{init?fmt=%2H}', 'products',
+                                             'atmos', 'grib2', '0p25',
+                                             'gfs.t{init?fmt=%2H}z'
+                                             +'.pres_a.0p25.analysis.grib2'),
                       'arch_file_format': os.path.join(COMOUT_INITDATE,                                                              'gfs',
                                                        'gfs.'
                                                        +'{init?fmt=%Y%m%d%H}'
@@ -74,13 +75,13 @@ subseasonal_obs_dict = {
                                                    +'?shift=-12}',
                                                    'seaice', 'osisaf',
                                                    'ice_conc_{hem?fmt=str}_'
-                                                   +'polstere-100_multi_'
+                                                   +'polstere-100_amsr2_'
                                                    +'{init_shift?fmt=%Y%m%d%H'
                                                    +'?shift=-12}'
                                                    +'00.nc'),
                 'daily_arch_file_format': os.path.join(COMOUT_INITDATE,
                                                        'osi_saf',
-                                                       'osi_saf.multi.'
+                                                       'osi_saf.amsr2.'
                                                        +'{init_shift?fmt=%Y%m%d%H'
                                                        +'?shift=-24}to'
                                                        +'{init?fmt=%Y%m%d%H}'
@@ -147,7 +148,7 @@ for OBS in OBSNAME:
             prod_file_format = os.path.join(COMINobsproc, 'gdas.'
                                             +'{init?fmt=%Y%m%d}',
                                             '{init?fmt=%H}',
-                                            'atmos', 'gdas.t'
+                                            'obs', 'gdas.t'
                                             +'{init?fmt=%H}'
                                             +'z.prepbufr')
             prod_file = sub_util.format_filler(
