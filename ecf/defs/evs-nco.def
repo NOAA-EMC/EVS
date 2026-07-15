@@ -2010,10 +2010,10 @@ suite evs_nco
               trigger (:TIME >= 1550 or :TIME < 2245)
               edit VHR '18'
             task jevs_plots_cam_severe_nbrcnt_last90days
-              trigger (:TIME >= 1715 or :TIME < 2315)
+              trigger (:TIME >= 1700 or :TIME < 2250)
               edit VHR '18'
             task jevs_plots_cam_severe_nbrctc_last90days
-              trigger (:TIME >= 1715 or :TIME < 2315)
+              trigger (:TIME >= 1700 or :TIME < 2305)
               edit VHR '18'
           endfamily 
         endfamily   # 12 plots
