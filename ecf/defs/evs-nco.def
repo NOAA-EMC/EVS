@@ -286,7 +286,7 @@ suite evs_nco
               edit VHR '03'
               edit MEM '1'
             task jevs_stats_cam_rrfsmem_radar_vhr_03_mem_2
-              trigger :TIME >= 0340 and :TIME < 0940 and ../../prep/cam/jevs_prep_cam_radar_vhr_03 == complete
+              trigger :TIME >= 0350 and :TIME < 0950 and ../../prep/cam/jevs_prep_cam_radar_vhr_03 == complete
               edit VHR '03'
               edit MEM '2'
             task jevs_stats_cam_rrfsmem_radar_vhr_03_mem_3
