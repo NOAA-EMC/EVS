@@ -22,7 +22,7 @@ export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 [[ "$LOUD" != YES ]] && set -x
 
 # Save the master DATA directory root
-export DATA_ROOT=${DATA}
+export DATA_base=${DATA}
 
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
@@ -43,7 +43,7 @@ for wfo in ${WFO}; do
     export wfo=$wfo
     
     # Create an isolated workspace for this specific WFO
-    export DATA="${DATA_ROOT}/${wfo}"
+    export DATA="${DATA_base}/${wfo}"
     
     mkdir -p ${DATA}/stats
     mkdir -p ${DATA}/job_work_dir
@@ -189,10 +189,10 @@ done
 # copy log files into logs and cat them
 #########################################
 # Set working directory back to global root to find all sandboxed logs
-cd ${DATA_ROOT}
-log_dir="${DATA_ROOT}/*/job_work_dir/*/logs"
+cd ${DATA_base}
+log_dir="${DATA_base}/*/job_work_dir/*/logs"
 
-log_file_count=$(find ${DATA_ROOT} -type f \( -name "*.out" -o -name "*.log" \) | wc -l)
+log_file_count=$(find ${DATA_base} -type f \( -name "*.out" -o -name "*.log" \) | wc -l)
 if [[ $log_file_count -ne 0 ]]; then
     for log_file in $log_dir; do
         if [ -f "$log_file" ]; then
