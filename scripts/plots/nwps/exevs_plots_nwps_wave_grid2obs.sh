@@ -21,8 +21,6 @@ export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*
 export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 [[ "$LOUD" != YES ]] && set -x
 
-# Save the master DATA directory root
-export DATA_base=${DATA}
 
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
@@ -43,12 +41,12 @@ for wfo in ${WFO}; do
     export wfo=$wfo
     
     # Create an isolated workspace for this specific WFO
-    export DATA="${DATA_base}/${wfo}"
+    export DATA_wfo="${DATA}/${wfo}"
     
-    mkdir -p ${DATA}/stats
-    mkdir -p ${DATA}/job_work_dir
-    mkdir -p ${DATA}/images
-    cd ${DATA}
+    mkdir -p ${DATA_wfo}/stats
+    mkdir -p ${DATA_wfo}/job_work_dir
+    mkdir -p ${DATA_wfo}/images
+    cd ${DATA_wfo}
 
     echo ' '
     echo "Copying *.stat files for ${wfo}:"
@@ -62,7 +60,7 @@ for wfo in ${WFO}; do
     while (( ${theDate} <= ${plot_end_date} )); do
         EVSINnwps=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
         if [ -s ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
-            cp ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+            cp ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA_wfo}/stats/.
         else
             echo "WARNING: ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
         fi
@@ -73,7 +71,7 @@ for wfo in ${WFO}; do
     # quick error check 
     ####################
     # Check for files specifically inside this WFO's stats sandbox
-    nc=$(ls ${DATA}/stats/evs.stats.${MODELNAME}.${wfo}*stat 2>/dev/null | wc -l | awk '{print $1}')
+    nc=$(ls ${DATA_wfo}/stats/evs.stats.${MODELNAME}.${wfo}*stat 2>/dev/null | wc -l | awk '{print $1}')
     
     if [ "${nc}" != '0' ] && [ -n "${nc}" ]; then
         set -x
@@ -106,7 +104,7 @@ for wfo in ${WFO}; do
     ###########################################
     # Run the command files for the PAST31DAYS 
     ###########################################
-    chmod 775 ${DATA}/plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
+    chmod 775 ${DATA_wfo}/plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
     if [ "${run_mpi}" = 'yes' ] ; then
         mpiexec -np 200 -ppn 100 --cpu-bind verbose,depth cfp plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
     else
@@ -125,9 +123,9 @@ for wfo in ${WFO}; do
     #######################
     periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
     if [ "$gather" = "yes" ] ; then
-        if [ "$(ls -A "${DATA}/images")" ]; then
-            echo "Found ${DATA}/images/*.png "
-            nc_images=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
+        if [ "$(ls -A "${DATA_wfo}/images")" ]; then
+            echo "Found ${DATA_wfo}/images/*.png "
+            nc_images=$(ls ${DATA_wfo}/images/*.png | wc -l | awk '{print $1}')
             
             for period in ${periods} ; do
                 period_lower=$(echo ${period,,})
@@ -160,7 +158,7 @@ for wfo in ${WFO}; do
                 
                 # tar and copy them to the final destination
                 if [ "${nc_images}" -gt '0' ] ; then
-                    cd ${DATA}/images
+                    cd ${DATA_wfo}/images
                     tar -cvf evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*_${wfo}.png
                 fi
                 
@@ -189,10 +187,10 @@ done
 # copy log files into logs and cat them
 #########################################
 # Set working directory back to global root to find all sandboxed logs
-cd ${DATA_base}
-log_dir="${DATA_base}/*/job_work_dir/*/logs"
+cd ${DATA_wfo}
+log_dir="${DATA_wfo}/*/job_work_dir/*/logs"
 
-log_file_count=$(find ${DATA_base} -type f \( -name "*.out" -o -name "*.log" \) | wc -l)
+log_file_count=$(find ${DATA_wfo} -type f \( -name "*.out" -o -name "*.log" \) | wc -l)
 if [[ $log_file_count -ne 0 ]]; then
     for log_file in $log_dir; do
         if [ -f "$log_file" ]; then
