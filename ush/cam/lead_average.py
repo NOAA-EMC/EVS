@@ -1190,12 +1190,18 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
 
     if sample_equalization:
         counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
-        for count, xval in zip(counts, x_vals1.tolist()):
+        sample_stride = 3 if len(counts) > 60 else 1
+
+        for i, (count, xval) in enumerate(zip(counts, x_vals1)):
+            if i % sample_stride != 0:
+                continue
+
             if not isinstance(count, str):
                 count = str(int(count))
+
             ax.annotate(
-                f'{count}', xy=(xval,1.), 
-                xycoords=('data', 'axes fraction'), xytext=(0,12),
+                f'{count}', xy=(xval, 1.),
+                xycoords=('data', 'axes fraction'), xytext=(0, 12),
                 textcoords='offset points', va='top', fontsize=11,
                 color='dimgrey', ha='center'
             )
