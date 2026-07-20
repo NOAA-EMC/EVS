@@ -4,7 +4,7 @@
 # Name of Script: evs_wave_timeseries.sh
 # Developed for EVS-NWPS: Samira Ardani (samira.ardani@noaa.gov)                   
 # Cited to: Mallory Rows's work for global_det component.     
-# Purpose of Script: Copy individual plot from tmp directory in $DATA to job working directory to address mpmd (03/2025)   
+# Purpose of Script: Copy individual plot from tmp directory in $DATA_wfo to job working directory to address mpmd (03/2025)   
 
 #######################################
 # Copy the plots to a common directory
@@ -61,8 +61,8 @@ for small_period in ${small_periods} ; do
 				# Lead average plots
 				for fhr in ${fhrs}; do
 					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f${fhr}.${region}.png
-            				tmp_image=$DATA/images/$imagename
-					job_work_dir=${DATA}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${stats}_lead_average_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
+            				tmp_image=$DATA_wfo/images/$imagename
+					job_work_dir=${DATA_wfo}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${stats}_lead_average_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
 					job_image=$job_work_dir/images/$imagename
 					if [[ ! -s $tmp_image ]]; then
 						if [[ -s $job_image ]]; then
@@ -75,8 +75,8 @@ for small_period in ${small_periods} ; do
 				# Time series plots
 				for fhr in ${fhrs} ; do
 					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.timeseries_valid${vhr}z_f${fhr}.${region}.png
-            				tmp_image=$DATA/images/$imagename
-					job_work_dir=${DATA}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_time_series_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
+            				tmp_image=$DATA_wfo/images/$imagename
+					job_work_dir=${DATA_wfo}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_time_series_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
 					job_image=$job_work_dir/images/$imagename
 					if [[ ! -s $tmp_image ]]; then
 						if [[ -s $job_image ]]; then
