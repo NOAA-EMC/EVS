@@ -8,18 +8,22 @@
 # Abstract:      This script adds a file check before files to be used in METplus and discards the corrupted netcdf files.
 #                
 #
-###############################################################################
+##############################################################################
 import sys
 import subprocess
 
 def rtofs_check_nc(filepath):
-    # Variables to check
-    test_vars = ['temperature', 'salinity']
-    
+    # Specific variables to check first, followed by universal fallback dimensions
+    test_vars = [
+        'temperature', 'salinity', 'sss', 'sst', 
+        'ice_coverage', 'ice_temperature', 'ice_thickness', 'ssh',
+        'lat', 'latitude', 'lon', 'longitude'  # Universal fallback
+    ]
+
     for var in test_vars:
         try:
-            # -v forces ncdump to attempt reading actual binary data from the variable
-            result = subprocess.run(
+            # Attempt to read data for the target variable
+            subprocess.run(
                 ['ncdump', '-v', var, filepath],
                 check=True,
                 stdout=subprocess.DEVNULL,
@@ -29,12 +33,12 @@ def rtofs_check_nc(filepath):
             status = 0
             print(status)
             return status
-            
+
         except subprocess.CalledProcessError:
-            # If the variable isn't in this file or the data is corrupt, try the next one
+            # Variable not present in this file OR corrupted; check next
             continue
 
-    # If neither variable could be read cleanly, mark as corrupted
+    # If NONE of the variables or fallback coordinates could be read, mark as corrupt
     status = 1
     print(status)
     return status
@@ -45,3 +49,4 @@ if __name__ == "__main__":
 
     filename = sys.argv[1]
     status = rtofs_check_nc(filename)
+
