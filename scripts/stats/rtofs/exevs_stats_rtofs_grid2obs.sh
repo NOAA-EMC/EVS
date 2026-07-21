@@ -98,7 +98,7 @@ if [ $OBTYPE = argo ]; then
         				fhr2=$(printf "%02d" "${fhr}")
         				export fhr3=$(printf "%03d" "${fhr}")
 					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-					COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$OBTYPE.nc
+					COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$OBTYPE.nc
 					if [ -s $COMINrtofsfilename ] ; then
           					for vari in ${VARS}; do
             						export VAR=$vari
