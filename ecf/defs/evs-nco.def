@@ -1987,22 +1987,22 @@ suite evs_nco
               trigger :TIME >= 1355 and :TIME < 1955 and ../../stats/global_det/jevs_stats_global_det_gfs_wave_grid2obs == complete
           endfamily
           family cam
-            task jevs_plots_cam_refs_grid2obs_ecnt_last90days
-              trigger :TIME >= 1230 and :TIME < 1830 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
-            task jevs_plots_cam_refs_grid2obs_ctc_last90days
-              trigger :TIME >= 1300 and :TIME < 1900 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
-            task jevs_plots_cam_refs_profile_last90days
-              trigger :TIME >= 1315 and :TIME < 1915 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
-            task jevs_plots_cam_refs_precip_last90days
-              trigger :TIME >= 1330 and :TIME < 1930 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_precip == complete
-            task jevs_plots_cam_refs_precip_spatial
-              trigger :TIME >= 1345 and :TIME < 1945 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_precip == complete
-            task jevs_plots_cam_refs_spcoutlook_last90days
-              trigger :TIME >= 1400 and :TIME < 2000 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_spcoutlook == complete
-            task jevs_plots_cam_refs_snowfall_last90days
-              trigger :TIME >= 1415 and :TIME < 2015 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_snowfall == complete
             task jevs_plots_cam_refs_grid2obs_cape_last90days
-              trigger :TIME >= 1430 and :TIME < 2030 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
+              trigger :TIME >= 1110 and :TIME < 1710 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
+            task jevs_plots_cam_refs_grid2obs_ctc_last90days
+              trigger :TIME >= 1120 and :TIME < 1720 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
+            task jevs_plots_cam_refs_precip_last90days
+              trigger :TIME >= 1130 and :TIME < 1730 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_precip == complete
+            task jevs_plots_cam_refs_grid2obs_ecnt_last90days
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
+            task jevs_plots_cam_refs_profile_last90days
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_grid2obs == complete
+            task jevs_plots_cam_refs_precip_spatial
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_precip == complete
+            task jevs_plots_cam_refs_spcoutlook_last90days
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_spcoutlook == complete
+            task jevs_plots_cam_refs_snowfall_last90days
+              trigger :TIME >= 1140 and :TIME < 1740 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_snowfall == complete
             task jevs_plots_cam_radar_nbrcnt_last90days
               trigger (:TIME >= 1500 or :TIME < 2100)
               edit VHR '18'
