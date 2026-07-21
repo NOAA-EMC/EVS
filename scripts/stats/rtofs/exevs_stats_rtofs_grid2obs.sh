@@ -99,7 +99,13 @@ if [ $OBTYPE = argo ]; then
         				export fhr3=$(printf "%03d" "${fhr}")
 					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
 					COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$OBTYPE.nc
-					if [ -s $COMINrtofsfilename ] ; then
+					# check nc files:
+					python $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename"
+					export err=$?; err_chk
+					file_check_argo=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
+					echo "$file_check_argo"
+					if [[ -s "$COMINrtofsfilename" && "$file_check_argo" -eq 0 ]] ; then
+
           					for vari in ${VARS}; do
             						export VAR=$vari
             						mkdir -p $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
@@ -123,7 +129,7 @@ if [ $OBTYPE = argo ]; then
 							fi
 						done
 					else
-						echo "WARNING: Missing validation file: RTOFS f${fhr3} 3dz. ${COMINrtofsfilename} is missing for valid date $VDATE. METplus will not run."
+						echo "WARNING: Missing or corrupted validation file: RTOFS f${fhr3} 3dz. ${COMINrtofsfilename} is missing or corrupted for valid date $VDATE. METplus will not run."
 					fi
 				done
 			else
@@ -147,7 +153,12 @@ elif [ $OBTYPE = ndbc ]; then
 				export fhr3=$(printf "%03d" "${fhr}")
 				match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
 				COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_prog.$OBTYPE.nc
-				if [ -s $COMINrtofsfilename ] ; then
+				# check nc files:
+				python $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename"
+				export err=$?; err_chk
+				file_check_ndbc=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
+				echo "$file_check_ndbc"
+				if [[ -s "$COMINrtofsfilename" && "$file_check_ndbc" -eq 0 ]] ; then
 					for vari in ${VARS}; do
 						export VAR=$vari
 						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
@@ -167,7 +178,7 @@ elif [ $OBTYPE = ndbc ]; then
 						fi
 					done
 				else
-					echo "WARNING: Missing RTOFS f${fhr3} prog file. $COMINrtofsfilename is missing for valid date $VDATE. METplus will not run."
+					echo "WARNING: Missing or corrupted RTOFS f${fhr3} prog file. $COMINrtofsfilename is missing or corrupted for valid date $VDATE. METplus will not run."
 				fi
 			done
 		else
