@@ -100,9 +100,8 @@ if [ $OBTYPE = argo ]; then
 					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
 					COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$OBTYPE.nc
 					# check nc files:
-					python $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename"
-					export err=$?; err_chk
 					file_check_argo=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
+					export err=$?; err_chk
 					echo "$file_check_argo"
 					if [[ -s "$COMINrtofsfilename" && "$file_check_argo" -eq 0 ]] ; then
 
@@ -154,9 +153,8 @@ elif [ $OBTYPE = ndbc ]; then
 				match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
 				COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_prog.$OBTYPE.nc
 				# check nc files:
-				python $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename"
-				export err=$?; err_chk
 				file_check_ndbc=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
+				export err=$?; err_chk
 				echo "$file_check_ndbc"
 				if [[ -s "$COMINrtofsfilename" && "$file_check_ndbc" -eq 0 ]] ; then
 					for vari in ${VARS}; do
