@@ -165,11 +165,7 @@ elif [ $OBTYPE = ndbc ]; then
 				export fhr3=$(printf "%03d" "${fhr}")
 				match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
 				COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_prog.$OBTYPE.nc
-				# check nc files:
-				file_check_ndbc=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
-				export err=$?; err_chk
-				echo "$file_check_ndbc"
-				if [[ -s "$COMINrtofsfilename" && "$file_check_ndbc" -eq 0 ]] ; then
+				if [[ -s "$COMINrtofsfilename" ]] ; then
 					for vari in ${VARS}; do
 						export VAR=$vari
 						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
@@ -177,19 +173,28 @@ elif [ $OBTYPE = ndbc ]; then
 						if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
 							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/
 						else
-							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
-							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf
+							
+							# check nc files:
+							file_check_ndbc=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
 							export err=$?; err_chk
-							if [ $SENDCOM = "YES" ]; then
-								mkdir -p $COMOUTsmall/$VAR
-								if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-									cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+							echo "$file_check_ndbc"
+							if [[ "$file_check_ndbc" -eq 0 ]]; then
+								run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+								-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf
+								export err=$?; err_chk
+								if [ $SENDCOM = "YES" ]; then
+									mkdir -p $COMOUTsmall/$VAR
+									if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+										cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+									fi
 								fi
+							else
+								echo "WARNING: corrupted RTOFS f${fhr3} prog file. $COMINrtofsfilename is corrupted for valid date $VDATE. METplus will not run."
 							fi
 						fi
 					done
 				else
-					echo "WARNING: Missing or corrupted RTOFS f${fhr3} prog file. $COMINrtofsfilename is missing or corrupted for valid date $VDATE. METplus will not run."
+					echo "WARNING: Missing RTOFS f${fhr3} prog file. $COMINrtofsfilename is missing for valid date $VDATE. METplus will not run."
 				fi
 			done
 		else
