@@ -16,8 +16,7 @@ def rtofs_check_nc(filepath):
     # Specific variables to check first, followed by universal fallback dimensions
     test_vars = [
         'temperature', 'salinity', 'sss', 'sst', 
-        'ice_coverage', 'ice_temperature', 'ice_thickness', 'ssh',
-        'lat', 'latitude', 'lon', 'longitude'  # Universal fallback
+        'ice_coverage', 'ice_temperature', 'ice_thickness', 'ssh','sla','analysed_sst'
     ]
 
     for var in test_vars:
