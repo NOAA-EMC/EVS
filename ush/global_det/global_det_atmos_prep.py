@@ -70,7 +70,7 @@ global_det_obs_dict = {
                                                   +'{init_shift?fmt=%Y%m%d%H'
                                                   +'?shift=-12}00.nc'),
                 'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                'osi_saf', 'osi_saf.multi.'
+                                                'osi_saf', 'osi_saf.amsr.'
                                                 +'{hem?fmt=str}.'
                                                 +'{init_shift?fmt=%Y%m%d%H'
                                                 +'?shift=-24}to'

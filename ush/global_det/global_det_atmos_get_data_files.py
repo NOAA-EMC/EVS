@@ -469,19 +469,19 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     # raw netCDF file
                     osi_saf_hem_prod_file_format = os.path.join(
                         COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
-                        'osi_saf', 'osi_saf.multi.'+hem+'.'
+                        'osi_saf', 'osi_saf.amsr.'+hem+'.'
                         +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
                         +'{valid?fmt=%Y%m%d%H}.nc'
                     )
                     osi_saf_hem_arch_file_format = os.path.join(
                         archive_obs_data_dir, 'osi_saf',
-                        'osi_saf.multi.'+hem+'.'
+                        'osi_saf.amsr.'+hem+'.'
                         +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
                         +'{valid?fmt=%Y%m%d%H}.nc'
                     )
                     osi_saf_hem_dest_file_format = os.path.join(
                         VERIF_CASE_STEP_osi_saf_dir,
-                        'osi_saf.multi.'+hem+'.'
+                        'osi_saf.amsr.'+hem+'.'
                         +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
                         +'{valid?fmt=%Y%m%d%H}.nc'
                     )
@@ -512,7 +512,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     )
                     osi_saf_hem_dest_file_format = os.path.join(
                         VERIF_CASE_STEP_osi_saf_dir,
-                        'osi_saf.multi.'+grid+'.'
+                        'osi_saf.amsr.'+grid+'.'
                         +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
                         +'{valid?fmt=%Y%m%d%H}.nc'
                     )
