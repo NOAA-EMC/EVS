@@ -109,32 +109,38 @@ if [ $OBTYPE = argo ]; then
                 				else
                     					COMINrtofsfilename=$COMINrtofsfilename_sal
                 				fi
-						# check nc files:
-						file_check_argo=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
-						export err=$?; err_chk
-						echo "$file_check_argo"
-						if [[ -s "$COMINrtofsfilename" && "$file_check_argo" -eq 0 ]] ; then
+						if [[ -s "$COMINrtofsfilename" ]]; then 
            						mkdir -p $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
             						if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
               							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/
            						else
-								python ${USHevs}/${COMPONENT}/rtofs_stats_qc_argo.py
+								# check nc files:
+								file_check_argo=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
 								export err=$?; err_chk
-								export id="${COMOUTsmall}/rejected_${VAR}_$VDATE.txt"
-								echo "$id"
+								echo "$file_check_argo"
 
-								run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
-              							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${OBTYPEupper}_climoWOA23_$VAR.conf
-              							export err=$?; err_chk
-             							if [ $SENDCOM = "YES" ]; then
-                							mkdir -p $COMOUTsmall/$VAR
-		  							if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-                  								cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/
+								if [[ "$file_check_argo" -eq 0 ]]; then
+									python ${USHevs}/${COMPONENT}/rtofs_stats_qc_argo.py
+									export err=$?; err_chk
+									export id="${COMOUTsmall}/rejected_${VAR}_$VDATE.txt"
+									echo "$id"
+
+									run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+              								-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${OBTYPEupper}_climoWOA23_$VAR.conf
+              								export err=$?; err_chk
+             								if [ $SENDCOM = "YES" ]; then
+                								mkdir -p $COMOUTsmall/$VAR
+		  								if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+                  									cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/
+										fi
 									fi
+								else
+									echo "WARNING: corrupted validation file: RTOFS f${fhr3} 3dz. ${COMINrtofsfilename} is corrupted for valid date $VDATE. METplus will not run."
+							
 								fi
 							fi
 						else
-							echo "WARNING: Missing or corrupted validation file: RTOFS f${fhr3} 3dz. ${COMINrtofsfilename} is missing or corrupted for valid date $VDATE. METplus will not run."
+							echo "WARNING: missing validation file: RTOFS f${fhr3} 3dz. ${COMINrtofsfilename} is missing for valid date $VDATE. METplus will not run."
 						fi
 					done
 				done
