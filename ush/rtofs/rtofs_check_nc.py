@@ -30,7 +30,6 @@ def rtofs_check_nc(filepath):
             )
             # If ncdump succeeds, the data block is healthy
             status = 0
-            print(status)
             return status
 
         except subprocess.CalledProcessError:
@@ -39,7 +38,6 @@ def rtofs_check_nc(filepath):
 
     # If NONE of the variables or fallback coordinates could be read, mark as corrupt
     status = 1
-    print(status)
     return status
 
 if __name__ == "__main__":
