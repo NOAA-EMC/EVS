@@ -117,7 +117,6 @@ if [ $OBTYPE = argo ]; then
 								# check nc files:
 								file_check_argo=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
 								export err=$?; err_chk
-								echo "$file_check_argo"
 
 								if [[ "$file_check_argo" -eq 0 ]]; then
 									python ${USHevs}/${COMPONENT}/rtofs_stats_qc_argo.py
@@ -177,7 +176,6 @@ elif [ $OBTYPE = ndbc ]; then
 							# check nc files:
 							file_check_ndbc=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
 							export err=$?; err_chk
-							echo "$file_check_ndbc"
 							if [[ "$file_check_ndbc" -eq 0 ]]; then
 								run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 								-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf

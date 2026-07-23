@@ -180,7 +180,6 @@ for ftype in nh sh; do
 	if [ -s $input_osisaf_file ]; then
 		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file")
 		export err=$?; err_chk
-		echo "$file_check"
 		if [ "$file_check" -eq 0 ]; then
 			echo "$input_osisaf_file is valid."
 		elif [ "$file_check" -eq 1 ]; then
@@ -275,7 +274,6 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	# check atlantic:
 	file_check_atlantic=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc")
 	export err=$?; err_chk
-	echo "$file_check_atlantic"
 	if [ "$file_check_atlantic" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc is valid."
 	elif [ "$file_check_atlantic" -eq 1 ]; then
@@ -285,7 +283,6 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
         # check indian
 	file_check_indian=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc")
 	export err=$?; err_chk
-	echo "$file_check_indian"
 	if [ "$file_check_indian" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is valid."
 	elif [ "$file_check_atlantic" -eq 1 ]; then
@@ -295,7 +292,6 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	# check pacific
 	file_check_pacific=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc")
 	export err=$?; err_chk
-	echo "$file_check_pacific"
 	if [ "$file_check_pacific" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is valid."
 	elif [ "$file_check_atlantic" -eq 1 ]; then

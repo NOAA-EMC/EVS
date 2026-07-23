@@ -149,7 +149,6 @@ else
             					else
 							file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename")
 							export err=$?; err_chk
-							echo "$file_check"
 							if [ $file_check -eq 1 ]; then
 								echo "$DCOMINrtofsfilename is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
    								if [ $SENDMAIL = YES ] ; then
