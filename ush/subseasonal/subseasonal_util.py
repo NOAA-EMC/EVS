@@ -4110,7 +4110,7 @@ def check_truth_files(job_dict):
                     and job_dict['job_name'] == 'WeeklyAvg_Concentration':
                 osi_saf_file_format = os.path.join(
                     verif_case_dir, 'data', 'osi_saf',
-                    'osi_saf.multi.'
+                    'osi_saf.amsr2.'
                     +'{valid_shift?fmt=%Y%m%d%H?shift=-168}to'
                     +'{valid?fmt=%Y%m%d%H}_G003.nc'
                 )
@@ -4193,7 +4193,7 @@ def check_truth_files(job_dict):
                     and job_dict['job_name'] == 'MonthlyAvg_Concentration':
                 osi_saf_file_format = os.path.join(
                     verif_case_dir, 'data', 'osi_saf',
-                    'osi_saf.multi.'
+                    'osi_saf.amsr2.'
                     +'{valid_shift?fmt=%Y%m%d%H?shift=-720}to'
                     +'{valid?fmt=%Y%m%d%H}_G003.nc'
                 )
