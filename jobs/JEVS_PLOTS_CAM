@@ -69,24 +69,22 @@ setpdy.sh 31
 . ./PDY
 
 if [ $MODELNAME = refs ] ; then
-   export VDATE=${VDATE:-$PDYm2}
-   export INITDATE=${INITDATE:-$PDYm2}
-   export eval_period=${EVAL_PERIOD:-last90days}
+    export VDATE=${VDATE:-$PDYm2}
+    export INITDATE=${INITDATE:-$PDYm2}
+    export eval_period=${EVAL_PERIOD:-last90days}
 elif [[ "$MODELNAME" == "rrfs" && "$RUN" == chem* ]]; then
     export VDATE_END=${VDATE_END:-${PDYm4}}
     export NDAYS=${NDAYS:-31}
     export VDATE_START=${VDATE_START:-$(finddate.sh ${VDATE_END} d-$((${NDAYS}-1)))}
+elif [ $VERIF_CASE = severe ] ; then
+    export VDATE=${VDATE:-$PDYm7}
+    export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
+elif [ $VERIF_CASE = headline ] ; then
+    export VDATE=${VDATE:-$PDYm1}
+    export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
 else
-   if [ $VERIF_CASE = severe ] ; then
-      export VDATE=${VDATE:-$PDYm7}
-      export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
-   elif [ $VERIF_CASE = radar ] ; then
-      export VDATE=${VDATE:-$PDYm2}
-      export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
-   else
-      export VDATE=${VDATE:-$PDYm1}
-      export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
-   fi
+    export VDATE=${VDATE:-$PDYm2}
+    export EVAL_PERIOD=${EVAL_PERIOD:-last90days}
 fi
 
 
