@@ -1314,7 +1314,7 @@ suite evs_nco
           family cam
             task jevs_plots_cam_precip_last90days
               trigger :TIME >= 0950 and :TIME < 1550
-              edit VHR '06'
+              edit VHR '09'
           endfamily
         endfamily    # 06 plots
       endfamily  # evs
@@ -2013,19 +2013,19 @@ suite evs_nco
               trigger :TIME >= 1140 and :TIME < 1740 and ../../../../06/evs/stats/cam/jevs_stats_cam_refs_snowfall == complete
             task jevs_plots_cam_radar_nbrcnt_last90days
               trigger (:TIME >= 1500 or :TIME < 2100)
-              edit VHR '12'
+              edit VHR '15'
             task jevs_plots_cam_radar_nbrctc_last90days
               trigger (:TIME >= 1500 or :TIME < 2100)
-              edit VHR '12'
+              edit VHR '15'
             task jevs_plots_cam_severe_nbrcnt_last90days
               trigger (:TIME >= 1700 or :TIME < 2300)
-              edit VHR '12'
+              edit VHR '17'
             task jevs_plots_cam_severe_nbrctc_last90days
               trigger (:TIME >= 1700 or :TIME < 2300)
-              edit VHR '12'
+              edit VHR '17'
             task evs_plots_cam_snowfall_last90days
               trigger (:TIME >= 1600 or :TIME < 2200)
-              edit VHR '12'
+              edit VHR '16'
           endfamily 
         endfamily   # 12 plots
       endfamily  # evs
