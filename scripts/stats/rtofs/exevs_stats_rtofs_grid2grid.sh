@@ -147,10 +147,10 @@ else
             					if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
               						cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/.
             					else
-							file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename")
+							file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename" "$OBTYPE" "obs")
 							export err=$?; err_chk
 							if [ $file_check -eq 1 ]; then
-								echo "$DCOMINrtofsfilename is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
+								echo "WARNING: $DCOMINrtofsfilename is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
    								if [ $SENDMAIL = YES ] ; then
        									export subject="${OBTYPEupper} Data is corrupted for EVS RTOFS"
        									echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE. Corrupted file is ${DCOMINrtofsfilename}. METplus will skip ${DCOMINrtofsfilename} and not run." > mailmsg

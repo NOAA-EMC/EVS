@@ -115,10 +115,10 @@ if [ $OBTYPE = argo ]; then
               							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/
            						else
 								# check nc files:
-								file_check_argo=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
+								file_check_argo=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename" "${OBTYPE}_${VAR}" "fcst")
 								export err=$?; err_chk
-
 								if [[ "$file_check_argo" -eq 0 ]]; then
+
 									python ${USHevs}/${COMPONENT}/rtofs_stats_qc_argo.py
 									export err=$?; err_chk
 									export id="${COMOUTsmall}/rejected_${VAR}_$VDATE.txt"
@@ -174,7 +174,7 @@ elif [ $OBTYPE = ndbc ]; then
 						else
 							
 							# check nc files:
-							file_check_ndbc=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename")
+							file_check_ndbc=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename" "$OBTYPE" "fcst")
 							export err=$?; err_chk
 							if [[ "$file_check_ndbc" -eq 0 ]]; then
 								run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
