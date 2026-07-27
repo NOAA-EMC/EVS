@@ -65,12 +65,12 @@ def rtofs_check_nc(filepath, target=None, file_type='fcst'):
         except subprocess.CalledProcessError:
             # If ANY primary variable is missing or corrupted -> FAIL
             status = 1
-            print(status)
+            print('Data is corrupted.')
             return status
 
     # 5. All required variables passed successfully -> PASS
     status = 0
-    print(status)
+    print('Data is passed successfully.')
     return status
 
 
