@@ -50,8 +50,6 @@ export OBSNAME="gfs ecmwf osi ghrsst gdas ccpa"
 export PREP_TYPE=obs
 
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT/$RUN
-export COMINgfs=/lfs/h2/emc/gfstemp/emc.global/EVS_archive/retrov17_01
-export COMINobsproc=/lfs/h2/emc/gfstemp/emc.global/comroot/retrov17_01_realtime
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.obs.prep
 
