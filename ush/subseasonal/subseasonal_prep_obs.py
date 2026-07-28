@@ -148,7 +148,7 @@ for OBS in OBSNAME:
             prod_file_format = os.path.join(COMINobsproc, 'gdas.'
                                             +'{init?fmt=%Y%m%d}',
                                             '{init?fmt=%H}',
-                                            'obs', 'gdas.t'
+                                            'atmos', 'gdas.t'
                                             +'{init?fmt=%H}'
                                             +'z.prepbufr')
             prod_file = sub_util.format_filler(
