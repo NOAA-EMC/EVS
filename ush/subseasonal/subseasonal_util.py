@@ -748,7 +748,7 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
     for hem in ['nh', 'sh']:
         hem_source_file = daily_source_file_format.replace('{hem?fmt=str}',
                                                            hem)
-        hem_dest_file = daily_dest_file.replace('amsr2.', 'amsr2.'+hem+'.')
+        hem_dest_file = daily_dest_file.replace('multi.', 'multi.'+hem+'.')
         hem_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                         +hem_dest_file.rpartition('/')[2])
         if check_file_exists_size(hem_source_file):
@@ -4110,7 +4110,7 @@ def check_truth_files(job_dict):
                     and job_dict['job_name'] == 'WeeklyAvg_Concentration':
                 osi_saf_file_format = os.path.join(
                     verif_case_dir, 'data', 'osi_saf',
-                    'osi_saf.amsr2.'
+                    'osi_saf.multi.'
                     +'{valid_shift?fmt=%Y%m%d%H?shift=-168}to'
                     +'{valid?fmt=%Y%m%d%H}_G003.nc'
                 )
@@ -4193,7 +4193,7 @@ def check_truth_files(job_dict):
                     and job_dict['job_name'] == 'MonthlyAvg_Concentration':
                 osi_saf_file_format = os.path.join(
                     verif_case_dir, 'data', 'osi_saf',
-                    'osi_saf.amsr2.'
+                    'osi_saf.multi.'
                     +'{valid_shift?fmt=%Y%m%d%H?shift=-720}to'
                     +'{valid?fmt=%Y%m%d%H}_G003.nc'
                 )
