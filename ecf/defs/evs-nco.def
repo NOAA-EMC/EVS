@@ -2023,7 +2023,7 @@ suite evs_nco
             task jevs_plots_cam_severe_nbrctc_last90days
               trigger (:TIME >= 1700 or :TIME < 2300)
               edit VHR '17'
-            task evs_plots_cam_snowfall_last90days
+            task jevs_plots_cam_snowfall_last90days
               trigger (:TIME >= 1600 or :TIME < 2200)
               edit VHR '16'
           endfamily 
