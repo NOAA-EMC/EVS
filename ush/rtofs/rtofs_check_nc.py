@@ -26,6 +26,7 @@ def rtofs_check_nc(filepath, target=None, file_type='fcst'):
         'aviso': ['ssh'],
         'smos': ['sss'],
         'smap': ['sss'],
+        'ndbc': ['sst'],
         'osisaf': ['ice_coverage', 'ice_temperature','ice_thickness'],
     }
 
