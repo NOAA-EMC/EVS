@@ -50,9 +50,10 @@ if not os.path.exists(COMOUT_INITDATE):
 subseasonal_obs_dict = {
     'gfs': {'prod_file_format': os.path.join(COMINgfs, 'gfs.'
                                              +'{init?fmt=%Y%m%d}',
-                                             '{init?fmt=%2H}',
-                                             'atmos', 'gfs.t{init?fmt=%2H}z'
-                                             +'.pgrb2.1p00.anl'),
+                                             '{init?fmt=%2H}', 'products',
+                                             'atmos', 'grib2', '0p25',
+                                             'gfs.t{init?fmt=%2H}z'
+                                             +'.pres_a.0p25.analysis.grib2'),
                       'arch_file_format': os.path.join(COMOUT_INITDATE,                                                              'gfs',
                                                        'gfs.'
                                                        +'{init?fmt=%Y%m%d%H}'
