@@ -31,6 +31,9 @@ _COMROOT_/evs/_SHORTVER_/stats/
 + /aqm/
 + /aqm/*._PDYm4_/***
 + /aqm/*._PDYm3_/***
++ /cam/
++ /cam/atmos._PDYm2_/***
++ /cam/atmos._PDYm1_/***
 + /global_det/
 + /global_det/*._PDYm2_/***
 + /global_det/*._PDYm1_/***
@@ -45,9 +48,6 @@ _COMROOT_/evs/_SHORTVER_/stats/
 + /wafs/*._PDYm3_/***
 + /wafs/*._PDYm2_/***
 + /wafs/*._PDYm1_/***
-+ /cam/
-+ /cam/atmos._PDYm2_/***
-+ /cam/atmos._PDYm1_/***
 - *
 B 100000
 
