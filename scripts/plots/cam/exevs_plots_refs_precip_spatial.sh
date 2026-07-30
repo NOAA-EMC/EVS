@@ -17,14 +17,14 @@ export JOB_GROUP=plot
 export VERIF_TYPE=precip
 export job_var=24hrAccumMaps
 export fhr_start=24
-export fhr_end=48
-export fhr_inc=24
+export fhr_end=60
+export fhr_inc=12
 export valid_hr_start=12
 export valid_hr_end=12
 export valid_hr_inc=24
-export init_hr_start=12
+export init_hr_start=0
 export init_hr_end=12
-export init_hr_inc=24
+export init_hr_inc=12
 export model_list='refsmean refslpmm refspmmn refsavrg'
 export model_plot_name_list='refsmean refslpmm refspmmn refsavrg'
 export obs_name=24hrCCPA
@@ -56,10 +56,11 @@ for model in $model_list ; do
  MODEL=`echo $model | tr '[a-z]' '[A-Z]'`	
  target=$DATA/grid2grid_plots/data/$model
  mkdir -p $target
- for fhr in 24 48 ; do
+ for fhr in 24 36 48 60 ; do
   last=`$NDATE -$fhr ${VDATE}12`	
   INITDATE=${last:0:8}
-  ln -sf $EVSINapcp24mean/${model}.$INITDATE.t12z.G227.24h.f${fhr}.nc  $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr0${fhr}.nc
+  INITHOUR=${last:8:10}
+  ln -sf $EVSINapcp24mean/${model}.$INITDATE.t${INITHOUR}z.G227.24h.f${fhr}.nc  $target/${model}_precip_24hrAccum_init${INITDATE}${INITHOUR}_fhr0${fhr}.nc
  done
 done
 
