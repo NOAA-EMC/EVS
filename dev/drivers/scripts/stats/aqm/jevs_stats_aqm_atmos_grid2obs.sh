@@ -53,7 +53,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 
 ########################################################################
 
-export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
+export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov,mallory.row@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
 

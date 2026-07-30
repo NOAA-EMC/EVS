@@ -40,6 +40,6 @@ export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 #export SENDMAIL=YES
 export run_mpi=no
-export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov,mallory.row@noaa.gov'
 
 ${HOMEevs}/jobs/JEVS_STATS_GLOBAL_ENS

@@ -52,7 +52,7 @@ export KEEPDATA=NO
 export SENDMAIL=YES
 export SENDDBN=NO
  
-export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
+export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov,mallory.row@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
 

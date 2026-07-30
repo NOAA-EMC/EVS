@@ -43,7 +43,7 @@ export get_gefs_bc_apcp24h=yes
 export get_model_bc=yes
 
 #export SENDMAIL=YES
-export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov,mallory.row@noaa.gov'
 
 if [ -z "$MAILTO" ]; then
    echo "MAILTO variable is not defined. Exiting without continuing."

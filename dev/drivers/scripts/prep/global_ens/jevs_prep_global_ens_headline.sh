@@ -41,7 +41,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export run_mpi=no
 
 #export SENDMAIL=YES
-export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov,mallory.row@noaa.gov'
 
 if [ -z "$MAILTO" ]; then
    echo "MAILTO variable is not defined. Exiting without continuing."

@@ -61,7 +61,7 @@ export nproc=128    ## nproc must match with the ncpus allocation above
 export DATA_TYPE=daily
 export NDAYS=31
 
-export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
+export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov,mallory.row@noaa.gov'}
 
 if [ -z "$MAILTO" ]; then
 

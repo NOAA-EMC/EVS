@@ -31,7 +31,7 @@ export SITE=$(cat /etc/cluster_name)
 export KEEPDATA=NO
 export SENDMAIL=YES
 
-export MAILTO='alicia.bentley@noaa.gov,shannon.shields@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,shannon.shields@noaa.gov,mallory.row@noaa.gov'
 
 export USER=$USER
 export ACCOUNT=VERF-DEV

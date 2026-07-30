@@ -56,7 +56,7 @@ export MODELNAME=urma
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export MAILTO=${MAILTO:-'mallory.row@noaa.gov,samira.ardani@noaa.gov'}
+export MAILTO=${MAILTO:-'andrew.benjamin@noaa.gov,samira.ardani@noaa.gov,mallory.row@noaa.gov'}
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_STATS_ANALYSES

@@ -45,7 +45,7 @@ export pid=${PBS_JOBID:-$$}
 export job=${PBS_JOBNAME:-jevs_stats_wafs_atmos}
 export jobid=$job.$pid
 
-export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
+export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov,mallory.row@noaa.gov'}
 export SENDMAIL=${SENDMAIL:-YES}
 
 ############################################################

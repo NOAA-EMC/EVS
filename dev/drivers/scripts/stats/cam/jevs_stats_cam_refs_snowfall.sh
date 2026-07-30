@@ -42,7 +42,7 @@ export verif_precip=no
 export verif_snowfall=yes
 export gather=yes
 
-export MAILTO='andrew.benjamin@noaa.gov,marcel.caron@noaa.gov'
+export MAILTO='andrew.benjamin@noaa.gov,marcel.caron@noaa.gov,mallory.row@noaa.gov'
 
 if [ -z "$MAILTO" ]; then
 
