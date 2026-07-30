@@ -114,7 +114,7 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
         	mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
         	for ftype in prog diag ice; do
 			rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$OBTYPE.grid
-			rtofs_native_filename=$EVSINprep/$RUN.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
+			rtofs_native_filename=$COMOUTprep/$RUN.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
 			tmp_rtofs_latlon_filename=$DATA/$RUN.$INITDATE/$OBTYPE/rtofs_glo_2ds_f${fhr}_${ftype}.$OBTYPE.nc
 			output_rtofs_latlon_filename=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/rtofs_glo_2ds_f${fhr}_${ftype}.$OBTYPE.nc
 			if [ ! -s $output_rtofs_latlon_filename ]; then
@@ -138,7 +138,7 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
         	if [ $OBTYPE = 'argo' ] ; then
 			for ftype in t s; do
                 		rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$OBTYPE.grid
-                		rtofs_native_filename=$EVSINprep/$RUN.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
+                		rtofs_native_filename=$COMOUTprep/$RUN.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
                 		tmp_rtofs_latlon_filename=$DATA/$RUN.$INITDATE/$OBTYPE/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$OBTYPE.nc
                 		output_rtofs_latlon_filename=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$OBTYPE.nc
                 		if [ ! -s $output_rtofs_latlon_filename ]; then
@@ -178,10 +178,8 @@ for ftype in nh sh; do
 	tmp_osisaf_file=$DATA/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	output_osisaf_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_multi_${INITDATE}1200.nc
 	if [ -s $input_osisaf_file ]; then
-		python $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file"
+		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file" "$OBTYPE" "obs")
 		export err=$?; err_chk
-		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file")
-		echo "$file_check"
 		if [ "$file_check" -eq 0 ]; then
 			echo "$input_osisaf_file is valid."
 		elif [ "$file_check" -eq 1 ]; then
@@ -274,10 +272,8 @@ mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
 if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc ] && [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc ] && [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc ]; then
 	
 	# check atlantic:
-	python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc"
+	file_check_atlantic=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc" "$OBTYPE" "obs")
 	export err=$?; err_chk
-	file_check_atlantic=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc")
-	echo "$file_check_atlantic"
 	if [ "$file_check_atlantic" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDATE}_prof.nc is valid."
 	elif [ "$file_check_atlantic" -eq 1 ]; then
@@ -285,10 +281,8 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	fi
 
         # check indian
-	python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc"
+	file_check_indian=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc" "$OBTYPE" "obs")
 	export err=$?; err_chk
-	file_check_indian=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc")
-	echo "$file_check_indian"
 	if [ "$file_check_indian" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is valid."
 	elif [ "$file_check_atlantic" -eq 1 ]; then
@@ -296,10 +290,8 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	fi
 	
 	# check pacific
-	python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc"
+	file_check_pacific=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc" "$OBTYPE" "obs")
 	export err=$?; err_chk
-	file_check_pacific=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc")
-	echo "$file_check_pacific"
 	if [ "$file_check_pacific" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is valid."
 	elif [ "$file_check_atlantic" -eq 1 ]; then
