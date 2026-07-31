@@ -29,8 +29,6 @@ source $HOMEevs/dev/modulefiles/global_det/global_det_prep.sh
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
-export MAILTO='alicia.bentley@noaa.gov,qi.shi@noaa.gov'
-
 export envir=prod
 export NET=evs
 export STEP=prep
@@ -44,6 +42,8 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT/
 
 export MODELNAME="cfs cmc cmc_regional dwd fnmoc gfs aigfs jma metfra ukmet ecmwf"
 export OBSNAME="osi_saf ghrsst_ospo ccpa_accum24hr prepbufr_gdas prepbufr_rrfs"
+
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_PREP_GLOBAL_DET

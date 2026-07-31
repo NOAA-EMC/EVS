@@ -45,7 +45,7 @@ export pid=${PBS_JOBID:-$$}
 export job=${PBS_JOBNAME:-jevs_stats_wafs_atmos}
 export jobid=$job.$pid
 
-export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 export SENDMAIL=${SENDMAIL:-YES}
 
 ############################################################
