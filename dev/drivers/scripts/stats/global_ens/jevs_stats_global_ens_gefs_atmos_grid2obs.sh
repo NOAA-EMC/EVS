@@ -37,6 +37,6 @@ export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 export OMP_NUM_THREADS=1
 #export SENDMAIL=YES
-export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 ${HOMEevs}/jobs/JEVS_STATS_GLOBAL_ENS

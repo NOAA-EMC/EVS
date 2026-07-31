@@ -35,8 +35,6 @@ export nproc=25
 
 export OMP_NUM_THREADS=1
 
-export MAILTO='alicia.bentley@noaa.gov,qi.shi@noaa.gov'
-
 export envir=prod
 export NET=evs
 export STEP=stats
@@ -49,6 +47,8 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
+
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_STATS_GLOBAL_DET

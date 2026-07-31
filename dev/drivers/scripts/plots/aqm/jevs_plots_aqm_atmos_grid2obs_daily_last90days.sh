@@ -61,7 +61,7 @@ export nproc=128    ## nproc must match with the ncpus allocation above
 export DATA_TYPE=daily
 export NDAYS=90
 
-export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 if [ -z "$MAILTO" ]; then
 

@@ -42,7 +42,7 @@ export verif_precip=yes
 export verif_snowfall=no
 export gather=yes
 
-export MAILTO='andrew.benjamin@noaa.gov,marcel.caron@noaa.gov'
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 if [ -z "$MAILTO" ]; then
 

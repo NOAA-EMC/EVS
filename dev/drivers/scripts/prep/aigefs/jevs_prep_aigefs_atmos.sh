@@ -36,7 +36,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
 export SENDMAIL=NO
-export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov' 
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 if [ -z "$MAILTO" ]; then
    echo "MAILTO variable is not defined. Exiting without continuing."

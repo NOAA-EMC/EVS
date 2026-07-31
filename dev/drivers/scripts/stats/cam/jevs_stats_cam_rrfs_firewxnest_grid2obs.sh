@@ -47,7 +47,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
-export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,andrew.benjamin@noaa.gov'}
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_STATS_CAM

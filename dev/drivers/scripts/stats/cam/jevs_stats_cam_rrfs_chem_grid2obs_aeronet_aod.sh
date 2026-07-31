@@ -54,7 +54,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 ############################################################
 # CALL executable job script here
 ############################################################
-export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,andrew.benjamin@noaa.gov'}
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 if [ -z "$MAILTO" ]; then
     echo "MAILTO variable is not defined. Exiting without continuing."

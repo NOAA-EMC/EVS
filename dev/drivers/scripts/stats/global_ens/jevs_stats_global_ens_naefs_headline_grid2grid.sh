@@ -43,6 +43,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 export run_mpi=no
 
 #export SENDMAIL=YES
-export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 ${HOMEevs}/jobs/JEVS_STATS_GLOBAL_ENS

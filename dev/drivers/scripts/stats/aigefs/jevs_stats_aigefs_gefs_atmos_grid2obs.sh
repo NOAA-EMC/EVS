@@ -37,6 +37,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export KEEPDATA=NO
 export SENDMAIL=NO
-export MAILTO='alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 ${HOMEevs}/jobs/JEVS_STATS_AIGEFS
