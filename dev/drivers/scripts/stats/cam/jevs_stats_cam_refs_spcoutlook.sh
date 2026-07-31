@@ -39,7 +39,7 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export jobid=$job.${PBS_JOBID:-$$}
 
-export MAILTO='andrew.benjamin@noaa.gov,marcel.caron@noaa.gov'
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 if [ -z "$MAILTO" ]; then
 
   echo "MAILTO variable is not defined. Exiting without continuing."

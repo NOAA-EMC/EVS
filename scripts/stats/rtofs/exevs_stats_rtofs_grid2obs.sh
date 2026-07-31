@@ -98,33 +98,50 @@ if [ $OBTYPE = argo ]; then
         				fhr2=$(printf "%02d" "${fhr}")
         				export fhr3=$(printf "%03d" "${fhr}")
 					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-					COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$OBTYPE.nc
-					if [ -s $COMINrtofsfilename ] ; then
-          					for vari in ${VARS}; do
-            						export VAR=$vari
-            						mkdir -p $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
+					# Define specific filenames for temperature (3ztio) and salinity (3zsio)
+            				COMINrtofsfilename_temp=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$OBTYPE.nc
+            				COMINrtofsfilename_sal=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_3dz_f${fhr3}_daily_3zsio.$OBTYPE.nc
+          				for vari in ${VARS}; do
+            					export VAR=$vari
+						# Assign active filename based on variable type
+                				if [ "${VAR}" == "temp" ]; then
+                  					COMINrtofsfilename=$COMINrtofsfilename_temp
+                				else
+                    					COMINrtofsfilename=$COMINrtofsfilename_sal
+                				fi
+						if [[ -s "$COMINrtofsfilename" ]]; then 
+           						mkdir -p $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
             						if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/.
+              							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/
            						else
-								python ${USHevs}/${COMPONENT}/rtofs_stats_qc_argo.py
+								# check nc files:
+								file_check_argo=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename" "${OBTYPE}_${VAR}" "fcst")
 								export err=$?; err_chk
-								export id="${COMOUTsmall}/rejected_${VAR}_$VDATE.txt"
-								echo "$id"
+								if [[ "$file_check_argo" -eq 0 ]]; then
 
-								run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
-              							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${OBTYPEupper}_climoWOA23_$VAR.conf
-              							export err=$?; err_chk
-              							if [ $SENDCOM = "YES" ]; then
-                  							mkdir -p $COMOUTsmall/$VAR
-		  							if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-                  								cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+									python ${USHevs}/${COMPONENT}/rtofs_stats_qc_argo.py
+									export err=$?; err_chk
+									export id="${COMOUTsmall}/rejected_${VAR}_$VDATE.txt"
+									echo "$id"
+
+									run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+              								-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${OBTYPEupper}_climoWOA23_$VAR.conf
+              								export err=$?; err_chk
+             								if [ $SENDCOM = "YES" ]; then
+                								mkdir -p $COMOUTsmall/$VAR
+		  								if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+                  									cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_${OBTYPEupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/
+										fi
 									fi
+								else
+									echo "WARNING: corrupted validation file: RTOFS f${fhr3} 3dz. ${COMINrtofsfilename} is corrupted for valid date $VDATE. METplus will not run."
+							
 								fi
 							fi
-						done
-					else
-						echo "WARNING: Missing validation file: RTOFS f${fhr3} 3dz. ${COMINrtofsfilename} is missing for valid date $VDATE. METplus will not run."
-					fi
+						else
+							echo "WARNING: missing validation file: RTOFS f${fhr3} 3dz. ${COMINrtofsfilename} is missing for valid date $VDATE. METplus will not run."
+						fi
+					done
 				done
 			else
 				echo "WARNING: Missing RTOFS f000 ice file: ${COMINicefilename} is missing for valid date $VDATE. METplus will not run."
@@ -147,22 +164,30 @@ elif [ $OBTYPE = ndbc ]; then
 				export fhr3=$(printf "%03d" "${fhr}")
 				match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
 				COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_prog.$OBTYPE.nc
-				if [ -s $COMINrtofsfilename ] ; then
+				if [[ -s "$COMINrtofsfilename" ]] ; then
 					for vari in ${VARS}; do
 						export VAR=$vari
 						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
 						mkdir -p $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
 						if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/.
+							cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/
 						else
-							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
-							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf
+							
+							# check nc files:
+							file_check_ndbc=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$COMINrtofsfilename" "$OBTYPE" "fcst")
 							export err=$?; err_chk
-							if [ $SENDCOM = "YES" ]; then
-								mkdir -p $COMOUTsmall/$VAR
-								if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
-									cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+							if [[ "$file_check_ndbc" -eq 0 ]]; then
+								run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+								-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf
+								export err=$?; err_chk
+								if [ $SENDCOM = "YES" ]; then
+									mkdir -p $COMOUTsmall/$VAR
+									if [ -s $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ] ; then
+										cp -v $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+									fi
 								fi
+							else
+								echo "WARNING: corrupted RTOFS f${fhr3} prog file. $COMINrtofsfilename is corrupted for valid date $VDATE. METplus will not run."
 							fi
 						fi
 					done
