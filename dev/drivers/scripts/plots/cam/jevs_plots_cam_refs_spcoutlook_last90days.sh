@@ -42,6 +42,5 @@ export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${STEP}_${MODELNAME}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/EVS/fix
 
 ${HOMEevs}/jobs/JEVS_PLOTS_CAM
