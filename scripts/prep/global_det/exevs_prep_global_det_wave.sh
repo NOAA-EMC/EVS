@@ -28,7 +28,7 @@ for MODEL in $MODELNAME; do
             336 342 348 354 360 366 372 378 384'
         for inithour in ${inithours} ; do
             for hr in ${lead_hours} ; do
-                input_filename="${COMINgfs}/${inithour}/wave/gridded/gfswave.t${inithour}z.global.0p25.f${hr}.grib2"
+                input_filename="${COMINgfs}/${inithour}/products/wave/gridded/global.0p25/gfs.t${inithour}z.global.0p25.f${hr}.grib2"
                 tmp_filename="${DATA}/${MODEL}/gfswave.${INITDATE}.t${inithour}z.global.0p25.f${hr}.grib2"
                 output_filename="${COMOUT}.${INITDATE}/${MODEL}/gfswave.${INITDATE}.t${inithour}z.global.0p25.f${hr}.grib2"
                 if [ ! -s $output_filename ] ; then
