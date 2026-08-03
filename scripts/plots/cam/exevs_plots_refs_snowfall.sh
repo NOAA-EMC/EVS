@@ -107,11 +107,11 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 	 OBS_LEVEL_value=$FCST_LEVEL_value
 
     	 if [ $FCST_LEVEL_value  = A06 ] ; then
-            export fcst_leads='6,12,18,24,30,36,42,48'
+            export fcst_leads='6,12,18,24,30,36,42,48,54,60'
             export fcst_valid_hours='00 06 12 18'
 	    accum=06h
          elif [ $FCST_LEVEL_value = A24 ] ; then
-            export fcst_leads='24,30,36,42,48'
+            export fcst_leads='24,30,36,42,48,54,60'
             export fcst_valid_hours='00 12'
 	    accum=24h
          fi
@@ -243,21 +243,21 @@ for stats in ets fbias fss ; do
     if [ $stats = fss ] ; then 
        if [ $level = 06h ] ; then
         valids="00z 06z 12z 18z"
-        lead=width1-3-5-7-9-11_f6-12-18-24-30-36-42-48
+        lead=width1-3-5-7-9-11_f6-12-18-24-30-36-42-48-54-60
 	new_level=a06
        elif [ $level = 24h ] ; then
         valids="00z 12z"
-        lead=width1-3-5-7-9-11_f24-30-36-42-48
+        lead=width1-3-5-7-9-11_f24-30-36-42-48-54-60
 	 new_level=a24
        fi	
     else	    
       if [ $level = 06h ] ; then
 	valids="00z 06z 12z 18z"
-        lead=f6-12-18-24-30-36-42-48
+        lead=f6-12-18-24-30-36-42-48-54-60
 	 new_level=a06
       elif [ $level = 24h ] ; then
         valids="00z 12z"
-        lead=f24-30-36-42-48
+        lead=f24-30-36-42-48-54-60
 	 new_level=a24
       fi
     fi
@@ -294,11 +294,11 @@ for var in weasd ; do
  for level in 06h 24h ; do
     if [ $level = 06h ] ; then
         valids="00z 06z 12z 18z"
-        lead=f6-12-18-24-30-36-42-48__ge0.0254ge0.1016ge0.2032ge0.3048
+        lead=f6-12-18-24-30-36-42-48-54-60__ge0.0254ge0.1016ge0.2032ge0.3048
 	 new_level=a06
     elif [ $level = 24h ] ; then
         valids="00z 12z"
-        lead=f24-30-36-42-48__ge0.0254ge0.1016ge0.2032ge0.3048
+        lead=f24-30-36-42-48-54-60__ge0.0254ge0.1016ge0.2032ge0.3048
 	 new_level=a24
     fi
 
