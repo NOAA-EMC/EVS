@@ -55,7 +55,7 @@ export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 export SENDMAIL=${SENDMAIL:-NO}
 
-export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,andrew.benjamin@noaa.gov'}
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 if [ -z "$MAILTO" ]; then
 

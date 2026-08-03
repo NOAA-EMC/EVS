@@ -48,7 +48,7 @@ export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 export SENDMAIL=${SENDMAIL:-YES}
 
-export MAILTO='andrew.benjamin@noaa.gov,samira.ardani@noaa.gov'
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 
 # developers directories

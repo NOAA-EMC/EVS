@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
+#PBS -l walltime=01:05:00
 #PBS -l place=exclhost,select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
@@ -42,7 +42,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${STEP}_${COMPONENT}_${OBTYPE}_${VERIF_CASE}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,samira.ardani@noaa.gov'}
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 # call j-job
 $HOMEevs/jobs/JEVS_STATS_RTOFS
