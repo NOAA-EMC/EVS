@@ -89,7 +89,7 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
   export fcst_init_hour="0,6,12,18"
   init_time='init00z_06z_12z_18z'
 
-  export fcst_leads="6,9,12,15,18,21,24,27,30,33,36,39,42,45,48"
+  export fcst_leads="6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60"
 
   for lead in $fcst_leads ; do 
 
