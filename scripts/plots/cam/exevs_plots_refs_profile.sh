@@ -94,18 +94,18 @@ fi
   for score_type in $score_types ; do
 
    if [ $score_type = lead_average ] ; then
-     export fcst_leads="6,12,18,24,30,36,42,48"
+     export fcst_leads="6,12,18,24,30,36,42,48,54,60"
    else 
-     export fcst_leads="6 12 18 24 30 36 42 48"
+     export fcst_leads="6 12 18 24 30 36 42 48 54 60"
    fi
 
    for lead in $fcst_leads ; do 
 
     export fcst_lead=$lead
 
-    if [[ "$fcst_lead" == "6" ]] || [[ "$fcst_lead" == "18" ]] || [[ "$fcst_lead" == "30" ]] || [[ "$fcst_lead" == "42" ]] ; then
+    if [[ "$fcst_lead" == "6" ]] || [[ "$fcst_lead" == "18" ]] || [[ "$fcst_lead" == "30" ]] || [[ "$fcst_lead" == "42" ]] || [[ "$fcst_lead" == "54" ]] ; then
        VX_MASK_LIST="CONUS, Alaska, PRico"
-    elif [[ "$fcst_lead" == "12" ]] || [[ "$fcst_lead" == "24" ]] || [[ "$fcst_lead" == "36" ]] || [[ "$fcst_lead" == "48" ]] ; then
+    elif [[ "$fcst_lead" == "12" ]] || [[ "$fcst_lead" == "24" ]] || [[ "$fcst_lead" == "36" ]] || [[ "$fcst_lead" == "48" ]] || [[ "$fcst_lead" == "60" ]] ; then
        VX_MASK_LIST="CONUS, Hawaii"
     else
        VX_MASK_LIST="CONUS, Alaska"
@@ -288,7 +288,7 @@ for valid in 00z 12z ; do
   if [ $stats = rmse_spread ] ; then
    score_types='stat_by_level'
    vars='hgt rh tmp ugrd vgrd'
-   leads='6 12 18 24 30 36 42 48'
+   leads='6 12 18 24 30 36 42 48 54 60'
   else
    score_types='lead_average'
    vars='700mb_wind_ens_freq_ge15.4 700mb_wind_ens_freq_ge20.58 850mb_tmp_ens_freq_lt273.15 850mb_wind_ens_freq_ge15.4 850mb_wind_ens_freq_ge20.58'
