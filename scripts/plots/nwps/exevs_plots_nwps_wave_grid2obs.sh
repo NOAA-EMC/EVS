@@ -1,42 +1,26 @@
 #!/bin/bash
 ##################################################################################
 # Name of Script: exevs_plots_nwps_wave_grid2obs.sh                           
-# Samira Ardani / samira.ardani@noaa.gov                                    
+# Samira Ardani / samira.ardani@noaa.gov                            
 # Purpose of Script: Run the grid2obs plots for NWPS wave model           
 #           Updates: 
 #           - Updated the code structure (11/2024)
 #           - Addressed mpmd (03/2025)
 #           - Added most of the available WFOs for plotting purposes (08/2025).
-#           - Adjusted the code to skip the rest of the loops for WFO without stat file (08/2025).        
-#                                                                               
-# Usage:                                                                        
-#  Parameters: None                                                             
-#  Input files:                                                                 
-#     evs.stats.nwps.wave.grid2obs.vYYYYMMDD.stat                             
-#  Output files:                                                                
-#     evs.plots.nwps.wave.grid2obs.last31days.vYYYYMMDD.tar                   
-#     evs.plots.nwps.wave.grid2obs.last90days.vYYYYMMDD.tar                   
-#                                                
+#           - Adjusted the code to skip the rest of the loops for WFO without stat file (08/2025).       
+#           - added file-space isolation between loop iterations and created strict WFO sandboxing.
+
 #################################################################################
 
 set -x
 
 # set major & minor MET version
-export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
+export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 
-# Use LOUD variable to turn on/off trace.  Defaults to YES (on).
+# Use LOUD variable to turn on/off trace. Defaults to YES (on).
 export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 [[ "$LOUD" != YES ]] && set -x
 
-#############################
-# grid2obs wave model plots 
-#############################
-
-cd $DATA
-
-mkdir -p ${DATA}/stats
-mkdir -p ${DATA}/job_work_dir
-mkdir -p ${DATA}/images
 
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
@@ -46,189 +30,186 @@ echo ' ******************************************'
 echo " *** ${MODELNAME}-${RUN} grid2obs plots ***"
 echo ' ******************************************'
 echo ' '
-echo "Starting at : `date`"
+echo "Starting at : $(date)"
 echo '-------------'
 echo ' '
-[[ "$LOUD" = YES ]] && set -x
-
-#############################
-# get the model .stat files 
-#############################
-set -x
-echo ' '
-echo 'Copying *.stat files :'
-echo '-----------------------------'
 [[ "$LOUD" = YES ]] && set -x
 
 WFO='ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
 
 for wfo in ${WFO}; do
-	export wfo=$wfo
-	plot_start_date=${PDYm90}
-	plot_end_date=${VDATE}
+    export wfo=$wfo
+    
+    # Create an isolated workspace for this specific WFO
+    export DATA_wfo="${DATA}/${wfo}"
+    
+    mkdir -p ${DATA_wfo}/stats
+    mkdir -p ${DATA_wfo}/job_work_dir
+    mkdir -p ${DATA_wfo}/images
+    cd ${DATA_wfo}
 
-	theDate=${plot_start_date}
-	while (( ${theDate} <= ${plot_end_date} )); do
-  		EVSINnwps=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
-    		if [ -s ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
-			cp ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
-    		else
-	    		echo "WARNING: ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
-    		fi
-    		theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
-	done
+    echo ' '
+    echo "Copying *.stat files for ${wfo}:"
+    echo '-----------------------------'
+    [[ "$LOUD" = YES ]] && set -x
 
-####################
-# quick error check 
-####################
-	if [ -s ${DATA}/stats/evs.stats.nwps.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
-		
-		nc=`ls ${DATA}/stats/evs.stats.nwps.${wfo}*stat | wc -l | awk '{print $1}'`
-		echo " Found ${nc} ${DATA}/stats/evs.stats.nwps.${wfo}*stat file for ${VDATE} "
-		if [ "${nc}" != '0' ]
-			then
-			set -x
-			echo "Successfully copied the NWPS *.stat file for ${VDATE}"
-			[[ "$LOUD" = YES ]] && set -x
-		else
-			set -x
-			echo ' '
-			echo '**************************************** '
-			echo '*** WARNING: NO NWPS *.stat FILES *** '
-			echo "             for ${wfo} at ${VDATE} "
-			echo '**************************************** '
-			echo ' '
-			echo "${MODELNAME}_${RUN} $VDATE $vhour : NWPS *.stat files missing."
-			[[ "$LOUD" = YES ]] && set -x
-			continue # This will skip the rest of the loop for this WFO
-		fi
-	else
-		echo "WARNING: ${DATA}/stats/evs.stats.nwps.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
-	fi
-#################################
-## Make the command files for cfp 
-#################################
-	# time_series
-	${USHevs}/${COMPONENT}/evs_wave_timeseries.sh
-	export err=$?; err_chk
+    plot_start_date=${PDYm90}
+    plot_end_date=${VDATE}
 
-	# lead_averages
-	${USHevs}/${COMPONENT}/evs_wave_leadaverages.sh
-	export err=$?; err_chk
+    theDate=${plot_start_date}
+    while (( ${theDate} <= ${plot_end_date} )); do
+        EVSINnwps=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
+        if [ -s ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
+            cp ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA_wfo}/stats/.
+        else
+            echo "WARNING: ${EVSINnwps}/evs.stats.${MODELNAME}.${wfo}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
+        fi
+        theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
+    done
 
-###########################################
-# Run the command files for the PAST31DAYS 
-###########################################
-	cd ${DATA}
-	chmod 775 ${DATA}/plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
-	if [ ${run_mpi} = 'yes' ] ; then
-		mpiexec -np 200 -ppn 100 --cpu-bind verbose,depth cfp plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
-	else
-		echo "not running mpiexec"
-		sh plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
-	fi
+    ####################
+    # quick error check 
+    ####################
+    # Check for files specifically inside this WFO's stats sandbox
+    nc=$(ls ${DATA_wfo}/stats/evs.stats.${MODELNAME}.${wfo}*stat 2>/dev/null | wc -l | awk '{print $1}')
+    
+    if [ "${nc}" != '0' ] && [ -n "${nc}" ]; then
+        set -x
+        echo "Successfully found ${nc} NWPS *.stat file(s) for ${wfo} up to ${VDATE}"
+        [[ "$LOUD" = YES ]] && set -x
+    else
+        set -x
+        echo ' '
+        echo '**************************************** '
+        echo '*** WARNING: NO NWPS *.stat FILES *** '
+        echo "             for ${wfo} at ${VDATE} "
+        echo '**************************************** '
+        echo ' '
+        echo "${MODELNAME}_${RUN} $VDATE : NWPS *.stat files missing for ${wfo}."
+        [[ "$LOUD" = YES ]] && set -x
+        continue # Safely skips the rest of the loop for this WFO without breaking the others
+    fi
 
+    #################################
+    ## Make the command files for cfp 
+    #################################
+    # time_series
+    ${USHevs}/${COMPONENT}/evs_wave_timeseries.sh
+    export err=$?; err_chk
 
-############################
-#  copy all the jobs files
-############################
-        ${USHevs}/${COMPONENT}/nwps_wave_plots_copy_plots.sh
-        export err=$?; err_chk
+    # lead_averages
+    ${USHevs}/${COMPONENT}/evs_wave_leadaverages.sh
+    export err=$?; err_chk
 
+    ###########################################
+    # Run the command files for the PAST31DAYS 
+    ###########################################
+    chmod 775 ${DATA_wfo}/plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
+    if [ "${run_mpi}" = 'yes' ] ; then
+        mpiexec -np 200 -ppn 100 --cpu-bind verbose,depth cfp plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
+    else
+        echo "not running mpiexec"
+        sh plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
+    fi
 
-#####################
-# Gather all the files 
-#######################
+    ############################
+    #  copy all the jobs files
+    ############################
+    ${USHevs}/${COMPONENT}/nwps_wave_plots_copy_plots.sh
+    export err=$?; err_chk
 
-	periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
-	if [ $gather = yes ] ; then
-		if [ "$(ls -A "${DATA}/images")" ]; then
-		echo "Found ${DATA}/images/*.png "
-		nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
-		for period in ${periods} ; do
-			period_lower=$(echo ${period,,})
-			if [ ${period} = 'LAST31DAYS' ] ; then
-				period_out='last31days'
-			elif [ ${period} = 'LAST90DAYS' ] ; then
-				period_out='last90days'
-			fi
+    #####################
+    # Gather all the files 
+    #######################
+    periods=$(echo "$EVAL_PERIOD" | tr '[:lower:]' '[:upper:]')
+    if [ "$gather" = "yes" ] ; then
+        if [ "$(ls -A "${DATA_wfo}/images")" ]; then
+            echo "Found ${DATA_wfo}/images/*.png "
+            nc_images=$(ls ${DATA_wfo}/images/*.png | wc -l | awk '{print $1}')
+            
+            for period in ${periods} ; do
+                period_lower=$(echo ${period,,})
+                if [ "${period}" = 'LAST31DAYS' ] ; then
+                    period_out='last31days'
+                elif [ "${period}" = 'LAST90DAYS' ] ; then
+                    period_out='last90days'
+                else
+                    period_out=${period_lower}
+                fi
 
-			# check to see if the plots are there
-			if [ "${nc}" != '0' ]; then
+                # check to see if the plots are there
+                if [ "${nc_images}" != '0' ]; then
+                    set -x
+                    echo "Found ${nc_images} ${period_lower} plots for ${VDATE}"
+                    [[ "$LOUD" = YES ]] && set -x
+                else
+                    set -x
+                    echo ' '
+                    echo '**************************************** '
+                    echo "*** FATAL ERROR: NO ${period} PLOTS   *** "
+                    echo "        found for ${VDATE} "
+                    echo '**************************************** '
+                    echo ' '
+                    echo "${MODELNAME}_${RUN} ${VDATE} ${period}: PLOTS are missing for ${wfo}."
+                    [[ "$LOUD" = YES ]] && set -x
+            
+                    err_exit "FATAL ERROR: Did not find any ${period} plots for ${VDATE}"
+                fi                                                                                                                                                                                      
+                
+                # tar and copy them to the final destination
+                if [ "${nc_images}" -gt '0' ] ; then
+                    cd ${DATA_wfo}/images
+                    tar -cvf evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*_${wfo}.png
+                fi
+                
+                if [ "$SENDCOM" = "YES" ]; then
+                    if [ -s evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ]; then
+                        cp -v evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
+                    fi
+                fi
+                
+                if [ "$SENDDBN" = "YES" ]; then
+                    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
+                fi
+            done
+        else
+            echo "Found no png images for ${wfo}. Folder is empty"
+        fi
+    else  
+        echo "not copying the plots"
+    fi
 
-				set -x
-				echo "Found ${nc} ${period_lower} plots for ${VDATE}"
-				[[ "$LOUD" = YES ]] && set -x
-			else
-				set -x
-				echo ' '
-				echo '**************************************** '
-				echo "*** FATAL ERROR: NO ${period} PLOTS  *** "
-				echo "    found for ${VDATE} "
-				echo '**************************************** '
-				echo ' '
-				echo "${MODELNAME}_${RUN} ${VDATE} ${period}: PLOTS are missing."
-				[[ "$LOUD" = YES ]] && set -x
-		
-				"FATAL ERROR : NO ${period} PLOTS FOR ${VDATE}"
-				err_exit "FATAL ERROR: Did not find any ${period} plots for ${VDATE}"
-			fi    	    	                                                                                                                                                                                                    		
-				# tar and copy them to the final destination
-
-			if [ "${nc}" > '0' ] ; then
-				cd ${DATA}/images
-				tar -cvf evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*_${wfo}.png
-			fi
-			if [ $SENDCOM = YES ]; then
-				if [ -s evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ]; then
-					cp -v evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar ${COMOUTplots}/evs.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
-				fi
-			fi
-			if [ $SENDDBN = YES ]; then
-				$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${wfo}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar
-			fi
-
-		done
-		else
-		echo "Found no png images. Folder is empty"
-		fi
-
-
-	else  
-		echo "not copying the plots"
-	fi
-
-	msg="JOB $job HAS COMPLETED NORMALLY."
+    msg="JOB $job FOR ${wfo} HAS COMPLETED NORMALLY."
 
 done
+
 #########################################
 # copy log files into logs and cat them
 #########################################
+# Set working directory back to global root to find all sandboxed logs
+cd ${DATA_wfo}
+log_dir="${DATA_wfo}/*/job_work_dir/*/logs"
 
-cd ${DATA}
-log_dir=$DATA/job_work_dir/*/logs
-
-log_file_count=$(find ${DATA} -type f -name "*.out" -o -name ".log" |wc -l)
+log_file_count=$(find ${DATA_wfo} -type f \( -name "*.out" -o -name "*.log" \) | wc -l)
 if [[ $log_file_count -ne 0 ]]; then
-	for log_file in $log_dir/*; do
-		echo "Start: $log_file"
-		cat $log_file
-
-		echo "End: $log_file"
-	done
+    for log_file in $log_dir; do
+        if [ -f "$log_file" ]; then
+            echo "Start: $log_file"
+            cat "$log_file"
+            echo "End: $log_file"
+        fi
+    done
 fi
-
 
 # --------------------------------------------------------------------------- #
 # Ending output 
-#
 set -x
 echo ' '
-echo "Ending at : `date`"
+echo "Ending at : $(date)"
 echo ' '
 echo " *** End of ${MODELNAME}-${RUN} grid2obs stat *** "
 echo ' '
 [[ "$LOUD" = YES ]] && set -x
 
 
-# End of NWPS grid2obs plots script ------------------------------------- #
+
