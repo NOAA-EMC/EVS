@@ -352,9 +352,9 @@ global_det_model_dict = {
               'inithours': ['00', '12'],
               'fcst_hrs': range(0, 180+6, 6)},
     'gfs': {'input_wmo_file_format': os.path.join(COMINgfs, '{init?fmt=%2H}',
-                                                  'atmos', 'gfs.'
+                                                  'model', 'atmos', 'master', 'gfs.'
                                                   +'t{init?fmt=%2H}z.master.'
-                                                  +'grb2f{lead?fmt=%3H}'),
+                                                  +'f{lead?fmt=%3H}.grib2'),
             'inithours': ['00', '12'],
             'fcst_hrs': list(range(0, 72+3, 3))
                         + list(range(78, 240+6, 6))},

@@ -31,7 +31,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_file_format_list:     file format of model files
 export model_list="gfs aigfs ecmwf"
 export model_evs_data_dir_list="$COMIN/stats/$COMPONENT/gfs $COMIN/stats/$COMPONENT/aigfs $COMIN/stats/$COMPONENT/ecmwf"
-export model_file_format_list="$COMROOT/gfs/${gfs_ver}/gfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/gfs.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H} ${COMIN}/prep/global_det/atmos.{init?fmt=%Y%m%d}/aigfs/aigfs.t{init?fmt=%H}z.f{lead?fmt=%3H} ${COMIN}/prep/global_det/atmos.{init?fmt=%Y%m%d}/ecmwf/ecmwf.precip.t{init?fmt=%H}z.f{lead?fmt=%3H}"
+export model_file_format_list="$COMROOT/gfs/${gfs_ver}/gfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/products/atmos/grib2/0p25/gfs.t{init?fmt=%2H}z.pres_a.0p25.f{lead?fmt=%3H}.grib2 ${COMIN}/prep/global_det/atmos.{init?fmt=%Y%m%d}/aigfs/aigfs.t{init?fmt=%H}z.f{lead?fmt=%3H} ${COMIN}/prep/global_det/atmos.{init?fmt=%Y%m%d}/ecmwf/ecmwf.precip.t{init?fmt=%H}z.f{lead?fmt=%3H}"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
 export OUTPUTROOT="$DATAROOT"

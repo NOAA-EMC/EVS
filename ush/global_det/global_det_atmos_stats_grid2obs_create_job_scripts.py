@@ -597,7 +597,7 @@ generate_stats_jobs_dict = {
                                   'msg_type': 'ADPSFC',
                                   'var1_fcst_name': 'TCDC',
                                   'var1_fcst_levels': 'L0',
-                                  'var1_fcst_options': ('GRIB_lvl_typ = 10; '
+                                  'var1_fcst_options': ('GRIB_lvl_typ = 200; '
                                                         +'GRIB2_pdt = 0; '
                                                         +'set_attr_level = '
                                                         +'"TOTAL";'),
