@@ -701,7 +701,6 @@ def prep_prod_gfs_file(source_file, dest_file, date_dt, log_missing_file):
     """
     # Environment variables and executables
     WGRIB2 = os.environ['WGRIB2']
-    EXECevs = os.environ['EXECevs']
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
