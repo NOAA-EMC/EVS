@@ -82,7 +82,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     export g2gs_precip_accum24hr_fhr_max=384
     export g2gs_precip_accum24hr_fhr_inc=24
     export g2gs_pres_levs_truth_name_list="gfs_anl"
-    export g2gs_pres_levs_truth_format_list="$COMINgfs/${MODELNAME}.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/products/atmos/grib2/0p25/${MODELNAME}.t{valid?fmt=%2H}z.pres_a.0p25.analysis.grib2"
+    export g2gs_pres_levs_truth_format_list="$COMINgfs/gfs.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/products/atmos/grib2/0p25/gfs.t{valid?fmt=%2H}z.pres_a.0p25.analysis.grib2"
     export g2gs_pres_levs_init_hr_list="00 06 12 18"
     export g2gs_pres_levs_valid_hr_list="00 06 12 18"
     export g2gs_pres_levs_fhr_min=6
