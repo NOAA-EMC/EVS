@@ -131,8 +131,8 @@ for DAY in range(1,4):
 
                         os.environ['VERIF_GRID'] = VERIF_GRID
                         os.environ['REC'] = str(REC)
-                        os.environ['MASK_FNAME'] = MASK_FNAME
-                        os.environ['MASK_NAME'] = MASK_NAME
+                        os.environ['MASK_FNAME'] = MASK_FNAME.replace('\x00', '')
+                        os.environ['MASK_NAME'] = MASK_NAME.replace('\x00', '')
 
                         cutil.run_shell_command([
                         os.path.join(os.environ['METPLUS_PATH'],'ush','run_metplus.py'), '-c',
