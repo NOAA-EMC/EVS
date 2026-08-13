@@ -1,0 +1,45 @@
+#!/bin/bash -e
+
+# =============================================================================
+# 
+# NAME: config.evs.prod.prep.cam.atmos.precip
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Set up configurations to run EVS CAM Precipitation - Prepare
+# DEPENDENCIES: $HOMEevs/scripts/prep/cam/exevs_prep_cam_precip.sh
+# 
+# =============================================================================
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+# Time Settings
+export FHR_END_FULL="60"
+export FHR_END_SHORT="18"
+
+# Model/Obs Settings
+
+# Additional Verification Settings
+export VHOUR_LIST="00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23"
+if [[ "$ACC" != "01" && "$ACC" != "03" && "$ACC" != "24" ]]; then
+    err_exit "The provided ACC, $ACC, is not supported for $MODELNAME"
+fi
+if [ "$NEST" = "conus" ]; then
+    export VERIF_TYPE="ccpa"
+    export COMINobs=${COMINccpa}
+    export OBSNAME="ccpa"
+elif [ "$NEST" = "ak" ]; then
+    export VERIF_TYPE="mrms"
+    export COMINobs=${DCOMINmrms}
+    export OBSNAME="mrms"
+elif [ "$NEST" = "pr" ]; then
+    export VERIF_TYPE="mrms"
+    export COMINobs=${DCOMINmrms}
+    export OBSNAME="mrms"
+elif [ "$NEST" = "hi" ]; then
+    export VERIF_TYPE="mrms"
+    export COMINobs=${DCOMINmrms}
+    export OBSNAME="mrms"
+else
+    err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
+fi
+
+echo "END: $(basename ${BASH_SOURCE[0]})"

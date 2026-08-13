@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: cam_plots_precip_spatial_map.py
-Contact(s): Marcel Caron, Mallory Row
+Contact(s): Marcel Caron
 Abstract: This script generates a spatial map for precip
 '''
 
@@ -35,13 +35,12 @@ class PrecipSpatialMap:
     Create a precipitation spatial map graphic
     """
 
-    def __init__(self, logger, input_dir, output_dir, restart_dir, 
+    def __init__(self, logger, output_dir, restart_dir, 
                  model_info_dict, date_info_dict, plot_info_dict, 
                  met_info_dict, logo_dir):
         """! Initalize PrecipSpatialMap class
              Args:
                  logger           - logger object
-                 input_dir        - path to input directory (string)
                  output_dir       - path to output directory (string)
                  restart_dir      - path to restart directory (string)
                  model_info_dict  - model infomation dictionary (strings)
@@ -53,7 +52,6 @@ class PrecipSpatialMap:
              Returns:
         """
         self.logger = logger
-        self.input_dir = input_dir
         self.output_dir = output_dir
         self.restart_dir = restart_dir
         self.model_info_dict = model_info_dict
@@ -68,7 +66,7 @@ class PrecipSpatialMap:
              Returns:
         """
         self.logger.info(f"Creating preciptation spatial map...")
-        self.logger.debug(f"Input directory: {self.input_dir}")
+        self.logger.debug(f"Input directory: (see Model information dictionary)")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Restart directory: {self.restart_dir}")
         self.logger.debug(f"Model information dictionary: "
@@ -86,11 +84,6 @@ class PrecipSpatialMap:
         valid_date_dt = datetime.datetime.strptime(
             self.date_info_dict['end_date']
             +self.date_info_dict['valid_hr_end'], '%Y%m%d%H'
-        )
-        init_date_dt = (
-            valid_date_dt 
-            - datetime.timedelta(
-                hours=int(self.date_info_dict['forecast_hour']))
         )
         # Set contour levels and color map
         clevs_in = [0.01, 0.10, 0.25, 0.50, 0.75, 1.00, 1.25, 1.50,
@@ -113,25 +106,35 @@ class PrecipSpatialMap:
         # Set Cartopy shapefile location
         config['data_dir'] = config['repo_data_dir']
         # Read in data
-        self.logger.info(f"Reading in model files from {self.input_dir}")
         for model_num in self.model_info_dict:
             model_num_dict = self.model_info_dict[model_num]
             model_num_name = model_num_dict['name']
             model_num_plot_name = model_num_dict['plot_name']
             model_num_obs_name = model_num_dict['obs_name']
+            model_num_input_dir = model_num_dict['input_dir']
+            self.logger.info(f"Reading in {model_num_name} files from {model_num_input_dir}")
             model_num_data_dir = os.path.join(
-                self.input_dir,
-                valid_date_dt.strftime('atmos.%Y%m%d'),
+                model_num_input_dir,
             )
             make_plot = False
             if model_num == 'obs':
+                fhr = self.date_info_dict['forecast_hour']
                 image_data_source = 'qpe'
                 image_forecast_hour = '024'
             else:
+                fhr = str(
+                    int(self.date_info_dict['forecast_hour'])
+                    - int(model_num_dict['shift'])
+                )
                 image_data_source = model_num_name
                 image_forecast_hour = (
-                    self.date_info_dict['forecast_hour'].zfill(3)
+                    fhr.zfill(3)
                 )
+            init_date_dt = (
+                valid_date_dt 
+                - datetime.timedelta(
+                    hours=int(fhr))
+            )
             image_region_dict = {
                 'CONUS': 'conus',
                 'Alaska': 'alaska',
@@ -144,6 +147,12 @@ class PrecipSpatialMap:
                 'Hawaii': 'hi',
                 'PuertoRico': 'pr'
             }
+            rap_region_dict = {
+                'CONUS': 'conus',
+                'Alaska': 'alaska',
+                'Hawaii': 'hawaii',
+                'PuertoRico': 'puerto_rico'
+            }
             image_name = os.path.join(
                 output_image_dir,
                 image_data_source
@@ -154,6 +163,7 @@ class PrecipSpatialMap:
             if model_num == 'obs':
                 model_num_files = glob.glob(os.path.join(
                     model_num_data_dir,
+                    valid_date_dt.strftime('atmos.%Y%m%d'),
                     '*',
                     'precip',
                     'spatial_maps',
@@ -175,19 +185,33 @@ class PrecipSpatialMap:
                         self.logger.warning(f"No input files exist, "
                                             +"not making plot")
             else:
-                model_num_file = os.path.join(
-                    model_num_data_dir,
-                    model_num,
-                    'precip',
-                    'spatial_maps',
-                    init_date_dt.strftime(
-                       f'{model_num_name}.init%Y%m%d.t%Hz.'
-                       + f'f{self.date_info_dict["forecast_hour"].zfill(3)}.'
-                       + f'a24h.'
-                       + f'{stats_region_dict[self.plot_info_dict["vx_mask"]]}'
-                       + f'.nc'
-                    ),
-                )
+                if model_num_name == 'rap':
+                    model_num_file = os.path.join(
+                        model_num_data_dir,
+                        valid_date_dt.strftime('atmos.%Y%m%d'),
+                        model_num,
+                        'precip',
+                        init_date_dt.strftime(
+                           f'pcp_combine_{model_num_name}_accum24hr_'
+                           + f'{rap_region_dict[self.plot_info_dict["vx_mask"]]}'
+                           + f'_init%Y%m%d%H_'
+                           + f'fhr{fhr.zfill(3)}'
+                           + f'.nc'
+                        ),
+                    )
+                else:
+                    model_num_file = os.path.join(
+                        model_num_data_dir,
+                        init_date_dt.strftime('atmos.%Y%m%d'),
+                        model_num,
+                        init_date_dt.strftime(
+                           f'{model_num_name}.t%Hz.'
+                           + f'f{fhr.zfill(3)}.'
+                           + f'a24h.'
+                           + f'{stats_region_dict[self.plot_info_dict["vx_mask"]]}'
+                           + f'.nc'
+                        ),
+                    )
                 if not os.path.exists(image_name):
                     if os.path.exists(model_num_file):
                         make_plot = True
@@ -210,6 +234,8 @@ class PrecipSpatialMap:
                         'MultiSensor_QPE_03H_Pass2_Z0',
                         'MultiSensor_QPE_24H_Pass2_Z0'
                     ]
+                elif model_num_name == 'rap':
+                    precip_var_keys = ['APCP_A24']
                 else:
                     precip_var_keys = ['APCP_24']
                 for precip_var_key in precip_var_keys:
@@ -254,8 +280,8 @@ class PrecipSpatialMap:
                 self.logger.info(f"Doing plot set up")
                 plot_specs_psm = PlotSpecs(self.logger, 'precip_spatial_map')
                 plot_specs_psm.set_up_plot()
-                forecast_day = int(self.date_info_dict['forecast_hour'])/24.
-                if int(self.date_info_dict['forecast_hour']) % 24 == 0:
+                forecast_day = int(fhr)/24.
+                if int(fhr) % 24 == 0:
                     forecast_day_plot = str(int(forecast_day))
                 else:
                     forecast_day_plot = str(forecast_day)
@@ -275,7 +301,7 @@ class PrecipSpatialMap:
                         +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
                         +f'({var_units})\n'
                         +'Forecast Day '+forecast_day_plot+' '
-                        +'(Hour '+self.date_info_dict['forecast_hour']+')\n'
+                        +'(Hour '+fhr+')\n'
                         +'valid '
                         +(valid_date_dt-datetime.timedelta(hours=24))\
                         .strftime('%d%b%Y %H')+'Z to '
@@ -458,7 +484,6 @@ class PrecipSpatialMap:
 
 def main():
     # Need settings
-    INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
     RESTART_DIR = os.environ['RESTART_DIR']
     LOGO_DIR = os.environ['HOME'],
@@ -525,7 +550,7 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = PrecipSpatialMap(logger, INPUT_DIR, OUTPUT_DIR, RESTART_DIR, 
+    p = PrecipSpatialMap(logger, OUTPUT_DIR, RESTART_DIR, 
                          MODEL_INFO_DICT, DATE_INFO_DICT, PLOT_INFO_DICT, 
                          MET_INFO_DICT, LOGO_DIR)
     p.make_precip_spatial_map()

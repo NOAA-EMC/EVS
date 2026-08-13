@@ -40,9 +40,9 @@ export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_chem}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
-export MODELNAME=${MODELNAME:-gcafs}
-export modsys=${modsys:-gcafs}
-export mod_ver=${mod_ver:-${gcafs_ver}}
+export MODELNAME=${MODELNAME:-gefs}
+export modsys=${modsys:-gefs}
+export mod_ver=${mod_ver:-${gefs_ver}}
 
 export DATA_TYPE=aeronet 
 
@@ -56,7 +56,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 ############################################################
 # CALL executable job script here
 ############################################################
-export MAILTO=${MAILTO:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 if [ -z "$MAILTO" ]; then
     echo "MAILTO variable is not defined. Exiting without continuing."

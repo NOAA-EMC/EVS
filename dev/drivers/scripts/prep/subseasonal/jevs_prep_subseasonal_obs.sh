@@ -31,8 +31,6 @@ export SITE=$(cat /etc/cluster_name)
 export KEEPDATA=NO
 export SENDMAIL=YES
 
-export MAILTO='alicia.bentley@noaa.gov,shannon.shields@noaa.gov'
-
 export USER=$USER
 export ACCOUNT=VERF-DEV
 export QUEUE=dev
@@ -46,12 +44,14 @@ export NET=evs
 export STEP=prep
 export COMPONENT=subseasonal
 export RUN=atmos
-export OBSNAME="gfs ecmwf osi ghrsst umd nam ccpa"
+export OBSNAME="gfs ecmwf osi ghrsst gdas ccpa"
 export PREP_TYPE=obs
 
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT/$RUN
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.obs.prep
+
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 # Call executable job script
 $HOMEevs/jobs/JEVS_PREP_SUBSEASONAL

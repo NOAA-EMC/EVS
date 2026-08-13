@@ -28,6 +28,9 @@ from datetime import datetime, timedelta as td
 # Third-party imports
 import numpy as np
 
+# Local imports
+import string_template_substitution
+
 def flatten(xs):
     for x in xs: 
         if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
@@ -73,34 +76,22 @@ def get_data_type(fname):
             'not':[],
             'type': 'gen'
         },
-        'NAM Nest Forecast': {
-            'and':['nam', 'nest'],
-            'or':[''],
-            'not':['firewx'],
-            'type': 'fcst'
-        },
         'HRRR Forecast': {
             'and':['hrrr'],
             'or':[''],
             'not':[],
             'type': 'fcst'
         },
-        'HiRes Window ARW Forecast': {
-            'and':['hiresw','arw'],
+        'RRFS Forecast': {
+            'and':['rrfs'],
             'or':[''],
-            'not':['mem2'],
+            'not':['firewx','prepbufr'],
             'type': 'fcst'
         },
-        'HiRes Window ARW2 Forecast': {
-            'and':['hiresw','arw','mem2'],
+        'REFS Member Forecast': {
+            'and':['rrfs','m00'],
             'or':[''],
-            'not':[],
-            'type': 'fcst'
-        },
-        'HiRes Window FV3 Forecast': {
-            'and':['hiresw','fv3'],
-            'or':[''],
-            'not':[],
+            'not':['firewx','prepbufr'],
             'type': 'fcst'
         },
     }
@@ -139,17 +130,25 @@ def get_all_eval_periods(graphics):
                         )
     return np.unique(np.hstack(all_eval_periods))
 
-def get_fhr_start(vhour, acc, fhr_incr, min_ihour):
-    fhr_start = (
-        float(vhour) + float(min_ihour)
-        + (
-            float(fhr_incr)
-            * np.ceil(
-                (float(acc)-float(vhour)-float(min_ihour))
-                / float(fhr_incr)
+def get_fhr_start(hour, acc, fhr_incr, min_ihour, use_vhour=True):
+    if use_vhour:
+        fhr_start = (
+            float(hour) + float(min_ihour)
+            + (
+                float(fhr_incr)
+                * np.ceil(
+                    (float(acc)-float(hour)-float(min_ihour))
+                    / float(fhr_incr)
+                )
             )
         )
-    )
+    else:
+        fhr_start = (
+            float(fhr_incr)
+            * np.ceil(
+                float(acc) / float(fhr_incr)
+            )
+        )
     return int(fhr_start)
 
 def run_shell_command(command, capture_output=False):
@@ -370,10 +369,17 @@ def mark_job_completed(restart_dir, data_dir, verif_case,
         raise ValueError(e)
 
     restart_out = Path(restart_dir) / completed_jobs_dirname
-    data_out = Path(data_dir) / verif_case
+    if verif_case in ['radar', 'severe']:
+        data_out = Path(data_dir)
+    else:
+        data_out = Path(data_dir) / verif_case
     if job_type:
-        restart_out = restart_out / job_type
-        data_out = data_out / 'METplus_output' / 'workdirs' / job_type / job_name / completed_jobs_dirname / job_type
+        if job_type == "prep_precip":
+            restart_out = restart_out
+            data_out = data_out / 'METplus_output' / 'workdirs' / job_name / completed_jobs_dirname
+        else:
+            restart_out = restart_out / job_type
+            data_out = data_out / 'METplus_output' / 'workdirs' / job_type / job_name / completed_jobs_dirname / job_type
     else:
         data_out = data_out / 'out' / 'workdirs' / job_name / completed_jobs_dirname
 
@@ -399,7 +405,8 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                          verif_case=None, verif_type=None, vx_mask=None, 
                          job_type=None, var_name=None, vhour=None, fhr=None, 
                          fhr_start=None, fhr_end=None, fhr_incr=None, 
-                         njob=None, acc=None, nbrhd=None, nbrhd_pt=None):
+                         njob=None, acc=None, nbrhd=None, nbrhd_pt=None,
+                         idate=None, ihour=None):
     sub_dirs_in = []
     sub_dirs_out = []
     copy_files = []
@@ -621,13 +628,17 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
         if verif_case == "snowfall":
             check_if_none = [
                 data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
-                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name, acc
+                vdate, vhour, model, var_name, acc
             ]
             if any([var is None for var in check_if_none]):
                 e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
-            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+            if fhr is None:
+                fhr_list = np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr))
+            else:
+                fhr_list = [int(fhr)]
+            for fhr in fhr_list:
                 vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
                 idt = vdt - td(hours=int(fhr))
                 idate = idt.strftime('%Y%m%d')
@@ -649,39 +660,45 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     f'{model}.{var_name}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
                 )
         else:
-            check_if_none = [
-                data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
-                vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc
-            ]
-            if any([var is None for var in check_if_none]):
-                e = (f"FATAL ERROR: None encountered as an argument while copying"
-                     + f" {met_tool} METplus output to COMOUT directory.")
-                raise TypeError(e)
-            # Copy obs
-            sub_dirs_in.append(os.path.join(
-                'METplus_output',
-                'workdirs',
-                'reformat',
-                f'job{njob}',
-                verif_type,
-                met_tool,
-                f'{verif_type}.{vdate}'
-            ))
-            sub_dirs_out.append(os.path.join(
-                'METplus_output',
-                verif_type,
-                met_tool,
-                f'{verif_type}.{vdate}'
-            ))
-            copy_files.append(
-                f'{verif_type}.t{vhour}z.a{acc}h.{vx_mask}.nc'
-            )
-            # Copy forecasts
-            for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
-                vdt = datetime.strptime(f'{vdate}{vhour}', '%Y%m%d%H')
-                idt = vdt - td(hours=int(fhr))
-                idate = idt.strftime('%Y%m%d')
-                ihour = idt.strftime('%H')
+            if vdate is None and idate is not None:
+                check_if_none = [
+                    data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+                    idate, ihour, fhr_start, fhr_end, fhr_incr, model, acc
+                ]
+                if any([var is None for var in check_if_none]):
+                    e = (f"FATAL ERROR: None encountered as an argument while copying"
+                         + f" {met_tool} METplus output to COMOUT directory.")
+                    raise TypeError(e)
+                # Copy forecasts
+                for fhr in np.arange(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr)):
+                    idt = datetime.strptime(f'{idate}{ihour}', '%Y%m%d%H')
+                    idate = idt.strftime('%Y%m%d')
+                    ihour = idt.strftime('%H')
+                    sub_dirs_in.append(os.path.join(
+                        'METplus_output',
+                        'workdirs',
+                        f'job{njob}',
+                        verif_type,
+                        met_tool,
+                    ))
+                    sub_dirs_out.append(os.path.join(
+                        'METplus_output',
+                        verif_type,
+                        met_tool,
+                    ))
+                    copy_files.append(
+                        f'{model}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                    )
+            else:
+                check_if_none = [
+                    data_dir, restart_dir, verif_case, verif_type, vx_mask, met_tool, 
+                    vdate, vhour, model, acc
+                ]
+                if any([var is None for var in check_if_none]):
+                    e = (f"FATAL ERROR: None encountered as an argument while copying"
+                         + f" {met_tool} METplus output to COMOUT directory.")
+                    raise TypeError(e)
+                # Copy obs
                 sub_dirs_in.append(os.path.join(
                     'METplus_output',
                     'workdirs',
@@ -689,14 +706,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     f'job{njob}',
                     verif_type,
                     met_tool,
+                    f'{verif_type}.{vdate}'
                 ))
                 sub_dirs_out.append(os.path.join(
                     'METplus_output',
                     verif_type,
                     met_tool,
+                    f'{verif_type}.{vdate}'
                 ))
                 copy_files.append(
-                    f'{model}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                    f'{verif_type}.t{vhour}z.a{acc}h.{vx_mask}.nc'
                 )
     elif met_tool == 'point_stat':
         check_if_none = [
@@ -886,10 +905,8 @@ def get_prepbufr_templates(indir, vdates, paths=[], obsname='both', already_prep
         vh = vdate.strftime('%H')
         vd = vdate.strftime('%Y%m%d')
         if vh in ['00', '03', '06', '09', '12', '15', '18', '21']:
-            if vh in ['03', '09', '15', '21']:
-                offsets = ['03']
-            elif vh in ['00', '06', '12', '18']:
-                offsets = ['00', '06']
+            offsets = ['00']
+            if vh in ['00', '06', '12', '18']:
                 if obsname in ['both', 'raob']:
                     if not already_preprocessed:
                         prepbufr_templates.append(os.path.join(
@@ -912,13 +929,13 @@ def get_prepbufr_templates(indir, vdates, paths=[], obsname='both', already_prep
                     if not already_preprocessed:
                         template = os.path.join(
                             indir, 
-                            'nam.{VDATE}',
-                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                            'rrfs.{VDATE}',
+                            'rrfs.t{VHOUR}z.prepbufr.tm{OFFSET}'
                         )
                     else:
                         template = os.path.join(
                             indir, 
-                            'nam.t{VHOUR}z.prepbufr.tm{OFFSET}'
+                            'rrfs.t{VHOUR}z.prepbufr.tm{OFFSET}'
                         )
                     prepbufr_paths.append(fname_constructor(
                         template, VDATE=use_vd, VHOUR=use_vh, OFFSET=offset
@@ -1342,3 +1359,126 @@ def get_obs_avail(indir, vdate, nest, obsname):
             return False
     else:
         raise ValueError(f"Invalid obsname: \"{obsname}\"")
+
+def _as_int(value, name):
+    """Convert value to int with a useful error message."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be convertible to int. Got: {value!r}")
+
+def _get_init_and_lead(VDATE, VHOUR, FHR):
+    """
+    Return init datetime and lead seconds from valid date/hour and forecast hour.
+
+    VDATE: YYYYMMDD
+    VHOUR: HH
+    FHR: forecast lead hour
+    """
+    fhr_int = _as_int(FHR, "FHR")
+    valid = datetime.strptime(f"{VDATE}{int(VHOUR):02d}", "%Y%m%d%H")
+    init = valid - td(hours=fhr_int)
+    lead = fhr_int * 3600
+    return init, lead
+
+def _substitute_fcst_template(MODEL_INPUT_TEMPLATE, VDATE, VHOUR, FHR, ACC=None):
+    """
+    Substitute METplus-style template tags like:
+      {init?fmt=%Y%m%d}
+      {init?fmt=%2H}
+      {lead?fmt=%3H}
+      {level?fmt=%HH}
+
+    ACC is used as level for precip-style accumulation templates.
+    """
+    init, lead = _get_init_and_lead(VDATE, VHOUR, FHR)
+
+    kwargs = {
+        "init": init,
+        "lead": lead,
+    }
+
+    if ACC is not None:
+        kwargs["level"] = _as_int(ACC, "ACC") * 3600
+
+    if string_template_substitution is not None:
+        return string_template_substitution.do_string_sub(
+            MODEL_INPUT_TEMPLATE,
+            **kwargs
+        )
+
+    # in case string_template_substitution is not importable ...
+    out = MODEL_INPUT_TEMPLATE
+    out = out.replace("{init?fmt=%Y%m%d}", init.strftime("%Y%m%d"))
+    out = out.replace("{init?fmt=%2H}", init.strftime("%H"))
+    out = out.replace("{lead?fmt=%2H}", f"{_as_int(FHR, 'FHR'):02d}")
+    out = out.replace("{lead?fmt=%3H}", f"{_as_int(FHR, 'FHR'):03d}")
+
+    if ACC is not None:
+        out = out.replace("{level?fmt=%HH}", f"{_as_int(ACC, 'ACC'):02d}H")
+
+    return out
+
+def get_cam_fcst_file_path(VERIF_CASE,job_type,COMINfcst=None,
+                           MODEL_INPUT_TEMPLATE=None,DATA=None,
+                           VERIF_TYPE=None,MODELNAME=None,NEST=None,
+                           VDATE=None,VHOUR=None,FHR=None,ACC=None,
+                           FCST_VAR_NAME=None):
+    """
+    Build the forecast/input file path needed for a CAM METplus job card.
+
+    Returns: full file path as string
+    """
+
+    verif_case = VERIF_CASE.lower()
+    job_type = job_type.lower()
+
+    if verif_case == "snowfall" and job_type == "generate":
+        if any(x is None for x in [DATA, VERIF_TYPE, MODELNAME, NEST,
+                                   VDATE, VHOUR, FHR, ACC, FCST_VAR_NAME]):
+            raise ValueError(
+                "snowfall generate requires DATA, VERIF_TYPE, MODELNAME, "
+                "NEST, VDATE, VHOUR, FHR, ACC, and FCST_VAR_NAME"
+            )
+
+        init, _ = _get_init_and_lead(VDATE, VHOUR, FHR)
+        fhr_int = _as_int(FHR, "FHR")
+        acc_int = _as_int(ACC, "ACC")
+
+        return os.path.join(
+            DATA,
+            verif_case,
+            "METplus_output",
+            VERIF_TYPE,
+            "pcp_combine",
+            f"{MODELNAME}.{FCST_VAR_NAME}.init{init:%Y%m%d}."
+            f"t{init:%H}z.f{fhr_int:03d}.a{acc_int:02d}h.{NEST}.nc"
+        )
+
+    if COMINfcst is None or MODEL_INPUT_TEMPLATE is None:
+        raise ValueError(
+            f"{VERIF_CASE} {job_type} requires COMINfcst and "
+            "MODEL_INPUT_TEMPLATE"
+        )
+
+    rel_path = _substitute_fcst_template(
+        MODEL_INPUT_TEMPLATE,
+        VDATE,
+        VHOUR,
+        FHR,
+        ACC=ACC
+    )
+
+    return os.path.join(COMINfcst, rel_path)
+
+def get_fcst_avail(**kwargs):
+    """
+    Return True if required CAM forecast/input file exists, else False.
+
+    """
+    fcst_file = get_cam_fcst_file_path(**kwargs)
+
+    if os.path.exists(fcst_file):
+        return True
+
+    return False

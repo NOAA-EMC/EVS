@@ -19,7 +19,7 @@ graphics = {
     'cam':{
         'headline':{
             'metar':{
-                'set1, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                'set1, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -71,7 +71,7 @@ graphics = {
                         }
                     },
                 },
-                'set2, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                'set2, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -123,7 +123,7 @@ graphics = {
                         }
                     },
                 },
-                'set3, namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                'set3, rap?shift=-3, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5, hrrr': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -175,7 +175,7 @@ graphics = {
                         }
                     },
                 },
-                'set4, namnest, hireswarw, hireswarwmem2, hireswfv3': {
+                'set4, rrfs, rrfsmem1, rrfsmem2, rrfsmem3, rrfsmem4, rrfsmem5': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',

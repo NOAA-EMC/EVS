@@ -127,15 +127,15 @@ global_det_obs_dict = {
                                                       +'{init?fmt=%Y%m%d%H}'
                                                       +'.nc'),
                       'inithours': ['00', '06', '12', '18']},
-    'prepbufr_nam': {'input_file_format': os.path.join(COMINobsproc, 'nam.'
+    'prepbufr_rrfs': {'input_file_format': os.path.join(COMINobsproc, 'rrfs.'
                                                        +'{init?fmt=%Y%m%d}',
-                                                       'nam.t'
+                                                       'rrfs.t'
                                                        +'{init?fmt=%H}'
                                                        +'z.prepbufr.tm'
                                                        +'{offset_hr?fmt=str}'),
                      'tmp_file_format': os.path.join(DATA, f"{RUN}.{INITDATE}",
-                                                     'prepbufr_nam', 'pb2nc_'
-                                                     +'nam_{vtype?fmt=str}_'
+                                                     'prepbufr_rrfs', 'pb2nc_'
+                                                     +'rrfs_{vtype?fmt=str}_'
                                                      +'valid'
                                                      +'{init?fmt=%Y%m%d%H}'
                                                      +'.nc'),
@@ -237,16 +237,16 @@ for OBS in OBSNAME:
                     gda_util.copy_file(tmp_file, output_file)
             else:
                 print(f"{output_file} exists")
-        elif OBS in ['prepbufr_gdas', 'prepbufr_nam']:
+        elif OBS in ['prepbufr_gdas', 'prepbufr_rrfs']:
             log_missing_file = os.path.join(
                 DATA, 'mail_missing_'+OBS+'_valid'
                 +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
             )
             if OBS == 'prepbufr_gdas':
                 vtype_list = ['pres_levs', 'sfc']
-            elif OBS == 'prepbufr_nam':
+            elif OBS == 'prepbufr_rrfs':
                 vtype_list = ['sfc', 'ptype']
-                offset_hr = int(f"{CDATE_dt:%H}")%6
+                offset_hr = int(0)
                 offset_date_dt = CDATE_dt + datetime.timedelta(hours=offset_hr)
                 input_file = gda_util.format_filler(
                     obs_dict['input_file_format'], offset_date_dt,

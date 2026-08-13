@@ -1,0 +1,96 @@
+#!/bin/bash -e
+
+# =============================================================================
+# 
+# NAME: config.evs.prod.prep.cam.atmos.precip.rrfs 
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Set up configurations to run EVS RRFS Precipitation - Prepare
+# DEPENDENCIES: $HOMEevs/scripts/prep/cam/exevs_rrfs_precip_prep.sh
+# 
+# =============================================================================
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+# METplus Settings
+export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
+export MET_CONFIG_OVERRIDES=""
+
+# Restart Settings
+export RESTART_DIR="${COMOUTsmall}/restart/${MODELNAME}/c${vhr}"
+export COMPLETED_JOBS_DIR="completed_jobs"
+
+# Time Settings
+export IHOUR_FULL="00 06 12 18"
+export FHR_END_FULL="84"
+export FHR_INCR_FULL="1"
+export FHR_END_SHORT="18"
+
+# Model/Obs Settings
+export COMINfcst=${COMINrrfs}
+
+# Additional Verification Settings
+if [ "$ACC" = "01" ]; then
+    if [[ " $IHOUR_FULL " == *" $IHOUR "* ]]; then
+        export FHR_GROUP_LIST="FULL"
+    else
+        export FHR_GROUP_LIST="SHORT"
+    fi
+    export MODEL_ACC="01"
+    export BUCKET_INTERVAL=$MODEL_ACC
+    export MODEL_PCP_COMBINE_METHOD="ADD"
+    export MODEL_PCP_COMBINE_COMMAND=""
+    export USE_ZERO_ACCUM="False"
+elif [ "$ACC" = "03" ]; then
+    if [[ " $IHOUR_FULL " == *" $IHOUR "* ]]; then
+        export FHR_GROUP_LIST="FULL"
+    else
+        export FHR_GROUP_LIST="SHORT"
+    fi
+    export MODEL_ACC="01"
+    export BUCKET_INTERVAL=$MODEL_ACC
+    export MODEL_PCP_COMBINE_METHOD="ADD"
+    export MODEL_PCP_COMBINE_COMMAND=""
+    export USE_ZERO_ACCUM="False"
+elif [ "$ACC" = "24" ]; then
+    if [[ " $IHOUR_FULL " == *" $IHOUR "* ]]; then
+        export FHR_GROUP_LIST="FULL"
+    else
+        export FHR_GROUP_LIST=""
+    fi
+    export MODEL_ACC="01"
+    export BUCKET_INTERVAL=$MODEL_ACC
+    export MODEL_PCP_COMBINE_METHOD="ADD"
+    export MODEL_PCP_COMBINE_COMMAND=""
+    export USE_ZERO_ACCUM="False"
+else
+    err_exit "The provided ACC, $ACC, is not supported for $MODELNAME"
+fi
+if [ "$NEST" = "conus" ]; then
+    export VERIF_TYPE="ccpa"
+    export FHR_INCR_SHORT="1"
+    export MIN_IHOUR="00"
+    export GRID="G212"
+    export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.3km.f{lead?fmt=%3H}.conus.grib2"
+elif [ "$NEST" = "ak" ]; then
+    export VERIF_TYPE="mrms"
+    export FHR_INCR_SHORT="1"
+    export MIN_IHOUR="00"
+    export GRID="G216"
+    export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.3km.f{lead?fmt=%3H}.conus.grib2"
+elif [ "$NEST" = "hi" ]; then
+    export VERIF_TYPE="mrms"
+    export FHR_INCR_SHORT="1"
+    export MIN_IHOUR="00"
+    export GRID="G196"
+    export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.2p5km.f{lead?fmt=%3H}.hi.grib2"
+elif [ "$NEST" = "pr" ]; then
+    export VERIF_TYPE="mrms"
+    export FHR_INCR_SHORT="1"
+    export MIN_IHOUR="00"
+    export GRID="G194"
+    export MODEL_INPUT_TEMPLATE="rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.2dfld.2p5km.f{lead?fmt=%3H}.pr.grib2"
+else
+    err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
+fi
+
+echo "END: $(basename ${BASH_SOURCE[0]})"

@@ -49,7 +49,7 @@ export OMP_NUM_THREADS=1
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export MODELNAME=gcafs
+export MODELNAME=gefs
 
 export DATA_TYPE=airnow
 

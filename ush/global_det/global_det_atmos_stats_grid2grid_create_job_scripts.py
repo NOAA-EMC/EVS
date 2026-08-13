@@ -95,8 +95,22 @@ reformat_data_jobs_dict = {
                                    gda_util.python_command(
                                        'global_det_atmos_stats_grid2grid_'
                                        +'create_wind_shear.py', []
+                                   )]},
+        'WindSpeed': {'env': {'var1_name': 'UGRD',
+                              'var1_levels': 'P850, P250',
+                              'var2_name': 'VGRD',
+                              'var2_levels': 'P850, P250',
+                              'grid': 'G004',
+                              'met_config_overrides': ''},
+                      'commands': [gda_util.metplus_command(
+                                       'GridStat_fcstGLOBAL_DET_'
+                                       +'obsModelAnalysis_WindsNetCDF.conf'
+                                   ),
+                                   gda_util.python_command(
+                                       'global_det_atmos_stats_grid2grid_'
+                                       +'create_wind_speed.py', []
                                    )]}
-    },
+    },    
     'sea_ice': {
         'ConcentrationNH': {'env': {'var1_name': 'ICEC',
                                     'var1_levels': 'Z0',
@@ -551,6 +565,14 @@ generate_stats_jobs_dict = {
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET_'
                                        +'obsModelAnalysis_WindShear.conf'
+                                   )]},
+        'WindSpeed': {'env': {'var1_name': 'WSPD_P850',
+                              'var1_levels': 'P850',
+                              'var2_name': 'WSPD_P250',
+                              'var2_levels': 'P250'},
+                      'commands': [gda_util.metplus_command(
+                                       'GridStat_fcstGLOBAL_DET_'
+                                       +'obsModelAnalysis_WindSpeed.conf'
                                    )]}
     },
     'sea_ice': {
@@ -945,7 +967,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     if JOB_GROUP == 'reformat_data':
                         if verif_type == 'pres_levs' \
                                 and verif_type_job in ['GeoHeightAnom',
-                                                       'WindShear']:
+                                                       'WindShear',
+                                                       'WindSpeed']:
                             check_truth_files = True
                         else:
                             check_truth_files = False
@@ -955,7 +978,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if verif_type == 'pres_levs' \
                                 and verif_type_job in [
                                     'DailyAvg_GeoHeightAnom',
-                                    'WindShear'
+                                    'WindShear',
+                                    'WindSpeed'
                                 ]:
                             check_truth_files = False
                         elif verif_type == 'means':
@@ -1057,7 +1081,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
                                 and verif_type_job in ['GeoHeight',
                                                        'Temp', 'UWind',
-                                                       'VWind', 'VectorWind'] \
+                                                       'VWind', 'VectorWind', 
+                                                       'WindSpeed'] \
                                 and job_env_dict['MODEL'] in ['jma',
                                                               'ukmet']:
                             model_fhr_lev_dict = {

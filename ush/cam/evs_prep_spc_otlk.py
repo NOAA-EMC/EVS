@@ -107,7 +107,7 @@ for DAY in range(1,4):
                                'gis_dump_dbf', 
                                os.path.join(OTLK_DIR,f'{SHP_FILE}.dbf'),
                                '|', 'sed', '-n', f"'/^Record[[:space:]]\\+{REC}/,/^Record[[:space:]]\\+[0-9]\\+/p'" # Get info from Record #REC
-                               '|', 'grep', '-m1', "'LABEL'" # Get the label line from Record #REC
+                               '|', 'grep', '-a', '-m1', "'LABEL'" # Get the label line from Record #REC
                                '|', 'cut', '-d\'"\'', '-f2'], # Get the label value 
                                capture_output=True)
                         NAME = NAME.replace('\n','')
@@ -131,8 +131,8 @@ for DAY in range(1,4):
 
                         os.environ['VERIF_GRID'] = VERIF_GRID
                         os.environ['REC'] = str(REC)
-                        os.environ['MASK_FNAME'] = MASK_FNAME
-                        os.environ['MASK_NAME'] = MASK_NAME
+                        os.environ['MASK_FNAME'] = MASK_FNAME.replace('\x00', '')
+                        os.environ['MASK_NAME'] = MASK_NAME.replace('\x00', '')
 
                         cutil.run_shell_command([
                         os.path.join(os.environ['METPLUS_PATH'],'ush','run_metplus.py'), '-c',

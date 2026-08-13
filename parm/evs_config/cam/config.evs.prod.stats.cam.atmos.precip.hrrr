@@ -25,7 +25,7 @@ export FHR_INCR_FULL="6"
 export FHR_END_SHORT="18"
 
 # Model/Obs Settings
-export COMINfcst=${COMINhrrr}
+export COMINfcst=${EVSINhrrr}
 
 # Additional Verification Settings
 if [ "$ACC" = "01" ]; then
@@ -44,6 +44,7 @@ if [ "$ACC" = "01" ]; then
     export OBS_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4"
     export MODEL_PCP_COMBINE_METHOD="ADD"
     export MODEL_PCP_COMBINE_COMMAND=""
+    export USE_ZERO_ACCUM="False"
 elif [ "$ACC" = "03" ]; then
     export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_ACC="01"
@@ -60,6 +61,7 @@ elif [ "$ACC" = "03" ]; then
     export OBS_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4,ge50.8"
     export MODEL_PCP_COMBINE_METHOD="ADD"
     export MODEL_PCP_COMBINE_COMMAND=""
+    export USE_ZERO_ACCUM="False"
 elif [ "$ACC" = "24" ]; then
     export FHR_GROUP_LIST="FULL"
     export MODEL_ACC="01"
@@ -76,6 +78,7 @@ elif [ "$ACC" = "24" ]; then
     export OBS_THRESH="ge0.254,ge2.54,ge6.35,ge12.7,ge25.4,ge38.1,ge50.8,ge76.2,ge101.6,ge152.4"
     export MODEL_PCP_COMBINE_METHOD="ADD"
     export MODEL_PCP_COMBINE_COMMAND=""
+    export USE_ZERO_ACCUM="False"
 else
     err_exit "The provided ACC, $ACC, is not supported for $MODELNAME"
 fi
@@ -91,7 +94,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G240"
-        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
+        export MODEL_INPUT_TEMPLATE="${RUN}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%2H}z.f{lead?fmt=%3H}.a{level?fmt=%HH}h.${NEST}.nc"
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
@@ -101,7 +104,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export FHR_INCR_SHORT="3"
         export MIN_IHOUR="00"
         export GRID="G091"
-        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"
+        export MODEL_INPUT_TEMPLATE="${RUN}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%2H}z.f{lead?fmt=%3H}.a{level?fmt=%HH}h.${NEST}.nc"
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
     else
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
@@ -118,7 +121,7 @@ else
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
         export GRID="G212"
-        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
+        export MODEL_INPUT_TEMPLATE="${RUN}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%2H}z.f{lead?fmt=%3H}.a{level?fmt=%HH}h.${NEST}.nc"
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G212_CONUS.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
@@ -128,7 +131,7 @@ else
         export FHR_INCR_SHORT="3"
         export MIN_IHOUR="00"
         export GRID="G216"
-        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"
+        export MODEL_INPUT_TEMPLATE="${RUN}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%2H}z.f{lead?fmt=%3H}.a{level?fmt=%HH}h.${NEST}.nc"
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G216.nc"
     else
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"

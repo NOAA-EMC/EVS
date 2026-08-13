@@ -60,14 +60,14 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 ################################################
 reformat_data_obs_jobs_dict = {
     'prepbufr': {
-        'PrepbufrNAM': {'env': {'prepbufr': 'nam',
-                                'obs_window': '900',
-                                'msg_type': 'ADPSFC',
-                                'obs_bufr_var_list': "'TOB'"},
-                        'commands': [sub_util.metplus_command(
-                                         'PB2NC_obsPrepbufr_'
-                                         +'Weeks3_4.conf'
-                                     )]},
+        'PrepbufrGDAS': {'env': {'prepbufr': 'gdas',
+                                 'obs_window': '900',
+                                 'msg_type': 'ADPSFC',
+                                 'obs_bufr_var_list': "'TOB'"},
+                         'commands': [sub_util.metplus_command(
+                                          'PB2NC_obsPrepbufr_'
+                                          +'Weeks3_4.conf'
+                                      )]},
     }
 }
 reformat_data_model_jobs_dict = {

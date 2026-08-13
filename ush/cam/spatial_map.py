@@ -18,11 +18,12 @@ This script is intended to be run as part of the cam component to automate
 precip spatial map plotting and configuration.
 """
 
+# Standard library imports
 import datetime
 import logging
 import os
-# Standard library imports
 import sys
+from urllib.parse import urlparse, parse_qs
 
 # Local imports
 USH_DIR = os.environ['USH_DIR']
@@ -47,12 +48,12 @@ MODELS = check_MODELS(os.environ['MODELS']).replace(' ','').split(',')
 VX_MASK_LIST = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')
 SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
 STAT_OUTPUT_BASE_DIR = check_STAT_OUTPUT_BASE_DIR(os.environ['STAT_OUTPUT_BASE_DIR'])
+SPATIAL_MAPS_OUTPUT_BASE_DIR = check_STAT_OUTPUT_BASE_DIR(os.environ['SPATIAL_MAPS_OUTPUT_BASE_DIR'])
 FIXevs = os.environ['FIXevs']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 RESTART_DIR = os.environ['RESTART_DIR']
 
 # Define Settings
-INPUT_DIR = STAT_OUTPUT_BASE_DIR
 OUTPUT_DIR = SAVE_DIR
 LOGO_DIR = os.path.join(FIXevs, 'logos')
 if VERIF_TYPE == 'ccpa':
@@ -61,17 +62,34 @@ else:
     MODEL_INFO_DICT = {
         'obs': {'name': VERIF_TYPE,
                 'plot_name': model_info.model_alias[VERIF_TYPE]['plot_name'],
-                'obs_name': 'OBS'}
+                'obs_name': 'OBS',
+                'input_dir': STAT_OUTPUT_BASE_DIR}
     }
+models = []
+model_queries = []
 for MODEL in MODELS:
-    if MODEL in model_info.model_alias:
-        MODEL_INFO_DICT[MODEL] = {'name': MODEL,
-                                  'plot_name': model_info.model_alias[MODEL]['plot_name'],
-                                  'obs_name': 'NA'}
+    parsed_model = urlparse(MODEL)
+    models.append(parsed_model.path)
+    model_queries.append(parse_qs(parsed_model.query))
+
+for m, model in enumerate(models):
+    if model in model_info.model_alias:
+        model_plot_name = model_info.model_alias[model]['plot_name']
     else:
-        MODEL_INFO_DICT[MODEL] = {'name': MODEL,
-                                  'plot_name': MODEL,
-                                  'obs_name': 'NA'}
+        model_plot_name = model
+    if model == 'rap':
+        model_input_dir = STAT_OUTPUT_BASE_DIR
+    else:
+        model_input_dir = SPATIAL_MAPS_OUTPUT_BASE_DIR
+    if 'shift' in model_queries[m]:
+        shift = int(model_queries[m]['shift'][0])
+    else:
+        shift = 0
+    MODEL_INFO_DICT[model] = {'name': model,
+                              'plot_name': model_plot_name,
+                              'obs_name': 'NA',
+                              'input_dir': model_input_dir,
+                              'shift': shift}
 DATE_INFO_DICT = {
     'end_date': VALID_END,
     'valid_hr_end': FCST_VALID_HOUR,
@@ -109,7 +127,7 @@ for VX_MASK in VX_MASK_LIST:
         'vx_mask': VX_MASK,
     }
     p = cam_plots_precip_spatial_map.PrecipSpatialMap(
-        logger, INPUT_DIR, OUTPUT_DIR, RESTART_DIR, MODEL_INFO_DICT, 
+        logger, OUTPUT_DIR, RESTART_DIR, MODEL_INFO_DICT, 
         DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT, 
         LOGO_DIR
     )

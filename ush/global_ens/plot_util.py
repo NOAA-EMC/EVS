@@ -1526,20 +1526,24 @@ def calculate_stat(logger, model_data, stat):
          stat_values = fdir
    elif stat == 'orate' or stat == 'baser':
       if line_type == 'CTC':
-         stat_values = (fy_oy + fn_oy)/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         stat_values = (fy_oy + fn_oy)/n
    elif stat == 'frate':
       if line_type == 'CTC':
-         stat_values = (fy_oy + fy_on)/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         stat_values = (fy_oy + fy_on)/n
    elif stat == 'orate_frate' or stat == 'baser_frate':
       if line_type == 'CTC':
-         stat_values_fbar = (fy_oy + fy_on)/total
-         stat_values_obar = (fy_oy + fn_oy)/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         stat_values_fbar = (fy_oy + fy_on)/n
+         stat_values_obar = (fy_oy + fn_oy)/n
          stat_values = pd.concat(
             [stat_values_fbar, stat_values_obar], axis=1
          )
    elif stat == 'accuracy':
       if line_type == 'CTC':
-         stat_values = (fy_oy + fn_on)/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         stat_values = (fy_oy + fn_on)/n
    elif stat == 'fbias':
       if line_type == 'CTC':
          stat_values = (fy_oy + fy_on)/(fy_oy + fn_oy)
@@ -1563,7 +1567,8 @@ def calculate_stat(logger, model_data, stat):
          stat_values = fy_oy/(fy_oy + fy_on + fn_oy)
    elif stat == 'gss' or stat == 'ets':
       if line_type == 'CTC':
-         C = ((fy_oy + fy_on)*(fy_oy + fn_oy))/total
+         n = fy_oy + fy_on + fn_oy + fn_on
+         C = ((fy_oy + fy_on)*(fy_oy + fn_oy))/n
          stat_values = (fy_oy - C)/(fy_oy + fy_on + fn_oy - C)
    elif stat == 'hk' or stat == 'tss' or stat == 'pss':
       if line_type == 'CTC':
@@ -1572,10 +1577,11 @@ def calculate_stat(logger, model_data, stat):
          )
    elif stat == 'hss':
       if line_type == 'CTC':
+         n = fy_oy + fy_on + fn_oy + fn_on
          Ca = (fy_oy+fy_on)*(fy_oy+fn_oy)
          Cb = (fn_oy+fn_on)*(fy_on+fn_on)
-         C = (Ca + Cb)/total
-         stat_values = (fy_oy + fn_on - C)/(total - C)
+         C = (Ca + Cb)/n
+         stat_values = (fy_oy + fn_on - C)/(n - C)
    elif stat == 'si':
        if line_type == 'SL1L2':
            # Replace 0 with NaN to avoid dividing by zero
