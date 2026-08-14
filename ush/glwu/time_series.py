@@ -314,6 +314,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     df_aggregated = df_aggregated[
         df_aggregated.index.isin(model_list, level='MODEL')
     ]
+    for stat in [metric1_name, metric2_name]:
+        if stat and str(stat).upper() in ['CORR', 'PCOR']:
+            stat_col = str(stat).upper()
+            if stat_col in df_aggregated.columns:
+                logger.info(f"Applying range check for {stat_col} to remove values outside [-1, 1]")
+
+                # Option A: Replace with NaN (Recommended for Time Series to keep gaps)
+                df_aggregated.loc[(df_aggregated[stat_col] > 1.0) | (df_aggregated[stat_col] < -1.0), stat_col] = np.nan
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
         index=str(date_type).upper()
