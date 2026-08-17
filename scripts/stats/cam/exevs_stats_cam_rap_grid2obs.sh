@@ -156,12 +156,14 @@ echo "*****************************"
   fi
 
 # Copy Reformat Output to Main Directory
+  shopt -s nullglob
   if [ $ncount_job -gt 0 ]; then
     for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
       cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
       export err=$?; err_chk
     done
   fi
+  shopt -u nullglob
 
 echo "*****************************"
 echo "Reformat jobs done"
@@ -262,12 +264,14 @@ echo "*****************************"
   fi
 
 # Copy Generate Output to Main Directory
+  shopt -s nullglob
   if [ $ncount_job -gt 0 ]; then
     for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
       cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
       export err=$?; err_chk
     done
   fi
+  shopt -u nullglob
 
 echo "*****************************"
 echo "Generate jobs done"
@@ -347,12 +351,14 @@ echo "*****************************"
   fi
 
 # Copy Gather Output to Main Directory
+  shopt -s nullglob
   if [ $ncount_job -gt 0 ]; then
     for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
        cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
        export err=$?; err_chk
     done
   fi
+  shopt -u nullglob
 
 echo "*****************************"
 echo "Gather jobs done"
@@ -446,12 +452,14 @@ echo "Gather3 jobs done"
 echo "*****************************"
 
 # Copy Gather 3 Output to Main Directory
+  shopt -s nullglob
   if [ $ncount_job -gt 0 ]; then
     for CHILD_DIR in ${DATA}/${VERIF_CASE}/METplus_output/workdirs/${job_type}/*; do
        cp -ru $CHILD_DIR/* ${DATA}/${VERIF_CASE}/METplus_output/.
        export err=$?; err_chk
     done
   fi
+  shopt -u nullglob
 
 # Copy "gather" output files to EVS COMOUTsmall directory
 if [ $SENDCOM = YES ]; then
