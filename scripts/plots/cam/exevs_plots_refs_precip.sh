@@ -107,11 +107,11 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 	export fcst_valid_hours='00 03 06 09 12 15 18 21'
 	FCST_LEVEL_values=A01
    elif [ $VAR = APCP_03 ] ; then
-         export fcst_leads='3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48'
+         export fcst_leads='3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'
 	 export fcst_valid_hours='00 03 06 09 12 15 18 21'
 	 FCST_LEVEL_values=A03
    elif [ $VAR = APCP_24 ] ; then
-         export fcst_leads='24,30,36,42,48'
+         export fcst_leads='24,30,36,42,48,54,60'
 	 export fcst_valid_hours='12'
 	 FCST_LEVEL_values=A24
    fi
@@ -277,17 +277,17 @@ for stats in ets fbias fss ; do
        if [ $var = apcp_01 ] ; then
         lead=width1-3-5-7-9-11_f1_to_f24
        elif [ $var = apcp_03 ] ; then
-        lead=width1-3-5-7-9-11_f3_to_f48
+        lead=width1-3-5-7-9-11_f3_to_f60
        elif [ $var = apcp_24 ] ; then
-        lead=width1-3-5-7-9-11_f24-30-36-42-48
+        lead=width1-3-5-7-9-11_f24-30-36-42-48-54-60
        fi	
     else	    
       if [ $var = apcp_01 ] ; then
         lead=f1_to_f24
       elif [ $var = apcp_03 ] ; then
-        lead=f3_to_f48
+        lead=f3_to_f60
       elif [ $var = apcp_24 ] ; then
-        lead=f24-30-36-42-48
+        lead=f24-30-36-42-48-54-60
       fi
     fi
 
@@ -336,10 +336,10 @@ for var in apcp_01 apcp_03 apcp_24 ; do
         lead=f1_to_f24__ge0.254ge2.54ge6.35ge12.7ge25.4
 	new_var=apcp_a01
     elif [ $var = apcp_03 ] ; then
-        lead=f3_to_f48__ge2.54ge6.35ge12.7ge25.4ge50.8
+        lead=f3_to_f60__ge2.54ge6.35ge12.7ge25.4ge50.8
 	new_var=apcp_a03
     elif [ $var = apcp_24 ] ; then
-        lead=f24-30-36-42-48__ge12.7ge25.4ge50.8ge76.2
+        lead=f24-30-36-42-48-54-60__ge12.7ge25.4ge50.8ge76.2
 	new_var=apcp_a24
     fi
 

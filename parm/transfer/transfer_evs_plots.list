@@ -34,10 +34,15 @@ _COMROOT_/evs/_SHORTVER_/plots/
 + /aqm/*._PDYm5_/***
 + /aqm/*._PDYm4_/***
 + /cam/
++ /cam/*._PDYm8_/***
++ /cam/*._PDYm7_/***
 + /cam/*._PDYm4_/***
 + /cam/*._PDYm3_/***
 + /cam/*._PDYm2_/***
 + /cam/*._PDYm1_/***
++ /global_chem/
++ /global_chem/*._PDYm5_/***
++ /global_chem/*._PDYm4_/***
 + /global_det/
 + /global_det/*._PDYm2_/
 + /global_det/*._PDYm2_/*.tar

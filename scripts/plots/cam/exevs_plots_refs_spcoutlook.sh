@@ -94,7 +94,7 @@ for stats in csi_fbias ratio_pod_csi ; do
  for score_type in $score_types ; do
  
   #no space between fcst_lead hour, so take it as one string! 	 
-  export fcst_leads="6,12,15,24,30,36,42,48"
+  export fcst_leads="6,12,15,24,30,36,42,48,54,60"
 
   for lead in $fcst_leads ; do 
 
