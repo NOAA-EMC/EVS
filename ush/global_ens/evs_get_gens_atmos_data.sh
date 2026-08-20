@@ -901,12 +901,12 @@ fi
 ############################################################
 if [ $modnam = osi_saf ] ; then
   INITDATEm1=$($NDATE -24 ${INITDATE}00 | cut -c1-8)
-  osisaf_comout_file=${COMOUTosi_saf}/osi_saf.multi.${INITDATEm1}00to${INITDATE}00_G004.nc
+  osisaf_comout_file=${COMOUTosi_saf}/osi_saf.amsr2.${INITDATEm1}00to${INITDATE}00_G004.nc
   if [ -s $osisaf_comout_file ]; then
     echo "${osisaf_comout_file} exists"
   else
-    osi_nh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATEm1}1200.nc
-    osi_sh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATEm1}1200.nc
+    osi_nh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_nh_polstere-100_amsr2_${INITDATEm1}1200.nc
+    osi_sh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_sh_polstere-100_amsr2_${INITDATEm1}1200.nc
     if [ ! -s $osi_nh ]; then
       echo "WARNING: $osi_nh is not available" 
       if [ $SENDMAIL = YES ]; then

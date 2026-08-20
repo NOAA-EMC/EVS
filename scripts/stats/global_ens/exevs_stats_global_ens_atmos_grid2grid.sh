@@ -145,11 +145,11 @@ fi
 if [ $verif_case = sea_ice ] ; then
   day1=`$NDATE -24 ${VDATE}12`
   VDATE_1=${day1:0:8}
-   if [ ! -s ${EVSIN}.${VDATE}/osi_saf/osi_saf.multi.${VDATE_1}00to${VDATE}00_G004.nc ] ; then
+   if [ ! -s ${EVSIN}.${VDATE}/osi_saf/osi_saf.amsr2.${VDATE_1}00to${VDATE}00_G004.nc ] ; then
      if [ $SENDMAIL = YES ]; then
        export subject="OSI_SAF analysis data missing "
        echo "Warning: No OSI_SAF analysis available for ${VDATE}" > mailmsg 
-       echo "Missing file is ${EVSIN}.${VDATE}/osi_saf/osi_saf.multi.${VDATE_1}00to${VDATE}00_G004.nc"  >> mailmsg
+       echo "Missing file is ${EVSIN}.${VDATE}/osi_saf/osi_saf.amsr2.${VDATE_1}00to${VDATE}00_G004.nc"  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
        cat mailmsg | mail -s "$subject" $MAILTO
      fi

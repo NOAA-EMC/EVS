@@ -9,7 +9,10 @@ case "$COMPONENT" in
     analyses | aqm | cam | glwu | nwps)
         MAILTO+=",andrew.benjamin@noaa.gov"
         ;;&
-    aigefs | global_ens)
+    global_ens)
+        MAILTO+=",jun.du@noaa.gov"
+        ;;&
+    aigefs)
         MAILTO+=",lichuan.chen@noaa.gov"
         ;;&
     analyses | glwu| nwps | rtofs)
