@@ -35,7 +35,7 @@ echo '-------------'
 echo ' '
 [[ "$LOUD" = YES ]] && set -x
 
-WFO='ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
+WFO='ajk alu akq box car chs gyx ilm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
 
 for wfo in ${WFO}; do
     export wfo=$wfo
