@@ -1862,6 +1862,15 @@ def check_model_files(job_dict):
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
                         +'_init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
                     )
+                elif job_dict['VERIF_TYPE'] == 'pres_levs' \
+                        and job_dict['job_name'] == 'WindSpeed':
+                    input_file_format = os.path.join(
+                      verif_case_dir, 'METplus_output',
+                      job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                      model, job_dict['VERIF_CASE'], 'wind_speed_'
+                      +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
+                      +'_init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
+                     )
                 elif job_dict['VERIF_TYPE'] in ['precip_accum24hr',
                                                 'precip_accum3hr']:
                     precip_accum = (job_dict['VERIF_TYPE']\

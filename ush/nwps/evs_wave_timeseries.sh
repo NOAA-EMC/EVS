@@ -19,7 +19,7 @@ stats_list='stats1 stats2 stats3 stats4 stats5'
 ptype='time_series'
 
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
-cd ${DATA}
+cd ${DATA_wfo}
 
 # write the commands
 
@@ -35,13 +35,13 @@ for period in ${periods} ; do
 		for wvar in ${wave_vars} ; do
 			for stats in ${stats_list}; do
 				for fhr in ${fhrs} ; do
-					job_work_dir=${DATA}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}
+					job_work_dir=${DATA_wfo}/job_work_dir/plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}
 					echo "export VX_MASK_LIST=${MASK} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh	
 					echo "export VERIF_CASE=${VERIF_CASE} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 					echo "export RUN=${RUN} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 					echo "export USHevs=${USHevs}/${COMPONENT} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 					echo "export FIXevs=${FIXevs}  " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
-					echo "export DATA=${DATA} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
+					echo "export DATA_wfo=${DATA_wfo} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 					echo "export MODNAM=${MODNAM} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 					echo "export PERIOD=${period} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 					echo "export VERIF_CASE=${VERIF_CASE} " >> plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
@@ -86,7 +86,7 @@ for period in ${periods} ; do
   
 					chmod +x plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
           
-					echo "${DATA}/plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh" >> plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
+					echo "${DATA_wfo}/plot_${wfo}_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh" >> plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
           
 				done  # fcst hrs
 			done  # end of stats

@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:40:00
-#PBS -l place=shared,select=1:ncpus=3:ompthreads=1:mem=110GB
+#PBS -l place=shared,select=1:ncpus=3:ompthreads=1:mem=210GB
 #PBS -l debug=true
 
 set -x
@@ -47,7 +47,7 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export vhr=${vhr:-${vhr}}
-export MAILTO="andrew.benjamin@noaa.gov,marcel.caron@noaa.gov"
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_PREP_CAM

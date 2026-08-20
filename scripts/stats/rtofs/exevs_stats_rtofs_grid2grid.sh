@@ -132,31 +132,32 @@ else
 	fi
 
 	if [ -s $DCOMINrtofsfilename ] ; then
-		python $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename"
-		export err=$?; err_chk
-		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename")
-		echo "$file_check"
-		if [ $file_check -eq 0 ]; then
-			echo "$DCOMINrtofsfilename is valid."
-		elif [ "$file_check" -eq 1 ]; then
-			echo "$DCOMINrtofsfilename is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
-		fi
      		if [ -s $COMINicefilename ] ; then
-      			if [ $file_check -eq 0 ]; then
-				for fday in 0 1 2 3 4 5 6 7 8; do
-        				fhr=$(($fday * 24))
-        				fhr2=$(printf "%02d" "${fhr}")
-        				export fhr3=$(printf "%03d" "${fhr}")
-					match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
-					COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_${ftype}.$OBTYPE.nc
-					if [ -s $COMINrtofsfilename ] ; then
-          					for vari in ${VARS}; do
-            						export VAR=$vari
-            						export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
-            						mkdir -p $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
-            						if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              							cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/.
-            						else
+			for fday in 0 1 2 3 4 5 6 7 8; do
+        			fhr=$(($fday * 24))
+        			fhr2=$(printf "%02d" "${fhr}")
+        			export fhr3=$(printf "%03d" "${fhr}")
+				match_date=$(date --date="${VDATE} ${fhr} hours ago" +"%Y%m%d")
+				COMINrtofsfilename=$COMIN/prep/$COMPONENT/$RUN.${match_date}/$OBTYPE/rtofs_glo_2ds_f${fhr3}_${ftype}.$OBTYPE.nc
+				if [ -s $COMINrtofsfilename ] ; then
+          				for vari in ${VARS}; do
+            					export VAR=$vari
+            					export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
+            					mkdir -p $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR
+            					if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
+              						cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${OBTYPEupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/${RUN}.$VDATE/$OBTYPE/${VERIF_CASE}/$VAR/.
+            					else
+							file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$DCOMINrtofsfilename" "$OBTYPE" "obs")
+							export err=$?; err_chk
+							if [ $file_check -eq 1 ]; then
+								echo "WARNING: $DCOMINrtofsfilename is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
+   								if [ $SENDMAIL = YES ] ; then
+       									export subject="${OBTYPEupper} Data is corrupted for EVS RTOFS"
+       									echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE. Corrupted file is ${DCOMINrtofsfilename}. METplus will skip ${DCOMINrtofsfilename} and not run." > mailmsg
+       									cat mailmsg | mail -s "$subject" $MAILTO
+   								fi
+							elif [ "$file_check" -eq 0 ]; then
+								echo "$DCOMINrtofsfilename is valid."
               							run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               							-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obs${OBTYPEupper}_climo$CLIMO.conf
               							export err=$?; err_chk
@@ -167,22 +168,14 @@ else
 									fi
               							fi
             						fi
-          					done
-					else
-          					echo "WARNING: Missing RTOFS f${fhr3} file for $VDATE: $COMINrtofsfilename"
-        				fi
-      				done
-  			else
-				echo "WARNING: Corrupted validation file: ${OBTYPEupper} is corrupted for valid date $VDATE. METplus will skip $DCOMINrtofsfilename and not run."
-				
-   				if [ $SENDMAIL = YES ] ; then
-       					export subject="${OBTYPEupper} Data is corrupted for EVS RTOFS"
-       					echo "WARNING: No ${OBTYPEupper} data was available for valid date $VDATE. Corrupted file is ${DCOMINrtofsfilename}. METplus will skip ${DCOMINrtofsfilename} and not run." > mailmsg
-       					cat mailmsg | mail -s "$subject" $MAILTO
-   				fi
-			fi
+						fi
+          				done
+				else
+          				echo "WARNING: Missing RTOFS f${fhr3} file for $VDATE: $COMINrtofsfilename"
+        			fi
+      			done
 		else
-     			echo "WARNING: Missing validation f000 ice file: $COMINicefilename is missing for valid date $VDATE. METplus wil not run."
+     			echo "WARNING: Missing validation f000 ice file: $COMINicefilename is missing for valid date $VDATE. METplus will not run."
    		fi
 	else
 		echo "WARNING:  Missing ${OBTYPEupper} data file for $VDATE: $DCOMINrtofsfilename. $DCOMINrtofsfilename does not exist. METplus will not run."
@@ -193,7 +186,6 @@ else
 		fi
 	fi
 fi
-
 #########################################################################
 # check if stat files exist
 #########################################################################

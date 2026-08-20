@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:15:00
+#PBS -l walltime=00:15:00
 #PBS -l select=1:ncpus=64:ompthreads=1:mem=50GB
 #PBS -l debug=true
 
@@ -59,7 +59,7 @@ export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 export USE_CFP=${USE_CFP:-YES}
 
-export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,andrew.benjamin@noaa.gov'}
+source $HOMEevs/dev/drivers/set_MAILTO.sh
 
 if [ -z "$MAILTO" ]; then
 
