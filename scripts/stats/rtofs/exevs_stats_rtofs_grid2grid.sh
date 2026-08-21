@@ -61,7 +61,7 @@ if [ $OBTYPE = osisaf ]; then
 	export VARS="sic"
 	export OBTYPEupper=$(echo $OBTYPE | tr '[a-z]' '[A-Z]')
 	for hem in nh sh; do
-		EVSINicefilename=$COMIN/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/ice_conc_${hem}_polstere-100_amsr2_${VDATE}1200.nc
+		EVSINicefilename=${COMIN}/prep/$COMPONENT/$RUN.$VDATE/$OBTYPE/ice_conc_${hem}_polstere-100_amsr2_${VDATE}1200.nc
 		if [ -s $EVSINicefilename ] ; then
 			for fday in 0 1 2 3 4 5 6 7 8; do
 				fhr=$(($fday * 24))
