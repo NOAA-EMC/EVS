@@ -1,4 +1,4 @@
-#PBS -N evs_plots_cam_severe_nbrctc_last31days
+#PBS -N evs_plots_cam_severe_nbrcnt_last90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
@@ -56,8 +56,8 @@ export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="severe"
 export MODELNAME=${COMPONENT}
-export LINE_TYPE="nbrctc"
-export EVAL_PERIOD="last31days"
+export LINE_TYPE="nbrcnt"
+export EVAL_PERIOD="last90days"
 
 ############################################################
 # Execute j-job
