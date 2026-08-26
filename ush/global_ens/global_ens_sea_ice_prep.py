@@ -36,27 +36,27 @@ if not os.path.exists(COMOUT_INITDATE):
 
 ###### OBS
 # Get operational observation data
-# Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
+# Northern & Southern Hemisphere 10 km OSI-SAF amsr2-sensor analysis - osi_saf
 global_det_obs_dict = {
     'osi_saf': {'daily_prod_file_format': os.path.join(DCOMINosi_saf,
                                                        '{init_shift?fmt=%Y%m%d'
                                                        +'?shift=-12}',
                                                        'seaice', 'osisaf',
                                                        'ice_conc_{hem?fmt=str}_'
-                                                       +'polstere-100_multi_'
+                                                       +'polstere-100_amsr2_'
                                                        +'{init_shift?fmt=%Y%m%d%H'
                                                        +'?shift=-12}'
                                                        +'00.nc'),
                 'daily_arch_file_format': os.path.join(WORKtask, RUN+'.'+INITDATE,
                                                        'osi_saf',
-                                                       'osi_saf.multi.'
+                                                       'osi_saf.amsr2.'
                                                        +'{init_shift?fmt=%Y%m%d%H'
                                                        +'?shift=-24}to'
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'_G004.nc'),
                 'weekly_arch_file_format': os.path.join(WORKtask, RUN+'.'+INITDATE,
                                                        'osi_saf',
-                                                       'osi_saf.multi.'
+                                                       'osi_saf.amsr2.'
                                                        +'{init_shift?fmt=%Y%m%d%H?'
                                                        +'shift=-168}'
                                                        +'to'
