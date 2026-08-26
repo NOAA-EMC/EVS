@@ -66,11 +66,11 @@ global_det_obs_dict = {
                                                   +'?shift=-12}',
                                                   'seaice', 'osisaf',
                                                   'ice_conc_{hem?fmt=str}_'
-                                                  +'polstere-100_multi_'
+                                                  +'polstere-100_amsr2_'
                                                   +'{init_shift?fmt=%Y%m%d%H'
                                                   +'?shift=-12}00.nc'),
                 'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                'osi_saf', 'osi_saf.multi.'
+                                                'osi_saf', 'osi_saf.amsr2.'
                                                 +'{hem?fmt=str}.'
                                                 +'{init_shift?fmt=%Y%m%d%H'
                                                 +'?shift=-24}to'
