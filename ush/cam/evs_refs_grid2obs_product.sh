@@ -54,7 +54,7 @@ for prod in mean prob ; do
   
       input_fcst="$COMINrefs/refs.${iday}/${ihr}/ensprod/refs.t${ihr}z.${prod}.f${fhr}.conus.grib2"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid_run}z.G227.nc"
-
+      
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
        echo  "#!/bin/ksh" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh
@@ -167,7 +167,7 @@ for prod in mean prob ; do
 
       input_fcst="$COMINrefs/refs.${iday}/${ihr}/ensprod/refs.t${ihr}z.${prod}.f${fhr}.ak.grib2"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid_run}z.G198.nc"
-
+          
       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
 
        echo  "#!/bin/ksh" >> run_refs_${model}.${dom}.${valid_run}.${fhr}.product.sh	      

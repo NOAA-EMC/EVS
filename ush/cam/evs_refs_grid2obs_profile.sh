@@ -65,8 +65,15 @@ for dom in $domains ; do
 
       input_fcst="$COMINrrfs/rrfsens.${iday}/${ihr}/*/rrfs.t${ihr}z.m*.prslev.3km.f0${fhr}.conus.grib2"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G227.nc"
+      
+      n_fcst=0
+      for fcst_file in $input_fcst; do
+          [[ -s "$fcst_file" ]] && ((n_fcst++))
+      done
 
-      if [ -s $input_fcst ] && [ -s $input_obsv ] ; then      
+      echo "FORECAST FILES FOUND: ${n_fcst}/${nmbrs}"
+
+      if (( n_fcst == nmbrs )) && [ -s $input_obsv ] ; then      
 
        echo "#!/bin/ksh" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
        echo "set -x" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -197,8 +204,15 @@ for dom in $domains ; do
 
       input_fcst="$WORK/refs.${iday}/upper_air/refs.*.t${ihr}z.ak.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G198.nc"
+      
+      n_fcst=0
+      for fcst_file in $input_fcst; do
+          [[ -s "$fcst_file" ]] && ((n_fcst++))
+      done
+      
+      echo "FORECAST FILES FOUND: ${n_fcst}/${nmbrs}"
 
-      if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
+      if (( n_fcst == nmbrs )) && [ -s $input_obsv ] ; then
 
         echo "#!/bin/ksh" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "set -x" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -327,8 +341,15 @@ for dom in $domains ; do
 
       input_fcst="$WORK/refs.${iday}/upper_air/refs.*.t${ihr}z.hi.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G139.nc"
+      
+      n_fcst=0
+      for fcst_file in $input_fcst; do
+          [[ -s "$fcst_file" ]] && ((n_fcst++))
+      done
+      
+      echo "FORECAST FILES FOUND: ${n_fcst}/${nmbrs}"
 
-      if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
+      if ((n_fcst == nmbrs )) && [ -s $input_obsv ] ; then
 
         echo "#!/bin/ksh" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
 	echo "set -x" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
@@ -453,8 +474,15 @@ for dom in $domains ; do
 
        input_fcst="$WORK/refs.${iday}/upper_air/refs.*.t${ihr}z.pr.f${fhr}"
        input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G200.nc"
+       
+       n_fcst=0
+       for fcst_file in $input_fcst; do
+           [[ -s "$fcst_file" ]] && ((n_fcst++))
+       done
+      
+       echo "FORECAST FILES FOUND: ${n_fcst}/${nmbrs}"
 
-       if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
+       if (( n_fcst == nmbrs )) && [ -s $input_obsv ] ; then
 
         echo "#!/bin/ksh" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
         echo "set -x" >> run_refs_${domain}.${valid_at}.${fhr}_profile.sh
