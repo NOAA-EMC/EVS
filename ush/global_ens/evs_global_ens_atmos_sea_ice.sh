@@ -76,7 +76,7 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
     for average in 24 ; do
         past=`$NDATE -$average ${vday}01`
         export vday1=${past:0:8}
-        export period=multi.${vday1}00to${vday}00_G004
+        export period=amsr2.${vday1}00to${vday}00_G004
         if [ $average = 24 ] ; then
             leads_chk="024 048 072 096 120 144 168 192 216 240 264 288 312 336 360 384"
         elif [ $average = 168 ] ; then
