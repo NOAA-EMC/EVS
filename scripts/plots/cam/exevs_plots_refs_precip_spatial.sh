@@ -101,6 +101,6 @@ if [ $SENDCOM = YES ] && [ -s evs.plots.refs.precip.spatial.map.v${VDATE}.tar ] 
  cp -v evs.plots.refs.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 fi
 
-if [ $SENDDBN = YES ] ; then
+if [ $SENDDBN = YES ] && [ -s evs.plots.refs.precip.spatial.map.v${VDATE}.tar ] ; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.precip.spatial.map.v${VDATE}.tar
 fi
