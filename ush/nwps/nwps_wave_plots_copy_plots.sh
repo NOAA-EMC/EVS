@@ -14,7 +14,7 @@
 # set up plot variables
 set -x
 
-small_periods='last31days last90days'
+small_periods=$(echo "$EVAL_PERIOD" | tr '[:upper:]' '[:lower:]')
 
 inithours='00 12'
 wave_vars='HTSGW WIND PERPW'
