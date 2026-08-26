@@ -1347,24 +1347,6 @@ def check_truth_files(job_dict):
                     +valid_date_dt.strftime('%Y%m%d%H')
                 )
                 truth_input_file_list.append(ccpa_file)
-            elif job_dict['VERIF_TYPE'] == 'sea_ice':
-                if 'DailyAvg_Concentration' in job_dict['job_name']:
-                    osi_saf_file = os.path.join(
-                        verif_case_dir, 'data', 'osi_saf',
-                        'osi_saf.multi.'+job_dict['hemisphere']+'.'
-                        +(valid_date_dt-datetime.timedelta(hours=24))\
-                        .strftime('%Y%m%d%H')
-                        +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-                    )
-                elif 'DailyAvg_Extent' in job_dict['job_name']:
-                    osi_saf_file = os.path.join(
-                        verif_case_dir, 'data', 'osi_saf',
-                        'osi_saf.multi.'+job_dict['grid']+'.'
-                        +(valid_date_dt-datetime.timedelta(hours=24))\
-                        .strftime('%Y%m%d%H')
-                        +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-                    )
-                truth_input_file_list.append(osi_saf_file)
             elif job_dict['VERIF_TYPE'] == 'snow':
                 nohrsc_file = os.path.join(
                     verif_case_dir, 'data', 'nohrsc',

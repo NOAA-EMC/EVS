@@ -100,7 +100,7 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     export g2gstats_sst_grid="G003"
     export g2gstats_sst_gather_by="VALID"
     export g2gstats_seaice_truth_name_list="osi_anl"
-    export g2gstats_seaice_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/osi_saf/osi_saf.multi.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}_G003.nc"
+    export g2gstats_seaice_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/osi_saf/osi_saf.amsr2.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}_G003.nc"
     export g2gstats_seaice_inithour_list="00"
     export g2gstats_seaice_vhr_list="00 12"
     export g2gstats_seaice_fhr_min="24"
