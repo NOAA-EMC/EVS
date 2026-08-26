@@ -116,7 +116,7 @@ fi
 if [ $var = osi_saf ]; then
     past=`$NDATE -24 ${vday}01`
     export vday1=${past:0:8}
-    export period=multi.${vday1}00to${vday}00_G004
+    export period=amsr2.${vday1}00to${vday}00_G004
    if [ -s ${EVSIN}.${vday}/osi_saf/osi_saf.${period}.nc ] ; then
         echo "OSI_SAF data is OK"
    else
