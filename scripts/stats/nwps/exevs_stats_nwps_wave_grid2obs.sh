@@ -42,7 +42,7 @@ mkdir -p ${DATA}/SFCSHP
 mkdir -p ${DATA}/job_work_dir
 
 vhours='00 06 12 18'
-WFO='aer afg ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
+WFO='aer afg ajk alu akq box car chs gyx ilm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
 CG='CG1'
 lead_hours='0 24 48 72 96 120 144'
 
