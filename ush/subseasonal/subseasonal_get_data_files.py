@@ -551,7 +551,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 for time_length in ['weekly', 'monthly']:
                     osi_saf_daily_arch_file_format = os.path.join(
                         COMIN+'.{valid?fmt=%Y%m%d}',
-                        'osi_saf', 'osi_saf.amsr2.'
+                        'osi_saf', 'osi_saf.amsr3.'
                         +'{valid_shift?fmt=%Y%m%d%H?shift='
                         +'-24}to'
                         +'{valid?fmt=%Y%m%d%H}_G003.nc'
@@ -572,7 +572,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                      + datetime.timedelta(hours=-168))
                         osi_saf_weekly_dest_file_format = os.path.join(
                             VERIF_CASE_STEP_osi_saf_dir,
-                            'osi_saf.amsr2.'
+                            'osi_saf.amsr3.'
                             +'{valid_shift?fmt=%Y%m%d%H?shift='
                             +'-168}to'
                             +'{valid?fmt=%Y%m%d%H}_G003.nc'
@@ -606,7 +606,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                       + datetime.timedelta(hours=-720))
                         osi_saf_monthly_dest_file_format = os.path.join(
                             VERIF_CASE_STEP_osi_saf_dir,
-                            'osi_saf.amsr2.'
+                            'osi_saf.amsr3.'
                             +'{valid_shift?fmt=%Y%m%d%H?shift='
                             +'-720}to'
                             +'{valid?fmt=%Y%m%d%H}_G003.nc'
