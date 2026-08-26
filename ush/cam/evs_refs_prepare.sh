@@ -273,10 +273,9 @@ if [ "$data" = "apcp24h_conus" ] ; then
       fhr_18=$((fhr-18))
       fhr_21=$((fhr-21))
 
-     for prod in mean avrg pmmn lpmm ; do
+      for prod in mean avrg pmmn lpmm ; do
 
-
-      #if [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_3}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_6}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_9}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_12}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_15}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_18}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_21}.grib2 ] ; then
+      if [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_3}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_6}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_9}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_12}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_15}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_18}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_21}.${domain}.grib2 ] ; then
 
       #####################################################################################################################
       # Restart: first check if refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists 
@@ -288,12 +287,12 @@ if [ "$data" = "apcp24h_conus" ] ; then
          export err=$?; err_chk
 	     if [ -s $output_base/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
              cp $output_base/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/${fcyc}/.
-         if [ $SENDCOM = YES ] ; then
+           if [ $SENDCOM = YES ] ; then
 	         [[ ! -d ${COMOUTsmall}/precip_mean24 ]] && mkdir -p ${COMOUTsmall}/precip_mean24
              cp $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUTsmall}/precip_mean24/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
 	         #Save restart files
 	         cp $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
-	     fi
+	       fi
          fi
        else
          #Restart: copy restart files to the working directory
@@ -304,8 +303,9 @@ if [ "$data" = "apcp24h_conus" ] ; then
            cp $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTsmall/precip_mean24
          fi
        fi
+      fi
 
-     done
+      done
    done
 fi
 
