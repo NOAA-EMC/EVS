@@ -2135,7 +2135,7 @@ def check_truth_files(job_dict):
                 if 'DailyAvg_Concentration' in job_dict['job_name']:
                     osi_saf_file = os.path.join(
                         verif_case_dir, 'data', 'osi_saf',
-                        'osi_saf.multi.'+job_dict['hemisphere']+'.'
+                        'osi_saf.amsr2.'+job_dict['hemisphere']+'.'
                         +(valid_date_dt-datetime.timedelta(hours=24))\
                         .strftime('%Y%m%d%H')
                         +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
@@ -2143,7 +2143,7 @@ def check_truth_files(job_dict):
                 elif 'DailyAvg_Extent' in job_dict['job_name']:
                     osi_saf_file = os.path.join(
                         verif_case_dir, 'data', 'osi_saf',
-                        'osi_saf.multi.'+job_dict['grid']+'.'
+                        'osi_saf.amsr2.'+job_dict['grid']+'.'
                         +(valid_date_dt-datetime.timedelta(hours=24))\
                         .strftime('%Y%m%d%H')
                         +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
