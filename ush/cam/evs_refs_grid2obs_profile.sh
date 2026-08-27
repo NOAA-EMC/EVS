@@ -63,7 +63,7 @@ for dom in $domains ; do
       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-      input_fcst="$COMINrrfs/rrfsens.${iday}/${ihr}/*/rrfs.t${ihr}z.m*.prslev.3km.f0${fhr}.conus.grib2"
+      input_fcst="$WORK/refs.${iday}/upper_air/refs.*.t${ihr}z.conus.f${fhr}"
       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr_profile.t${valid_at}z.G227.nc"
       
       n_fcst=0
