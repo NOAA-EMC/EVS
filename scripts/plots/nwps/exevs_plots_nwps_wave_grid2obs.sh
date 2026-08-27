@@ -35,7 +35,7 @@ echo '-------------'
 echo ' '
 [[ "$LOUD" = YES ]] && set -x
 
-WFO='ajk alu akq box car chs gys olm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
+WFO='ajk alu akq box car chs gyx ilm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
 
 for wfo in ${WFO}; do
     export wfo=$wfo
@@ -104,13 +104,31 @@ for wfo in ${WFO}; do
     ###########################################
     # Run the command files for the PAST31DAYS 
     ###########################################
-    chmod 775 ${DATA_wfo}/plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
-    if [ "${run_mpi}" = 'yes' ] ; then
-        mpiexec -np 200 -ppn 100 --cpu-bind verbose,depth cfp plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
-    else
-        echo "not running mpiexec"
-        sh plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh
-    fi
+    cmd_file="${DATA_wfo}/plot_all_${MODELNAME}_${RUN}_g2o_${wfo}_plots.sh"
+    
+    if [ -s "${cmd_file}" ]; then
+	sed -i 's/$/ || true/' "${cmd_file}"
+        chmod 775 ${cmd_file}
+
+	if [ "${run_mpi}" = 'yes' ] ; then
+            # Dynamically set NP based on line count to avoid CFP idle-rank SIGTERM crashes
+            ncmd=$(awk 'END {print NR}' ${cmd_file})
+            if [ ${ncmd} -lt 200 ]; then
+                nprocs=${ncmd}
+            else
+                nprocs=200
+            fi
+            
+            echo "Running cfp for ${wfo} with -np ${nprocs} (${ncmd} total commands)"
+            mpiexec -np ${nprocs} --cpu-bind verbose,depth cfp ${cmd_file}
+        else
+	    echo "not running mpiexec"
+            sh ${cmd_file}
+        fi
+     else
+	    echo "WARNING: ${cmd_file} is missing or empty. Skipping execution for ${wfo}."
+            continue
+     fi
 
     ############################
     #  copy all the jobs files
