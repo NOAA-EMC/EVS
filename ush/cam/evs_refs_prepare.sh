@@ -265,7 +265,6 @@ if [ "$data" = "apcp24h_conus" ] ; then
       export prod 
 
       fhr_3=$((fhr-3))
-      fhr_3=$((fhr-3))
       fhr_6=$((fhr-6))
       fhr_9=$((fhr-9))
       fhr_12=$((fhr-12))
@@ -273,9 +272,17 @@ if [ "$data" = "apcp24h_conus" ] ; then
       fhr_18=$((fhr-18))
       fhr_21=$((fhr-21))
 
+      fhr_3_fmt=$(printf "%02d" "${fhr_3}")
+      fhr_6_fmt=$(printf "%02d" "${fhr_6}")
+      fhr_9_fmt=$(printf "%02d" "${fhr_9}")
+      fhr_12_fmt=$(printf "%02d" "${fhr_12}")
+      fhr_15_fmt=$(printf "%02d" "${fhr_15}")
+      fhr_18_fmt=$(printf "%02d" "${fhr_18}")
+      fhr_21_fmt=$(printf "%02d" "${fhr_21}")
+
       for prod in mean avrg pmmn lpmm ; do
 
-      if [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_3}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_6}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_9}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_12}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_15}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_18}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_21}.${domain}.grib2 ] ; then
+      if [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_3_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_6_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_9_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_12_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_15_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_18_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_21_fmt}.${domain}.grib2 ] ; then
 
       #####################################################################################################################
       # Restart: first check if refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists 
@@ -335,7 +342,6 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       export prod
 
       fhr_3=$((fhr-3))
-      fhr_3=$((fhr-3))
       fhr_6=$((fhr-6))
       fhr_9=$((fhr-9))
       fhr_12=$((fhr-12))
@@ -343,10 +349,18 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       fhr_18=$((fhr-18))
       fhr_21=$((fhr-21))
 
+      fhr_3_fmt=$(printf "%02d" "${fhr_3}")
+      fhr_6_fmt=$(printf "%02d" "${fhr_6}")
+      fhr_9_fmt=$(printf "%02d" "${fhr_9}")
+      fhr_12_fmt=$(printf "%02d" "${fhr_12}")
+      fhr_15_fmt=$(printf "%02d" "${fhr_15}")
+      fhr_18_fmt=$(printf "%02d" "${fhr_18}")
+      fhr_21_fmt=$(printf "%02d" "${fhr_21}")
+
      for prod in mean avrg pmmn lpmm ; do
 
 
-      if [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_3}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_6}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_9}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_12}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_15}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_18}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_21}.ak.grib2 ] ; then
+      if [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_3_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_6_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_9_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_12_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_15_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_18_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_21_fmt}.ak.grib2 ] ; then
 
       #################################################################################################
       # Restart: first check if refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists
