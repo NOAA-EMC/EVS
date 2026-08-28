@@ -251,7 +251,6 @@ if [ "$data" = "apcp24h_conus" ] ; then
    export domain=conus
    export grid=G227
    export output_base=$WORK/apcp24h_conus
-   export fcyc	
    export vcyc=12
    obsv_vcyc=${vday}${vcyc}
 
@@ -259,12 +258,10 @@ if [ "$data" = "apcp24h_conus" ] ; then
    for fhr in 24 30 36 42 48 54 60 ; do
       fcst_time=`$NDATE -$fhr $obsv_vcyc`
       fyyyymmdd=${fcst_time:0:8}
-      fcyc=${fcst_time:8:2}
+      export fcyc=${fcst_time:8:2}
       mkdir -p $WORK/refs.${fyyyymmdd}/${fcyc}
       export modelpath=${COMREFS}/refs.${fyyyymmdd}/${fcyc}/ensprod
-      export prod 
 
-      fhr_3=$((fhr-3))
       fhr_3=$((fhr-3))
       fhr_6=$((fhr-6))
       fhr_9=$((fhr-9))
@@ -273,39 +270,49 @@ if [ "$data" = "apcp24h_conus" ] ; then
       fhr_18=$((fhr-18))
       fhr_21=$((fhr-21))
 
-     for prod in mean avrg pmmn lpmm ; do
+      fhr_fmt=$(printf "%02d" "${fhr}")
+      fhr_3_fmt=$(printf "%02d" "${fhr_3}")
+      fhr_6_fmt=$(printf "%02d" "${fhr_6}")
+      fhr_9_fmt=$(printf "%02d" "${fhr_9}")
+      fhr_12_fmt=$(printf "%02d" "${fhr_12}")
+      fhr_15_fmt=$(printf "%02d" "${fhr_15}")
+      fhr_18_fmt=$(printf "%02d" "${fhr_18}")
+      fhr_21_fmt=$(printf "%02d" "${fhr_21}")
 
+      for prod in mean avrg pmmn lpmm ; do
+          export prod 
 
-      #if [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_3}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_6}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_9}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_12}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_15}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_18}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.conus.${prod}.f${fhr_21}.grib2 ] ; then
+          if [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_3_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_6_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_9_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_12_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_15_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_18_fmt}.${domain}.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_21_fmt}.${domain}.grib2 ] ; then
 
-      #####################################################################################################################
-      # Restart: first check if refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists 
-      #    in the $COMOUTrestart directory, if not, run METplus to create it
-      #    otherwise, copy it from the $COMOUTrestart directory
-      ###################################################################################################################
-       if [ ! -s  $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
-         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstREFS_APCP24h.conf
-         export err=$?; err_chk
-	     if [ -s $output_base/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
-             cp $output_base/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/${fcyc}/.
-         if [ $SENDCOM = YES ] ; then
-	         [[ ! -d ${COMOUTsmall}/precip_mean24 ]] && mkdir -p ${COMOUTsmall}/precip_mean24
-             cp $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUTsmall}/precip_mean24/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
-	         #Save restart files
-	         cp $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
-	     fi
-         fi
-       else
-         #Restart: copy restart files to the working directory
-	     [[ ! -d $WORK/refs.${fyyyymmdd}/${fcyc} ]] && mkdir -p $WORK/refs.${fyyyymmdd}/${fcyc}
-         cp  $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc
-	     [[ ! -d $COMOUTsmall/precip_mean24 ]] && mkdir $COMOUTsmall/precip_mean24
-         if [ -s $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
-           cp $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTsmall/precip_mean24
-         fi
-       fi
+          #####################################################################################################################
+          # Restart: first check if refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists 
+          #    in the $COMOUTrestart directory, if not, run METplus to create it
+          #    otherwise, copy it from the $COMOUTrestart directory
+          ###################################################################################################################
+           if [ ! -s  $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+             ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstREFS_APCP24h.conf
+             export err=$?; err_chk
+             if [ -s $output_base/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+                 cp $output_base/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/${fcyc}/.
+               if [ $SENDCOM = YES ] ; then
+                 [[ ! -d ${COMOUTsmall}/precip_mean24 ]] && mkdir -p ${COMOUTsmall}/precip_mean24
+                 cp $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUTsmall}/precip_mean24/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
+                 #Save restart files
+                 cp $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc
+               fi
+             fi
+           else
+             #Restart: copy restart files to the working directory
+             [[ ! -d $WORK/refs.${fyyyymmdd}/${fcyc} ]] && mkdir -p $WORK/refs.${fyyyymmdd}/${fcyc}
+             cp  $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc
+             [[ ! -d $COMOUTsmall/precip_mean24 ]] && mkdir $COMOUTsmall/precip_mean24
+             if [ -s $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc ] ; then
+               cp $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G227.24h.f${fhr}.nc $COMOUTsmall/precip_mean24
+             fi
+           fi
+          fi
 
-     done
+      done
    done
 fi
 
@@ -321,7 +328,6 @@ if [ "$data" = "apcp24h_alaska" ] ; then
    export domain=ak
    export grid=G255
    export output_base=$WORK/apcp24h_ak
-   export fcyc
    export vcyc=12
    obsv_vcyc=${vday}${vcyc}
 
@@ -332,9 +338,7 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       export fcyc=${fcst_time:8:2} #Alaska only has 06 cycle run 
       mkdir -p refs.${fyyyymmdd}/${fcyc}
       export modelpath=${COMREFS}/refs.${fyyyymmdd}/${fcyc}/ensprod
-      export prod
 
-      fhr_3=$((fhr-3))
       fhr_3=$((fhr-3))
       fhr_6=$((fhr-6))
       fhr_9=$((fhr-9))
@@ -343,34 +347,44 @@ if [ "$data" = "apcp24h_alaska" ] ; then
       fhr_18=$((fhr-18))
       fhr_21=$((fhr-21))
 
-     for prod in mean avrg pmmn lpmm ; do
+      fhr_fmt=$(printf "%02d" "${fhr}")
+      fhr_3_fmt=$(printf "%02d" "${fhr_3}")
+      fhr_6_fmt=$(printf "%02d" "${fhr_6}")
+      fhr_9_fmt=$(printf "%02d" "${fhr_9}")
+      fhr_12_fmt=$(printf "%02d" "${fhr_12}")
+      fhr_15_fmt=$(printf "%02d" "${fhr_15}")
+      fhr_18_fmt=$(printf "%02d" "${fhr_18}")
+      fhr_21_fmt=$(printf "%02d" "${fhr_21}")
+
+      for prod in mean avrg pmmn lpmm ; do
+          export prod
 
 
-      if [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_3}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_6}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_9}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_12}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_15}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_18}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_21}.ak.grib2 ] ; then
+          if [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_3_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_6_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_9_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_12_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_15_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_18_fmt}.ak.grib2 ] && [ -s $modelpath/refs.t${fcyc}z.${prod}.f${fhr_21_fmt}.ak.grib2 ] ; then
 
-      #################################################################################################
-      # Restart: first check if refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists
-      #    in the $COMOUTrestart directory, if not, run METplus to create it
-      #    otherwise, copy it from the $COMOUTrestart directory
-      ##################################################################################################
-      if [ ! -s  $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
-         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstREFS_APCP24h.conf
-         export err=$?; err_chk
-         if [ -s $output_base/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
-            mv $output_base/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/${fcyc}/.
-            #Save restart files
-	        if [ $SENDCOM = YES ] ; then
-              cp $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc
-	        fi
-         fi
-      else
-         #Restart: copy restart files to the working directory
-	     [[ ! -d $WORK/refs.${fyyyymmdd}/${fcyc} ]] && mkdir -p $WORK/refs.${fyyyymmdd}/${fcyc}
-         cp  $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc
-      fi
+          #################################################################################################
+          # Restart: first check if refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G227.24h.f${fhr}.nc exists
+          #    in the $COMOUTrestart directory, if not, run METplus to create it
+          #    otherwise, copy it from the $COMOUTrestart directory
+          ##################################################################################################
+          if [ ! -s  $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
+             ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstREFS_APCP24h.conf
+             export err=$?; err_chk
+             if [ -s $output_base/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc ] ; then
+                mv $output_base/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/${fcyc}/.
+                #Save restart files
+                if [ $SENDCOM = YES ] ; then
+                  cp $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc
+                fi
+             fi
+          else
+             #Restart: copy restart files to the working directory
+             [[ ! -d $WORK/refs.${fyyyymmdd}/${fcyc} ]] && mkdir -p $WORK/refs.${fyyyymmdd}/${fcyc}
+             cp  $COMOUTrestart/prepare/refs${prod}.${fyyyymmdd}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/refs.${fyyyymmdd}/${fcyc}/refs${prod}.t${fcyc}z.G255.24h.f${fhr}.nc
+          fi
 
-      fi
-     done
+          fi
+      done
    done
 fi
 
