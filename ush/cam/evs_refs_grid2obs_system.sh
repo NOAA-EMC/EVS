@@ -54,16 +54,23 @@ for dom in CONUS Alaska ; do
        if [ ! -e  $COMOUTrestart/system/run_refs_${domain}.${valid_at}.${fhr}_system.completed ] ; then
 
         ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
-	iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
+	    iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
           
-	input_fcst="$WORK/refs.${iday}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}"
+	    input_fcst="$WORK/refs.${iday}/verf_g2g/refs.*.t${ihr}z.conus.f${fhr}"
         input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid_at}z.G227.nc"
+      
+        n_fcst=0
+        for fcst_file in $input_fcst; do
+            [[ -s "$fcst_file" ]] && ((n_fcst++))
+        done
 
-	if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
+        echo "FORECAST FILES FOUND: ${n_fcst}/${nmbrs}"
 
-	 echo "#!/bin/ksh" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
-	 echo "set -x " >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
+        if (( n_fcst == nmbrs )) && [ -s $input_obsv ] ; then
+
+	     echo "#!/bin/ksh" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
+	     echo "set -x " >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
          echo "export regrid=G227" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
          echo "export obsv=prepbufr" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
          echo "export domain=CONUS" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
@@ -93,22 +100,22 @@ for dom in CONUS Alaska ; do
  
          echo  "export verif_grid=''" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
         
-	 echo  "export verif_poly='${maskpath}/Bukovsky_G227_CONUS.nc,
-	                           ${maskpath}/Bukovsky_G227_CONUS_East.nc,
-			           ${maskpath}/Bukovsky_G227_CONUS_West.nc,
+	     echo  "export verif_poly='${maskpath}/Bukovsky_G227_CONUS.nc,
+                       ${maskpath}/Bukovsky_G227_CONUS_East.nc,
+                       ${maskpath}/Bukovsky_G227_CONUS_West.nc,
 			           ${maskpath}/Bukovsky_G227_CONUS_South.nc,
-		                   ${maskpath}/Bukovsky_G227_CONUS_Central.nc,
-		                   ${maskpath}/Bukovsky_G227_Appalachia.nc,
-				   ${maskpath}/Bukovsky_G227_CPlains.nc,
-				   ${maskpath}/Bukovsky_G227_DeepSouth.nc,
-        		           ${maskpath}/Bukovsky_G227_GreatBasin.nc,
-	                           ${maskpath}/Bukovsky_G227_GreatLakes.nc,
-	                           ${maskpath}/Bukovsky_G227_Mezquital.nc,
-	                           ${maskpath}/Bukovsky_G227_MidAtlantic.nc,
-	                           ${maskpath}/Bukovsky_G227_NorthAtlantic.nc,
-		                   ${maskpath}/Bukovsky_G227_NPlains.nc,
-		                   ${maskpath}/Bukovsky_G227_NRockies.nc,
-		                   ${maskpath}/Bukovsky_G227_PacificNW.nc,
+                       ${maskpath}/Bukovsky_G227_CONUS_Central.nc,
+                       ${maskpath}/Bukovsky_G227_Appalachia.nc,
+                       ${maskpath}/Bukovsky_G227_CPlains.nc,
+                       ${maskpath}/Bukovsky_G227_DeepSouth.nc,
+                       ${maskpath}/Bukovsky_G227_GreatBasin.nc,
+                       ${maskpath}/Bukovsky_G227_GreatLakes.nc,
+                       ${maskpath}/Bukovsky_G227_Mezquital.nc,
+                       ${maskpath}/Bukovsky_G227_MidAtlantic.nc,
+                       ${maskpath}/Bukovsky_G227_NorthAtlantic.nc,
+                       ${maskpath}/Bukovsky_G227_NPlains.nc,
+                       ${maskpath}/Bukovsky_G227_NRockies.nc,
+                       ${maskpath}/Bukovsky_G227_PacificNW.nc,
 			           ${maskpath}/Bukovsky_G227_PacificSW.nc,
 			           ${maskpath}/Bukovsky_G227_Prairie.nc,
 			           ${maskpath}/Bukovsky_G227_Southeast.nc,
@@ -215,16 +222,23 @@ for dom in CONUS Alaska ; do
        if [ ! -e  $COMOUTrestart/system/run_refs_${domain}.${valid_at}.${fhr}_system.completed ] ; then
        ##########################################################################################
        
-        ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
-	iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
+       ihr=`$NDATE -$fhr $VDATE$valid_at|cut -c 9-10`
+       iday=`$NDATE -$fhr $VDATE$valid_at|cut -c 1-8`
 
-	input_fcst="$WORK/refs.${iday}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr}"
-	input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid_at}z.G198.nc"
-	                                   
-        if [ -s $input_fcst ] && [ -s $input_obsv ] ; then
+       input_fcst="$WORK/refs.${iday}/verf_g2g/refs.*.t${ihr}z.ak.f${fhr}"
+       input_obsv="$WORK/prepbufr.${VDATE}/prepbufr.t${valid_at}z.G198.nc"
+         
+       n_fcst=0
+       for fcst_file in $input_fcst; do
+           [[ -s "$fcst_file" ]] && ((n_fcst++))
+       done
+
+       echo "FORECAST FILES FOUND: ${n_fcst}/${nmbrs}"
+       
+       if (( n_fcst == nmbrs )) && [ -s $input_obsv ] ; then
 
          echo "#!/bin/ksh" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
-	 echo "set -x " >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
+	     echo "set -x " >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
          echo "export regrid=NONE" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
          echo "export obsv=prepbufr" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
          echo "export domain=Alaska" >> run_refs_${domain}.${valid_at}.${fhr}_system.sh
