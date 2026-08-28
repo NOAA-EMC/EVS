@@ -686,7 +686,7 @@ if [ "$data" = "sfc" ] ; then
 
   >prepare_poe.sh 
   #for day in $PDYm1 $PDYm2 $PDYm3 ; do
-  for day in $VDATE $VDATE_1 $VDATE_2 ; do
+  for day in $VDATE $VDATE_1 $VDATE_2 $VDATE_3; do
    work=$DATA/refs.$day/verf_g2g
    mkdir -p $work
 
