@@ -679,6 +679,8 @@ if [ "$data" = "sfc" ] ; then
   echo "GUST" >> $DATA/pat
   echo "HPBL" >> $DATA/pat
 
+  D3=`$NDATE -72 ${VDATE}00`
+  VDATE_3=`echo ${D3} | cut -c 1-8`
   D2=`$NDATE -48 ${VDATE}00`
   VDATE_2=`echo ${D2} | cut -c 1-8`
   D1=`$NDATE -24 ${VDATE}00`
@@ -716,7 +718,7 @@ if [ "$data" = "sfc" ] ; then
       echo "set -x" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "work=$work" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "cd \$work">> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 66; do" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66; do" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    typeset -Z2 hh" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    hh=\$fhr      " >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "      for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 ; do" >> run_prepare.${day}.${cyc}.${domain}.sh
@@ -852,7 +854,7 @@ if [ "$data" = "upper_air" ] ; then
      echo "work=$work" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
      echo "cd \$work" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
 
-     echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 66 ; do" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66 ; do" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
      echo "    typeset -Z2 hh" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
      echo "    hh=\$fhr" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
      echo "    typeset -Z2 hh_tl" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
