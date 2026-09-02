@@ -8,7 +8,7 @@
 #   4. Store the well-formed analysis/observations or smaller ensemble member files
 #      in the evs prep sub-directory /prep/aigefs/atmos.YYYYMMDD
 #
-# Updated: 10/03/2025 by L. Gwen Chen (lichuan.chen@noaa.gov) 
+# Updated: 09/02/2026 by L. Gwen Chen (lichuan.chen@noaa.gov) 
 #######################################################################################
 set -x
 
@@ -35,34 +35,37 @@ cd $WORKtask
 #################################################################################
 if [ $modnam = gfsanl ]; then
   for ihour in 00 06 12 18 ; do
-    if [ ! -s $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl ] ; then
-      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl is not available" 
+    if [ ! -s $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.analysis.grib2 ] ; then
+      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.analysis.grib2 is not available" 
       if [ $SENDMAIL = YES ]; then
         export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS analysis available for ${vday}${ihour}" > mailmsg
-        echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl" >> mailmsg
+        echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.analysis.grib2" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
       fi
     else
-      cp -v $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
+      cp -v $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.analysis.grib2 $WORKtask/gfsanl.t${ihour}z.0p25.f000.grib2
     fi
-    if [ ! -s $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 ]; then
-      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 is not available"
+
+    if [ ! -s $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.f000.grib2 ]; then
+      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.f000.grib2 is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="GFS F000 Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS F000 available for ${vday}${ihour}" > mailmsg
-        echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000" >> mailmsg
+        echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.f000.grib2" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
       fi
     else
-      GFSf000=$COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000
+      GFSf000=$COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.f000.grib2
       $WGRIB2 $GFSf000 | grep "UGRD:10 m above ground" | $WGRIB2 -i $GFSf000 -grib $WORKtask/U10_f000.${ihour}
-      cat $WORKtask/U10_f000.${ihour} >> $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
+      cat $WORKtask/U10_f000.${ihour} >> $WORKtask/gfsanl.t${ihour}z.0p25.f000.grib2
       $WGRIB2 $GFSf000 | grep "VGRD:10 m above ground" | $WGRIB2 -i $GFSf000 -grib $WORKtask/V10_f000.${ihour}
-      cat $WORKtask/V10_f000.${ihour} >> $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
+      cat $WORKtask/V10_f000.${ihour} >> $WORKtask/gfsanl.t${ihour}z.0p25.f000.grib2
     fi
+
+    $WGRIB2 $WORKtask/gfsanl.t${ihour}z.0p25.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
     if [ $SENDCOM="YES" ] ; then
         if [ -s $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2 ]; then
             cp -v $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2 $COMOUTgefs/gfsanl.t${ihour}z.grid3.f000.grib2
