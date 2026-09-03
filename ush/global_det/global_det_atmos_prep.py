@@ -57,7 +57,7 @@ gda_util.make_dir(output_INITDATE)
 
 ###### OBS
 # Get operational observation data
-# Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
+# Northern & Southern Hemisphere 10 km OSI-SAF AMSR3 analysis - osi_saf
 # Group for High Resolution Sea Surface Temperature (GHRSST) Level 4 SST analysis for Office of Satellite and Product Operations (OSPO)- ghrsst_ospo
 # NCEP's Climatology-Calibrated Precipitation Analysis to 24 hour accumulation- ccpa_accum24hr
 global_det_obs_dict = {
@@ -66,11 +66,11 @@ global_det_obs_dict = {
                                                   +'?shift=-12}',
                                                   'seaice', 'osisaf',
                                                   'ice_conc_{hem?fmt=str}_'
-                                                  +'polstere-100_amsr2_'
+                                                  +'polstere-100_amsr3_'
                                                   +'{init_shift?fmt=%Y%m%d%H'
                                                   +'?shift=-12}00.nc'),
                 'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                'osi_saf', 'osi_saf.amsr2.'
+                                                'osi_saf', 'osi_saf.amsr3.'
                                                 +'{hem?fmt=str}.'
                                                 +'{init_shift?fmt=%Y%m%d%H'
                                                 +'?shift=-24}to'

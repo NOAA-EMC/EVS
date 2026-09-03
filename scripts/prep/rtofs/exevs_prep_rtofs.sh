@@ -174,9 +174,9 @@ fi
 mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
 for ftype in nh sh; do
 	osi_saf_grid_file=$FIXevs/cdo_grids/rtofs_$OBTYPE.grid
-	input_osisaf_file=$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_amsr2_${INITDATE}1200.nc
-	tmp_osisaf_file=$DATA/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_amsr2_${INITDATE}1200.nc
-	output_osisaf_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_amsr2_${INITDATE}1200.nc
+	input_osisaf_file=$DCOMROOT/$INITDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_amsr3_${INITDATE}1200.nc
+	tmp_osisaf_file=$DATA/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_amsr3_${INITDATE}1200.nc
+	output_osisaf_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ice_conc_${ftype}_polstere-100_amsr3_${INITDATE}1200.nc
 	if [ -s $input_osisaf_file ]; then
 		file_check=$(python3 $USHevs/${COMPONENT}/rtofs_check_nc.py "$input_osisaf_file" "$OBTYPE" "obs")
 		export err=$?; err_chk

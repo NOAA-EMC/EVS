@@ -44,7 +44,7 @@ if not os.path.exists(COMOUT_INITDATE):
 
 ###### OBS
 # Get operational observation data
-# Northern & Southern Hemisphere 10 km OSI-SAF AMSR2 analysis - osi_saf
+# Northern & Southern Hemisphere 10 km OSI-SAF AMSR3 analysis - osi_saf
 # Group for High Resolution Sea Surface Temperature (GHRSST) Level 4 SST analysis for Office of Satellite and Product Operations (OSPO) - ghrsst_ospo
 # NCEP's Climatology-Calibrated Precipitation Analysis - ccpa
 subseasonal_obs_dict = {
@@ -74,13 +74,13 @@ subseasonal_obs_dict = {
                                                    +'?shift=-12}',
                                                    'seaice', 'osisaf',
                                                    'ice_conc_{hem?fmt=str}_'
-                                                   +'polstere-100_amsr2_'
+                                                   +'polstere-100_amsr3_'
                                                    +'{init_shift?fmt=%Y%m%d%H'
                                                    +'?shift=-12}'
                                                    +'00.nc'),
                 'daily_arch_file_format': os.path.join(COMOUT_INITDATE,
                                                        'osi_saf',
-                                                       'osi_saf.amsr2.'
+                                                       'osi_saf.amsr3.'
                                                        +'{init_shift?fmt=%Y%m%d%H'
                                                        +'?shift=-24}to'
                                                        +'{init?fmt=%Y%m%d%H}'
