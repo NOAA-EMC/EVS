@@ -679,14 +679,15 @@ if [ "$data" = "sfc" ] ; then
   echo "GUST" >> $DATA/pat
   echo "HPBL" >> $DATA/pat
 
+  D3=`$NDATE -72 ${VDATE}00`
+  VDATE_3=`echo ${D3} | cut -c 1-8`
   D2=`$NDATE -48 ${VDATE}00`
   VDATE_2=`echo ${D2} | cut -c 1-8`
   D1=`$NDATE -24 ${VDATE}00`
   VDATE_1=`echo ${D1} | cut -c 1-8`
 
   >prepare_poe.sh 
-  #for day in $PDYm1 $PDYm2 $PDYm3 ; do
-  for day in $VDATE $VDATE_1 $VDATE_2 ; do
+  for day in $VDATE $VDATE_1 $VDATE_2 $VDATE_3; do
    work=$DATA/refs.$day/verf_g2g
    mkdir -p $work
 
@@ -697,6 +698,17 @@ if [ "$data" = "sfc" ] ; then
     day_tl=`echo ${DTL} | cut -c 1-8`
     cyc_tl=`echo ${DTL} | cut -c 9-10`
 
+    fhr_list=""
+    for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 ; do
+        valid_time=`$NDATE $fhr ${day}${cyc}`
+        valid_date=`echo $valid_time | cut -c 1-8`
+
+        if [ "$valid_date" = "$VDATE" ] ; then
+            fhr_list="$fhr_list $fhr"
+        fi
+    done
+
+    [ -z "$fhr_list" ] && continue
 
     for domain in conus ak ; do
      
@@ -716,7 +728,7 @@ if [ "$data" = "sfc" ] ; then
       echo "set -x" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "work=$work" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "cd \$work">> run_prepare.${day}.${cyc}.${domain}.sh
-      echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 66; do" >> run_prepare.${day}.${cyc}.${domain}.sh
+      echo "for fhr in $fhr_list ; do" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    typeset -Z2 hh" >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "    hh=\$fhr      " >> run_prepare.${day}.${cyc}.${domain}.sh
       echo "      for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 ; do" >> run_prepare.${day}.${cyc}.${domain}.sh
@@ -819,6 +831,18 @@ if [ "$data" = "upper_air" ] ; then
     DTL=`$NDATE -6 ${day}${cyc}`
     day_tl=`echo ${DTL} | cut -c 1-8`
     cyc_tl=`echo ${DTL} | cut -c 9-10`
+    
+    fhr_list=""
+    for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 ; do
+        valid_time=`$NDATE $fhr ${day}${cyc}`
+        valid_date=`echo $valid_time | cut -c 1-8`
+
+        if [ "$valid_date" = "$VDATE" ] ; then
+            fhr_list="$fhr_list $fhr"
+        fi
+    done
+
+    [ -z "$fhr_list" ] && continue
 
     for domain in conus ak hi pr ; do
 
@@ -852,7 +876,7 @@ if [ "$data" = "upper_air" ] ; then
      echo "work=$work" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
      echo "cd \$work" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
 
-     echo "for fhr in 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 66 ; do" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
+     echo "for fhr in $fhr_list ; do" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
      echo "    typeset -Z2 hh" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
      echo "    hh=\$fhr" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
      echo "    typeset -Z2 hh_tl" >> run_prepare_upper_air.${day}.${cyc}.${domain}.sh
