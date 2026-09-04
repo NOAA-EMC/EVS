@@ -86,8 +86,10 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
          ' | grep -F '+shlex.quote(vx_mask)
          +' | grep -F '+shlex.quote(line_type)
       )
-      log_msg = "Pruning "+data_dir+" files for model "+model+", vx_mask "
+      log_msg = ( 
+                 "Pruning "+data_dir+" files for model "+model+", vx_mask "
                +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
+      )
       if RUN_type == 'anom' and 'HGT' in var_name:
          filter_cmd += ' | grep -F '+shlex.quote(os.environ['INTERP'])
          log_msg += ", interp "+os.environ['INTERP']
