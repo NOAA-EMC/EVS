@@ -13,7 +13,9 @@
 #   5. Store the well-formed analysis/observations or smaller ensemble member files
 #      in the evs prep sub-directory /prep/global_ens/atmos.YYYYMMDD
 #
-# Updated: 05/20/2025 by L. Gwen Chen (lichuan.chen@noaa.gov) 
+# Updated:
+#          09/01/2026 by Jun Du: regrid from 0.25deg to 1.0deg of gfs anl and fcst (GFS.v17)
+#          05/20/2025 by L. Gwen Chen (lichuan.chen@noaa.gov) 
 #          11/15/2023 by Binbin Zhou, Lynker@EMC/NCEP
 #######################################################################################
 set -x
@@ -36,37 +38,41 @@ mkdir -p $WORKtask
 cd $WORKtask
 
 #################################################################################
-# Get GFS analysis grib2 data in GRID#3 (1-degree global) and WMO 1.5 deg for 00Z
-# NOTE: There are no U10, V10 in GFS analysis, so use GFS*f000 as an alternative
+# Get GFS analysis grib2 data and convert it to GRID#3 (1-degree global) and 
+# WMO 1.5 deg for 00Z
+# NOTE: There are no U10, V10 in GFS analysis, so use GFS*f000 and convert it to 
+# GRID#3 as an alternative
 #################################################################################
 if [ $modnam = gfsanl ]; then
   for ihour in 00 06 12 18 ; do
-    if [ ! -s $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl ] ; then
-      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl is not available" 
+    if [ ! -s $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.analysis.grib2 ] ; then
+      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/products/atmos/grid2/0p25/gfs.t${ihour}z.pres_a.0p25.analysis.grib2 is not available" 
       if [ $SENDMAIL = YES ]; then
         export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS analysis available for ${vday}${ihour}" > mailmsg
-        echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl" >> mailmsg
+        echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/products/atmos/grid2/0p25/gfs.t${ihour}z.pres_a.0p25.analysis.grib2" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
       fi
     else
-      cp -v $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
+      $WGRIB2 $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.analysis.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
     fi
-    if [ ! -s $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 ]; then
-      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000 is not available"
+    if [ ! -s $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.f000.grib2 ]; then
+      echo "WARNING: $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.f000.grib2 is not available"
       if [ $SENDMAIL = YES ]; then
         export subject="GFS F000 Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GFS F000 available for ${vday}${ihour}" > mailmsg
-        echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000" >> mailmsg
+        echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.f000.grib2" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $MAILTO
       fi
     else
-      GFSf000=$COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000
-      $WGRIB2 $GFSf000 | grep "UGRD:10 m above ground" | $WGRIB2 -i $GFSf000 -grib $WORKtask/U10_f000.${ihour}
+      GFSf000=$COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.f000.grib2
+      $WGRIB2 $GFSf000 | grep "UGRD:10 m above ground" | $WGRIB2 -i $GFSf000 -grib $WORKtask/temp_U10_f000.${ihour}
+      $WGRIB2 $WORKtask/temp_U10_f000.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/U10_f000.${ihour}
       cat $WORKtask/U10_f000.${ihour} >> $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
-      $WGRIB2 $GFSf000 | grep "VGRD:10 m above ground" | $WGRIB2 -i $GFSf000 -grib $WORKtask/V10_f000.${ihour}
+      $WGRIB2 $GFSf000 | grep "VGRD:10 m above ground" | $WGRIB2 -i $GFSf000 -grib $WORKtask/temp_V10_f000.${ihour}
+      $WGRIB2 $WORKtask/temp_V10_f000.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/V10_f000.${ihour}
       cat $WORKtask/V10_f000.${ihour} >> $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
     fi
     if [ $SENDCOM="YES" ] ; then
@@ -870,11 +876,12 @@ fi
 
 #################################################################################
 # Get GFS 00Z forecasts 500mb Geopotential Heights for headline score comparison
+# (also converted from 0.25deg to 1deg)
 #################################################################################
 if [ $modnam = gfs ] ; then
   for ihour in 00 ; do
     for hhh in 024 048 072 096 120 144 168 192 216 240 264 288 312 336 360 384 ; do     
-      gfs=$COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f${hhh}
+      gfs=$COMINgfs/gfs.$vday/${ihour}/products/atmos/grib2/0p25/gfs.t${ihour}z.pres_a.0p25.f${hhh}.grib2
       if [ ! -s $gfs ]; then
         echo "WARNING: $gfs is not available"
         if [ $SENDMAIL = YES ]; then
@@ -885,7 +892,8 @@ if [ $modnam = gfs ] ; then
           cat mailmsg | mail -s "$subject" $MAILTO
         fi
       else
-        $WGRIB2 $gfs | grep "HGT:500 mb" | $WGRIB2 -i $gfs -grib $WORKtask/gfs.t${ihour}z.grid3.f${hhh}.grib2
+        $WGRIB2 $gfs | grep "HGT:500 mb" | $WGRIB2 -i $gfs -grib $WORKtask/temp_gfs.t${ihour}z.grid3.f${hhh}.grib2
+        $WGRIB2 $WORKtask/temp_gfs.t${ihour}z.grid3.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/gfs.t${ihour}z.grid3.f${hhh}.grib2
         if [ $SENDCOM="YES" ] ; then
           if [ -s $WORKtask/gfs.t${ihour}z.grid3.f${hhh}.grib2 ]; then
             cp -v $WORKtask/gfs.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gfs.t${ihour}z.grid3.f${hhh}.grib2
