@@ -45,5 +45,7 @@ source $HOMEevs/dev/drivers/set_MAILTO.sh
 if [ -z "$MAILTO" ]; then
    echo "MAILTO variable is not defined. Exiting without continuing."
 else
+#export VDATE=20260901
+ export COMINgfs=/lfs/h2/emc/gfstemp/emc.global/EVS_archive/retrov17_01
    ${HOMEevs}/jobs/JEVS_PREP_GLOBAL_ENS
 fi
