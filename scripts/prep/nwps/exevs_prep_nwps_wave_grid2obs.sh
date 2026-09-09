@@ -102,11 +102,14 @@ mkdir -p ${DATA}/ncfiles
 mkdir -p ${COMOUT}.${INITDATE}/ndbc/${VERIF_CASE}
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
 ndbc_txt_ncount=$(ls -l $DCOMINndbc/$INITDATE/validation_data/marine/buoy/*.txt |wc -l)
+ndbc_txt_ncount_COMOUT=$(ls -l $COMOUT.${INITDATE}/ndbc/*.txt |wc -l)
+
 if [ $ndbc_txt_ncount -gt 0 ]; then
 	python $USHevs/${COMPONENT}/nwps_wave_prep_read_ndbc.py
 	export err=$?; err_chk
-   
-	
+fi   
+
+if [ $ndbc_txt_ncount_COMOUT -gt 0 ]; then
 	run_metplus.py -c $CONFIGevs/machine.conf \
      	-c $CONFIGevs/$STEP/$COMPONENT/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf
    	export err=$?; err_chk
@@ -117,6 +120,8 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 		if [ -s $tmp_ndbc_file ]; then
 			cp -v $tmp_ndbc_file $output_ndbc_file
 		fi
+	else
+		echo "WARNING: No NDBC data was available for init date ${INITDATE} in $COMOUT."
 	fi
 else
 	echo "WARNING: No NDBC data was available for init date ${INITDATE}."
