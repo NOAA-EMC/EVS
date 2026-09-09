@@ -14,7 +14,7 @@
 #      in the evs prep sub-directory /prep/global_ens/atmos.YYYYMMDD
 #
 # Updated:
-#          09/01/2026 by Jun Du: regrid from 0.25deg to 1.0deg of gfs anl and fcst (GFS.v17)
+#          09/01/2026 by Jun Du: regrid from 0.25deg to 1.0deg of gfs anl and fcst
 #          05/20/2025 by L. Gwen Chen (lichuan.chen@noaa.gov) 
 #          11/15/2023 by Binbin Zhou, Lynker@EMC/NCEP
 #######################################################################################
