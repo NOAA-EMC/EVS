@@ -107,5 +107,6 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
 
       with open(pruned_met_stat_file, 'w') as pmsf:
          pmsf.write(met_header_cols)
+         pmsf.flush()
          subprocess.run(grep_cmd, shell=True, stdout=pmsf, encoding='UTF-8')
    print("END: "+os.path.basename(__file__))
