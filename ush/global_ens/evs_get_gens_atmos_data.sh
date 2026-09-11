@@ -70,11 +70,10 @@ if [ $modnam = gfsanl ]; then
       fi
     else
       $WGRIB2 $GFSf000 | grep "UGRD:10 m above ground" | $WGRIB2 -i $GFSf000 -grib $WORKtask/temp_U10_f000.${ihour}
-      $WGRIB2 $WORKtask/temp_U10_f000.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/U10_f000.${ihour}
-      cat $WORKtask/U10_f000.${ihour} >> $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
       $WGRIB2 $GFSf000 | grep "VGRD:10 m above ground" | $WGRIB2 -i $GFSf000 -grib $WORKtask/temp_V10_f000.${ihour}
-      $WGRIB2 $WORKtask/temp_V10_f000.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/V10_f000.${ihour}
-      cat $WORKtask/V10_f000.${ihour} >> $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
+      cat $WORKtask/temp_U10_f000.${ihour} $WORKtask/temp_V10_f000.${ihour} >> $WORKtask/temp_WIND10_f000.${ihour}
+      $WGRIB2 $WORKtask/temp_WIND10_f000.${ihour} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/WIND10_f000.${ihour}
+      cat $WORKtask/WIND10_f000.${ihour} >> $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2
     fi
     if [ $SENDCOM="YES" ] ; then
         if [ -s $WORKtask/gfsanl.t${ihour}z.grid3.f000.grib2 ]; then
