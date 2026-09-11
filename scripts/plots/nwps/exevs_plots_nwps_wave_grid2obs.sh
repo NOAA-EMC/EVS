@@ -118,9 +118,16 @@ for wfo in ${WFO}; do
             else
                 nprocs=200
             fi
+
+	    # Dynamically set PPN (Processes Per Node) based on nprocs
+            if [ ${nprocs} -lt 100 ]; then
+                ppn=${nprocs}
+            else
+                ppn=100
+            fi
             
-            echo "Running cfp for ${wfo} with -np ${nprocs} (${ncmd} total commands)"
-            mpiexec -np ${nprocs} --cpu-bind verbose,depth cfp ${cmd_file}
+            echo "Running cfp for ${wfo} with -np ${nprocs} -ppn ${ppn} (${ncmd} total commands)"
+            mpiexec -np ${nprocs} -ppn ${ppn} --cpu-bind verbose,depth cfp ${cmd_file}
         else
 	    echo "not running mpiexec"
             sh ${cmd_file}
