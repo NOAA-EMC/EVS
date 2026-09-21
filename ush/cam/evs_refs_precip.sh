@@ -143,7 +143,7 @@ for obsvtype in ccpa mrms ; do
 	       
              #########################################################################################
              # Restart check: 
-	     #       check if this  sub-task has been completed in the previous run
+	         #       check if this  sub-task has been completed in the previous run
              #       if not, do this sub-task, and mark it is completed after it is done
              #       if yes, skip this task
              #########################################################################################
@@ -152,22 +152,40 @@ for obsvtype in ccpa mrms ; do
                ihr=`$NDATE -$fhr $VDATE$vhr|cut -c 9-10`
                iday=`$NDATE -$fhr $VDATE$vhr|cut -c 1-8`
             
-	      #Check if input fcst and input_obsv files are available 
-	      if [ $extra = "verf_g2g" ] ; then
-		 input_fcst=${modelpath}/refs.${iday}/${ihr}/preproc/prcip/prcip.t${ihr}z.${domain}.m??.f${fhr}.grib2
-	      elif [ $extra = "ensprod" ] ; then
-		 input_fcst=${modelpath}/refs.${iday}/${ihr}/ensprod/refs.t${ihr}z.${prod}.f${fhr}.${domain}.grib2
-              else
-		 input_fcst=${modelpath}/refs.${iday}/${ihr}/refs${prod}.t${ihr}z.${grid}.24h.f${fhr}.nc
-	      fi
+             #Check if input fcst and input_obsv files are available
+             fcst_check=0 
+             if [ $extra = "verf_g2g" ] ; then
+                 input_fcst=${modelpath}/refs.${iday}/${ihr}/preproc/prcip/prcip.t${ihr}z.${domain}.m??.f${fhr}.grib2
+                 n_fcst=0
+                 for fcst_file in $input_fcst; do
+                     [[ -s "$fcst_file" ]] && ((n_fcst++))
+                 done
 
-	      input_obsv="$WORK/${obsvtype}.${VDATE}/${obsv}.t${vhr}z.*"
+                 echo "FORECAST FILES FOUND: ${n_fcst}/${nmem}"
 
-              if [ -s $input_fcst ] && [ -s $input_obsv ] ; then 
+                 if (( n_fcst == nmem )); then
+                     fcst_check=1
+                 fi
+             elif [ $extra = "ensprod" ] ; then
+                 input_fcst=${modelpath}/refs.${iday}/${ihr}/ensprod/refs.t${ihr}z.${prod}.f${fhr}.${domain}.grib2
+                 if [[ -s "$input_fcst" ]]; then
+                     fcst_check=1
+                 fi
+             else
+                 input_fcst=${modelpath}/refs.${iday}/${ihr}/refs${prod}.t${ihr}z.${grid}.24h.f${fhr}.nc
+                 if [[ -s "$input_fcst" ]]; then
+                     fcst_check=1
+                 fi
+             fi
+
+             input_obsv="$WORK/${obsvtype}.${VDATE}/${obsv}.t${vhr}z.*"
+
+
+             if (( fcst_check )) && [ -s $input_obsv ] ; then 
 
                 echo  "#!/bin/ksh" >>run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                 echo  "set -x" >>run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
- 	        echo  "export nmem=$nmem" >>run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
+ 	            echo  "export nmem=$nmem" >>run_refs_precip_${prod}.${obsv}.f${fhr}.v${vhr}.sh
                
                 if [ $acc = 24h ] ; then
                     if [ $obsvtype = ccpa ] ; then

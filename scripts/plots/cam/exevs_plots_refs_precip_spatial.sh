@@ -53,19 +53,28 @@ mkdir -p $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs
 # Virtual link the refs's stat data files of last 31/90 days
 #*************************************************************
 for model in $model_list ; do
- MODEL=`echo $model | tr '[a-z]' '[A-Z]'`	
- target=$DATA/grid2grid_plots/data/$model
- mkdir -p $target
- for fhr in 24 48 ; do
-  last=`$NDATE -$fhr ${VDATE}12`	
-  INITDATE=${last:0:8}
-  ln -sf $EVSINapcp24mean/${model}.$INITDATE.t12z.G227.24h.f${fhr}.nc  $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr0${fhr}.nc
- done
+    MODEL=`echo $model | tr '[a-z]' '[A-Z]'`	
+    target=$DATA/grid2grid_plots/data/$model
+    mkdir -p $target
+    for fhr in 24 48 ; do
+        last=`$NDATE -$fhr ${VDATE}12`	
+        INITDATE=${last:0:8}
+
+        src_fcst=$EVSINapcp24mean/${model}.$INITDATE.t12z.G227.24h.f${fhr}.nc
+        dst_fcst=$target/${model}_precip_24hrAccum_init${INITDATE}12_fhr0${fhr}.nc
+        if [ -s "$src_fcst" ]; then
+            ln -sf "$src_fcst"  "$dst_fcst"
+        fi
+    done
 done
 
 target=$DATA/grid2grid_plots/data/ccpa
 mkdir -p $target
-ln -sf $EVSINapcp24mean/ccpa24h.t12z.G240.nc  $target/ccpa_precip_24hrAccum_valid${VDATE}12.nc
+src_obs=$EVSINapcp24mean/ccpa24h.t12z.G240.nc
+dst_obs=$target/ccpa_precip_24hrAccum_valid${VDATE}12.nc
+if [ -s "$src_obs" ]; then
+    ln -sf "$src_obs"  "$dst_obs"
+fi
 
 #**************************************
 # Run spatial map python scripts
@@ -101,6 +110,6 @@ if [ $SENDCOM = YES ] && [ -s evs.plots.refs.precip.spatial.map.v${VDATE}.tar ] 
  cp -v evs.plots.refs.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 fi
 
-if [ $SENDDBN = YES ] ; then
+if [ $SENDDBN = YES ] && [ -s $COMOUT/evs.plots.refs.precip.spatial.map.v${VDATE}.tar ] ; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.refs.precip.spatial.map.v${VDATE}.tar
 fi
