@@ -286,13 +286,14 @@ while valid_hr <= int(valid_hr_end):
                         daily_avg_df_list.append(
                             daily_avg_obtype_sid_vx_mask_df
                         )
-            daily_avg_df = pd.concat(
-                daily_avg_df_list, axis=1, ignore_index=True
-            ).T
-            daily_avg_df.to_csv(
-                output_file, header=input_file_header,
-                index=None, sep=' ', mode='w'
-            )
+            if len(daily_avg_df_list) != 0:
+                daily_avg_df = pd.concat(
+                    daily_avg_df_list, axis=1, ignore_index=True
+                ).T
+                daily_avg_df.to_csv(
+                    output_file, header=input_file_header,
+                    index=None, sep=' ', mode='w'
+                )
             if gda_util.check_file_exists_size(output_file):
                 if SENDCOM == 'YES':
                     gda_util.copy_file(output_file, output_file_COMOUT)
