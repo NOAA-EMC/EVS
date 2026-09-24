@@ -44,6 +44,7 @@ if [ "$NEST" = "conus" ]; then
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
+    export PB2NC_MASK="G240"
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
@@ -69,6 +70,7 @@ elif [ "$NEST" = "subreg" ]; then
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
+    export PB2NC_MASK="G218"
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G218_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G218_CPlains.nc, ${FIXevs}/masks/Bukovsky_G218_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G218_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G218_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G218_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G218_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NPlains.nc, ${FIXevs}/masks/Bukovsky_G218_NRockies.nc, ${FIXevs}/masks/Bukovsky_G218_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G218_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G218_Prairie.nc, ${FIXevs}/masks/Bukovsky_G218_Southeast.nc, ${FIXevs}/masks/Bukovsky_G218_Southwest.nc, ${FIXevs}/masks/Bukovsky_G218_SPlains.nc, ${FIXevs}/masks/Bukovsky_G218_SRockies.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
@@ -94,6 +96,7 @@ elif [ "$NEST" = "ak" ]; then
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
+    export PB2NC_MASK="G091"
     export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
@@ -119,6 +122,7 @@ elif [ "$NEST" = "firewx" ]; then
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
+    export PB2NC_MASK="G240"
     export GRID_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc"
     export NEST_INPUT_TEMPLATE="firewx.{init?fmt=%Y%m%d}/{init?fmt=%2H}/rrfs.t{init?fmt=%2H}z.prslev.1p5km.f{lead?fmt=%3H}.firewx.grib2"
     export MIN_IHOUR="00"
@@ -144,6 +148,7 @@ elif [ "$NEST" = "spc_otlk" ]; then
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
+    export PB2NC_MASK="G240"
     export GRID_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc"
     export NEST_INPUT_TEMPLATE=""
     export MIN_IHOUR="00"
