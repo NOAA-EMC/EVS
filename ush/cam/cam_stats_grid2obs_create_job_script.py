@@ -64,6 +64,7 @@ if job_type == 'reformat':
     FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
     MIN_IHOUR = os.environ['MIN_IHOUR']
     COMINobs = os.environ['COMINobs']
+    PB2NC_MASK = os.environ['PB2NC_MASK']
     njob = os.environ['njob']
     MET_PLUS_OUT = os.path.join(
         os.environ['MET_PLUS_OUT'], 'workdirs', job_type, f'job{njob}'
@@ -240,6 +241,7 @@ if job_type == 'reformat':
     job_env_vars_dict['FHR_INCR_FULL'] = FHR_INCR_FULL
     job_env_vars_dict['MIN_IHOUR'] = MIN_IHOUR
     job_env_vars_dict['COMINobs'] = COMINobs
+    job_env_vars_dict['PB2NC_MASK'] = PB2NC_MASK
     job_env_vars_dict['SKIP_IF_OUTPUT_EXISTS'] = SKIP_IF_OUTPUT_EXISTS
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
