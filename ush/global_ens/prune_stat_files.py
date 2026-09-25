@@ -87,8 +87,9 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
          +' | grep -F '+shlex.quote(line_type)
       )
       log_msg = ( 
-                 "Pruning "+data_dir+" files for model "+model+", vx_mask "
-               +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
+          "Pruning "+data_dir+" files for model "+model+", vx_mask "
+          +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "
+          +line_type
       )
       if RUN_type == 'anom' and 'HGT' in var_name:
          filter_cmd += ' | grep -F '+shlex.quote(os.environ['INTERP'])
@@ -105,7 +106,9 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
       grep_cmd = (
          'grep -Fh '+fcst_var_filter+' '+met_stat_files_cmd+filter_cmd
       )
+      print(log_msg)
       with open(pruned_met_stat_file, 'w') as pmsf:
          pmsf.write(met_header_cols)
+         pmsf.flush()
          subprocess.run(grep_cmd, shell=True, stdout=pmsf, encoding='UTF-8')
    print("END: "+os.path.basename(__file__))

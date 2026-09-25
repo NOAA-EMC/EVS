@@ -23,6 +23,7 @@ import sys
 from datetime import timedelta as td
 
 import numpy as np
+import shlex
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
@@ -88,40 +89,40 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
          continue
       with open(met_stat_files[0]) as msf:
          met_header_cols = msf.readline()
-      all_grep_output = ''
+      fcst_var_filter = ' '.join(
+         '-e '+shlex.quote(fcst_var_name) for fcst_var_name in fcst_var_names
+      )
+      filter_cmd = (
+          ' | grep -F '+shlex.quote(vx_mask)
+          +' | grep -F '+shlex.quote(line_type)
+          +' | grep -F '+shlex.quote(os.environ['INTERP'])
+      )
+      log_msg = (
+          "Pruning "+data_dir+" files for model "+model+", vx_mask "
+          +vx_mask+", variable "+'/'.join(fcst_var_names)
+          +", line_type "+line_type+", interp "+os.environ['INTERP']
+      )
       if any(interp_pnts):
-         print("Pruning "+data_dir+" files for model "+model+", vx_mask "
-               +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
-               +", interp "+os.environ['INTERP']+", interp points "+'/'.join(interp_pnts))
          filter_cmd = (
-            ' | grep " '+vx_mask
-            +' " | grep "'+'\|'.join(fcst_var_names)
-            +'" | grep " '+line_type
-            +' " | grep " '+os.environ['INTERP']
-            +' " | grep "'+'\|'.join(interp_pnts)+'"'
+             filter_cmd
+             +' | grep -F "'+'\|'.join(interp_pnts)+'"'
          )
-      else:
-         print("Pruning "+data_dir+" files for model "+model+", vx_mask "
-               +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
-               +", interp "+os.environ['INTERP'])
-         filter_cmd = (
-            ' | grep " '+vx_mask
-            +' " | grep "'+'\|'.join(fcst_var_names)
-            +'" | grep " '+line_type
-            +' " | grep " '+os.environ['INTERP']+' "'
-         )
+         log_msg += ", interp points "+'/'.join(interp_pnts)
       # Prune the MET .stat files and write to new file
-      for met_stat_file in met_stat_files:
-         ps = subprocess.run('grep -R "'+model+'" '+met_stat_file+filter_cmd,
-                               shell=True, stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT, encoding='UTF-8')
-         grep_output = ps.stdout
-         all_grep_output = all_grep_output+grep_output
+      met_stat_files_cmd = ' '.join(
+          shlex.quote(str(met_stat_file)) for met_stat_file in met_stat_files
+      )
       pruned_met_stat_file = os.path.join(pruned_data_dir,
                                           model+'.stat')
+      grep_cmd = (
+          'grep -Fh '+fcst_var_filter+' '+met_stat_files_cmd+filter_cmd
+      )
+      print(log_msg)
       try:
          with open(pruned_met_stat_file, 'w') as pmsf:
-            pmsf.write(met_header_cols+all_grep_output)
+            pmsf.write(met_header_cols)
+            pmsf.flush()
+            subprocess.run(grep_cmd, shell=True, stdout=pmsf, encoding='UTF-8')
       except OSError:
          raise
    print("END: "+os.path.basename(__file__))
