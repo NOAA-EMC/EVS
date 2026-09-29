@@ -47,6 +47,11 @@ ndbc_for_glwu = os.path.join (DATA,'ndbc')
 if not os.path.exists(ndbc_for_glwu):
     os.mkdir(ndbc_for_glwu)
 
+ndbc_prep = os.path.join (DATA,'ndbc_prep')
+if not os.path.exists(ndbc_prep):
+    os.mkdir(ndbc_prep)
+        
+
 output_glwu_ndbc = os.path.join(f'{COMOUT}.{INITDATE}','ndbc')
 if not os.path.exists(output_glwu_ndbc):
     os.mkdir(output_glwu_ndbc)
@@ -114,8 +119,14 @@ for tmp_buoy_file in tmp_glwu_ndbc_files:
     tmp_glwu_ndbc_final.write(ndbc_header2)
     tmp_glwu_ndbc_final.close()
     new_df.to_csv(tmp_glwu_ndbc, header=None, index=None, sep=' ', mode='a')
+
+    #final DATA preparation
+    ndbc_prep_data= os.path.join(ndbc_prep, f'{tmp_id}.txt')
+    shutil.copy2(tmp_glwu_ndbc, ndbc_prep_data) 
     
+    #final COMOUT preparation
     output_glwu_ndbc_files = os.path.join(output_glwu_ndbc, f'{tmp_id}.txt')
+
     if SENDCOM == 'YES':
         if os.path.getsize(tmp_glwu_ndbc) > 0:
             shutil.copy2(tmp_glwu_ndbc, output_glwu_ndbc_files)
