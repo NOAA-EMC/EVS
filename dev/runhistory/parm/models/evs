@@ -8,6 +8,6 @@ dotransfer
 #
 whichpdys       PDYm5
 storetypes      5yr
-files           ./plots/{aqm,cam,global_chem,global_det,rtofs}/headline.%thepdy%/evs.plots.*headline.v%thepdy%.tar
+files           ./plots/{aqm,cam,global_chem,global_det,rtofs}/headline.%thepdy%/evs.plots.*headline.*v%thepdy%.tar
 tarmod          .plots
 dotransfer
