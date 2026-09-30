@@ -69,6 +69,8 @@ elif JOB_GROUP == 'filter_stats':
     fhr_list = os.environ['fhr_list']
     if 'vhrmean_fhr_list' in os.environ:
         vhrmean_fhr_list = os.environ['vhrmean_fhr_list']
+    else:
+        vhrmean_fhr_list = None
     grid = os.environ['grid']
     event_equalization = os.environ['event_equalization']
     interp_method = os.environ['interp_method']
@@ -94,6 +96,8 @@ elif JOB_GROUP == 'make_plots':
     fhr_list = os.environ['fhr_list']
     if 'vhrmean_fhr_list' in os.environ:
         vhrmean_fhr_list = os.environ['vhrmean_fhr_list']
+    else:
+        vhrmean_fhr_list = None
     grid = os.environ['grid']
     event_equalization = os.environ['event_equalization']
     interp_method = os.environ['interp_method']
@@ -261,7 +265,7 @@ elif JOB_GROUP == 'filter_stats':
     date_info_dict = original_date_info_dict.copy()
     plot_info_dict = original_plot_info_dict.copy()
     met_info_dict = original_met_info_dict.copy()
-    if 'vhrmean_fhrs' is not None:
+    if vhrmean_fhr_list is not None:
     # Combine all hours from vhrmean_fhrs and fhrs
        combined_fhrs = sorted(list(set(vhrmean_fhrs + fhrs)))
     else:
@@ -501,7 +505,10 @@ elif JOB_GROUP == 'make_plots':
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
-            date_info_dict['forecast_hours'] = vhrmean_fhrs
+            if vhrmean_fhr_list is not None:
+               date_info_dict['forecast_hours'] = vhrmean_fhrs
+            else:
+               date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = vha_info[0][0][0]
             plot_info_dict['fcst_var_level'] = vha_info[0][0][1]
             plot_info_dict['fcst_var_thresh'] = vha_info[0][0][2]
