@@ -215,6 +215,9 @@ for verif_type in verif_type_list:
         verif_type_env_var_list.append('fhr_min')
         verif_type_env_var_list.append('fhr_max')
         verif_type_env_var_list.append('fhr_inc')
+    if f"{VERIF_CASE_STEP_abbrev}_{verif_type}_vhrmean_fhr_list" \
+            in list(os.environ.keys()):    
+        verif_type_env_var_list.append('vhrmean_fhr_list')                   
     for verif_type_env_var in verif_type_env_var_list:
          env_var_check = (VERIF_CASE_STEP_abbrev+'_'+verif_type+'_'
                           +verif_type_env_var)
