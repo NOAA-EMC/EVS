@@ -2734,6 +2734,11 @@ def initalize_job_env_dict(verif_type, group,
             )
             fhr_list = [str(i) for i in fhr_range]
         job_env_dict['fhr_list'] = ', '.join(fhr_list)
+        if verif_case_step_abbrev_type+'_vhrmean_fhr_list' in list(os.environ.keys()):
+            vhrmean_fhr_list = (
+                os.environ[verif_case_step_abbrev_type+'_vhrmean_fhr_list'].split(' ')
+            )
+            job_env_dict['vhrmean_fhr_list'] = ', '.join(vhrmean_fhr_list)
         if verif_type in ['pres_levs', 'means', 'sfc', 'ptype']:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
