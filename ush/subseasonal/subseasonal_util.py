@@ -10,6 +10,7 @@ import datetime
 import numpy as np
 import subprocess
 import shutil
+import shlex
 import sys
 import netCDF4 as netcdf
 import numpy as np
@@ -4685,28 +4686,33 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
                          +f"{model_stat_files_wildcard}")
             with open(model_stat_files[0]) as msf:
                 met_header_cols = msf.readline()
-            all_grep_output = ''
-            grep_opts = (
-                ' | grep "'+obs+' "'
-                +' | grep "'+grid+' "'
-                +' | grep "'+vx_mask+' "'
-                +' | grep "'+fcst_var_name+' "'
-                +' | grep "'+obs_var_name+' "'
-                +' | grep "'+line_type+' "'
+            fcst_var_filter = ' '.join(
+                '-e '+shlex.quote(fcst_var_name)
             )
-            for model_stat_file in model_stat_files:
-                logger.debug(f"Getting data from {model_stat_file}")
-                ps = subprocess.run(
-                    'grep -R "'+model+' " '+model_stat_file+grep_opts,
-                    shell=True, stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT, encoding='UTF-8'
-                )
-                logger.debug(f"Ran {ps.args}")
-                all_grep_output = all_grep_output+ps.stdout
-            logger.debug(f"Condensed {model} .stat file at "
+            grep_opts = (
+                ' | grep -F "'+obs+' "'
+                +' | grep -F "'+model+' "'
+                +' | grep -F "'+grid+' "'
+                +' | grep -F "'+vx_mask+' "'
+                +' | grep -F "'+obs_var_name+' "'
+                +' | grep -F "'+line_type+' "'
+            )
+            model_stat_files_cmd = ' '.join(
+                shlex.quote(str(model_stat_file)) for model_stat_file in model_stat_files
+            )
+            grep_cmd = (
+                'grep -Fh '+fcst_var_filter+' '+model_stat_files_cmd+grep_opts
+            )
+            logger.debug(f"Condensed {model} .stat file for {obs}, "
+                         +f"{grid}, {vx_mask}, "
+                         +f"{obs_var_name}, "
+                         +f"{fcst_var_name}, and {line_type} at "
                          +f"{output_file}")
-            with open(output_file, 'w') as f:
-                f.write(met_header_cols+all_grep_output)
+            try:
+               with open(output_file, 'w') as cf:
+                  cf.write(met_header_cols)
+                  cf.flush()
+                  subprocess.run(grep_cmd, shell=True, stdout=cf, encoding='UTF-8')
 
 def build_df(logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
