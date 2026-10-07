@@ -4708,11 +4708,10 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
                          +f"{obs_var_name}, "
                          +f"{fcst_var_name}, and {line_type} at "
                          +f"{output_file}")
-            try:
-               with open(output_file, 'w') as cf:
-                  cf.write(met_header_cols)
-                  cf.flush()
-                  subprocess.run(grep_cmd, shell=True, stdout=cf, encoding='UTF-8')
+            with open(output_file, 'w') as cf:
+                cf.write(met_header_cols)
+                cf.flush()
+                subprocess.run(grep_cmd, shell=True, stdout=cf, encoding='UTF-8')
 
 def build_df(logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
