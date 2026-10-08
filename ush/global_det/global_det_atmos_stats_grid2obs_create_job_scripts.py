@@ -439,8 +439,7 @@ generate_stats_jobs_dict = {
                                  'var1_obs_name': 'CAPE',
                                  'var1_obs_levels': 'L0-100000',
                                  'var1_obs_options': ('cnt_thresh = '
-                                                      #+'[ >0&&<15000 ]; '
-                                                      +'[ >0 ]; '
+                                                      +'[ >0&&<15000 ]; '
                                                       +'cnt_logic = '
                                                       +'INTERSECTION;'),
                                  'var1_obs_threshs': ('ge500, ge1000, '
