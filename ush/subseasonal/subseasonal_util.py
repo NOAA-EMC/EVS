@@ -4674,39 +4674,44 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
 
          Returns:
     """
-    model_stat_files_wildcard = os.path.join(input_dir, model, model+'_*.stat')
+    model_stat_files_wildcard = os.path.join(input_dir, model, f"{model}_*.stat")
     model_stat_files = glob.glob(model_stat_files_wildcard, recursive=True)
     if len(model_stat_files) == 0:
-        logger.warning(f"NO STAT FILES IN MATCHING "
+        logger.warning(f"NO STAT FILES MATCHING "
                        +f"{model_stat_files_wildcard}")
     else:
         if not os.path.exists(output_file):
             logger.debug(f"Condensing down stat files matching "
                          +f"{model_stat_files_wildcard}")
+            # Grab the MET header from the first file
             with open(model_stat_files[0]) as msf:
                 met_header_cols = msf.readline()
-            all_grep_output = ''
-            grep_opts = (
-                ' | grep "'+obs+' "'
-                +' | grep "'+grid+' "'
-                +' | grep "'+vx_mask+' "'
-                +' | grep "'+fcst_var_name+' "'
-                +' | grep "'+obs_var_name+' "'
-                +' | grep "'+line_type+' "'
+            # Build the grep command cleanly using a list comprehension
+            additional_grep_list = [
+                obs, model, grid, vx_mask, obs_var_name, line_type
+            ]
+            grep_chain = " | ".join([f'grep -F "{item} "' for item in additional_grep_list])
+            # Assemble the master command
+            # Using -h prevents grep from printing the filename at the start of each line
+            master_command = f'grep -hF "{fcst_var_name} " {model_stat_files_wildcard} | {grep_chain}'
+            logger.info(f"Running grep command: {master_command}")
+            # Execute one subprocess for all files
+            grep = subprocess.run(
+                master_command,
+                shell=True,
+                capture_output=True,
+                encoding="utf8"
             )
-            for model_stat_file in model_stat_files:
-                logger.debug(f"Getting data from {model_stat_file}")
-                ps = subprocess.run(
-                    'grep -R "'+model+' " '+model_stat_file+grep_opts,
-                    shell=True, stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT, encoding='UTF-8'
-                )
-                logger.debug(f"Ran {ps.args}")
-                all_grep_output = all_grep_output+ps.stdout
-            logger.debug(f"Condensed {model} .stat file at "
-                         +f"{output_file}")
-            with open(output_file, 'w') as f:
-                f.write(met_header_cols+all_grep_output)
+            logger.debug(f"Condensed {model} .stat file for {obs}, "
+                         +f"{grid}, {vx_mask}, "
+                         +f"{obs_var_name}, "
+                         +f"{fcst_var_name}, and {line_type} and "
+                         +f"saved to {output_file}")
+            # Write the header and the grep output to the new file
+            with open(output_file, 'w') as cf:
+                cf.write(met_header_cols + grep.stdout)
+        else:
+            logger.info(f"{output_file} already exists")
 
 def build_df(logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
