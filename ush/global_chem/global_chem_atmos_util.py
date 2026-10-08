@@ -1172,7 +1172,7 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
         
         # 2. Build the chained grep command cleanly using a list comprehension
         additional_grep_list = [
-            obs, vx_mask, fcst_var_name, fcst_var_level, obs_var_name, line_type
+            obs, vx_mask, fcst_var_level, obs_var_name, line_type
         ]
         
         # Creates: 'grep -F "obs " | grep -F "vx_mask " | ...'
@@ -1180,7 +1180,7 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
         
         # 3. Assemble the master command
         # Using -h prevents grep from printing the filename at the start of each line
-        master_command = f'grep -h "{model} " {model_stat_files_wildcard} | {grep_chain}'
+        master_command = f'grep -hF "{fcst_var_name} " {model_stat_files_wildcard} | {grep_chain}'
         
         logger.info(f"Running single batch grep: {master_command}")
         
