@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_copy_job_dir_output.py
-Orginal Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This copies MPMD working directory output to common DATA directory
 Run By: scripts/plots/aqm/exevs_aqm_grid2obs.sh

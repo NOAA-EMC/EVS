@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_util.py
-Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This contains many functions used across aqm.
 '''
@@ -728,6 +727,8 @@ def check_plot_files(job_dict):
             plot_info_list = list(itertools.product(var_info))
         elif job_dict['plot'] == 'valid_hour_average_fhr_mean':
             plot_info_list = list(itertools.product(var_info))
+        elif job_dict['plot'] == 'threshold_average_fhrvhr_mean':
+            plot_info_list = list(itertools.product(var_info))
         if job_dict['plot'] in ['performance_diagram', 'threshold_average']:
             fcst_var_thresh_list = (job_dict['fcst_var_thresh_list']\
                                     .split(', '))
@@ -773,7 +774,8 @@ def check_plot_files(job_dict):
                 plot_dict['obs_var_level'] = plot_info[0][1][1]
                 plot_dict['obs_var_thresh'] = plot_info[0][1][2]
             elif plot_dict['plot'] in ['time_series_fhr_mean', 'lead_average_vhr_mean',
-                                        'valid_hour_average_fhr_mean' ]:
+                                       'valid_hour_average_fhr_mean',
+                                       'threshold_average_fhrvhr_mean' ]:
                 plot_dict['fcst_var_name'] = plot_info[0][0][0]
                 plot_dict['fcst_var_level'] = plot_info[0][0][1]
                 plot_dict['fcst_var_thresh'] = plot_info[0][0][2]
@@ -797,7 +799,8 @@ def check_plot_files(job_dict):
                     os.path.exists(plot_check)
                 )
             elif plot_dict['plot'] in ['time_series_fhr_mean', 'lead_average_vhr_mean',
-                                        'valid_hour_average_fhr_mean' ]:
+                                       'valid_hour_average_fhr_mean',
+                                       'threshold_average_fhrvhr_mean' ]:
                 plot_check = plot_specs.get_savefig_name(
                     plot_dict['job_COMOUT_dir'], plot_dict, plot_dict
                 )
@@ -1033,6 +1036,7 @@ def initialize_job_env_dict(verif_type, group,
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
     job_env_dict['fig_name_label'] = os.environ['fig_name_label']
+    job_env_dict['plot_diff_fig'] = os.environ['plot_diff_fig']
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'filter_stats', 'make_plots']:
         if verif_case_step_abbrev_type+'_fhr_list' in list(os.environ.keys()):
@@ -1622,37 +1626,6 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
         else:
             write_filtered_stat_file = False
             read_filtered_stat_file = False
-        if os.path.exists(condensed_model_file) and line_type == 'MCTC':
-            tmp_df = pd.read_csv(
-                condensed_model_file, sep=" ", skiprows=1,
-                skipinitialspace=True,
-                keep_default_na=False, dtype='str', header=None
-            )
-            if len(tmp_df) > 0:
-                ncat = int(tmp_df[25][0])
-                new_met_version_line_type_col_list = []
-                for col in met_version_line_type_col_list:
-                    if col == '(N_CAT)':
-                        new_met_version_line_type_col_list.append('N_CAT')
-                    elif col == 'F[0-9]*_O[0-9]*':
-                        fcount = 1
-                        ocount = 1
-                        totcount = 1
-                        while totcount <= ncat*ncat:
-                            new_met_version_line_type_col_list.append(
-                                'F'+str(fcount)+'_'+'O'+str(ocount)
-                            )
-                            if ocount < ncat:
-                                ocount+=1
-                            elif ocount == ncat:
-                                ocount = 1
-                                fcount+=1
-                            totcount+=1
-                    else:
-                        new_met_version_line_type_col_list.append(col)
-                met_version_line_type_col_list = (
-                    new_met_version_line_type_col_list
-                )
         if write_filtered_stat_file:
             if fcst_var_thresh != 'NA':
                 fcst_var_thresh_symbol, fcst_var_thresh_letter = (
@@ -1755,117 +1728,6 @@ def build_df(job_group, logger, input_dir, output_dir, model_info_dict,
                         [model_stat_file_df_valid_date_idx_list[0]]\
                         [:]
                     )
-                # Do conversions if needed
-                #### K to F
-                if fcst_var_name in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG',
-                                     'SST_DAILYAVG', 'TSOIL'] \
-                        and fcst_var_level in ['Z0', 'Z2', 'Z0.1-0'] \
-                        and line_type in ['SL1L2', 'SAL1L2']:
-                    coef = np.divide(9., 5.)
-                    if fcst_var_name == 'TMP_ANOM_DAILYAVG':
-                        const = 0
-                    elif line_type == 'SAL1L2':
-                        const = 0
-                    else:
-                        const = ((-273.15)*9./5.)+32.
-                    convert = True
-                    units_old = 'K'
-                    units_new = 'F'
-                #### m/s to knots
-                elif fcst_var_name in ['UGRD', 'VGRD', 'UGRD_VGRD',
-                                       'WNDSHR', 'GUST'] \
-                        and line_type in ['SL1L2', 'SAL1L2',
-                                          'VL1L2', 'VAL1L2']:
-                    coef = 1.94384449412
-                    const = 0
-                    convert = True
-                    units_old = 'm/s'
-                    units_new = 'kt'
-                else:
-                    convert = False
-                if convert:
-                    if line_type == 'SL1L2':
-                        fcst_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'FBAR'
-                        ]
-                        obs_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'OBAR'
-                        ]
-                        col1_list = ['FBAR', 'OBAR']
-                        col2_list = ['FOBAR', 'FFBAR', 'OOBAR']
-                    elif line_type == 'SAL1L2':
-                        fcst_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'FABAR'
-                        ]
-                        obs_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'OABAR'
-                        ]
-                        col1_list = ['FABAR', 'OABAR']
-                        col2_list = ['FOABAR', 'FFABAR', 'OOABAR']
-                    elif line_type == 'VL1L2':
-                        uf_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'UFBAR'
-                        ]
-                        vf_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'VFBAR'
-                        ]
-                        uo_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'UOBAR'
-                        ]
-                        vo_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'VOBAR'
-                        ]
-                        col1_list = ['UFBAR', 'VFBAR', 'UOBAR', 'VOBAR']
-                        col2_list = ['UVFOBAR', 'UVFFBAR', 'UVOOBAR']
-                    elif line_type == 'VAL1L2':
-                        uf_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'UFABAR'
-                        ]
-                        vf_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'VFABAR'
-                        ]
-                        uo_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'UOABAR'
-                        ]
-                        vo_avg_old = model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, 'VOABAR'
-                        ]
-                        col1_list = ['UFABAR', 'VFABAR', 'UOABAR', 'VOABAR']
-                        col2_list = ['UVFOABAR', 'UVFFABAR', 'UVOOABAR']
-                    for col in col1_list:
-                        model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, col
-                        ] = (coef
-                             * model_num_df.loc[model_num_df['FCST_UNITS'] \
-                                               == units_old, col]) \
-                            + const
-                    for col in col2_list:
-                        if col in ['FOBAR', 'FOABAR']:
-                            const2 =  ((coef * const * fcst_avg_old)
-                                       + (coef * const * obs_avg_old))
-                        elif col in ['FFBAR', 'FFABAR']:
-                            const2 = 2 * (coef * const * fcst_avg_old)
-                        elif col in ['OOBAR', 'OOABAR']:
-                            const2 = 2 * (coef * const * obs_avg_old)
-                        elif col in ['UVFOBAR', 'UVFOABAR']:
-                            const2 = (coef * const \
-                                      * (uf_avg_old+vf_avg_old
-                                         +uo_avg_old+vo_avg_old))
-                        elif col in ['UVFFBAR', 'UVFFABAR']:
-                            const2 = 2 * (coef * const * \
-                                          (uf_avg_old+vf_avg_old))
-                        elif col in ['UVOOBAR', 'UVOOABAR']:
-                            const2 = 2 * (coef * const * \
-                                          (uo_avg_old+vo_avg_old))
-                        model_num_df.loc[
-                            model_num_df['FCST_UNITS'] == units_old, col
-                        ] = (coef**2
-                             *model_num_df.loc[model_num_df['FCST_UNITS'] \
-                                               == units_old, col]) \
-                             + const2 + const**2
-                    model_num_df.loc[
-                        model_num_df['FCST_UNITS'] == units_old, 'FCST_UNITS'
-                    ] = units_new
             else:
                 logger.debug(f"{filtered_model_stat_file} does not exist")
         if model_num == 'model1':
@@ -1978,37 +1840,6 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
         else:
             write_filtered_stat_file = False
             read_filtered_stat_file = False
-        if os.path.exists(condensed_model_file) and line_type == 'MCTC':
-            tmp_df = pd.read_csv(
-                condensed_model_file, sep=" ", skiprows=1,
-                skipinitialspace=True,
-                keep_default_na=False, dtype='str', header=None
-            )
-            if len(tmp_df) > 0:
-                ncat = int(tmp_df[25][0])
-                new_met_version_line_type_col_list = []
-                for col in met_version_line_type_col_list:
-                    if col == '(N_CAT)':
-                        new_met_version_line_type_col_list.append('N_CAT')
-                    elif col == 'F[0-9]*_O[0-9]*':
-                        fcount = 1
-                        ocount = 1
-                        totcount = 1
-                        while totcount <= ncat*ncat:
-                            new_met_version_line_type_col_list.append(
-                                'F'+str(fcount)+'_'+'O'+str(ocount)
-                            )
-                            if ocount < ncat:
-                                ocount+=1
-                            elif ocount == ncat:
-                                ocount = 1
-                                fcount+=1
-                            totcount+=1
-                    else:
-                        new_met_version_line_type_col_list.append(col)
-                met_version_line_type_col_list = (
-                    new_met_version_line_type_col_list
-                )
         if write_filtered_stat_file:
             if fcst_var_thresh != 'NA':
                 fcst_var_thresh_symbol, fcst_var_thresh_letter = (
@@ -2153,10 +1984,13 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                         ]
                     ).tolist()
                     if len(model_stat_file_df_valid_date_idx_list) == 0:
+                        """
                         logger.debug("No data matching valid date "
                                      +f"{valid_date} in "
                                      +f"{filtered_model_stat_file}")
+                        """
                         continue
+                    """
                     elif len(model_stat_file_df_valid_date_idx_list) > 1:
                         logger.debug(f"Multiple lines matching valid date "
                                      +f"{valid_date} in "
@@ -2166,6 +2000,7 @@ def build_df_fhr_mean(job_group, logger, input_dir, output_dir, model_info_dict,
                         logger.debug(f"One line matching valid date "
                                      +f"{valid_date} in "
                                      +f"{filtered_model_stat_file}")
+                    """
                     model_num_df.loc[(model_num_name, valid_date)] = (
                         model_stat_file_df.loc\
                         [model_stat_file_df_valid_date_idx_list[0]]\

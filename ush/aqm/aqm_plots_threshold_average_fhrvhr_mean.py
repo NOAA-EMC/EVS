@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Name: aqm_plots_threshold_average.py
+Name: aqm_plots_threshold_average_fhrvhr_mean.py
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a threshold average plot.
           (x-axis: threshold value; y-axis: statistics value)
@@ -23,14 +23,14 @@ import re
 import aqm_util as gda_util
 from aqm_plots_specs import PlotSpecs
 
-class ThresholdAverage:
+class ThresholdAverageFhrVhrMean:
     """
     Make a threshold average graphic
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
-        """! Initialize ThresholdAverage class
+        """! Initialize ThresholdAverageFhrVhrMean class
 
              Args:
                  logger          - logger object
@@ -53,7 +53,7 @@ class ThresholdAverage:
         self.met_info_dict = met_info_dict
         self.logo_dir = logo_dir
 
-    def make_threshold_average(self):
+    def make_threshold_average_fhrvhr_mean(self):
         """! Make the threshold average graphic
 
              Args:
@@ -74,47 +74,42 @@ class ThresholdAverage:
             self.logger.error("Cannot make threshold_average for stat "
                               +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
-        # Get dates to plot
-        self.logger.debug("Making valid and init date arrays")
-        valid_dates, init_dates = gda_util.get_plot_dates(
-            self.logger,
-            self.date_info_dict['date_type'],
-            self.date_info_dict['start_date'],
-            self.date_info_dict['end_date'],
-            self.date_info_dict['valid_hr_start'],
-            self.date_info_dict['valid_hr_end'],
-            self.date_info_dict['valid_hr_inc'],
-            self.date_info_dict['init_hr_start'],
-            self.date_info_dict['init_hr_end'],
-            self.date_info_dict['init_hr_inc'],
-            self.date_info_dict['forecast_hour']
+
+        self.logger.info("Reading in model stat files "
+                         +f"from {self.input_dir}")
+        selected_filter_init_hour=self.date_info_dict['init_hr_start']
+        ###  may not need this perform_fcst_hour_filtering=True
+        selected_fcst_day=self.date_info_dict['fday_start']
+
+        forecast_hours=self.date_info_dict['forecast_hours']
+        fhr_max=int(forecast_hours[-1])
+        self.logger.info(f"Maximum FCST Hrs is = {fhr_max}")
+        sel_fhr_start=(int(selected_fcst_day)-1)*24+1
+        sel_fhr_end=int(selected_fcst_day)*24
+        if sel_fhr_end > fhr_max:
+            sel_fhr_end=fhr_max
+        sel_fhr_inc=1
+
+        plot_fcst_hours= np.arange(
+            sel_fhr_start, sel_fhr_end+sel_fhr_inc, sel_fhr_inc
         )
-        format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
-                              for d in range(len(valid_dates))]
-        format_init_dates = [init_dates[d].strftime('%Y%m%d_%H%M%S') \
-                             for d in range(len(init_dates))]
-        if self.date_info_dict['date_type'] == 'VALID':
-            self.logger.debug("Based on date information, plot will display "
-                              +"valid dates "+', '.join(format_valid_dates)+" "
-                              +"for forecast hour "
-                              +f"{self.date_info_dict['forecast_hour']} "
-                              +"with initialization dates "
-                              +', '.join(format_init_dates))
-            plot_dates = valid_dates
-        elif self.date_info_dict['date_type'] == 'INIT':
-            self.logger.debug("Based on date information, plot will display "
-                              +"initialization dates "
-                              +', '.join(format_init_dates)+" "
-                              +"for forecast hour "
-                              +f"{self.date_info_dict['forecast_hour']} "
-                              +"with valid dates "
-                              +', '.join(format_valid_dates))
-            plot_dates = init_dates
+        selected_fcst_hours=[ str(ifhr).zfill(2) for ifhr in plot_fcst_hours ]
+        self.logger.info(f"selected forecast hours = {selected_fcst_hours}")
+
+        # Define valid_hours before looping through thresholds
+        valid_hours = np.arange(
+            int(self.date_info_dict['valid_hr_start']),
+            int(self.date_info_dict['valid_hr_end'])\
+            +int(self.date_info_dict['valid_hr_inc']),
+            int(self.date_info_dict['valid_hr_inc'])
+        )
+
         # Make dataframe for all thresholds
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
         self.logger.info("Building dataframe for all thresholds")
         # Make dataframe for all thresholds
         fcst_units = []
+        initial_threshold_avg_df=True
         for fcst_var_thresh in self.plot_info_dict['fcst_var_threshs']:
             self.logger.debug("Building data for forecast threshold "
                               +f"{fcst_var_thresh}")
@@ -122,33 +117,102 @@ class ThresholdAverage:
                                    .index(fcst_var_thresh))
             obs_var_thresh = (self.plot_info_dict['obs_var_threshs']\
                               [fcst_var_thresh_idx])
-            all_model_df = gda_util.build_df(
-                'make_plots', self.logger, self.input_dir, self.output_dir,
-                self.model_info_dict, self.met_info_dict,
-                self.plot_info_dict['fcst_var_name'],
-                self.plot_info_dict['fcst_var_level'],
-                fcst_var_thresh,
-                self.plot_info_dict['obs_var_name'],
-                self.plot_info_dict['obs_var_level'],
-                obs_var_thresh,
-                self.plot_info_dict['line_type'],
-                self.plot_info_dict['grid'],
-                self.plot_info_dict['vx_mask'],
-                self.plot_info_dict['interp_method'],
-                self.plot_info_dict['interp_points'],
-                self.date_info_dict['date_type'],
-                plot_dates, format_valid_dates,
-                self.date_info_dict['forecast_hour']
-            )
-            fcst_units.extend(
-                all_model_df['FCST_UNITS'].values.astype('str').tolist()
-            )
+            initial_init_df=True
+            num_vld_fcst_hrs_in_df=0
+            for valid_hour in valid_hours:
+                self.logger.debug(f"Building data for valid hour {valid_hour}")
+                for forecast_hour in plot_fcst_hours:
+                    check_init_cyc=gda_util.get_init_hour(valid_hour,forecast_hour)
+                    if check_init_cyc != int(selected_filter_init_hour):
+                        continue
+                    num_vld_fcst_hrs_in_df+=1
+                    # Get dates to plot
+                    self.logger.debug("Making valid and init date arrays")
+                    valid_dates, init_dates = gda_util.get_plot_dates(
+                        self.logger,
+                        self.date_info_dict['date_type'],
+                        self.date_info_dict['start_date'],
+                        self.date_info_dict['end_date'],
+                        str(valid_hour),
+                        str(valid_hour),
+                        '24',
+                        self.date_info_dict['init_hr_start'],
+                        self.date_info_dict['init_hr_end'],
+                        self.date_info_dict['init_hr_inc'],
+                        forecast_hour
+                    )
+                    format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
+                                          for d in range(len(valid_dates))]
+                    format_init_dates = [init_dates[d].strftime('%Y%m%d_%H%M%S') \
+                                         for d in range(len(init_dates))]
+                    if self.date_info_dict['date_type'] == 'VALID':
+                        self.logger.debug("Based on date information, plot will display "
+                                          +"valid dates "+', '.join(format_valid_dates)+" "
+                                          +"for forecast hour "
+                                          +f"{forecast_hour} with "
+                                          +"with initialization dates "
+                                          +', '.join(format_init_dates))
+                        plot_dates = valid_dates
+                    elif self.date_info_dict['date_type'] == 'INIT':
+                        self.logger.debug("Based on date information, plot will display "
+                                          +"initialization dates "
+                                          +', '.join(format_init_dates)+" "
+                                          +"for forecast hour "
+                                          +f"{forecast_hour} with "
+                                          +"with valid dates "
+                                          +', '.join(format_valid_dates))
+                        plot_dates = init_dates
+                    self.logger.debug(f"Building data for valid hour {valid_hour} "
+                                      +f"and forecast hour {forecast_hour}")
+                    all_model_df = gda_util.build_df(
+                        'make_plots', self.logger, self.input_dir, self.output_dir,
+                        self.model_info_dict, self.met_info_dict,
+                        self.plot_info_dict['fcst_var_name'],
+                        self.plot_info_dict['fcst_var_level'],
+                        fcst_var_thresh,
+                        self.plot_info_dict['obs_var_name'],
+                        self.plot_info_dict['obs_var_level'],
+                        obs_var_thresh,
+                        self.plot_info_dict['line_type'],
+                        self.plot_info_dict['grid'],
+                        self.plot_info_dict['vx_mask'],
+                        self.plot_info_dict['interp_method'],
+                        self.plot_info_dict['interp_points'],
+                        self.date_info_dict['date_type'],
+                        plot_dates, format_valid_dates,
+                        str(forecast_hour)
+                    )
+                    fcst_units.extend(
+                        all_model_df['FCST_UNITS'].values.astype('str').tolist()
+                    )
+                    model_idx_list = (
+                        all_model_df.index.get_level_values(0).unique().tolist()
+                    )
+                    all_model_df.rename(
+                        index=lambda s: s + 'f' + str(forecast_hour).zfill(3) + 'vld' + str(valid_hour).zfill(2),
+                        level=1, inplace=True
+                    )
+                    if initial_init_df:
+                        all_vldhr_fcsthr_all_model_df = all_model_df
+                        initial_init_df=False
+                    else:
+                        all_vldhr_fcsthr_all_model_df = pd.concat(
+                            [all_vldhr_fcsthr_all_model_df, all_model_df]
+                        )
+            if num_vld_fcst_hrs_in_df == 0:
+                self.logger.info(f"No stats found for threshold values {fcst_var_thresh} "
+                                +f"from init hour {selected_filter_init_hour}Z, "
+                                +f"valid hour {valid_hours}, "
+                                +f"and selected forecast hour {plot_fcst_hours}")
+                self.logger.info(f"Skip to next threshold value in the loop")
+                continue
             # Calculate statistic mean and 95% confidence intervals
             self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
                              +f"from line type {self.plot_info_dict['line_type']} "
                              +"average and 95% confidence intervals")
             stat_df, stat_array = gda_util.calculate_stat(
-                self.logger, all_model_df, self.plot_info_dict['line_type'],
+                self.logger, all_vldhr_fcsthr_all_model_df,
+                self.plot_info_dict['line_type'],
                 self.plot_info_dict['stat']
             )
             model_idx_list = (
@@ -162,11 +226,12 @@ class ThresholdAverage:
                 for model_idx in model_idx_list:
                     model_idx_num = model_idx_list.index(model_idx)
                     stat_df.loc[model_idx] = stat_array[model_idx_num,:]
-                    all_model_df.loc[model_idx] = (
-                        all_model_df.loc[model_idx].where(
+                    all_vldhr_fcsthr_all_model_df.loc[model_idx] = (
+                        all_vldhr_fcsthr_all_model_df.loc[model_idx].where(
                             stat_df.loc[model_idx].notna()
                     ).values)
-            if fcst_var_thresh == self.plot_info_dict['fcst_var_threshs'][0]:
+            if initial_threshold_avg_df:
+                initial_threshold_avg_df=False
                 threshs_avg_df = pd.DataFrame(
                     np.nan, model_idx_list,
                     columns=self.plot_info_dict['fcst_var_threshs']
@@ -184,11 +249,11 @@ class ThresholdAverage:
                     calc_avg_df = stat_df.loc[model_idx]
                 else:
                     avg_method = 'aggregation'
-                    calc_avg_df = all_model_df.loc[model_idx]
+                    calc_avg_df = all_vldhr_fcsthr_all_model_df.loc[model_idx]
                 model_idx_thresh_avg = gda_util.calculate_average(
                     self.logger, avg_method, self.plot_info_dict['line_type'],
-                    self.plot_info_dict['stat'], calc_avg_df
-                )
+                        self.plot_info_dict['stat'], calc_avg_df
+                    )
                 if not np.isnan(model_idx_thresh_avg) \
                         and not np.ma.is_masked(model_idx_thresh_avg):
                     threshs_avg_df.loc[model_idx, fcst_var_thresh] = (
@@ -225,9 +290,9 @@ class ThresholdAverage:
             include_difference_plot = True
         else:
             include_difference_plot = False
-            
+
         if include_difference_plot:
-            plot_specs_ta = PlotSpecs(self.logger, 'threshold_average')
+            plot_specs_ta = PlotSpecs(self.logger, 'threshold_average_fhrvhr_mean')
         else:
             plot_specs_ta = PlotSpecs(self.logger, 'threshold_average_no_diffplot')
 
@@ -256,9 +321,9 @@ class ThresholdAverage:
         elif len(fcst_units) == 0:
             self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
-        plot_title = plot_specs_ta.get_plot_title(
+        plot_title = plot_specs_ta.get_plot_title_by_fday(
             self.plot_info_dict, self.date_info_dict,
-            fcst_units[0]
+            fcst_units[0], selected_fcst_hours
         )
         plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
         if os.path.exists(plot_left_logo_path):
@@ -312,7 +377,7 @@ class ThresholdAverage:
             ax2.set_xlabel('Threshold')
             ax2.set_xlim([xticks[0], xticks[-1]])
             ax2.set_xticks(xticks[::xtick_intvl])
-            if self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'AOD' ]:
+            if self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'AOD', 'PMTF', 'PMTC' ]:
                 convert_thresh_list = []
                 for thresh in self.plot_info_dict['fcst_var_threshs']:
                     convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
@@ -339,7 +404,7 @@ class ThresholdAverage:
             ax1.set_xlabel('Threshold')
             ax1.set_xlim([xticks[0], xticks[-1]])
             ax1.set_xticks(xticks[::xtick_intvl])
-            if self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'AOD' ]:
+            if self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'AOD', 'PMTF', 'PMTC' ]:
                 convert_thresh_list = []
                 for thresh in self.plot_info_dict['fcst_var_threshs']:
                     convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
@@ -566,14 +631,14 @@ class ThresholdAverage:
             preset_y_axis_tick_min = ax.get_yticks()[0]
             preset_y_axis_tick_max = ax.get_yticks()[-1]
             preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]
-            if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
+            if self.plot_info_dict['stat'] in ['CSI'] and subplot_num == 1:
                 y_axis_tick_inc = 0.1
             else:
                 y_axis_tick_inc = preset_y_axis_tick_inc
             if np.ma.is_masked(stat_min):
                 y_axis_min = preset_y_axis_tick_min
             else:
-                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['CSI'] and subplot_num == 1:
                     y_axis_min = round(stat_min,1) - y_axis_tick_inc
                 else:
                     y_axis_min = preset_y_axis_tick_min
@@ -582,9 +647,8 @@ class ThresholdAverage:
             if np.ma.is_masked(stat_max):
                 y_axis_max = preset_y_axis_tick_max
             else:
-                if self.plot_info_dict['stat'] in ['ACC', 'CSI'] and subplot_num == 1:
+                if self.plot_info_dict['stat'] in ['CSI'] and subplot_num == 1:
                     y_axis_max = 1
-                    stat_check=self.plot_info_dict['stat']
                 else:
                     y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
                     while y_axis_max < stat_max:
@@ -678,7 +742,8 @@ def main():
         'init_hr_start': 'INIT_HR_START',
         'init_hr_end': 'INIT_HR_END',
         'init_hr_inc': 'INIT_HR_INC',
-        'forecast_hour': 'FORECAST_HOUR'
+        'forecast_hours': ['FORECAST_HOUR'],
+        'fday_start': 'FDAY_START'
     }
     PLOT_INFO_DICT = {
         'line_type': 'LINE_TYPE',
@@ -723,10 +788,10 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = ThresholdAverage(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
+    p = ThresholdAverageFhrVhrMean(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
                          DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT,
                          LOGO_DIR)
-    p.make_threshold_average()
+    p.make_threshold_average_fhrvhr_mea()
 
 if __name__ == "__main__":
     main()

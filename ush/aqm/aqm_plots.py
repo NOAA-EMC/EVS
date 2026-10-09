@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_plots.py
-Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This is the driver script for creating plots.
 Run By: individual plotting job scripts generated through
@@ -40,6 +39,7 @@ end_date = os.environ['end_date']
 date_type = os.environ['date_type']
 NDAYS = os.environ['NDAYS']
 fig_name_label = os.environ['fig_name_label']
+plot_diff_fig = os.environ['plot_diff_fig']
 dir_name_label = fig_name_label
 obs_src_name=os.environ['obs_src_name']
 restart_mode = os.environ['restart_mode']
@@ -434,6 +434,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['plot_diff_fig'] = plot_diff_fig
         plot_info_dict['obs_src_name'] = obs_src_name
         for ts_info in \
                 list(itertools.product(valid_hrs, fhrs, var_info)):
@@ -490,6 +491,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['plot_diff_fig'] = plot_diff_fig
         plot_info_dict['obs_src_name'] = obs_src_name
         for ts_info in list(var_info):
             logger.info(f"aqm_plots.py {ts_info}")
@@ -561,6 +563,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['plot_diff_fig'] = plot_diff_fig
         plot_info_dict['obs_src_name'] = obs_src_name
         for la_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(la_info[0])
@@ -616,6 +619,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['plot_diff_fig'] = plot_diff_fig
         plot_info_dict['obs_src_name'] = obs_src_name
         for la_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
@@ -683,6 +687,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['plot_diff_fig'] = plot_diff_fig
         plot_info_dict['obs_src_name'] = obs_src_name
         for vha_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
@@ -743,6 +748,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['plot_diff_fig'] = plot_diff_fig
         plot_info_dict['obs_src_name'] = obs_src_name
         for vhafm_info in list(var_info):
             date_info_dict['valid_hr_start'] = valid_hr_start
@@ -856,6 +862,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['plot_diff_fig'] = plot_diff_fig
         plot_info_dict['obs_src_name'] = obs_src_name
         for ta_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(ta_info[0])
@@ -917,6 +924,65 @@ elif JOB_GROUP == 'make_plots':
                                     +f"{job_COMOUT_image_name}")
                         gda_util.copy_file(job_work_image_name,
                                            job_COMOUT_image_name)
+    elif plot == 'threshold_average_fhrvhr_mean':
+        import aqm_plots_threshold_average_fhrvhr_mean as gdap_tafvm
+        date_info_dict['fday_start'] = fday_start
+        date_info_dict['fday_end'] = fday_end
+        date_info_dict['fday_inc'] = fday_inc
+        plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['plot_diff_fig'] = plot_diff_fig
+        plot_info_dict['obs_src_name'] = obs_src_name
+        for tafvm_info in list(var_info):
+            date_info_dict['valid_hr_start'] = valid_hr_start
+            date_info_dict['valid_hr_end'] = valid_hr_end
+            date_info_dict['valid_hr_inc'] = valid_hr_inc
+            date_info_dict['forecast_hours'] = fhrs
+            plot_info_dict['fcst_var_name'] = fcst_var_name
+            plot_info_dict['fcst_var_level'] = tafvm_info[0][1]
+            plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
+            plot_info_dict['obs_var_name'] = obs_var_name
+            plot_info_dict['obs_var_level'] = tafvm_info[1][1]
+            plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
+            job_work_image_name = plot_specs.get_savefig_name(
+                job_work_dir, plot_info_dict, date_info_dict
+            )
+            job_COMOUT_image_name = job_work_image_name.replace(
+                job_work_dir, job_COMOUT_dir
+            )
+            job_DATA_image_name = job_work_image_name.replace(
+                job_work_dir, job_DATA_dir
+            )
+            if SENDCOM == 'YES':
+                check_job_image_name = job_COMOUT_image_name
+                job_input_dir = job_COMOUT_dir
+            else:
+                check_job_image_name = job_DATA_image_name
+                job_input_dir = job_DATA_dir
+            if ( not os.path.exists(check_job_image_name) or restart_mode != "YES" ) \
+                    and plot_info_dict['stat'] != 'FBAR_OBAR':
+                if len(plot_info_dict['fcst_var_threshs']) <= 1:
+                    logger.warning("No span of thresholds to plot, "
+                                   +"given 1 threshold, skipping "
+                                   +"threshold_average_fhrvhr_mean plots")
+                    make_tafvm = False
+                else:
+                    make_tafvm = True
+            else:
+                make_tafvm = False
+            if make_tafvm:
+                plot_tafvm = gdap_tafvm.ThresholdAverageFhrVhrMean(logger,
+                                                     job_input_dir+'/..',
+                                                     job_work_dir,
+                                                     model_info_dict,
+                                                     date_info_dict,
+                                                     plot_info_dict,
+                                                     met_info_dict, logo_dir)
+                plot_tafvm.make_threshold_average_fhrvhr_mean()
+                if SENDCOM == 'YES' and os.path.exists(job_work_image_name):
+                    logger.info(f"Copying {job_work_image_name} to "
+                                +f"{job_COMOUT_image_name}")
+                    gda_util.copy_file(job_work_image_name,
+                                       job_COMOUT_image_name)
     elif plot == 'performance_diagram':
         ## performance diagram is for daily values with threshold list
         ## for day 1 day 2 day 3 FCST, each init should only have one
@@ -980,6 +1046,7 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['fday_end'] = fday_end
         date_info_dict['fday_inc'] = fday_inc
         plot_info_dict['fig_name_label'] = fig_name_label
+        plot_info_dict['plot_diff_fig'] = plot_diff_fig
         plot_info_dict['obs_src_name'] = obs_src_name
         for pd_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(pd_info[0])
