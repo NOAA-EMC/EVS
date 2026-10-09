@@ -101,7 +101,6 @@ class ValidHourAverageFhrMean:
         for valid_hour in valid_hours:
             flag_init_df=True
             self.logger.debug(f"Building data for valid hour {valid_hour}")
-            flag_init_df=True
             for forecast_hour in plot_fcst_hours:
                 check_init_date=gda_util.get_init_hour(valid_hour,forecast_hour)
                 if check_init_date != int(selected_filter_init_hour):

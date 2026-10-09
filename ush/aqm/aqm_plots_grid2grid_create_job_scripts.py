@@ -703,7 +703,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         itertools.product(plot_valid_hrs_loop,
                                           plot_fcst_threshs_loop,
                                           plot_fcst_levels_loop,
-                                          plot_fdays_loop, 
+                                          plot_fdays_loop,
                                           plot_init_hrs_loop)
                     ):
                         job_env_dict['fday_start'] = str(plot_loop_info[3])
