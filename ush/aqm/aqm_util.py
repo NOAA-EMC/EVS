@@ -127,60 +127,6 @@ def check_file_exists_size(file_name):
         file_good = False
     return file_good
 
-def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
-                           fhr):
-    """! This writes a missing model file to a log
-
-         Args:
-             log_missing_file - log of missing file (string)
-             missing_file     - missing file path (string)
-             model            - model name (string)
-             init_dt          - initialization date (datetime)
-             fhr              - forecast hour (string)
-    """
-    if not os.path.exists(log_missing_file):
-        with open(log_missing_file, "w") as lmf:
-            lmf.write("#!/bin/bash\n")
-            lmf.write("set -x\n")
-            if fhr == 'anl':
-                lmf.write(f'export subject="{model.upper()} Analysis '
-                          +'Data Missing for EVS aqm"\n')
-                lmf.write(f'echo "Warning: No {model.upper()} analysis was '
-                          +f'available for valid date {init_dt:%Y%m%d%H}" '
-                          +'> mailmsg\n')
-            else:
-                lmf.write(f'export subject="F{fhr} {model.upper()} Forecast '
-                          +'Data Missing for EVS aqm"\n')
-                lmf.write(f'echo "Warning: No {model.upper()} forecast was '
-                          +f'available for {init_dt:%Y%m%d%H}f{fhr}" '
-                          +'> mailmsg\n')
-            lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
-            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
-            lmf.write(f'cat mailmsg | mail -s "$subject" $MAILTO\n')
-        os.chmod(log_missing_file, 0o755)
-
-def log_missing_file_truth(log_missing_file, missing_file, obs, valid_dt):
-    """! This writes a missing truth file to a log
-
-         Args:
-             log_missing_file - log of missing file (string)
-             missing_file     - missing file path (string)
-             obs              - observation name (string)
-             valid_dt         - initialization date (datetime)
-    """
-    if not os.path.exists(log_missing_file):
-        with open(log_missing_file, "a") as lmf:
-            lmf.write("#!/bin/bash\n")
-            lmf.write("set -x\n")
-            lmf.write(f'export subject="{obs} Data Missing for EVS '
-                      +'aqm"\n')
-            lmf.write(f'echo "Warning: No {obs} data was available for '
-                      +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
-            lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
-            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
-            lmf.write(f'cat mailmsg | mail -s "$subject" $MAILTO\n')
-        os.chmod(log_missing_file, 0o755)
-
 
 def copy_file(source_file, dest_file):
     """! This copies a file from one location to another
@@ -194,125 +140,6 @@ def copy_file(source_file, dest_file):
     if check_file_exists_size(source_file):
         print("Copying "+source_file+" to "+dest_file)
         shutil.copy(source_file, dest_file)
-
-def convert_grib1_grib2(grib1_file, grib2_file):
-    """! Converts GRIB1 data to GRIB2
-
-         Args:
-             grib1_file - string of the path to
-                          the GRIB1 file to
-                          convert (string)
-             grib2_file - string of the path to
-                          save the converted GRIB2
-                          file (string)
-         Returns:
-    """
-    print(f"Converting GRIB1 file {grib1_file} to GRIB2 file {grib2_file}")
-    cnvgrib = os.environ['CNVGRIB']
-    run_shell_command(
-        [cnvgrib, '-g12', grib1_file, grib2_file, '>', '/dev/null', '2>&1']
-    )
-
-def convert_grib2_grib1(grib2_file, grib1_file):
-    """! Converts GRIB2 data to GRIB1
-
-         Args:
-             grib2_file - string of the path to
-                          the GRIB2 file to
-                          convert
-             grib1_file - string of the path to
-                          save the converted GRIB1
-                          file
-         Returns:
-    """
-    print(f"Converting GRIB2 file {grib2_file} to GRIB1 file {grib1_file}")
-    cnvgrib = os.environ['CNVGRIB']
-    run_shell_command(
-        [cnvgrib, '-g21', grib2_file, grib1_file, '>', '/dev/null', '2>&1']
-    )
-
-def convert_grib2_grib2(grib2_fileA, grib2_fileB):
-    """! Converts GRIB2 data to GRIB2
-
-         Args:
-             grib2_fileA - string of the path to
-                           the GRIB2 file to
-                           convert
-             grib2_fileB - string of the path to
-                           save the converted GRIB2
-                           file
-         Returns:
-    """
-    print(f"Converting GRIB2 file {grib2_fileA} to GRIB2 file {grib2_fileB}")
-    cnvgrib = os.environ['CNVGRIB']
-    run_shell_command(
-        [cnvgrib, '-g22', grib2_fileA, grib2_fileB, '>', '/dev/null', '2>&1']
-    )
-
-def check_grib1_file_corrupt(grib1_file):
-    """! Checks if GRIB1 file is corrupt
-
-         Args:
-             grib1_file - string of the path to
-                          the GRIB1 file to
-                          convert
-         Returns:
-             file_is_corrupt - True means file is corrupt
-                               False means file is not corrupt
-    """
-    WGRIB = os.environ['WGRIB']
-    chk_corrupt = subprocess.run(
-        f"{WGRIB} {grib1_file}  1> /dev/null 2>&1", shell=True
-    )
-    if chk_corrupt.returncode != 0:
-        print(f"WARNING: {grib1_file} is corrupt")
-        file_is_corrupt = True
-    else:
-        file_is_corrupt = False
-    return file_is_corrupt
-
-def check_grib2_file_corrupt(grib2_file):
-    """! Checks if GRIB2 file is corrupt
-
-         Args:
-             grib2_file - string of the path to
-                          the GRIB2 file to
-                          convert
-         Returns:
-             file_is_corrupt - True means file is corrupt
-                               False means file is not corrupt
-    """
-    WGRIB2 = os.environ['WGRIB2']
-    chk_corrupt = subprocess.run(
-        f"{WGRIB2} {grib2_file}  1> /dev/null 2>&1", shell=True
-    )
-    if chk_corrupt.returncode != 0:
-        print(f"WARNING: {grib2_file} is corrupt")
-        file_is_corrupt = True
-    else:
-        file_is_corrupt = False
-    return file_is_corrupt
-
-def check_netcdf_file_corrupt(netcdf_file):
-    """! Checks if netCDF file is corrupt
-                
-         Args:
-             netcdf_file - string of the path to
-                           the netCDF file to 
-                           convert
-         Returns:
-             file_is_corrupt - True means file is corrupt
-                               False means file is not corrupt
-    """
-    chk_corrupt = subprocess.run(
-        f"ncks -H {netcdf_file}  1> /dev/null 2>&1", shell=True
-    )
-    if chk_corrupt.returncode != 0:
-        print(f"WARNING: {netcdf_file} is corrupt")
-        file_is_corrupt = True
-    else:
-        file_is_corrupt = False
-    return file_is_corrupt
 
 
 def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
@@ -894,101 +721,6 @@ def check_plot_files(job_dict):
             plot_files_exist = False
     return plot_files_exist
 
-def get_obs_valid_hrs(obs):
-    """! This returns the valid hour start, end, and increment
-         information for a given observation
-
-         Args:
-             obs - observation name (string)
-
-         Returns:
-             valid_hr_start - starting valid hour (integer)
-             valid_hr_end   - ending valid hour (integer)
-             valid_hr_inc   - valid hour increment (integer)
-    """
-    obs_valid_hr_dict = {
-        '24hrCCPA': {'valid_hr_start': 12,
-                     'valid_hr_end': 12,
-                     'valid_hr_inc': 24},
-        '3hrCCPA': {'valid_hr_start': 0,
-                     'valid_hr_end': 21,
-                     'valid_hr_inc': 3},
-        '24hrNOHRSC': {'valid_hr_start': 12,
-                       'valid_hr_end': 12,
-                       'valid_hr_inc': 24},
-        'OSI-SAF': {'valid_hr_start': 00,
-                    'valid_hr_end': 00,
-                    'valid_hr_inc': 24},
-        'GHRSST-OSPO': {'valid_hr_start': 00,
-                        'valid_hr_end': 00,
-                        'valid_hr_inc': 24},
-        'GET_D': {'valid_hr_start': 00,
-                  'valid_hr_end': 00,
-                  'valid_hr_inc': 24},
-    }
-    if obs in list(obs_valid_hr_dict.keys()):
-        valid_hr_start = obs_valid_hr_dict[obs]['valid_hr_start']
-        valid_hr_end = obs_valid_hr_dict[obs]['valid_hr_end']
-        valid_hr_inc = obs_valid_hr_dict[obs]['valid_hr_inc']
-    else:
-        print(f"FATAL ERROR: Cannot get {obs} valid hour information")
-        sys.exit(1)
-    return valid_hr_start, valid_hr_end, valid_hr_inc
-
-def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
-                         account):
-    """! This submits a job to the transfer queue
-         to get data that does not reside on current machine
-         Args:
-             job_file   - path to job submission file (string)
-             job_name   - job submission name (string)
-             job_output - path to write job output (string)
-             machine    - machine name (string)
-             user       - user name (string)
-             queue      - submission queue name (string)
-             account    - submission account name (string)
-         Returns:
-    """
-    # Set up job wall time information
-    walltime = '60'
-    walltime_seconds = (
-        datetime.timedelta(minutes=int(walltime)).total_seconds()
-    )
-    walltime = (datetime.datetime.min
-                + datetime.timedelta(minutes=int(walltime))).time()
-    # Submit job
-    print(f"Submitting {job_file} to {queue}")
-    print(f"Output sent to {job_output}")
-    os.chmod(job_file, 0o755)
-    if machine == 'WCOSS2':
-        job_submit_cmd = (
-            f"qsub -V -l walltime={walltime:%H:%M:%S} -q {queue} -A {account} "
-            +f"-o {job_output} -e {job_output} -N {job_name} "
-            +f"-l select=1:ncpus=1 {job_file}"
-        )
-        job_check_cmd = (
-            f"qselect -s QR -u {user} -N {job_name} | wc -l"
-        )
-    elif machine in ['HERA', 'ORION', 'S4', 'JET']:
-        job_submit_cmd = (
-            f"sbatch --ntasks=1 --time={walltime:%H:%M:%S} "
-            +f"--partition={queue} --account={account} --output={job_output} "
-            +f"--job-name={job_name} {job_file}"
-        )
-        job_check_cmd = (
-            f"squeue -u {user} -n {job_name} -t R,PD -h | wc -l"
-        )
-    job_submit = subprocess.run(job_submit_cmd, shell=True)
-    sleep_counter, sleep_checker = 1, 10
-    while (sleep_counter*sleep_checker) <= walltime_seconds:
-        sleep(sleep_checker)
-        print(f"Walltime checker: {str(sleep_counter*sleep_checker)} "
-              +f"out of {str(int(walltime_seconds))} seconds")
-        job_check = subprocess.run(job_check_cmd, shell=True,
-                                   capture_output=True, encoding="utf8")
-        if job_check.stdout[0] == '0':
-            break
-        sleep_counter+=1
 
 def initialize_job_env_dict(verif_type, group,
                            verif_case_step_abbrev_type, job):
@@ -1009,15 +741,7 @@ def initialize_job_env_dict(verif_type, group,
         'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
         'COMOUT', 'evs_run_mode'
     ]
-    if group in ['reformat_data', 'assemble_data', 'generate_stats',
-                 'gather_stats', 'summarize_stats', 'write_reports',
-                 'concatenate_reports']:
-        if os.environ['VERIF_CASE'] == 'wmo':
-           job_env_var_list.extend(['met_ver'])
-        job_env_var_list.extend(
-            ['METPLUS_PATH', 'MET_ROOT']
-        )
-    elif group in ['condense_stats', 'filter_stats', 'make_plots',
+    if group in ['condense_stats', 'filter_stats', 'make_plots',
                    'tar_images']:
         job_env_var_list.extend(['MET_ROOT', 'met_ver'])
         if group == 'tar_images':
@@ -1025,10 +749,6 @@ def initialize_job_env_dict(verif_type, group,
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
-    if os.environ['VERIF_CASE'] == 'wmo':
-        for env_var in ['MODELNAME', 'COMINgfs', 'JOB_GROUP']:
-            job_env_dict[env_var] = os.environ[env_var]
-        return job_env_dict
     if group in ['condense_stats', 'filter_stats', 'make_plots',
                  'tar_images']:
         job_env_dict['plot_verbosity'] = 'DEBUG'
@@ -1037,8 +757,7 @@ def initialize_job_env_dict(verif_type, group,
     job_env_dict['job_name'] = job
     job_env_dict['fig_name_label'] = os.environ['fig_name_label']
     job_env_dict['plot_diff_fig'] = os.environ['plot_diff_fig']
-    if group in ['reformat_data', 'assemble_data', 'generate_stats',
-                 'filter_stats', 'make_plots']:
+    if group in ['filter_stats', 'make_plots']:
         if verif_case_step_abbrev_type+'_fhr_list' in list(os.environ.keys()):
             fhr_list = (
                 os.environ[verif_case_step_abbrev_type+'_fhr_list'].split(' ')
@@ -1078,28 +797,7 @@ def initialize_job_env_dict(verif_type, group,
                 verif_type_valid_hr_inc = 24
             job_env_dict['valid_hr_inc'] = str(verif_type_valid_hr_inc)
         else:
-            if verif_type == 'precip_accum24hr':
-                valid_hr_start, valid_hr_end, valid_hr_inc = (
-                    get_obs_valid_hrs('24hrCCPA')
-                )
-            elif verif_type == 'precip_accum3hr':
-                valid_hr_start, valid_hr_end, valid_hr_inc = (
-                    get_obs_valid_hrs('3hrCCPA')
-                )
-            elif verif_type == 'snow':
-                valid_hr_start, valid_hr_end, valid_hr_inc = (
-                    get_obs_valid_hrs('24hrNOHRSC')
-                )
-            elif verif_type == 'sea_ice':
-                valid_hr_start, valid_hr_end, valid_hr_inc = (
-                    get_obs_valid_hrs('OSI-SAF')
-                )
-            elif verif_type == 'sst':
-                valid_hr_start, valid_hr_end, valid_hr_inc = (
-                    get_obs_valid_hrs('GHRSST-OSPO')
-                )
-            else:
-                 valid_hr_start, valid_hr_end, valid_hr_inc = 12, 12, 23
+            valid_hr_start, valid_hr_end, valid_hr_inc = 12, 12, 23
             job_env_dict['valid_hr_start'] = str(valid_hr_start).zfill(2)
             job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
             job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
@@ -1317,16 +1015,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
                                COMOUT directory
     """
     region_savefig_dict = {
-        'Africa': 'africa',
-        'AFRICA': 'africa',
-        'Alaska': 'alaska',
-        'alaska': 'alaska',
         'Appalachia': 'buk_apl',
-        'ANTARCTIC': 'antarctic',
-        'ARCTIC': 'arctic',
-        'Asia': 'asia',
-        'ASIA': 'asia',
-        'ATL_MDR': 'al_mdr',
         'Conus': 'conus',
         'conus': 'conus',
         'CONUS': 'buk_conus',
@@ -1336,35 +1025,20 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
         'CONUS_West': 'buk_conus_w',
         'CPlains': 'buk_cpl',
         'DeepSouth': 'buk_ds',
-        'EPAC_MDR': 'ep_mdr',
-        'GLOBAL': 'glb',
         'GreatBasin': 'buk_grb',
         'GreatLakes': 'buk_grlk',
-        'hawaii': 'hawaii',
         'Mezquital': 'buk_mez',
         'MidAtlantic': 'buk_matl',
-        'N60N90': 'n60',
-        'NAMERICA': 'namer',
-        'NAO': 'nao',
-        'NHEM': 'nhem',
         'NorthAtlantic': 'buk_ne',
         'NPlains': 'buk_npl',
-        'NPO': 'npo',
         'NRockies': 'buk_nrk',
         'PacificNW': 'buk_npw',
         'PacificSW': 'buk_psw',
         'Prairie': 'buk_pra',
-        'prico': 'prico',
-        'S60S90': 's60',
-        'SAO': 'sao',
-        'SAMERICA': 'samer',
-        'SHEM': 'shem',
         'Southeast': 'buk_se',
         'Southwest': 'buk_sw',
         'SPlains': 'buk_spl',
-        'SPO': 'spo',
         'SRockies': 'buk_srk',
-        'TROPICS': 'tropics'
     }
     dir_step = plot_job_env_dict['STEP'].lower()
     dir_verif_case = plot_job_env_dict['VERIF_CASE'].lower()
@@ -1373,16 +1047,11 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     dir_line_type = plot_job_env_dict['line_type'].lower()
     dir_parameter = plot_job_env_dict['fcst_var_name'].lower()
     if job_group == 'make_plots':
-        if plot_job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
-            dir_level = plot_job_env_dict['vert_profile'].lower()
-        else:
-            dir_level = (plot_job_env_dict['fcst_var_level_list'].lower()\
+        dir_level = (plot_job_env_dict['fcst_var_level_list'].lower()\
                          .replace('.','p').replace('-', '_'))
     else:
         dir_level = (plot_job_env_dict['fcst_var_level'].lower()\
                      .replace('.','p').replace('-', '_'))
-    if plot_job_env_dict['fcst_var_name'] == 'CAPE':
-        dir_level = dir_level.replace('z0', 'l0').replace('p90_0', 'l90')
     dir_region = region_savefig_dict[plot_job_env_dict['vx_mask']]
     if job_group in ['condense_stats', 'filter_stats']:
         job_work_dir = os.path.join(
@@ -1422,41 +1091,6 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     )
     return job_work_dir, job_DATA_dir, job_COMOUT_dir
 
-def get_daily_stat_file(model_name, source_stats_base_dir,
-                        dest_model_name_stats_dir,
-                        verif_case, start_date_dt, end_date_dt):
-    """! Link model daily stat files
-         Args:
-             model_name                - name of model (string)
-             source_stats_base_dir     - full path to stats/aqm
-                                         source directory (string)
-             dest_model_name_stats_dir - full path to model
-                                         destintion directory (string)
-             verif_case                - grid2grid or grid2obs (string)
-             start_date_dt             - month start date (datetime obj)
-             end_date_dt               - month end date (datetime obj)
-         Returns:
-    """
-    date_dt = start_date_dt
-    while date_dt <= end_date_dt:
-        source_model_date_stat_file = os.path.join(
-            source_stats_base_dir,
-            model_name+'.'+date_dt.strftime('%Y%m%d'),
-            'evs.stats.'+model_name+'.atmos.'+verif_case+'.'
-            +'v'+date_dt.strftime('%Y%m%d')+'.stat'
-        )
-        dest_model_date_stat_file = os.path.join(
-            dest_model_name_stats_dir,
-            model_name+'_atmos_'+verif_case+'_v'
-            +date_dt.strftime('%Y%m%d')+'.stat'
-        )
-        if not os.path.exists(dest_model_date_stat_file):
-            if check_file_exists_size(source_model_date_stat_file):
-                print(f"Linking {source_model_date_stat_file} to "
-                      +f"{dest_model_date_stat_file}")
-                os.symlink(source_model_date_stat_file,
-                           dest_model_date_stat_file)
-        date_dt = date_dt + datetime.timedelta(days=1)
 
 def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
                               vx_mask, fcst_var_name, fcst_var_level,
@@ -2034,12 +1668,6 @@ def calculate_stat(logger, data_df, line_type, stat):
        FOBAR = data_df.loc[:]['FOBAR']
        FFBAR = data_df.loc[:]['FFBAR']
        OOBAR = data_df.loc[:]['OOBAR']
-   elif line_type == 'SAL1L2':
-       FABAR = data_df.loc[:]['FABAR']
-       OABAR = data_df.loc[:]['OABAR']
-       FOABAR = data_df.loc[:]['FOABAR']
-       FFABAR = data_df.loc[:]['FFABAR']
-       OOABAR = data_df.loc[:]['OOABAR']
    elif line_type == 'CNT':
        FBAR = data_df.loc[:]['FBAR']
        FBAR_NCL = data_df.loc[:]['FBAR_NCL']
@@ -2117,10 +1745,6 @@ def calculate_stat(logger, data_df, line_type, stat):
        MAD = data_df.loc[:]['MAD']
        MAD_BCL = data_df.loc[:]['MAD_BCL']
        MAD_BCU = data_df.loc[:]['MAD_BCU']
-       ANOM_CORR_NCL = data_df.loc[:]['ANOM_CORR_NCL']
-       ANOM_CORR_NCU = data_df.loc[:]['ANOM_CORR_NCU']
-       ANOM_CORR_BCL = data_df.loc[:]['ANOM_CORR_BCL']
-       ANOM_CORR_BCU = data_df.loc[:]['ANOM_CORR_BCU']
        ME2 = data_df.loc[:]['ME2']
        ME2_BCL = data_df.loc[:]['ME2_BCL']
        ME2_BCU = data_df.loc[:]['ME2_BCU']
@@ -2133,34 +1757,16 @@ def calculate_stat(logger, data_df, line_type, stat):
        RMSOA = data_df.loc[:]['RMSOA']
        RMSOA_BCL = data_df.loc[:]['RMSOA_BCL']
        RMSOA_BCU = data_df.loc[:]['RMSOA_BCU']
-       ANOM_CORR_UNCNTR = data_df.loc[:]['ANOM_CORR_UNCNTR']
-       ANOM_CORR_UNCNTR_BCL = data_df.loc[:]['ANOM_CORR_UNCNTR_BCL']
-       ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
        SI = data_df.loc[:]['SI']
        SI_BCL = data_df.loc[:]['SI_BCL']
        SI_BCU = data_df.loc[:]['SI_BCU']
-   elif line_type == 'GRAD':
-       FGBAR = data_df.loc[:]['FGBAR']
-       OGBAR = data_df.loc[:]['OGBAR']
-       MGBAR = data_df.loc[:]['MGBAR']
-       EGBAR = data_df.loc[:]['EGBAR']
-       S1 = data_df.loc[:]['S1']
-       S1_OG = data_df.loc[:]['S1_OG']
-       FGOG_RATIO = data_df.loc[:]['FGOG_RATIO']
-       DX = data_df.loc[:]['DX']
-       DY = data_df.loc[:]['DY']
-   elif line_type == 'FHO':
-       F_RATE = data_df.loc[:]['F_RATE']
-       H_RATE = data_df.loc[:]['H_RATE']
-       O_RATE = data_df.loc[:]['O_RATE']
-   elif line_type in ['CTC', 'NBRCTC']:
+   elif line_type in ['CTC']:
        FY_OY = data_df.loc[:]['FY_OY']
        FY_ON = data_df.loc[:]['FY_ON']
        FN_OY = data_df.loc[:]['FN_OY']
        FN_ON = data_df.loc[:]['FN_ON']
-       if line_type == 'CTC':
-           EC_VALUE = data_df.loc[:]['EC_VALUE']
-   elif line_type in ['CTS', 'NBRCTS']:
+       EC_VALUE = data_df.loc[:]['EC_VALUE']
+   elif line_type in ['CTS']:
        BASER = data_df.loc[:]['BASER']
        BASER_NCL = data_df.loc[:]['BASER_NCL']
        BASER_NCU = data_df.loc[:]['BASER_NCU']
@@ -2171,11 +1777,6 @@ def calculate_stat(logger, data_df, line_type, stat):
        FMEAN_NCU = data_df.loc[:]['FMEAN_NCU']
        FMEAN_BCL = data_df.loc[:]['FMEAN_BCL']
        FMEAN_BCU = data_df.loc[:]['FMEAN_BCU']
-       ACC = data_df.loc[:]['ACC']
-       ACC_NCL = data_df.loc[:]['ACC_NCL']
-       ACC_NCU = data_df.loc[:]['ACC_NCU']
-       ACC_BCL = data_df.loc[:]['ACC_BCL']
-       ACC_BCU = data_df.loc[:]['ACC_BCU']
        FBIAS = data_df.loc[:]['FBIAS']
        FBIAS_BCL = data_df.loc[:]['FBIAS_BCL']
        FBIAS_BCU = data_df.loc[:]['FBIAS_BCU']
@@ -2253,120 +1854,12 @@ def calculate_stat(logger, data_df, line_type, stat):
        BAGSS = data_df.loc[:]['BAGSS']
        BAGSS_BCL = data_df.loc[:]['BAGSS_BCL']
        BAGSS_BCU = data_df.loc[:]['BAGSS_BCU']
-       if line_type == 'CTS':
-           EC_VALUE = data_df.loc[:]['EC_VALUE']
-   elif line_type == 'MCTC':
-       F1_O1 = data_df.loc[:]['F1_O1']
-   elif line_type == 'NBRCNT':
-       FBS = data_df.loc[:]['FBS']
-       FBS_BCL = data_df.loc[:]['FBS_BCL']
-       FBS_BCU = data_df.loc[:]['FBS_BCU']
-       FSS = data_df.loc[:]['FSS']
-       FSS_BCL = data_df.loc[:]['FSS_BCL']
-       FSS_BCU = data_df.loc[:]['FSS_BCU']
-       AFSS = data_df.loc[:]['AFSS']
-       AFSS_BCL = data_df.loc[:]['AFSS_BCL']
-       AFSS_BCU = data_df.loc[:]['AFSS_BCU']
-       UFSS = data_df.loc[:]['UFSS']
-       UFSS_BCL = data_df.loc[:]['UFSS_BCL']
-       UFSS_BCU = data_df.loc[:]['UFSS_BCU']
-       F_RATE = data_df.loc[:]['F_RATE']
-       F_RATE_BCL = data_df.loc[:]['F_RATE_BCL']
-       F_RATE_BCU = data_df.loc[:]['F_RATE_BCU']
-       O_RATE = data_df.loc[:]['O_RATE']
-       O_RATE_BCL = data_df.loc[:]['O_RATE_BCL']
-       O_RATE_BCU = data_df.loc[:]['O_RATE_BCU']
-   elif line_type == 'VL1L2':
-       UFBAR = data_df.loc[:]['UFBAR']
-       VFBAR = data_df.loc[:]['VFBAR']
-       UOBAR = data_df.loc[:]['UOBAR']
-       VOBAR = data_df.loc[:]['VOBAR']
-       UVFOBAR = data_df.loc[:]['UVFOBAR']
-       UVFFBAR = data_df.loc[:]['UVFFBAR']
-       UVOOBAR = data_df.loc[:]['UVOOBAR']
-       F_SPEED_BAR = data_df.loc[:]['F_SPEED_BAR']
-       O_SPEED_BAR = data_df.loc[:]['O_SPEED_BAR']
-       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
-       DIR_ME = data_df.loc[:]['DIR_ME']
-       DIR_MAE = data_df.loc[:]['DIR_MAE']
-       DIR_MSE = data_df.loc[:]['DIR_MSE']
-   elif line_type == 'VAL1L2':
-       UFABAR = data_df.loc[:]['UFABAR']
-       VFABAR = data_df.loc[:]['VFABAR']
-       UOABAR = data_df.loc[:]['UOABAR']
-       VOABAR = data_df.loc[:]['VOABAR']
-       UVFOABAR = data_df.loc[:]['UVFOABAR']
-       UVFFABAR = data_df.loc[:]['UVFFABAR']
-       UVOOABAR = data_df.loc[:]['UVOOABAR']
-       FA_SPEED_BAR = data_df.loc[:]['FA_SPEED_BAR']
-       OA_SPEED_BAR = data_df.loc[:]['OA_SPEED_BAR']
-       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
-       DIRA_ME = data_df.loc[:]['DIRA_ME']
-       DIRA_MAE = data_df.loc[:]['DIRA_MAE']
-       DIRA_MSE = data_df.loc[:]['DIRA_MSE']
-   elif line_type == 'VCNT':
-       FBAR = data_df.loc[:]['FBAR']
-       OBAR = data_df.loc[:]['OBAR']
-       FS_RMS = data_df.loc[:]['FS_RMS']
-       OS_RMS = data_df.loc[:]['OS_RMS']
-       MSVE = data_df.loc[:]['MSVE']
-       RMSVE = data_df.loc[:]['RMSVE']
-       FSTDEV = data_df.loc[:]['FSTDEV']
-       OSTDEV = data_df.loc[:]['OSTDEV']
-       FDIR = data_df.loc[:]['FDIR']
-       ORDIR = data_df.loc[:]['ODIR']
-       FBAR_SPEED = data_df.loc[:]['FBAR_SPEED']
-       OBAR_SPEED = data_df.loc[:]['OBAR_SPEED']
-       VDIFF_SPEED = data_df.loc[:]['VDIFF_SPEED']
-       VDIFF_DIR = data_df.loc[:]['VDIFF_DIR']
-       SPEED_ERR = data_df.loc[:]['SPEED_ERR']
-       SPEED_ABSERR = data_df.loc[:]['SPEED_ABSERR']
-       DIR_ERR = data_df.loc[:]['DIR_ERR']
-       DIR_ABSERR = data_df.loc[:]['DIR_ABSERR']
-       ANOM_CORR = data_df.loc[:]['ANOM_CORR']
-       ANOM_CORR_NCL = data_df.loc[:]['ANOM_CORR_NCL']
-       ANOM_CORR_NCU = data_df.loc[:]['ANOM_CORR_NCU']
-       ANOM_CORR_BCL = data_df.loc[:]['ANOM_CORR_BCL']
-       ANOM_CORR_BCU = data_df.loc[:]['ANOM_CORR_BCU']
-       ANOM_CORR_UNCNTR = data_df.loc[:]['ANOM_CORR_UNCNTR']
-       ANOM_CORR_UNCNTR_BCL = data_df.loc[:]['ANOM_CORR_UNCNTR_BCL']
-       ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
-       TOTAL_DIR = data_df.loc[:]['TOTAL_DIR']
-       DIR_ME = data_df.loc[:]['DIR_ME']
-       DIR_ME_BCL = data_df.loc[:]['DIR_ME_BCL']
-       DIR_ME_BCU = data_df.loc[:]['DIR_ME_BCU']
-       DIR_MAE = data_df.loc[:]['DIR_MAE']
-       DIR_MAE_BCL = data_df.loc[:]['DIR_MAE_BCL']
-       DIR_MAE_BCU = data_df.loc[:]['DIR_MAE_BCU']
-       DIR_MSE = data_df.loc[:]['DIR_MSE']
-       DIR_MSE_BCL = data_df.loc[:]['DIR_MSE_BCL']
-       DIR_MSE_BCU = data_df.loc[:]['DIR_MSE_BCU']
-       DIR_RMSE = data_df.loc[:]['DIR_RMSE']
-       DIR_RMSE_BCL = data_df.loc[:]['DIR_RMSE_BCL']
-       DIR_RMSE_BCU = data_df.loc[:]['DIR_RMSE_BCU']
-   if stat == 'ACC': # Anomaly Correlation Coefficient
-       if line_type == 'SAL1L2':
-           radicand = (FFABAR - FABAR*FABAR)*(OOABAR - OABAR*OABAR)
-           radicand[radicand<0] = np.nan
-           stat_df = (FOABAR - FABAR*OABAR) \
-                     /np.sqrt(radicand)
-       elif line_type in ['CNT', 'VCNT']:
-           stat_df = ANOM_CORR
-       elif line_type == 'VAL1L2':
-           radicand = UVFFABAR*UVOOABAR
-           radicand[radicand<0] = np.nan
-           stat_df = UVFOABAR/np.sqrt(radicand)
-   elif stat in ['BIAS', 'ME']: # Bias/Mean Error
+       EC_VALUE = data_df.loc[:]['EC_VALUE']
+   if stat in ['BIAS', 'ME']: # Bias/Mean Error
        if line_type == 'SL1L2':
            stat_df = FBAR - OBAR
        elif line_type == 'CNT':
            stat_df = ME
-       elif line_type == 'VL1L2':
-           radicand1 = UVFFBAR
-           radicand1[radicand1<0] = np.nan
-           radicand2 = UVOOBAR
-           radicand2[radicand2<0] = np.nan
-           stat_df = np.sqrt(radicand1) - np.sqrt(radicand2)
    elif stat == 'CORR': # Pearson Correlation Coefficient
        if line_type == 'SL1L2':
            var_f = FFBAR - FBAR*FBAR
@@ -2377,10 +1870,7 @@ def calculate_stat(logger, data_df, line_type, stat):
    elif stat == 'CSI': # Critical Success Index'
        if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FY_ON + FN_OY)
-   elif stat == 'F1_O1': # Count of forecast category 1 and observation category 1
-       if line_type == 'MCTC':
-           stat_df = F1_O1
-   elif stat in ['ETS', 'GSS']: # Equitable Threat Score/Gilbert Skill Score
+   elif stat in ['ETS']: # Equitable Threat Score/Gilbert Skill Score
        if line_type == 'CTC':
            TOTAL = FY_OY + FY_ON + FN_OY + FN_ON
            C = ((FY_OY + FY_ON)*(FY_OY + FN_OY))/TOTAL
@@ -2395,19 +1885,6 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = (FY_OY + FY_ON)/(FY_OY + FN_OY)
        elif line_type == 'CTS':
            stat_df = FBIAS
-   elif stat == 'FSS': # Fraction Skill Score
-       if line_type == 'NBRCNT':
-           stat_df = FSS
-   elif stat == 'FY_OY': # Forecast Yes/Obs Yes
-       if line_type == 'CTC':
-           stat_df = FY_OY
-   elif stat == 'HSS': # Heidke Skill Score
-       if line_type == 'CTC':
-           TOTAL = FY_OY + FY_ON + FN_OY + FN_ON
-           CA = (FY_OY+FY_ON)*(FY_OY+FN_OY)
-           CB = (FN_OY+FN_ON)*(FY_ON+FN_ON)
-           C = (CA + CB)/TOTAL
-           stat_df = (FY_OY + FN_ON - C)/(TOTAL - C)
    elif stat == 'OBAR': # Observation Mean
        if line_type == 'SL1L2':
            stat_df = OBAR
@@ -2421,13 +1898,6 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = np.sqrt(radicand)
        elif line_type == 'CNT':
            stat_df = RMSE
-       elif line_type == 'VL1L2':
-           radicand = UVFFBAR + UVOOBAR - 2*UVFOBAR
-           radicand[radicand<0] = np.nan
-           stat_df = np.sqrt(radicand)
-   elif stat == 'S1': # S1
-       if line_type == 'GRAD':
-           stat_df = S1
    elif stat == 'SRATIO': # Success Ratio
        if line_type == 'CTC':
            stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
