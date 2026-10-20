@@ -77,6 +77,11 @@ mkdir -m 775 -p ${COMOUT}
 export DATA_TYPE=${DATA_TYPE:-hourly}
 export restart_mode=${restart_mode:-YES}
 export fig_name_label=${fig_name_label:-last${NDAYS}days}
+if [ "${VERIF_CASE}" == "grid2obs" ]; then
+    export plot_diff_fig=${plot_diff_fig:-YES}
+else
+    export plot_diff_fig=${plot_diff_fig:-NO}
+fi
 #######################################################################
 # Execute the script.
 #######################################################################
