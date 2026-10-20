@@ -211,7 +211,7 @@ class TimeSeriesFhrMean:
         elif len(fcst_units) == 0:
             self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
-        plot_title = plot_specs_ts.get_plot_title_aqm(
+        plot_title = plot_specs_ts.get_plot_title_by_fday(
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0], selected_fcst_hours
         )
