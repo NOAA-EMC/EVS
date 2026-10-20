@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''
 Name: aqm_plots_threshold_average.py
-Original Author: Mallory Row (mallory.row@noaa.gov)
 Contact(s): Ho-Chun Huang (ho-chun.huang@noaa.gov)
 Abstract: This script generates a threshold average plot.
           (x-axis: threshold value; y-axis: statistics value)
@@ -222,7 +221,16 @@ class ThresholdAverage:
                     threshs_ci_df.loc[model_idx, fcst_var_thresh] = ci
         # Set up plot
         self.logger.info(f"Setting up plot")
-        plot_specs_ta = PlotSpecs(self.logger, 'threshold_average')
+        if str(self.plot_info_dict['plot_diff_fig']).upper() == 'YES':
+            include_difference_plot = True
+        else:
+            include_difference_plot = False
+            
+        if include_difference_plot:
+            plot_specs_ta = PlotSpecs(self.logger, 'threshold_average')
+        else:
+            plot_specs_ta = PlotSpecs(self.logger, 'threshold_average_no_diffplot')
+
         plot_specs_ta.set_up_plot()
         n_xticks = 7
         xticks = np.arange(0, len(self.plot_info_dict['fcst_var_threshs']),
@@ -287,55 +295,60 @@ class ThresholdAverage:
         )
         # Make plot
         self.logger.info(f"Making plot")
-        fig, (ax1, ax2) = plt.subplots(2,1,
+        if include_difference_plot:
+            fig, (ax1, ax2) = plt.subplots(2,1,
                                        figsize=(plot_specs_ta.fig_size[0],
                                                 plot_specs_ta.fig_size[1]),
                                        sharex=True)
-        if self.plot_info_dict['fcst_var_name'] == 'DPT' \
-                and self.plot_info_dict['fcst_var_level'] == 'Z2':
-            plot_title = plot_title.replace('2 meter Dewpoint (K)',
-                                            '2 meter Dewpoint (F)')
+        else:
+            fig, ax1 = plt.subplots(1,1,figsize=(plot_specs_ta.fig_size[0],
+                                            plot_specs_ta.fig_size[1] ))
+
         fig.suptitle(plot_title)
         ax1.grid(True)
         ax1.set_ylabel(stat_plot_name)
-        ax2.grid(True)
-        ax2.set_xlabel('Threshold')
-        ax2.set_xlim([xticks[0], xticks[-1]])
-        ax2.set_xticks(xticks[::xtick_intvl])
-        if self.plot_info_dict['fcst_var_name'] == 'DPT' \
-                and self.plot_info_dict['fcst_var_level'] == 'Z2':
-            convert_thresh_list = []
-            for thresh in self.plot_info_dict['fcst_var_threshs']:
-                convert_thresh_K_to_F = round(
-                    round((((float(thresh[2:])-273.15)*9)/5)+32)
+        if include_difference_plot:
+            ax2.grid(True)
+            ax2.set_xlabel('Threshold')
+            ax2.set_xlim([xticks[0], xticks[-1]])
+            ax2.set_xticks(xticks[::xtick_intvl])
+            if self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'AOD' ]:
+                convert_thresh_list = []
+                for thresh in self.plot_info_dict['fcst_var_threshs']:
+                    convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
+                    convert_thresh_list.append(convert_thresh_sign)
+                ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
+            else:
+                ax2.set_xticklabels(
+                    self.plot_info_dict['fcst_var_threshs'][::xtick_intvl]
                 )
-                convert_thresh_list.append(
-                    f"{thresh[0:2]}{str(convert_thresh_K_to_F)}"
-                )
-            ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
-        elif self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'AOD' ]:
-            convert_thresh_list = []
-            for thresh in self.plot_info_dict['fcst_var_threshs']:
-                convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
-                convert_thresh_list.append(convert_thresh_sign)
-            ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
+            ax2.set_ylabel('Difference')
+            ax2.set_title('Difference from '
+                          +self.model_info_dict['model1']['plot_name'], loc='left')
+            props = {'boxstyle': 'square',
+                     'pad': 0.35,
+                     'facecolor': 'white',
+                     'linestyle': 'solid',
+                     'linewidth': 1,
+                     'edgecolor': 'black'}
+            ax2.text(0.995, 1.05, 'Note: points outside the '
+                     +'outline bars are significant at the 95% '
+                     +'confidence level', ha='right', va='center',
+                     fontsize=13, bbox=props, transform=ax2.transAxes)
         else:
-            ax2.set_xticklabels(
-                self.plot_info_dict['fcst_var_threshs'][::xtick_intvl]
-            )
-        ax2.set_ylabel('Difference')
-        ax2.set_title('Difference from '
-                      +self.model_info_dict['model1']['plot_name'], loc='left')
-        props = {'boxstyle': 'square',
-                 'pad': 0.35,
-                 'facecolor': 'white',
-                 'linestyle': 'solid',
-                 'linewidth': 1,
-                 'edgecolor': 'black'}
-        ax2.text(0.995, 1.05, 'Note: points outside the '
-                 +'outline bars are significant at the 95% '
-                 +'confidence level', ha='right', va='center',
-                 fontsize=13, bbox=props, transform=ax2.transAxes)
+            ax1.set_xlabel('Threshold')
+            ax1.set_xlim([xticks[0], xticks[-1]])
+            ax1.set_xticks(xticks[::xtick_intvl])
+            if self.plot_info_dict['fcst_var_name'] in [ 'PMAVE', 'OZMAX8', 'AOTK', 'AOD' ]:
+                convert_thresh_list = []
+                for thresh in self.plot_info_dict['fcst_var_threshs']:
+                    convert_thresh_sign = thresh.replace("gt","$\u003E$").replace("ge","$\u2265$")
+                    convert_thresh_list.append(convert_thresh_sign)
+                ax1.set_xticklabels(convert_thresh_list[::xtick_intvl])
+            else:
+                ax1.set_xticklabels(
+                    self.plot_info_dict['fcst_var_threshs'][::xtick_intvl]
+                )
         if plot_left_logo:
             left_logo_img = fig.figimage(
                 left_logo_img_array, left_logo_xpixel_loc,
@@ -351,18 +364,19 @@ class ThresholdAverage:
         model_idx_list = (
             threshs_avg_df.index.get_level_values(0).unique().tolist()
         )
-        ci_bar_max_widths = np.append(
-            np.diff(xticks),
-            xticks[-1]-xticks[-2]
-        )/1.5
-        ci_bar_min_widths = np.append(
-            np.diff(xticks),
-            xticks[-1]-xticks[-2]
-        )/len(list(self.model_info_dict.keys()))
-        ci_bar_intvl_widths = (
-            (ci_bar_max_widths-ci_bar_min_widths)
-            /len(list(self.model_info_dict.keys()))
-        )
+        if include_difference_plot:
+            ci_bar_max_widths = np.append(
+                np.diff(xticks),
+                xticks[-1]-xticks[-2]
+            )/1.5
+            ci_bar_min_widths = np.append(
+                np.diff(xticks),
+                xticks[-1]-xticks[-2]
+            )/len(list(self.model_info_dict.keys()))
+            ci_bar_intvl_widths = (
+                (ci_bar_max_widths-ci_bar_min_widths)
+                /len(list(self.model_info_dict.keys()))
+            )
         for model_idx in model_idx_list:
             model_num = model_idx.split('/')[0]
             model_num_name = model_idx.split('/')[1]
@@ -423,127 +437,128 @@ class ThresholdAverage:
             else:
                 self.logger.debug(f"{model_num} [{model_num_name},"
                                   +f"{model_num_plot_name}] has no points")
-            masked_model_num_model1_diff_data = np.ma.masked_invalid(
-                model_num_data - model1_masked_model_num_data
-            )
-            model_num_diff_npts = (
-                len(masked_model_num_model1_diff_data)
-                - np.ma.count_masked(masked_model_num_model1_diff_data)
-            )
-            masked_diff_thresh_values = np.ma.masked_where(
-                np.ma.getmask(masked_model_num_model1_diff_data),
-                thresh_values
-            )
-            if model_num_diff_npts != 0:
-                self.logger.debug(f"Plotting {model_num} [{model_num_name},"
-                                  +f"{model_num_plot_name}] difference from "
-                                  +f"model1 ["
-                                  +f"{self.model_info_dict['model1']['name']},"
-                                  +self.model_info_dict['model1']['plot_name']
-                                  +"]")
-                ax2.plot(
-                    masked_diff_thresh_values,
-                    masked_model_num_model1_diff_data,
-                    color = model_num_plot_settings_dict['color'],
-                    linestyle = model_num_plot_settings_dict['linestyle'],
-                    linewidth = model_num_plot_settings_dict['linewidth'],
-                    marker = model_num_plot_settings_dict['marker'],
-                    markersize = model_num_plot_settings_dict['markersize'],
-                    zorder = (len(list(self.model_info_dict.keys()))
-                              - model_idx_list.index(model_idx) + 4)
+            if include_difference_plot:
+                masked_model_num_model1_diff_data = np.ma.masked_invalid(
+                    model_num_data - model1_masked_model_num_data
                 )
-                if masked_model_num_model1_diff_data.min() \
-                        < stat_min_max_dict['ax2_stat_min'] \
-                        or np.ma.is_masked(stat_min_max_dict['ax2_stat_min']):
-                    stat_min_max_dict['ax2_stat_min'] = (
-                        masked_model_num_model1_diff_data.min()
-                    )
-                if masked_model_num_model1_diff_data.max() \
-                        > stat_min_max_dict['ax2_stat_max'] \
-                        or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
-                    stat_min_max_dict['ax2_stat_max'] = (
-                        masked_model_num_model1_diff_data.max()
-                    )
-            else:
-                self.logger.debug(f"{model_num} [{model_num_name},"
-                                  +f"{model_num_plot_name}] difference from "
-                                  +f"model1 ["
-                                  +f"{self.model_info_dict['model1']['name']},"
-                                  +self.model_info_dict['model1']['plot_name']
-                                  +"] has no points")
-            if model_num == 'model1':
-                ax2.plot(
-                    thresh_values,
-                    np.zeros_like(thresh_values),
-                    color = model_num_plot_settings_dict['color'],
-                    linestyle = model_num_plot_settings_dict['linestyle'],
-                    linewidth = model_num_plot_settings_dict['linewidth'],
-                    marker = None,
-                    markersize = model_num_plot_settings_dict['markersize'],
-                    zorder = (len(list(self.model_info_dict.keys()))
-                              - model_idx_list.index(model_idx) + 4)
+                model_num_diff_npts = (
+                    len(masked_model_num_model1_diff_data)
+                    - np.ma.count_masked(masked_model_num_model1_diff_data)
                 )
-            if model_num != 'model1':
-                masked_model_num_model1_diff_ci_data = np.ma.masked_invalid(
-                    threshs_ci_df.loc[model_idx]
-                )
-                model_num_ci_npts = (
-                    len(masked_model_num_model1_diff_ci_data)
-                    - np.ma.count_masked(masked_model_num_model1_diff_ci_data)
-                )
-                masked_ci_thresh_values = np.ma.masked_where(
-                    np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                masked_diff_thresh_values = np.ma.masked_where(
+                    np.ma.getmask(masked_model_num_model1_diff_data),
                     thresh_values
                 )
-                self.logger.debug(f"Plotting {model_num} ["
-                                  +f"{model_num_name},"
-                                  +f"{model_num_plot_name}] difference "
-                                  +"from model1 ["
-                                  +f"{self.model_info_dict['model1']['name']},"
-                                  +self.model_info_dict['model1']['plot_name']
-                                  +"] confidence intervals")
-                if model_num_ci_npts != 0:
-                    ci_min = masked_model_num_model1_diff_ci_data.min()
-                    ci_max = masked_model_num_model1_diff_ci_data.max()
-                    if ci_min < stat_min_max_dict['ax2_stat_min'] \
+                if model_num_diff_npts != 0:
+                    self.logger.debug(f"Plotting {model_num} [{model_num_name},"
+                                      +f"{model_num_plot_name}] difference from "
+                                      +f"model1 ["
+                                      +f"{self.model_info_dict['model1']['name']},"
+                                      +self.model_info_dict['model1']['plot_name']
+                                      +"]")
+                    ax2.plot(
+                        masked_diff_thresh_values,
+                        masked_model_num_model1_diff_data,
+                        color = model_num_plot_settings_dict['color'],
+                        linestyle = model_num_plot_settings_dict['linestyle'],
+                        linewidth = model_num_plot_settings_dict['linewidth'],
+                        marker = model_num_plot_settings_dict['marker'],
+                        markersize = model_num_plot_settings_dict['markersize'],
+                        zorder = (len(list(self.model_info_dict.keys()))
+                                  - model_idx_list.index(model_idx) + 4)
+                    )
+                    if masked_model_num_model1_diff_data.min() \
+                            < stat_min_max_dict['ax2_stat_min'] \
                             or np.ma.is_masked(stat_min_max_dict['ax2_stat_min']):
-                        if not np.ma.is_masked(ci_min):
-                            stat_min_max_dict['ax2_stat_min'] = ci_min
-                    if ci_max > stat_min_max_dict['ax2_stat_max'] \
-                            or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
-                        if not np.ma.is_masked(ci_max):
-                            stat_min_max_dict['ax2_stat_max'] = ci_max
-                    cmasked_ci_thresh_values = masked_ci_thresh_values
-                    cmasked_model_num_model1_diff_ci_data = masked_model_num_model1_diff_ci_data
-                    cmasked_ci_bar_max_widths = np.ma.masked_where(
-                            np.ma.getmask(masked_model_num_model1_diff_ci_data),
-                            ci_bar_max_widths
-                    )
-                    cmasked_ci_bar_intvl_widths = np.ma.masked_where(
-                            np.ma.getmask(masked_model_num_model1_diff_ci_data),
-                            ci_bar_intvl_widths
-                    )
-                    for thresh_idx in range(len(cmasked_ci_thresh_values)):
-                        thresh = cmasked_ci_thresh_values[thresh_idx]
-                        thresh_ci = (
-                            cmasked_model_num_model1_diff_ci_data[thresh_idx]
+                        stat_min_max_dict['ax2_stat_min'] = (
+                            masked_model_num_model1_diff_data.min()
                         )
-                        ax2.bar(thresh, 2*np.absolute(thresh_ci),
-                                bottom=-1*np.absolute(thresh_ci),
-                                width=(cmasked_ci_bar_max_widths[thresh_idx]
-                                       -(cmasked_ci_bar_intvl_widths[thresh_idx]
-                                       *model_idx_list.index(model_idx))),
-                                color = 'None',
-                                edgecolor=model_num_plot_settings_dict['color'],
-                                linewidth=1)
+                    if masked_model_num_model1_diff_data.max() \
+                            > stat_min_max_dict['ax2_stat_max'] \
+                            or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
+                        stat_min_max_dict['ax2_stat_max'] = (
+                            masked_model_num_model1_diff_data.max()
+                        )
                 else:
-                    self.logger.debug(f"{model_num} ["
+                    self.logger.debug(f"{model_num} [{model_num_name},"
+                                      +f"{model_num_plot_name}] difference from "
+                                      +f"model1 ["
+                                      +f"{self.model_info_dict['model1']['name']},"
+                                      +self.model_info_dict['model1']['plot_name']
+                                      +"] has no points")
+                if model_num == 'model1':
+                    ax2.plot(
+                        thresh_values,
+                        np.zeros_like(thresh_values),
+                        color = model_num_plot_settings_dict['color'],
+                        linestyle = model_num_plot_settings_dict['linestyle'],
+                        linewidth = model_num_plot_settings_dict['linewidth'],
+                        marker = None,
+                        markersize = model_num_plot_settings_dict['markersize'],
+                        zorder = (len(list(self.model_info_dict.keys()))
+                                  - model_idx_list.index(model_idx) + 4)
+                    )
+                if model_num != 'model1':
+                    masked_model_num_model1_diff_ci_data = np.ma.masked_invalid(
+                        threshs_ci_df.loc[model_idx]
+                    )
+                    model_num_ci_npts = (
+                        len(masked_model_num_model1_diff_ci_data)
+                        - np.ma.count_masked(masked_model_num_model1_diff_ci_data)
+                    )
+                    masked_ci_thresh_values = np.ma.masked_where(
+                        np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                        thresh_values
+                    )
+                    self.logger.debug(f"Plotting {model_num} ["
                                       +f"{model_num_name},"
                                       +f"{model_num_plot_name}] difference "
                                       +"from model1 ["
                                       +f"{self.model_info_dict['model1']['name']},"
                                       +self.model_info_dict['model1']['plot_name']
-                                      +"] confidence intervals has no points")
+                                      +"] confidence intervals")
+                    if model_num_ci_npts != 0:
+                        ci_min = masked_model_num_model1_diff_ci_data.min()
+                        ci_max = masked_model_num_model1_diff_ci_data.max()
+                        if ci_min < stat_min_max_dict['ax2_stat_min'] \
+                                or np.ma.is_masked(stat_min_max_dict['ax2_stat_min']):
+                            if not np.ma.is_masked(ci_min):
+                                stat_min_max_dict['ax2_stat_min'] = ci_min
+                        if ci_max > stat_min_max_dict['ax2_stat_max'] \
+                                or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
+                            if not np.ma.is_masked(ci_max):
+                                stat_min_max_dict['ax2_stat_max'] = ci_max
+                        cmasked_ci_thresh_values = masked_ci_thresh_values
+                        cmasked_model_num_model1_diff_ci_data = masked_model_num_model1_diff_ci_data
+                        cmasked_ci_bar_max_widths = np.ma.masked_where(
+                                np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                                ci_bar_max_widths
+                        )
+                        cmasked_ci_bar_intvl_widths = np.ma.masked_where(
+                                np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                                ci_bar_intvl_widths
+                        )
+                        for thresh_idx in range(len(cmasked_ci_thresh_values)):
+                            thresh = cmasked_ci_thresh_values[thresh_idx]
+                            thresh_ci = (
+                                cmasked_model_num_model1_diff_ci_data[thresh_idx]
+                            )
+                            ax2.bar(thresh, 2*np.absolute(thresh_ci),
+                                    bottom=-1*np.absolute(thresh_ci),
+                                    width=(cmasked_ci_bar_max_widths[thresh_idx]
+                                           -(cmasked_ci_bar_intvl_widths[thresh_idx]
+                                           *model_idx_list.index(model_idx))),
+                                    color = 'None',
+                                    edgecolor=model_num_plot_settings_dict['color'],
+                                    linewidth=1)
+                    else:
+                        self.logger.debug(f"{model_num} ["
+                                          +f"{model_num_name},"
+                                          +f"{model_num_plot_name}] difference "
+                                          +"from model1 ["
+                                          +f"{self.model_info_dict['model1']['name']},"
+                                          +self.model_info_dict['model1']['plot_name']
+                                          +"] confidence intervals has no points")
         subplot_num = 1
         for ax in fig.get_axes():
             stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
@@ -680,6 +695,7 @@ def main():
         'obs_var_level': 'OBS_VAR_LEVEL',
         'obs_var_threshs': ['OBS_VAR_THRESHS'],
         'fig_name_label': 'FIG_NAME_LABEL',
+        'plot_diff_fig': 'PLOT_DIFF_FIG',
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
