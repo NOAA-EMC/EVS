@@ -55,26 +55,26 @@ done
 wfos='aer afg ajk alu akq box car chs gyx ilm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
 #CG1 is the main domain. CG2-CG6 are the nested domains.
 #CGs='CG1 CG2 CG3 CG4 CG5 CG6'
-CGs='CG1'
+CGs='cg1'
 for wfo in $wfos; do
 	for CG in $CGs; do
 		for HH in ${HHs}; do
-			DATAfilename=${DATA}/gribs/${wfo}_nwps_${CG}_${INITDATE}_${HH}00.grib2
+			DATAfilename=${DATA}/gribs/nwps.t${HH}z.${CG}.${wfo}.grib2
 			if [ ! -s ${DATAfilename} ]; then
 				echo "WARNING: NO NWPS forecast was available for init date ${INITDATE}${HH} for ${wfo}"
 			else
 				fcst=0
 				while (( $fcst <= 144 )); do
 					FCST=$(printf "%03d" "$fcst")
-	    				DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}.${INITDATE}.t${HH}z.f${FCST}.grib2
-					ARCmodelfilename_fhr=${ARCmodel}/${wfo}_nwps_${CG}.${INITDATE}.t${HH}z.f${FCST}.grib2
+	    				DATAfilename_fhr=${DATA}/gribs/nwps.t${HH}z.${CG}.${wfo}.f${FCST}.grib2
+					ARCmodelfilename_fhr=${ARCmodel}/nwps.t${HH}z.${CG}.${wfo}.f${FCST}.grib2
 					if [ ! -s $ARCmodelfilename_fhr ]; then
 						if [ $fcst = 0 ]; then
 							grib2_match_fhr=":surface:anl:"
 						else
 	    						grib2_match_fhr=":${fcst} hour fcst:"
 						fi
-						DATAfilename_fhr=${DATA}/gribs/${wfo}_nwps_${CG}.${INITDATE}.t${HH}z.f${FCST}.grib2
+						DATAfilename_fhr=${DATA}/gribs/nwps.t${HH}z.${CG}.${wfo}.f${FCST}.grib2
 						wgrib2 $DATAfilename -match "$grib2_match_fhr" -grib $DATAfilename_fhr > /dev/null
 						export err=$?; err_chk
 						
