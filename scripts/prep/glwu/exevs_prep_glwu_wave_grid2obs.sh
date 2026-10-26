@@ -81,7 +81,9 @@ done
 ############################################################
 
 mkdir -p ${DATA}/ndbc
+mkdir -p ${DATA}/ndbc_prep
 mkdir -p ${DATA}/ncfiles
+
 mkdir -p ${COMOUT}.${INITDATE}/ndbc/${VERIF_CASE}
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
 ndbc_txt_ncount=$(ls -l $DCOMINndbc/$INITDATE/validation_data/marine/buoy/*.txt |wc -l)
@@ -89,7 +91,7 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
 	python $USHevs/${COMPONENT}/glwu_wave_prep_read_ndbc.py
 	export err=$?; err_chk
 
-	ndbc_gl_ncount=$(ls -l ${COMOUT}.${INITDATE}/ndbc/*.txt |wc -l)
+	ndbc_gl_ncount=$(ls -l $DATA/ndbc_prep/*.txt |wc -l)
 	if [ $ndbc_gl_ncount -gt 0 ]; then
 		run_metplus.py -c $PARMevs/metplus_config/machine.conf \
    		-c $CONFIGevs/$STEP/$COMPONENT/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf

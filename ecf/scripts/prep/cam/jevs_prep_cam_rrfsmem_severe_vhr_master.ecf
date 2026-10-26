@@ -1,4 +1,4 @@
-#PBS -N evs_prep_cam_rrfsmem_severe_vhr_%VHR%
+#PBS -N evs_prep_cam_rrfsmem_severe_vhr_%VHR%_mem_%MEM%
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%

@@ -47,6 +47,11 @@ ndbc_for_glwu = os.path.join (DATA,'ndbc')
 if not os.path.exists(ndbc_for_glwu):
     os.mkdir(ndbc_for_glwu)
 
+ndbc_prep = os.path.join (DATA,'ndbc_prep')
+if not os.path.exists(ndbc_prep):
+    os.mkdir(ndbc_prep)
+        
+
 output_glwu_ndbc = os.path.join(f'{COMOUT}.{INITDATE}','ndbc')
 if not os.path.exists(output_glwu_ndbc):
     os.mkdir(output_glwu_ndbc)
@@ -79,11 +84,20 @@ glwu_buoy_id = list(dff['buoy_id'])
 all_ndbc_files = glob.glob (os.path.join(all_ndbc,"*.txt"))
 all_buoy_id = []
 for ndbc_file in all_ndbc_files:
-    ndbc_buoy_id = ndbc_file.rpartition('/')[2].partition('.')[0]
+    # Use os.path.basename for safe path handling across platforms
+    filename = os.path.basename(ndbc_file)
+    ndbc_buoy_id = filename.partition('.')[0]
     all_buoy_id.append(ndbc_buoy_id)
+    
     if ndbc_buoy_id in glwu_buoy_id:
-        shutil.copy2(ndbc_file, ndbc_for_glwu)
-
+        # Check if the file actually exists and is not a broken symlink
+        if os.path.isfile(ndbc_file):
+            try:
+                shutil.copy2(ndbc_file, ndbc_for_glwu)
+            except (FileNotFoundError, IOError, OSError) as e:
+                print(f"WARNING: Could not copy {ndbc_file}: {e}")
+        else:
+            print(f"WARNING: File does not exist: {ndbc_file}")
 
 #############################################################################
 # Modify the copied .txt files to include the data for that particular INITDATE:
@@ -105,8 +119,14 @@ for tmp_buoy_file in tmp_glwu_ndbc_files:
     tmp_glwu_ndbc_final.write(ndbc_header2)
     tmp_glwu_ndbc_final.close()
     new_df.to_csv(tmp_glwu_ndbc, header=None, index=None, sep=' ', mode='a')
+
+    #final DATA preparation
+    ndbc_prep_data= os.path.join(ndbc_prep, f'{tmp_id}.txt')
+    shutil.copy2(tmp_glwu_ndbc, ndbc_prep_data) 
     
+    #final COMOUT preparation
     output_glwu_ndbc_files = os.path.join(output_glwu_ndbc, f'{tmp_id}.txt')
+
     if SENDCOM == 'YES':
         if os.path.getsize(tmp_glwu_ndbc) > 0:
             shutil.copy2(tmp_glwu_ndbc, output_glwu_ndbc_files)

@@ -60,7 +60,8 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     export g2op_type_list="sfc"
     export g2op_event_equalization="NO"
     export g2op_sfc_init_hr_list="00 06 12 18"
-    export g2op_sfc_valid_hr_list="00 03 06 09 12 15 18 21"
+    export g2op_sfc_valid_hr_list="00 06 12 18"
     export g2op_sfc_fhr_list="24 72 120 168 240 312 384"
+    export g2op_sfc_vhrmean_fhr_list="6 12 18 24 30 36 42 48 54 60 66 72 96 120 144 168 192 216 240 264 288 312 336 360 384"
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"
