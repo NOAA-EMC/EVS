@@ -119,11 +119,10 @@ elif job_type == 'generate':
         MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE, DATA=DATA,
         VERIF_TYPE=VERIF_TYPE, MODELNAME=MODELNAME, NEST=NEST, VDATE=VDATE,
         VHOUR=VHOUR, FHR=FHR, ACC=None, FCST_VAR_NAME=None)
-    obs_avail = cutil.get_obs_avail(
-        os.path.join(DATA, VERIF_CASE, 'data', VERIF_TYPE, 'prepbufr'), 
-        datetime.strptime(VDATE+VHOUR, '%Y%m%d%H'), 
-        NEST, OBSNAME
-    )
+    obs_avail = bool(glob.glob(os.path.join(
+        DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE, NEST,
+        'pb2nc', f'prepbufr.*.{VDATE}{VHOUR}.nc'
+    )))
 elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
