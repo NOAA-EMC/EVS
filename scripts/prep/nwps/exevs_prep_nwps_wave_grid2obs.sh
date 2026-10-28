@@ -66,7 +66,7 @@ for wfo in $wfos; do
 				fcst=0
 				while (( $fcst <= 144 )); do
 					FCST=$(printf "%03d" "$fcst")
-	    				DATAfilename_fhr=${DATA}/gribs/nwps.t${HH}z.${CG}.${wfo}.f${FCST}.grib2
+	    			DATAfilename_fhr=${DATA}/gribs/nwps.t${HH}z.${CG}.${wfo}.f${FCST}.grib2
 					ARCmodelfilename_fhr=${ARCmodel}/nwps.t${HH}z.${CG}.${wfo}.f${FCST}.grib2
 					if [ ! -s $ARCmodelfilename_fhr ]; then
 						if [ $fcst = 0 ]; then
