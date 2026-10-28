@@ -221,7 +221,7 @@ if [ $modnam = gefs ] ; then
       typeset -Z2 mb
       nfhrs=$fhr_beg
       while [ $nfhrs -le $fhr_end ] ; do
-       Wholedata=YES
+        Wholedata=YES
         hhh=$nfhrs
         typeset -Z3 hhh
         gefs=$origin/gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh}
@@ -234,7 +234,7 @@ if [ $modnam = gefs ] ; then
           $WGRIB2 $gefs | grep --file=${pat0} | $WGRIB2 -i $gefs -grib ${grabgefs}
         else
           echo "WARNING: $gefs is not available"
-          echo "METplus should not run for GEFS Member ${mb} F${hhh}"
+          echo "grid3 file should not be created to avoid METplus failure in stats step"
           Wholedata=NO
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
@@ -251,7 +251,7 @@ if [ $modnam = gefs ] ; then
           cat ${x} >> ${grabgefs}
         else
           echo "WARNING: $gefs_cvc is not available"
-          echo "METplus should not run for GEFS Member ${mb} F${hhh}"
+          echo "grid3 file should not be created to avoid METplus failure in stats step"
           Wholedata=NO
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
