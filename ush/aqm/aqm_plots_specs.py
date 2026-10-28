@@ -226,7 +226,9 @@ class PlotSpecs:
             'airnow': 'AIRNOW',
             'airnow_pm25': 'AIRNOW',
             'airnow_pm10': 'AIRNOW',
+            'aod': 'AERONET',
             'aeronet': 'AERONET',
+            'aeronetaod': 'AERONET',
             'aeronet_aod': 'AERONET',
             'abi': 'GOES ABI',
             'abi_aod': 'GOES ABI',
@@ -360,7 +362,8 @@ class PlotSpecs:
                 if int(forecast_hour) % 24 == 0:
                     forecast_day_list.append(str(int(forecast_day)))
                 else:
-                    if fcst_var in [ "OZMAX8" , "PMAVE", "AOD" ]:  ## round up
+                    ## if fcst_var in [ "OZMAX8" , "PMAVE", "AOD" ]:  ## round up
+                    if fcst_var in [ "OZMAX8" , "PMAVE" ]:  ## round up
                         forecast_day = int(fday_for_title)
                     forecast_day_list.append(str(forecast_day))
             if len(forecast_hour_list) == 1:
@@ -569,18 +572,21 @@ class PlotSpecs:
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
                                               var_level_for_title))
-        if plot_info_dict['fcst_var_name'] in [ 'AOTK', 'AOD']:
+        ##
+        ##    units = '$\u03bcg/m^3$'
+        ##
+        if plot_info_dict['fcst_var_name'] in [ 'AOTK', 'AOD' ]:
             units = 'unitless'
-        elif plot_info_dict['fcst_var_name']  in ['PMTF', 'PMAVE']:
+        elif plot_info_dict['fcst_var_name']  in [ 'PMTF', 'PMAVE' ]:
             units = r'$\mu g/m^3$'
-        elif plot_info_dict['fcst_var_name'] in ['OZCON1', 'OZMAX8']:
+        elif plot_info_dict['fcst_var_name'] in [ 'OZCON1', 'OZMAX8' ]:
             units = 'ppbV'
         else:
             units = 'unknown'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
             var_thresh_symbol = var_thresh_for_title.replace("gt","$\u003E$").replace("ge","$\u2265$")
-            if plot_info_dict['fcst_var_name'] in ['AOTK', 'AOD']:
+            if plot_info_dict['fcst_var_name'] in [ 'AOTK', 'AOD' ]:
                 plot_title = plot_title+', '+var_thresh_symbol
             else:
                 plot_title = plot_title+', '+var_thresh_symbol+' '+units
@@ -678,18 +684,18 @@ class PlotSpecs:
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
                                               var_level_for_title))
-        if plot_info_dict['fcst_var_name'] in ['AOTK', 'AOD']:
+        if plot_info_dict['fcst_var_name'] in [ 'AOTK', 'AOD' ]:
             units = 'unitless'
-        elif plot_info_dict['fcst_var_name'] in ['PMTF', 'PMAVE']:
+        elif plot_info_dict['fcst_var_name'] in [ 'PMTF', 'PMAVE' ]:
             units = r'$\mu g/m^3$'
-        elif plot_info_dict['fcst_var_name'] in ['OZCON1', 'OZMAX8']:
+        elif plot_info_dict['fcst_var_name'] in [ 'OZCON1', 'OZMAX8' ]:
             units = 'ppbV'
         else:                 
             units = 'unknown'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
             var_thresh_symbol = var_thresh_for_title.replace("gt","$\u003E$").replace("ge","$\u2265$")
-            if plot_info_dict['fcst_var_name'] in ['AOTK', 'AOD']:
+            if plot_info_dict['fcst_var_name'] in [ 'AOTK', 'AOD' ]:
                 plot_title = plot_title+', '+var_thresh_symbol
             else:
                 plot_title = plot_title+', '+var_thresh_symbol+' '+units

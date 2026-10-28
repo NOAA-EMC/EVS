@@ -41,9 +41,15 @@ export modelid=${MODELNAME}${aqm_ver_id}
 # for different models or types of solution defined in ${config}
 #
 IFS=' ' read -ra obstype_list <<< "${g2op_type_list}"
+IFS=' ' read -ra obssrc_list <<< "${g2op_src_list}"
 let num_obstype=${#obstype_list[@]}
+let num_obssrc=${#obssrc_list[@]}
 if [ ${num_obstype} -lt 1 ]; then
-    echo "ERROR :: number of variable to be plotted is zero"
+    echo "DEBUG: There is no obs variable to be plotted, ${MODELNAME} ${RUN} ${VERIF_CASE} ${STEP} step will be skipped"
+    exit
+fi
+if [ ${num_obstype} -ne ${num_obssrc} ]; then
+    echo "DEBUG: The number of obs variables to be plotted is different from obs sources, ${MODELNAME} ${RUN} ${VERIF_CASE} ${STEP} step will be skipped"
     exit
 fi
 
@@ -54,11 +60,12 @@ if [ ${num_mdl} -gt 10 ]; then
     echo "number of model to be plotted can not exceed 10"
     exit
 fi
-let imdl=0
-while [ ${imdl} -lt ${num_mdl} ]; do
+for imdl in "${!mdl_list[@]}"; do
     biasc=$( echo ${mdl_list[${imdl}]} | awk -F"_" '{print $2}' )
     idir=${mdl_idir_list[${imdl}]}
-    for ivar in "${obstype_list[@]}"; do
+    for ivar in "${!obstype_list[@]}"; do
+	obsvar=${obstype_list[${ivar}]}
+	obssrc=${obssrc_list[${ivar}]}
         #
         ## the time stamp of aqm daily variable is valided at 11Z (ozmax8)
         ## and 04z (pamve) of next day from initial start date.  To get
@@ -66,16 +73,21 @@ while [ ${imdl} -lt ${num_mdl} ]; do
 	## day1,day2, and day3, the stat of previous days also need
         ## to be copied
         #
-        if [ "${ivar}" == "ozmax8" ]  || [ "${ivar}" == "pmave" ]; then  ## get 3 additional day's stat
+        if [ "${obsvar}" == "ozmax8" ]  || [ "${obsvar}" == "pmave" ]; then  ## get 3 additional day's stat
             cdate=${VDATE_START}"00"
             NOW=$( ${NDATE} -24 ${cdate} | cut -c1-8 )
-	    echo "variable = ${ivar} old_start_date = ${VDATE_START} new_start_date = ${NOW}"
+	    echo "variable = ${obsvar} old_start_date = ${VDATE_START} new_start_date = ${NOW}"
         else
             NOW=${VDATE_START}
 	fi
+
         while [ ${NOW} -le ${VDATE_END} ]; do
-            cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${ivar}.v${NOW}.stat
-            sedfile=${modelid}_${biasc}_${ivar}.v${NOW}.stat
+            if [ "${obsvar}" == "aeronetaod" ]; then
+                cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_aeronet_aod.v${NOW}.stat
+            else
+                cpfile=evs.stats.${MODELNAME}_${biasc}.${RUN}.${VERIF_CASE}_${obsvar}.v${NOW}.stat
+            fi
+            sedfile=${modelid}_${biasc}_${obsvar}.v${NOW}.stat
             if [ -s ${idir}/${MODELNAME}.${NOW}/${cpfile} ]; then
                 cp -v ${idir}/${MODELNAME}.${NOW}/${cpfile} ${STATDIR}
                 sed "s/${model1}/${modelid}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
@@ -86,7 +98,6 @@ while [ ${imdl} -lt ${num_mdl} ]; do
             NOW=$( ${NDATE} +24 ${cdate} | cut -c1-8 )
         done
     done
-    ((imdl++))
 done
 
 # Make directory

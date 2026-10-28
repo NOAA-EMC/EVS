@@ -575,6 +575,8 @@ suite evs_nco
               trigger :TIME >= 0500 and :TIME < 1100
             task jevs_plots_aqm_atmos_grid2obs_hourly_last31days
               trigger :TIME >= 0515 and :TIME < 1115
+            task jevs_plots_aqm_atmos_grid2obs_hourly_aod_last31days
+              trigger :TIME >= 0520 and :TIME < 1120
             task jevs_plots_aqm_atmos_grid2obs_daily_last90days
               trigger :TIME >= 0530 and :TIME < 1130
             task jevs_plots_aqm_atmos_grid2grid_hourly_last31days
