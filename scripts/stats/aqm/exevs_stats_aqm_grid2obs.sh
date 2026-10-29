@@ -388,7 +388,7 @@ export OutputId=${MODELNAME}_${biastyp}_${ObsType}
 export RUNTIME_STATS=${DATA}/point_stat/${OutputId}
 export StatFileId=${NET}.${STEP}.${MODELNAME}_${biastyp}.${RUN}.${VERIF_CASE}_${ObsType}    # config variable
 point_stat_conf_file=${CONFIGevs}/PointStat_fcstAOD_obsAERONET.conf
-stat_analysis_conf_file=${CONFIGevs}/Statanalysis_fcstAOD_obsAERONET.conf
+stat_analysis_conf_file=${CONFIGevs}/StatAnalysis_fcstAOD_obsAERONET.conf
 
 check_file=${EVSINaqm}/${RUN}.${VDATE}/obs/${ObsSrc}_All_${VDATE}_lev15.nc
 num_obs_found=0
