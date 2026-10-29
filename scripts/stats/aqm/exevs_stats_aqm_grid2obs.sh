@@ -426,7 +426,7 @@ for mdl_cyc in ${init_cyc}; do
           else
             echo ${fhr} >> ${recorded_temp_list}
             let "num_fcst_in_metplus=num_fcst_in_metplus+1"
-   fi
+          fi
         else
           echo ${fhr} >> ${recorded_temp_list}
           let "num_fcst_in_metplus=num_fcst_in_metplus+1"
