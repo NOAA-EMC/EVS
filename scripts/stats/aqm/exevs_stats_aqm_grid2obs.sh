@@ -68,7 +68,7 @@ cdate=${VDATE}${vhr}
 vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
 vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
-check_file=${EVSINaqm}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+check_file=${EVSINaqm}/${RUN}.${vld_date}/obs/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
 if [ -s ${check_file} ]; then
   obs_hourly_found=1
@@ -183,7 +183,7 @@ done  ## outtyp loop
 # Daily verification of the daily maximum of 8-hr ozone
 # Verification being done on both raw and bias-corrected output data
 
-check_file=${EVSINaqm}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
+check_file=${EVSINaqm}/${RUN}.${VDATE}/obs/airnow_daily_${VDATE}.nc
 obs_daily_found=0
 if [ -s ${check_file} ]; then
   obs_daily_found=1
@@ -364,6 +364,127 @@ if [ ${vhr} = 04 ]; then
     fi
   done  ## biastyp loop
 fi  ## vhr if logic
+
+#
+# Begin verification of the hourly AOD data.  Only raw soultion can produce AOD output.
+#
+export init_cyc="06 12"
+let inc=1
+
+export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}}
+export config_common=${PARMevs}/metplus_config/machine.conf
+
+check_restart=$( echo ${restart_mode} | tr a-z A-Z )
+
+export ObsType="aeronet_aod"
+export ObsSrc=$( echo ${ObsType} | awk -F"_" '{print $1}' )
+export ObsVar=$( echo ${ObsType} | awk -F"_" '{print $2}' )
+export OBSTYPE=$( echo ${ObsType} | tr a-z A-Z )           
+export OBS_STANLYS_TYPE="AERONET_AOD"     ## to reset the OBS name in output stats
+biastyp="raw"
+bctag=""
+export bcout="_${biastyp}"
+export OutputId=${MODELNAME}_${biastyp}_${ObsType}                                     
+export RUNTIME_STATS=${DATA}/point_stat/${OutputId}
+export StatFileId=${NET}.${STEP}.${MODELNAME}_${biastyp}.${RUN}.${VERIF_CASE}_${ObsType}    # config variable
+point_stat_conf_file=${CONFIGevs}/PointStat_fcstAOD_obsAERONET.conf
+stat_analysis_conf_file=${CONFIGevs}/StatAnalysis_fcstAOD_obsAERONET.conf
+
+check_file=${EVSINaqm}/${RUN}.${VDATE}/obs/${ObsSrc}_All_${VDATE}_lev15.nc
+num_obs_found=0
+if [ -s ${check_file} ]; then
+    num_obs_found=1
+else
+    echo "PREP_OUTPUT_MISSING: Pre-processed ${ObsSrc} Level 1.5 input ${check_file} is missing. The verification on ${VDATE} will be skipped"
+fi
+echo "DEBUG: index of daily aeronet obs found = ${num_obs_found}"
+
+export FileinId="cmaq"
+fcstmax=72
+for mdl_cyc in ${init_cyc}; do
+  export mdl_cyc    ## variable used in *.conf
+
+  let ihr=1
+  num_fcst_in_metplus=0
+  if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+  while [ ${ihr} -le ${fcstmax} ]; do
+    filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit
+    fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
+    export fhr
+
+    export datehr=${VDATE}${vhr}
+    adate=`${NDATE} -${ihr} ${datehr}`
+    aday=`echo ${adate} |cut -c1-8`
+    acyc=`echo ${adate} |cut -c9-10`
+    if [ "${acyc}" == "${mdl_cyc}" ]; then
+      fcst_file=${COMINaqm}/${dirname}.${aday}/${acyc}/${MODELNAME}.t${acyc}z.${FileinId}.f${filehr}.${gridspec}.grib2
+      if [ -s ${fcst_file} ]; then
+        if [ "${check_restart}" == "YES" ]; then
+          point_stat_file="${COMOUTsmall}/point_stat_${OutputId}_${fhr}0000L_${VDATE}_${vhr}0000V.stat"
+          if [ -s ${point_stat_file} ]; then
+            echo "DEBUG: Restart Mode; Found stats file, skip fcst hour ${fhr} processing"
+          else
+            echo ${fhr} >> ${recorded_temp_list}
+            let "num_fcst_in_metplus=num_fcst_in_metplus+1"
+          fi
+        else
+          echo ${fhr} >> ${recorded_temp_list}
+          let "num_fcst_in_metplus=num_fcst_in_metplus+1"
+        fi
+      else
+        echo "PREP_OUTPUT_MISSING: Pre-processed AQM AOD output ${fcst_file} is missing. The missing AQM AOD forecast file will be skipped"
+      fi 
+    fi 
+    ((ihr+=${inc}))
+  done   ## fcst hour loop
+
+  if [ -s ${recorded_temp_list} ]; then
+    export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+  fi
+  if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+  export num_fcst_in_metplus
+  echo "DEBUG: number of fcst lead in_metplus point_stat for ${model1} ${ObsType} == ${num_fcst_in_metplus}"
+
+  if [ ${num_fcst_in_metplus} -gt 0 -a ${num_obs_found} -eq 1 ]; then     ##  run Point Stat Analysis
+    export fcsthours=${fcsthours_list}
+    run_metplus.py ${point_stat_conf_file} ${config_common}
+    export err=$?; err_chk
+  else
+    if [ ${num_obs_found} -eq 0 ]; then
+        echo "DEBUG: There is no pre-processed ${ObsSrc} OBS, the metplus stats process will be skipped"
+    fi
+    if [ ${num_fcst_in_metplus} -eq 0 ]; then
+        echo "DEBUG: There is no pre-processed ${ObsVar} ${model1}-smoke and dust ${mdl_cyc} cycle forecast output validated at ${vhr}Z, the metplus stats process will be skipped"
+    fi
+  fi
+  if [ "${SENDCOM}" == "YES" ]; then
+    if [ -d ${RUNTIME_STATS}/${VDATE}.stat ]; then      ## does not exist if run_metplus.py did not execute
+      stat_file_count=$(find ${RUNTIME_STATS}/${VDATE}.stat -name "*${OutputId}*" | wc -l)
+      if [ ${stat_file_count} -ne 0 ]; then
+        mkdir -p ${COMOUTsmall}
+        cp -v ${RUNTIME_STATS}/${VDATE}.stat/*${OutputId}* ${COMOUTsmall}
+      else
+        echo "DEBUG: NO stats file *${OutputId}* found in ${RUNTIME_STATS}/${VDATE}.stat"
+      fi
+    fi
+  fi
+done   ## init hour loop
+if [ "${vhr}" == "23" ]; then
+  stat_file_count=$(find ${COMOUTsmall} -name "*${OutputId}*" | wc -l)
+  if [ ${stat_file_count} -ne 0 ]; then
+    cp -v ${COMOUTsmall}/*${OutputId}* ${finalstat}
+    cd ${finalstat}
+    run_metplus.py ${stat_analysis_conf_file} ${config_common}
+    export err=$?; err_chk
+    if [ ${SENDCOM} = "YES" ]; then
+      cpfile=${finalstat}/${StatFileId}.v${VDATE}.stat
+      if [ -s ${cpfile} ]; then
+        mkdir -p ${COMOUTfinal}
+        cp -v ${cpfile} ${COMOUTfinal}
+      fi
+    fi
+  fi
+fi
 
 exit
 
