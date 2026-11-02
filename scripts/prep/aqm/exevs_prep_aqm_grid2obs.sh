@@ -73,7 +73,7 @@ while [ ${ic} -le ${endvhr} ]; do
                 export err=$?; err_chk
                 if [ ${SENDCOM} = "YES" ]; then
                     cpfile=${PREP_SAVE_DIR}/airnow_hourly_aqobs_${INITDATE}${VHOUR}.nc 
-                    if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
+                    if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprepobs}; fi
                 fi
             fi
         else
@@ -112,7 +112,7 @@ if [ -s ${checkfile} ]; then
             export err=$?; err_chk
             if [ ${SENDCOM} = "YES" ]; then
                 cpfile=${PREP_SAVE_DIR}/airnow_daily_${INITDATE}.nc
-                if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc};fi
+                if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprepobs};fi
             fi
         fi
     else
@@ -133,6 +133,61 @@ else
     fi
 
     echo "WARNING: ${checkfile} is missing, so ${MODELNAME} ${STEP} will skip this file for valid date ${INITDATE}"
+fi
+export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}}
+export config_common=${PARMevs}/metplus_config/machine.conf
+export OBTTYPE="aeronet"
+export obstype=$( echo ${OBTTYPE} | tr a-z A-Z )
+prep_config_file=${CONFIGevs}/ASCII2NC_obs${obstype}.conf
+flag_process_ascii_aeronet="YES"
+if [ "${check_restart}" == "YES" ]; then   ## Check ASCII2NC AERONET AOD file for RESTART ability
+    checkfile=${COMOUTprepobs}/${OBTTYPE}_All_${INITDATE}_lev15.nc
+    if [ -s ${checkfile} ]; then
+        msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
+        if [ ${msg} -eq 0 ]; then flag_process_ascii_aeronet="NO"; fi
+    fi
+fi
+##
+## Pre-Processed AERONET AOD input ascii file to METPlus NetCDF input for PointStat
+##
+checkfile=${DCOMINaeronet}/${INITDATE}/validation_data/aq/${OBTTYPE}/${INITDATE}.lev15
+if [ -s ${checkfile} ] && [ "${flag_process_ascii_aeronet}" == "YES" ]; then
+    screen_file=${DATA}/checked_${OBTTYPE}_${INITDATE}.lev15
+    python ${USHevs}/${COMPONENT}/screen_aeronet_aod_lev15.py ${checkfile} ${screen_file}
+    export err=$?; err_chk
+    number_of_record=$(wc -l ${screen_file} | awk -F" " '{print $1}')
+    ## There is 6 comment and header lines 
+    if [ ${number_of_record} -gt 6 ]; then
+        if [ -s ${prep_config_file} ]; then
+            run_metplus.py ${prep_config_file} ${config_common}
+            export err=$?; err_chk
+            if [ ${SENDCOM} = "YES" ]; then
+                cpfile=${PREP_SAVE_DIR}/${OBTTYPE}_All_${INITDATE}_lev15.nc
+                if [ -e ${cpfile} ]; then
+                    mkdir -p ${COMOUTprepobs}
+                    cp -v ${cpfile} ${COMOUTprepobs}
+                fi
+            fi
+        fi
+    else
+        if [ ${SENDMAIL} = "YES" ]; then
+            echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip ${checkfile}" >> ${email_msg}
+            echo "==============" >> ${email_msg}
+            flag_send_message=YES
+        fi
+        echo "WARNING: There is no valid record to be processed, ${MODELNAME} ${RUN} ${STEP} will skip ${checkfile}"
+    fi
+else
+    if [ "${flag_process_ascii_aeronet}" == "NO" ]; then
+        echo "DEBUG: ASCII2NC AERONET AOD files has been found.  RESTART Skip ASCII2NC processing"
+    elif [ ! -s ${checkfile} ]; then
+        if [ ${SENDMAIL} = "YES" ]; then
+            echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}" >> ${email_msg}
+            echo "==============" >> ${email_msg}
+            flag_send_message=YES
+        fi
+        echo "WARNING: ${checkfile} is missing, ${MODELNAME} ${RUN} ${STEP} will skip this file for valid date ${INITDATE}"
+    fi
 fi
 #
 ##
@@ -163,7 +218,7 @@ for hour in 06 12; do
                 comout_file=aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
                 cat out1.grb2 out2.grb2 out3.grb2 > ${comout_file}
                 if [ ${SENDCOM} = "YES" ]; then
-                    if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTproc}; fi
+                    if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTprepmdl}; fi
                 fi
             else
                 echo "FCST_OUTPUT_MISSING: AQM forecast file ${ozmax8_file} is missing. The missing AQM forecast file will be skipped"
@@ -180,7 +235,7 @@ for hour in 06 12; do
                 comout_file=aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
                 cat out1.grb2 out2.grb2 out3.grb2 > ${comout_file}
                 if [ ${SENDCOM} = "YES" ]; then
-                    if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTproc}; fi
+                    if [ -s ${comout_file} ]; then cp -v ${comout_file} ${COMOUTprepmdl}; fi
                 fi
             else
                 echo "FCST_OUTPUT_MISSING: AQM forecast file ${ozmax8_file} is missing. The missing AQM forecast file will be skipped"
