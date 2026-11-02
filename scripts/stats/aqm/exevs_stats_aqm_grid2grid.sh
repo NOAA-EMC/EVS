@@ -92,7 +92,7 @@ for ObsType in "${grid2grid_list[@]}"; do
       recorded_temp_list=${RUNTIME_STATS}/fcstlist_in_metplus
 
 
-      check_file=${EVSINaqm}/${RUN}.${VDATE}/${MODELNAME}/${ObsType}_${AOD_SCAN}_${MODELNAME}_${SatId}_${VDATE}_${vhr}_${AOD_QC_NAME}.nc
+      check_file=${EVSINaqm}/${RUN}.${VDATE}/obs/${ObsType}_${AOD_SCAN}_${MODELNAME}_${SatId}_${VDATE}_${vhr}_${AOD_QC_NAME}.nc
       obs_hourly_found=0
       if [ -s ${check_file} ]; then
         obs_hourly_found=1

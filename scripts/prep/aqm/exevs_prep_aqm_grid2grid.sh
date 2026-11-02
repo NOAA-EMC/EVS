@@ -133,12 +133,12 @@ if [ "${num_mdl_grid}" != "0" ]; then
 
         if [ "${check_restart}" == "YES" ]; then   ## Check gridded L3 AOD files for RESTART ability
           checkfile="${out_file_prefix}_${INITDATE}_*_${AOD_QC_NAME}.nc"
-          obs_file_count=$(find ${COMOUTproc} -name ${checkfile} | wc -l )
+          obs_file_count=$(find ${COMOUTprepobs} -name ${checkfile} | wc -l )
           if [ ${obs_file_count} -eq 0 ]; then
             let ic=0
           elif [ ${obs_file_count} -eq ${total_num_file} ]; then
             ## check corrupted ASCII2NC file
-            checkfile="${COMOUTproc}/${out_file_prefix}_${INITDATE}_${endvhr}_${AOD_QC_NAME}.nc"
+            checkfile="${COMOUTprepobs}/${out_file_prefix}_${INITDATE}_${endvhr}_${AOD_QC_NAME}.nc"
             msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
             if [ ${msg} -eq 0 ]; then
               let ic=${endvhr}+1   ## skip current Aod_Scan Processing
@@ -245,7 +245,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
 
                   if [ "${SENDCOM}" = "YES" ]; then
                     cpfile=${RUNTIME_PREP_DIR}/${out_file_prefix}_${INITDATE}_${VHOUR}_${AOD_QC_NAME}.nc
-                    if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
+                    if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprepobs}; fi
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
@@ -311,7 +311,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
                   export err=$?; err_chk
                   if [ "${SENDCOM}" = "YES" ]; then
                     cpfile=${RUNTIME_PREP_DIR}/${out_file_prefix}_${INITDATE}_${VHOUR}_${AOD_QC_NAME}.nc
-                    if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTproc}; fi
+                    if [ -s ${cpfile} ]; then cp -v ${cpfile} ${COMOUTprepobs}; fi
                   fi
                 else
                   if [ "${SENDMAIL}" = "YES" ]; then
@@ -345,12 +345,12 @@ if [ "${num_mdl_grid}" != "0" ]; then
 
       if [ "${check_restart}" == "YES" ]; then   ## Check Join L3 AOD files for RESTART ability
         checkfile="${join_file_prefix}_${INITDATE}_*_${AOD_QC_NAME}.nc"
-        join_file_count=$(find ${COMOUTproc} -name ${checkfile} | wc -l )
+        join_file_count=$(find ${COMOUTprepobs} -name ${checkfile} | wc -l )
         if [ ${join_file_count} -eq 0 ]; then
           let ic=0
         elif [ ${join_file_count} -eq ${total_num_file} ]; then
           ## check corrupted integrated file
-          checkfile="${COMOUTproc}/${join_file_prefix}_${INITDATE}_${endvhr}_${AOD_QC_NAME}.nc"
+          checkfile="${COMOUTprepobs}/${join_file_prefix}_${INITDATE}_${endvhr}_${AOD_QC_NAME}.nc"
           msg=$(ncdump -h ${checkfile} 1> /dev/null 2>&1 ; err=$? ; echo ${err} )
           if [ ${msg} -eq 0 ]; then
             let ic=${endvhr}+1      ## skip current Aod_Scan Integration
@@ -373,12 +373,12 @@ if [ "${num_mdl_grid}" != "0" ]; then
         goes_east_aod_file=${RUNTIME_PREP_DIR}/${goes_east_aod}
         goes_west_aod_file=${RUNTIME_PREP_DIR}/${goes_west_aod}
 
-        if [ ! -s ${goes_east_aod_file} ] && [ -s ${COMOUTproc}/${goes_east_aod} ]; then
-          cp -v ${COMOUTproc}/${goes_east_aod} ${RUNTIME_PREP_DIR}
+        if [ ! -s ${goes_east_aod_file} ] && [ -s ${COMOUTprepobs}/${goes_east_aod} ]; then
+          cp -v ${COMOUTprepobs}/${goes_east_aod} ${RUNTIME_PREP_DIR}
         fi
 
-        if [ ! -s ${goes_west_aod_file} ] && [ -s ${COMOUTproc}/${goes_west_aod} ]; then
-          cp -v ${COMOUTproc}/${goes_west_aod} ${RUNTIME_PREP_DIR}
+        if [ ! -s ${goes_west_aod_file} ] && [ -s ${COMOUTprepobs}/${goes_west_aod} ]; then
+          cp -v ${COMOUTprepobs}/${goes_west_aod} ${RUNTIME_PREP_DIR}
         fi
 
         join_script_name=${USHevs}/${COMPONENT}/integrate_goes_east_west_aod.py
@@ -394,7 +394,7 @@ if [ "${num_mdl_grid}" != "0" ]; then
         fi
 
         if [ "${SENDCOM}" = "YES" ]; then
-          if [ -s ${join_aod_file} ]; then cp -v ${join_aod_file} ${COMOUTproc}; fi
+          if [ -s ${join_aod_file} ]; then cp -v ${join_aod_file} ${COMOUTprepobs}; fi
         fi
         ((ic++))
       done  # vldhr
