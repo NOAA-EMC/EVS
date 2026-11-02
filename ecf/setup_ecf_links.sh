@@ -68,6 +68,9 @@ cyc=$(seq 0 6 23)
 link_master_to_cyc_mem "jevs_prep_cam_rrfsmem_severe_vhr" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_prep_cam_refs_severe_vhr" "$cyc"
+cyc=$(seq 0 6 23)
+link_master_to_cyc "jevs_prep_cam_precip_vhr" "$cyc"
+
 cd $ECF_DIR/scripts/stats/cam
 echo "Linking CAM stats ..."
 cyc=$(seq 0 23)
