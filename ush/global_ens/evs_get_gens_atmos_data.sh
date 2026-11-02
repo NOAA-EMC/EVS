@@ -13,7 +13,10 @@
 #   5. Store the well-formed analysis/observations or smaller ensemble member files
 #      in the evs prep sub-directory /prep/global_ens/atmos.YYYYMMDD
 #
-# Updated:
+# Updated: 10/27/2026 by Jun Du, Introduced a parameter Wholedata to deal with the
+#                     completeness of gefs data. Wholedata=YES if both pgrb2a and
+#                     and pgrb2b exist; otherwise Wholedata=NO to avoid running METplus
+#                     with incomplete/partial data in the stats step
 #          09/01/2026 by Jun Du: regrid from 0.25deg to 1.0deg of gfs anl and fcst
 #          05/20/2025 by L. Gwen Chen (lichuan.chen@noaa.gov) 
 #          11/15/2023 by Binbin Zhou, Lynker@EMC/NCEP
@@ -223,6 +226,7 @@ if [ $modnam = gefs ] ; then
       typeset -Z2 mb
       nfhrs=$fhr_beg
       while [ $nfhrs -le $fhr_end ] ; do
+        Wholedata=YES
         hhh=$nfhrs
         typeset -Z3 hhh
         gefs=$origin/gep${mb}.t${ihour}z.pgrb2a.0p50.f${hhh}
@@ -235,6 +239,8 @@ if [ $modnam = gefs ] ; then
           $WGRIB2 $gefs | grep --file=${pat0} | $WGRIB2 -i $gefs -grib ${grabgefs}
         else
           echo "WARNING: $gefs is not available"
+          echo "grid3 file should not be created to avoid METplus failure in stats step"
+          Wholedata=NO
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
             echo "Warning: No GEFS Member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
@@ -250,6 +256,8 @@ if [ $modnam = gefs ] ; then
           cat ${x} >> ${grabgefs}
         else
           echo "WARNING: $gefs_cvc is not available"
+          echo "grid3 file should not be created to avoid METplus failure in stats step"
+          Wholedata=NO
           if [ $SENDMAIL = YES ]; then
             export subject="GEFS Member ${mb} F${hhh} Data Missing for EVS ${COMPONENT}"
             echo "Warning: No GEFS Member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
@@ -258,7 +266,9 @@ if [ $modnam = gefs ] ; then
             cat mailmsg | mail -s "$subject" $MAILTO
           fi
         fi
-        if [ ! -z $grabgefs ]; then
+
+        if [ $Wholedata = YES ]; then
+         if [ ! -z $grabgefs ]; then
           if [ -s $grabgefs ]; then
             $WGRIB2 ${grabgefs} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $WORKtask/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
           fi
@@ -267,7 +277,9 @@ if [ $modnam = gefs ] ; then
               cp -v $WORKtask/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2 $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
             fi
           fi
+         fi
         fi
+
         nfhrs=`expr $nfhrs + 6`
       done # forecast hour
 
