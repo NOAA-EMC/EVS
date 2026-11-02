@@ -43,7 +43,7 @@ mkdir -p ${DATA}/job_work_dir
 
 vhours='00 06 12 18'
 WFO='aer afg ajk alu akq box car chs gyx ilm lwx mhx okx phi gum hfo bro crp hgx jax key lch lix mfl mlb mob sju tae tbw eka lox mfr mtr pqr sew sgx'
-CG='CG1'
+CG='cg1'
 lead_hours='0 24 48 72 96 120 144'
 
 
@@ -97,8 +97,8 @@ for wfo in ${WFO}; do
 	    			flead=$(printf "%03d" "${lead}")
 	    			flead2=$(printf "%02d" "${lead}")
 	    
-	    			EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
-	    			DATAmodelfilename=$DATA/gribs/${wfo}_${MODELNAME}_${cg}.${match_date}.t${match_fhr}z.f${flead}.grib2
+	    			EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.t${match_fhr}z.${cg}.${wfo}.f${flead}.grib2
+	    			DATAmodelfilename=$DATA/gribs/${MODELNAME}.${match_date}.t${match_fhr}z.${cg}.${wfo}.f${flead}.grib2
 	    			for OBSNAME in NDBC; do
 		    			export OBSNAME=${OBSNAME}
 			    		EVSINobsfilename=${EVSINndbcnc}/${RUN}.${VDATE}/ndbc/${VERIF_CASE}/ndbc.${VDATE}.nc
