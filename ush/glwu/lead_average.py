@@ -862,6 +862,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     var_savename = df['FCST_VAR'].tolist()[0]
     if domain in list(domain_translator.keys()):
         domain_string = domain_translator[domain]
+    elif str(domain).isdigit() or (
+        len(str(domain)) == 5
+        and str(domain).isalnum()
+        and not str(domain).startswith('Bukovsky')
+    ):
+        domain_string = f"Buoy {domain}"
     else:
         domain_string = domain
     date_hours_string = plot_util.get_name_for_listed_items(
@@ -1029,16 +1035,24 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         metric1_name = 'corr'
     if str(metric2_name).lower() == 'pcor':
         metric2_name = 'corr'
-    domain_string = domain_string.replace(', ','_')
-    if str(domain_string).lower() == 'global_0p25':
-        domain_string = 'latlon_0p25_glb'
+    if str(domain).isdigit() or (
+        len(str(domain)) == 5
+        and str(domain).isalnum()
+        and not str(domain).startswith('Bukovsky')
+    ):
+        domain_save_string = f"buoy_{str(domain).lower()}"
+    else:
+        domain_string = domain_string.replace(', ','_')
+        if str(domain_string).lower() == 'global_0p25':
+            domain_string = 'latlon_0p25_glb'
+        domain_save_string = str(domain_string).lower()
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
                  + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                  + f'{str(time_period_savename).lower()}.'
                  + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'{domain_save_string}')
     if metric2_name is not None:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
@@ -1046,7 +1060,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
                      + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
-                     + f'{str(domain_string).lower()}')
+                     + f'{domain_save_string}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
@@ -1054,7 +1068,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
                      + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
-                     + f'{str(domain).lower()}')
+                     + f'{domain_save_string}')
     if save_header:
         save_name = f'{save_header}_'+save_name
     #save_subdir = os.path.join(
@@ -1304,10 +1318,17 @@ def main():
                 logger.warning(e)
                 continue
             for domain in DOMAINS:
-                if str(domain) not in case_specs['vx_mask_list']:
-                    e = (f"The requested domain is not valid for the requested"
-                         + f" case type ({VERIF_CASETYPE}) and line_type"
-                         + f" ({LINE_TYPE}): {domain}")
+                domain_clean = str(domain).strip()
+                is_buoy_id = domain_clean.isdigit() or (
+                    len(domain_clean) == 5
+                    and domain_clean.isalnum()
+                    and not domain_clean.startswith('Bukovsky')
+                )
+
+                if not is_buoy_id and str(domain) not in case_specs['vx_mask_list']:
+                    e = (f"The requested domain is not valid for the"
+                         + f" requested case type ({VERIF_CASETYPE}) and"
+                         + f" line_type ({LINE_TYPE}): {domain}")
                     logger.warning(e)
                     logger.warning("Continuing ...")
                     continue

@@ -84,7 +84,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
-   
+    
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         logger.info("========================================")
@@ -116,7 +116,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
             frange_save_phrase = f'{flead[0]}_TO_F{flead[-1]}'
         frange_string = f'Forecast Hour{frange_phrase}'
-        frange_save_string = f'F{int(frange_save_phrase):03d}'
+        try:
+            frange_save_string = f'F{int(frange_save_phrase):03d}'
+        except ValueError:
+            frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
         frange_string = (f'Forecast Hours {flead[0]:03d}'
@@ -248,7 +251,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             ), 
             df_split
         )
-    
+     
         df_aggregated = df_aggregated[
             df_aggregated.index.get_level_values(str(date_type).upper())
             .isin(df_reduced.index)
@@ -878,6 +881,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     var_savename = df['FCST_VAR'].tolist()[0]
     if domain in list(domain_translator.keys()):
         domain_string = domain_translator[domain]
+    elif str(domain).isdigit() or (len(str(domain)) == 5 and str(domain).isalnum() and not str(domain).startswith('Bukovsky')):
+        domain_string = f"Buoy {domain}"
     else:
         domain_string = domain
     '''
@@ -1042,9 +1047,16 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         metric1_name = 'corr'
     if str(metric2_name).lower() == 'pcor':
         metric2_name = 'corr'
-    domain_string = domain_string.replace(', ','_')
-    if str(domain_string).lower() == 'global_0p25':
-        domain_string = 'latlon_0p25_glb'
+    
+    # Save Name domain conversion (Distinguish Buoys from generic domains)
+    if str(domain).isdigit() or (len(str(domain)) == 5 and str(domain).isalnum() and not str(domain).startswith('Bukovsky')):
+        domain_save_string = f"buoy_{str(domain).lower()}"
+    else:
+        domain_string = domain_string.replace(', ','_')
+        if str(domain_string).lower() == 'global_0p25':
+            domain_string = 'latlon_0p25_glb'
+        domain_save_string = str(domain_string).lower()
+
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
@@ -1052,7 +1064,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'{domain_save_string}')
     if metric2_name is not None:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1061,7 +1073,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'{domain_save_string}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1070,14 +1082,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'{domain_save_string}')
     if save_header:
         save_name = f'{save_header}_'+save_name
     #save_subdir = os.path.join(
     #    save_dir, f'{str(obtype).lower()}'
     #)
     save_subdir = os.path.join(
-        save_dir, 'images'              
+        save_dir, 'images'               
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
@@ -1320,7 +1332,11 @@ def main():
                 logger.warning(e)
                 continue
             for domain in DOMAINS:
-                if str(domain) not in case_specs['vx_mask_list']:
+                # BUOY VALIDATION BYPASS: Check if domain is an individual buoy ID
+                domain_clean = str(domain).strip()
+                is_buoy_id = domain_clean.isdigit() or (len(domain_clean) == 5 and domain_clean.isalnum() and not domain_clean.startswith('Bukovsky'))
+
+                if not is_buoy_id and str(domain) not in case_specs['vx_mask_list']:
                     e = (f"The requested domain is not valid for the"
                          + f" requested case type ({VERIF_CASETYPE}) and"
                          + f" line_type ({LINE_TYPE}): {domain}")
@@ -1477,4 +1493,4 @@ if __name__ == "__main__":
     CONFIDENCE_INTERVALS = str(CONFIDENCE_INTERVALS).lower() in [
         'true', '1', 't', 'y', 'yes'
     ]
-    main()
+    main() 

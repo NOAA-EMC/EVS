@@ -94,7 +94,17 @@ else
 	err_exit "FATAL ERROR: Did not copy the GLWU *.stat files for ${VDATE}"
 	exit
 fi
+###################################################################
+# Dynamically extract buoy IDs and masks from copied .stat files
+###################################################################
+set +x
+echo "Extracting unique Buoy IDs and Masks from copied stat files..."
+# Column 23 in standard MET SL1L2/CNT lines is VX_MASK
+extracted_masks=$(grep -E 'CNT|SL1L2' ${DATA}/stats/evs*stat 2>/dev/null | awk '{print $23}' | grep -v -E 'ALL|FULL|header' | sort -u | tr '\n' ',' | sed 's/,$//')
 
+export VX_MASK_LIST="${extracted_masks:-GreatLakes}"
+echo "Active plotting masks/buoys exported to VX_MASK_LIST: ${VX_MASK_LIST}"
+set -x
 #################################
 ## Make the command files for cfp 
 #################################

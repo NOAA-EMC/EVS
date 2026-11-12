@@ -227,7 +227,7 @@ def filter_by_obtype(df, logger, obtype):
 def filter_by_domain(df, logger, domain):
     if df is None:
         return df
-    df = df[df['VX_MASK'].eq(str(domain))]
+    df = df[df['VX_MASK'].astype(str).str.strip().eq(str(domain).strip())]
     check_empty(df, logger, 'filter_by_domain')
     return df
 
