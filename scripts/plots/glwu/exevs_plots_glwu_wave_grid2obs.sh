@@ -99,9 +99,8 @@ fi
 ###################################################################
 set +x
 echo "Extracting unique Buoy IDs and Masks from copied stat files..."
-# Column 23 in standard MET SL1L2/CNT lines is VX_MASK
-extracted_masks=$(grep -E 'CNT|SL1L2' ${DATA}/stats/evs*stat 2>/dev/null | awk '{print $23}' | grep -v -E 'ALL|FULL|header' | sort -u | tr '\n' ',' | sed 's/,$//')
-
+# Column 24 in standard MET SL1L2/CNT lines is VX_MASK
+extracted_masks=$(awk '$1 != "VERSION" && ($24 == "SL1L2" || $24 == "CNT") {print $17}' ${DATA}/stats/evs*stat 2>/dev/null | grep -v -E 'ALL|FULL|VX_MASK' | sort -u | tr '\n' ',' | sed 's/,$//')
 export VX_MASK_LIST="${extracted_masks:-GreatLakes}"
 echo "Active plotting masks/buoys exported to VX_MASK_LIST: ${VX_MASK_LIST}"
 set -x

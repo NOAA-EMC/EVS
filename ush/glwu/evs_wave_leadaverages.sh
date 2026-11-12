@@ -48,7 +48,7 @@ for period in ${periods} ; do
         echo "export plot_end_date=${VDATE} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
         echo "export VHR=${vhr} " >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
 	echo "export job_work_dir=${job_work_dir}" >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
-        echo "export VX_MASK_LIST='${VX_MASK_LIST:-GreatLakes}'" >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
+ 	echo "export VX_MASK_LIST=\"${VX_MASK_LIST:-GreatLakes}\"" >> plot_${wvar}_${vhr}_${stats}_${ptype}_${period}.sh
 
         case ${stats} in
           'stats1')
