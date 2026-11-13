@@ -1,29 +1,38 @@
-
 #!/bin/bash
 #########################################################################################################################
-# Name of Script: evs_wave_timeseries.sh
-# Developed for EVS-GLWU: Samira Ardani (samira.ardani@noaa.gov)                   
+# Name of Script: glwu_wave_plots_copy_plots.sh
+# Developed for EVS-GLWU: Samira Ardani (samira.ardani@noaa.gov)                    
 # Cited to: Mallory Rows's work for global_det component.     
 # Purpose of Script: Copy individual plot from tmp directory in $DATA to job working directory to address mpmd (03/2025)   
+#########################################################################################################################
 
 #######################################
 # Copy the plots to a common directory
 #######################################
 
-
 # set up plot variables
 set -x
 
-small_periods='last31days last90days'
-
+small_periods=$(echo "$EVAL_PERIOD" | tr '[:upper:]' '[:lower:]')
 inithours='01 07 13 19'
 wave_vars='HTSGW WIND'
 fhrs='000 024 048 072 096 120 144'
 stats_list='stats1 stats2 stats3 stats4 stats5'
-region='greatlakes'
-export region=${region}
 export obstype="ndbc_standard"
 ptype='timeseries fhrmean'
+
+# Build list of target domain suffixes: always include 'greatlakes', plus any buoy IDs from VX_MASK_LIST
+regions_to_copy="greatlakes"
+if [ -n "${VX_MASK_LIST}" ]; then
+    for mask in $(echo "${VX_MASK_LIST}" | tr ',' ' '); do
+        mask_clean=$(echo "${mask}" | tr -d ' ')
+        # Format numeric/5-char buoy IDs to match the 'buoy_<id>' suffix produced by Python
+        if [[ "${mask_clean}" =~ ^[0-9]+$ ]] || ([[ ${#mask_clean} -eq 5 ]] && [[ "${mask_clean}" =~ ^[a-zA-Z0-9]+$ ]] && [[ ! "${mask_clean}" =~ ^Bukovsky ]]); then
+            buoy_suffix="buoy_$(echo "${mask_clean}" | tr '[:upper:]' '[:lower:]')"
+            regions_to_copy="${regions_to_copy} ${buoy_suffix}"
+        fi
+    done
+fi
 
 for small_period in ${small_periods} ; do
 	for vhr in ${inithours} ; do
@@ -36,17 +45,17 @@ for small_period in ${small_periods} ; do
 					;;
 					'stats2')
 					image_stat="corr"
-			       		;;
+					;;
 					'stats3')
 					image_stat="fbar_obar"
 					;;
 					'stats4')
 					image_stat="esd"
-		                	;;
+					;;
 					'stats5')
 					image_stat="si"
-		                	;;
-		                	'stats6')
+					;;
+					'stats6')
 					image_stat="p95"
 					;;
 				esac
@@ -59,23 +68,14 @@ for small_period in ${small_periods} ; do
 					;;
 				esac
 
-				# Lead average plots
-				imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f144.${region}.png
-            			tmp_image=$DATA/images/$imagename
-				job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${stats}_lead_average_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
-				job_image=$job_work_dir/images/$imagename
-				if [[ ! -s $tmp_image ]]; then
-					if [[ -s $job_image ]]; then
-						cp -v $job_image $tmp_image
-					else
-						echo "NOTE: $job_image does not exist"
-					fi
-				fi
-				# Time series plots
-				for fhr in ${fhrs} ; do
-					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.timeseries_valid${vhr}z_f${fhr}.${region}.png
-            				tmp_image=$DATA/images/$imagename
-					job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${fhr}_${stats}_time_series_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
+				# Loop over 'greatlakes' and every individual 'buoy_<id>'
+				for reg in ${regions_to_copy} ; do
+					export region=${reg}
+
+					# Lead average plots
+					imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.fhrmean_valid${vhr}z_f144.${reg}.png
+					tmp_image=$DATA/images/$imagename
+					job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${stats}_lead_average_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
 					job_image=$job_work_dir/images/$imagename
 					if [[ ! -s $tmp_image ]]; then
 						if [[ -s $job_image ]]; then
@@ -84,9 +84,23 @@ for small_period in ${small_periods} ; do
 							echo "NOTE: $job_image does not exist"
 						fi
 					fi
+
+					# Time series plots
+					for fhr in ${fhrs} ; do
+						imagename=evs.${COMPONENT}.${image_stat}.${w_var}_${image_level}_${obstype}.${small_period}.timeseries_valid${vhr}z_f${fhr}.${reg}.png
+						tmp_image=$DATA/images/$imagename
+						job_work_dir=${DATA}/job_work_dir/plot_${wvar}_${vhr}_${fhr}_${stats}_time_series_$(echo ${small_period} | tr '[a-z]' '[A-Z]')
+						job_image=$job_work_dir/images/$imagename
+						if [[ ! -s $tmp_image ]]; then
+							if [[ -s $job_image ]]; then
+								cp -v $job_image $tmp_image
+							else
+								echo "NOTE: $job_image does not exist"
+							fi
+						fi
+					done
 				done
 			done
 		done
 	done
 done
-

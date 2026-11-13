@@ -94,7 +94,16 @@ else
 	err_exit "FATAL ERROR: Did not copy the GLWU *.stat files for ${VDATE}"
 	exit
 fi
-
+###################################################################
+# Dynamically extract buoy IDs and masks from copied .stat files
+###################################################################
+set +x
+echo "Extracting unique Buoy IDs and Masks from copied stat files..."
+# Column 24 in standard MET SL1L2/CNT lines is VX_MASK
+extracted_masks=$(awk '$1 != "VERSION" && ($24 == "SL1L2" || $24 == "CNT") {print $17}' ${DATA}/stats/evs*stat 2>/dev/null | grep -v -E 'ALL|FULL|VX_MASK' | sort -u | tr '\n' ',' | sed 's/,$//')
+export VX_MASK_LIST="${extracted_masks:-GreatLakes}"
+echo "Active plotting masks/buoys exported to VX_MASK_LIST: ${VX_MASK_LIST}"
+set -x
 #################################
 ## Make the command files for cfp 
 #################################
@@ -113,7 +122,7 @@ chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 ###########################################
 
 if [ ${run_mpi} = 'yes' ] ; then
-	mpiexec -np 128 --cpu-bind verbose,core cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
+	mpiexec -np 128 -ppn 128 --cpu-bind verbose,core cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 else
 	echo "not running mpiexec"
 	sh plot_all_${MODELNAME}_${RUN}_g2o_plots.sh

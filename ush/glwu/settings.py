@@ -764,6 +764,15 @@ class Reference():
         to this dictionary.  Add keys and values, not forgetting to include
         a comma at the end of any new lines.
         '''
+        
+        # Define dynamic class to handle unknown / numeric station IDs
+        class BuoyAwareDomainTranslator(dict):
+            def __missing__(self, key):
+                k_str = str(key).strip()
+                if k_str.isdigit():
+                    return f"Buoy {k_str}"
+                return k_str
+
         self.domain_translator = {'NHX': 'Northern Hemisphere 20N-80N',
                                   'SHX': 'Southern Hemisphere 20S-80S',
                                   'TRO': 'Tropics 20S-20N',
@@ -818,6 +827,8 @@ class Reference():
                                   'NMT': 'Northern Mountain Region',
                                   'GRB': 'Great Basin',
                                   'GRL': 'GreatLakes',
+                                  'GreatLakes': 'GreatLakes',
+                                  'Bukovsky_3km_GreatLakes': 'GreatLakes',
                                   'SMT': 'Southern Mountain Region',
                                   'SWD': 'Southwest Desert',
                                   'NPL': 'Northern Plains',
@@ -1006,6 +1017,14 @@ class Reference():
         each string representing a possible domain name in the VX_MASK column
         in the MET .stat file.
         '''
+        class DynamicMaskList(list):
+            """Allows any numeric buoy ID to pass the 'in' check automatically."""
+            def __contains__(self, item):
+                item_str = str(item).strip()
+                if item_str.isdigit() or (len(item_str) == 5 and item_str.isalnum() and not item_str.startswith('Bukovsky')):
+                    return True
+                return super().__contains__(item)
+
         self.case_type = {
             'grid2grid_anom': {
                 'SAL1L2': {
@@ -2305,7 +2324,7 @@ class Reference():
                 'SL1L2': {
                     'plot_stats_list': ('me, esd, rmse, bcrmse, pcor, si, fbar, obar'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['GreatLakes'],
+                    'vx_mask_list' : DynamicMaskList(['GreatLakes', 'Bukovsky_3km_GreatLakes', 'GRL']),
                     'var_dict': {
                         'HTSGW': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
@@ -2376,7 +2395,7 @@ class Reference():
                     'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['GreatLakes'],
+                    'vx_mask_list' : DynamicMaskList(['GreatLakes', 'Bukovsky_3km_GreatLakes', 'GRL']),
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
@@ -2473,7 +2492,7 @@ class Reference():
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['GreatLakes'],
+                    'vx_mask_list' : DynamicMaskList(['GreatLakes', 'Bukovsky_3km_GreatLakes', 'GRL']),
                     'var_dict': {
                         'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
