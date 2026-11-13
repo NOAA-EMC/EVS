@@ -122,7 +122,7 @@ chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 ###########################################
 
 if [ ${run_mpi} = 'yes' ] ; then
-	mpiexec -np 128 -ppn ${ppn} --cpu-bind verbose,core cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
+	mpiexec -np 128 -ppn 128 --cpu-bind verbose,core cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 else
 	echo "not running mpiexec"
 	sh plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
