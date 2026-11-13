@@ -84,7 +84,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
-    
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         logger.info("========================================")
@@ -251,7 +250,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             ), 
             df_split
         )
-     
         df_aggregated = df_aggregated[
             df_aggregated.index.get_level_values(str(date_type).upper())
             .isin(df_reduced.index)
