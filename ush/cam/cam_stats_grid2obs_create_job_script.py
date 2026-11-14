@@ -273,6 +273,25 @@ elif job_type == 'generate':
     job_env_vars_dict['COMINfcst'] = COMINfcst
     job_env_vars_dict['MODEL_INPUT_TEMPLATE'] = MODEL_INPUT_TEMPLATE
     job_env_vars_dict['VAR_NAME'] = VAR_NAME
+    if VAR_NAME == 'CEILING' and VERIF_TYPE == 'metar':
+        ceiling_dir = os.path.join(DATA, VERIF_CASE, 'data', MODELNAME, 'tmp')
+        ceiling_filename = (
+            f'ceiling_agl.{NEST}.t{VHOUR}z.f{int(FHR):03d}.job{njob}.nc'
+        )
+        job_env_vars_dict['CEILING_AGL_DIR'] = ceiling_dir
+        job_env_vars_dict['CEILING_AGL_FILENAME'] = ceiling_filename
+        job_env_vars_dict['CEILING_FCST_FILE'] = cutil.get_cam_fcst_file_path(
+            VERIF_CASE=VERIF_CASE, job_type=job_type,
+            COMINfcst=COMINfcst,
+            MODEL_INPUT_TEMPLATE=MODEL_INPUT_TEMPLATE,
+            VDATE=VDATE, VHOUR=VHOUR, FHR=FHR
+        )
+        job_env_vars_dict['CEILING_GRIB_FIELD'] = (
+            var_def['ceiling_grib_field'].replace('"', r'\"')
+        )
+        job_env_vars_dict['SURFACE_GRIB_FIELD'] = (
+            var_def['surface_grib_field'].replace('"', r'\"')
+        )
     job_env_vars_dict['FCST_VAR1_NAME'] = FCST_VAR1_NAME
     job_env_vars_dict['FCST_VAR1_LEVELS'] = FCST_VAR1_LEVELS
     job_env_vars_dict['FCST_VAR1_THRESHOLDS'] = FCST_VAR1_THRESHOLDS
@@ -958,12 +977,32 @@ elif STEP == 'stats':
                 else:
                     if not f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR), job_type=job_type):
                         if obs_avail and fcst_avail:
-                            job_cmd_list.append(
-                                f'{metplus_launcher} -c {machine_conf} '
-                                + f'-c {MET_PLUS_CONF}/'
-                                + f'PointStat_fcst{COMPONENT.upper()}_'
-                                + f'obs{VERIF_TYPE.upper()}.conf'
-                            )
+                            if VAR_NAME == 'CEILING' and VERIF_TYPE == 'metar':
+                                job_cmd_list.append(
+                                    f'{metplus_launcher} -c {machine_conf} '
+                                    + f'-c {MET_PLUS_CONF}/'
+                                    + 'PCPCombine_fcstCAM_CEILING.conf'
+                                )
+                                job_cmd_list.append(
+                                    '[ -s "${CEILING_AGL_DIR}/${CEILING_AGL_FILENAME}" ] '
+                                    '|| { echo "FATAL ERROR: Derived ceiling AGL file '
+                                    'missing or empty: ${CEILING_AGL_DIR}/'
+                                    '${CEILING_AGL_FILENAME}"; exit 1; }'
+                                )
+                                job_cmd_list.append(
+                                    f'{metplus_launcher} -c {machine_conf} '
+                                    + f'-c {MET_PLUS_CONF}/'
+                                    + 'PointStat_fcstCAM_obsMETAR.conf '
+                                    + f'-c {MET_PLUS_CONF}/'
+                                    + 'PointStat_fcstCAM_obsMETAR_CEILING.conf'
+                                )
+                            else:
+                                job_cmd_list.append(
+                                    f'{metplus_launcher} -c {machine_conf} '
+                                    + f'-c {MET_PLUS_CONF}/'
+                                    + f'PointStat_fcst{COMPONENT.upper()}_'
+                                    + f'obs{VERIF_TYPE.upper()}.conf'
+                                )
                             job_cmd_list.append(
                                 f'python -c '
                                 + '\"import cam_util as cutil; cutil.copy_data_to_restart('
@@ -1152,3 +1191,4 @@ else:
     job.close()
 
 print(f"END: {os.path.basename(__file__)}")
+
