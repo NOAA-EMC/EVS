@@ -983,19 +983,21 @@ elif STEP == 'stats':
                                     + f'-c {MET_PLUS_CONF}/'
                                     + 'PCPCombine_fcstCAM_CEILING.conf'
                                 )
-                                job_cmd_list.append(
-                                    '[ -s "${CEILING_AGL_DIR}/${CEILING_AGL_FILENAME}" ] '
-                                    '|| { echo "FATAL ERROR: Derived ceiling AGL file '
-                                    'missing or empty: ${CEILING_AGL_DIR}/'
-                                    '${CEILING_AGL_FILENAME}"; exit 1; }'
-                                )
-                                job_cmd_list.append(
-                                    f'{metplus_launcher} -c {machine_conf} '
-                                    + f'-c {MET_PLUS_CONF}/'
-                                    + 'PointStat_fcstCAM_obsMETAR.conf '
-                                    + f'-c {MET_PLUS_CONF}/'
-                                    + 'PointStat_fcstCAM_obsMETAR_CEILING.conf'
-                                )
+                                job_cmd_list.extend([
+                                    'if [ -s "${CEILING_AGL_DIR}/${CEILING_AGL_FILENAME}" ]; then',
+                                    (
+                                        f'    {metplus_launcher} -c {machine_conf} '
+                                        + f'-c {MET_PLUS_CONF}/PointStat_fcstCAM_obsMETAR.conf '
+                                        + f'-c {MET_PLUS_CONF}/PointStat_fcstCAM_obsMETAR_CEILING.conf'
+                                    ),
+                                    'else',
+                                    (
+                                        '    echo "WARNING: Derived ceiling AGL file missing or empty: '
+                                        '${CEILING_AGL_DIR}/${CEILING_AGL_FILENAME}".'
+                                        ' Not running METplus.'
+                                    ),
+                                    'fi'
+                                ])
                             else:
                                 job_cmd_list.append(
                                     f'{metplus_launcher} -c {machine_conf} '
