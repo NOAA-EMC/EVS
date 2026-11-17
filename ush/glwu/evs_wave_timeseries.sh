@@ -18,8 +18,7 @@ fhrs='000 024 048 072 096 120 144'
 wave_vars='HTSGW WIND'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 ptype='time_series'
-region='GreatLakes'
-export region=${region}
+
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
@@ -49,8 +48,9 @@ for period in ${periods} ; do
           echo "export plot_end_date=${VDATE} " >> plot_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
           echo "export VHR=${vhr} " >> plot_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
 	  echo "export job_work_dir=${job_work_dir}" >> plot_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
-
-          case ${stats} in
+	  echo "export VX_MASK_LIST=\"${VX_MASK_LIST:-GreatLakes}\"" >> plot_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
+          
+	  case ${stats} in
             'stats1')
               echo "export METRIC='me, rmse' " >> plot_${wvar}_${vhr}_${fhr}_${stats}_${ptype}_${period}.sh
               ;;
