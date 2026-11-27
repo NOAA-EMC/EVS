@@ -36,7 +36,7 @@ expected_cols = len(ndbc_header1[1:].split())  # 19 columns
 
 
 def is_valid_ndbc_file(filepath):
-    """Validate that an NDBC text file is non-empty, not an HTML error page,
+    """Validate that an NDBC text file is non-empty, not an HTML page,
     has valid NDBC headers, and contains at least one valid 19-column data row."""
     if not os.path.exists(filepath) or os.path.getsize(filepath) == 0:
         print(f"WARNING: {filepath} empty or missing, 0 sized")
@@ -53,10 +53,10 @@ def is_valid_ndbc_file(filepath):
         print(f"WARNING: {filepath} has fewer than 3 lines (missing header or data)")
         return False
 
-    # Reject HTML error pages (e.g., 404/503 responses saved as .txt)
+    # Reject HTML pages (e.g., 404/503 responses saved as .txt)
     head_sample = "".join(lines[:5]).lower()
     if "<html" in head_sample or "<!doctype" in head_sample:
-        print(f"WARNING: {filepath} contains an HTML error page")
+        print(f"WARNING: {filepath} contains a corrupted HTML page")
         return False
 
     # Check standard NDBC 2-line header
