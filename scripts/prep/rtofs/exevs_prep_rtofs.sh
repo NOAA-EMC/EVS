@@ -235,26 +235,36 @@ fi
 mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE
 mkdir -p $DATA/$RUN.$INITDATE/$OBTYPE/buoy
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
-ndbc_txt_ncount=$(find $DCOMROOT/$INITDATE/validation_data/marine/buoy -type f -name "*.txt" |wc -l)
+ndbc_txt_ncount=$(find $DCOMROOT/$INITDATE/validation_data/marine/buoy -type f -name "*.txt" | wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
-	python $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_trim_ndbc_files.py
+	python3 $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_trim_ndbc_files.py
     	export err=$?; err_chk
-    	tmp_ndbc_file=$DATA/$RUN.$INITDATE/$OBTYPE/ndbc.${INITDATE}.nc
-    	output_ndbc_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ndbc.${INITDATE}.nc
-    	if [ ! -s $output_ndbc_file ]; then
-        	run_metplus.py -c $PARMevs/metplus_config/machine.conf \
-        	-c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsNDBC.conf
-        	export err=$?; err_chk
-         	if [ $SENDCOM = YES ]; then
-             		if [ -s $tmp_ndbc_file ] ; then
-				cp -v $tmp_ndbc_file $output_ndbc_file
-			fi
-         	fi
-	else
-		echo "RESTART: $output_ndbc_file exists; Copying to $tmp_ndbc_file"
-		cp -v $output_ndbc_file $tmp_ndbc_file
 
-   	 fi
+	valid_ndbc_ncount=$(find $DATA/$RUN.$INITDATE/$OBTYPE/buoy -type f -name "*.txt" | wc -l)
+	if [ $valid_ndbc_ncount -gt 0 ]; then
+    		tmp_ndbc_file=$DATA/$RUN.$INITDATE/$OBTYPE/ndbc.${INITDATE}.nc
+    		output_ndbc_file=$COMOUTprep/$RUN.$INITDATE/$OBTYPE/ndbc.${INITDATE}.nc
+    		if [ ! -s $output_ndbc_file ]; then
+        		run_metplus.py -c $PARMevs/metplus_config/machine.conf \
+        		-c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsNDBC.conf
+        		export err=$?; err_chk
+         		if [ $SENDCOM = YES ]; then
+             			if [ -s $tmp_ndbc_file ] ; then
+					cp -v $tmp_ndbc_file $output_ndbc_file
+				fi
+         		fi
+		else
+			echo "RESTART: $output_ndbc_file exists; Copying to $tmp_ndbc_file"
+			cp -v $output_ndbc_file $tmp_ndbc_file
+   	 	fi
+	else
+		echo "WARNING: All NDBC buoy files in $DCOMROOT/$INITDATE/validation_data/marine/buoy were empty or corrupted for valid date $INITDATE. METplus will not run."
+		if [ $SENDMAIL = YES ] ; then
+			export subject="NDBC Data Corrupted for EVS RTOFS"
+			echo "WARNING: No valid NDBC data was available for valid date $INITDATE. All files in $DCOMROOT/$INITDATE/validation_data/marine/buoy were empty or corrupted. METplus will not run." > mailmsg
+			cat mailmsg | mail -s "$subject" $MAILTO
+		fi
+	fi
 else
 	echo "WARNING: No NDBC data was available for valid date $INITDATE. $DCOMROOT/$INITDATE/validation_data/marine/buoy/ is empty or does not exist. METplus will not run. "	
   	if [ $SENDMAIL = YES ] ; then
@@ -263,6 +273,8 @@ else
     		cat mailmsg | mail -s "$subject" $MAILTO
   	fi
 fi
+
+
 # convert Argo basin files into a netcdf file using python embedding
 export OBTYPE=argo
 if [ ! -d $COMOUTprep/$RUN.$INITDATE/$OBTYPE ]; then
@@ -285,7 +297,7 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	export err=$?; err_chk
 	if [ "$file_check_indian" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is valid."
-	elif [ "$file_check_atlantic" -eq 1 ]; then
+	elif [ "$file_check_indian" -eq 1 ]; then
 		echo "WARNING: Corrupted validation file: $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc is corrupted for valid date ${INITDATE}. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/indian_ocean/${INITDATE}_prof.nc and not run."
 	fi
 	
@@ -294,7 +306,7 @@ if [ -s $DCOMROOT/$INITDATE/validation_data/marine/argo/atlantic_ocean/${INITDAT
 	export err=$?; err_chk
 	if [ "$file_check_pacific" -eq 0 ]; then
 		echo "$DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is valid."
-	elif [ "$file_check_atlantic" -eq 1 ]; then
+	elif [ "$file_check_pacific" -eq 1 ]; then
 		echo "WARNING: Corrupted validation file: $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc is corrupted for valid date ${INITDATE}. METplus will skip $DCOMROOT/$INITDATE/validation_data/marine/argo/pacific_ocean/${INITDATE}_prof.nc and not run."
 
 	fi
